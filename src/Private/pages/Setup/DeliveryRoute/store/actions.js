@@ -1,0 +1,50 @@
+const actions = {
+    GET_DELIVERY_ROUTE: "GET_DELIVERY_ROUTE",
+    GET_DELIVERY_ROUTE_SUCCESS: "GET_DELIVERY_ROUTE_SUCCESS",
+    GET_DELIVERY_ROUTE_FAILED: "GET_DELIVERY_ROUTE_FAILED",
+
+    GET_DELIVERY_ROUTE_BY_ID: "GET_DELIVERY_ROUTE_BY_ID",
+    GET_DELIVERY_ROUTE_BY_ID_SUCCESS: "GET_DELIVERY_ROUTE_BY_ID_SUCCESS",
+    GET_DELIVERY_ROUTE_BY_ID_FAILED: "GET_DELIVERY_ROUTE_BY_ID_FAILED",
+
+    CREATE_DELIVERY_ROUTE: "CREATE_DELIVERY_ROUTE",
+    CREATE_DELIVERY_ROUTE_SUCCESS: "CREATE_DELIVERY_ROUTE_SUCCESS",
+    CREATE_DELIVERY_ROUTE_FAILED: "CREATE_DELIVERY_ROUTE_FAILED",
+
+    UPDATE_DELIVERY_ROUTE: "UPDATE_DELIVERY_ROUTE",
+    UPDATE_DELIVERY_ROUTE_SUCCESS: "UPDATE_DELIVERY_ROUTE_SUCCESS",
+    UPDATE_DELIVERY_ROUTE_FAILED: "UPDATE_DELIVERY_ROUTE_FAILED",
+
+    DELETE_DELIVERY_ROUTE: "DELETE_DELIVERY_ROUTE",
+    DELETE_DELIVERY_ROUTE_SUCCESS: "DELETE_DELIVERY_ROUTE_SUCCESS",
+    DELETE_DELIVERY_ROUTE_FAILED: "DELETE_DELIVERY_ROUTE_FAILED",
+
+    get_delivery_route: (query) => ({
+        type: actions.GET_DELIVERY_ROUTE,
+        query,
+    }),
+
+    get_delivery_route_by_id: (id) => ({
+        type: actions.GET_DELIVERY_ROUTE_BY_ID,
+        id,
+    }),
+
+    create_delivery_route: (id, data) => ({
+        type: actions.CREATE_DELIVERY_ROUTE,
+        id,
+        data,
+    }),
+
+    update_delivery_route: (id, data) => ({
+        type: actions.UPDATE_DELIVERY_ROUTE,
+        id,
+        data,
+    }),
+
+    delete_delivery_route: (id) => ({
+        type: actions.DELETE_DELIVERY_ROUTE,
+        id,
+    }),
+};
+
+export default actions;

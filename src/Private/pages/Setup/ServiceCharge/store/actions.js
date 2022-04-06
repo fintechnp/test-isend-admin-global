@@ -1,0 +1,60 @@
+const actions = {
+    GET_SERVICE_CHARGE: "GET_SERVICE_CHARGE",
+    GET_SERVICE_CHARGE_SUCCESS: "GET_SERVICE_CHARGE_SUCCESS",
+    GET_SERVICE_CHARGE_FAILED: "GET_SERVICE_CHARGE_FAILED",
+
+    GET_SERVICE_CHARGE_BY_PARTNER: "GET_SERVICE_CHARGE_BY_PARTNER",
+    GET_SERVICE_CHARGE_BY_PARTNER_SUCCESS:
+        "GET_SERVICE_CHARGE_BY_PARTNER_SUCCESS",
+    GET_SERVICE_CHARGE_BY_PARTNER_FAILED:
+        "GET_SERVICE_CHARGE_BY_PARTNER_FAILED",
+
+    GET_SERVICE_CHARGE_DETAILS: "GET_SERVICE_CHARGE_DETAILS",
+    GET_SERVICE_CHARGE_DETAILS_SUCCESS: "GET_SERVICE_CHARGE_DETAILS_SUCCESS",
+    GET_SERVICE_CHARGE_DETAILS_FAILED: "GET_SERVICE_CHARGE_DETAILS_FAILED",
+
+    ADD_SERVICE_CHARGE: "ADD_SERVICE_CHARGE",
+    ADD_SERVICE_CHARGE_SUCCESS: "ADD_SERVICE_CHARGE_SUCCESS",
+    ADD_SERVICE_CHARGE_FAILED: "ADD_SERVICE_CHARGE_FAILED",
+
+    UPDATE_SERVICE_CHARGE: "UPDATE_SERVICE_CHARGE",
+    UPDATE_SERVICE_CHARGE_SUCCESS: "UPDATE_SERVICE_CHARGE_SUCCESS",
+    UPDATE_SERVICE_CHARGE_FAILED: "UPDATE_SERVICE_CHARGE_FAILED",
+
+    DELETE_SERVICE_CHARGE: "DELETE_SERVICE_CHARGE",
+    DELETE_SERVICE_CHARGE_SUCCESS: "DELETE_SERVICE_CHARGE_SUCCESS",
+    DELETE_SERVICE_CHARGE_FAILED: "DELETE_SERVICE_CHARGE_FAILED",
+
+    get_all_service_charge: (query) => ({
+        type: actions.GET_SERVICE_CHARGE,
+        query,
+    }),
+
+    get_service_charge_by_partner: (id) => ({
+        type: actions.GET_SERVICE_CHARGE_BY_PARTNER,
+        id,
+    }),
+
+    get_service_charge_details: (id) => ({
+        type: actions.GET_SERVICE_CHARGE_DETAILS,
+        id,
+    }),
+
+    add_service_charge: (data) => ({
+        type: actions.ADD_SERVICE_CHARGE,
+        data,
+    }),
+
+    update_service_charge: (id, data) => ({
+        type: actions.UPDATE_SERVICE_CHARGE,
+        data,
+        id,
+    }),
+
+    delete_service_charge: (id) => ({
+        type: actions.DELETE_SERVICE_CHARGE,
+        id,
+    }),
+};
+
+export default actions;
