@@ -2,17 +2,17 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import actions from "../store/actions";
 import Header from "../components/Header";
 import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
+import { CountryName, CurrencyName } from "./../../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -121,20 +121,24 @@ const ExchangeRateList = () => {
             accessor: "sending_currency",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CurrencyName(data.value)}
+                    </StyledText>
                 </Box>
             ),
         },
         {
             Header: () => (
                 <Box>
-                    <Typography>Base Country</Typography>
+                    <Typography>Base Currency</Typography>
                 </Box>
             ),
             accessor: "base_currency",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CurrencyName(data.value)}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -147,11 +151,17 @@ const ExchangeRateList = () => {
             accessor: "receiving_country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CountryName(data.value)}
+                    </StyledText>
                     <Typography
                         sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
                     >
-                        {data?.row?.original?.receiving_currency}
+                        {data?.row?.original?.receiving_currency
+                            ? CurrencyName(
+                                  data?.row?.original?.receiving_currency
+                              )
+                            : "N/A"}
                     </Typography>
                 </Box>
             ),
@@ -286,10 +296,7 @@ const ExchangeRateList = () => {
 
     return (
         <MenuContainer>
-            <Header
-                title="Exchange Rate List"
-                buttonText="Add Exchange Rate"
-            />
+            <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
             <Filter
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}

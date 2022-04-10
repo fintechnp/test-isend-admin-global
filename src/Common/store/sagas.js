@@ -60,10 +60,14 @@ export const get_all_country = takeEvery(actions.GET_ALL_COUNTRY, function* () {
 
 export const get_all_reference = takeEvery(
     actions.GET_ALL_REFERENCE,
-    function* () {
+    function* (action) {
         const api = new Api();
         try {
-            const res = yield call(api.get, `common/referencedata`);
+            const res = yield call(
+                api.get,
+                `common/referencedata`,
+                action.query
+            );
             yield put({
                 type: actions.GET_ALL_REFERENCE_SUCCESS,
                 response: res,

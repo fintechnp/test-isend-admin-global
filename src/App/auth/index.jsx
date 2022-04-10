@@ -85,6 +85,10 @@ export default class AuthProvider extends Component {
             });
             store.dispatch({
                 type: "GET_ALL_REFERENCE",
+                query: {
+                    page_number: 1,
+                    page_size: 100,
+                },
             });
         }
     };

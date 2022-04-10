@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -16,7 +17,7 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
-import { Box } from "@mui/material";
+import PartnerActions from "./../../../Partner/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -96,9 +97,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddDeliveryOption({ update_data, update }) {
+function AddPayoutLocation({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    const [filterSchema, setFilterSchema] = React.useState({
+        page_number: 1,
+        page_size: 100,
+        agent_type: "SEND",
+        sort_by: "name",
+        order_by: "ASC",
+    });
+    const { response: partner_data, loading: g_loading } = useSelector(
+        (state) => state.get_all_partner
+    );
     const { success: add_success, loading: add_loading } = useSelector(
         (state) => state.add_user
     );
@@ -107,6 +118,10 @@ function AddDeliveryOption({ update_data, update }) {
     );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
+
+    React.useEffect(() => {
+        dispatch(PartnerActions.get_all_partner(filterSchema));
+    }, [dispatch, filterSchema]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
@@ -177,6 +192,7 @@ function AddDeliveryOption({ update_data, update }) {
                             onSubmit={handleMenuUpdate}
                             buttonText="Update"
                             update={update}
+                            partnerList={partner_data?.data || []}
                             user_type={update_data?.user_type}
                             loading={update_loading}
                             form={`update_delivery_route_form`}
@@ -188,6 +204,7 @@ function AddDeliveryOption({ update_data, update }) {
                             enableReinitialize={true}
                             onSubmit={handleMenuSubmit}
                             buttonText="Create"
+                            partnerList={partner_data?.data || []}
                             form={`add_delivery_route_form`}
                             initialValues={{ is_active: false }}
                             loading={add_loading}
@@ -200,4 +217,4 @@ function AddDeliveryOption({ update_data, update }) {
     );
 }
 
-export default AddDeliveryOption;
+export default React.memo(AddPayoutLocation);

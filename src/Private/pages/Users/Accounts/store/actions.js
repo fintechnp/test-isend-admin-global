@@ -3,15 +3,6 @@ const actions = {
     GET_ACCOUNT_USER_SUCCESS: "GET_ACCOUNT_USER_SUCCESS",
     GET_ACCOUNT_USER_FAILED: "GET_ACCOUNT_USER_FAILED",
 
-    GET_ALL_PERMISSION: "GET_ALL_PERMISSION",
-    GET_ALL_PERMISSION_SUCCESS: "GET_ALL_PERMISSION_SUCCESS",
-    GET_ALL_PERMISSION_FAILED: "GET_ALL_PERMISSION_FAILED",
-    GET_ALL_PERMISSION_RESET: "GET_ALL_PERMISSION_RESET",
-
-    CREATE_USER_PERMISSION: "CREATE_USER_PERMISSION",
-    CREATE_USER_PERMISSION_SUCCESS: "CREATE_USER_PERMISSION_SUCCESS",
-    CREATE_USER_PERMISSION_FAILED: "CREATE_USER_PERMISSION_FAILED",
-
     GET_ACCOUNT_USER_DETAILS: "GET_ACCOUNT_USER_DETAILS",
     GET_ACCOUNT_USER_DETAILS_SUCCESS: "GET_ACCOUNT_USER_DETAILS_SUCCESS",
     GET_ACCOUNT_USER_DETAILS_FAILED: "GET_ACCOUNT_USER_DETAILS_FAILED",
@@ -47,11 +38,6 @@ const actions = {
         query,
     }),
 
-    get_all_permission: (id) => ({
-        type: actions.GET_ALL_PERMISSION,
-        id,
-    }),
-
     get_user_details: () => ({
         type: actions.GET_ACCOUNT_USER_DETAILS,
     }),
@@ -74,12 +60,6 @@ const actions = {
 
     update_user_status: (data, id) => ({
         type: actions.UPDATE_ACCOUNT_STATUS,
-        data,
-        id,
-    }),
-
-    create_user_permission: (data, id) => ({
-        type: actions.CREATE_USER_PERMISSION,
         data,
         id,
     }),

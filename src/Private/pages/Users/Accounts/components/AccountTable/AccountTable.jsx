@@ -77,8 +77,8 @@ const initialState = {
     page_size: 15,
     user_type: "",
     search: "",
-    sort_by: "",
-    order_by: "",
+    sort_by: "name",
+    order_by: "ASC",
 };
 
 function AccountTable() {
@@ -106,6 +106,11 @@ function AccountTable() {
     }, [d_success, u_success, a_success]);
 
     const columns = useMemo(() => [
+        {
+            Header: "SN",
+            maxWidth: 50,
+            Cell: ({ row }) => <Typography>{row.index + 1}</Typography>,
+        },
         {
             Header: "Name",
             accessor: "name",
@@ -218,7 +223,11 @@ function AccountTable() {
                     </span>
                     <Tooltip title="Map Privilege" arrow>
                         <IconButton
-                            onClick={() => navigate("/user/permission")}
+                            onClick={() =>
+                                navigate(
+                                    `/user/permission/${row?.original?.id}`
+                                )
+                            }
                         >
                             <SyncAltOutlinedIcon
                                 sx={{

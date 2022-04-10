@@ -11,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 
 import Toolbar from "./../Toolbar";
 import DrawerList from "../List";
-import Logo from "../../../assets/isend_white.svg";
-import Logo_short from "../../../assets/isend_short_white.png";
+import Logo from "../../../assets/long-logo.svg";
+import Logo_short from "../../../assets/short-logo.svg";
 
 const drawerWidth = 280;
 
@@ -80,6 +80,7 @@ const DrawerHeader = styled("div", {
 
 const LogoWrapper = styled(CardMedia)(({ theme }) => ({
     maxHeight: "40px",
+    width: "100%",
     objectFit: "contain",
     display: "flex",
     alignItems: "center",

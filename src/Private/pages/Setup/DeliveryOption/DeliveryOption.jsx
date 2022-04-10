@@ -6,13 +6,16 @@ import { Box, Switch, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import { Delete } from "./../../../../App/components";
+import {
+    CountryName,
+    CurrencyName,
+    ReferenceName,
+} from "./../../../../App/helpers";
 import AddDeliveryOption from "./components/AddDeliveryOption";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
@@ -49,7 +52,8 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.secondary.contrastText,
+    textTransform: "capitalize",
 }));
 
 const initialState = {
@@ -133,7 +137,9 @@ const DeliveryOption = () => {
             accessor: "payment_type",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {ReferenceName(1, data.value)}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -146,11 +152,15 @@ const DeliveryOption = () => {
             accessor: "country_code",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? CountryName(data.value) : "N/A"}
+                    </StyledText>
                     <Typography
                         sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
                     >
-                        {data?.row?.original?.currency_code}
+                        {data?.row?.original?.currency_code
+                            ? CurrencyName(data?.row?.original?.currency_code)
+                            : "N/A"}
                     </Typography>
                 </Box>
             ),
@@ -212,7 +222,10 @@ const DeliveryOption = () => {
                             </Tooltip>
                         )}
                     </span>
-                    <AddDeliveryOption update={true} update_data={row?.original} />
+                    <AddDeliveryOption
+                        update={true}
+                        update_data={row?.original}
+                    />
                     <Delete
                         data={row?.original}
                         handleDelete={handleDelete}
@@ -269,13 +282,13 @@ const DeliveryOption = () => {
     };
 
     const handlePayemntType = (e) => {
-      const payment = e.target.value;
-      const updatedFilterSchema = {
-          ...filterSchema,
-          payment_type: payment,
-      };
-      setFilterSchema(updatedFilterSchema);
-  };
+        const payment = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            payment_type: payment,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {

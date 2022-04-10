@@ -9,6 +9,12 @@ import {
     UpdateUserStatusReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
+//permission
+import {
+    GetAllPermissionReducer,
+    CreateUserPermissionRdcr,
+    PermissionSaga,
+} from "./pages/Users/UserPermission/store";
 import {
     GetAllMenuReducer,
     AddMenuReducer,
@@ -119,6 +125,10 @@ export const privateReducer = {
     delete_user: DeleteUserReducer,
     update_user_status: UpdateUserStatusReducer,
 
+    //permission
+    get_all_permission: GetAllPermissionReducer,
+    create_user_permission: CreateUserPermissionRdcr,
+
     //menu
     get_all_menu: GetAllMenuReducer,
     add_menu: AddMenuReducer,
@@ -203,6 +213,7 @@ export const privateReducer = {
 
 export const privateSaga = [
     AccountSaga(),
+    PermissionSaga(),
     MenuSaga(),
     SubMenuSaga(),
     DeliveryOptionSaga(),

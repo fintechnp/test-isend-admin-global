@@ -11,9 +11,13 @@ import CableIcon from "@mui/icons-material/Cable";
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import { Delete } from "./../../../../App/components";
 import AddPartnerBank from "./components/AddPartnerBank";
 import Table, { TablePagination } from "./../../../../App/components/Table";
+import {
+    CountryName,
+    CurrencyName,
+    ReferenceName,
+} from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -126,18 +130,15 @@ const PartnerBank = () => {
         {
             Header: () => (
                 <Box>
-                    <Typography>Agent</Typography>
+                    <Typography>Payment Type</Typography>
                 </Box>
             ),
-            accessor: "agent_id",
+            accessor: "payment_type",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
-                    >
-                        {data?.row?.original?.payment_type}
-                    </Typography>
+                    <StyledText component="p">
+                        {ReferenceName(1, data?.value)}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -146,11 +147,13 @@ const PartnerBank = () => {
             accessor: "country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CountryName(data.value)}
+                    </StyledText>
                     <Typography
                         sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
                     >
-                        {data?.row?.original?.currency}
+                        {CurrencyName(data?.row?.original?.currency)}
                     </Typography>
                 </Box>
             ),

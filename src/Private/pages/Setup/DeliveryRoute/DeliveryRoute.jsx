@@ -12,6 +12,11 @@ import Header from "./components/Header";
 import Filter from "./components/Filter";
 import { Delete } from "./../../../../App/components";
 import AddDeliveryRoute from "./components/AddDeliveryRoute";
+import {
+    CountryName,
+    CurrencyName,
+    ReferenceName,
+} from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -131,7 +136,9 @@ const DeliveryRoute = () => {
             accessor: "payment_type",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {ReferenceName(1, data.value)}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -144,11 +151,13 @@ const DeliveryRoute = () => {
             accessor: "payout_country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CountryName(data.value)}
+                    </StyledText>
                     <Typography
                         sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
                     >
-                        {data?.row?.original?.payout_currency}
+                        {CurrencyName(data?.row?.original?.payout_currency)}
                     </Typography>
                 </Box>
             ),

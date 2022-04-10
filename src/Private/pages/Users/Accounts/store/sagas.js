@@ -22,51 +22,6 @@ export const getAllUser = takeEvery(
     }
 );
 
-export const getAllPermission = takeEvery(
-    actions.GET_ALL_PERMISSION,
-    function* (action) {
-        try {
-            const res = yield call(
-                api.get,
-                `account/allpolicybyuserid?user_id=${action.id}`
-            );
-            yield put({
-                type: actions.GET_ALL_PERMISSION_SUCCESS,
-                response: res,
-            });
-        } catch (error) {
-            yield put({
-                type: actions.GET_ALL_PERMISSION_FAILED,
-                error: error.data,
-            });
-        }
-    }
-);
-
-export const createUserPermission = takeEvery(
-    actions.CREATE_USER_PERMISSION,
-    function* (action) {
-        try {
-            const res = yield call(
-                api.put,
-                `account/updateuserpolicies?user_id=${action.id}`,
-                action.data
-            );
-            yield put({
-                type: actions.CREATE_USER_PERMISSION_SUCCESS,
-                response: res,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: res });
-        } catch (error) {
-            yield put({
-                type: actions.CREATE_USER_PERMISSION_FAILED,
-                error: error.data,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: error?.data });
-        }
-    }
-);
-
 export const getUserDetails = takeEvery(
     actions.GET_ACCOUNT_USER_DETAILS,
     function* () {
@@ -178,8 +133,6 @@ export const deleteUser = takeEvery(
 export default function* saga() {
     yield all([
         getAllUser,
-        getAllPermission,
-        createUserPermission,
         getUserDetails,
         getUserDetailById,
         addUser,

@@ -6,13 +6,17 @@ import { Box, Switch, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import actions from "../store/actions";
 import Header from "../components/Header";
 import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
+import {
+    CountryName,
+    CurrencyName,
+    ReferenceName,
+} from "./../../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -110,12 +114,6 @@ const ServiceChargeList = () => {
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
                         {data.value}
                     </StyledName>
-                    <Typography
-                        component="p"
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1, pl: 1 }}
-                    >
-                        {data?.row?.original?.payment_type}
-                    </Typography>
                 </Box>
             ),
         },
@@ -128,11 +126,13 @@ const ServiceChargeList = () => {
             accessor: "receiving_country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CountryName(data.value)}
+                    </StyledText>
                     <Typography
                         sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
                     >
-                        {data?.row?.original?.receiving_currency}
+                        {CurrencyName(data?.row?.original?.receiving_currency)}
                     </Typography>
                 </Box>
             ),
@@ -148,7 +148,19 @@ const ServiceChargeList = () => {
             maxWidth: 180,
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {ReferenceName(37, data.value)}
+                    </StyledText>
+                    <Typography
+                        component="p"
+                        sx={{
+                            opacity: 0.6,
+                            fontSize: "12px",
+                            lineHeight: 1,
+                        }}
+                    >
+                        {ReferenceName(1, data?.row?.original?.payment_type)}
+                    </Typography>
                 </Box>
             ),
         },
@@ -161,14 +173,17 @@ const ServiceChargeList = () => {
             accessor: "min_amount",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p" sx={{ textAlign: "right", paddingRight: "16px" }}>
+                    <StyledText
+                        component="p"
+                        sx={{ textAlign: "right", paddingRight: "16px" }}
+                    >
                         {data.value}
                     </StyledText>
                     <Typography
                         sx={{
                             pr: 2,
                             opacity: 0.6,
-                            fontSize: "12px",
+                            fontSize: "13px",
                             lineHeight: 1,
                             textAlign: "right",
                         }}

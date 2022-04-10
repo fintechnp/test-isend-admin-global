@@ -49,8 +49,8 @@ const Select = styled(MuiSelect)(({ theme }) => ({
         paddingRight: "28px",
     },
     "& .MuiSvgIcon-root.MuiSelect-icon": {
-        color: theme.palette.border.main
-    }
+        color: theme.palette.border.main,
+    },
 }));
 
 const DropWrapper = styled(Box)(({ theme }) => ({
@@ -75,7 +75,6 @@ const sortData = [
 ];
 
 const orderData = [
-    { key: "None", value: "" },
     { key: "Ascending", value: "ASC" },
     { key: "Descending", value: "DESC" },
 ];
@@ -162,7 +161,7 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue="ASC"
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

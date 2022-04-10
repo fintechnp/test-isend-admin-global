@@ -13,6 +13,11 @@ import Filter from "./components/Filter";
 import { Delete } from "./../../../../App/components";
 import AddPayoutLocation from "./components/AddPayoutLocation";
 import Table, { TablePagination } from "./../../../../App/components/Table";
+import {
+    CountryName,
+    CurrencyName,
+    ReferenceName,
+} from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -131,7 +136,9 @@ const PayoutLocation = () => {
             accessor: "payment_type",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {ReferenceName(1, data.value)}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -144,7 +151,14 @@ const PayoutLocation = () => {
             accessor: "country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CountryName(data.value)}
+                    </StyledText>
+                    <Typography
+                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
+                    >
+                        {CurrencyName(data?.row?.original?.currency)}
+                    </Typography>
                 </Box>
             ),
         },

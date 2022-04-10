@@ -32,7 +32,9 @@ const PartnerDetails = lazy(() =>
     import("../pages/Setup/Partner/PartnerDetails")
 );
 const Corridor = lazy(() => import("../pages/Setup/Partner/Corridor"));
-const AddUpdateCorridor = lazy(() => import("../pages/Setup/Partner/AddUpdateCorridor"));
+const AddUpdateCorridor = lazy(() =>
+    import("../pages/Setup/Partner/AddUpdateCorridor")
+);
 const PartnerBank = lazy(() => import("../pages/Setup/PartnerBank"));
 const MapBank = lazy(() => import("../pages/Setup/PartnerBank/MapBank"));
 const PayoutLocation = lazy(() => import("../pages/Setup/PayoutLocation"));
@@ -54,7 +56,7 @@ const ServiceChargeDetails = lazy(() =>
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
     { path: "/user/accounts", component: <Accounts /> },
-    { path: "/user/permission", component: <UserPermission /> },
+    { path: "/user/permission/:id", component: <UserPermission /> },
     { path: "/user/menu", component: <Menu /> },
     { path: "/user/menu/sub/:id", component: <SubMenu /> },
 
@@ -80,7 +82,10 @@ const privateRoutes = [
     { path: "/setup/partner/details/:id", component: <PartnerDetails /> },
     { path: "/setup/partner/corridor/:id", component: <Corridor /> },
     { path: "/setup/partner/corridor/add", component: <AddUpdateCorridor /> },
-    { path: "/setup/partner/corridor/update/:id", component: <AddUpdateCorridor /> },
+    {
+        path: "/setup/partner/corridor/update/:id",
+        component: <AddUpdateCorridor />,
+    },
     { path: "/setup/partner-bank", component: <PartnerBank /> },
     {
         path: "/setup/partner-bank/map/:payment/:country/:currency",

@@ -55,7 +55,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "",
-    order_by: "",
+    order_by: "ASC",
 };
 
 const Menu = () => {

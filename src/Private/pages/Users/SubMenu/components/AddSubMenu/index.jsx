@@ -167,7 +167,7 @@ function AddSubMenu({ update_data, update }) {
                     id="customized-dialog-title"
                     onClose={handleClose}
                 >
-                    {update ? "Update" : "Create New"}Sub Menu
+                    {update ? "Update" : "Create New"} Sub Menu
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     {update ? (

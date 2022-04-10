@@ -8,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../../App/components/Fields/SelectField";
 import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
 import Validator from "../../../../../../App/utils/validators";
@@ -64,9 +63,9 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 
 const DeliveryOptionForm = ({
     handleSubmit,
-    user_type,
     update,
     loading,
+    partnerList,
     buttonText,
     handleClose,
 }) => {
@@ -74,16 +73,6 @@ const DeliveryOptionForm = ({
     const [type, setType] = useState(false);
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
-    const partner_data = useSelector(
-        (state) => state.get_all_partner?.response
-    );
-
-    const handleType = (e) => {
-        setType(e.target.value);
-        if (e.target.value !== "PARTNER") {
-            dispatch(change("add_user_form", "agent_id", 0));
-        }
-    };
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -96,12 +85,25 @@ const DeliveryOptionForm = ({
                                 label="Sending Agent"
                                 type="text"
                                 small={12}
-                                component={TextField}
+                                component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
-                            />
+                            >
+                                <option value="" disabled>
+                                    Select Sending Agent
+                                </option>
+                                {partnerList &&
+                                    partnerList.map((data, index) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={index}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -109,12 +111,25 @@ const DeliveryOptionForm = ({
                                 label="Payout Agent"
                                 type="number"
                                 small={12}
-                                component={TextField}
+                                component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
-                            />
+                            >
+                                <option value="" disabled>
+                                    Select Payout Agent
+                                </option>
+                                {partnerList &&
+                                    partnerList.map((data, index) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={index}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -137,10 +152,10 @@ const DeliveryOptionForm = ({
                                             (ref_data) =>
                                                 ref_data.reference_type === 1
                                         )[0]
-                                        .reference_data.map((data) => (
+                                        .reference_data.map((data, index) => (
                                             <option
                                                 value={data.value}
-                                                key={data.reference_id}
+                                                key={index}
                                             >
                                                 {data.name}
                                             </option>
@@ -163,8 +178,8 @@ const DeliveryOptionForm = ({
                                     Select Country
                                 </option>
                                 {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
+                                    country.map((data, index) => (
+                                        <option value={data.iso3} key={index}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -186,10 +201,10 @@ const DeliveryOptionForm = ({
                                     Select Currency
                                 </option>
                                 {country &&
-                                    country.map((data) => (
+                                    country.map((data, index) => (
                                         <option
                                             value={data.currency}
-                                            key={data.id}
+                                            key={index}
                                         >
                                             {data.currency}
                                         </option>

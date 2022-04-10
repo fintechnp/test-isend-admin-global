@@ -12,6 +12,7 @@ import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import Table, { TablePagination } from "./../../../../App/components/Table";
+import { CountryName } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -65,7 +66,7 @@ const Partner = () => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: deliveryoption_data, loading: g_loading } = useSelector(
+    const { response: partner_data, loading: g_loading } = useSelector(
         (state) => state.get_all_partner
     );
     const { loading: d_loading, success: d_success } = useSelector(
@@ -128,7 +129,9 @@ const Partner = () => {
             accessor: "country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {CountryName(data.value)}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -305,13 +308,13 @@ const Partner = () => {
             />
             <Table
                 columns={columns}
-                data={deliveryoption_data?.data || []}
+                data={partner_data?.data || []}
                 sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={deliveryoption_data?.pagination}
+                        paginationData={partner_data?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />
