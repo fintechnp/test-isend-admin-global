@@ -7,6 +7,7 @@ import {
     UpdateUserReducer,
     DeleteUserReducer,
     UpdateUserStatusReducer,
+    GetUserNumberReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 //permission
@@ -124,6 +125,7 @@ export const privateReducer = {
     update_user: UpdateUserReducer,
     delete_user: DeleteUserReducer,
     update_user_status: UpdateUserStatusReducer,
+    get_user_number: GetUserNumberReducer,
 
     //permission
     get_all_permission: GetAllPermissionReducer,

@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { useTheme } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 import { Grid } from "@mui/material";
 import React from "react";
 
@@ -11,7 +11,9 @@ const Wapper = styled(Grid)(({ theme }) => ({
 }));
 
 function Numbers() {
-    const theme = useTheme();
+    const { response: number_data, loading } = useSelector(
+        (state) => state.get_user_number
+    );
 
     return (
         <Wapper container spacing={2}>
@@ -31,12 +33,7 @@ function Numbers() {
                 md={3}
                 sx={{ display: "flex", flexGrow: 1 }}
             >
-                <Card
-                    name="Admin"
-                    total={100}
-                    number={20}
-                    color="primary"
-                />
+                <Card name="Admin" total={100} number={20} color="primary" />
             </Grid>
             <Grid
                 item
@@ -59,12 +56,7 @@ function Numbers() {
                 md={3}
                 sx={{ display: "flex", flexGrow: 1 }}
             >
-                <Card
-                    name="User"
-                    total={100}
-                    number={43}
-                    color="success"
-                />
+                <Card name="User" total={100} number={43} color="success" />
             </Grid>
         </Wapper>
     );

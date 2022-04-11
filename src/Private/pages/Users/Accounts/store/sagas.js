@@ -22,6 +22,24 @@ export const getAllUser = takeEvery(
     }
 );
 
+export const getUserNumber = takeEvery(
+    actions.GET_ACCOUNT_NUMBER,
+    function* () {
+        try {
+            const res = yield call(api.get, `account/usertype`);
+            yield put({
+                type: actions.GET_ACCOUNT_NUMBER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_ACCOUNT_NUMBER_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 export const getUserDetails = takeEvery(
     actions.GET_ACCOUNT_USER_DETAILS,
     function* () {
@@ -133,6 +151,7 @@ export const deleteUser = takeEvery(
 export default function* saga() {
     yield all([
         getAllUser,
+        getUserNumber,
         getUserDetails,
         getUserDetailById,
         addUser,

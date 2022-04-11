@@ -10,13 +10,12 @@ import SyncAltOutlinedIcon from "@mui/icons-material/SyncAltOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
-import Switch from "@mui/material/Switch";
 
 import Table, {
     TablePagination,
 } from "./../../../../../../App/components/Table";
 import actions from "./../../store/actions";
-// import ControlledSwitch from "./../Switch";
+import Switch from "./../Switch";
 import AddAccount from "./../AddAccount";
 import Header from "./../Header";
 import Filter from "./../Filter";
@@ -48,29 +47,42 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.secondary.contrastText,
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
+    opacity: 0.9,
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.secondary.contrastText,
 }));
 
-// export function ControlledSwitch({ value, data, handleStatus }) {
-//     const [checked, setChecked] = React.useState(null);
+export function ControlledSwitch({ value, data }) {
+    const dispatch = useDispatch();
+    const [checked, setChecked] = React.useState(value);
 
-//     useEffect(() => {
-//         // setChecked(value);
-//     }, [value]);
+    const handleStatus = useCallback(
+        (e) => {
+            setChecked(e.target.checked);
+            dispatch(
+                actions.update_user_status(
+                    { is_active: e.target.checked },
+                    data?.id
+                )
+            );
+        },
+        [data]
+    );
 
-//     const handleChange = (event) => {
-//         setChecked(event.target.checked);
-//         handleStatus(event.target.checked, data?.id);
-//     };
-
-//     return <Switch size="small" checked={checked} onChange={handleChange} />;
-// }
+    return (
+        <Switch
+            size="small"
+            defaultValue={value}
+            checked={checked}
+            data={data}
+            handleStatus={handleStatus}
+        />
+    );
+}
 
 const initialState = {
     page_number: 1,
@@ -91,6 +103,9 @@ function AccountTable() {
     const { success: a_success } = useSelector((state) => state.add_user);
     const { success: u_success } = useSelector((state) => state.update_user);
     const { success: d_success } = useSelector((state) => state.delete_user);
+    // const { success: s_success } = useSelector(
+    //     (state) => state.update_user_status
+    // );
 
     useEffect(() => {
         dispatch(actions.get_all_user(filterSchema));
@@ -103,6 +118,7 @@ function AccountTable() {
         dispatch({ type: "ADD_ACCOUNT_USER_RESET" });
         dispatch({ type: "UPDATE_ACCOUNT_USER_RESET" });
         dispatch({ type: "DELETE_ACCOUNT_USER_RESET" });
+        dispatch({ type: "UPDATE_ACCOUNT_STATUS_RESET" });
     }, [d_success, u_success, a_success]);
 
     const columns = useMemo(() => [
@@ -123,8 +139,8 @@ function AccountTable() {
                     }}
                 >
                     <Avatar sx={{ fontSize: "15px" }}>
-                        {data.value.split(" ")[0][0]}
-                        {data.value.split(" ")[1][0]}
+                        {/* {data?.value.charAt(1)} */}
+                        {/* {data?.value.split(" ")[1][0]} */}
                     </Avatar>
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
                         {data.value}
@@ -174,15 +190,9 @@ function AccountTable() {
             width: 120,
             Cell: (data) => (
                 <SwitchWrapper textAlign="right" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
+                    <ControlledSwitch
+                        value={data?.value}
+                        data={data.row.original}
                     />
                 </SwitchWrapper>
             ),
@@ -289,9 +299,9 @@ function AccountTable() {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleStatus = useCallback((is_active, id) => {
-        dispatch(actions.update_user_status({ is_active: is_active }, id));
-    }, []);
+    // const handleStatus = useCallback((is_active, id) => {
+    //     dispatch(actions.update_user_status({ is_active: is_active }, id));
+    // }, []);
 
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
