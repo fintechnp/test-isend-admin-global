@@ -12,6 +12,9 @@ const CardWapper = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
+    "&:hover": {
+        background: theme.palette.background.light,
+    },
     border: `1px solid ${theme.palette.border.light}`,
 }));
 
@@ -62,7 +65,7 @@ function Card({ name, total, number, color }) {
                 </TotalNumber>
                 <BorderLinearProgress
                     variant="determinate"
-                    value={number}
+                    value={(number * 100) / total}
                     color={color}
                 />
             </BottomWraper>

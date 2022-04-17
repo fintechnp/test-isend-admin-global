@@ -7,7 +7,7 @@ const PermissionSkeleton = () => {
   return (
     <>
       <Grid container spacing={2} >
-        {Array.from(Array(8).keys()).map((row, index) => {
+        {Array.from(Array(12).keys()).map((row, index) => {
             return (
               <Grid item xs={12} sm={4} md={3} key={index}>
                 <SkeletonCard />

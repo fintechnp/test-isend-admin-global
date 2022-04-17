@@ -29,9 +29,8 @@ const actions = {
         id,
     }),
 
-    create_delivery_route: (id, data) => ({
+    create_delivery_route: (data) => ({
         type: actions.CREATE_DELIVERY_ROUTE,
-        id,
         data,
     }),
 

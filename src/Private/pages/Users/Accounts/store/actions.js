@@ -42,8 +42,9 @@ const actions = {
         query,
     }),
 
-    get_user_number: () => ({
+    get_user_number: (query) => ({
         type: actions.GET_ACCOUNT_NUMBER,
+        query,
     }),
 
     get_user_details: () => ({

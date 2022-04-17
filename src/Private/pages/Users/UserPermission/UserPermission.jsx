@@ -155,19 +155,17 @@ const UserPermission = () => {
                     <Grid item xs={12} sx={{ margin: 0 }}>
                         <Grid container>
                             {permission_data?.data &&
-                                permission_data?.data.map((data, index) => {
-                                    return (
-                                        <Grid
-                                            item
-                                            key={index}
-                                            xs={12}
-                                            sm={4}
-                                            md={3}
-                                        >
-                                            <Card data={data} />
-                                        </Grid>
-                                    );
-                                })}
+                                permission_data?.data.map((data, index) => (
+                                    <Grid
+                                        item
+                                        key={index}
+                                        xs={12}
+                                        sm={4}
+                                        md={3}
+                                    >
+                                        <Card data={data} />
+                                    </Grid>
+                                ))}
                         </Grid>
                     </Grid>
                 )}

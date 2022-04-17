@@ -64,24 +64,40 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 
 const DeliveryOptionForm = ({
     handleSubmit,
-    user_type,
+    partnerList,
     update,
     loading,
     buttonText,
     handleClose,
 }) => {
     const dispatch = useDispatch();
-    const [type, setType] = useState(false);
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
-    const partner_data = useSelector(
-        (state) => state.get_all_partner?.response
-    );
 
-    const handleType = (e) => {
-        setType(e.target.value);
-        if (e.target.value !== "PARTNER") {
-            dispatch(change("add_user_form", "agent_id", 0));
+    const convertCurrency = (iso3) => {
+        const currency = country.filter((data) => data.iso3 === iso3);
+        if (currency) {
+            return currency[0].currency;
+        }
+    };
+
+    const handleCurrency = (e) => {
+        if (update) {
+            dispatch(
+                change(
+                    "update_delivery_route_form",
+                    "payout_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
+        } else {
+            dispatch(
+                change(
+                    "add_delivery_route_form",
+                    "payout_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
         }
     };
 
@@ -94,14 +110,27 @@ const DeliveryOptionForm = ({
                             <Field
                                 name="send_agent_id"
                                 label="Sending Agent"
-                                type="text"
+                                type="number"
                                 small={12}
-                                component={TextField}
+                                component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
-                            />
+                            >
+                                <option value="" disabled>
+                                    Select Sending Agent
+                                </option>
+                                {partnerList &&
+                                    partnerList.map((data, index) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -109,12 +138,25 @@ const DeliveryOptionForm = ({
                                 label="Payout Agent"
                                 type="number"
                                 small={12}
-                                component={TextField}
+                                component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
-                            />
+                            >
+                                <option value="" disabled>
+                                    Select Payout Agent
+                                </option>
+                                {partnerList &&
+                                    partnerList.map((data) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -153,6 +195,7 @@ const DeliveryOptionForm = ({
                                 label="Country"
                                 type="number"
                                 small={12}
+                                onChange={handleCurrency}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -164,7 +207,10 @@ const DeliveryOptionForm = ({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
+                                        <option
+                                            value={data.iso3}
+                                            key={data.tid}
+                                        >
                                             {data.country}
                                         </option>
                                     ))}
@@ -189,35 +235,37 @@ const DeliveryOptionForm = ({
                                     country.map((data) => (
                                         <option
                                             value={data.currency}
-                                            key={data.id}
+                                            key={data.tid}
                                         >
-                                            {data.currency}
+                                            {data.currency_name}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
+                        {update && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Grid
+                                    container
+                                    alignItems="flex-end"
+                                    justifyContent="flex-end"
+                                >
+                                    <Grid item xs={12}>
+                                        <StatusText component="p">
+                                            Status
+                                        </StatusText>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Field
+                                            name="is_active"
+                                            label="Active"
+                                            small={12}
+                                            reverse="row-reverse"
+                                            component={CheckboxField}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </FieldWrapper>
+                            </FieldWrapper>
+                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>

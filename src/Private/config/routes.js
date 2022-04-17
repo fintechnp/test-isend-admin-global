@@ -58,7 +58,7 @@ const privateRoutes = [
     { path: "/user/accounts", component: <Accounts /> },
     { path: "/user/permission/:id", component: <UserPermission /> },
     { path: "/user/menu", component: <Menu /> },
-    { path: "/user/menu/sub/:id", component: <SubMenu /> },
+    { path: "/user/menu/sub/:name/:id", component: <SubMenu /> },
 
     { path: "/setup/delivery-option", component: <DeliveryOption /> },
     { path: "/setup/delivery-route", component: <DeliveryRoute /> },

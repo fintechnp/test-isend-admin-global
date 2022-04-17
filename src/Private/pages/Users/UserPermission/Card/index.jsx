@@ -47,7 +47,7 @@ const PermissionCard = ({ data }) => {
                 <CardContent>
                     <Header>{data?.name}</Header>
                     <Divider light />
-                    <Form />
+                    <Form sub_data={data?.sub_menu} length={data?.sub_menu.length}/>
                 </CardContent>
             </Card>
         </>

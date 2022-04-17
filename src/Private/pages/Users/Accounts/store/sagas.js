@@ -24,9 +24,9 @@ export const getAllUser = takeEvery(
 
 export const getUserNumber = takeEvery(
     actions.GET_ACCOUNT_NUMBER,
-    function* () {
+    function* (action) {
         try {
-            const res = yield call(api.get, `account/usertype`);
+            const res = yield call(api.get, `account/usertype`, action.query);
             yield put({
                 type: actions.GET_ACCOUNT_NUMBER_SUCCESS,
                 response: res,

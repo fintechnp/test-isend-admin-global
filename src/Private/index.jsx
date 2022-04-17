@@ -13,7 +13,7 @@ import {
 //permission
 import {
     GetAllPermissionReducer,
-    CreateUserPermissionRdcr,
+    UpdateUserPermissionRdcr,
     PermissionSaga,
 } from "./pages/Users/UserPermission/store";
 import {
@@ -129,7 +129,7 @@ export const privateReducer = {
 
     //permission
     get_all_permission: GetAllPermissionReducer,
-    create_user_permission: CreateUserPermissionRdcr,
+    update_user_permission: UpdateUserPermissionRdcr,
 
     //menu
     get_all_menu: GetAllMenuReducer,

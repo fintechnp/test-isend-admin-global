@@ -99,16 +99,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AddMenu({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const {
-        response: add_user,
-        success: add_success,
-        loading: add_loading,
-    } = useSelector((state) => state.add_user);
-    const {
-        response: update_user,
-        success: update_success,
-        loading: update_loading,
-    } = useSelector((state) => state.update_user);
+    const { success: add_success, loading: add_loading } = useSelector(
+        (state) => state.add_menu
+    );
+    const { success: update_success, loading: update_loading } = useSelector(
+        (state) => state.update_menu
+    );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -193,7 +189,6 @@ function AddMenu({ update_data, update }) {
                             onSubmit={handleMenuSubmit}
                             buttonText="Create"
                             form={`add_menu_form`}
-                            initialValues={{ is_active: false }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

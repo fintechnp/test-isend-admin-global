@@ -27,22 +27,22 @@ export const getAllPermission = takeEvery(
 );
 
 export const createUserPermission = takeEvery(
-    actions.CREATE_USER_PERMISSION,
+    actions.UPDATE_USER_PERMISSION,
     function* (action) {
         try {
             const res = yield call(
-                api.put,
+                api.patch,
                 `account/policies/${action.id}`,
                 action.data
             );
             yield put({
-                type: actions.CREATE_USER_PERMISSION_SUCCESS,
+                type: actions.UPDATE_USER_PERMISSION_SUCCESS,
                 response: res,
             });
             yield put({ type: "SET_TOAST_DATA", response: res });
         } catch (error) {
             yield put({
-                type: actions.CREATE_USER_PERMISSION_FAILED,
+                type: actions.UPDATE_USER_PERMISSION_FAILED,
                 error: error.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });

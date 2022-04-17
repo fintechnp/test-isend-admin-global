@@ -22,6 +22,12 @@ const TableContainer = styled("div")(({ theme }) => ({
     [theme.breakpoints.up("md")]: {
         paddingTop: theme.spacing(0.5),
     },
+    "& .MuiCollapse-wrapper:hover": {
+        background: theme.palette.primary.contrastText,
+    },
+    "& .MuiCollapse-wrapperInner:hover": {
+        background: theme.palette.primary.contrastText,
+    },
 }));
 
 const GlobalTable = styled(MuiTable)(({ theme }) => ({
@@ -41,6 +47,9 @@ const TableHead = styled(MuiTableHead)(({ theme }) => ({}));
 
 const BoxContainer = styled(Box)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.border.light}`,
+    "& :hover": {
+        background: theme.palette.background.light,
+    },
 }));
 
 const Table = ({
@@ -90,7 +99,7 @@ const Table = ({
         useFlexLayout,
         useExpanded,
         usePaginationHook,
-        useRowSelectHook,
+        useRowSelectHook
     );
 
     return (
@@ -173,19 +182,20 @@ const Table = ({
                                                 );
                                             })}
                                         </TableRow>
-                                        {row.isExpanded ? (
-                                            <SubComponent
-                                                index={row.index}
-                                                title={title}
-                                                handleEdit={handleEdit}
-                                                handleDelete={handleDelete}
-                                                sub_data={row?.original}
-                                                sub_columns={sub_columns}
-                                                toggleRowExpanded={
-                                                    toggleRowExpanded
-                                                }
-                                            />
-                                        ) : null}
+                                        {/* {row.isExpanded ? ( */}
+                                        <SubComponent
+                                            index={row.index}
+                                            title={title}
+                                            checked={row?.isExpanded}
+                                            handleEdit={handleEdit}
+                                            handleDelete={handleDelete}
+                                            sub_data={row?.original}
+                                            sub_columns={sub_columns}
+                                            toggleRowExpanded={
+                                                toggleRowExpanded
+                                            }
+                                        />
+                                        {/* ) : null} */}
                                     </BoxContainer>
                                 );
                             })

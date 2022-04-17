@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
 import AddSubMenu from "./components/AddSubMenu";
 import { Delete } from "./../../../../App/components";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -53,8 +54,7 @@ const StyledText = styled(Typography)(({ theme }) => ({
 
 const SubMenu = () => {
     const dispatch = useDispatch();
-    const { id } = useParams();
-    const navigate = useNavigate();
+    const { id, name } = useParams();
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
         page_size: 5,
@@ -79,111 +79,109 @@ const SubMenu = () => {
         dispatch({ type: "DELETE_SUB_MENU_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "menu_id",
-            maxWidth: 80,
-        },
-        {
-            Header: "Title",
-            accessor: "sub_title",
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center">
-                    <Typography>Order</Typography>
-                </Box>
-            ),
-            accessor: "menu_order",
-            Cell: (data) => (
-                <Box textAlign="center">
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="right" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            width: 120,
-            Cell: (data) => (
-                <SwitchWrapper textAlign="right" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Account Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Account Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <AddSubMenu update={true} update_data={row?.original} />
-                    <Delete
-                        parent_id={row.original.parent_id}
-                        id={row.original.menu_id}
-                        handleDelete={handleDelete}
-                        loading={d_loading}
-                        tooltext="Delete"
-                    />
-                </Box>
-            ),
-        },
-    ]);
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "menu_id",
+                maxWidth: 80,
+            },
+            {
+                Header: "Title",
+                accessor: "sub_title",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Order</Typography>
+                    </Box>
+                ),
+                accessor: "menu_order",
+                Cell: (data) => (
+                    <Box textAlign="center">
+                        <StyledText component="p">{data.value}</StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="right" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: "",
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <span {...row.getToggleRowExpandedProps({})}>
+                            {row.isExpanded ? (
+                                <Tooltip title="Hide Account Details" arrow>
+                                    <IconButton>
+                                        <VisibilityOffOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Show Account Details" arrow>
+                                    <IconButton>
+                                        <RemoveRedEyeOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </span>
+                        <AddSubMenu update={true} update_data={row?.original} />
+                        <Delete
+                            parent_id={row.original.parent_id}
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Delete"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const sub_columns = [
         { key: "menu_id", name: "Id" },
@@ -192,8 +190,12 @@ const SubMenu = () => {
         { key: "is_active", name: "Status" },
     ];
 
-    const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+    const handleStatus = useCallback((is_active, sub_id, parent_id) => {
+        dispatch(
+            actions.update_sub_menu_status(sub_id, parent_id, {
+                is_active: is_active,
+            })
+        );
     }, []);
 
     const handleChangePage = (e, newPage) => {
@@ -220,7 +222,7 @@ const SubMenu = () => {
 
     return (
         <MenuContainer>
-            <Header />
+            <Header name={name} />
             <Table
                 columns={columns}
                 title="Sub Menu"

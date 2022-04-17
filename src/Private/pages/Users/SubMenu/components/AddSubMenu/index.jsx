@@ -132,7 +132,13 @@ function AddSubMenu({ update_data, update }) {
     };
 
     const handleSubMenuUpdate = (data) => {
-        dispatch(actions.update_sub_menu(id, data.menu_id, data));
+        dispatch(
+            actions.update_sub_menu(
+                update_data?.tid,
+                update_data?.parent_id,
+                data
+            )
+        );
     };
 
     return (
@@ -174,8 +180,8 @@ function AddSubMenu({ update_data, update }) {
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                menu_id: memoizedData?.menu_id,
-                                name: memoizedData?.name,
+                                menu_id: memoizedData?.tid,
+                                name: memoizedData?.sub_title,
                                 menu_order: memoizedData?.menu_order,
                                 is_active: memoizedData?.is_active,
                             }}
@@ -194,7 +200,6 @@ function AddSubMenu({ update_data, update }) {
                             onSubmit={handleSubMenuSubmit}
                             buttonText="Create"
                             form={`add_sub_menu_form`}
-                            initialValues={{ is_active: false }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

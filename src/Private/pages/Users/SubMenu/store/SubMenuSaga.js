@@ -39,7 +39,7 @@ export const updateSubMenu = takeEvery(
         try {
             const res = yield call(
                 api.put,
-                `menu/${action.id}/${action.sub_id}`,
+                `menu/${action.parent_id}/${action.sub_id}`,
                 action.data
             );
             yield put({ type: actions.UPDATE_SUB_MENU_SUCCESS, response: res });
@@ -54,13 +54,37 @@ export const updateSubMenu = takeEvery(
     }
 );
 
+export const updateSubMenuStatus = takeEvery(
+    actions.UPDATE_SUB_MENU_STATUS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.patch,
+                `menu/${action.parent_id}/${action.sub_id}`,
+                action.data
+            );
+            yield put({
+                type: actions.UPDATE_SUB_MENU_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_SUB_MENU_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const deleteSubMenu = takeEvery(
     actions.DELETE_SUB_MENU,
     function* (action) {
         try {
             const res = yield call(
                 api.delete,
-                `menu/${action.id}/${action.sub_id}`
+                `menu/${action.parent_id}/${action.sub_id}`
             );
             yield put({ type: actions.DELETE_SUB_MENU_SUCCESS, response: res });
             yield put({ type: "SET_TOAST_DATA", response: res });
@@ -75,5 +99,11 @@ export const deleteSubMenu = takeEvery(
 );
 
 export default function* MenuSaga() {
-    yield all([getAllSubMenu, addSubMenu, updateSubMenu, deleteSubMenu]);
+    yield all([
+        getAllSubMenu,
+        addSubMenu,
+        updateSubMenu,
+        updateSubMenuStatus,
+        deleteSubMenu,
+    ]);
 }

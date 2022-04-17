@@ -85,7 +85,12 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleCountry, handleOrder, handlePayemntType }) {
+function Filter({
+    handleSearch,
+    handleCountry,
+    handleOrder,
+    handlePayemntType,
+}) {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
@@ -129,9 +134,7 @@ function Filter({ handleSearch, handleCountry, handleOrder, handlePayemntType })
                                 return value[0]?.country;
                             }}
                         >
-                            <MenuItem value="">
-                                All Country
-                            </MenuItem>
+                            <MenuItem value="">All Country</MenuItem>
                             {country.map((sort) => (
                                 <MenuItem value={sort.iso3} key={sort.iso3}>
                                     {sort.country}
@@ -203,4 +206,4 @@ function Filter({ handleSearch, handleCountry, handleOrder, handlePayemntType })
     );
 }
 
-export default Filter;
+export default React.memo(Filter);
