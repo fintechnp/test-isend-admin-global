@@ -56,6 +56,8 @@ import {
     AddPartnerReducer,
     UpdatePartnerReducer,
     DeletePartnerReducer,
+    GetSendingPartnerReducer,
+    GetPayoutPartnerReducer,
     PartnerSaga,
 } from "./pages/Setup/Partner/store";
 
@@ -160,6 +162,8 @@ export const privateReducer = {
 
     //partner
     get_all_partner: GetAllPartnerReducer,
+    get_sending_partner: GetSendingPartnerReducer,
+    get_payout_partner: GetPayoutPartnerReducer,
     get_partner_details: GetPartnerDetailsReducer,
     add_partner: AddPartnerReducer,
     update_partner: UpdatePartnerReducer,

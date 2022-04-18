@@ -26,6 +26,7 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
     },
     "& .MuiFormHelperText-root": {
         background: "transparent",
+        marginLeft: "0px",
     },
 }));
 

@@ -100,7 +100,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const filter = {
     page_number: 1,
     page_size: 100,
-    agent_type: "PAY",
+    agent_type: "SEND",
+    country: "",
     sort_by: "name",
     order_by: "ASC",
 };
@@ -108,23 +109,42 @@ const filter = {
 function AddDeliveryRoute({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { response: partner_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_partner
+    const [filterSchemaPay, setFilterSchemaPay] = React.useState({
+        page_number: 1,
+        page_size: 100,
+        agent_type: "PAY",
+        country: "",
+        sort_by: "name",
+        order_by: "ASC",
+    });
+    const { response: partner_sending } = useSelector(
+        (state) => state.get_sending_partner
+    );
+    const { response: partner_payout } = useSelector(
+        (state) => state.get_payout_partner
     );
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_user
+        (state) => state.create_delivery_route
     );
     const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_user
+        (state) => state.update_delivery_route
     );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
         if (open) {
-            dispatch(PartnerActions.get_all_partner(filter));
+            dispatch(PartnerActions.get_sending_partner(filter));
         }
-    }, [open]);
+    }, [dispatch, open]);
+
+    React.useEffect(() => {
+        if (open && filterSchemaPay?.country) {
+            dispatch(PartnerActions.get_payout_partner(filterSchemaPay));
+        } else if (open && !filterSchemaPay?.country) {
+            dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
+        }
+    }, [open, filterSchemaPay]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
@@ -137,6 +157,11 @@ function AddDeliveryRoute({ update_data, update }) {
     };
 
     const handleClose = () => {
+        const updatedFilterPay = {
+            ...filterSchemaPay,
+            country: "",
+        };
+        setFilterSchemaPay(updatedFilterPay);
         setOpen(false);
     };
 
@@ -147,6 +172,17 @@ function AddDeliveryRoute({ update_data, update }) {
     const handleRouteUpdate = (data) => {
         dispatch(actions.update_delivery_route(data.tid, data));
     };
+
+    const handleAgent = React.useCallback(
+        (country) => {
+            const updatedFilterPay = {
+                ...filterSchemaPay,
+                country: country,
+            };
+            setFilterSchemaPay(updatedFilterPay);
+        },
+        [filterSchemaPay]
+    );
 
     return (
         <div>
@@ -198,11 +234,13 @@ function AddDeliveryRoute({ update_data, update }) {
                             onSubmit={handleRouteUpdate}
                             buttonText="Update"
                             update={update}
-                            user_type={update_data?.user_type}
+                            payout_country={memoizedData?.payout_country}
                             loading={update_loading}
                             form={`update_delivery_route_form`}
                             handleClose={handleClose}
-                            partnerList={partner_data?.data || []}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
                         />
                     ) : (
                         <AccountForm
@@ -212,8 +250,10 @@ function AddDeliveryRoute({ update_data, update }) {
                             buttonText="Create"
                             form={`add_delivery_route_form`}
                             loading={add_loading}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
                             handleClose={handleClose}
-                            partnerList={partner_data?.data || []}
                         />
                     )}
                 </DialogContent>

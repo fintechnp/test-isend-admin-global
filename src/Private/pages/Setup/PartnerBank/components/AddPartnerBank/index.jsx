@@ -13,10 +13,11 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { Box } from "@mui/material";
 
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
-import { Box } from "@mui/material";
+import PartnerActions from "./../../../Partner/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -96,17 +97,35 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const filter = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "PAY",
+    country: "",
+    sort_by: "name",
+    order_by: "ASC",
+};
+
 function AddPartnerBank({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    const { response: partner_payout } = useSelector(
+        (state) => state.get_payout_partner
+    );
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_user
+        (state) => state.create_partner_bank
     );
     const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_user
+        (state) => state.update_partner_bank
     );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
+
+    React.useEffect(() => {
+        if (open) {
+            dispatch(PartnerActions.get_payout_partner(filter));
+        }
+    }, [dispatch, open]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
@@ -122,12 +141,12 @@ function AddPartnerBank({ update_data, update }) {
         setOpen(false);
     };
 
-    const handleMenuSubmit = (data) => {
-        dispatch(actions.create_delivery_route(data));
+    const handlePartnerBankSubmit = (data) => {
+        dispatch(actions.create_partner_bank(data));
     };
 
-    const handleMenuUpdate = (data) => {
-        dispatch(actions.update_delivery_route(data.menu_id, data));
+    const handlePartnerBankUpdate = (data) => {
+        dispatch(actions.update_partner_bank(data.tid, data));
     };
 
     return (
@@ -169,28 +188,37 @@ function AddPartnerBank({ update_data, update }) {
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                menu_id: memoizedData?.menu_id,
-                                name: memoizedData?.name,
-                                menu_order: memoizedData?.menu_order,
+                                tid: memoizedData?.tid,
+                                bank_name: memoizedData?.bank_name,
+                                country: memoizedData?.country,
+                                currency: memoizedData?.currency,
+                                agent_id: memoizedData?.agent_id,
+                                payment_type: memoizedData?.payment_type,
+                                external_bank_code:
+                                    memoizedData?.external_bank_code,
+                                external_bank_code1:
+                                    memoizedData?.external_bank_code1,
+                                external_bank_code2:
+                                    memoizedData?.external_bank_code2,
                                 is_active: memoizedData?.is_active,
                             }}
-                            onSubmit={handleMenuUpdate}
+                            onSubmit={handlePartnerBankUpdate}
                             buttonText="Update"
                             update={update}
-                            user_type={update_data?.user_type}
                             loading={update_loading}
-                            form={`update_delivery_route_form`}
+                            form={`update_partner_bank_form`}
+                            partner_payout={partner_payout?.data || []}
                             handleClose={handleClose}
                         />
                     ) : (
                         <AccountForm
                             update={update}
                             enableReinitialize={true}
-                            onSubmit={handleMenuSubmit}
+                            onSubmit={handlePartnerBankSubmit}
                             buttonText="Create"
-                            form={`add_delivery_route_form`}
-                            initialValues={{ is_active: false }}
+                            form={`add_partner_bank_form`}
                             loading={add_loading}
+                            partner_payout={partner_payout?.data || []}
                             handleClose={handleClose}
                         />
                     )}

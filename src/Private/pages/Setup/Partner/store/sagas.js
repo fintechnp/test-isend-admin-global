@@ -15,6 +15,44 @@ export const getAllAgent = takeEvery(actions.GET_PARTNER, function* (action) {
     }
 });
 
+export const getSendingAgent = takeEvery(
+    actions.GET_SENDING_PARTNER,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `agent`, action.query);
+            yield put({
+                type: actions.GET_SENDING_PARTNER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_SENDING_PARTNER_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const getPayoutAgent = takeEvery(
+    actions.GET_PAYOUT_PARTNER,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `agent`, action.query);
+            yield put({
+                type: actions.GET_PAYOUT_PARTNER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_PAYOUT_PARTNER_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const getAgentDetails = takeEvery(
     actions.GET_PARTNER_DETAILS,
     function* (action) {
@@ -171,6 +209,8 @@ export const deleteCorridor = takeEvery(
 export default function* saga() {
     yield all([
         getAllAgent,
+        getSendingAgent,
+        getPayoutAgent,
         getAgentDetails,
         addAgent,
         updateAgent,

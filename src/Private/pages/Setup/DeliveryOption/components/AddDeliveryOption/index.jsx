@@ -109,7 +109,7 @@ function AddDeliveryOption({ update_data, update }) {
         order_by: "ASC",
     });
     const { response: partner_data } = useSelector(
-        (state) => state.get_all_partner
+        (state) => state.get_payout_partner
     );
     const { success: add_success, loading: add_loading } = useSelector(
         (state) => state.add_delivery_option
@@ -122,9 +122,9 @@ function AddDeliveryOption({ update_data, update }) {
 
     React.useEffect(() => {
         if (open && filterSchema?.country) {
-            dispatch(PartnerActions.get_all_partner(filterSchema));
-        } else {
-            dispatch({ type: "GET_PARTNER_RESET" });
+            dispatch(PartnerActions.get_payout_partner(filterSchema));
+        } else if (open && !filterSchema?.country) {
+            dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
         }
     }, [open, filterSchema]);
 
