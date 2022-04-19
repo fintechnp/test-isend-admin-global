@@ -1,6 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
+
+import AddCorridor from "./AddCorridor";
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -8,10 +10,16 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
+const AddButton = styled(Button)(({ theme }) => ({
+    padding: "6px 12px",
+    textTransform: "capitalize",
+}));
+
 function Header() {
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>Mapping List</Typography>
+            <Typography sx={{ fontSize: "22px" }}>Corridor List</Typography>
+            <AddCorridor />
         </HeaderWrapper>
     );
 }

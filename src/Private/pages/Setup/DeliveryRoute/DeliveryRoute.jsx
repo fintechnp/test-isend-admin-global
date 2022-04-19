@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
@@ -71,7 +70,6 @@ const initialState = {
 
 const DeliveryRoute = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: deliveryroute_data, loading: g_loading } = useSelector(
@@ -89,9 +87,8 @@ const DeliveryRoute = () => {
 
     useEffect(() => {
         dispatch(actions.get_delivery_route(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "CREATE_DELIVERY_ROUTE_RESET" });
+        dispatch({ type: "UPDATE_DELIVERY_ROUTE_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
     const columns = useMemo(
@@ -189,7 +186,11 @@ const DeliveryRoute = () => {
                 ),
             },
             {
-                Header: "",
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
                 accessor: "show",
                 Cell: ({ row }) => (
                     <Box

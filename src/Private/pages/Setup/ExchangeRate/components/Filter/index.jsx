@@ -103,7 +103,7 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
 
             <DropWrapper>
                 <Box>
-                <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleSort}
                             displayEmpty

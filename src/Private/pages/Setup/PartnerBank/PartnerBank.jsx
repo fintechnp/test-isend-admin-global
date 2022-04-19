@@ -14,17 +14,16 @@ import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddPartnerBank from "./components/AddPartnerBank";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
+import Table, { TablePagination } from "./../../../../App/components/Table";
 import {
     CountryName,
     CurrencyName,
     ReferenceName,
 } from "./../../../../App/helpers";
+import Unmap from "../../../../App/components/Dialog/Unmap";
+import PartnerActions from "./../Partner/store/actions";
 
-const MenuContainer = styled("div")(({ theme }) => ({
+const PartnerBankContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
     borderRadius: "6px",
     width: "100%",
@@ -57,6 +56,15 @@ const StyledText = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
+const filter = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "PAY",
+    country: "",
+    sort_by: "name",
+    order_by: "ASC",
+};
+
 const PartnerBank = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -75,6 +83,9 @@ const PartnerBank = () => {
     const { loading: d_loading, success: d_success } = useSelector(
         (state) => state.delete_partner_bank
     );
+    const { loading: un_loading, success: un_success } = useSelector(
+        (state) => state.unmapp_partner_bank
+    );
     const { success: a_success } = useSelector(
         (state) => state.create_partner_bank
     );
@@ -82,9 +93,17 @@ const PartnerBank = () => {
         (state) => state.update_partner_bank
     );
 
+    React.useEffect(() => {
+        dispatch(PartnerActions.get_payout_partner(filter));
+    }, [dispatch, a_success, u_success]);
+
     useEffect(() => {
         dispatch(actions.get_all_partner_bank(filterSchema));
-    }, [dispatch, filterSchema, d_success, a_success, u_success]);
+        dispatch({ type: "UPDATE_PARTNER_BANK_RESET" });
+        dispatch({ type: "CREATE_PARTNER_BANK_RESET" });
+        dispatch({ type: "DELETE_PARTNER_BANK_RESET" });
+        dispatch({ type: "MAP_PARTNER_BANK_RESET" });
+    }, [dispatch, filterSchema, d_success, a_success, u_success, un_success]);
 
     const columns = useMemo(
         () => [
@@ -176,7 +195,7 @@ const PartnerBank = () => {
                         ) : (
                             <Tooltip title="Not Mapped" arrow>
                                 <RemoveCircleOutlineIcon
-                                    sx={{ color: "danger.main" }}
+                                    sx={{ color: "border.main" }}
                                 />
                             </Tooltip>
                         )}
@@ -184,7 +203,11 @@ const PartnerBank = () => {
                 ),
             },
             {
-                Header: "",
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
                 accessor: "show",
                 Cell: ({ row }) => (
                     <Box
@@ -228,26 +251,21 @@ const PartnerBank = () => {
                             update_data={row?.original}
                         />
                         {row?.original?.is_mapped ? (
-                            <Tooltip title="UnMap Partner Bank" arrow>
-                                <IconButton
-                                    onClick={() =>
-                                        handleMap(row?.original?.tid)
-                                    }
-                                >
-                                    <CableIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            background: "danger.main",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
+                            <Unmap
+                                success={un_success}
+                                id={row.original.tid}
+                                handleMapUnmap={handleUnmap}
+                                loading={un_loading}
+                                title="Do you want to unmap this partner bank?"
+                                information="You have to remap after unmapping this. Make sure before
+                                unmapping."
+                            />
                         ) : (
                             <Tooltip title="Map Partner Bank" arrow>
                                 <IconButton
                                     onClick={() =>
                                         navigate(
-                                            `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}`
+                                            `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}/${row?.original?.tid}`
                                         )
                                     }
                                 >
@@ -263,7 +281,7 @@ const PartnerBank = () => {
                 ),
             },
         ],
-        []
+        [un_success]
     );
 
     const sub_columns = [
@@ -278,7 +296,7 @@ const PartnerBank = () => {
         { key: "is_mapped", name: "Mapping Status" },
     ];
 
-    const handleMap = useCallback((id) => {
+    const handleUnmap = useCallback((id) => {
         dispatch(actions.map_partner_bank(id, { payout_location_id: 0 }));
     }, []);
 
@@ -343,9 +361,13 @@ const PartnerBank = () => {
         dispatch(actions.delete_partner_bank(id));
     };
 
+    const handleCloseDialog = () => {
+        dispatch(PartnerActions.get_payout_partner(filter));
+    };
+
     return (
-        <MenuContainer>
-            <Header />
+        <PartnerBankContainer>
+            <Header handleCloseDialog={handleCloseDialog} />
             <Filter
                 handleSearch={handleSearch}
                 handleFilterAgent={handleFilterAgent}
@@ -368,7 +390,7 @@ const PartnerBank = () => {
                     />
                 )}
             />
-        </MenuContainer>
+        </PartnerBankContainer>
     );
 };
 

@@ -81,14 +81,9 @@ const privateRoutes = [
     { path: "/setup/partner/update/:id", component: <AddUpdatePartner /> },
     { path: "/setup/partner/details/:id", component: <PartnerDetails /> },
     { path: "/setup/partner/corridor/:id", component: <Corridor /> },
-    { path: "/setup/partner/corridor/add", component: <AddUpdateCorridor /> },
-    {
-        path: "/setup/partner/corridor/update/:id",
-        component: <AddUpdateCorridor />,
-    },
     { path: "/setup/partner-bank", component: <PartnerBank /> },
     {
-        path: "/setup/partner-bank/map/:payment/:country/:currency",
+        path: "/setup/partner-bank/map/:payment/:country/:currency/:id",
         component: <MapBank />,
     },
     { path: "/setup/payout-location", component: <PayoutLocation /> },

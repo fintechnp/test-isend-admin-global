@@ -100,28 +100,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AddPayoutLocation({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const [filterSchema, setFilterSchema] = React.useState({
-        page_number: 1,
-        page_size: 100,
-        agent_type: "SEND",
-        sort_by: "name",
-        order_by: "ASC",
-    });
-    const { response: partner_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_partner
-    );
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_user
+        (state) => state.add_payout_location
     );
     const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_user
+        (state) => state.update_payout_location
     );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
-
-    React.useEffect(() => {
-        dispatch(PartnerActions.get_all_partner(filterSchema));
-    }, [dispatch, filterSchema]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
@@ -137,12 +123,12 @@ function AddPayoutLocation({ update_data, update }) {
         setOpen(false);
     };
 
-    const handleMenuSubmit = (data) => {
-        dispatch(actions.create_delivery_route(data));
+    const handlePayoutLocationSubmit = (data) => {
+        dispatch(actions.add_payout_location(data));
     };
 
-    const handleMenuUpdate = (data) => {
-        dispatch(actions.update_delivery_route(data.menu_id, data));
+    const handlePayoutLocationUpdate = (data) => {
+        dispatch(actions.update_payout_location(data.tid, data));
     };
 
     return (
@@ -184,29 +170,28 @@ function AddPayoutLocation({ update_data, update }) {
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                menu_id: memoizedData?.menu_id,
-                                name: memoizedData?.name,
-                                menu_order: memoizedData?.menu_order,
+                                tid: memoizedData?.tid,
+                                location_name: memoizedData?.location_name,
+                                location_code: memoizedData?.location_code,
+                                country: memoizedData?.country,
+                                currency: memoizedData?.currency,
+                                payment_type: memoizedData?.payment_type,
                                 is_active: memoizedData?.is_active,
                             }}
-                            onSubmit={handleMenuUpdate}
+                            onSubmit={handlePayoutLocationUpdate}
                             buttonText="Update"
                             update={update}
-                            partnerList={partner_data?.data || []}
-                            user_type={update_data?.user_type}
                             loading={update_loading}
-                            form={`update_delivery_route_form`}
+                            form={`update_payout_location_form`}
                             handleClose={handleClose}
                         />
                     ) : (
                         <AccountForm
                             update={update}
                             enableReinitialize={true}
-                            onSubmit={handleMenuSubmit}
+                            onSubmit={handlePayoutLocationSubmit}
                             buttonText="Create"
-                            partnerList={partner_data?.data || []}
-                            form={`add_delivery_route_form`}
-                            initialValues={{ is_active: false }}
+                            form={`add_payout_location_form`}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

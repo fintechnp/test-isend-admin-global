@@ -8,6 +8,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
+import { useSelector } from "react-redux";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -89,7 +90,9 @@ const orderData = [
 ];
 
 function Filter({ handleSearch, handleFilterAgent, handleOrder, handleSort }) {
-    const country = JSON.parse(localStorage.getItem("country"));
+    const { response: partner_payout } = useSelector(
+        (state) => state.get_payout_partner
+    );
 
     return (
         <FilterWrapper>
@@ -117,11 +120,14 @@ function Filter({ handleSearch, handleFilterAgent, handleOrder, handleSort }) {
                             displayEmpty
                             defaultValue=""
                         >
-                            <option value="">All Agent</option>
-                            {country &&
-                                country.map((sort) => (
-                                    <option value={sort.iso3} key={sort.iso3}>
-                                        {sort.country}
+                            <option value="">All Partner</option>
+                            {partner_payout?.data &&
+                                partner_payout?.data.map((data) => (
+                                    <option
+                                        value={data.agent_id}
+                                        key={data?.tid}
+                                    >
+                                        {data.name}
                                     </option>
                                 ))}
                         </Select>

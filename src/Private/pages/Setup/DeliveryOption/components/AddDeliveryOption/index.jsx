@@ -131,6 +131,8 @@ function AddDeliveryOption({ update_data, update }) {
     React.useEffect(() => {
         if (add_success || update_success) {
             setOpen(false);
+            dispatch({ type: "ADD_DELIVERY_OPTION_RESET" });
+            dispatch({ type: "UPDATE_DELIVERY_OPTION_RESET" });
         }
     }, [add_success, update_success]);
 

@@ -102,7 +102,7 @@ export const updatePartnerBank = takeEvery(
     }
 );
 
-export const mapPartnerBank = takeEvery(
+export const unmapPartnerBank = takeEvery(
     actions.MAP_PARTNER_BANK,
     function* (action) {
         const query = api.getJSONToQueryStr(action.data);
@@ -154,6 +154,6 @@ export default function* saga() {
         createPartnerBank,
         updatePartnerBank,
         deletePartnerBank,
-        mapPartnerBank,
+        unmapPartnerBank,
     ]);
 }

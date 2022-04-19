@@ -158,7 +158,11 @@ const Partner = () => {
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -217,16 +221,6 @@ const Partner = () => {
             ),
         },
     ]);
-
-    const sub_columns = [
-        { key: "delivery_option_id", name: "Id" },
-        { key: "delivery_name", name: "Name" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "country_code", name: "Country" },
-        { key: "currency_code", name: "Currency" },
-        { key: "agent_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
-    ];
 
     const handleStatus = useCallback((is_active, id) => {
         // dispatch(actions.update_user_status({ is_active: is_active }, id));
@@ -295,11 +289,7 @@ const Partner = () => {
 
     return (
         <MenuContainer>
-            <Header
-                title="Our Partner List"
-                buttonText="Add Partner"
-                partner={true}
-            />
+            <Header />
             <Filter
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}
@@ -309,7 +299,6 @@ const Partner = () => {
             <Table
                 columns={columns}
                 data={partner_data?.data || []}
-                sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
                 renderPagination={() => (

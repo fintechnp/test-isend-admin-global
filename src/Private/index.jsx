@@ -76,6 +76,7 @@ import {
     CreatePartnerBankReducer,
     UpdatePartnerBankReducer,
     DeletePartnerBankReducer,
+    UnmapPartnerBankReducer,
     PartnerBankSaga,
 } from "./pages/Setup/PartnerBank/store";
 
@@ -183,6 +184,7 @@ export const privateReducer = {
     create_partner_bank: CreatePartnerBankReducer,
     update_partner_bank: UpdatePartnerBankReducer,
     delete_partner_bank: DeletePartnerBankReducer,
+    unmapp_partner_bank: UnmapPartnerBankReducer,
 
     //payout location
     get_all_payout_location: GetAllPayoutLocationReducer,

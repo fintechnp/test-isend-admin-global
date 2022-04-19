@@ -19,23 +19,19 @@ function Header({ title, buttonText, partner }) {
     const navigate = useNavigate();
 
     const handleAdd = () => {
-        if (partner) {
-            navigate("/setup/partner/create");
-        } else {
-            navigate("/setup/partner/corridor/add");
-        }
+        navigate("/setup/partner/create");
     };
 
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+            <Typography sx={{ fontSize: "22px" }}>Our Partner List</Typography>
             <AddButton
                 size="small"
                 variant="outlined"
                 onClick={handleAdd}
                 endIcon={<AddIcon />}
             >
-                {buttonText}
+                Add Partner
             </AddButton>
         </HeaderWrapper>
     );

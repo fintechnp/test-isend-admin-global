@@ -11,7 +11,10 @@ import actions from "../store/actions";
 import Header from "../components/Header";
 import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
-import Table, { TablePagination } from "./../../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../../App/components/Table";
 import {
     CountryName,
     CurrencyName,
@@ -204,15 +207,10 @@ const ServiceChargeList = () => {
             maxWidth: 180,
             Cell: (data) => (
                 <SwitchWrapper textAlign="center" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
+                    <TableSwitch
+                        value={data?.value}
+                        data={data.row.original}
+                        handleStatus={handleStatus}
                     />
                 </SwitchWrapper>
             ),
@@ -263,16 +261,6 @@ const ServiceChargeList = () => {
             ),
         },
     ]);
-
-    const sub_columns = [
-        { key: "delivery_option_id", name: "Id" },
-        { key: "delivery_name", name: "Name" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "country_code", name: "Country" },
-        { key: "currency_code", name: "Currency" },
-        { key: "agent_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
-    ];
 
     const handleStatus = useCallback((is_active, id) => {
         // dispatch(actions.update_user_status({ is_active: is_active }, id));
@@ -355,7 +343,6 @@ const ServiceChargeList = () => {
                 columns={columns}
                 title="Service Charge Details"
                 data={servicecharge_data?.data || []}
-                sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
                 renderPagination={() => (

@@ -90,9 +90,7 @@ const DeliveryOption = () => {
 
     useEffect(() => {
         dispatch(actions.get_all_delivery_option(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "DELETE_DELIVERY_OPTION_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
     const columns = useMemo(
@@ -194,7 +192,11 @@ const DeliveryOption = () => {
                 ),
             },
             {
-                Header: "",
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
                 accessor: "show",
                 Cell: ({ row }) => (
                     <Box

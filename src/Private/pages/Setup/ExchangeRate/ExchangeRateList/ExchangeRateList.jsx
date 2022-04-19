@@ -180,7 +180,11 @@ const ExchangeRateList = () => {
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box

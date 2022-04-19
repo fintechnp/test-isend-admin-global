@@ -24,7 +24,7 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
     },

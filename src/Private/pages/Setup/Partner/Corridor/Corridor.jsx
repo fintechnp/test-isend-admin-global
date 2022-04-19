@@ -4,13 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Switch, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
+import Header from "./Header";
+import AddCorridor from "./AddCorridor";
 import actions from "../store/actions";
-import Header from "../components/Header";
-import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
 
@@ -53,18 +52,13 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    country: "",
-    currency: "",
-    agent_type: "",
-    search: "",
-    sort_by: "country",
+    sort_by: "name",
     order_by: "ASC",
 };
 
 const Corridor = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: corridor_data, loading: g_loading } = useSelector(
@@ -159,7 +153,11 @@ const Corridor = () => {
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -192,21 +190,7 @@ const Corridor = () => {
                             </Tooltip>
                         )}
                     </span>
-                    <Tooltip title="Edit Corridor" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/corridor/update/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
+                    <AddCorridor update={true} update_data={row?.original} />
                     <Delete tooltext="Delete Corridor" />
                 </Box>
             ),
@@ -224,7 +208,9 @@ const Corridor = () => {
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+        dispatch(
+            actions.update_payout_location_status(id, { is_active: is_active })
+        );
     }, []);
 
     const handleSearch = useCallback(
@@ -290,13 +276,7 @@ const Corridor = () => {
 
     return (
         <MenuContainer>
-            <Header title="Corridor List" buttonText="Add Corridor" />
-            <Filter
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
-            />
+            <Header />
             <Table
                 columns={columns}
                 title="Corridor Details"
