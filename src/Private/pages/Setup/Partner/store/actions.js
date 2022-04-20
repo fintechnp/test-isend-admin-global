@@ -41,14 +41,17 @@ const actions = {
     ADD_CORRIDOR: "ADD_CORRIDOR",
     ADD_CORRIDOR_SUCCESS: "ADD_CORRIDOR_SUCCESS",
     ADD_CORRIDOR_FAILED: "ADD_CORRIDOR_FAILED",
+    ADD_CORRIDOR_RESET: "ADD_CORRIDOR_RESET",
 
     UPDATE_CORRIDOR: "UPDATE_CORRIDOR",
     UPDATE_CORRIDOR_SUCCESS: "UPDATE_CORRIDOR_SUCCESS",
     UPDATE_CORRIDOR_FAILED: "UPDATE_CORRIDOR_FAILED",
+    UPDATE_CORRIDOR_RESET: "UPDATE_CORRIDOR_RESET",
 
     DELETE_CORRIDOR: "DELETE_CORRIDOR",
     DELETE_CORRIDOR_SUCCESS: "DELETE_CORRIDOR_SUCCESS",
     DELETE_CORRIDOR_FAILED: "DELETE_CORRIDOR_FAILED",
+    DELETE_CORRIDOR_RESET: "DELETE_CORRIDOR_RESET",
 
     //PARTNER
     get_all_partner: (query) => ({
@@ -99,14 +102,16 @@ const actions = {
         id,
     }),
 
-    add_corridor: (data) => ({
+    add_corridor: (parent_id, data) => ({
         type: actions.ADD_CORRIDOR,
         data,
+        parent_id,
     }),
 
-    update_corridor: (id, data) => ({
+    update_corridor: (c_id, parent_id, data) => ({
         type: actions.UPDATE_CORRIDOR,
-        id,
+        c_id,
+        parent_id,
         data,
     }),
 

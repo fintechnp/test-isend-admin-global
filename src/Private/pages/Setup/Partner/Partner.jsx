@@ -50,6 +50,29 @@ const StyledText = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
+const UnBlocked = styled(Box)(({ theme }) => ({
+    opacity: 0.8,
+    fontSize: "15px",
+    borderRadius: "6px",
+    padding: "3px 12px",
+    color: theme.palette.border.light,
+    background: theme.palette.success.main,
+    "&:hover": {
+        background: theme.palette.success.main,
+    },
+}));
+
+const Blocked = styled(Box)(({ theme }) => ({
+    opacity: 0.8,
+    fontSize: "15px",
+    borderRadius: "6px",
+    padding: "3px 12px",
+    background: theme.palette.border.light,
+    "&:hover": {
+        background: theme.palette.border.light,
+    },
+}));
+
 const initialState = {
     page_number: 1,
     page_size: 15,
@@ -144,16 +167,15 @@ const Partner = () => {
             accessor: "is_active",
             Cell: (data) => (
                 <SwitchWrapper textAlign="center" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
+                    {data.value ? (
+                        <Tooltip title="Unblocked" arrow>
+                            <UnBlocked>Active</UnBlocked>
+                        </Tooltip>
+                    ) : (
+                        <Tooltip title="Blocked" arrow>
+                            <Blocked>Blocked</Blocked>
+                        </Tooltip>
+                    )}
                 </SwitchWrapper>
             ),
         },
@@ -183,6 +205,9 @@ const Partner = () => {
                             <RemoveRedEyeOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -198,6 +223,9 @@ const Partner = () => {
                             <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -213,6 +241,9 @@ const Partner = () => {
                             <SubdirectoryArrowRightOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>

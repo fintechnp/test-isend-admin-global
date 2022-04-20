@@ -159,7 +159,11 @@ export const getCorridorDetails = takeEvery(
 
 export const addCorridor = takeEvery(actions.ADD_CORRIDOR, function* (action) {
     try {
-        const res = yield call(api.post, `agent/corridor`, action.data);
+        const res = yield call(
+            api.post,
+            `agent/${action.parent_id}/corridor`,
+            action.data
+        );
         yield put({ type: actions.ADD_CORRIDOR_SUCCESS, response: res });
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
@@ -174,7 +178,7 @@ export const updateCorridor = takeEvery(
         try {
             const res = yield call(
                 api.put,
-                `agent/corridor/${action.id}`,
+                `agent/${action.parent_id}/corridor/${action.c_id}`,
                 action.data
             );
             yield put({ type: actions.UPDATE_CORRIDOR_SUCCESS, response: res });

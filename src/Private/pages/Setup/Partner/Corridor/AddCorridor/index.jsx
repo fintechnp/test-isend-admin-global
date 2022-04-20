@@ -10,13 +10,14 @@ import { Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import MuiEditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 
 import CorridorForm from "./Form";
 import actions from "./../../store/actions";
+import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -30,8 +31,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UpdateButton = styled(IconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
+    color: theme.palette.border.dark,
+    "&:hover": {
+        background: theme.palette.border.light,
+        opacity: 1,
+    },
+}));
+
+const EditOutlinedIcon = styled(MuiEditOutlinedIcon)(({ theme }) => ({
+    fontSize: "20px",
+    opacity: 1,
+    "&:hover": {
+        background: "transparent",
+    },
 }));
 
 const AddButton = styled(Button)(({ theme }) => ({
@@ -98,6 +110,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function AddCorridor({ update_data, update }) {
     const dispatch = useDispatch();
+    const { id } = useParams();
     const [open, setOpen] = React.useState(false);
     const { success: add_success, loading: add_loading } = useSelector(
         (state) => state.add_corridor
@@ -123,23 +136,21 @@ function AddCorridor({ update_data, update }) {
     };
 
     const handleCorridorSubmit = (data) => {
-        dispatch(actions.update_corridor(data));
+        data.is_active = !data.is_active;
+        dispatch(actions.add_corridor(id, data));
     };
 
     const handleCorridorUpdate = (data) => {
-        dispatch(actions.update_corridor(update_data?.tid, data));
+        data.is_active = !data.is_active;
+        dispatch(actions.update_corridor(update_data?.tid, id, data));
     };
 
     return (
         <div>
             {update ? (
                 <Tooltip title="Edit Corridor" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                            }}
-                        />
+                    <UpdateButton disableRipple onClick={handleClickOpen}>
+                        <EditOutlinedIcon />
                     </UpdateButton>
                 </Tooltip>
             ) : (
@@ -175,6 +186,7 @@ function AddCorridor({ update_data, update }) {
                                 country: memoizedData?.country,
                                 transaction_currency:
                                     memoizedData?.transaction_currency,
+                                is_active: !memoizedData?.is_active,
                             }}
                             onSubmit={handleCorridorUpdate}
                             buttonText="Update"

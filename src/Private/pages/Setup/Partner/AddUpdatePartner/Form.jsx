@@ -1,260 +1,166 @@
-import React, { useState } from "react";
+import * as React from "react";
 import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../App/utils/validators";
+import Basic from "./Basic";
 
-const Container = styled(Grid)(({ theme }) => ({
-    borderRadius: "5px",
-    [theme.breakpoints.up("sm")]: {
-        minWidth: "350px",
-    },
-}));
-
-const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
+const CompletedWrapper = styled(Box)(({ theme }) => ({
+    marginTop: "16px",
+    minHeight: "140px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "32px 0px",
     backgroundColor: theme.palette.background.light,
 }));
 
-const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
-}));
+const steps = ["Basic Information", "Contact Details", "Business Information"];
 
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
-}));
+function PartnerForm() {
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [completed, setCompleted] = React.useState({});
 
-const ButtonWrapper = styled(Grid)(({ theme }) => ({
-    paddingTop: "12px",
-}));
+    const totalSteps = () => {
+        return steps.length;
+    };
 
-const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-    },
-}));
+    const completedSteps = () => {
+        return Object.keys(completed).length;
+    };
 
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
-}));
+    const isLastStep = () => {
+        return activeStep === totalSteps() - 1;
+    };
 
-const PartnerForm = ({
-    handleSubmit,
-    user_type,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
-    const dispatch = useDispatch();
-    const [type, setType] = useState(false);
-    const reference = JSON.parse(localStorage.getItem("reference"));
-    const country = JSON.parse(localStorage.getItem("country"));
-    const partner_data = useSelector(
-        (state) => state.get_all_partner?.response
-    );
+    const allStepsCompleted = () => {
+        return completedSteps() === totalSteps();
+    };
 
-    const handleType = (e) => {
-        setType(e.target.value);
-        if (e.target.value !== "PARTNER") {
-            dispatch(change("add_user_form", "agent_id", 0));
-        }
+    const handleNext = () => {
+        const newActiveStep =
+            isLastStep() && !allStepsCompleted()
+                ? // It's the last step, but not all steps have been completed,
+                  // find the first step that has been completed
+                  steps.findIndex((step, i) => !(i in completed))
+                : activeStep + 1;
+        setActiveStep(newActiveStep);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleStep = (step) => () => {
+        setActiveStep(step);
+    };
+
+    const handleComplete = () => {
+        const newCompleted = completed;
+        newCompleted[activeStep] = true;
+        setCompleted(newCompleted);
+        handleNext();
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+        setCompleted({});
     };
 
     return (
-        <Form onSubmit={handleSubmit}>
-            <Container container direction="column">
-                <Grid item xs={12}>
-                    <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="send_agent_id"
-                                label="Sending Agent"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+        <Box sx={{ width: "100%", pt: "8px" }}>
+            <Stepper
+                nonLinear
+                activeStep={activeStep}
+                alternativeLabel
+                sx={{ width: "100%", pb: 1 }}
+            >
+                {steps.map((label, index) => (
+                    <Step key={label} completed={completed[index]}>
+                        <StepLabel color="inherit">{label}</StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+            <div>
+                {allStepsCompleted() ? (
+                    <React.Fragment>
+                        <CompletedWrapper sx={{}}>
+                            <Typography
+                                sx={{
+                                    mt: 2,
+                                    mb: 1,
+                                    color: "border.dark",
+                                    fontSize: "18px",
+                                }}
+                            >
+                                All steps completed - Please submit to create
+                                Partner.
+                            </Typography>
+                            <CheckCircleOutlineIcon
+                                sx={{ fontSize: "64px", color: "success.main" }}
                             />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_agent_id"
-                                label="Payout Agent"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payment_type"
-                                label="Payment Type"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payment Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_country"
-                                label="Country"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_currency"
-                                label="Currency"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.id}
-                                        >
-                                            {data.currency}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </FieldWrapper>
-                    </FormWrapper>
-                </Grid>
-                <Grid item>
-                    <Divider sx={{ pt: 1.2 }} />
-                </Grid>
-                <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
+                            <Button
                                 size="small"
                                 variant="outlined"
-                                loading={loading}
-                                endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                type="submit"
+                                onClick={handleReset}
+                                sx={{ mt: 2, textTransform: "capitalize" }}
                             >
-                                {buttonText}
-                            </CreateButton>
-                        </Grid>
-                    </ButtonWrapper>
-                </Grid>
-            </Container>
-        </Form>
+                                Submit
+                            </Button>
+                        </CompletedWrapper>
+                    </React.Fragment>
+                ) : (
+                    <React.Fragment>
+                        <Box>
+                            <Basic />
+                        </Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                pt: 2,
+                            }}
+                        >
+                            <Button
+                                color="inherit"
+                                disabled={activeStep === 0}
+                                onClick={handleBack}
+                                sx={{ mr: 1 }}
+                            >
+                                Back
+                            </Button>
+                            <Box sx={{ flex: "1 1 auto" }} />
+                            <Button onClick={handleNext} sx={{ mr: 1 }}>
+                                Next
+                            </Button>
+                            {activeStep !== steps.length &&
+                                (completed[activeStep] ? (
+                                    <Typography
+                                        variant="caption"
+                                        sx={{ display: "inline-block" }}
+                                    >
+                                        Step {activeStep + 1} already completed
+                                    </Typography>
+                                ) : (
+                                    <Button onClick={handleComplete}>
+                                        {completedSteps() === totalSteps() - 1
+                                            ? "Finish"
+                                            : "Complete Step"}
+                                    </Button>
+                                ))}
+                        </Box>
+                    </React.Fragment>
+                )}
+            </div>
+        </Box>
     );
-};
+}
 
 export default reduxForm({ form: ["form"] })(PartnerForm);

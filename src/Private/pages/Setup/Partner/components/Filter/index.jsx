@@ -51,10 +51,14 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
 }));
 
 const Select = styled(MuiSelect)(({ theme }) => ({
-    // minWidth: "max-content",
     "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
         padding: "8px 10px",
         paddingRight: "28px",
+    },
+    "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
+        padding: "8px 10px",
+        paddingRight: "28px",
+        maxWidth: "130px",
     },
     "& .MuiSvgIcon-root.MuiSelect-icon": {
         color: theme.palette.border.main,
@@ -108,32 +112,18 @@ function Filter({ handleSearch, handleCountry, handleOrder, handleAgentType }) {
                 <Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
+                            native
                             onChange={handleCountry}
                             displayEmpty
                             defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Country
-                                        </Typography>
-                                    );
-                                }
-                                const value = country.filter(
-                                    (type) => type.iso3 === selected
-                                );
-                                return value[0]?.country;
-                            }}
                         >
-                            <MenuItem value="">All Country</MenuItem>
-                            {country.map((sort) => (
-                                <MenuItem value={sort.iso3} key={sort.iso3}>
-                                    {sort.country}
-                                </MenuItem>
-                            ))}
+                            <option value="">All Country</option>
+                            {country &&
+                                country.map((sort) => (
+                                    <option value={sort.iso3} key={sort.iso3}>
+                                        {sort.country}
+                                    </option>
+                                ))}
                         </Select>
                     </FormControl>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>

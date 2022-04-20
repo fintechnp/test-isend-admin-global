@@ -2,16 +2,41 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 import PartnerForm from "./Form";
 import actions from "./../store/actions";
-import { Grid, Typography } from "@mui/material";
+
+const TitleWrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+}));
 
 const Title = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
     fontSize: "18px",
     fontWeight: 600,
     paddingBottom: "6px",
+}));
+
+const BackButton = styled(Button)(({ theme }) => ({
+    fontSize: "12px",
+    textTransform: "capitalize",
+    color: theme.palette.border.main,
+    borderColor: theme.palette.border.main,
+    "&:hover": {
+        color: theme.palette.border.dark,
+        borderColor: theme.palette.border.dark,
+    },
+    "& .MuiButton-startIcon>*:nth-of-type(1)": {
+        fontSize: "15px",
+    },
 }));
 
 function AddUpdatePartner() {
@@ -25,7 +50,7 @@ function AddUpdatePartner() {
         (state) => state.update_service_charge
     );
 
-    const handleClose = (data) => {
+    const handleBack = (data) => {
         navigate(-1);
     };
 
@@ -40,7 +65,20 @@ function AddUpdatePartner() {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <Title>{id ? "Update" : "Add"} Partner </Title>
+                <TitleWrapper>
+                    <Title>{id ? "Update" : "Add"} Partner </Title>
+                    <BackButton
+                        variant="outlined"
+                        size="small"
+                        onClick={handleBack}
+                        startIcon={<ArrowBackIosNewIcon />}
+                    >
+                        Back
+                    </BackButton>
+                </TitleWrapper>
+            </Grid>
+            <Grid item xs={12}>
+                <Divider sx={{ mb: 1.2 }} />
             </Grid>
             <Grid item xs={12}>
                 {id ? (
@@ -55,7 +93,7 @@ function AddUpdatePartner() {
                         onSubmit={handleChargeUpdate}
                         buttonText="Update"
                         loading={update_loading}
-                        handleClose={handleClose}
+                        handleBack={handleBack}
                         form={`update_partner_form`}
                     />
                 ) : (
@@ -64,8 +102,7 @@ function AddUpdatePartner() {
                         onSubmit={handleChargeCreate}
                         buttonText="Create"
                         form={`add_partner_form`}
-                        handleClose={handleClose}
-                        initialValues={{ is_active: false }}
+                        handleBack={handleBack}
                         loading={add_loading}
                     />
                 )}

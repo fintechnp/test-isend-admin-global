@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { change, Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
@@ -8,13 +8,12 @@ import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../../App/utils/validators";
+import TextField from "../../../../../App/components/Fields/TextField";
+import SelectField from "../../../../../App/components/Fields/SelectField";
+import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
+import Validator from "../../../../../App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
-    maxWidth: "900px",
     borderRadius: "5px",
     [theme.breakpoints.up("sm")]: {
         minWidth: "350px",
@@ -62,42 +61,10 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const AddCorridor = ({
-    handleSubmit,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
+const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
     const dispatch = useDispatch();
+    const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
-
-    const convertCurrency = (iso3) => {
-        const currency = country.filter((data) => data.iso3 === iso3);
-        if (currency) {
-            return currency[0].currency;
-        }
-    };
-
-    const handleCurrency = (e) => {
-        if (update) {
-            dispatch(
-                change(
-                    "update_corridor_form",
-                    "transaction_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
-        } else {
-            dispatch(
-                change(
-                    "add_corridor_form",
-                    "transaction_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
-        }
-    };
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -106,8 +73,8 @@ const AddCorridor = ({
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="name"
-                                label="Name"
+                                name="send_agent_id"
+                                label="Sending Agent"
                                 type="text"
                                 small={12}
                                 component={TextField}
@@ -119,9 +86,9 @@ const AddCorridor = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="short_code"
-                                label="Short Code"
-                                type="text"
+                                name="payout_agent_id"
+                                label="Payout Agent"
+                                type="number"
                                 small={12}
                                 component={TextField}
                                 validate={[
@@ -132,11 +99,41 @@ const AddCorridor = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="country"
+                                name="payment_type"
+                                label="Payment Type"
+                                type="number"
+                                small={12}
+                                component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Payment Type
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 1
+                                        )[0]
+                                        .reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="payout_country"
                                 label="Country"
                                 type="number"
                                 small={12}
-                                onChange={handleCurrency}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -148,10 +145,7 @@ const AddCorridor = ({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.id}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -159,7 +153,7 @@ const AddCorridor = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="transaction_currency"
+                                name="payout_currency"
                                 label="Currency"
                                 type="number"
                                 small={12}
@@ -176,37 +170,35 @@ const AddCorridor = ({
                                     country.map((data) => (
                                         <option
                                             value={data.currency}
-                                            key={data.tid}
+                                            key={data.id}
                                         >
-                                            {data.currency_name}
+                                            {data.currency}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
-                        {update && (
-                            <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
-                                    <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            name="is_active"
-                                            label="Blocked"
-                                            small={12}
-                                            reverse="row-reverse"
-                                            component={CheckboxField}
-                                        />
-                                    </Grid>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Grid
+                                container
+                                alignItems="flex-end"
+                                justifyContent="flex-end"
+                            >
+                                <Grid item xs={12}>
+                                    <StatusText component="p">
+                                        Status
+                                    </StatusText>
                                 </Grid>
-                            </FieldWrapper>
-                        )}
+                                <Grid item xs={12}>
+                                    <Field
+                                        name="is_active"
+                                        label="Active"
+                                        small={12}
+                                        reverse="row-reverse"
+                                        component={CheckboxField}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </FieldWrapper>
                     </FormWrapper>
                 </Grid>
                 <Grid item>
@@ -224,7 +216,7 @@ const AddCorridor = ({
                             <CancelButton
                                 size="small"
                                 variant="contained"
-                                onClick={handleClose}
+                                onClick={handleBack}
                             >
                                 Cancel
                             </CancelButton>
@@ -247,4 +239,4 @@ const AddCorridor = ({
     );
 };
 
-export default React.memo(reduxForm({ form: ["form"] })(AddCorridor));
+export default Basic;

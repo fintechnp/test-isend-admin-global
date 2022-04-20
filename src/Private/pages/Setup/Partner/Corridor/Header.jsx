@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import React from "react";
 
 import AddCorridor from "./AddCorridor";
@@ -10,15 +11,27 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
-const AddButton = styled(Button)(({ theme }) => ({
-    padding: "6px 12px",
-    textTransform: "capitalize",
-}));
-
 function Header() {
+    const { response: partner_data } = useSelector(
+        (state) => state.get_partner_details
+    );
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>Corridor List</Typography>
+            <Box>
+                <Typography component="span" sx={{ fontSize: "22px" }}>
+                    Corridor List of
+                </Typography>
+                <Typography
+                    component="span"
+                    sx={{
+                        fontSize: "20px",
+                        paddingLeft: "8px",
+                        textTransform: "capitalize",
+                    }}
+                >
+                    {partner_data?.data?.name}
+                </Typography>
+            </Box>
             <AddCorridor />
         </HeaderWrapper>
     );
