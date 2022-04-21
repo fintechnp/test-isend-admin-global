@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 import PartnerForm from "./Form";
 import actions from "./../store/actions";
@@ -54,11 +53,12 @@ function AddUpdatePartner() {
         navigate(-1);
     };
 
-    const handleChargeCreate = (data) => {
+    const handlePartnerAdd = (data) => {
+        console.log("add partner jhhhhhhhxdjf");
         dispatch(actions.add_partner(data));
     };
 
-    const handleChargeUpdate = (data) => {
+    const handlePartnerUpdate = (data) => {
         dispatch(actions.update_partner(data.menu_id, data));
     };
 
@@ -71,7 +71,6 @@ function AddUpdatePartner() {
                         variant="outlined"
                         size="small"
                         onClick={handleBack}
-                        startIcon={<ArrowBackIosNewIcon />}
                     >
                         Back
                     </BackButton>
@@ -90,19 +89,17 @@ function AddUpdatePartner() {
                         //     menu_order: memoizedData?.menu_order,
                         //     is_active: memoizedData?.is_active,
                         // }}
-                        onSubmit={handleChargeUpdate}
+                        onSubmit={handlePartnerUpdate}
                         buttonText="Update"
                         loading={update_loading}
-                        handleBack={handleBack}
                         form={`update_partner_form`}
                     />
                 ) : (
                     <PartnerForm
                         enableReinitialize={true}
-                        onSubmit={handleChargeCreate}
+                        onSubmit={handlePartnerAdd}
                         buttonText="Create"
                         form={`add_partner_form`}
-                        handleBack={handleBack}
                         loading={add_loading}
                     />
                 )}

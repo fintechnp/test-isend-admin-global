@@ -4,24 +4,24 @@ import { change, Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
 import Validator from "../../../../../App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
-    borderRadius: "5px",
+    marginTop: theme.spacing(1),
+    paddingBottom: theme.spacing(4),
     [theme.breakpoints.up("sm")]: {
         minWidth: "350px",
     },
 }));
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
+    padding: "8px 4px 16px",
+    borderRadius: "4px",
     backgroundColor: theme.palette.background.light,
 }));
 
@@ -39,18 +39,29 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingTop: "12px",
 }));
 
-const CancelButton = styled(Button)(({ theme }) => ({
+const BackButton = styled(Button)(({ theme }) => ({
+    minWidth: "100px",
+    borderRadius: "2px",
+    textTransform: "capitalize",
+    color: theme.palette.border.dark,
+    borderColor: theme.palette.border.main,
+    "&:hover": {
+        borderColor: theme.palette.border.dark,
+    },
+}));
+
+const NextButton = styled(Button)(({ theme }) => ({
     minWidth: "100px",
     color: "#fff",
     borderRadius: "2px",
     textTransform: "capitalize",
-    background: theme.palette.warning.main,
+    background: theme.palette.text.main,
     "&:hover": {
-        background: theme.palette.warning.dark,
+        background: theme.palette.text.dark,
     },
 }));
 
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
+const CompleteButton = styled(LoadingButton)(({ theme }) => ({
     minWidth: "100px",
     color: "#fff",
     borderRadius: "2px",
@@ -61,7 +72,21 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
+const Basic = ({
+    handleSubmit,
+    handleNext,
+    handleBack,
+    update,
+    completed,
+    loading,
+    buttonText,
+    activeStep,
+    steps,
+    totalSteps,
+    completedSteps,
+    allStepsCompleted,
+    handleComplete,
+}) => {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
@@ -73,8 +98,8 @@ const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="send_agent_id"
-                                label="Sending Agent"
+                                name="name"
+                                label="Partner Name"
                                 type="text"
                                 small={12}
                                 component={TextField}
@@ -86,9 +111,107 @@ const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="payout_agent_id"
-                                label="Payout Agent"
+                                name="short_code"
+                                label="Short Code"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.minValue3,
+                                    Validator.maxLength10,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="agent_type"
+                                label="Partner Type"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Agent Type
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 3
+                                        )[0]
+                                        .reference_data.map((data) => {
+                                            if (data?.name !== "CORRIDOR") {
+                                                return (
+                                                    <option
+                                                        value={data.value}
+                                                        key={data.reference_id}
+                                                    >
+                                                        {data.name}
+                                                    </option>
+                                                );
+                                            }
+                                        })}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="phone_number"
+                                label="Phone Number"
                                 type="number"
+                                small={12}
+                                component={TextField}
+                                validate={Validator.mobileValidator}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="email"
+                                label="Email"
+                                type="email"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emailValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="country"
+                                label="Country"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue3,
+                                    Validator.maxLength3,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Country
+                                </option>
+                                {country &&
+                                    country.map((data) => (
+                                        <option
+                                            value={data.iso3}
+                                            key={data.iso3}
+                                        >
+                                            {data.country}
+                                        </option>
+                                    ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="postcode"
+                                label="Post Code"
+                                type="text"
                                 small={12}
                                 component={TextField}
                                 validate={[
@@ -99,105 +222,65 @@ const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="payment_type"
-                                label="Payment Type"
+                                name="unit"
+                                label="Unit"
                                 type="number"
                                 small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payment Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
+                                component={TextField}
+                            />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="payout_country"
-                                label="Country"
-                                type="number"
+                                name="street"
+                                label="Street"
+                                type="text"
                                 small={12}
-                                component={SelectField}
+                                component={TextField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
+                            />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="payout_currency"
-                                label="Currency"
-                                type="number"
+                                name="city"
+                                label="City"
+                                type="text"
                                 small={12}
-                                component={SelectField}
+                                component={TextField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.id}
-                                        >
-                                            {data.currency}
-                                        </option>
-                                    ))}
-                            </Field>
+                            />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
+                            <Field
+                                name="state"
+                                label="State"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="address"
+                                label="Address"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="website"
+                                label="Website"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -209,28 +292,48 @@ const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
                         container
                         columnGap={2}
                         direction="row"
-                        justifyContent="flex-end"
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleBack}
-                            >
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
+                            <BackButton
                                 size="small"
                                 variant="outlined"
-                                loading={loading}
-                                endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                type="submit"
+                                onClick={handleBack}
+                                disabled={activeStep === 0}
                             >
-                                {buttonText}
-                            </CreateButton>
+                                Back
+                            </BackButton>
+                        </Grid>
+                        <Grid item xs />
+                        <Grid item>
+                            <NextButton
+                                size="small"
+                                variant="contained"
+                                onClick={handleNext}
+                            >
+                                Next
+                            </NextButton>
+                        </Grid>
+                        <Grid item>
+                            {activeStep !== steps.length && (
+                                <CompleteButton
+                                    size="small"
+                                    variant="outlined"
+                                    loading={loading}
+                                    endIcon={
+                                        completedSteps() ===
+                                        totalSteps() - 1 ? (
+                                            <DoneAllIcon />
+                                        ) : null
+                                    }
+                                    type="submit"
+                                >
+                                    {completedSteps() === totalSteps() - 1 &&
+                                    completed[activeStep]
+                                        ? "Finish"
+                                        : buttonText}
+                                </CompleteButton>
+                            )}
                         </Grid>
                     </ButtonWrapper>
                 </Grid>
@@ -239,4 +342,8 @@ const Basic = ({ handleSubmit, handleBack, update, loading, buttonText }) => {
     );
 };
 
-export default Basic;
+export default React.memo(
+    reduxForm({
+        form: "basic_form",
+    })(Basic)
+);

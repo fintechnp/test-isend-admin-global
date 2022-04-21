@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
+import MuiStepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
@@ -10,6 +10,8 @@ import { change, Field, Form, reduxForm } from "redux-form";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import Basic from "./Basic";
+import Contact from "./Contact";
+import Business from "./Business";
 
 const CompletedWrapper = styled(Box)(({ theme }) => ({
     marginTop: "16px",
@@ -22,9 +24,19 @@ const CompletedWrapper = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.light,
 }));
 
-const steps = ["Basic Information", "Contact Details", "Business Information"];
+const Stepper = styled(MuiStepper)(({ theme }) => ({
+    "& .MuiSvgIcon-root.MuiStepIcon-root.Mui-completed": {
+        color: theme.palette.success.main,
+    },
+}));
 
-function PartnerForm() {
+const steps = [
+    "Basic Information",
+    "Contact Person Details",
+    "Business Information",
+];
+
+function PartnerForm({ handleSubmit }) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
 
@@ -47,9 +59,7 @@ function PartnerForm() {
     const handleNext = () => {
         const newActiveStep =
             isLastStep() && !allStepsCompleted()
-                ? // It's the last step, but not all steps have been completed,
-                  // find the first step that has been completed
-                  steps.findIndex((step, i) => !(i in completed))
+                ? steps.findIndex((step, i) => !(i in completed))
                 : activeStep + 1;
         setActiveStep(newActiveStep);
     };
@@ -74,13 +84,25 @@ function PartnerForm() {
         setCompleted({});
     };
 
+    const handleBasicForm = () => {
+        handleComplete();
+    };
+
+    const handleContactForm = () => {
+        handleComplete();
+    };
+
+    const handleBusinessForm = () => {
+        handleComplete();
+    };
+
     return (
-        <Box sx={{ width: "100%", pt: "8px" }}>
+        <Box sx={{ width: "100%", pt: "16px" }}>
             <Stepper
                 nonLinear
                 activeStep={activeStep}
                 alternativeLabel
-                sx={{ width: "100%", pb: 1 }}
+                sx={{ width: "100%", padding: "16px 0px" }}
             >
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
@@ -88,7 +110,7 @@ function PartnerForm() {
                     </Step>
                 ))}
             </Stepper>
-            <div>
+            <Form onSubmit={handleSubmit}>
                 {allStepsCompleted() ? (
                     <React.Fragment>
                         <CompletedWrapper sx={{}}>
@@ -109,8 +131,13 @@ function PartnerForm() {
                             <Button
                                 size="small"
                                 variant="outlined"
-                                onClick={handleReset}
-                                sx={{ mt: 2, textTransform: "capitalize" }}
+                                // onClick={handleReset}
+                                sx={{
+                                    mt: 2,
+                                    textTransform: "capitalize",
+                                    minWidth: "120px",
+                                }}
+                                type="submit"
                             >
                                 Submit
                             </Button>
@@ -119,46 +146,55 @@ function PartnerForm() {
                 ) : (
                     <React.Fragment>
                         <Box>
-                            <Basic />
-                        </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                pt: 2,
-                            }}
-                        >
-                            <Button
-                                color="inherit"
-                                disabled={activeStep === 0}
-                                onClick={handleBack}
-                                sx={{ mr: 1 }}
-                            >
-                                Back
-                            </Button>
-                            <Box sx={{ flex: "1 1 auto" }} />
-                            <Button onClick={handleNext} sx={{ mr: 1 }}>
-                                Next
-                            </Button>
-                            {activeStep !== steps.length &&
-                                (completed[activeStep] ? (
-                                    <Typography
-                                        variant="caption"
-                                        sx={{ display: "inline-block" }}
-                                    >
-                                        Step {activeStep + 1} already completed
-                                    </Typography>
-                                ) : (
-                                    <Button onClick={handleComplete}>
-                                        {completedSteps() === totalSteps() - 1
-                                            ? "Finish"
-                                            : "Complete Step"}
-                                    </Button>
-                                ))}
+                            {activeStep === 0 && (
+                                <Basic
+                                    steps={steps}
+                                    buttonText="Complete"
+                                    completed={completed}
+                                    activeStep={activeStep}
+                                    handleNext={handleNext}
+                                    handleBack={handleBack}
+                                    totalSteps={totalSteps}
+                                    handleComplete={handleComplete}
+                                    completedSteps={completedSteps}
+                                    allStepsCompleted={allStepsCompleted}
+                                    onSubmit={handleBasicForm}
+                                />
+                            )}
+                            {activeStep === 1 && (
+                                <Contact
+                                    steps={steps}
+                                    completed={completed}
+                                    buttonText="Complete"
+                                    activeStep={activeStep}
+                                    handleNext={handleNext}
+                                    handleBack={handleBack}
+                                    totalSteps={totalSteps}
+                                    handleComplete={handleComplete}
+                                    completedSteps={completedSteps}
+                                    allStepsCompleted={allStepsCompleted}
+                                    onSubmit={handleContactForm}
+                                />
+                            )}
+                            {activeStep === 2 && (
+                                <Business
+                                    completed={completed}
+                                    steps={steps}
+                                    buttonText="Complete"
+                                    activeStep={activeStep}
+                                    handleNext={handleNext}
+                                    handleBack={handleBack}
+                                    totalSteps={totalSteps}
+                                    handleComplete={handleComplete}
+                                    completedSteps={completedSteps}
+                                    allStepsCompleted={allStepsCompleted}
+                                    onSubmit={handleBusinessForm}
+                                />
+                            )}
                         </Box>
                     </React.Fragment>
                 )}
-            </div>
+            </Form>
         </Box>
     );
 }
