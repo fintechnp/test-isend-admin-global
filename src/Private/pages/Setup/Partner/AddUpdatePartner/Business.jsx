@@ -88,6 +88,7 @@ const Business = ({
     handleComplete,
 }) => {
     const dispatch = useDispatch();
+    const [date_format, setDateFormat] = useState("mm/dd/yyyy");
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -100,7 +101,7 @@ const Business = ({
                             <Field
                                 name="date_of_incorporation"
                                 label="Incorporation Date"
-                                type="text"
+                                type="date"
                                 small={12}
                                 component={TextField}
                                 validate={Validator.emptyValidator}
@@ -123,23 +124,10 @@ const Business = ({
                             <Field
                                 name="business_license_expiry_date"
                                 label="License Exp. Date"
-                                type="number"
+                                type="date"
                                 small={12}
                                 component={TextField}
                                 validate={Validator.emptyValidator}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payment_type"
-                                label="License No."
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -464,6 +452,7 @@ const Business = ({
                         direction="row"
                         alignItems="center"
                     >
+                        <Grid item xs />
                         <Grid item>
                             <BackButton
                                 size="small"
@@ -471,18 +460,8 @@ const Business = ({
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
                             >
-                                Back
+                                Previous
                             </BackButton>
-                        </Grid>
-                        <Grid item xs />
-                        <Grid item>
-                            <NextButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleNext}
-                            >
-                                Next
-                            </NextButton>
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
@@ -500,7 +479,7 @@ const Business = ({
                                 >
                                     {completedSteps() === totalSteps() - 1
                                         ? "Finish"
-                                        : buttonText}
+                                        : "Next"}
                                 </CompleteButton>
                             )}
                         </Grid>
@@ -511,8 +490,4 @@ const Business = ({
     );
 };
 
-export default React.memo(
-    reduxForm({
-        form: "business_form",
-    })(Business)
-);
+export default reduxForm({ form: ["form"] })(Business);

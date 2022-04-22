@@ -100,9 +100,9 @@ const Partner = () => {
 
     useEffect(() => {
         dispatch(actions.get_all_partner(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
         dispatch({ type: "UPDATE_MENU_RESET" });
         dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "ADD_PARTNER_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
     const columns = useMemo(() => [

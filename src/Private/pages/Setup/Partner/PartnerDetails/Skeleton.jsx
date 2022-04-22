@@ -11,21 +11,21 @@ function PartnerSkeleton() {
             <Grid item xs={12}>
                 <Grid container>
                     <Grid item>
-                        <Typography>Basic</Typography>
+                        <Typography>loading</Typography>
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
                 <Grid container>
                     <Grid item>
-                        <Typography>Basic</Typography>
+                        <Typography>loading</Typography>
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
                 <Grid container>
                     <Grid item>
-                        <Typography>Basic</Typography>
+                        <Typography>loading</Typography>
                     </Grid>
                 </Grid>
             </Grid>

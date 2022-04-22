@@ -83,7 +83,7 @@ const Contact = ({
     const dispatch = useDispatch();
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
             <Container container direction="column">
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
@@ -151,6 +151,7 @@ const Contact = ({
                         direction="row"
                         alignItems="center"
                     >
+                        <Grid item xs />
                         <Grid item>
                             <BackButton
                                 size="small"
@@ -158,18 +159,8 @@ const Contact = ({
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
                             >
-                                Back
+                                Previous
                             </BackButton>
-                        </Grid>
-                        <Grid item xs />
-                        <Grid item>
-                            <NextButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleNext}
-                            >
-                                Next
-                            </NextButton>
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
@@ -194,12 +185,8 @@ const Contact = ({
                     </ButtonWrapper>
                 </Grid>
             </Container>
-        </Form>
+        </form>
     );
 };
 
-export default React.memo(
-    reduxForm({
-        form: "contact_form",
-    })(Contact)
-);
+export default reduxForm({ form: ["form"] })(Contact);

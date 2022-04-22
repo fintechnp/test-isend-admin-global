@@ -294,6 +294,7 @@ const Basic = ({
                         direction="row"
                         alignItems="center"
                     >
+                        <Grid item xs />
                         <Grid item>
                             <BackButton
                                 size="small"
@@ -301,18 +302,8 @@ const Basic = ({
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
                             >
-                                Back
+                                Previous
                             </BackButton>
-                        </Grid>
-                        <Grid item xs />
-                        <Grid item>
-                            <NextButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleNext}
-                            >
-                                Next
-                            </NextButton>
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
@@ -331,7 +322,7 @@ const Basic = ({
                                     {completedSteps() === totalSteps() - 1 &&
                                     completed[activeStep]
                                         ? "Finish"
-                                        : buttonText}
+                                        : "Next"}
                                 </CompleteButton>
                             )}
                         </Grid>
@@ -342,8 +333,4 @@ const Basic = ({
     );
 };
 
-export default React.memo(
-    reduxForm({
-        form: "basic_form",
-    })(Basic)
-);
+export default reduxForm({ form: ["form"] })(Basic);

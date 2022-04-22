@@ -4,14 +4,16 @@ import Box from "@mui/material/Box";
 import MuiStepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import { change, Field, Form, reduxForm } from "redux-form";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useDispatch, useSelector } from "react-redux";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import Basic from "./Basic";
 import Contact from "./Contact";
 import Business from "./Business";
+import actions from "./../store/actions";
 
 const CompletedWrapper = styled(Box)(({ theme }) => ({
     marginTop: "16px",
@@ -28,6 +30,9 @@ const Stepper = styled(MuiStepper)(({ theme }) => ({
     "& .MuiSvgIcon-root.MuiStepIcon-root.Mui-completed": {
         color: theme.palette.success.main,
     },
+    "& .MuiStepLabel-label": {
+        fontSize: "18px",
+    },
 }));
 
 const steps = [
@@ -36,9 +41,21 @@ const steps = [
     "Business Information",
 ];
 
-function PartnerForm({ handleSubmit }) {
+function PartnerForm({ update_data }) {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
+    const { success: add_success, loading: add_loading } = useSelector(
+        (state) => state.add_partner
+    );
+
+    React.useEffect(() => {
+        if (add_success) {
+            navigate(-1);
+        }
+    }, [add_success]);
 
     const totalSteps = () => {
         return steps.length;
@@ -80,8 +97,9 @@ function PartnerForm({ handleSubmit }) {
     };
 
     const handleReset = () => {
-        setActiveStep(0);
-        setCompleted({});
+        // setActiveStep(0);
+        // setCompleted({});
+        dispatch(actions.add_partner(data));
     };
 
     const handleBasicForm = () => {
@@ -92,7 +110,8 @@ function PartnerForm({ handleSubmit }) {
         handleComplete();
     };
 
-    const handleBusinessForm = () => {
+    const handleBusinessForm = (data) => {
+        setData(data);
         handleComplete();
     };
 
@@ -110,93 +129,100 @@ function PartnerForm({ handleSubmit }) {
                     </Step>
                 ))}
             </Stepper>
-            <Form onSubmit={handleSubmit}>
-                {allStepsCompleted() ? (
-                    <React.Fragment>
-                        <CompletedWrapper sx={{}}>
-                            <Typography
-                                sx={{
-                                    mt: 2,
-                                    mb: 1,
-                                    color: "border.dark",
-                                    fontSize: "18px",
-                                }}
-                            >
-                                All steps completed - Please submit to create
-                                Partner.
-                            </Typography>
-                            <CheckCircleOutlineIcon
-                                sx={{ fontSize: "64px", color: "success.main" }}
+            {allStepsCompleted() ? (
+                <React.Fragment>
+                    <CompletedWrapper sx={{}}>
+                        <Typography
+                            sx={{
+                                mt: 2,
+                                mb: 1,
+                                color: "border.dark",
+                                fontSize: "18px",
+                            }}
+                        >
+                            All steps completed - Please submit to create
+                            Partner.
+                        </Typography>
+                        <CheckCircleOutlineIcon
+                            sx={{ fontSize: "64px", color: "success.main" }}
+                        />
+                        <LoadingButton
+                            size="small"
+                            variant="outlined"
+                            loading={add_loading}
+                            sx={{
+                                mt: 2,
+                                borderWidth: "2px",
+                                minWidth: "120px",
+                                "&:hover": {
+                                    borderWidth: "2px",
+                                },
+                            }}
+                            onClick={handleReset}
+                        >
+                            Submit
+                        </LoadingButton>
+                    </CompletedWrapper>
+                </React.Fragment>
+            ) : (
+                <React.Fragment>
+                    <Box>
+                        {activeStep === 0 && (
+                            <Basic
+                                destroyOnUnmount={false}
+                                form={`add_partner_form`}
+                                steps={steps}
+                                buttonText="Complete"
+                                completed={completed}
+                                activeStep={activeStep}
+                                handleNext={handleNext}
+                                handleBack={handleBack}
+                                totalSteps={totalSteps}
+                                handleComplete={handleComplete}
+                                completedSteps={completedSteps}
+                                allStepsCompleted={allStepsCompleted}
+                                onSubmit={handleBasicForm}
                             />
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                // onClick={handleReset}
-                                sx={{
-                                    mt: 2,
-                                    textTransform: "capitalize",
-                                    minWidth: "120px",
-                                }}
-                                type="submit"
-                            >
-                                Submit
-                            </Button>
-                        </CompletedWrapper>
-                    </React.Fragment>
-                ) : (
-                    <React.Fragment>
-                        <Box>
-                            {activeStep === 0 && (
-                                <Basic
-                                    steps={steps}
-                                    buttonText="Complete"
-                                    completed={completed}
-                                    activeStep={activeStep}
-                                    handleNext={handleNext}
-                                    handleBack={handleBack}
-                                    totalSteps={totalSteps}
-                                    handleComplete={handleComplete}
-                                    completedSteps={completedSteps}
-                                    allStepsCompleted={allStepsCompleted}
-                                    onSubmit={handleBasicForm}
-                                />
-                            )}
-                            {activeStep === 1 && (
-                                <Contact
-                                    steps={steps}
-                                    completed={completed}
-                                    buttonText="Complete"
-                                    activeStep={activeStep}
-                                    handleNext={handleNext}
-                                    handleBack={handleBack}
-                                    totalSteps={totalSteps}
-                                    handleComplete={handleComplete}
-                                    completedSteps={completedSteps}
-                                    allStepsCompleted={allStepsCompleted}
-                                    onSubmit={handleContactForm}
-                                />
-                            )}
-                            {activeStep === 2 && (
-                                <Business
-                                    completed={completed}
-                                    steps={steps}
-                                    buttonText="Complete"
-                                    activeStep={activeStep}
-                                    handleNext={handleNext}
-                                    handleBack={handleBack}
-                                    totalSteps={totalSteps}
-                                    handleComplete={handleComplete}
-                                    completedSteps={completedSteps}
-                                    allStepsCompleted={allStepsCompleted}
-                                    onSubmit={handleBusinessForm}
-                                />
-                            )}
-                        </Box>
-                    </React.Fragment>
-                )}
-            </Form>
+                        )}
+                        {activeStep === 1 && (
+                            <Contact
+                                destroyOnUnmount={false}
+                                form={`add_partner_form`}
+                                steps={steps}
+                                completed={completed}
+                                buttonText="Complete"
+                                activeStep={activeStep}
+                                handleNext={handleNext}
+                                handleBack={handleBack}
+                                totalSteps={totalSteps}
+                                handleComplete={handleComplete}
+                                completedSteps={completedSteps}
+                                allStepsCompleted={allStepsCompleted}
+                                onSubmit={handleContactForm}
+                            />
+                        )}
+                        {activeStep === 2 && (
+                            <Business
+                                destroyOnUnmount={false}
+                                form={`add_partner_form`}
+                                completed={completed}
+                                steps={steps}
+                                buttonText="Complete"
+                                activeStep={activeStep}
+                                handleNext={handleNext}
+                                handleBack={handleBack}
+                                totalSteps={totalSteps}
+                                handleComplete={handleComplete}
+                                completedSteps={completedSteps}
+                                allStepsCompleted={allStepsCompleted}
+                                onSubmit={handleBusinessForm}
+                            />
+                        )}
+                    </Box>
+                </React.Fragment>
+            )}
         </Box>
     );
 }
 
-export default reduxForm({ form: ["form"] })(PartnerForm);
+export default PartnerForm;
