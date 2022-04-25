@@ -311,18 +311,9 @@ const Basic = ({
                                     size="small"
                                     variant="outlined"
                                     loading={loading}
-                                    endIcon={
-                                        completedSteps() ===
-                                        totalSteps() - 1 ? (
-                                            <DoneAllIcon />
-                                        ) : null
-                                    }
                                     type="submit"
                                 >
-                                    {completedSteps() === totalSteps() - 1 &&
-                                    completed[activeStep]
-                                        ? "Finish"
-                                        : "Next"}
+                                    Next
                                 </CompleteButton>
                             )}
                         </Grid>
