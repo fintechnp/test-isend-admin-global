@@ -28,7 +28,7 @@ const PrivateLayout = ({ children }) => {
             //User
             {
                 key: "user",
-                text: "User",
+                text: "Users",
                 sub: true,
                 icon: <GroupAdd />,
                 permission: [
@@ -64,13 +64,13 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/setup/delivery-option",
                         key: "setup-delivery-option",
-                        text: "Delivery Option",
+                        text: "Delivery Options",
                         sub: false,
                     },
                     {
                         path: "/setup/delivery-route",
                         key: "setup-delivery-option-route",
-                        text: "Delivery Route",
+                        text: "Delivery Routes",
                         sub: false,
                     },
                     {
@@ -100,7 +100,7 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/setup/reference",
                         key: "setup-reference",
-                        text: "Reference",
+                        text: "References",
                         sub: false,
                     },
                     {

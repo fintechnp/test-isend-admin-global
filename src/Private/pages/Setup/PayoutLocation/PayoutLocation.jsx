@@ -212,6 +212,9 @@ const PayoutLocation = () => {
                                         <VisibilityOffOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -225,6 +228,9 @@ const PayoutLocation = () => {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>

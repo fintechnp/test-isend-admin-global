@@ -62,7 +62,7 @@ const initialState = {
 };
 
 const ExchangeRateList = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -205,6 +205,9 @@ const ExchangeRateList = () => {
                             <RemoveRedEyeOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -220,6 +223,9 @@ const ExchangeRateList = () => {
                             <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -300,7 +306,7 @@ const ExchangeRateList = () => {
 
     return (
         <MenuContainer>
-            <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
+            <Header title="Exchange Rate List" buttonText="Add Exchange Rate" name={name}/>
             <Filter
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}

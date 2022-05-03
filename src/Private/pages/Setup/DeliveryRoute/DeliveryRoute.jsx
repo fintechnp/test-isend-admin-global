@@ -207,6 +207,9 @@ const DeliveryRoute = () => {
                                         <VisibilityOffOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -217,6 +220,9 @@ const DeliveryRoute = () => {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>

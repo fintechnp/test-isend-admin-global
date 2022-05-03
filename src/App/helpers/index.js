@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import NumberFormat from "react-number-format";
+
 export const CountryName = (iso3) => {
     const country = JSON.parse(localStorage.getItem("country"));
     if (iso3 && country) {
@@ -38,6 +41,29 @@ export const ReferenceName = (id, value) => {
         } else {
             return "N/A";
         }
+    } else {
+        return "N/A";
+    }
+};
+
+export const FormatDate = (date) => {
+    if (date) {
+        const newDate = new Date(date);
+        return format(newDate, "MMM dd, yyyy");
+    } else {
+        return "N/A";
+    }
+};
+
+export const FormatNumber = (value) => {
+    if (value) {
+        return (
+            <NumberFormat
+                value={value}
+                displayType={"text"}
+                thousandSeparator={true}
+            />
+        );
     } else {
         return "N/A";
     }

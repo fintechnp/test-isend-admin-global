@@ -168,7 +168,7 @@ const Partner = () => {
             Cell: (data) => (
                 <SwitchWrapper textAlign="center" sx={{}}>
                     {data.value ? (
-                        <Tooltip title="Unblocked" arrow>
+                        <Tooltip title="Active" arrow>
                             <UnBlocked>Active</UnBlocked>
                         </Tooltip>
                     ) : (

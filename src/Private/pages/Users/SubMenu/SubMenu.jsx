@@ -156,6 +156,9 @@ const SubMenu = () => {
                                         <VisibilityOffOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -166,6 +169,9 @@ const SubMenu = () => {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>

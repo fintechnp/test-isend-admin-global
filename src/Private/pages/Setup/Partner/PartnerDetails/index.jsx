@@ -7,11 +7,14 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
 
 import actions from "./../store/actions";
 import PartnerSkeleton from "./Skeleton";
+import Details from "./Details";
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
+    paddingBottom: "8px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -21,7 +24,7 @@ const Title = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
     fontSize: "18px",
     fontWeight: 600,
-    paddingBottom: "6px",
+    paddingLeft: "8px",
 }));
 
 const BackButton = styled(Button)(({ theme }) => ({
@@ -52,7 +55,7 @@ function PartnerDetails() {
         }
     }, [id]);
 
-    const handleBack = (data) => {
+    const handleBack = () => {
         navigate(-1);
     };
 
@@ -60,7 +63,12 @@ function PartnerDetails() {
         <Grid container>
             <Grid item xs={12}>
                 <TitleWrapper>
-                    <Title>Partner Details</Title>
+                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <ContactPageIcon
+                            sx={{ color: "primary.main", fontSize: "28px" }}
+                        />
+                        <Title> Partner Details </Title>
+                    </Box>
                     <BackButton
                         variant="outlined"
                         size="small"
@@ -73,8 +81,7 @@ function PartnerDetails() {
             <Grid item xs={12}>
                 <Divider sx={{ mb: 1.2 }} />
             </Grid>
-            {loading ? <PartnerSkeleton /> : <Typography>data</Typography>}
-            <Grid item xs={12}></Grid>
+            {loading ? <PartnerSkeleton /> : <Details data={response?.data} />}
         </Grid>
     );
 }

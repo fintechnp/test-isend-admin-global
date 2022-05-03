@@ -15,7 +15,7 @@ const AddButton = styled(Button)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-function Header({ title, buttonText }) {
+function Header({ title, buttonText, name }) {
     const navigate = useNavigate();
 
     const handleAdd = () => {
@@ -24,7 +24,9 @@ function Header({ title, buttonText }) {
 
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+            <Typography sx={{ fontSize: "22px" }}>
+                {title} {name && `of ${name}`}
+            </Typography>
             {buttonText && (
                 <AddButton
                     size="small"

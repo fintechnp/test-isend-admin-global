@@ -180,6 +180,9 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>

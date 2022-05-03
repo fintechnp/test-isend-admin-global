@@ -11,14 +11,16 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
-function Header({ title, type, id }) {
+function Header({ title, type, id, name }) {
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+            <Typography sx={{ fontSize: "22px" }}>
+                {title} {name && `of ${name}`}
+            </Typography>
             {type ? (
                 <AddReference update={false} />
             ) : (
-                <AddReferenceData update={false} id={id}/>
+                <AddReferenceData update={false} id={id} />
             )}
         </HeaderWrapper>
     );

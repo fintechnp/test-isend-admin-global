@@ -63,7 +63,7 @@ const privateRoutes = [
     { path: "/setup/delivery-option", component: <DeliveryOption /> },
     { path: "/setup/delivery-route", component: <DeliveryRoute /> },
     { path: "/setup/exchange-rate", component: <ExchangeRate /> },
-    { path: "/setup/exchange-rate/:id", component: <ExchangeRateList /> },
+    { path: "/setup/exchange-rate/:name/:id", component: <ExchangeRateList /> },
     {
         path: "/setup/exchange-rate/create",
         component: <AddUpdateExchangeRate />,
@@ -88,9 +88,12 @@ const privateRoutes = [
     },
     { path: "/setup/payout-location", component: <PayoutLocation /> },
     { path: "/setup/reference", component: <Reference /> },
-    { path: "/setup/reference/data/:id", component: <ReferenceData /> },
+    { path: "/setup/reference/data/:name/:id", component: <ReferenceData /> },
     { path: "/setup/service-charge", component: <ServiceCharge /> },
-    { path: "/setup/service-charge/:id", component: <ServiceChargeList /> },
+    {
+        path: "/setup/service-charge/:name/:id",
+        component: <ServiceChargeList />,
+    },
     {
         path: "/setup/service-charge/create",
         component: <AddUpdateServiceCharge />,

@@ -227,6 +227,9 @@ const PartnerBank = () => {
                                         <VisibilityOffOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -240,6 +243,9 @@ const PartnerBank = () => {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -272,6 +278,9 @@ const PartnerBank = () => {
                                     <CableIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>

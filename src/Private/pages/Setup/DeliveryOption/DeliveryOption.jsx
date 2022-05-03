@@ -216,6 +216,9 @@ const DeliveryOption = () => {
                                         <VisibilityOffOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -229,6 +232,9 @@ const DeliveryOption = () => {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>

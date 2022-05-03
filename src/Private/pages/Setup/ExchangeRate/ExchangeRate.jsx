@@ -136,13 +136,16 @@ const ExchangeRate = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/exchange-rate/${row.original.sending_agent_id}`
+                                    `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_agent_id}`
                                 )
                             }
                         >
                             <RemoveRedEyeOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>

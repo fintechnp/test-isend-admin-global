@@ -207,12 +207,16 @@ function AccountTable() {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
                                 </Tooltip>
                             )}
                         </span>
+                        <AddAccount update={true} update_data={row?.original} />
                         <Tooltip title="Map Privilege" arrow>
                             <IconButton
                                 onClick={() =>
@@ -224,11 +228,13 @@ function AccountTable() {
                                 <SyncAltOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
                                     }}
                                 />
                             </IconButton>
                         </Tooltip>
-                        <AddAccount update={true} update_data={row?.original} />
                     </Box>
                 ),
             },

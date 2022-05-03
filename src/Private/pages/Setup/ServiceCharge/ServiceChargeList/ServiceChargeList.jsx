@@ -69,7 +69,7 @@ const initialState = {
 };
 
 const ServiceChargeList = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -216,7 +216,7 @@ const ServiceChargeList = () => {
             ),
         },
         {
-            Header: "",
+            Header: "Actions",
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -237,6 +237,9 @@ const ServiceChargeList = () => {
                             <RemoveRedEyeOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -252,6 +255,9 @@ const ServiceChargeList = () => {
                             <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -332,6 +338,7 @@ const ServiceChargeList = () => {
             <Header
                 title="Service Charge List"
                 buttonText="Add Service Charge"
+                name={name}
             />
             <Filter
                 handleSearch={handleSearch}

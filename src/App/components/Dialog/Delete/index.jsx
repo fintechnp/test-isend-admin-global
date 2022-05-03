@@ -46,7 +46,11 @@ const DialogContentText = styled(MuiDialogContentText)(({ theme }) => ({
 const DeleteIcon = styled(LoadingButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    "&: hover": { color: "border.dark", opacity: 1 },
+    "&: hover": {
+        color: theme.palette.border.dark,
+        opacity: 1,
+        background: theme.palette.border.light,
+    },
 }));
 
 const DeleteButton = styled(LoadingButton)(({ theme }) => ({
@@ -112,7 +116,9 @@ function DeleteDialog({
                         onClick={handleClickOpen}
                         endIcon={
                             <DeleteOutlineOutlinedIcon
-                                sx={{ fontSize: "16px" }}
+                                sx={{
+                                    fontSize: "16px",
+                                }}
                             />
                         }
                     >
@@ -125,12 +131,15 @@ function DeleteDialog({
                         color="primary"
                         component="span"
                         onClick={handleClickOpen}
-                        sx={{ minWidth: "3px" }}
+                        sx={{ minWidth: "3px", borderRadius: "20px" }}
                     >
                         <DeleteOutlinedIcon
                             sx={{
                                 fontSize: "20px",
                                 color: "warning.main",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </DeleteIcon>

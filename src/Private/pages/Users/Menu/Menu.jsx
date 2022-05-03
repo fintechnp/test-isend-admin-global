@@ -159,6 +159,9 @@ const Menu = () => {
                                         <VisibilityOffOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -169,6 +172,9 @@ const Menu = () => {
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
                                                 fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
                                             }}
                                         />
                                     </IconButton>
@@ -187,6 +193,9 @@ const Menu = () => {
                                 <SubdirectoryArrowRightOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
                                     }}
                                 />
                             </IconButton>

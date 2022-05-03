@@ -135,13 +135,16 @@ const ServiceCharge = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/service-charge/${row.original.sending_agent_id}`
+                                    `/setup/service-charge/${row?.original?.agent_name}/${row?.original?.sending_agent_id}`
                                 )
                             }
                         >
                             <RemoveRedEyeOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
