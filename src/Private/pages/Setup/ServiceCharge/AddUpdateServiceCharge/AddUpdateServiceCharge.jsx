@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -25,7 +25,17 @@ function AddUpdateServiceCharge() {
         (state) => state.update_service_charge
     );
 
-    const handleClose = (data) => {
+    const { response: chargeData, loading: get_loading } = useSelector(
+        (state) => state.get_service_charge_details
+    );
+
+    useEffect(() => {
+        if (id) {
+            dispatch(actions.get_service_charge_details(id));
+        }
+    }, [dispatch, id]);
+
+    const handleClose = () => {
         navigate(-1);
     };
 
@@ -46,14 +56,27 @@ function AddUpdateServiceCharge() {
                 {id ? (
                     <ServiceChargeForm
                         destroyOnUnmount
-                        // initialValues={{
-                        //     menu_id: memoizedData?.menu_id,
-                        //     name: memoizedData?.name,
-                        //     menu_order: memoizedData?.menu_order,
-                        //     is_active: memoizedData?.is_active,
-                        // }}
+                        enableReinitialize
+                        initialValues={{
+                            min_amount: chargeData?.data?.min_amount,
+                            max_amount: chargeData?.data?.max_amount,
+                            charge_mode: chargeData?.data?.charge_mode,
+                            charge_flat: chargeData?.data?.charge_flat,
+                            charge_per: chargeData?.data?.charge_per,
+                            send_commission_type:
+                                chargeData?.data?.send_commission_type,
+                            send_commission_amount:
+                                chargeData?.data?.send_commission_amount,
+                            pay_commission_type:
+                                chargeData?.data?.pay_commission_type,
+                            pay_commission_amount:
+                                chargeData?.data?.pay_commission_amount,
+                            additional_fee: chargeData?.data?.additional_fee,
+                            is_enable: chargeData?.data?.is_enable,
+                        }}
                         onSubmit={handleChargeUpdate}
                         buttonText="Update"
+                        update={true}
                         handleClose={handleClose}
                         loading={update_loading}
                         form={`update_service_charge_form`}
@@ -65,7 +88,7 @@ function AddUpdateServiceCharge() {
                         buttonText="Create"
                         handleClose={handleClose}
                         form={`add_service_charge_form`}
-                        initialValues={{ is_active: false }}
+                        initialValues={{ is_enable: true }}
                         loading={add_loading}
                     />
                 )}

@@ -230,7 +230,7 @@ const ServiceChargeList = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/service-charge/details/${row.original.sending_agent_id}`
+                                    `/setup/service-charge/details/${row.original.tid}`
                                 )
                             }
                         >

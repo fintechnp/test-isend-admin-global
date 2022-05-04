@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
+import { change, Field, Form, reduxForm } from "redux-form";
+import { Grid, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
@@ -62,12 +62,36 @@ const ServiceChargeForm = ({
     const [mode, setMode] = useState("F");
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
-    const { response: servicecharge_data } = useSelector(
-        (state) => state.get_service_charge_by_partner
-    );
 
     const handleChargeMode = (e) => {
         setMode(e.target.value);
+    };
+
+    const convertCurrency = (iso3) => {
+        const currency = country.filter((data) => data.iso3 === iso3);
+        if (currency) {
+            return currency[0].currency;
+        }
+    };
+
+    const handleCurrency = (e) => {
+        if (update) {
+            dispatch(
+                change(
+                    "update_service_charge_form",
+                    "receiving_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
+        } else {
+            dispatch(
+                change(
+                    "add_service_charge_form",
+                    "receiving_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
+        }
     };
 
     return (
@@ -125,7 +149,7 @@ const ServiceChargeForm = ({
                                     reference
                                         ?.filter(
                                             (ref_data) =>
-                                                ref_data.reference_type === 1
+                                                ref_data.reference_type === 37
                                         )[0]
                                         .reference_data.map((data) => (
                                             <option
@@ -143,6 +167,7 @@ const ServiceChargeForm = ({
                                 label="Receiving Country"
                                 type="number"
                                 small={12}
+                                onChange={handleCurrency}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -181,7 +206,7 @@ const ServiceChargeForm = ({
                                             value={data.currency}
                                             key={data.id}
                                         >
-                                            {data.currency}
+                                            {data.currency_name}
                                         </option>
                                     ))}
                             </Field>
@@ -190,7 +215,7 @@ const ServiceChargeForm = ({
                             <Field
                                 name="min_amount"
                                 label="Min Amount"
-                                type="text"
+                                type="number"
                                 small={12}
                                 component={TextField}
                                 validate={[
@@ -203,7 +228,7 @@ const ServiceChargeForm = ({
                             <Field
                                 name="max_amount"
                                 label="Max Amount"
-                                type="text"
+                                type="number"
                                 small={12}
                                 component={TextField}
                                 validate={[

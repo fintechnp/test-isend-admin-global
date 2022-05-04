@@ -60,7 +60,7 @@ function PartnerDetails() {
     };
 
     return (
-        <Grid container>
+        <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>

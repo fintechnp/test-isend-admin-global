@@ -14,10 +14,12 @@ const Title = styled(Typography)(({ theme }) => ({
     paddingBottom: "6px",
 }));
 
-function AddUpdateExchangeRate() {
+function AddUpdateExchangeRate({update_data}) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const memoizedData = React.useMemo(() => update_data, [update_data]);
+
     const { success: add_success, loading: add_loading } = useSelector(
         (state) => state.add_service_charge
     );
@@ -46,26 +48,26 @@ function AddUpdateExchangeRate() {
                 {id ? (
                     <ExchangeRateForm
                         destroyOnUnmount
-                        // initialValues={{
-                        //     menu_id: memoizedData?.menu_id,
-                        //     name: memoizedData?.name,
-                        //     menu_order: memoizedData?.menu_order,
-                        //     is_active: memoizedData?.is_active,
-                        // }}
+                        initialValues={{
+                            sending_agent_id: memoizedData?.menu_id,
+                            name: memoizedData?.name,
+                            menu_order: memoizedData?.menu_order,
+                            is_active: memoizedData?.is_active,
+                        }}
                         onSubmit={handleChargeUpdate}
                         buttonText="Update"
                         handleClose={handleClose}
                         loading={update_loading}
-                        form={`update_partner_form`}
+                        form={`update_exchange_rate`}
                     />
                 ) : (
                     <ExchangeRateForm
                         enableReinitialize={true}
                         onSubmit={handleChargeCreate}
                         buttonText="Create"
-                        form={`add_partner_form`}
+                        form={`add_exchange_rate`}
                         handleClose={handleClose}
-                        initialValues={{ is_active: false }}
+                        initialValues={{ sending_agent_id: 1 }}
                         loading={add_loading}
                     />
                 )}

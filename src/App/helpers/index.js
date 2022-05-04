@@ -68,3 +68,16 @@ export const FormatNumber = (value) => {
         return "N/A";
     }
 };
+
+export const Mode = (mode) => {
+    if (mode) {
+        switch (mode) {
+            case "F":
+                return "Flat";
+            case "P":
+                return "Percentage";
+            default:
+                return "N/A";
+        }
+    }
+};

@@ -1,13 +1,18 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import { Skeleton, Typography } from "@mui/material";
+import { Skeleton } from "@mui/material";
 
 function PartnerSkeleton() {
     return (
-        <Grid container rowSpacing={1}>
+        <Grid
+            container
+            rowSpacing={1}
+            sx={{
+                padding: "8px 20px",
+                margin: 0,
+                backgroundColor: "background.main",
+            }}
+        >
             <Grid item xs={12}>
                 <Skeleton />
             </Grid>

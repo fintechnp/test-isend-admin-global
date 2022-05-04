@@ -67,18 +67,15 @@ const ExchangeRate = () => {
     const { response: servicecharge_data, loading: g_loading } = useSelector(
         (state) => state.get_all_exchange_rate
     );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_partner
-    );
-    const { success: a_success } = useSelector((state) => state.add_partner);
-    const { success: u_success } = useSelector((state) => state.update_partner);
+    // const { loading: d_loading, success: d_success } = useSelector(
+    //     (state) => state.delete_partner
+    // );
+    // const { success: a_success } = useSelector((state) => state.add_partner);
+    // const { success: u_success } = useSelector((state) => state.update_partner);
 
     useEffect(() => {
         dispatch(actions.get_all_exchange_rate(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
-    }, [dispatch, filterSchema, a_success, u_success]);
+    }, [dispatch, filterSchema]);
 
     const columns = useMemo(() => [
         {

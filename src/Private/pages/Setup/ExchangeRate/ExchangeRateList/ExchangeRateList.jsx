@@ -198,7 +198,7 @@ const ExchangeRateList = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/exchange-rate/details/${row.original.exchange_rate_id}`
+                                    `/setup/exchange-rate/details/${row?.original?.exchange_rate_id}`
                                 )
                             }
                         >
@@ -237,11 +237,7 @@ const ExchangeRateList = () => {
                 </Box>
             ),
         },
-    ]);
-
-    const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
-    }, []);
+    ], []);
 
     const handleSearch = useCallback(
         (e) => {

@@ -42,7 +42,15 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
 
 function PartnerDetails({ data }) {
     return (
-        <Grid container rowSpacing={1}>
+        <Grid
+            container
+            rowSpacing={1}
+            sx={{
+                padding: "6px 16px",
+                margin: 0,
+                backgroundColor: "background.main",
+            }}
+        >
             <Grid item xs={12}>
                 <Box>
                     <Header>Basic Information</Header>
