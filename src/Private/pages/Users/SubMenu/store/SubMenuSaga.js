@@ -57,11 +57,11 @@ export const updateSubMenu = takeEvery(
 export const updateSubMenuStatus = takeEvery(
     actions.UPDATE_SUB_MENU_STATUS,
     function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
         try {
             const res = yield call(
                 api.patch,
-                `menu/${action.parent_id}/${action.sub_id}`,
-                action.data
+                `menu/${action.parent_id}/${action.sub_id}?${query}`
             );
             yield put({
                 type: actions.UPDATE_SUB_MENU_STATUS_SUCCESS,

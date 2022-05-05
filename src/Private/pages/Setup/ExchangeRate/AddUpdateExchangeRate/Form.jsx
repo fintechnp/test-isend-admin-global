@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { change, Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
@@ -22,6 +24,14 @@ const Container = styled(Grid)(({ theme }) => ({
 const FormWrapper = styled(Grid)(({ theme }) => ({
     padding: "12px",
     backgroundColor: theme.palette.background.light,
+}));
+
+const Header = styled(Box)(({ theme }) => ({
+    paddingBottom: "4px",
+    paddingLeft: "16px",
+    fontSize: "18px",
+    fontWeight: 500,
+    color: theme.palette.primary.main,
 }));
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
@@ -60,9 +70,39 @@ const ExchangeRateForm = ({
     loading,
     buttonText,
     handleClose,
+    partner_sending,
 }) => {
+    const { id } = useParams();
     const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
+    const [form_name, setFormName] = useState("add_exchange_rate");
+    const [state, setState] = useState({
+        base_to_sending: 0,
+        base_to_sending_margin: 0,
+        base_to_sending_settle: 0,
+        base_to_receiving: 0,
+        base_to_receiving_margin: 0,
+        base_to_receiving_settle: 0,
+        send_min_amount: 0,
+        send_max_amount: 0,
+        receive_min_amount: 0,
+        receive_max_amount: 0,
+        customer_rate: 0,
+        round_customer_rate: 0,
+        round_send_amount: 0,
+        round_receiving_amount: 0,
+    });
+
+    useEffect(() => {
+        if (id) {
+            setFormName("update_exchange_rate");
+        }
+    }, [id]);
+
+    const handleState = (event) => {
+        const { name, value } = event.target;
+        setState({ ...state, [name]: value });
+    };
 
     const convertCurrency = (iso3) => {
         const currency = country.filter((data) => data.iso3 === iso3);
@@ -72,20 +112,22 @@ const ExchangeRateForm = ({
     };
 
     const handleCurrency = (e) => {
-        if (update) {
+        dispatch(
+            change(
+                form_name,
+                "receiving_currency",
+                convertCurrency(e.target.value)
+            )
+        );
+    };
+
+    const roundCustomerRate = (e) => {
+        if (e.target.value) {
             dispatch(
                 change(
-                    "update_exchange_rate",
-                    "receiving_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
-        } else {
-            dispatch(
-                change(
-                    "add_exchange_rate",
-                    "receiving_currency",
-                    convertCurrency(e.target.value)
+                    form_name,
+                    "customer_rate",
+                    state?.customer_rate.toFixed(parseInt(e.target.value) || 2)
                 )
             );
         }
@@ -93,15 +135,49 @@ const ExchangeRateForm = ({
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Container container direction="column">
+            <Container container direction="column" sx={{ pb: 3 }}>
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
+                        <Grid item xs={12}>
+                            <Box>
+                                <Header>Sending Information</Header>
+                                <Divider sx={{ margin: "0px 12px" }} />
+                            </Box>
+                        </Grid>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="sending_agent_id"
+                                label="Sending Agent"
+                                type="number"
+                                small={12}
+                                component={SelectField}
+                                disabled
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Sending Agent
+                                </option>
+                                {partner_sending &&
+                                    partner_sending.map((data, index) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
+                        </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="sending_currency"
                                 label="Sending Currency"
                                 type="text"
                                 small={12}
+                                disabled
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -122,6 +198,91 @@ const ExchangeRateForm = ({
                                     ))}
                             </Field>
                         </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="base_to_sending"
+                                label="Base To Sending"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="base_to_sending_margin"
+                                label="Base To Sending Margin"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="base_to_sending_settle"
+                                label="Base To Sending Settle"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="send_min_amount"
+                                label="Send Minimum Amount"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="send_max_amount"
+                                label="Send Maximum Amount"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="round_send_amount"
+                                label="Round Send Amount"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.integerValidator,
+                                ]}
+                            />
+                        </FieldWrapper>
+
+                        <Grid item xs={12}>
+                            <Box pt={2}>
+                                <Header>Receiving Information</Header>
+                                <Divider sx={{ margin: "0px 12px" }} />
+                            </Box>
+                        </Grid>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="receiving_country"
@@ -172,51 +333,6 @@ const ExchangeRateForm = ({
                                     ))}
                             </Field>
                         </FieldWrapper>
-                        <Grid item xs={12} sx={{ p: 1.4 }}>
-                            <Divider />
-                        </Grid>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="base_to_sending"
-                                label="Base To Sending"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="base_to_sending_margin"
-                                label="Base To Sending Margin"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="base_to_sending_settle"
-                                label="Base To Sending Settle"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <Grid item xs={12} sx={{ p: 1.4 }}>
-                            <Divider />
-                        </Grid>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="base_to_receiving"
@@ -256,80 +372,6 @@ const ExchangeRateForm = ({
                                 ]}
                             />
                         </FieldWrapper>
-                        <Grid item xs={12} sx={{ p: 1.4 }}>
-                            <Divider />
-                        </Grid>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="customer_rate"
-                                label="Customer Rate"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="round_customer_rate"
-                                label="Round Customer Rate"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <Grid item xs={12} sx={{ p: 1.4 }}>
-                            <Divider />
-                        </Grid>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="send_min_amount"
-                                label="Send Minimum Amount"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="send_max_amount"
-                                label="Send Maxium Amount"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="round_send_amount"
-                                label="Round Send Amount"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.integerValidator,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <Grid item xs={12} sx={{ p: 1.4 }}>
-                            <Divider />
-                        </Grid>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="receive_min_amount"
@@ -366,6 +408,40 @@ const ExchangeRateForm = ({
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.integerValidator,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <Grid item xs={12}>
+                            <Box pt={2}>
+                                <Header>Rate Information</Header>
+                                <Divider sx={{ margin: "0px 12px" }} />
+                            </Box>
+                        </Grid>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="customer_rate"
+                                label="Customer Rate"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                onBlur={handleState}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="round_customer_rate"
+                                label="Round Customer Rate"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                                onChange={(e) => roundCustomerRate(e)}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
                                 ]}
                             />
                         </FieldWrapper>

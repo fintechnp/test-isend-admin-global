@@ -15,11 +15,11 @@ const AddButton = styled(Button)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-function Header({ title, buttonText, name }) {
+function Header({ title, buttonText, name, sending_currency, id }) {
     const navigate = useNavigate();
 
     const handleAdd = () => {
-        navigate(`/setup/exchange-rate/create`);
+        navigate(`/setup/exchange-rate/create/${sending_currency}/${id}`);
     };
 
     return (

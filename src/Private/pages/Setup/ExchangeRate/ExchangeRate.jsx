@@ -133,7 +133,7 @@ const ExchangeRate = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_agent_id}`
+                                    `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}`
                                 )
                             }
                         >

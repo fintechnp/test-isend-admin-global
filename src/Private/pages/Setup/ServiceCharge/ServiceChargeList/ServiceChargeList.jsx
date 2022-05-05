@@ -83,8 +83,6 @@ const ServiceChargeList = () => {
     const { success: a_success } = useSelector((state) => state.add_partner);
     const { success: u_success } = useSelector((state) => state.update_partner);
 
-    console.log(servicecharge_data, "fdsafkl;sadfkjk");
-
     useEffect(() => {
         if (id) {
             dispatch(actions.get_service_charge_by_partner(id, filterSchema));
@@ -248,7 +246,7 @@ const ServiceChargeList = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/service-charge/update/${row.original.sending_agent_id}`
+                                    `/setup/service-charge/update/${row?.original?.tid}`
                                 )
                             }
                         >
@@ -339,6 +337,7 @@ const ServiceChargeList = () => {
                 title="Service Charge List"
                 buttonText="Add Service Charge"
                 name={name}
+                agent_id={id}
             />
             <Filter
                 handleSearch={handleSearch}

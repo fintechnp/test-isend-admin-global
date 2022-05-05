@@ -14,7 +14,6 @@ function ControlledSwitch({ size, defaultChecked, checked, handleCheck }) {
 
 function TableSwitch({ value, data, handleStatus }) {
     const [checked, setChecked] = React.useState(false);
-    console.log(data, "ddddddddd")
 
     React.useEffect(() => {
         setChecked(value);

@@ -121,7 +121,7 @@ const DeliveryOptionForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="location_code"
-                                label="Location Name"
+                                label="Location Code"
                                 type="text"
                                 small={12}
                                 component={TextField}

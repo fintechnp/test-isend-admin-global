@@ -38,8 +38,9 @@ export const updateMenu = takeEvery(actions.UPDATE_MENU, function* (action) {
 export const updateMenuStatus = takeEvery(
     actions.UPDATE_MENU_STATUS,
     function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
         try {
-            const res = yield call(api.patch, `menu/${action.id}`, action.data);
+            const res = yield call(api.patch, `menu/${action.id}?${query}`);
             yield put({
                 type: actions.UPDATE_MENU_STATUS_SUCCESS,
                 response: res,

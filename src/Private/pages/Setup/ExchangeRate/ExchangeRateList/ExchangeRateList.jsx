@@ -62,7 +62,7 @@ const initialState = {
 };
 
 const ExchangeRateList = () => {
-    const { id, name } = useParams();
+    const { id, name, sending_currency } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -82,162 +82,166 @@ const ExchangeRateList = () => {
         if (id) {
             dispatch(actions.get_exchange_rate_by_partner(id, filterSchema));
         }
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "exchange_rate_id",
-            maxWidth: 50,
-        },
-        {
-            Header: "Partner Name",
-            accessor: "agent_name",
-            width: 180,
-            maxWidth: 280,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Sending Currency</Typography>
-                </Box>
-            ),
-            accessor: "sending_currency",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CurrencyName(data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Base Currency</Typography>
-                </Box>
-            ),
-            accessor: "base_currency",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CurrencyName(data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Recieve Country</Typography>
-                </Box>
-            ),
-            accessor: "receiving_country",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "exchange_rate_id",
+                maxWidth: 50,
+            },
+            {
+                Header: "Partner Name",
+                accessor: "agent_name",
+                width: 180,
+                maxWidth: 280,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
                     >
-                        {data?.row?.original?.receiving_currency
-                            ? CurrencyName(
-                                  data?.row?.original?.receiving_currency
-                              )
-                            : "N/A"}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box sx={{}}>
-                    <Typography>Customer Rate</Typography>
-                </Box>
-            ),
-            accessor: "customer_rate",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center">
-                    <Typography>Actions</Typography>
-                </Box>
-            ),
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Tooltip title="Exchange Rate Details" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/exchange-rate/details/${row?.original?.exchange_rate_id}`
-                                )
-                            }
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Sending Currency</Typography>
+                    </Box>
+                ),
+                accessor: "sending_currency",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CurrencyName(data.value)}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Base Currency</Typography>
+                    </Box>
+                ),
+                accessor: "base_currency",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CurrencyName(data.value)}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Recieve Country</Typography>
+                    </Box>
+                ),
+                accessor: "receiving_country",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CountryName(data.value)}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
                         >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Exchange Rate" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/exchange-rate/update/${row.original.exchange_rate_id}`
-                                )
-                            }
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Delete
-                        tooltext="Delete Exchange Rate"
-                        handleDelete={handleDelete}
-                    />
-                </Box>
-            ),
-        },
-    ], []);
+                            {data?.row?.original?.receiving_currency
+                                ? CurrencyName(
+                                      data?.row?.original?.receiving_currency
+                                  )
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box sx={{}}>
+                        <Typography>Customer Rate</Typography>
+                    </Box>
+                ),
+                accessor: "customer_rate",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">{data.value}</StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Tooltip title="Exchange Rate Details" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/exchange-rate/details/${row?.original?.exchange_rate_id}`
+                                    )
+                                }
+                            >
+                                <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Exchange Rate" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/exchange-rate/update/${row.original.exchange_rate_id}`
+                                    )
+                                }
+                            >
+                                <EditOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Delete
+                            tooltext="Delete Exchange Rate"
+                            handleDelete={handleDelete}
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const handleSearch = useCallback(
         (e) => {
@@ -302,7 +306,13 @@ const ExchangeRateList = () => {
 
     return (
         <MenuContainer>
-            <Header title="Exchange Rate List" buttonText="Add Exchange Rate" name={name}/>
+            <Header
+                title="Exchange Rate List"
+                buttonText="Add Exchange Rate"
+                name={name}
+                id={id}
+                sending_currency={sending_currency}
+            />
             <Filter
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}
