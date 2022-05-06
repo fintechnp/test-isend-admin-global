@@ -82,6 +82,9 @@ const ExchangeRateList = () => {
         if (id) {
             dispatch(actions.get_exchange_rate_by_partner(id, filterSchema));
         }
+        dispatch({ type: "ADD_EXCHANGE_RATE_RESET" });
+        dispatch({ type: "UPDATE_EXCHANGE_RATE_RESET" });
+        dispatch({ type: "DELETE_EXCHANGE_RATE_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
     const columns = useMemo(
@@ -104,7 +107,7 @@ const ExchangeRateList = () => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                        <StyledName component="p">
                             {data.value}
                         </StyledName>
                     </Box>
@@ -233,8 +236,10 @@ const ExchangeRateList = () => {
                             </IconButton>
                         </Tooltip>
                         <Delete
-                            tooltext="Delete Exchange Rate"
+                            id={row.original.tid}
                             handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Delete Exchange Rate"
                         />
                     </Box>
                 ),
@@ -301,7 +306,7 @@ const ExchangeRateList = () => {
     };
 
     const handleDelete = (id) => {
-        dispatch(actions.delete_corridor(id));
+        dispatch(actions.delete_exchange_rate(id));
     };
 
     return (

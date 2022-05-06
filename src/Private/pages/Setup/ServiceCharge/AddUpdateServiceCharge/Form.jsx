@@ -350,7 +350,7 @@ const ServiceChargeForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="send_commission_amount"
-                                label="Send Commission Amount/Percentage"
+                                label="Send Commission Amount / Percentage"
                                 type="number"
                                 small={12}
                                 component={TextField}
@@ -382,7 +382,7 @@ const ServiceChargeForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="pay_commission_amount"
-                                label="Pay Commission Amount/Percentage"
+                                label="Pay Commission Amount / Percentage"
                                 type="number"
                                 small={12}
                                 component={TextField}

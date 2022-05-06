@@ -27,6 +27,12 @@ const Title = styled(Typography)(({ theme }) => ({
     paddingLeft: "8px",
 }));
 
+const Fetching = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.main,
+    fontSize: "16px",
+    fontWeight: 400,
+}));
+
 const BackButton = styled(Button)(({ theme }) => ({
     fontSize: "12px",
     textTransform: "capitalize",
@@ -55,19 +61,18 @@ function AddUpdateExchangeRate() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { response: partner_sending } = useSelector(
+    const { response: partner_sending, loading: partner_loading } = useSelector(
         (state) => state.get_sending_partner
     );
-
-    const { response: exchangeData } = useSelector(
+    const { response: exchangeData, loading: get_loading } = useSelector(
         (state) => state.get_exchange_rate_details
     );
 
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_service_charge
+        (state) => state.add_exchange_rate
     );
     const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_service_charge
+        (state) => state.update_exchange_rate
     );
 
     React.useEffect(() => {
@@ -80,17 +85,55 @@ function AddUpdateExchangeRate() {
         }
     }, [dispatch, id]);
 
+    React.useEffect(() => {
+        if (add_success || update_success) {
+            handleClose();
+        }
+    }, [add_success, update_success]);
+
     const handleClose = () => {
         navigate(-1);
     };
 
     const handleChargeCreate = (data) => {
-        dispatch(actions.add_partner(data));
+        dispatch(actions.add_exchange_rate(data));
     };
 
     const handleChargeUpdate = (data) => {
-        dispatch(actions.update_partner(data.menu_id, data));
+        dispatch(actions.update_exchange_rate(id, data));
     };
+
+    if (get_loading || partner_loading) {
+        return (
+            <Grid container>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                            <PublishedWithChangesIcon
+                                sx={{ color: "primary.main", fontSize: "28px" }}
+                            />
+                            <Title>{id ? "Update" : "Add"} Exchange Rate</Title>
+                        </Box>
+                        <BackButton
+                            variant="outlined"
+                            size="small"
+                            onClick={handleClose}
+                        >
+                            Back
+                        </BackButton>
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mb: 1.2 }} />
+                </Grid>
+                <Grid item xs={12}>
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <Fetching>Fetching...</Fetching>
+                    </Box>
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <Grid container>
@@ -121,10 +164,6 @@ function AddUpdateExchangeRate() {
                         enableReinitialize={true}
                         initialValues={
                             exchangeData?.data && {
-                                sending_agent_id:
-                                    exchangeData?.data?.sending_agent_id,
-                                sending_currency:
-                                    exchangeData?.data?.sending_currency,
                                 base_to_sending:
                                     exchangeData?.data?.base_to_sending,
                                 base_to_sending_margin:
@@ -137,10 +176,6 @@ function AddUpdateExchangeRate() {
                                     exchangeData?.data?.send_max_amount,
                                 round_send_amount:
                                     exchangeData?.data?.round_send_amount,
-                                receiving_country:
-                                    exchangeData?.data?.receiving_country,
-                                receiving_currency:
-                                    exchangeData?.data?.receiving_currency,
                                 base_to_receiving:
                                     exchangeData?.data?.base_to_receiving,
                                 base_to_receiving_margin:

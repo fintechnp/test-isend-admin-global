@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import { Grid, Button } from "@mui/material";
+import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
@@ -76,20 +76,22 @@ const ExchangeRateForm = ({
     const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
     const [form_name, setFormName] = useState("add_exchange_rate");
-    const [state, setState] = useState({
+    const [rate, setRate] = useState(0);
+    const [round, setRound] = useState(2);
+    const [sendState, setSendState] = useState({
         base_to_sending: 0,
         base_to_sending_margin: 0,
         base_to_sending_settle: 0,
+        send_min_amount: 0,
+        send_max_amount: 0,
+        round_send_amount: 0,
+    });
+    const [receiveState, setReceiveState] = useState({
         base_to_receiving: 0,
         base_to_receiving_margin: 0,
         base_to_receiving_settle: 0,
-        send_min_amount: 0,
-        send_max_amount: 0,
         receive_min_amount: 0,
         receive_max_amount: 0,
-        customer_rate: 0,
-        round_customer_rate: 0,
-        round_send_amount: 0,
         round_receiving_amount: 0,
     });
 
@@ -98,11 +100,6 @@ const ExchangeRateForm = ({
             setFormName("update_exchange_rate");
         }
     }, [id]);
-
-    const handleState = (event) => {
-        const { name, value } = event.target;
-        setState({ ...state, [name]: value });
-    };
 
     const convertCurrency = (iso3) => {
         const currency = country.filter((data) => data.iso3 === iso3);
@@ -121,13 +118,17 @@ const ExchangeRateForm = ({
         );
     };
 
+    const handleRate = (event) => {
+        setRate(event.target.value);
+    };
+
     const roundCustomerRate = (e) => {
         if (e.target.value) {
             dispatch(
                 change(
                     form_name,
                     "customer_rate",
-                    state?.customer_rate.toFixed(parseInt(e.target.value) || 2)
+                    rate?.toFixed(parseInt(e.target.value) || 2)
                 )
             );
         }
@@ -144,60 +145,66 @@ const ExchangeRateForm = ({
                                 <Divider sx={{ margin: "0px 12px" }} />
                             </Box>
                         </Grid>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="sending_agent_id"
-                                label="Sending Agent"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                disabled
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Sending Agent
-                                </option>
-                                {partner_sending &&
-                                    partner_sending.map((data, index) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
-                                            {data.name}
+                        {!id && (
+                            <>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="sending_agent_id"
+                                        label="Sending Agent"
+                                        type="number"
+                                        small={12}
+                                        component={SelectField}
+                                        disabled
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Sending Agent
                                         </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="sending_currency"
-                                label="Sending Currency"
-                                type="text"
-                                small={12}
-                                disabled
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.id}
-                                        >
-                                            {data.currency_name}
+                                        {partner_sending &&
+                                            partner_sending.map(
+                                                (data, index) => (
+                                                    <option
+                                                        value={data.agent_id}
+                                                        key={data?.tid}
+                                                    >
+                                                        {data.name}
+                                                    </option>
+                                                )
+                                            )}
+                                    </Field>
+                                </FieldWrapper>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="sending_currency"
+                                        label="Sending Currency"
+                                        type="text"
+                                        small={12}
+                                        disabled
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Currency
                                         </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
+                                        {country &&
+                                            country.map((data) => (
+                                                <option
+                                                    value={data.currency}
+                                                    key={data.country_id}
+                                                >
+                                                    {data.currency_name}
+                                                </option>
+                                            ))}
+                                    </Field>
+                                </FieldWrapper>
+                            </>
+                        )}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="base_to_sending"
@@ -283,56 +290,63 @@ const ExchangeRateForm = ({
                                 <Divider sx={{ margin: "0px 12px" }} />
                             </Box>
                         </Grid>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="receiving_country"
-                                label="Receive Country"
-                                type="text"
-                                small={12}
-                                onChange={handleCurrency}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
-                                            {data.country}
+                        {!id && (
+                            <>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="receiving_country"
+                                        label="Receive Country"
+                                        type="text"
+                                        small={12}
+                                        onChange={handleCurrency}
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Country
                                         </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="receiving_currency"
-                                label="Receive Currency"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.id}
-                                        >
-                                            {data.currency_name}
+                                        {country &&
+                                            country.map((data) => (
+                                                <option
+                                                    value={data.iso3}
+                                                    key={data.country_id}
+                                                >
+                                                    {data.country}
+                                                </option>
+                                            ))}
+                                    </Field>
+                                </FieldWrapper>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="receiving_currency"
+                                        label="Receive Currency"
+                                        type="text"
+                                        small={12}
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Currency
                                         </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
+                                        {country &&
+                                            country.map((data) => (
+                                                <option
+                                                    value={data.currency}
+                                                    key={data.country_id}
+                                                >
+                                                    {data.currency_name}
+                                                </option>
+                                            ))}
+                                    </Field>
+                                </FieldWrapper>
+                            </>
+                        )}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="base_to_receiving"
@@ -424,7 +438,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                onBlur={handleState}
+                                onChange={handleRate}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -438,7 +452,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                onChange={(e) => roundCustomerRate(e)}
+                                onChange={roundCustomerRate}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,

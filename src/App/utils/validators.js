@@ -8,7 +8,8 @@ const validators = {
         }
         return undefined;
     },
-    emptyValidator: (value) => (value ? undefined : "This field is required"),
+    emptyValidator: (value) =>
+        value || value === 0 ? undefined : "This field is required",
     passwordValidator: (value) => {
         if (!value) {
             return "This field is required";

@@ -2,11 +2,9 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
@@ -67,90 +65,88 @@ const ExchangeRate = () => {
     const { response: servicecharge_data, loading: g_loading } = useSelector(
         (state) => state.get_all_exchange_rate
     );
-    // const { loading: d_loading, success: d_success } = useSelector(
-    //     (state) => state.delete_partner
-    // );
-    // const { success: a_success } = useSelector((state) => state.add_partner);
-    // const { success: u_success } = useSelector((state) => state.update_partner);
 
     useEffect(() => {
         dispatch(actions.get_all_exchange_rate(filterSchema));
     }, [dispatch, filterSchema]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "SN",
-            maxWidth: 100,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data?.row?.index + 1}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: "Partner Name",
-            accessor: "agent_name",
-            width: 3000,
-            maxWidth: 500,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center" sx={{}}>
-                    <Typography>Actions</Typography>
-                </Box>
-            ),
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Tooltip title="Show All Exchange Rates" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}`
-                                )
-                            }
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-            ),
-        },
-    ]);
+    const columns = useMemo(
+        () => [
+            {
+                Header: "SN",
+                maxWidth: 100,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data?.row?.index + 1}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Partner Name",
+                accessor: "agent_name",
+                width: 3000,
+                maxWidth: 500,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Tooltip title="Show All Exchange Rates" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}`
+                                    )
+                                }
+                            >
+                                <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const handleSearch = useCallback(
         (e) => {

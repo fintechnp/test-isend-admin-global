@@ -6,7 +6,7 @@ export const renderFromHelper = ({ touched, error }) => {
         return;
     } else {
         return (
-            <FormHelperText style={{ color: "red" }}>
+            <FormHelperText sx={{ color: "warning.main" }}>
                 {touched && error}
             </FormHelperText>
         );
