@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import MuiStepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,15 @@ const Stepper = styled(MuiStepper)(({ theme }) => ({
     "& .MuiStepLabel-label": {
         fontSize: "18px",
     },
+    "& .MuiStepLabel-label.Mui-completed": {
+        color: theme.palette.success.main,
+    },
+}));
+
+const Fetching = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.main,
+    fontSize: "16px",
+    fontWeight: 400,
 }));
 
 const steps = [
@@ -41,7 +50,8 @@ const steps = [
     "Business Information",
 ];
 
-function PartnerForm({ update_data }) {
+function PartnerForm({ update_data, loading }) {
+    const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [data, setData] = React.useState({});
@@ -50,12 +60,19 @@ function PartnerForm({ update_data }) {
     const { success: add_success, loading: add_loading } = useSelector(
         (state) => state.add_partner
     );
+    const { success: update_success, loading: update_loading } = useSelector(
+        (state) => state.update_partner
+    );
+
+    const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
-        if (add_success) {
+        if (add_success || update_success) {
             navigate(-1);
+            // setActiveStep(0);
+            setCompleted({});
         }
-    }, [add_success]);
+    }, [add_success, update_success]);
 
     const totalSteps = () => {
         return steps.length;
@@ -85,10 +102,6 @@ function PartnerForm({ update_data }) {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleStep = (step) => () => {
-        setActiveStep(step);
-    };
-
     const handleComplete = () => {
         const newCompleted = completed;
         newCompleted[activeStep] = true;
@@ -96,13 +109,15 @@ function PartnerForm({ update_data }) {
         handleNext();
     };
 
-    const handleReset = () => {
-        // setActiveStep(0);
-        // setCompleted({});
-        dispatch(actions.add_partner(data));
+    const handleSubmitForm = (id) => {
+        if (id) {
+            dispatch(actions.update_partner(id, data));
+        } else {
+            dispatch(actions.add_partner(data));
+        }
     };
 
-    const handleBasicForm = () => {
+    const handleBasicForm = (data) => {
         handleComplete();
     };
 
@@ -114,6 +129,28 @@ function PartnerForm({ update_data }) {
         setData(data);
         handleComplete();
     };
+
+    if (loading) {
+        return (
+            <Box sx={{ width: "100%", pt: "16px" }}>
+                <Stepper
+                    nonLinear
+                    activeStep={activeStep}
+                    alternativeLabel
+                    sx={{ width: "100%", padding: "16px 0px" }}
+                >
+                    {steps.map((label, index) => (
+                        <Step key={label} completed={completed[index]}>
+                            <StepLabel color="inherit">{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+                <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+                    <Fetching>Fetching...</Fetching>
+                </Box>
+            </Box>
+        );
+    }
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
@@ -149,7 +186,7 @@ function PartnerForm({ update_data }) {
                         <LoadingButton
                             size="small"
                             variant="outlined"
-                            loading={add_loading}
+                            loading={add_loading || update_loading}
                             sx={{
                                 mt: 2,
                                 borderWidth: "2px",
@@ -158,7 +195,7 @@ function PartnerForm({ update_data }) {
                                     borderWidth: "2px",
                                 },
                             }}
-                            onClick={handleReset}
+                            onClick={() => handleSubmitForm(id)}
                         >
                             Submit
                         </LoadingButton>
@@ -166,59 +203,139 @@ function PartnerForm({ update_data }) {
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    <Box>
-                        {activeStep === 0 && (
-                            <Basic
-                                destroyOnUnmount={false}
-                                form={`add_partner_form`}
-                                steps={steps}
-                                buttonText="Complete"
-                                completed={completed}
-                                activeStep={activeStep}
-                                handleNext={handleNext}
-                                handleBack={handleBack}
-                                totalSteps={totalSteps}
-                                handleComplete={handleComplete}
-                                completedSteps={completedSteps}
-                                allStepsCompleted={allStepsCompleted}
-                                onSubmit={handleBasicForm}
-                            />
-                        )}
-                        {activeStep === 1 && (
-                            <Contact
-                                destroyOnUnmount={false}
-                                form={`add_partner_form`}
-                                steps={steps}
-                                completed={completed}
-                                buttonText="Complete"
-                                activeStep={activeStep}
-                                handleNext={handleNext}
-                                handleBack={handleBack}
-                                totalSteps={totalSteps}
-                                handleComplete={handleComplete}
-                                completedSteps={completedSteps}
-                                allStepsCompleted={allStepsCompleted}
-                                onSubmit={handleContactForm}
-                            />
-                        )}
-                        {activeStep === 2 && (
-                            <Business
-                                destroyOnUnmount={false}
-                                form={`add_partner_form`}
-                                completed={completed}
-                                steps={steps}
-                                buttonText="Complete"
-                                activeStep={activeStep}
-                                handleNext={handleNext}
-                                handleBack={handleBack}
-                                totalSteps={totalSteps}
-                                handleComplete={handleComplete}
-                                completedSteps={completedSteps}
-                                allStepsCompleted={allStepsCompleted}
-                                onSubmit={handleBusinessForm}
-                            />
-                        )}
-                    </Box>
+                    {id ? (
+                        <Box>
+                            {activeStep === 0 && (
+                                <Basic
+                                    destroyOnUnmount={false}
+                                    enableReinitialize={true}
+                                    shouldError={() => true}
+                                    form={`update_partner_form`}
+                                    initialValues={
+                                        memoizedData && {
+                                            name: memoizedData?.name,
+                                            short_code:
+                                                memoizedData?.short_code,
+                                            agent_type:
+                                                memoizedData?.agent_type,
+                                            phone_number:
+                                                memoizedData?.phone_number,
+                                            email: memoizedData?.email,
+                                            country: memoizedData?.country,
+                                            postcode: memoizedData?.postcode,
+                                            unit: memoizedData?.unit,
+                                            street: memoizedData?.street,
+                                            city: memoizedData?.city,
+                                            state: memoizedData?.state,
+                                            address: memoizedData?.address,
+                                            website: memoizedData?.website,
+                                            contact_person_full_name:
+                                                memoizedData?.contact_person_full_name,
+                                            contact_person_post:
+                                                memoizedData?.contact_person_post,
+                                            contact_person_mobile:
+                                                memoizedData?.contact_person_mobile,
+                                            contact_person_email:
+                                                memoizedData?.contact_person_email,
+                                            date_of_incorporation:
+                                                memoizedData?.date_of_incorporation,
+                                            business_license_number:
+                                                memoizedData?.business_license_number,
+                                            business_license_expiry_date:
+                                                memoizedData?.business_license_expiry_date,
+                                            balance: memoizedData?.balance,
+                                            credit_limit:
+                                                memoizedData?.credit_limit,
+                                            transaction_currency:
+                                                memoizedData?.transaction_currency,
+                                            settlement_currency:
+                                                memoizedData?.settlement_currency,
+                                            tax_type: memoizedData?.tax_type,
+                                            date_format:
+                                                memoizedData?.date_format,
+                                            time_zone: memoizedData?.time_zone,
+                                            transaction_limit:
+                                                memoizedData?.transaction_limit,
+                                            commission_currency:
+                                                memoizedData?.commission_currency,
+                                            bank_charge_currency:
+                                                memoizedData?.bank_charge_currency,
+                                            is_prefunding:
+                                                memoizedData?.is_prefunding,
+                                        }
+                                    }
+                                    steps={steps}
+                                    buttonText="Update"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBasicForm}
+                                />
+                            )}
+                            {activeStep === 1 && (
+                                <Contact
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`update_partner_form`}
+                                    steps={steps}
+                                    buttonText="Update"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleContactForm}
+                                />
+                            )}
+                            {activeStep === 2 && (
+                                <Business
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`update_partner_form`}
+                                    steps={steps}
+                                    buttonText="Update All"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBusinessForm}
+                                />
+                            )}
+                        </Box>
+                    ) : (
+                        <Box>
+                            {activeStep === 0 && (
+                                <Basic
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`add_partner_form`}
+                                    steps={steps}
+                                    buttonText="Next"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBasicForm}
+                                />
+                            )}
+                            {activeStep === 1 && (
+                                <Contact
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`add_partner_form`}
+                                    steps={steps}
+                                    buttonText="Next"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleContactForm}
+                                />
+                            )}
+                            {activeStep === 2 && (
+                                <Business
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`add_partner_form`}
+                                    steps={steps}
+                                    buttonText="Finish"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBusinessForm}
+                                />
+                            )}
+                        </Box>
+                    )}
                 </React.Fragment>
             )}
         </Box>

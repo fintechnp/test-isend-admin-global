@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm } from "redux-form";
+import { Grid, Button } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
@@ -29,12 +26,6 @@ const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
 }));
 
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
-}));
-
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingTop: "12px",
 }));
@@ -55,39 +46,13 @@ const NextButton = styled(Button)(({ theme }) => ({
     color: "#fff",
     borderRadius: "2px",
     textTransform: "capitalize",
-    background: theme.palette.text.main,
-    "&:hover": {
-        background: theme.palette.text.dark,
-    },
-}));
-
-const CompleteButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
     },
 }));
 
-const Basic = ({
-    handleSubmit,
-    handleNext,
-    handleBack,
-    update,
-    completed,
-    loading,
-    buttonText,
-    activeStep,
-    steps,
-    totalSteps,
-    completedSteps,
-    allStepsCompleted,
-    handleComplete,
-}) => {
-    const dispatch = useDispatch();
+const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -307,14 +272,13 @@ const Basic = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <CompleteButton
+                                <NextButton
                                     size="small"
                                     variant="outlined"
-                                    loading={loading}
                                     type="submit"
                                 >
-                                    Next
-                                </CompleteButton>
+                                    {buttonText}
+                                </NextButton>
                             )}
                         </Grid>
                     </ButtonWrapper>

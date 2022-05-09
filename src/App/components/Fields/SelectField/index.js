@@ -37,6 +37,11 @@ const Select = styled(MuiSelect)(({ theme }) => ({
         padding: "9px 10px",
         fontSize: "15px",
     },
+    "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled":
+        {
+            "-webkit-text-fill-color": "black",
+            fontWeight: 600,
+        },
     "&:focus": {
         border: "1px solid #D0D3D5",
     },

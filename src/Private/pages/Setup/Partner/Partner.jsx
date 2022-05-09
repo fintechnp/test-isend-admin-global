@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
@@ -11,7 +11,11 @@ import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/Subdirectory
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import { Delete } from "./../../../../App/components";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../App/components/Table";
 import { CountryName } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -92,18 +96,16 @@ const Partner = () => {
     const { response: partner_data, loading: g_loading } = useSelector(
         (state) => state.get_all_partner
     );
-    const { loading: d_loading, success: d_success } = useSelector(
+    const { success: d_success, loading: d_loading } = useSelector(
         (state) => state.delete_partner
     );
-    const { success: a_success } = useSelector((state) => state.add_partner);
-    const { success: u_success } = useSelector((state) => state.update_partner);
 
     useEffect(() => {
         dispatch(actions.get_all_partner(filterSchema));
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "DELETE_PARTNER_RESET" });
         dispatch({ type: "ADD_PARTNER_RESET" });
-    }, [dispatch, filterSchema, d_success, a_success, u_success]);
+        dispatch({ type: "UPDATE_PARTNER_RESET" });
+    }, [dispatch, filterSchema, d_success]);
 
     const columns = useMemo(() => [
         {
@@ -167,15 +169,11 @@ const Partner = () => {
             accessor: "is_active",
             Cell: (data) => (
                 <SwitchWrapper textAlign="center" sx={{}}>
-                    {data.value ? (
-                        <Tooltip title="Active" arrow>
-                            <UnBlocked>Active</UnBlocked>
-                        </Tooltip>
-                    ) : (
-                        <Tooltip title="Blocked" arrow>
-                            <Blocked>Blocked</Blocked>
-                        </Tooltip>
-                    )}
+                    <TableSwitch
+                        value={data?.value}
+                        data={data.row.original}
+                        handleStatus={handleStatus}
+                    />
                 </SwitchWrapper>
             ),
         },
@@ -230,6 +228,12 @@ const Partner = () => {
                             />
                         </IconButton>
                     </Tooltip>
+                    <Delete
+                        id={row.original.tid}
+                        handleDelete={handleDelete}
+                        loading={d_loading}
+                        tooltext="Remove Partner"
+                    />
                     <Tooltip title="See Corridor" arrow>
                         <IconButton
                             onClick={() =>
@@ -254,7 +258,7 @@ const Partner = () => {
     ]);
 
     const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+        dispatch(actions.update_partner_status(id, { is_active: is_active }));
     }, []);
 
     const handleSearch = useCallback(

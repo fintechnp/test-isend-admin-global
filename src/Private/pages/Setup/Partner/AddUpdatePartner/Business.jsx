@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
+import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Divider from "@mui/material/Divider";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 
@@ -56,17 +54,6 @@ const NextButton = styled(Button)(({ theme }) => ({
     color: "#fff",
     borderRadius: "2px",
     textTransform: "capitalize",
-    background: theme.palette.text.main,
-    "&:hover": {
-        background: theme.palette.text.dark,
-    },
-}));
-
-const CompleteButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
@@ -75,20 +62,11 @@ const CompleteButton = styled(LoadingButton)(({ theme }) => ({
 
 const Business = ({
     handleSubmit,
-    handleNext,
     handleBack,
-    update,
-    loading,
-    buttonText,
     activeStep,
     steps,
-    totalSteps,
-    completedSteps,
-    allStepsCompleted,
-    handleComplete,
+    buttonText,
 }) => {
-    const dispatch = useDispatch();
-    const [date_format, setDateFormat] = useState("mm/dd/yyyy");
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -242,9 +220,7 @@ const Business = ({
                                 <option value="" disabled>
                                     Select Date Format
                                 </option>
-                                <option value="yyyy-mm-dd" selected="">
-                                    YYYY-MM-DD
-                                </option>
+                                <option value="yyyy-mm-dd">YYYY-MM-DD</option>
                                 <option value="mm/dd/yyyy">mm/dd/yyyy</option>
                                 <option value="mm-dd-yyyy">mm-dd-yyyy</option>
                                 <option value="dd/mm/yyyy">dd/mm/yyyy</option>
@@ -345,7 +321,7 @@ const Business = ({
                                 <option value="570">
                                     (GMT + 09:30) Darwin
                                 </option>
-                                <option selected="" value="600">
+                                <option value="600">
                                     (GMT + 10:00) Brisbane, Sydney
                                 </option>
                                 <option value="660">
@@ -465,22 +441,13 @@ const Business = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <CompleteButton
+                                <NextButton
                                     size="small"
                                     variant="outlined"
-                                    loading={loading}
-                                    endIcon={
-                                        completedSteps() ===
-                                        totalSteps() - 1 ? (
-                                            <DoneAllIcon />
-                                        ) : null
-                                    }
                                     type="submit"
                                 >
-                                    {completedSteps() === totalSteps() - 1
-                                        ? "Finish"
-                                        : "Next"}
-                                </CompleteButton>
+                                    {buttonText}
+                                </NextButton>
                             )}
                         </Grid>
                     </ButtonWrapper>

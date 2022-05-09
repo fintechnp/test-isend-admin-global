@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { change, Field, Form, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,6 +19,10 @@ const Container = styled(Grid)(({ theme }) => ({
     [theme.breakpoints.up("sm")]: {
         minWidth: "350px",
     },
+    "& .MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input":
+        {
+            color: "#000",
+        },
 }));
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
@@ -71,29 +75,25 @@ const ExchangeRateForm = ({
     buttonText,
     handleClose,
     partner_sending,
+    values,
 }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
     const [form_name, setFormName] = useState("add_exchange_rate");
-    const [rate, setRate] = useState(0);
-    const [round, setRound] = useState(2);
-    const [sendState, setSendState] = useState({
-        base_to_sending: 0,
-        base_to_sending_margin: 0,
-        base_to_sending_settle: 0,
-        send_min_amount: 0,
-        send_max_amount: 0,
-        round_send_amount: 0,
-    });
-    const [receiveState, setReceiveState] = useState({
-        base_to_receiving: 0,
-        base_to_receiving_margin: 0,
-        base_to_receiving_settle: 0,
-        receive_min_amount: 0,
-        receive_max_amount: 0,
-        round_receiving_amount: 0,
-    });
+    const [base_to_sending, setBaseSend] = useState(0);
+    const [base_to_sending_margin, setBaseSendMargin] = useState(0);
+    const [base_to_receiving, setBaseReceive] = useState(0);
+    const [base_to_receiving_margin, setBaseReceiveMargin] = useState(0);
+    const [base_to_sending_settle, setBaseSendSettle] = useState(0);
+    const [base_to_receiving_settle, setBaseReceiveSettle] = useState(0);
+    const [customer_rate, setCustomerRate] = useState(0);
+    const [send_min, setSendMin] = useState(0);
+    const [send_max, setSendMax] = useState(0);
+    const [receive_min, setReceiveMin] = useState(0);
+    const [receive_max, setReceiveMax] = useState(0);
+    const form_value = useSelector((state) => state.form);
+    console.log(form_value);
 
     useEffect(() => {
         if (id) {
@@ -118,18 +118,295 @@ const ExchangeRateForm = ({
         );
     };
 
-    const handleRate = (event) => {
-        setRate(event.target.value);
+    const handleBaseSend = (e) => {
+        setBaseSend(e.target.value);
+        if (base_to_sending_margin) {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_sending_settle",
+                    parseFloat(e.target.value || 0) +
+                        parseFloat(base_to_sending_margin)
+                )
+            );
+            setBaseSendSettle(
+                parseFloat(e.target.value || 0) +
+                    parseFloat(base_to_sending_margin)
+            );
+            if (base_to_receiving_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        base_to_receiving_settle /
+                            (parseFloat(e.target.value || 0) +
+                                parseFloat(base_to_sending_margin))
+                    )
+                );
+                setCustomerRate(
+                    base_to_receiving_settle /
+                        (parseFloat(e.target.value || 0) +
+                            parseFloat(base_to_sending_margin))
+                );
+            }
+        } else {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_sending_settle",
+                    parseFloat(e.target.value)
+                )
+            );
+            setBaseSendSettle(parseFloat(e.target.value || 0));
+            if (base_to_receiving_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        base_to_receiving_settle /
+                            parseFloat(e.target.value || 0)
+                    )
+                );
+                setCustomerRate(
+                    base_to_receiving_settle / parseFloat(e.target.value || 0)
+                );
+            }
+        }
     };
 
-    const roundCustomerRate = (e) => {
+    const handleBaseSendMargin = (e) => {
+        setBaseSendMargin(e.target.value);
+        if (base_to_sending) {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_sending_settle",
+                    parseFloat(e.target.value || 0) +
+                        parseFloat(base_to_sending)
+                )
+            );
+            setBaseSendSettle(
+                parseFloat(e.target.value || 0) + parseFloat(base_to_sending)
+            );
+            if (base_to_receiving_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        base_to_receiving_settle /
+                            (parseFloat(e.target.value || 0) +
+                                parseFloat(base_to_sending))
+                    )
+                );
+                setCustomerRate(
+                    base_to_receiving_settle /
+                        (parseFloat(e.target.value || 0) +
+                            parseFloat(base_to_sending))
+                );
+            }
+        } else {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_sending_settle",
+                    parseFloat(e.target.value)
+                )
+            );
+            setBaseSendSettle(parseFloat(e.target.value || 0));
+            if (base_to_receiving_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        base_to_receiving_settle /
+                            parseFloat(e.target.value || 0)
+                    )
+                );
+                setCustomerRate(
+                    base_to_receiving_settle / parseFloat(e.target.value || 0)
+                );
+            }
+        }
+    };
+
+    const handleBaseReceive = (e) => {
+        setBaseReceive(e.target.value);
+        if (base_to_receiving_margin) {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_receiving_settle",
+                    parseFloat(e.target.value || 0) +
+                        parseFloat(base_to_receiving_margin)
+                )
+            );
+            setBaseReceiveSettle(
+                parseFloat(e.target.value || 0) +
+                    parseFloat(base_to_receiving_margin)
+            );
+            if (base_to_sending_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        (parseFloat(e.target.value || 0) +
+                            parseFloat(base_to_receiving_margin)) /
+                            base_to_sending_settle
+                    )
+                );
+                setCustomerRate(
+                    (parseFloat(e.target.value || 0) +
+                        parseFloat(base_to_receiving_margin)) /
+                        base_to_sending_settle
+                );
+            }
+        } else {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_receiving_settle",
+                    parseFloat(e.target.value)
+                )
+            );
+            setBaseReceiveSettle(parseFloat(e.target.value || 0));
+            if (base_to_sending_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        parseFloat(e.target.value || 0) / base_to_sending_settle
+                    )
+                );
+                setCustomerRate(
+                    parseFloat(e.target.value || 0) / base_to_sending_settle
+                );
+            }
+        }
+    };
+
+    const handleBaseReceiveMargin = (e) => {
+        setBaseReceiveMargin(e.target.value);
+        if (base_to_receiving) {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_receiving_settle",
+                    parseFloat(e.target.value || 0) +
+                        parseFloat(base_to_receiving)
+                )
+            );
+            setBaseReceiveSettle(
+                parseFloat(e.target.value || 0) + parseFloat(base_to_receiving)
+            );
+            if (base_to_sending_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        (parseFloat(e.target.value || 0) +
+                            parseFloat(base_to_receiving)) /
+                            base_to_sending_settle
+                    )
+                );
+                setCustomerRate(
+                    (parseFloat(e.target.value || 0) +
+                        parseFloat(base_to_receiving)) /
+                        base_to_sending_settle
+                );
+            }
+        } else {
+            dispatch(
+                change(
+                    form_name,
+                    "base_to_receiving_settle",
+                    parseFloat(e.target.value)
+                )
+            );
+            setBaseReceiveSettle(parseFloat(e.target.value || 0));
+            if (base_to_sending_settle) {
+                dispatch(
+                    change(
+                        form_name,
+                        "customer_rate",
+                        parseFloat(e.target.value || 0) / base_to_sending_settle
+                    )
+                );
+                setCustomerRate(
+                    parseFloat(e.target.value || 0) / base_to_sending_settle
+                );
+            }
+        }
+    };
+
+    const handleSendRound = (e) => {
         if (e.target.value) {
             dispatch(
                 change(
                     form_name,
-                    "customer_rate",
-                    rate?.toFixed(parseInt(e.target.value) || 2)
+                    "send_min_amount",
+                    parseFloat(send_min).toFixed(parseInt(e.target.value) || 8)
                 )
+            );
+            dispatch(
+                change(
+                    form_name,
+                    "send_max_amount",
+                    parseFloat(send_max).toFixed(parseInt(e.target.value) || 8)
+                )
+            );
+        }
+    };
+
+    const handleReceiveRound = (e) => {
+        if (e.target.value) {
+            dispatch(
+                change(
+                    form_name,
+                    "receive_min_amount",
+                    parseFloat(receive_min).toFixed(
+                        parseInt(e.target.value) || 8
+                    )
+                )
+            );
+            dispatch(
+                change(
+                    form_name,
+                    "receive_max_amount",
+                    parseFloat(receive_max).toFixed(
+                        parseInt(e.target.value) || 8
+                    )
+                )
+            );
+        }
+    };
+
+    const CustomerRate = (e) => {
+        if (e.target.value) {
+            // dispatch(
+            //     change(
+            //         form_name,
+            //         "customer_rate",
+            //         values?.customer_rate?.toFixed(
+            //             parseInt(e.target.value) || 2
+            //         )
+            //     )
+            // );
+        }
+    };
+
+    const roundCustomerRate = (e) => {
+        if (e.target.value) {
+            // dispatch(
+            //     change(
+            //         form_name,
+            //         "customer_rate",
+            //         values?.customer_rate?.toFixed(
+            //             parseInt(e.target.value) || 2
+            //         )
+            //     )
+            // );
+            setCustomerRate(
+                customer_rate?.toFixed(parseInt(e.target.value) || 2)
             );
         }
     };
@@ -212,6 +489,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => handleBaseSend(e)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -225,6 +503,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => handleBaseSendMargin(e)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -251,6 +530,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => setSendMin(e.target.value)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -264,6 +544,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => setSendMax(e.target.value)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -277,6 +558,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => handleSendRound(e)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.integerValidator,
@@ -354,6 +636,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => handleBaseReceive(e)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -371,6 +654,7 @@ const ExchangeRateForm = ({
                                     Validator.emptyValidator,
                                     Validator.minValue1,
                                 ]}
+                                onChange={(e) => handleBaseReceiveMargin(e)}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -393,6 +677,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => setReceiveMin(e.target.value)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -406,6 +691,7 @@ const ExchangeRateForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => setReceiveMax(e.target.value)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -415,10 +701,11 @@ const ExchangeRateForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="round_receiving_amount"
-                                label="Round Send Amount"
+                                label="Round Receive Amount"
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => handleReceiveRound(e)}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.integerValidator,
@@ -437,8 +724,9 @@ const ExchangeRateForm = ({
                                 label="Customer Rate"
                                 type="number"
                                 small={12}
+                                value={customer_rate}
                                 component={TextField}
-                                onChange={handleRate}
+                                // onChange={CustomerRate}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -456,6 +744,7 @@ const ExchangeRateForm = ({
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength1,
                                 ]}
                             />
                         </FieldWrapper>

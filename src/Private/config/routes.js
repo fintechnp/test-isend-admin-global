@@ -53,6 +53,10 @@ const ServiceChargeDetails = lazy(() =>
     import("../pages/Setup/ServiceCharge/ServiceChargeDetails")
 );
 
+//Compliance
+// const Accounts = lazy(() => import("../pages/Users/Accounts"));
+// const Menu = lazy(() => import("../pages/Users/Menu"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
     { path: "/user/accounts", component: <Accounts /> },
@@ -60,6 +64,7 @@ const privateRoutes = [
     { path: "/user/menu", component: <Menu /> },
     { path: "/user/menu/sub/:name/:id", component: <SubMenu /> },
 
+    //Setup routes
     { path: "/setup/delivery-option", component: <DeliveryOption /> },
     { path: "/setup/delivery-route", component: <DeliveryRoute /> },
     { path: "/setup/exchange-rate", component: <ExchangeRate /> },
@@ -109,6 +114,8 @@ const privateRoutes = [
         path: "/setup/service-charge/details/:id",
         component: <ServiceChargeDetails />,
     },
+
+    //Compliance
 ];
 
 export default privateRoutes;

@@ -13,7 +13,7 @@ function PartnerSkeleton() {
                 backgroundColor: "background.main",
             }}
         >
-            {Array.from(Array(11).keys()).map((row, index) => {
+            {Array.from(Array(13).keys()).map((row, index) => {
                 return (
                     <Grid item xs={12} md={6} sx={{ padding: "4px 8px" }}>
                         <Skeleton />

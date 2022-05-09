@@ -44,7 +44,7 @@ function AddUpdatePartner() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, success, loading } = useSelector(
+    const { response, loading } = useSelector(
         (state) => state.get_partner_details
     );
 
@@ -56,7 +56,6 @@ function AddUpdatePartner() {
 
     useEffect(() => {
         dispatch(reset("add_partner_form"));
-        dispatch({ type: "ADD_PARTNER_RESET" });
     }, []);
 
     const handleBack = () => {
@@ -86,7 +85,7 @@ function AddUpdatePartner() {
                 <Divider sx={{ mb: 1.2, pt: 0.5 }} />
             </Grid>
             <Grid item xs={12}>
-                <PartnerForm update_data={response?.data} />
+                <PartnerForm update_data={response?.data} loading={loading} />
             </Grid>
         </Grid>
     );

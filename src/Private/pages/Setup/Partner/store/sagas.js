@@ -84,7 +84,7 @@ export const addAgent = takeEvery(actions.ADD_PARTNER, function* (action) {
 });
 
 export const updateAgent = takeEvery(
-    actions.DELETE_PARTNER,
+    actions.UPDATE_PARTNER,
     function* (action) {
         try {
             const res = yield call(api.put, `agent/${action.id}`, action.data);
@@ -96,6 +96,27 @@ export const updateAgent = takeEvery(
                 error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const updateAgentStatus = takeEvery(
+    actions.UPDATE_PARTNER_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(api.patch, `agent/${action.id}?${query}`);
+            yield put({
+                type: actions.UPDATE_PARTNER_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_PARTNER_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
         }
     }
 );
@@ -218,6 +239,7 @@ export default function* saga() {
         getAgentDetails,
         addAgent,
         updateAgent,
+        updateAgentStatus,
         deleteAgent,
         getAllCorridor,
         getCorridorDetails,

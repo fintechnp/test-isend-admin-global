@@ -47,7 +47,7 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
 }));
 
 const ListButton = styled(ListItemButton)(({ theme, open }) => ({
-    padding: "6px 8px !important",
+    padding: "6px 6px !important",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
