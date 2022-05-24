@@ -53,9 +53,31 @@ const ServiceChargeDetails = lazy(() =>
     import("../pages/Setup/ServiceCharge/ServiceChargeDetails")
 );
 
+//Customers
+const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
+const CustomerReports = lazy(() => import("../pages/Customers/Reports"));
+
+//Transactions
+const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
+const DailyTransactions = lazy(() =>
+    import("../pages/Transactions/DailyTransactions")
+);
+const PendingTransactions = lazy(() =>
+    import("../pages/Transactions/PendingTransactions")
+);
+const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
+
+//Reports
+const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
+const ReportsSummary = lazy(() => import("../pages/Reports/Summary"));
+
 //Compliance
-// const Accounts = lazy(() => import("../pages/Users/Accounts"));
-// const Menu = lazy(() => import("../pages/Users/Menu"));
+const ComplianceBlockList = lazy(() => import("../pages/Compliance/BlockList"));
+const ComplianceHoldList = lazy(() => import("../pages/Compliance/HoldList"));
+const CompliancePaymentRules = lazy(() =>
+    import("../pages/Compliance/PaymentRules")
+);
+const ComplianceReport = lazy(() => import("../pages/Compliance/Report"));
 
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
@@ -115,7 +137,28 @@ const privateRoutes = [
         component: <ServiceChargeDetails />,
     },
 
+    //Customers
+    { path: "/customer/search", component: <CustomerSearch /> },
+    { path: "/customer/report", component: <CustomerReports /> },
+
+    //Transactions
+    { path: "/transaction/new", component: <CreateTransactions /> },
+    { path: "/transaction/daily", component: <DailyTransactions /> },
+    { path: "/transaction/pending", component: <PendingTransactions /> },
+    { path: "/transaction/search", component: <SearchTransactions /> },
+
+    //Reports
+    { path: "/report/country-wise-report", component: <ReportsCountrywise /> },
+    { path: "/report/summary", component: <ReportsSummary /> },
+
     //Compliance
+    { path: "/compliance/hold-list", component: <ComplianceBlockList /> },
+    { path: "/compliance/block-list", component: <ComplianceHoldList /> },
+    {
+        path: "/compliance/payment-rules",
+        component: <CompliancePaymentRules />,
+    },
+    { path: "/compliance/report", component: <ComplianceReport /> },
 ];
 
 export default privateRoutes;

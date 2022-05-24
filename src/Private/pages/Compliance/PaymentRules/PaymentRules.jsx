@@ -2,7 +2,7 @@ import React from 'react'
 
 function PaymentRules() {
   return (
-    <div>PaymentRules</div>
+    <div>Payment Rules</div>
   )
 }
 

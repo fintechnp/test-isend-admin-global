@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
 import Divider from "@mui/material/Divider";
+import { useDispatch } from "react-redux";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
@@ -53,8 +54,14 @@ const NextButton = styled(Button)(({ theme }) => ({
 }));
 
 const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
+    const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
+
+    useEffect(() => {
+        dispatch({ type: "ADD_PARTNER_RESET" });
+        dispatch({ type: "UPDATE_PARTNER_RESET" });
+    }, [dispatch]);
 
     return (
         <Form onSubmit={handleSubmit}>

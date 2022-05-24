@@ -9,6 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
+import { getFormValues } from "redux-form";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
@@ -70,15 +71,15 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 
 const ExchangeRateForm = ({
     handleSubmit,
+    data,
     update,
     loading,
     buttonText,
     handleClose,
     partner_sending,
-    values,
 }) => {
-    const { id } = useParams();
     const dispatch = useDispatch();
+    const { id, currency, agent_id } = useParams();
     const country = JSON.parse(localStorage.getItem("country"));
     const [form_name, setFormName] = useState("add_exchange_rate");
     const [base_to_sending, setBaseSend] = useState(0);
@@ -87,17 +88,38 @@ const ExchangeRateForm = ({
     const [base_to_receiving_margin, setBaseReceiveMargin] = useState(0);
     const [base_to_sending_settle, setBaseSendSettle] = useState(0);
     const [base_to_receiving_settle, setBaseReceiveSettle] = useState(0);
+    const [round_receieve, setRoundReceieve] = useState(0);
     const [customer_rate, setCustomerRate] = useState(0);
     const [send_min, setSendMin] = useState(0);
     const [send_max, setSendMax] = useState(0);
     const [receive_min, setReceiveMin] = useState(0);
     const [receive_max, setReceiveMax] = useState(0);
-    const form_value = useSelector((state) => state.form);
-    console.log(form_value);
+    const formValues = useSelector((state) => getFormValues(form_name)(state));
 
     useEffect(() => {
         if (id) {
             setFormName("update_exchange_rate");
+        } else {
+            dispatch(change("add_exchange_rate", "sending_agent_id", agent_id));
+            dispatch(change("add_exchange_rate", "sending_currency", currency));
+        }
+    }, [id, dispatch]);
+
+    useEffect(() => {
+        if (id) {
+            setBaseSend(data?.base_to_sending);
+            setBaseSendMargin(data?.base_to_sending_margin);
+            setBaseReceive(data?.base_to_receiving);
+            setBaseReceiveMargin(data?.base_to_receiving_margin);
+            setBaseSendSettle(data?.base_to_sending_settle);
+            setBaseReceiveSettle(data?.base_to_receiving_settle);
+
+            setCustomerRate(data?.customer_rate);
+            setSendMin(data?.send_min);
+            setSendMax(data?.send_max);
+            setReceiveMin(data?.receive_min);
+            setReceiveMax(data?.receive_max);
+            setRoundReceieve(data?.round_receieve);
         }
     }, [id]);
 
@@ -359,6 +381,7 @@ const ExchangeRateForm = ({
 
     const handleReceiveRound = (e) => {
         if (e.target.value) {
+            setRoundReceieve(e.target.value);
             dispatch(
                 change(
                     form_name,
@@ -382,31 +405,42 @@ const ExchangeRateForm = ({
 
     const CustomerRate = (e) => {
         if (e.target.value) {
-            // dispatch(
-            //     change(
-            //         form_name,
-            //         "customer_rate",
-            //         values?.customer_rate?.toFixed(
-            //             parseInt(e.target.value) || 2
-            //         )
-            //     )
-            // );
+            if (
+                e.target.value &&
+                base_to_receiving_settle &&
+                base_to_sending_settle
+            ) {
+                dispatch(
+                    change(
+                        form_name,
+                        "base_to_receiving_settle",
+                        parseFloat(e.target.value) *
+                            parseFloat(base_to_sending_settle)
+                    )
+                );
+                dispatch(
+                    change(
+                        form_name,
+                        "base_to_receiving",
+                        parseFloat(e.target.value) *
+                            parseFloat(base_to_sending_settle) -
+                            parseFloat(base_to_receiving_margin)
+                    )
+                );
+            }
         }
     };
 
     const roundCustomerRate = (e) => {
         if (e.target.value) {
-            // dispatch(
-            //     change(
-            //         form_name,
-            //         "customer_rate",
-            //         values?.customer_rate?.toFixed(
-            //             parseInt(e.target.value) || 2
-            //         )
-            //     )
-            // );
-            setCustomerRate(
-                customer_rate?.toFixed(parseInt(e.target.value) || 2)
+            dispatch(
+                change(
+                    form_name,
+                    "customer_rate",
+                    parseFloat(formValues?.customer_rate)?.toFixed(
+                        parseInt(e.target.value) || 2
+                    )
+                )
             );
         }
     };
@@ -726,7 +760,7 @@ const ExchangeRateForm = ({
                                 small={12}
                                 value={customer_rate}
                                 component={TextField}
-                                // onChange={CustomerRate}
+                                onChange={CustomerRate}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,

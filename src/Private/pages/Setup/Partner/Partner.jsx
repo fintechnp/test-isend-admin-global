@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import {reset} from 'redux-form';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -79,7 +80,7 @@ const Blocked = styled(Box)(({ theme }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 10,
     country: "",
     currency: "",
     agent_type: "",
@@ -105,157 +106,161 @@ const Partner = () => {
         dispatch({ type: "DELETE_PARTNER_RESET" });
         dispatch({ type: "ADD_PARTNER_RESET" });
         dispatch({ type: "UPDATE_PARTNER_RESET" });
+        dispatch(reset('update_partner_form'));
     }, [dispatch, filterSchema, d_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "agent_id",
-            maxWidth: 70,
-        },
-        {
-            Header: "Partner Name",
-            accessor: "name",
-            width: 280,
-            maxWidth: 500,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Type</Typography>
-                </Box>
-            ),
-            accessor: "agent_type",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Country</Typography>
-                </Box>
-            ),
-            accessor: "country",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            Cell: (data) => (
-                <SwitchWrapper textAlign="center" sx={{}}>
-                    <TableSwitch
-                        value={data?.value}
-                        data={data.row.original}
-                        handleStatus={handleStatus}
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center">
-                    <Typography>Actions</Typography>
-                </Box>
-            ),
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Tooltip title="Partner Details" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/details/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Partner" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/update/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Delete
-                        id={row.original.tid}
-                        handleDelete={handleDelete}
-                        loading={d_loading}
-                        tooltext="Remove Partner"
-                    />
-                    <Tooltip title="See Corridor" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/corridor/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <SubdirectoryArrowRightOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-            ),
-        },
-    ]);
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "agent_id",
+                maxWidth: 70,
+            },
+            {
+                Header: "Partner Name",
+                accessor: "name",
+                width: 280,
+                maxWidth: 500,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Type</Typography>
+                    </Box>
+                ),
+                accessor: "agent_type",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">{data.value}</StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Country</Typography>
+                    </Box>
+                ),
+                accessor: "country",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CountryName(data.value)}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="center" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Tooltip title="Partner Details" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/details/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Partner" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/update/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <EditOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Remove Partner"
+                        />
+                        <Tooltip title="See Corridor" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/corridor/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <SubdirectoryArrowRightOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const handleStatus = useCallback((is_active, id) => {
         dispatch(actions.update_partner_status(id, { is_active: is_active }));

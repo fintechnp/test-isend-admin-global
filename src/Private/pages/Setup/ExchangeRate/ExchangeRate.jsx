@@ -41,12 +41,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
-const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    color: "border.main",
-}));
-
 const initialState = {
     page_number: 1,
     page_size: 15,
@@ -169,15 +163,6 @@ const ExchangeRate = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleSort = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
@@ -202,7 +187,6 @@ const ExchangeRate = () => {
             <Filter
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
-                handleSort={handleSort}
             />
             <Table
                 columns={columns}

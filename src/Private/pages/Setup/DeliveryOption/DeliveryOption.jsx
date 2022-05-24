@@ -351,6 +351,7 @@ const DeliveryOption = () => {
                 sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
+                totalPage={deliveryoption_data?.pagination?.totalPage || 1}
                 renderPagination={() => (
                     <TablePagination
                         paginationData={deliveryoption_data?.pagination}

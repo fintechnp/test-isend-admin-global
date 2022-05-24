@@ -57,19 +57,30 @@ function PartnerForm({ update_data, loading }) {
     const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_partner
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_partner
-    );
+    const {
+        success: add_success,
+        loading: add_loading,
+        error: add_error,
+    } = useSelector((state) => state.add_partner);
+    const {
+        success: update_success,
+        loading: update_loading,
+        error: update_error,
+    } = useSelector((state) => state.update_partner);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
+        if (update_error) {
+            setActiveStep(0);
+            let keys = Object.keys(completed);
+            delete completed[keys[keys.length - 1]];
+        }
+    }, [update_error]);
+
+    React.useEffect(() => {
         if (add_success || update_success) {
             navigate(-1);
-            // setActiveStep(0);
             setCompleted({});
         }
     }, [add_success, update_success]);
@@ -208,7 +219,7 @@ function PartnerForm({ update_data, loading }) {
                             {activeStep === 0 && (
                                 <Basic
                                     destroyOnUnmount={false}
-                                    enableReinitialize={true}
+                                    // enableReinitialize={true}
                                     shouldError={() => true}
                                     form={`update_partner_form`}
                                     initialValues={

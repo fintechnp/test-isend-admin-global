@@ -100,26 +100,6 @@ const ServiceChargeList = () => {
                 maxWidth: 60,
             },
             {
-                Header: "Partner Name",
-                accessor: "agent_name",
-                width: 220,
-                maxWidth: 280,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <StyledName component="p" >
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
                 Header: () => (
                     <Box>
                         <Typography>R.Country/Currency</Typography>
@@ -147,7 +127,7 @@ const ServiceChargeList = () => {
             },
             {
                 Header: () => (
-                    <Box>
+                    <Box sx={{ textAlign: "center" }}>
                         <Typography>Customer Type</Typography>
                     </Box>
                 ),
@@ -155,7 +135,7 @@ const ServiceChargeList = () => {
                 width: 130,
                 maxWidth: 180,
                 Cell: (data) => (
-                    <Box>
+                    <Box sx={{ textAlign: "center" }}>
                         <StyledText component="p">
                             {ReferenceName(37, data.value)}
                         </StyledText>
@@ -177,7 +157,7 @@ const ServiceChargeList = () => {
             },
             {
                 Header: () => (
-                    <Box>
+                    <Box sx={{ textAlign: "right" }}>
                         <Typography>Min/Max Amount</Typography>
                     </Box>
                 ),
@@ -186,13 +166,13 @@ const ServiceChargeList = () => {
                     <Box>
                         <StyledText
                             component="p"
-                            sx={{ textAlign: "right", paddingRight: "16px" }}
+                            sx={{ textAlign: "right", paddingRight: "4px" }}
                         >
                             {data.value}
                         </StyledText>
                         <Typography
                             sx={{
-                                pr: 2,
+                                paddingRight: "4px",
                                 opacity: 0.6,
                                 fontSize: "13px",
                                 lineHeight: 1,
@@ -224,7 +204,11 @@ const ServiceChargeList = () => {
                 ),
             },
             {
-                Header: "Actions",
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
                 accessor: "show",
                 Cell: ({ row }) => (
                     <Box
@@ -301,11 +285,11 @@ const ServiceChargeList = () => {
         [filterSchema]
     );
 
-    const handleCountry = (e) => {
-        const country = e.target.value;
+    const handleSort = (e) => {
+        const sort = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-            country: country,
+            sort_by: sort,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -315,15 +299,6 @@ const ServiceChargeList = () => {
         const updatedFilterSchema = {
             ...filterSchema,
             order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleAgentType = (e) => {
-        const payment = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_type: payment,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -360,9 +335,8 @@ const ServiceChargeList = () => {
             />
             <Filter
                 handleSearch={handleSearch}
-                handleCountry={handleCountry}
+                handleSort={handleSort}
                 handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
             />
             <Table
                 columns={columns}

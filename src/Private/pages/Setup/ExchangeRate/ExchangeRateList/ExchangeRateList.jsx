@@ -95,58 +95,9 @@ const ExchangeRateList = () => {
                 maxWidth: 50,
             },
             {
-                Header: "Partner Name",
-                accessor: "agent_name",
-                width: 180,
-                maxWidth: 280,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
                 Header: () => (
                     <Box>
-                        <Typography>Sending Currency</Typography>
-                    </Box>
-                ),
-                accessor: "sending_currency",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">
-                            {CurrencyName(data.value)}
-                        </StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box>
-                        <Typography>Base Currency</Typography>
-                    </Box>
-                ),
-                accessor: "base_currency",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">
-                            {CurrencyName(data.value)}
-                        </StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box>
-                        <Typography>Recieve Country</Typography>
+                        <Typography>Recieve Country/Currency</Typography>
                     </Box>
                 ),
                 accessor: "receiving_country",
@@ -173,13 +124,41 @@ const ExchangeRateList = () => {
             },
             {
                 Header: () => (
-                    <Box sx={{}}>
+                    <Box>
+                        <Typography>Sending/Base Currency</Typography>
+                    </Box>
+                ),
+                accessor: "sending_currency",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CurrencyName(data.value)}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {data?.row?.original?.base_currency
+                                ? CurrencyName(
+                                      data?.row?.original?.base_currency
+                                  )
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box sx={{ textAlign: "center" }}>
                         <Typography>Customer Rate</Typography>
                     </Box>
                 ),
                 accessor: "customer_rate",
                 Cell: (data) => (
-                    <Box>
+                    <Box sx={{ textAlign: "center" }}>
                         <StyledText component="p">{data.value}</StyledText>
                     </Box>
                 ),
@@ -260,11 +239,11 @@ const ExchangeRateList = () => {
         [filterSchema]
     );
 
-    const handleCountry = (e) => {
-        const country = e.target.value;
+    const handleSort = (e) => {
+        const sort = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-            country: country,
+            sort_by: sort,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -274,15 +253,6 @@ const ExchangeRateList = () => {
         const updatedFilterSchema = {
             ...filterSchema,
             order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleAgentType = (e) => {
-        const payment = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_type: payment,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -320,9 +290,8 @@ const ExchangeRateList = () => {
             />
             <Filter
                 handleSearch={handleSearch}
-                handleCountry={handleCountry}
+                handleSort={handleSort}
                 handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
             />
             <Table
                 columns={columns}

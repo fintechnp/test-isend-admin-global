@@ -154,29 +154,11 @@ const ServiceCharge = () => {
         [filterSchema]
     );
 
-    const handleCountry = (e) => {
-        const country = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            country: country,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleOrder = (e) => {
         const order = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
             order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSort = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -204,9 +186,7 @@ const ServiceCharge = () => {
             <Header title="Partnerwise Service Charge" />
             <Filter
                 handleSearch={handleSearch}
-                handleCountry={handleCountry}
                 handleOrder={handleOrder}
-                handleSort={handleSort}
             />
             <Table
                 columns={columns}

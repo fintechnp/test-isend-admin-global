@@ -196,6 +196,7 @@ function AddUpdateExchangeRate() {
                                     exchangeData?.data?.round_customer_rate,
                             }
                         }
+                        data={exchangeData?.data}
                         onSubmit={handleChargeUpdate}
                         buttonText="Update"
                         handleClose={handleClose}
