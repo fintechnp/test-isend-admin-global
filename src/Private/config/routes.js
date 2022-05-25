@@ -152,8 +152,8 @@ const privateRoutes = [
     { path: "/report/summary", component: <ReportsSummary /> },
 
     //Compliance
-    { path: "/compliance/hold-list", component: <ComplianceBlockList /> },
-    { path: "/compliance/block-list", component: <ComplianceHoldList /> },
+    { path: "/compliance/hold-list", component: <ComplianceHoldList /> },
+    { path: "/compliance/block-list", component: <ComplianceBlockList /> },
     {
         path: "/compliance/payment-rules",
         component: <CompliancePaymentRules />,

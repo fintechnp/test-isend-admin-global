@@ -217,6 +217,12 @@ const PrivateLayout = ({ children }) => {
                 permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER],
                 children: [
                     {
+                        path: "/compliance/payment-rules",
+                        key: "paymentsetup",
+                        text: "Payment Rules",
+                        sub: false,
+                    },
+                    {
                         path: "/compliance/hold-list",
                         key: "hold-compliance",
                         text: "Hold List",
@@ -226,12 +232,6 @@ const PrivateLayout = ({ children }) => {
                         path: "/compliance/block-list",
                         key: "blocksetup",
                         text: "Block List",
-                        sub: false,
-                    },
-                    {
-                        path: "/compliance/payment-rules",
-                        key: "paymentsetup",
-                        text: "Payment Rules",
                         sub: false,
                     },
                     {

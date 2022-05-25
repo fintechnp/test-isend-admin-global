@@ -120,6 +120,17 @@ import {
     ReferenceSaga,
 } from "./pages/Setup/Reference/store";
 
+//Manage Compliance payment rules
+import {
+    GetPaymentRulesReducer,
+    GetPaymentRulesByIdReducer,
+    AddPaymentRulesReducer,
+    UpdatePaymentRulesReducer,
+    UpdatePaymentRulesStatusReducer,
+    DeletePaymentRulesReducer,
+    PaymentRulesSaga,
+} from "./pages/Compliance/PaymentRules/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -217,6 +228,13 @@ export const privateReducer = {
     add_reference_data: AddReferenceDataReducer,
     update_reference_data: UpdateReferenceDataReducer,
     delete_reference_data: DeleteReferenceDataReducer,
+
+    get_payment_rules: GetPaymentRulesReducer,
+    get_payment_rules_by_id: GetPaymentRulesByIdReducer,
+    add_payment_rules: AddPaymentRulesReducer,
+    update_payment_rules: UpdatePaymentRulesReducer,
+    update_payment_rules_status: UpdatePaymentRulesStatusReducer,
+    delete_payment_rules: DeletePaymentRulesReducer,
 };
 
 export const privateSaga = [
@@ -232,6 +250,7 @@ export const privateSaga = [
     ServiceChargeSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
+    PaymentRulesSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
