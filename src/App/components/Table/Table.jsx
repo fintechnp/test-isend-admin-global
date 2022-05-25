@@ -57,7 +57,6 @@ const Table = ({
     data,
     title,
     loading,
-    totalPage,
     sub_columns,
     handleDelete,
     handleEdit,
@@ -213,7 +212,7 @@ const Table = ({
                 </GlobalTable>
             </div>
 
-            {!loading && rows.length && renderPagination && totalPage >= 2
+            {!loading && rows.length && renderPagination
                 ? renderPagination()
                 : null}
 

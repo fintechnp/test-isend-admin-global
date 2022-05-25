@@ -71,12 +71,12 @@ function PartnerForm({ update_data, loading }) {
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
-        if (update_error) {
+        if (update_error || add_error) {
             setActiveStep(0);
             let keys = Object.keys(completed);
             delete completed[keys[keys.length - 1]];
         }
-    }, [update_error]);
+    }, [update_error, add_error]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
