@@ -142,6 +142,9 @@ function AddAccount({ update_data, update }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>
@@ -180,6 +183,7 @@ function AddAccount({ update_data, update }) {
                                 user_type: memoizedData?.user_type,
                                 phone_number: memoizedData?.phone_number,
                                 email: memoizedData?.email,
+                                agent_id: memoizedData?.agent_id,
                                 is_active: memoizedData?.is_active,
                             }}
                             onSubmit={handleUpdateUser}
@@ -197,7 +201,7 @@ function AddAccount({ update_data, update }) {
                             onSubmit={handleNewUser}
                             buttonText="Create"
                             form={`add_user_form`}
-                            initialValues={{ is_active: false }}
+                            initialValues={{ is_active: false, agent_id: 0 }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

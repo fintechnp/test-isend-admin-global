@@ -18,6 +18,7 @@ export const getAllPayoutLocation = takeEvery(
                 type: actions.GET_PAYOUT_LOCATION_FAILED,
                 error: error.data,
             });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
         }
     }
 );
@@ -36,6 +37,7 @@ export const getPayoutLocationDetails = takeEvery(
                 type: actions.GET_PAYOUT_LOCATION_DETAILS_FAILED,
                 error: error.data,
             });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
         }
     }
 );
@@ -84,6 +86,30 @@ export const updatePayoutLocation = takeEvery(
     }
 );
 
+export const updatePayoutLocationStatus = takeEvery(
+    actions.UPDATE_PAYOUT_LOCATION_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(
+                api.patch,
+                `payoutlocation/${action.id}?${query}`
+            );
+            yield put({
+                type: actions.UPDATE_PAYOUT_LOCATION_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_PAYOUT_LOCATION_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
 export const deletePayoutLocation = takeEvery(
     actions.DELETE_PAYOUT_LOCATION,
     function* (action) {
@@ -112,5 +138,6 @@ export default function* saga() {
         addPayoutLocation,
         updatePayoutLocation,
         deletePayoutLocation,
+        updatePayoutLocationStatus,
     ]);
 }

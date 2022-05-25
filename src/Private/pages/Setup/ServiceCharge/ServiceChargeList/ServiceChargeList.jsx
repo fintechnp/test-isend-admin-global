@@ -11,7 +11,10 @@ import actions from "../store/actions";
 import Header from "../components/Header";
 import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
-import Table, { TablePagination } from "./../../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../../App/components/Table";
 import {
     CountryName,
     CurrencyName,
@@ -66,7 +69,7 @@ const initialState = {
 };
 
 const ServiceChargeList = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -75,207 +78,199 @@ const ServiceChargeList = () => {
         (state) => state.get_service_charge_by_partner
     );
     const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_corridor
+        (state) => state.delete_service_charge
     );
     const { success: a_success } = useSelector((state) => state.add_partner);
     const { success: u_success } = useSelector((state) => state.update_partner);
-
-    console.log(servicecharge_data, "fdsafkl;sadfkjk");
 
     useEffect(() => {
         if (id) {
             dispatch(actions.get_service_charge_by_partner(id, filterSchema));
         }
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "ADD_SERVICE_CHARGE_RESET" });
+        dispatch({ type: "UPDATE_SERVICE_CHARGE_RESET" });
+        dispatch({ type: "DELETE_SERVICE_CHARGE_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "charge_id",
-            maxWidth: 60,
-        },
-        {
-            Header: "Partner Name",
-            accessor: "agent_name",
-            width: 220,
-            maxWidth: 280,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        justifyContent: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>R.Country/Currency</Typography>
-                </Box>
-            ),
-            accessor: "receiving_country",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
-                    >
-                        {CurrencyName(data?.row?.original?.receiving_currency)}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Customer Type</Typography>
-                </Box>
-            ),
-            accessor: "customer_type",
-            width: 130,
-            maxWidth: 180,
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {ReferenceName(37, data.value)}
-                    </StyledText>
-                    <Typography
-                        component="p"
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "charge_id",
+                maxWidth: 60,
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>R.Country/Currency</Typography>
+                    </Box>
+                ),
+                accessor: "receiving_country",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CountryName(data.value)}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {CurrencyName(
+                                data?.row?.original?.receiving_currency
+                            )}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box sx={{ textAlign: "center" }}>
+                        <Typography>Customer Type</Typography>
+                    </Box>
+                ),
+                accessor: "customer_type",
+                width: 130,
+                maxWidth: 180,
+                Cell: (data) => (
+                    <Box sx={{ textAlign: "center" }}>
+                        <StyledText component="p">
+                            {ReferenceName(37, data.value)}
+                        </StyledText>
+                        <Typography
+                            component="p"
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {ReferenceName(
+                                1,
+                                data?.row?.original?.payment_type
+                            )}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box sx={{ textAlign: "right" }}>
+                        <Typography>Min/Max Amount</Typography>
+                    </Box>
+                ),
+                accessor: "min_amount",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText
+                            component="p"
+                            sx={{ textAlign: "right", paddingRight: "4px" }}
+                        >
+                            {data.value}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                paddingRight: "4px",
+                                opacity: 0.6,
+                                fontSize: "13px",
+                                lineHeight: 1,
+                                textAlign: "right",
+                            }}
+                        >
+                            {data?.row?.original?.max_amount}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 130,
+                maxWidth: 180,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="center" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
                         sx={{
-                            opacity: 0.6,
-                            fontSize: "12px",
-                            lineHeight: 1,
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
                         }}
                     >
-                        {ReferenceName(1, data?.row?.original?.payment_type)}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Min/Max Amount</Typography>
-                </Box>
-            ),
-            accessor: "min_amount",
-            Cell: (data) => (
-                <Box>
-                    <StyledText
-                        component="p"
-                        sx={{ textAlign: "right", paddingRight: "16px" }}
-                    >
-                        {data.value}
-                    </StyledText>
-                    <Typography
-                        sx={{
-                            pr: 2,
-                            opacity: 0.6,
-                            fontSize: "13px",
-                            lineHeight: 1,
-                            textAlign: "right",
-                        }}
-                    >
-                        {data?.row?.original?.max_amount}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_enable",
-            width: 130,
-            maxWidth: 180,
-            Cell: (data) => (
-                <SwitchWrapper textAlign="center" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Tooltip title="Service Charge Details" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/service-charge/details/${row.original.sending_agent_id}`
-                                )
-                            }
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Service Charge" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/service-charge/update/${row.original.sending_agent_id}`
-                                )
-                            }
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Delete tooltext="Delete Service Charge" />
-                </Box>
-            ),
-        },
-    ]);
-
-    const sub_columns = [
-        { key: "delivery_option_id", name: "Id" },
-        { key: "delivery_name", name: "Name" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "country_code", name: "Country" },
-        { key: "currency_code", name: "Currency" },
-        { key: "agent_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
-    ];
+                        <Tooltip title="Service Charge Details" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/service-charge/details/${row.original.tid}`
+                                    )
+                                }
+                            >
+                                <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Service Charge" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/service-charge/update/${row?.original?.tid}`
+                                    )
+                                }
+                            >
+                                <EditOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Delete Service Charge"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+        dispatch(
+            actions.update_service_charge_status(id, { is_active: is_active })
+        );
     }, []);
 
     const handleSearch = useCallback(
@@ -290,11 +285,11 @@ const ServiceChargeList = () => {
         [filterSchema]
     );
 
-    const handleCountry = (e) => {
-        const country = e.target.value;
+    const handleSort = (e) => {
+        const sort = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-            country: country,
+            sort_by: sort,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -304,15 +299,6 @@ const ServiceChargeList = () => {
         const updatedFilterSchema = {
             ...filterSchema,
             order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleAgentType = (e) => {
-        const payment = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_type: payment,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -336,7 +322,7 @@ const ServiceChargeList = () => {
     };
 
     const handleDelete = (id) => {
-        dispatch(actions.delete_corridor(id));
+        dispatch(actions.delete_service_charge(id));
     };
 
     return (
@@ -344,18 +330,18 @@ const ServiceChargeList = () => {
             <Header
                 title="Service Charge List"
                 buttonText="Add Service Charge"
+                name={name}
+                agent_id={id}
             />
             <Filter
                 handleSearch={handleSearch}
-                handleCountry={handleCountry}
+                handleSort={handleSort}
                 handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
             />
             <Table
                 columns={columns}
                 title="Service Charge Details"
                 data={servicecharge_data?.data || []}
-                sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
                 renderPagination={() => (

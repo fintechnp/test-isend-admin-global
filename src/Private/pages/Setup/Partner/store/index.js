@@ -1,5 +1,7 @@
 export { default as PartnerSaga } from "./sagas";
 export { default as GetAllPartnerReducer } from "./reducers/getAllPartner";
+export { default as GetPayoutPartnerReducer } from "./reducers/getPayoutPartner";
+export { default as GetSendingPartnerReducer } from "./reducers/getSendingPartner";
 export { default as GetPartnerDetailsReducer } from "./reducers/getPartnerDetails";
 export { default as AddPartnerReducer } from "./reducers/addPartner";
 export { default as UpdatePartnerReducer } from "./reducers/updatePartner";

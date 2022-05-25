@@ -15,6 +15,44 @@ export const getAllAgent = takeEvery(actions.GET_PARTNER, function* (action) {
     }
 });
 
+export const getSendingAgent = takeEvery(
+    actions.GET_SENDING_PARTNER,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `agent`, action.query);
+            yield put({
+                type: actions.GET_SENDING_PARTNER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_SENDING_PARTNER_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const getPayoutAgent = takeEvery(
+    actions.GET_PAYOUT_PARTNER,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `agent`, action.query);
+            yield put({
+                type: actions.GET_PAYOUT_PARTNER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_PAYOUT_PARTNER_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const getAgentDetails = takeEvery(
     actions.GET_PARTNER_DETAILS,
     function* (action) {
@@ -46,7 +84,7 @@ export const addAgent = takeEvery(actions.ADD_PARTNER, function* (action) {
 });
 
 export const updateAgent = takeEvery(
-    actions.DELETE_PARTNER,
+    actions.UPDATE_PARTNER,
     function* (action) {
         try {
             const res = yield call(api.put, `agent/${action.id}`, action.data);
@@ -58,6 +96,27 @@ export const updateAgent = takeEvery(
                 error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const updateAgentStatus = takeEvery(
+    actions.UPDATE_PARTNER_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(api.patch, `agent/${action.id}?${query}`);
+            yield put({
+                type: actions.UPDATE_PARTNER_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_PARTNER_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
         }
     }
 );
@@ -121,7 +180,11 @@ export const getCorridorDetails = takeEvery(
 
 export const addCorridor = takeEvery(actions.ADD_CORRIDOR, function* (action) {
     try {
-        const res = yield call(api.post, `agent/corridor`, action.data);
+        const res = yield call(
+            api.post,
+            `agent/${action.parent_id}/corridor`,
+            action.data
+        );
         yield put({ type: actions.ADD_CORRIDOR_SUCCESS, response: res });
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
@@ -136,7 +199,7 @@ export const updateCorridor = takeEvery(
         try {
             const res = yield call(
                 api.put,
-                `agent/corridor/${action.id}`,
+                `agent/${action.parent_id}/corridor/${action.c_id}`,
                 action.data
             );
             yield put({ type: actions.UPDATE_CORRIDOR_SUCCESS, response: res });
@@ -171,9 +234,12 @@ export const deleteCorridor = takeEvery(
 export default function* saga() {
     yield all([
         getAllAgent,
+        getSendingAgent,
+        getPayoutAgent,
         getAgentDetails,
         addAgent,
         updateAgent,
+        updateAgentStatus,
         deleteAgent,
         getAllCorridor,
         getCorridorDetails,

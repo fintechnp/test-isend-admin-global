@@ -13,6 +13,11 @@ const actions = {
     UPDATE_MENU_FAILED: "UPDATE_MENU_FAILED",
     UPDATE_MENU_RESET: "UPDATE_MENU_RESET",
 
+    UPDATE_MENU_STATUS: "UPDATE_MENU_STATUS",
+    UPDATE_MENU_STATUS_SUCCESS: "UPDATE_MENU_STATUS_SUCCESS",
+    UPDATE_MENU_STATUS_FAILED: "UPDATE_MENU_STATUS_FAILED",
+    UPDATE_MENU_STATUS_RESET: "UPDATE_MENU_STATUS_RESET",
+
     DELETE_MENU: "DELETE_MENU",
     DELETE_MENU_SUCCESS: "DELETE_MENU_SUCCESS",
     DELETE_MENU_FAILED: "DELETE_MENU_FAILED",
@@ -30,6 +35,12 @@ const actions = {
 
     update_menu: (id, data) => ({
         type: actions.UPDATE_MENU,
+        data,
+        id,
+    }),
+
+    update_menu_status: (data, id) => ({
+        type: actions.UPDATE_MENU_STATUS,
         data,
         id,
     }),

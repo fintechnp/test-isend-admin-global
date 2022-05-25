@@ -16,23 +16,32 @@ const actions = {
     ADD_SERVICE_CHARGE: "ADD_SERVICE_CHARGE",
     ADD_SERVICE_CHARGE_SUCCESS: "ADD_SERVICE_CHARGE_SUCCESS",
     ADD_SERVICE_CHARGE_FAILED: "ADD_SERVICE_CHARGE_FAILED",
+    ADD_SERVICE_CHARGE_RESET: "ADD_SERVICE_CHARGE_RESET",
 
     UPDATE_SERVICE_CHARGE: "UPDATE_SERVICE_CHARGE",
     UPDATE_SERVICE_CHARGE_SUCCESS: "UPDATE_SERVICE_CHARGE_SUCCESS",
     UPDATE_SERVICE_CHARGE_FAILED: "UPDATE_SERVICE_CHARGE_FAILED",
+    UPDATE_SERVICE_CHARGE_RESET: "UPDATE_SERVICE_CHARGE_RESET",
+
+    UPDATE_SERVICE_CHARGE_STATUS: "UPDATE_SERVICE_CHARGE_STATUS",
+    UPDATE_SERVICE_CHARGE_STATUS_SUCCESS:
+        "UPDATE_SERVICE_CHARGE_STATUS_SUCCESS",
+    UPDATE_SERVICE_CHARGE_STATUS_FAILED: "UPDATE_SERVICE_CHARGE_STATUS_FAILED",
 
     DELETE_SERVICE_CHARGE: "DELETE_SERVICE_CHARGE",
     DELETE_SERVICE_CHARGE_SUCCESS: "DELETE_SERVICE_CHARGE_SUCCESS",
     DELETE_SERVICE_CHARGE_FAILED: "DELETE_SERVICE_CHARGE_FAILED",
+    DELETE_SERVICE_CHARGE_RESET: "DELETE_SERVICE_CHARGE_RESET",
 
     get_all_service_charge: (query) => ({
         type: actions.GET_SERVICE_CHARGE,
         query,
     }),
 
-    get_service_charge_by_partner: (id) => ({
+    get_service_charge_by_partner: (id, query) => ({
         type: actions.GET_SERVICE_CHARGE_BY_PARTNER,
         id,
+        query,
     }),
 
     get_service_charge_details: (id) => ({
@@ -47,6 +56,12 @@ const actions = {
 
     update_service_charge: (id, data) => ({
         type: actions.UPDATE_SERVICE_CHARGE,
+        data,
+        id,
+    }),
+
+    update_service_charge_status: (id, data) => ({
+        type: actions.UPDATE_SERVICE_CHARGE_STATUS,
         data,
         id,
     }),

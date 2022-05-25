@@ -118,7 +118,11 @@ const Reference = () => {
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -135,6 +139,9 @@ const Reference = () => {
                                     <VisibilityOffOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -145,6 +152,9 @@ const Reference = () => {
                                     <RemoveRedEyeOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -156,13 +166,16 @@ const Reference = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/reference/data/${row.original.reference_type_id}`
+                                    `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`
                                 )
                             }
                         >
                             <SubdirectoryArrowLeftIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>

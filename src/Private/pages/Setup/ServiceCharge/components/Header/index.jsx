@@ -15,16 +15,18 @@ const AddButton = styled(Button)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-function Header({ title, buttonText }) {
+function Header({ title, buttonText, name, agent_id }) {
     const navigate = useNavigate();
 
     const handleAdd = () => {
-        navigate("/setup/service-charge/create");
+        navigate(`/setup/service-charge/${agent_id}/create`);
     };
 
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+            <Typography sx={{ fontSize: "22px" }}>
+                {title} {name && `of ${name}`}
+            </Typography>
             {buttonText && (
                 <AddButton
                     size="small"

@@ -28,7 +28,7 @@ const PrivateLayout = ({ children }) => {
             //User
             {
                 key: "user",
-                text: "User",
+                text: "Users",
                 sub: true,
                 icon: <GroupAdd />,
                 permission: [
@@ -64,13 +64,13 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/setup/delivery-option",
                         key: "setup-delivery-option",
-                        text: "Delivery Option",
+                        text: "Delivery Options",
                         sub: false,
                     },
                     {
                         path: "/setup/delivery-route",
                         key: "setup-delivery-option-route",
-                        text: "Delivery Route",
+                        text: "Delivery Routes",
                         sub: false,
                     },
                     {
@@ -100,7 +100,7 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/setup/reference",
                         key: "setup-reference",
-                        text: "Reference",
+                        text: "References",
                         sub: false,
                     },
                     {
@@ -112,10 +112,10 @@ const PrivateLayout = ({ children }) => {
                 ],
             },
 
-            //Tracker pannel
+            //Customers
             {
                 key: "customer",
-                text: "Customer",
+                text: "Customers",
                 sub: true,
                 icon: <AccountBox />,
                 permission: [
@@ -134,16 +134,16 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/customer/report",
                         key: "customer-report",
-                        text: "Report",
+                        text: "Reports",
                         sub: false,
                     },
                 ],
             },
 
-            //Transaction
+            //Transactions
             {
                 key: "transaction",
-                text: "Transaction",
+                text: "Transactions",
                 sub: true,
                 icon: <TrendingUp />,
                 permission: [
@@ -168,13 +168,13 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/transaction/daily",
                         key: "daily-transaction",
-                        text: "Daily Transaction",
+                        text: "Daily Transactions",
                         sub: false,
                     },
                     {
                         path: "/transaction/pending",
                         key: "pending-transaction",
-                        text: "Pending Transaction",
+                        text: "Pending Transactions",
                         sub: false,
                     },
                 ],
@@ -183,7 +183,7 @@ const PrivateLayout = ({ children }) => {
             //Report Pannel
             {
                 key: "report",
-                text: "Report",
+                text: "Reports",
                 sub: true,
                 icon: <Report />,
                 permission: [
@@ -223,7 +223,7 @@ const PrivateLayout = ({ children }) => {
                         sub: false,
                     },
                     {
-                        path: "/compliance/block",
+                        path: "/compliance/block-list",
                         key: "blocksetup",
                         text: "Block List",
                         sub: false,

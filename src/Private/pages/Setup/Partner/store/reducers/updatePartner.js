@@ -27,7 +27,14 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 response: [],
-                error: action.error,
+                error: true,
+            };
+        case actions.UPDATE_PARTNER_RESET:
+            return {
+                success: false,
+                loading: false,
+                error: null,
+                response: [],
             };
         default:
             return state;

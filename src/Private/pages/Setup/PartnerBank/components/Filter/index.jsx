@@ -8,6 +8,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
+import { useSelector } from "react-redux";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -24,7 +25,7 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "70%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
     },
@@ -56,6 +57,11 @@ const Select = styled(MuiSelect)(({ theme }) => ({
         padding: "8px 10px",
         paddingRight: "28px",
     },
+    "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
+        padding: "8px 10px",
+        paddingRight: "28px",
+        maxWidth: "130px",
+    },
     "& .MuiSvgIcon-root.MuiSelect-icon": {
         color: theme.palette.border.main,
     },
@@ -74,25 +80,19 @@ const DropWrapper = styled(Box)(({ theme }) => ({
 
 const sortData = [
     { key: "None", value: "" },
-    { key: "Country", value: "country" },
-    { key: "Partner", value: "agent_id" },
+    { key: "Payout Agent", value: "agent_id" },
     { key: "Bank Name", value: "bank_name" },
-    { key: "Payment Type", value: "payment_type" },
 ];
 
 const orderData = [
-    { key: "None", value: "" },
     { key: "Ascending", value: "ASC" },
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({
-    handleSearch,
-    handleCountry,
-    handleOrder,
-    handleSortBy,
-}) {
-    const country = JSON.parse(localStorage.getItem("country"));
+function Filter({ handleSearch, handleFilterAgent, handleOrder, handleSort }) {
+    const { response: partner_payout } = useSelector(
+        (state) => state.get_payout_partner
+    );
 
     return (
         <FilterWrapper>
@@ -115,37 +115,26 @@ function Filter({
                 <Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
-                            onChange={handleCountry}
+                            native
+                            onChange={handleFilterAgent}
                             displayEmpty
                             defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Country
-                                        </Typography>
-                                    );
-                                }
-                                const value = country.filter(
-                                    (type) => type.iso3 === selected
-                                );
-                                return value[0]?.country;
-                            }}
                         >
-                            <MenuItem value="">All Country</MenuItem>
-                            {country.map((sort) => (
-                                <MenuItem value={sort.iso3} key={sort.iso3}>
-                                    {sort.country}
-                                </MenuItem>
-                            ))}
+                            <option value="">All Partner</option>
+                            {partner_payout?.data &&
+                                partner_payout?.data.map((data) => (
+                                    <option
+                                        value={data.agent_id}
+                                        key={data?.tid}
+                                    >
+                                        {data.name}
+                                    </option>
+                                ))}
                         </Select>
                     </FormControl>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
-                            onChange={handleSortBy}
+                            onChange={handleSort}
                             displayEmpty
                             defaultValue=""
                             renderValue={(selected) => {
@@ -176,7 +165,7 @@ function Filter({
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue="ASC"
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

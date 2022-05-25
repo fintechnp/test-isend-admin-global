@@ -10,6 +10,7 @@ import { Tooltip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -19,6 +20,13 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
         paddingBottom: theme.spacing(2),
         columnGap: 4,
         width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    "& .MuiDialogActions-root": {
+        marginBottom: "8px",
+        columnGap: "12px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -35,10 +43,25 @@ const DialogContentText = styled(MuiDialogContentText)(({ theme }) => ({
     },
 }));
 
-const DeleteButton = styled(LoadingButton)(({ theme }) => ({
+const DeleteIcon = styled(LoadingButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    "&: hover": { color: "border.dark", opacity: 1 },
+    "&: hover": {
+        color: theme.palette.border.dark,
+        opacity: 1,
+        background: theme.palette.border.light,
+    },
+}));
+
+const DeleteButton = styled(LoadingButton)(({ theme }) => ({
+    textTransform: "capitalize",
+    padding: "4px 12px",
+    boxShadow: "none",
+    color: theme.palette.primary.contrastText,
+    background: theme.palette.warning.main,
+    "&:hover": {
+        background: theme.palette.warning.dark,
+    },
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -63,7 +86,14 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function DeleteDialog({ loading, parent_id, id, handleDelete, tooltext }) {
+function DeleteDialog({
+    loading,
+    parent_id,
+    id,
+    handleDelete,
+    tooltext,
+    button = false,
+}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -81,22 +111,39 @@ function DeleteDialog({ loading, parent_id, id, handleDelete, tooltext }) {
     return (
         <div>
             <Tooltip title={tooltext} arrow>
-                <DeleteButton
-                    size="small"
-                    loading={loading}
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                    onClick={handleClickOpen}
-                    sx={{ minWidth: "3px" }}
-                >
-                    <DeleteOutlinedIcon
-                        sx={{
-                            fontSize: "20px",
-                            color: "warning.main",
-                        }}
-                    />
-                </DeleteButton>
+                {button ? (
+                    <DeleteButton
+                        onClick={handleClickOpen}
+                        endIcon={
+                            <DeleteOutlineOutlinedIcon
+                                sx={{
+                                    fontSize: "16px",
+                                }}
+                            />
+                        }
+                    >
+                        Delete
+                    </DeleteButton>
+                ) : (
+                    <DeleteIcon
+                        size="small"
+                        loading={loading}
+                        color="primary"
+                        component="span"
+                        onClick={handleClickOpen}
+                        sx={{ minWidth: "3px", borderRadius: "20px" }}
+                    >
+                        <DeleteOutlinedIcon
+                            sx={{
+                                fontSize: "20px",
+                                color: "warning.main",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
+                            }}
+                        />
+                    </DeleteIcon>
+                )}
             </Tooltip>
             <BootstrapDialog
                 open={open}

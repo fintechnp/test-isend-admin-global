@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
+import { change, Field, Form, reduxForm } from "redux-form";
+import { Grid, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
 import Validator from "../../../../../App/utils/validators";
+import { useParams } from "react-router-dom";
 
 const Container = styled(Grid)(({ theme }) => ({
     borderRadius: "5px",
@@ -19,6 +21,14 @@ const Container = styled(Grid)(({ theme }) => ({
 const FormWrapper = styled(Grid)(({ theme }) => ({
     padding: "8px 8px 16px",
     backgroundColor: theme.palette.background.light,
+}));
+
+const Header = styled(Box)(({ theme }) => ({
+    paddingBottom: "4px",
+    paddingLeft: "16px",
+    fontSize: "18px",
+    fontWeight: 500,
+    color: theme.palette.primary.main,
 }));
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
@@ -55,19 +65,51 @@ const ServiceChargeForm = ({
     handleSubmit,
     update,
     loading,
+    c_mode,
     buttonText,
     handleClose,
 }) => {
+    const { id } = useParams();
     const dispatch = useDispatch();
     const [mode, setMode] = useState("F");
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
-    const { response: servicecharge_data } = useSelector(
-        (state) => state.get_service_charge_by_partner
-    );
+
+    useEffect(() => {
+        if (c_mode) {
+            setMode(c_mode);
+        }
+    }, [c_mode]);
 
     const handleChargeMode = (e) => {
         setMode(e.target.value);
+    };
+
+    const convertCurrency = (iso3) => {
+        const currency = country.filter((data) => data.iso3 === iso3);
+        if (currency) {
+            return currency[0].currency;
+        }
+    };
+
+    const handleCurrency = (e) => {
+        if (update) {
+            dispatch(
+                change(
+                    "update_service_charge_form",
+                    "receiving_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
+        } else {
+            dispatch(
+                change(
+                    "add_service_charge_form",
+                    "receiving_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
+        }
     };
 
     return (
@@ -75,122 +117,138 @@ const ServiceChargeForm = ({
             <Container container direction="column">
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payment_type"
-                                label="Payment Type"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payment Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="customer_type"
-                                label="Customer Type"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Customer Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="receiving_country"
-                                label="Receiving Country"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
-                                            {data.country}
+                        <Grid item xs={12}>
+                            <Box>
+                                <Header>Basic Information</Header>
+                                <Divider sx={{ margin: "0px 12px" }} />
+                            </Box>
+                        </Grid>
+                        {!id && (
+                            <>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="payment_type"
+                                        label="Payment Type"
+                                        type="number"
+                                        small={12}
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Payment Type
                                         </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="receiving_currency"
-                                label="Receiving Currency"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.id}
-                                        >
-                                            {data.currency}
+                                        {reference &&
+                                            reference
+                                                ?.filter(
+                                                    (ref_data) =>
+                                                        ref_data.reference_type ===
+                                                        1
+                                                )[0]
+                                                .reference_data.map((data) => (
+                                                    <option
+                                                        value={data.value}
+                                                        key={data.reference_id}
+                                                    >
+                                                        {data.name}
+                                                    </option>
+                                                ))}
+                                    </Field>
+                                </FieldWrapper>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="customer_type"
+                                        label="Customer Type"
+                                        type="number"
+                                        small={12}
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Customer Type
                                         </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
+                                        {reference &&
+                                            reference
+                                                ?.filter(
+                                                    (ref_data) =>
+                                                        ref_data.reference_type ===
+                                                        37
+                                                )[0]
+                                                .reference_data.map((data) => (
+                                                    <option
+                                                        value={data.value}
+                                                        key={data.reference_id}
+                                                    >
+                                                        {data.name}
+                                                    </option>
+                                                ))}
+                                    </Field>
+                                </FieldWrapper>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="receiving_country"
+                                        label="Receiving Country"
+                                        type="number"
+                                        small={12}
+                                        onChange={handleCurrency}
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Country
+                                        </option>
+                                        {country &&
+                                            country.map((data) => (
+                                                <option
+                                                    value={data.iso3}
+                                                    key={data.country_id}
+                                                >
+                                                    {data.country}
+                                                </option>
+                                            ))}
+                                    </Field>
+                                </FieldWrapper>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="receiving_currency"
+                                        label="Receiving Currency"
+                                        type="number"
+                                        small={12}
+                                        component={SelectField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                        ]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Currency
+                                        </option>
+                                        {country &&
+                                            country.map((data) => (
+                                                <option
+                                                    value={data.currency}
+                                                    key={data.country_id}
+                                                >
+                                                    {data.currency_name}
+                                                </option>
+                                            ))}
+                                    </Field>
+                                </FieldWrapper>
+                            </>
+                        )}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="min_amount"
                                 label="Min Amount"
-                                type="text"
+                                type="number"
                                 small={12}
                                 component={TextField}
                                 validate={[
@@ -203,7 +261,7 @@ const ServiceChargeForm = ({
                             <Field
                                 name="max_amount"
                                 label="Max Amount"
-                                type="text"
+                                type="number"
                                 small={12}
                                 component={TextField}
                                 validate={[
@@ -262,6 +320,14 @@ const ServiceChargeForm = ({
                                 />
                             </FieldWrapper>
                         )}
+                        <Grid item xs={12}>
+                            <Box pt={2}>
+                                <Header>
+                                    Commission and Additional Information
+                                </Header>
+                                <Divider sx={{ margin: "0px 12px" }} />
+                            </Box>
+                        </Grid>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="send_commission_type"
@@ -284,7 +350,7 @@ const ServiceChargeForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="send_commission_amount"
-                                label="Send Commission Amount"
+                                label="Send Commission Amount / Percentage"
                                 type="number"
                                 small={12}
                                 component={TextField}
@@ -297,7 +363,7 @@ const ServiceChargeForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="pay_commission_type"
-                                label="pay Commission Type"
+                                label="Pay Commission Type"
                                 type="text"
                                 small={12}
                                 component={SelectField}
@@ -316,7 +382,7 @@ const ServiceChargeForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="pay_commission_amount"
-                                label="Pay Commission Amount"
+                                label="Pay Commission Amount / Percentage"
                                 type="number"
                                 small={12}
                                 component={TextField}

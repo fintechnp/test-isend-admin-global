@@ -17,7 +17,6 @@ import Logo_short from "../../../assets/short-logo.svg";
 const drawerWidth = 280;
 
 const openedMixin = (theme) => ({
-    padding: "8px",
     width: drawerWidth,
     background: theme.palette.primary.main,
     transition: theme.transitions.create("width", {

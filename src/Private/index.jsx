@@ -7,12 +7,13 @@ import {
     UpdateUserReducer,
     DeleteUserReducer,
     UpdateUserStatusReducer,
+    GetUserNumberReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 //permission
 import {
     GetAllPermissionReducer,
-    CreateUserPermissionRdcr,
+    UpdateUserPermissionRdcr,
     PermissionSaga,
 } from "./pages/Users/UserPermission/store";
 import {
@@ -55,6 +56,8 @@ import {
     AddPartnerReducer,
     UpdatePartnerReducer,
     DeletePartnerReducer,
+    GetSendingPartnerReducer,
+    GetPayoutPartnerReducer,
     PartnerSaga,
 } from "./pages/Setup/Partner/store";
 
@@ -73,6 +76,7 @@ import {
     CreatePartnerBankReducer,
     UpdatePartnerBankReducer,
     DeletePartnerBankReducer,
+    UnmapPartnerBankReducer,
     PartnerBankSaga,
 } from "./pages/Setup/PartnerBank/store";
 
@@ -124,10 +128,11 @@ export const privateReducer = {
     update_user: UpdateUserReducer,
     delete_user: DeleteUserReducer,
     update_user_status: UpdateUserStatusReducer,
+    get_user_number: GetUserNumberReducer,
 
     //permission
     get_all_permission: GetAllPermissionReducer,
-    create_user_permission: CreateUserPermissionRdcr,
+    update_user_permission: UpdateUserPermissionRdcr,
 
     //menu
     get_all_menu: GetAllMenuReducer,
@@ -158,6 +163,8 @@ export const privateReducer = {
 
     //partner
     get_all_partner: GetAllPartnerReducer,
+    get_sending_partner: GetSendingPartnerReducer,
+    get_payout_partner: GetPayoutPartnerReducer,
     get_partner_details: GetPartnerDetailsReducer,
     add_partner: AddPartnerReducer,
     update_partner: UpdatePartnerReducer,
@@ -177,6 +184,7 @@ export const privateReducer = {
     create_partner_bank: CreatePartnerBankReducer,
     update_partner_bank: UpdatePartnerBankReducer,
     delete_partner_bank: DeletePartnerBankReducer,
+    unmapp_partner_bank: UnmapPartnerBankReducer,
 
     //payout location
     get_all_payout_location: GetAllPayoutLocationReducer,

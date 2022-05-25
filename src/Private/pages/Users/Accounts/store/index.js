@@ -1,5 +1,6 @@
 export { default as AccountSaga } from "./sagas";
 export { default as GetAllUserReducer } from "./reducers/getAllUser";
+export { default as GetUserNumberReducer } from "./reducers/getUserNumber";
 export { default as GetUserDetailsReducer } from "./reducers/getUserDetails";
 export { default as GetUserDetailByIdReducer } from "./reducers/getUserDetailByIdReducer";
 export { default as AddUserReducer } from "./reducers/addUser";

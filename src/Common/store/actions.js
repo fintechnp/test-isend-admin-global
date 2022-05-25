@@ -46,8 +46,9 @@ const actions = {
         type: actions.GET_ALL_COUNTRY,
     }),
 
-    get_all_reference: () => ({
+    get_all_reference: (query) => ({
         type: actions.GET_ALL_REFERENCE,
+        query,
     }),
 };
 

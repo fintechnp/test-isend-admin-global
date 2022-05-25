@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import { Grid, Typography } from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
 import MuiFormControl from "@mui/material/FormControl";

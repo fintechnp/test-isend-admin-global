@@ -6,6 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { Tooltip } from "@mui/material";
 
 const ListItem = styled(MuiListItem)(({ theme, open }) => ({
     flex: 1,
@@ -49,7 +50,7 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
 }));
 
 const ListButton = styled(ListItemButton)(({ theme, open }) => ({
-    padding: "6px 8px !important",
+    padding: "6px 6px !important",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -101,18 +102,25 @@ function MainHeader({
 
     return (
         <Link to={item.path} color="inherit" style={{ textDecoration: "none" }}>
-            <ListItem dense disablePadding open={open}>
-                <ListButton
-                    open={open}
-                    selected={
-                        selectedkey === item.key || pathname === item.path
-                    }
-                    onClick={() => handleMainHeader(item)}
-                >
-                    <ListIcon>{item.icon}</ListIcon>
-                    <ListText primary={item.text} open={open} />
-                </ListButton>
-            </ListItem>
+            <Tooltip
+                title={item.text}
+                disableHoverListener={open}
+                arrow
+                placement="right"
+            >
+                <ListItem dense disablePadding open={open}>
+                    <ListButton
+                        open={open}
+                        selected={
+                            selectedkey === item.key || pathname === item.path
+                        }
+                        onClick={() => handleMainHeader(item)}
+                    >
+                        <ListIcon>{item.icon}</ListIcon>
+                        <ListText primary={item.text} open={open} />
+                    </ListButton>
+                </ListItem>
+            </Tooltip>
         </Link>
     );
 }

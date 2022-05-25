@@ -114,28 +114,30 @@ const MenuForm = ({
                                 ]}
                             />
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
+                        {update && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Grid
+                                    container
+                                    alignItems="flex-end"
+                                    justifyContent="flex-end"
+                                >
+                                    <Grid item xs={12}>
+                                        <StatusText component="p">
+                                            Status
+                                        </StatusText>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Field
+                                            name="is_active"
+                                            label="Active"
+                                            small={12}
+                                            reverse="row-reverse"
+                                            component={CheckboxField}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </FieldWrapper>
+                            </FieldWrapper>
+                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>

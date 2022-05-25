@@ -1,35 +1,87 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import AddCardIcon from "@mui/icons-material/AddCard";
 
 import actions from "./../store/actions";
-import { Grid, Typography } from "@mui/material";
+import Skeleton from "./Skeleton";
+import Details from "./Details";
+
+const TitleWrapper = styled(Box)(({ theme }) => ({
+    paddingBottom: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+}));
 
 const Title = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
     fontSize: "18px",
     fontWeight: 600,
-    paddingBottom: "6px",
+    paddingLeft: "8px",
+}));
+
+const BackButton = styled(Button)(({ theme }) => ({
+    fontSize: "12px",
+    textTransform: "capitalize",
+    color: theme.palette.border.main,
+    borderColor: theme.palette.border.main,
+    "&:hover": {
+        color: theme.palette.border.dark,
+        borderColor: theme.palette.border.dark,
+    },
+    "& .MuiButton-startIcon>*:nth-of-type(1)": {
+        fontSize: "15px",
+    },
 }));
 
 function ServiceChargeDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { response: service_data, loading: loading } = useSelector(
-        (state) => state.get_service_charge_by_partner
+    const { response, loading } = useSelector(
+        (state) => state.get_service_charge_details
     );
 
     useEffect(() => {
-        dispatch(actions.get_service_charge_by_partner(id));
+        if (id) {
+            dispatch(actions.get_service_charge_details(id));
+        }
     }, [dispatch, id]);
 
+    const handleBack = () => {
+        navigate(-1);
+    };
+
     return (
-        <Grid container>
+        <Grid container >
             <Grid item xs={12}>
-                <Title>Service Charge Details</Title>
+                <TitleWrapper>
+                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <AddCardIcon
+                            sx={{ color: "primary.main", fontSize: "28px" }}
+                        />
+                        <Title> Service Charge Details </Title>
+                    </Box>
+                    <BackButton
+                        variant="outlined"
+                        size="small"
+                        onClick={handleBack}
+                    >
+                        Back
+                    </BackButton>
+                </TitleWrapper>
             </Grid>
-            <Grid item xs={12}></Grid>
+            <Grid item xs={12}>
+                <Divider sx={{ mb: 1.2 }} />
+            </Grid>
+            {loading ? <Skeleton /> : <Details data={response?.data} />}
         </Grid>
     );
 }

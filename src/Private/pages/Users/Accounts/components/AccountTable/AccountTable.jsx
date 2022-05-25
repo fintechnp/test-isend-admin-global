@@ -10,13 +10,12 @@ import SyncAltOutlinedIcon from "@mui/icons-material/SyncAltOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
-import Switch from "@mui/material/Switch";
 
 import Table, {
     TablePagination,
+    TableSwitch,
 } from "./../../../../../../App/components/Table";
 import actions from "./../../store/actions";
-// import ControlledSwitch from "./../Switch";
 import AddAccount from "./../AddAccount";
 import Header from "./../Header";
 import Filter from "./../Filter";
@@ -48,29 +47,14 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.secondary.contrastText,
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
+    opacity: 0.9,
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.secondary.contrastText,
 }));
-
-// export function ControlledSwitch({ value, data, handleStatus }) {
-//     const [checked, setChecked] = React.useState(null);
-
-//     useEffect(() => {
-//         // setChecked(value);
-//     }, [value]);
-
-//     const handleChange = (event) => {
-//         setChecked(event.target.checked);
-//         handleStatus(event.target.checked, data?.id);
-//     };
-
-//     return <Switch size="small" checked={checked} onChange={handleChange} />;
-// }
 
 const initialState = {
     page_number: 1,
@@ -99,148 +83,164 @@ function AccountTable() {
     useEffect(() => {
         if (u_success || d_success || a_success) {
             setFilterSchema({ ...initialState });
+            dispatch(
+                actions.get_user_number({
+                    include_count: true,
+                    page_number: 1,
+                    page_size: 20,
+                })
+            );
         }
         dispatch({ type: "ADD_ACCOUNT_USER_RESET" });
         dispatch({ type: "UPDATE_ACCOUNT_USER_RESET" });
         dispatch({ type: "DELETE_ACCOUNT_USER_RESET" });
+        dispatch({ type: "UPDATE_ACCOUNT_STATUS_RESET" });
     }, [d_success, u_success, a_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "SN",
-            maxWidth: 50,
-            Cell: ({ row }) => <Typography>{row.index + 1}</Typography>,
-        },
-        {
-            Header: "Name",
-            accessor: "name",
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <Avatar sx={{ fontSize: "15px" }}>
-                        {data.value.split(" ")[0][0]}
-                        {data.value.split(" ")[1][0]}
-                    </Avatar>
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center">
-                    <Typography>Role</Typography>
-                </Box>
-            ),
-            accessor: "user_type",
-            Cell: (data) => (
-                <Box textAlign="center">
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: "Phone Number",
-            accessor: "phone_number",
-            Cell: (data) => (
-                <>
-                    <StyledText component="p">{data.value}</StyledText>
-                </>
-            ),
-        },
-        {
-            Header: "Email",
-            accessor: "email",
-            maxWidth: 250,
-            Cell: (data) => (
-                <>
-                    <StyledText component="p">{data.value}</StyledText>
-                </>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="right" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            width: 120,
-            Cell: (data) => (
-                <SwitchWrapper textAlign="right" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Account Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Account Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <Tooltip title="Map Privilege" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/user/permission/${row?.original?.id}`
-                                )
-                            }
-                        >
-                            <SyncAltOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <AddAccount update={true} update_data={row?.original} />
-                </Box>
-            ),
-        },
-    ]);
+    const columns = useMemo(
+        () => [
+            {
+                Header: "SN",
+                maxWidth: 50,
+                Cell: ({ row }) => <Typography>{row.index + 1}</Typography>,
+            },
+            {
+                Header: "Name",
+                accessor: "name",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Avatar sx={{ fontSize: "15px" }}>
+                            {/* {data?.value.charAt(1)} */}
+                            {/* {data?.value.split(" ")[1][0]} */}
+                        </Avatar>
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Role</Typography>
+                    </Box>
+                ),
+                accessor: "user_type",
+                Cell: (data) => (
+                    <Box textAlign="center">
+                        <StyledText component="p">{data.value}</StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Phone Number",
+                accessor: "phone_number",
+                Cell: (data) => (
+                    <>
+                        <StyledText component="p">{data.value}</StyledText>
+                    </>
+                ),
+            },
+            {
+                Header: "Email",
+                accessor: "email",
+                maxWidth: 250,
+                Cell: (data) => (
+                    <>
+                        <StyledText component="p">{data.value}</StyledText>
+                    </>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="right" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <span {...row.getToggleRowExpandedProps({})}>
+                            {row.isExpanded ? (
+                                <Tooltip title="Hide Account Details" arrow>
+                                    <IconButton>
+                                        <VisibilityOffOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Show Account Details" arrow>
+                                    <IconButton>
+                                        <RemoveRedEyeOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </span>
+                        <AddAccount update={true} update_data={row?.original} />
+                        <Tooltip title="Map Privilege" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/user/permission/${row?.original?.id}`
+                                    )
+                                }
+                            >
+                                <SyncAltOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const sub_columns = [
         { key: "name", name: "Name" },
@@ -311,8 +311,6 @@ function AccountTable() {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleEdit = (id, data) => {};
-
     const handleDelete = (id) => {
         dispatch(actions.delete_user(id));
     };
@@ -331,7 +329,6 @@ function AccountTable() {
                 title="Account Details"
                 data={user_list?.data || []}
                 sub_columns={sub_columns}
-                handleEdit={handleEdit}
                 handleDelete={handleDelete}
                 loading={loading}
                 rowsPerPage={8}

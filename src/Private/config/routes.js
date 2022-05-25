@@ -53,19 +53,49 @@ const ServiceChargeDetails = lazy(() =>
     import("../pages/Setup/ServiceCharge/ServiceChargeDetails")
 );
 
+//Customers
+const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
+const CustomerReports = lazy(() => import("../pages/Customers/Reports"));
+
+//Transactions
+const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
+const DailyTransactions = lazy(() =>
+    import("../pages/Transactions/DailyTransactions")
+);
+const PendingTransactions = lazy(() =>
+    import("../pages/Transactions/PendingTransactions")
+);
+const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
+
+//Reports
+const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
+const ReportsSummary = lazy(() => import("../pages/Reports/Summary"));
+
+//Compliance
+const ComplianceBlockList = lazy(() => import("../pages/Compliance/BlockList"));
+const ComplianceHoldList = lazy(() => import("../pages/Compliance/HoldList"));
+const CompliancePaymentRules = lazy(() =>
+    import("../pages/Compliance/PaymentRules")
+);
+const ComplianceReport = lazy(() => import("../pages/Compliance/Report"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
     { path: "/user/accounts", component: <Accounts /> },
     { path: "/user/permission/:id", component: <UserPermission /> },
     { path: "/user/menu", component: <Menu /> },
-    { path: "/user/menu/sub/:id", component: <SubMenu /> },
+    { path: "/user/menu/sub/:name/:id", component: <SubMenu /> },
 
+    //Setup routes
     { path: "/setup/delivery-option", component: <DeliveryOption /> },
     { path: "/setup/delivery-route", component: <DeliveryRoute /> },
     { path: "/setup/exchange-rate", component: <ExchangeRate /> },
-    { path: "/setup/exchange-rate/:id", component: <ExchangeRateList /> },
     {
-        path: "/setup/exchange-rate/create",
+        path: "/setup/exchange-rate/:name/:sending_currency/:id",
+        component: <ExchangeRateList />,
+    },
+    {
+        path: "/setup/exchange-rate/create/:currency/:agent_id",
         component: <AddUpdateExchangeRate />,
     },
     {
@@ -81,23 +111,21 @@ const privateRoutes = [
     { path: "/setup/partner/update/:id", component: <AddUpdatePartner /> },
     { path: "/setup/partner/details/:id", component: <PartnerDetails /> },
     { path: "/setup/partner/corridor/:id", component: <Corridor /> },
-    { path: "/setup/partner/corridor/add", component: <AddUpdateCorridor /> },
-    {
-        path: "/setup/partner/corridor/update/:id",
-        component: <AddUpdateCorridor />,
-    },
     { path: "/setup/partner-bank", component: <PartnerBank /> },
     {
-        path: "/setup/partner-bank/map/:payment/:country/:currency",
+        path: "/setup/partner-bank/map/:payment/:country/:currency/:id",
         component: <MapBank />,
     },
     { path: "/setup/payout-location", component: <PayoutLocation /> },
     { path: "/setup/reference", component: <Reference /> },
-    { path: "/setup/reference/data/:id", component: <ReferenceData /> },
+    { path: "/setup/reference/data/:name/:id", component: <ReferenceData /> },
     { path: "/setup/service-charge", component: <ServiceCharge /> },
-    { path: "/setup/service-charge/:id", component: <ServiceChargeList /> },
     {
-        path: "/setup/service-charge/create",
+        path: "/setup/service-charge/:name/:id",
+        component: <ServiceChargeList />,
+    },
+    {
+        path: "/setup/service-charge/:agent_id/create",
         component: <AddUpdateServiceCharge />,
     },
     {
@@ -108,6 +136,29 @@ const privateRoutes = [
         path: "/setup/service-charge/details/:id",
         component: <ServiceChargeDetails />,
     },
+
+    //Customers
+    { path: "/customer/search", component: <CustomerSearch /> },
+    { path: "/customer/report", component: <CustomerReports /> },
+
+    //Transactions
+    { path: "/transaction/new", component: <CreateTransactions /> },
+    { path: "/transaction/daily", component: <DailyTransactions /> },
+    { path: "/transaction/pending", component: <PendingTransactions /> },
+    { path: "/transaction/search", component: <SearchTransactions /> },
+
+    //Reports
+    { path: "/report/country-wise-report", component: <ReportsCountrywise /> },
+    { path: "/report/summary", component: <ReportsSummary /> },
+
+    //Compliance
+    { path: "/compliance/hold-list", component: <ComplianceBlockList /> },
+    { path: "/compliance/block-list", component: <ComplianceHoldList /> },
+    {
+        path: "/compliance/payment-rules",
+        component: <CompliancePaymentRules />,
+    },
+    { path: "/compliance/report", component: <ComplianceReport /> },
 ];
 
 export default privateRoutes;

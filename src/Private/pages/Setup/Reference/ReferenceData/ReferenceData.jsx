@@ -52,7 +52,7 @@ const initialState = {
 };
 
 const ReferenceData = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -128,7 +128,11 @@ const ReferenceData = () => {
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -145,6 +149,9 @@ const ReferenceData = () => {
                                     <VisibilityOffOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -155,6 +162,9 @@ const ReferenceData = () => {
                                     <RemoveRedEyeOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -237,7 +247,7 @@ const ReferenceData = () => {
 
     return (
         <MenuContainer>
-            <Header title="Reference Data" type={false} id={id} />
+            <Header title="Reference Data" type={false} id={id} name={name} />
             <Filter
                 type={false}
                 handleSearch={handleSearch}

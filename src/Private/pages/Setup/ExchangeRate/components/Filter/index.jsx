@@ -74,8 +74,7 @@ const DropWrapper = styled(Box)(({ theme }) => ({
 
 const sortData = [
     { key: "None", value: "" },
-    { key: "Id", value: "sending_agent_id" },
-    { key: "Agent Name", value: "agent_name" },
+    { key: "Country", value: "receiving_country" },
 ];
 
 const orderData = [
@@ -103,35 +102,40 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
 
             <DropWrapper>
                 <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleSort}
-                            displayEmpty
-                            defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Sort By
-                                        </Typography>
+                    {handleSort && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleSort}
+                                displayEmpty
+                                defaultValue=""
+                                renderValue={(selected) => {
+                                    if (selected.length === 0) {
+                                        return (
+                                            <Typography
+                                                component="p"
+                                                sx={{ opacity: 0.6 }}
+                                            >
+                                                Sort By
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = sortData.filter(
+                                        (type) => type.value === selected
                                     );
-                                }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
-                                return value[0]?.key;
-                            }}
-                        >
-                            {sortData.map((order) => (
-                                <MenuItem value={order.value} key={order.value}>
-                                    {order.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {sortData.map((order) => (
+                                    <MenuItem
+                                        value={order.value}
+                                        key={order.value}
+                                    >
+                                        {order.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleOrder}

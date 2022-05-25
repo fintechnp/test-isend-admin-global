@@ -28,6 +28,13 @@ const reducer = (state = initialState, action) => {
                 loading: false,
                 error: action.error,
             };
+        case actions.UPDATE_CORRIDOR_RESET:
+            return {
+                success: false,
+                loading: false,
+                error: null,
+                response: [],
+            };
         default:
             return state;
     }

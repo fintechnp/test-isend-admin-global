@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { change, Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../../App/components/Fields/SelectField";
 import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
 import Validator from "../../../../../../App/utils/validators";
@@ -64,24 +63,50 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 
 const DeliveryOptionForm = ({
     handleSubmit,
-    user_type,
     update,
     loading,
     buttonText,
+    payout_country,
+    handleAgent,
     handleClose,
+    partner_sending,
+    partner_payout,
 }) => {
     const dispatch = useDispatch();
-    const [type, setType] = useState(false);
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
-    const partner_data = useSelector(
-        (state) => state.get_all_partner?.response
-    );
 
-    const handleType = (e) => {
-        setType(e.target.value);
-        if (e.target.value !== "PARTNER") {
-            dispatch(change("add_user_form", "agent_id", 0));
+    useEffect(() => {
+        if (payout_country && update) {
+            handleAgent(payout_country);
+        }
+    }, [payout_country]);
+
+    const convertCurrency = (iso3) => {
+        const currency = country.filter((data) => data.iso3 === iso3);
+        if (currency) {
+            return currency[0].currency;
+        }
+    };
+
+    const handleCurrency = (e) => {
+        handleAgent(e.target.value);
+        if (update) {
+            dispatch(
+                change(
+                    "update_delivery_route_form",
+                    "payout_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
+        } else {
+            dispatch(
+                change(
+                    "add_delivery_route_form",
+                    "payout_currency",
+                    convertCurrency(e.target.value)
+                )
+            );
         }
     };
 
@@ -90,32 +115,6 @@ const DeliveryOptionForm = ({
             <Container container direction="column">
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="send_agent_id"
-                                label="Sending Agent"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_agent_id"
-                                label="Payout Agent"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="payment_type"
@@ -153,6 +152,7 @@ const DeliveryOptionForm = ({
                                 label="Country"
                                 type="number"
                                 small={12}
+                                onChange={handleCurrency}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -164,7 +164,10 @@ const DeliveryOptionForm = ({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
+                                        <option
+                                            value={data.iso3}
+                                            key={data.tid}
+                                        >
                                             {data.country}
                                         </option>
                                     ))}
@@ -189,35 +192,91 @@ const DeliveryOptionForm = ({
                                     country.map((data) => (
                                         <option
                                             value={data.currency}
-                                            key={data.id}
+                                            key={data.tid}
                                         >
-                                            {data.currency}
+                                            {data.currency_name}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
+                            <Field
+                                name="send_agent_id"
+                                label="Sending Agent"
+                                type="number"
+                                small={12}
+                                component={SelectField}
+                                disabled={partner_sending.length > 0 ? false : true}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
                             >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
+                                <option value="" disabled>
+                                    Select Sending Agent
+                                </option>
+                                {partner_sending &&
+                                    partner_sending.map((data, index) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="payout_agent_id"
+                                label="Payout Agent"
+                                type="number"
+                                small={12}
+                                component={SelectField}
+                                disabled={partner_payout.length > 0 ? false : true}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Payout Agent
+                                </option>
+                                {partner_payout &&
+                                    partner_payout.map((data) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
+                        </FieldWrapper>
+                        {update && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Grid
+                                    container
+                                    alignItems="flex-end"
+                                    justifyContent="flex-end"
+                                >
+                                    <Grid item xs={12}>
+                                        <StatusText component="p">
+                                            Status
+                                        </StatusText>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Field
+                                            name="is_active"
+                                            label="Active"
+                                            small={12}
+                                            reverse="row-reverse"
+                                            component={CheckboxField}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </FieldWrapper>
+                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>

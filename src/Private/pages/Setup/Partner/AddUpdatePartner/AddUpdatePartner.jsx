@@ -1,74 +1,91 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
+import { reset } from "redux-form";
 import { useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 
 import PartnerForm from "./Form";
 import actions from "./../store/actions";
-import { Grid, Typography } from "@mui/material";
+
+const TitleWrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+}));
 
 const Title = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
     fontSize: "18px",
     fontWeight: 600,
-    paddingBottom: "6px",
+    paddingLeft: "8px",
+}));
+
+const BackButton = styled(Button)(({ theme }) => ({
+    fontSize: "12px",
+    textTransform: "capitalize",
+    color: theme.palette.border.main,
+    borderColor: theme.palette.border.main,
+    "&:hover": {
+        color: theme.palette.border.dark,
+        borderColor: theme.palette.border.dark,
+    },
+    "& .MuiButton-startIcon>*:nth-of-type(1)": {
+        fontSize: "15px",
+    },
 }));
 
 function AddUpdatePartner() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_service_charge
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_service_charge
+    const { response, loading } = useSelector(
+        (state) => state.get_partner_details
     );
 
-    const handleClose = (data) => {
+    useEffect(() => {
+        if (id) {
+            dispatch(actions.get_partner_details(id));
+        }
+    }, [id]);
+
+    useEffect(() => {
+        dispatch(reset("add_partner_form"));
+    }, []);
+
+    const handleBack = () => {
         navigate(-1);
-    };
-
-    const handleChargeCreate = (data) => {
-        dispatch(actions.add_partner(data));
-    };
-
-    const handleChargeUpdate = (data) => {
-        dispatch(actions.update_partner(data.menu_id, data));
     };
 
     return (
         <Grid container>
             <Grid item xs={12}>
-                <Title>{id ? "Update" : "Add"} Partner </Title>
+                <TitleWrapper>
+                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <PersonAddAltOutlinedIcon
+                            sx={{ color: "primary.main", fontSize: "28px" }}
+                        />
+                        <Title>{id ? "Update" : "Add"} Partner </Title>
+                    </Box>
+                    <BackButton
+                        variant="outlined"
+                        size="small"
+                        onClick={handleBack}
+                    >
+                        Back
+                    </BackButton>
+                </TitleWrapper>
             </Grid>
             <Grid item xs={12}>
-                {id ? (
-                    <PartnerForm
-                        destroyOnUnmount
-                        // initialValues={{
-                        //     menu_id: memoizedData?.menu_id,
-                        //     name: memoizedData?.name,
-                        //     menu_order: memoizedData?.menu_order,
-                        //     is_active: memoizedData?.is_active,
-                        // }}
-                        onSubmit={handleChargeUpdate}
-                        buttonText="Update"
-                        loading={update_loading}
-                        handleClose={handleClose}
-                        form={`update_partner_form`}
-                    />
-                ) : (
-                    <PartnerForm
-                        enableReinitialize={true}
-                        onSubmit={handleChargeCreate}
-                        buttonText="Create"
-                        form={`add_partner_form`}
-                        handleClose={handleClose}
-                        initialValues={{ is_active: false }}
-                        loading={add_loading}
-                    />
-                )}
+                <Divider sx={{ mb: 1.2, pt: 0.5 }} />
+            </Grid>
+            <Grid item xs={12}>
+                <PartnerForm update_data={response?.data} loading={loading} />
             </Grid>
         </Grid>
     );

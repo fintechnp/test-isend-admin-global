@@ -37,7 +37,12 @@ function Login() {
                 Cookies.set("refreshToken", res.refresh_token);
                 dispatch(actions.get_user());
                 dispatch(actions.get_all_country());
-                dispatch(actions.get_all_reference());
+                dispatch(
+                    actions.get_all_reference({
+                        page_number: 1,
+                        page_size: 100,
+                    })
+                );
                 setLoading(false);
             }
         } catch (err) {

@@ -13,6 +13,11 @@ const actions = {
     UPDATE_SUB_MENU_FAILED: "UPDATE_SUB_MENU_FAILED",
     UPDATE_SUB_MENU_RESET: "UPDATE_SUB_MENU_RESET",
 
+    UPDATE_SUB_MENU_STATUS: "UPDATE_SUB_MENU_STATUS",
+    UPDATE_SUB_MENU_STATUS_SUCCESS: "UPDATE_SUB_MENU_STATUS_SUCCESS",
+    UPDATE_SUB_MENU_STATUS_FAILED: "UPDATE_SUB_MENU_STATUS_FAILED",
+    UPDATE_SUB_MENU_STATUS_RESET: "UPDATE_SUB_MENU_STATUS_RESET",
+
     DELETE_SUB_MENU: "DELETE_SUB_MENU",
     DELETE_SUB_MENU_SUCCESS: "DELETE_SUB_MENU_SUCCESS",
     DELETE_SUB_MENU_FAILED: "DELETE_SUB_MENU_FAILED",
@@ -30,16 +35,23 @@ const actions = {
         id,
     }),
 
-    update_sub_menu: (id, sub_id, data) => ({
+    update_sub_menu: (sub_id, parent_id, data) => ({
         type: actions.UPDATE_SUB_MENU,
         data,
-        id,
+        parent_id,
         sub_id,
     }),
 
-    delete_sub_menu: (id, sub_id) => ({
+    update_sub_menu_status: (sub_id, parent_id, data) => ({
+        type: actions.UPDATE_SUB_MENU_STATUS,
+        data,
+        parent_id,
+        sub_id,
+    }),
+
+    delete_sub_menu: (sub_id, parent_id) => ({
         type: actions.DELETE_SUB_MENU,
-        id,
+        parent_id,
         sub_id,
     }),
 };

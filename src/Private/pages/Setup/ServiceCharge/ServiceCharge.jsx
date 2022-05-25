@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
@@ -20,13 +20,6 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
-}));
-
-const SwitchWrapper = styled(Box)(({ theme }) => ({
-    "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
-        opacity: 0.8,
-        color: theme.palette.primary.main,
-    },
 }));
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -66,90 +59,88 @@ const ServiceCharge = () => {
     const { response: servicecharge_data, loading: g_loading } = useSelector(
         (state) => state.get_all_service_charge
     );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_partner
-    );
-    const { success: a_success } = useSelector((state) => state.add_partner);
-    const { success: u_success } = useSelector((state) => state.update_partner);
 
     useEffect(() => {
         dispatch(actions.get_all_service_charge(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
-    }, [dispatch, filterSchema, d_success, a_success, u_success]);
+    }, [dispatch, filterSchema]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "SN",
-            maxWidth: 100,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data?.row?.index + 1}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: "Partner Name",
-            accessor: "agent_name",
-            width: 280,
-            maxWidth: 500,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center" sx={{}}>
-                    <Typography>Actions</Typography>
-                </Box>
-            ),
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Tooltip title="Partner Details" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/service-charge/${row.original.sending_agent_id}`
-                                )
-                            }
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-            ),
-        },
-    ]);
+    const columns = useMemo(
+        () => [
+            {
+                Header: "SN",
+                maxWidth: 100,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data?.row?.index + 1}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Partner Name",
+                accessor: "agent_name",
+                width: 280,
+                maxWidth: 500,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Tooltip title="Partner Details" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/service-charge/${row?.original?.agent_name}/${row?.original?.sending_agent_id}`
+                                    )
+                                }
+                            >
+                                <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const handleSearch = useCallback(
         (e) => {
@@ -163,29 +154,11 @@ const ServiceCharge = () => {
         [filterSchema]
     );
 
-    const handleCountry = (e) => {
-        const country = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            country: country,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleOrder = (e) => {
         const order = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
             order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSort = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -213,9 +186,7 @@ const ServiceCharge = () => {
             <Header title="Partnerwise Service Charge" />
             <Filter
                 handleSearch={handleSearch}
-                handleCountry={handleCountry}
                 handleOrder={handleOrder}
-                handleSort={handleSort}
             />
             <Table
                 columns={columns}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
@@ -17,7 +17,10 @@ import {
     ReferenceName,
 } from "./../../../../App/helpers";
 import AddDeliveryOption from "./components/AddDeliveryOption";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -87,155 +90,173 @@ const DeliveryOption = () => {
 
     useEffect(() => {
         dispatch(actions.get_all_delivery_option(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "DELETE_DELIVERY_OPTION_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "delivery_option_id",
-            maxWidth: 80,
-        },
-        {
-            Header: "Option Name",
-            accessor: "delivery_name",
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Payout Agent</Typography>
-                </Box>
-            ),
-            accessor: "payout_agent",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Payment Type</Typography>
-                </Box>
-            ),
-            accessor: "payment_type",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {ReferenceName(1, data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Country/Currency</Typography>
-                </Box>
-            ),
-            accessor: "country_code",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {data.value ? CountryName(data.value) : "N/A"}
-                    </StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "delivery_option_id",
+                maxWidth: 80,
+            },
+            {
+                Header: "Option Name",
+                accessor: "delivery_name",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
                     >
-                        {data?.row?.original?.currency_code
-                            ? CurrencyName(data?.row?.original?.currency_code)
-                            : "N/A"}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="right" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            width: 120,
-            Cell: (data) => (
-                <SwitchWrapper textAlign="right" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Delivery Option Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Delivery Option Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <AddDeliveryOption
-                        update={true}
-                        update_data={row?.original}
-                    />
-                    <Delete
-                        data={row?.original}
-                        handleDelete={handleDelete}
-                        loading={d_loading}
-                        tooltext="Delete Delivery Option"
-                    />
-                </Box>
-            ),
-        },
-    ]);
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Payout Agent</Typography>
+                    </Box>
+                ),
+                accessor: "payout_agent",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">{data.value}</StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Payment Type</Typography>
+                    </Box>
+                ),
+                accessor: "payment_type",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {ReferenceName(1, data.value)}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Country/Currency</Typography>
+                    </Box>
+                ),
+                accessor: "country_code",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? CountryName(data.value) : "N/A"}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {data?.row?.original?.currency_code
+                                ? CurrencyName(
+                                      data?.row?.original?.currency_code
+                                  )
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="right" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <span {...row.getToggleRowExpandedProps({})}>
+                            {row.isExpanded ? (
+                                <Tooltip
+                                    title="Hide Delivery Option Details"
+                                    arrow
+                                >
+                                    <IconButton>
+                                        <VisibilityOffOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip
+                                    title="Show Delivery Option Details"
+                                    arrow
+                                >
+                                    <IconButton>
+                                        <RemoveRedEyeOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </span>
+                        <AddDeliveryOption
+                            update={true}
+                            update_data={row?.original}
+                        />
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Delete Delivery Option"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const sub_columns = [
         { key: "delivery_option_id", name: "Id" },
@@ -246,10 +267,6 @@ const DeliveryOption = () => {
         { key: "payment_type", name: "Payment Type" },
         { key: "is_active", name: "Status" },
     ];
-
-    const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
-    }, []);
 
     const handleSearch = useCallback(
         (e) => {
@@ -312,6 +329,12 @@ const DeliveryOption = () => {
         dispatch(actions.delete_delivery_option(id));
     };
 
+    const handleStatus = useCallback((is_active, id) => {
+        dispatch(
+            actions.update_delivery_option_status(id, { is_active: is_active })
+        );
+    }, []);
+
     return (
         <MenuContainer>
             <Header />
@@ -328,6 +351,7 @@ const DeliveryOption = () => {
                 sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
+                totalPage={deliveryoption_data?.pagination?.totalPage || 1}
                 renderPagination={() => (
                     <TablePagination
                         paginationData={deliveryoption_data?.pagination}

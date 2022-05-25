@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { PersistGate } from "redux-persist/integration/react";
 import CssBaseline from "@mui/material/CssBaseline";
+import GlobalStyles from "@mui/material/GlobalStyles";
+import darkScrollbar from "@mui/material/darkScrollbar";
 
 import MainRoutes from "./routes";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -24,6 +26,25 @@ const App = () => {
                         <ErrorBoundary>
                             <BrowserRouter>
                                 <CssBaseline enableColorScheme />
+                                <GlobalStyles
+                                    styles={{
+                                        h1: { color: "grey" },
+                                        "*::-webkit-scrollbar": {
+                                            width: "0.4em",
+                                            height: "0.4em",
+                                            right: "12px",
+                                        },
+                                        "*::-webkit-scrollbar-track": {
+                                            "-webkit-box-shadow":
+                                                "inset 0 0 6px rgba(0,0,0,0.00)",
+                                        },
+                                        "*::-webkit-scrollbar-thumb": {
+                                            backgroundColor: `${theme.palette.border.light}`,
+                                            outline: `1px solid ${theme.palette.border.main}`,
+                                            borderRadius: "6px",
+                                        },
+                                    }}
+                                />
                                 <MainRoutes />
                                 <Toaster />
                             </BrowserRouter>
