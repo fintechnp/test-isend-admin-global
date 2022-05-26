@@ -9,12 +9,13 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import AddPaymentRules from "./components/AddPaymentRules";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
-import { CountryName } from "./../../../../App/helpers";
+import AddSanction from "./components/AddSanction";
+import Table, { TablePagination } from "./../../../../App/components/Table";
+import {
+    CountryName,
+    FormatDate,
+    ReferenceName,
+} from "./../../../../App/helpers";
 import { Delete } from "./../../../../App/components";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -26,13 +27,6 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
-}));
-
-const SwitchWrapper = styled(Box)(({ theme }) => ({
-    "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
-        opacity: 0.8,
-        color: theme.palette.primary.main,
-    },
 }));
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -47,42 +41,35 @@ const StyledName = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
-const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "14px",
-    color: "border.main",
-}));
-
 const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    sort_by: "rule_name",
+    sort_by: "name",
     order_by: "ASC",
 };
 
-const PaymentRules = () => {
+const SanctionList = () => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: paymentRules, loading: l_loading } = useSelector(
-        (state) => state.get_payment_rules
+    const { response: sanctionList, loading: l_loading } = useSelector(
+        (state) => state.get_sanction_list
     );
     const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_payment_rules
+        (state) => state.delete_sanction
     );
-    const { success: a_success } = useSelector(
-        (state) => state.add_payment_rules
-    );
+    const { success: a_success } = useSelector((state) => state.add_sanction);
     const { success: u_success } = useSelector(
-        (state) => state.update_payment_rules
+        (state) => state.update_sanction
     );
 
     useEffect(() => {
-        dispatch(actions.get_all_payemnt_rules(filterSchema));
-        dispatch({ type: "ADD_PAYMENT_RULES_RESET" });
-        dispatch({ type: "UPDATE_PAYMENT_RULES_RESET" });
-        dispatch({ type: "DELETE_PAYMENT_RULES_RESET" });
+        dispatch(actions.get_sanction_list(filterSchema));
+        dispatch({ type: "ADD_SANCTION_RESET" });
+        dispatch({ type: "UPDATE_SANCTION_RESET" });
+        dispatch({ type: "DELETE_SANCTION_RESET" });
+        dispatch({ type: "IMPORT_SANCTION_LIST_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
     const columns = useMemo(
@@ -93,8 +80,8 @@ const PaymentRules = () => {
                 maxWidth: 50,
             },
             {
-                Header: "Rule Name",
-                accessor: "rule_name",
+                Header: "Name",
+                accessor: "name",
                 maxWidth: 140,
                 Cell: (data) => (
                     <Box
@@ -104,23 +91,21 @@ const PaymentRules = () => {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ fontSize: "13px" }}>
+                        <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value}
                         </StyledName>
                         <Typography
                             component="span"
-                            sx={{ fontSize: "10px", opacity: 0.8 }}
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {CountryName(data?.row?.original?.send_country)} to{" "}
-                            {CountryName(data?.row?.original?.payout_country)}
+                            {ReferenceName(37, data?.row?.original?.type)}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Sending/Payout Partner",
-                accessor: "sending_agent",
-                width: 240,
+                Header: "Address",
+                accessor: "address",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -133,99 +118,60 @@ const PaymentRules = () => {
                             component="p"
                             sx={{
                                 paddingLeft: "4px",
-                                fontSize: "13px",
+                                fontSize: "14px",
                                 opacity: 0.6,
                             }}
                         >
                             {data.value}
                         </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
-                        >
-                            {data?.row?.original?.payout_agent}
-                        </StyledName>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Amount</Typography>
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Country</Typography>
                     </Box>
                 ),
-                accessor: "amount",
+                accessor: "country",
                 maxWidth: 90,
                 Cell: (data) => (
-                    <Box textAlign="right" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {CountryName(data.value)}
                         </StyledName>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="center" sx={{}}>
-                        <Typography>Transactions</Typography>
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>DOB</Typography>
                     </Box>
                 ),
-                accessor: "no_of_transactions",
+                accessor: "dob",
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {FormatDate(data.value)}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Source</Typography>
+                    </Box>
+                ),
+                accessor: "source",
                 maxWidth: 90,
                 Cell: (data) => (
-                    <Box textAlign="center" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value}
                         </StyledName>
                     </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center" sx={{}}>
-                        <Typography>Days</Typography>
-                    </Box>
-                ),
-                accessor: "no_of_days",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box textAlign="center">
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>C. Action</Typography>
-                    </Box>
-                ),
-                accessor: "compliance_action",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box textAlign="center">
-                        <StyledText component="p">{data.value}</StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Status</Typography>
-                    </Box>
-                ),
-                accessor: "is_active",
-                width: 80,
-                Cell: (data) => (
-                    <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data?.row?.original}
-                            handleStatus={handleStatus}
-                        />
-                    </SwitchWrapper>
                 ),
             },
             {
@@ -245,7 +191,7 @@ const PaymentRules = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Payment Rules Details" arrow>
+                                <Tooltip title="Hide Sanction Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -258,10 +204,7 @@ const PaymentRules = () => {
                                     </IconButton>
                                 </Tooltip>
                             ) : (
-                                <Tooltip
-                                    title="Show Payment Rules Details"
-                                    arrow
-                                >
+                                <Tooltip title="Show Sanction Details" arrow>
                                     <IconButton>
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
@@ -275,15 +218,15 @@ const PaymentRules = () => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPaymentRules
+                        <AddSanction
                             update={true}
                             update_data={row?.original}
                         />
                         <Delete
-                            id={row.original.tid}
+                            id={row?.original.tid}
                             handleDelete={handleDelete}
                             loading={d_loading}
-                            tooltext="Delete Payment Rules"
+                            tooltext="Delete Sanction"
                         />
                     </Box>
                 ),
@@ -294,23 +237,17 @@ const PaymentRules = () => {
 
     const sub_columns = [
         { key: "tid", name: "Id" },
-        { key: "sending_agent", name: "Sending Partner" },
-        { key: "send_country", name: "Sending Country" },
-        { key: "send_currency", name: "Sending Currency" },
-        { key: "payout_agent", name: "Payout Partner" },
-        { key: "payout_country", name: "Payout Country" },
+        { key: "type", name: "Type" },
+        { key: "name", name: "Name" },
+        { key: "address", name: "Address" },
+        { key: "country", name: "Country" },
+        { key: "dob", name: "DOB" },
+        { key: "source", name: "Source" },
         { key: "amount", name: "Amount" },
-        { key: "no_of_transactions", name: "No of Transactions" },
-        { key: "no_of_days", name: "No of Days" },
-        { key: "compliance_action", name: "Compliance Action" },
-        { key: "is_active", name: "Status" },
+        { key: "remarks", name: "Remarks" },
+        { key: "ref1", name: "Ref 1" },
+        { key: "ref2", name: "Ref 2" },
     ];
-
-    const handleStatus = useCallback((is_active, id) => {
-        dispatch(
-            actions.update_payemnt_rules_status({ is_active: is_active }, id)
-        );
-    }, []);
 
     const handleSearch = useCallback(
         (e) => {
@@ -323,15 +260,6 @@ const PaymentRules = () => {
         },
         [filterSchema]
     );
-
-    const handleFilterAgent = (e) => {
-        const agent_id = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_id: agent_id,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
 
     const handleSort = (e) => {
         const type = e.target.value;
@@ -370,7 +298,7 @@ const PaymentRules = () => {
     };
 
     const handleDelete = (id) => {
-        dispatch(actions.delete_payemnt_rules(id));
+        dispatch(actions.delete_sanction(id));
     };
 
     return (
@@ -378,21 +306,20 @@ const PaymentRules = () => {
             <Header />
             <Filter
                 handleSearch={handleSearch}
-                handleFilterAgent={handleFilterAgent}
                 handleSort={handleSort}
                 handleOrder={handleOrder}
             />
             <Table
                 columns={columns}
                 title="Payment Rules"
-                data={paymentRules?.data || []}
+                data={sanctionList?.data || []}
                 sub_columns={sub_columns}
                 loading={l_loading}
                 rowsPerPage={8}
                 handleDelete={handleDelete}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={paymentRules?.pagination}
+                        paginationData={sanctionList?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />
@@ -402,4 +329,4 @@ const PaymentRules = () => {
     );
 };
 
-export default PaymentRules;
+export default SanctionList;

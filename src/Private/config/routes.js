@@ -73,6 +73,7 @@ const ReportsSummary = lazy(() => import("../pages/Reports/Summary"));
 
 //Compliance
 const ComplianceBlockList = lazy(() => import("../pages/Compliance/BlockList"));
+const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
 const ComplianceHoldList = lazy(() => import("../pages/Compliance/HoldList"));
 const CompliancePaymentRules = lazy(() =>
     import("../pages/Compliance/PaymentRules")
@@ -153,6 +154,7 @@ const privateRoutes = [
 
     //Compliance
     { path: "/compliance/hold-list", component: <ComplianceHoldList /> },
+    { path: "/compliance/sanction-list", component: <SanctionList /> },
     { path: "/compliance/block-list", component: <ComplianceBlockList /> },
     {
         path: "/compliance/payment-rules",

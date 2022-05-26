@@ -223,6 +223,12 @@ const PrivateLayout = ({ children }) => {
                         sub: false,
                     },
                     {
+                        path: "/compliance/sanction-list",
+                        key: "sanction-compliance",
+                        text: "Sanction List",
+                        sub: false,
+                    },
+                    {
                         path: "/compliance/hold-list",
                         key: "hold-compliance",
                         text: "Hold List",

@@ -131,6 +131,17 @@ import {
     PaymentRulesSaga,
 } from "./pages/Compliance/PaymentRules/store";
 
+//Manage Compliance Sanction
+import {
+    GetSanctionListReducer,
+    GetSanctionByIdReducer,
+    AddSanctionReducer,
+    ImportSanctionReducer,
+    UpdateSanctionReducer,
+    DeleteSanctionReducer,
+    SanctionSaga,
+} from "./pages/Compliance/SanctionList/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -235,6 +246,21 @@ export const privateReducer = {
     update_payment_rules: UpdatePaymentRulesReducer,
     update_payment_rules_status: UpdatePaymentRulesStatusReducer,
     delete_payment_rules: DeletePaymentRulesReducer,
+
+    GetSanctionListReducer,
+    GetSanctionByIdReducer,
+    AddSanctionReducer,
+    ImportSanctionReducer,
+    UpdateSanctionReducer,
+    DeleteSanctionReducer,
+
+    //Sanction
+    get_sanction_list: GetSanctionListReducer,
+    get_sanction_by_id: GetSanctionByIdReducer,
+    add_sanction: AddSanctionReducer,
+    import_sanction: ImportSanctionReducer,
+    update_sanction: UpdateSanctionReducer,
+    delete_sanction: DeleteSanctionReducer,
 };
 
 export const privateSaga = [
@@ -251,6 +277,7 @@ export const privateSaga = [
     ExchangeRateSaga(),
     ReferenceSaga(),
     PaymentRulesSaga(),
+    SanctionSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

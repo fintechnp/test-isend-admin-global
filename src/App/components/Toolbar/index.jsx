@@ -276,7 +276,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     }}
                 >
                     <IconButton
-                        edge="false"
+                        edge={false}
                         size="small"
                         disableRipple
                         color="inherit"

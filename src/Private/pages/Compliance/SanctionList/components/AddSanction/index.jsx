@@ -16,8 +16,7 @@ import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 
 import AccountForm from "./Form";
-import actions from "./../../store/actions";
-import PartnerActions from "./../../../../Setup/Partner/store/actions";
+import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -97,40 +96,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const stateSend = {
-    page_number: 1,
-    page_size: 100,
-    agent_type: "SEND",
-    country: "",
-    sort_by: "name",
-    order_by: "ASC",
-};
-
-const statePay = {
-    page_number: 1,
-    page_size: 100,
-    agent_type: "PAY",
-    country: "",
-    sort_by: "name",
-    order_by: "ASC",
-};
-
-function AddUpdatePaymentRules({ update_data, update }) {
+function AddSanction({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const [filterSend, setFilterSend] = React.useState(stateSend);
-    const [filterPay, setFilterPay] = React.useState(statePay);
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_payment_rules
+        (state) => state.add_sanction
     );
     const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_payment_rules
-    );
-    const { response: partner_sending } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
+        (state) => state.update_sanction
     );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
@@ -141,21 +114,7 @@ function AddUpdatePaymentRules({ update_data, update }) {
         }
     }, [add_success, update_success]);
 
-    React.useEffect(() => {
-        if (filterPay?.country) {
-            dispatch(PartnerActions.get_payout_partner(filterPay));
-        }
-    }, [dispatch, filterPay]);
-
-    React.useEffect(() => {
-        if (filterSend?.country) {
-            dispatch(PartnerActions.get_sending_partner(filterSend));
-        }
-    }, [dispatch, filterSend]);
-
     const handleClickOpen = () => {
-        dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
-        dispatch({ type: "GET_SENDING_PARTNER_RESET" });
         setOpen(true);
     };
 
@@ -163,36 +122,18 @@ function AddUpdatePaymentRules({ update_data, update }) {
         setOpen(false);
     };
 
-    const handleSendPartner = (e) => {
-        const country = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSend,
-            country: country,
-        };
-        setFilterSend(updatedFilterSchema);
+    const handleSanctionSubmit = (data) => {
+        dispatch(actions.add_sanction(data));
     };
 
-    const handlePayoutPartner = (e) => {
-        const country = e.target.value;
-        const updatedFilterSchema = {
-            ...filterPay,
-            country: country,
-        };
-        setFilterPay(updatedFilterSchema);
-    };
-
-    const handlePaymentRulesSubmit = (data) => {
-        dispatch(actions.add_payemnt_rules(data));
-    };
-
-    const handlePaymentRulesUpdate = (data) => {
-        dispatch(actions.update_payemnt_rules(data.rules_id, data));
+    const handleUpdateSanction = (data) => {
+        dispatch(actions.update_sanction(data.sanction_id, data));
     };
 
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Payment Rules" arrow>
+                <Tooltip title="Edit Sanction" arrow>
                     <UpdateButton onClick={handleClickOpen}>
                         <EditOutlinedIcon
                             sx={{
@@ -211,7 +152,7 @@ function AddUpdatePaymentRules({ update_data, update }) {
                     onClick={handleClickOpen}
                     endIcon={<AddIcon />}
                 >
-                    Add Payment Rules
+                    Add Sanction
                 </AddButton>
             )}
             <BootstrapDialog
@@ -224,52 +165,42 @@ function AddUpdatePaymentRules({ update_data, update }) {
                     id="customized-dialog-title"
                     onClose={handleClose}
                 >
-                    {update ? "Update" : "Create New"} Payment Rules
+                    {update ? "Update" : "Create New"} Sanction
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     {update ? (
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                rules_id: memoizedData?.tid,
-                                rule_name: memoizedData?.rule_name,
-                                send_agent_id: memoizedData?.send_agent_id,
-                                send_country: memoizedData?.send_country,
-                                send_currency: memoizedData?.send_currency,
-                                payout_agent_id: memoizedData?.payout_agent_id,
-                                payout_country: memoizedData?.payout_country,
-                                no_of_days: memoizedData?.no_of_days,
-                                no_of_transactions:
-                                    memoizedData?.no_of_transactions,
-                                amount: memoizedData?.amount,
-                                compliance_action:
-                                    memoizedData?.compliance_action,
-                                is_active: memoizedData?.is_active,
+                                sanction_id: memoizedData?.tid,
+                                name: memoizedData?.name,
+                                type: memoizedData?.type,
+                                address: memoizedData?.address,
+                                country: memoizedData?.country,
+                                dob: new Date(memoizedData?.dob)
+                                    .toISOString()
+                                    .slice(0, 10),
+                                source: memoizedData?.source,
+                                remarks: memoizedData?.remarks,
+                                ref1: memoizedData?.ref1,
+                                ref2: memoizedData?.ref2,
                             }}
-                            onSubmit={handlePaymentRulesUpdate}
+                            onSubmit={handleUpdateSanction}
                             buttonText="Update"
                             update={update}
                             loading={update_loading}
-                            form={`update_payment_rules_form`}
+                            form={`update_sanction_form`}
                             handleClose={handleClose}
-                            handleSendPartner={handleSendPartner}
-                            handlePayoutPartner={handlePayoutPartner}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
                         />
                     ) : (
                         <AccountForm
                             update={update}
                             enableReinitialize={true}
-                            onSubmit={handlePaymentRulesSubmit}
+                            onSubmit={handleSanctionSubmit}
                             buttonText="Create"
-                            form={`add_payment_rules_form`}
+                            form={`add_sanction_form`}
                             loading={add_loading}
                             handleClose={handleClose}
-                            handleSendPartner={handleSendPartner}
-                            handlePayoutPartner={handlePayoutPartner}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
                         />
                     )}
                 </DialogContent>
@@ -278,4 +209,4 @@ function AddUpdatePaymentRules({ update_data, update }) {
     );
 }
 
-export default AddUpdatePaymentRules;
+export default AddSanction;
