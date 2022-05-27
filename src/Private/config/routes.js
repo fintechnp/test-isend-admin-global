@@ -32,9 +32,6 @@ const PartnerDetails = lazy(() =>
     import("../pages/Setup/Partner/PartnerDetails")
 );
 const Corridor = lazy(() => import("../pages/Setup/Partner/Corridor"));
-const AddUpdateCorridor = lazy(() =>
-    import("../pages/Setup/Partner/AddUpdateCorridor")
-);
 const PartnerBank = lazy(() => import("../pages/Setup/PartnerBank"));
 const MapBank = lazy(() => import("../pages/Setup/PartnerBank/MapBank"));
 const PayoutLocation = lazy(() => import("../pages/Setup/PayoutLocation"));
@@ -62,19 +59,32 @@ const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
 const DailyTransactions = lazy(() =>
     import("../pages/Transactions/DailyTransactions")
 );
-const PendingTransactions = lazy(() =>
-    import("../pages/Transactions/PendingTransactions")
-);
 const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
 
 //Reports
 const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
 const ReportsSummary = lazy(() => import("../pages/Reports/Summary"));
 
+//PaymentProcess
+const PendingPayment = lazy(() =>
+    import("../pages/PaymentProcess/PendingPayment")
+);
+const PendingTransactions = lazy(() =>
+    import("../pages/PaymentProcess/PendingTransactions")
+);
+const BlockedTransactions = lazy(() =>
+    import("../pages/PaymentProcess/BlockedTransactions")
+);
+const AmlSupicious = lazy(() => import("../pages/PaymentProcess/AmlSupicious"));
+const ExceptionTransactions = lazy(() =>
+    import("../pages/PaymentProcess/ExceptionTransactions")
+);
+const TransactionsDetails = lazy(() =>
+    import("../pages/PaymentProcess/Details")
+);
+
 //Compliance
-const ComplianceBlockList = lazy(() => import("../pages/Compliance/BlockList"));
 const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
-const ComplianceHoldList = lazy(() => import("../pages/Compliance/HoldList"));
 const CompliancePaymentRules = lazy(() =>
     import("../pages/Compliance/PaymentRules")
 );
@@ -145,17 +155,31 @@ const privateRoutes = [
     //Transactions
     { path: "/transaction/new", component: <CreateTransactions /> },
     { path: "/transaction/daily", component: <DailyTransactions /> },
-    { path: "/transaction/pending", component: <PendingTransactions /> },
     { path: "/transaction/search", component: <SearchTransactions /> },
 
     //Reports
     { path: "/report/country-wise-report", component: <ReportsCountrywise /> },
     { path: "/report/summary", component: <ReportsSummary /> },
 
+    //PaymentProcess
+    { path: "/payment/pending", component: <PendingPayment /> },
+    {
+        path: "/payment/pending-transactions",
+        component: <PendingTransactions />,
+    },
+    { path: "/payment/block-list", component: <BlockedTransactions /> },
+    { path: "/payment/aml-suspicious", component: <AmlSupicious /> },
+    {
+        path: "/payment/exception-transactions",
+        component: <ExceptionTransactions />,
+    },
+    {
+        path: "/transactions/details/:id",
+        component: <TransactionsDetails />,
+    },
+
     //Compliance
-    { path: "/compliance/hold-list", component: <ComplianceHoldList /> },
     { path: "/compliance/sanction-list", component: <SanctionList /> },
-    { path: "/compliance/block-list", component: <ComplianceBlockList /> },
     {
         path: "/compliance/payment-rules",
         component: <CompliancePaymentRules />,

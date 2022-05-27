@@ -9,6 +9,7 @@ import {
     GroupWork,
     Receipt,
     GroupAdd,
+    Payment,
 } from "@mui/icons-material";
 import roles from "../../global/roles";
 import Loading from "./../../../App/components/Loading";
@@ -171,10 +172,50 @@ const PrivateLayout = ({ children }) => {
                         text: "Daily Transactions",
                         sub: false,
                     },
+                ],
+            },
+
+            //Payment Process
+            {
+                key: "payment",
+                text: "Payment Processing",
+                sub: true,
+                icon: <Payment />,
+                permission: [
+                    roles.SUPER_ADMIN,
+                    roles.ADMIN,
+                    roles.MANAGER,
+                    roles.USER,
+                ],
+                children: [
                     {
-                        path: "/transaction/pending",
-                        key: "pending-transaction",
+                        path: "/payment/pending",
+                        key: "pending-payment",
+                        text: "Payment Pending",
+                        sub: false,
+                    },
+                    {
+                        path: "/payment/pending-transactions",
+                        key: "pending-transactions",
                         text: "Pending Transactions",
+                        sub: false,
+                    },
+                    {
+                        path: "/payment/block-list",
+                        key: "blocksetup",
+                        text: "Block List",
+                        sub: false,
+                    },
+                    {
+                        path: "/payment/aml-suspicious",
+                        key: "amlsuspicioius",
+                        text: "Aml Suspicious",
+                        sub: false,
+                    },
+                    {
+                        path: "/payment/exception-transactions",
+                        key: "exception",
+                        text: "Exception Transactions",
                         sub: false,
                     },
                 ],
@@ -183,7 +224,7 @@ const PrivateLayout = ({ children }) => {
             //Report Pannel
             {
                 key: "report",
-                text: "Reports",
+                text: "Generate Reports",
                 sub: true,
                 icon: <Report />,
                 permission: [
@@ -229,21 +270,9 @@ const PrivateLayout = ({ children }) => {
                         sub: false,
                     },
                     {
-                        path: "/compliance/hold-list",
-                        key: "hold-compliance",
-                        text: "Hold List",
-                        sub: false,
-                    },
-                    {
-                        path: "/compliance/block-list",
-                        key: "blocksetup",
-                        text: "Block List",
-                        sub: false,
-                    },
-                    {
                         path: "/compliance/report",
                         key: "report-compliance",
-                        text: "Report",
+                        text: "Suspicious Reports",
                         sub: false,
                     },
                 ],

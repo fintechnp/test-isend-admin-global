@@ -10,6 +10,7 @@ import {
     GetUserNumberReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
+
 //permission
 import {
     GetAllPermissionReducer,
@@ -119,6 +120,21 @@ import {
     DeleteReferenceDataReducer,
     ReferenceSaga,
 } from "./pages/Setup/Reference/store";
+
+//Payment Process
+import {
+    GetPaymentPendingReducer,
+    GetPendingTransactionsReducer,
+    GetBlockedTransactionsReducer,
+    GetAmlSuspiciousReducer,
+    GetExceptionTransactionsReducer,
+    UpdatePaymentPendingReducer,
+    UpdatePendingTransactionsReducer,
+    UpdateBlockedTransactionsReducer,
+    UpdateAmlSuspiciousReducer,
+    UpdateExceptionTransactionsReducer,
+    PaymentProcessingSaga,
+} from "./pages/PaymentProcess/store";
 
 //Manage Compliance payment rules
 import {
@@ -247,12 +263,17 @@ export const privateReducer = {
     update_payment_rules_status: UpdatePaymentRulesStatusReducer,
     delete_payment_rules: DeletePaymentRulesReducer,
 
-    GetSanctionListReducer,
-    GetSanctionByIdReducer,
-    AddSanctionReducer,
-    ImportSanctionReducer,
-    UpdateSanctionReducer,
-    DeleteSanctionReducer,
+    //Payment Process
+    get_payment_pending: GetPaymentPendingReducer,
+    get_pending_transactions: GetPendingTransactionsReducer,
+    get_blocked_transactions: GetBlockedTransactionsReducer,
+    get_aml_suspicious: GetAmlSuspiciousReducer,
+    get_exception_transactions: GetExceptionTransactionsReducer,
+    update_payment_pending: UpdatePaymentPendingReducer,
+    update_pending_transactions: UpdatePendingTransactionsReducer,
+    update_blocked_transactions: UpdateBlockedTransactionsReducer,
+    update_aml_suspicious: UpdateAmlSuspiciousReducer,
+    update_exception_transactions: UpdateExceptionTransactionsReducer,
 
     //Sanction
     get_sanction_list: GetSanctionListReducer,
@@ -278,6 +299,7 @@ export const privateSaga = [
     ReferenceSaga(),
     PaymentRulesSaga(),
     SanctionSaga(),
+    PaymentProcessingSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
