@@ -14,6 +14,9 @@ import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
         maxWidth: "90%",
+        [theme.breakpoints.up("md")]: {
+            minWidth: "60%",
+        },
     },
     "& .MuiDialogActions-root": {
         marginBottom: "8px",
@@ -65,6 +68,7 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
 
 function ReleaseDialog({ loading, id, handleRelease, tooltext }) {
     const [open, setOpen] = React.useState(false);
+    const [remarks, setRemarks] = React.useState("");
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -75,7 +79,14 @@ function ReleaseDialog({ loading, id, handleRelease, tooltext }) {
     };
 
     const handleYes = () => {
-        handleRelease(id);
+        setOpen(false);
+        if (remarks) {
+            handleRelease(id, { remarks: remarks });
+        }
+    };
+
+    const handleRemarks = (e) => {
+        setRemarks(e.target.value);
     };
 
     return (
@@ -117,7 +128,13 @@ function ReleaseDialog({ loading, id, handleRelease, tooltext }) {
                         flexDirection: "column",
                     }}
                 >
-                    <TextareaAutosize minRows={8} placeholder="Write Remarks" />
+                    <TextareaAutosize
+                        minRows={8}
+                        required
+                        errorText="fill"
+                        placeholder="Write Remarks"
+                        onChange={handleRemarks}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <CancelButton

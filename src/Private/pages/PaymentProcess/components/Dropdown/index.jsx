@@ -1,14 +1,12 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import EditIcon from "@mui/icons-material/Edit";
-import Divider from "@mui/material/Divider";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useDispatch, useSelector } from "react-redux";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+
+import Form from "./Form";
+import PartnerActions from "./../../../Setup/Partner/store/actions";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -19,7 +17,7 @@ const StyledMenu = styled((props) => (
         }}
         transformOrigin={{
             vertical: "top",
-            horizontal: "right",
+            horizontal: "center",
         }}
         {...props}
     />
@@ -27,7 +25,10 @@ const StyledMenu = styled((props) => (
     "& .MuiPaper-root": {
         borderRadius: 6,
         marginTop: theme.spacing(1),
-        minWidth: 180,
+        maxWidth: "90%",
+        [theme.breakpoints.up("md")]: {
+            maxWidth: "70%",
+        },
         color:
             theme.palette.mode === "light"
                 ? "rgb(55, 65, 81)"
@@ -35,32 +36,69 @@ const StyledMenu = styled((props) => (
         boxShadow:
             "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
         "& .MuiMenu-list": {
-            padding: "4px 0",
+            padding: 0,
         },
-        "& .MuiMenuItem-root": {
-            "& .MuiSvgIcon-root": {
-                fontSize: 18,
-                color: theme.palette.text.secondary,
-                marginRight: theme.spacing(1.5),
-            },
-            "&:active": {
-                backgroundColor: alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.selectedOpacity
-                ),
-            },
-        },
+        border: `1px solid ${theme.palette.border.main}`,
     },
 }));
 
-export default function CustomizedMenus() {
+const stateSend = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "SEND",
+    country: "",
+    sort_by: "name",
+    order_by: "ASC",
+};
+
+const statePay = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "PAY",
+    country: "",
+    sort_by: "name",
+    order_by: "ASC",
+};
+
+export default function TransactionFilter({ handleFilter }) {
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const [filterPay, setFilterPay] = React.useState(statePay);
+    const { response: partner_sending } = useSelector(
+        (state) => state.get_sending_partner
+    );
+    const { response: partner_payout } = useSelector(
+        (state) => state.get_payout_partner
+    );
+
+    React.useEffect(() => {
+        if (filterPay?.country) {
+            dispatch(PartnerActions.get_payout_partner(filterPay));
+        }
+    }, [dispatch, filterPay]);
+
+    React.useEffect(() => {
+        dispatch(PartnerActions.get_sending_partner(stateSend));
+    }, [dispatch]);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+    const submitFilter = (data) => {
+        setAnchorEl(null);
+        handleFilter(data);
+    };
+    const handlePayoutPartner = (e) => {
+        const country = e.target.value;
+        const updatedFilterSchema = {
+            ...filterPay,
+            country: country,
+        };
+        setFilterPay(updatedFilterSchema);
     };
 
     return (
@@ -87,23 +125,14 @@ export default function CustomizedMenus() {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleClose} disableRipple>
-                    <EditIcon />
-                    Edit
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    <FileCopyIcon />
-                    Duplicate
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose} disableRipple>
-                    <ArchiveIcon />
-                    Archive
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    <MoreHorizIcon />
-                    More
-                </MenuItem>
+                <Form
+                    destroyOnUnmount
+                    handlePayoutPartner={handlePayoutPartner}
+                    partner_sending={partner_sending?.data || []}
+                    partner_payout={partner_payout?.data || []}
+                    handleClose={handleClose}
+                    onSubmit={submitFilter}
+                />
             </StyledMenu>
         </div>
     );

@@ -123,6 +123,7 @@ import {
 
 //Payment Process
 import {
+    GetTransactionDetailsReducer,
     GetPaymentPendingReducer,
     GetPendingTransactionsReducer,
     GetBlockedTransactionsReducer,
@@ -264,6 +265,7 @@ export const privateReducer = {
     delete_payment_rules: DeletePaymentRulesReducer,
 
     //Payment Process
+    get_transaction_details: GetTransactionDetailsReducer,
     get_payment_pending: GetPaymentPendingReducer,
     get_pending_transactions: GetPendingTransactionsReducer,
     get_blocked_transactions: GetBlockedTransactionsReducer,

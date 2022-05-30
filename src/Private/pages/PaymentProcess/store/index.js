@@ -1,4 +1,5 @@
 export { default as PaymentProcessingSaga } from "./sagas";
+export { default as GetTransactionDetailsReducer } from "./reducers/getTransactionDetails";
 export { default as GetPaymentPendingReducer } from "./reducers/getPaymentPending";
 export { default as GetPendingTransactionsReducer } from "./reducers/getPendingTransactions";
 export { default as GetBlockedTransactionsReducer } from "./reducers/getBlockedTransactions";

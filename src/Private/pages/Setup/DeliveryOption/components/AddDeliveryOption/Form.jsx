@@ -185,7 +185,7 @@ const DeliveryOptionForm = ({
                             <Field
                                 name="payment_type"
                                 label="Payment Type"
-                                type="number"
+                                type="text"
                                 small={12}
                                 component={SelectField}
                                 validate={[

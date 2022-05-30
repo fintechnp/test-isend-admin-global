@@ -4,6 +4,24 @@ import actions from "./actions";
 
 const api = new Api();
 
+export const getTransactionDetails = takeEvery(
+    actions.GET_TRANSACTION_DETAILS,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `transaction/${action.id}`);
+            yield put({
+                type: actions.GET_TRANSACTION_DETAILS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_TRANSACTION_DETAILS_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 export const getPaymentPending = takeEvery(
     actions.GET_PENDING_PAYMENT,
     function* (action) {
@@ -238,6 +256,7 @@ export const updateExceptionTransactions = takeEvery(
 
 export default function* saga() {
     yield all([
+        getTransactionDetails,
         getPaymentPending,
         getPendingTransactions,
         getBlockedTransactions,

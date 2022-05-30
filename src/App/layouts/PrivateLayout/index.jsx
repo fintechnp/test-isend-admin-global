@@ -203,7 +203,7 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/payment/block-list",
                         key: "blocksetup",
-                        text: "Block List",
+                        text: "Blocked Transactions",
                         sub: false,
                     },
                     {

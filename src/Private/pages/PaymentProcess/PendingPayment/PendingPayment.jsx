@@ -40,6 +40,15 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
+    transaction_id: 0,
+    pin_number: "",
+    customer_id: 0,
+    sending_agent_id: 0,
+    payout_agent_id: 0,
+    payout_country: "",
+    payment_type: "",
+    from_date: "",
+    to_date: "",
     sort_by: "created_ts",
     order_by: "ASC",
 };
@@ -49,19 +58,16 @@ const PendingPayment = () => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: sanctionList, loading: l_loading } = useSelector(
+    const { response: paymentPending, loading: l_loading } = useSelector(
         (state) => state.get_payment_pending
     );
     const { success: u_success } = useSelector(
-        (state) => state.update_sanction
+        (state) => state.update_payment_pending
     );
 
     useEffect(() => {
         dispatch(actions.get_payment_pending(filterSchema));
-        dispatch({ type: "ADD_SANCTION_RESET" });
-        dispatch({ type: "UPDATE_SANCTION_RESET" });
-        dispatch({ type: "DELETE_SANCTION_RESET" });
-        dispatch({ type: "IMPORT_SANCTION_LIST_RESET" });
+        dispatch({ type: "RELEASE_PENDING_PAYMENT_RESET" });
     }, [dispatch, filterSchema, u_success]);
 
     const columns = useMemo(
@@ -281,6 +287,22 @@ const PendingPayment = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleFilter = (data) => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            transaction_id: data?.transaction_id,
+            pin_number: data?.pin_number,
+            customer_id: data?.customer_id,
+            sending_agent_id: data?.sending_agent_id,
+            payout_agent_id: data?.payout_agent_id,
+            payout_country: data?.payment_country,
+            payment_type: data?.payment_type,
+            from_date: data?.from_date,
+            to_date: data?.to_date,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
@@ -310,15 +332,16 @@ const PendingPayment = () => {
                 handleSearch={handleSearch}
                 handleSort={handleSort}
                 handleOrder={handleOrder}
+                handleFilter={handleFilter}
             />
             <Table
                 columns={columns}
-                data={sanctionList?.data || []}
+                data={paymentPending?.data || []}
                 loading={l_loading}
                 rowsPerPage={8}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={sanctionList?.pagination}
+                        paginationData={paymentPending?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />
