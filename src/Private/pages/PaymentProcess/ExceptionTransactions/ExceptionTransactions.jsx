@@ -11,7 +11,11 @@ import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import { Release } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CurrencyName, FormatDate } from "./../../../../App/helpers";
+import {
+    CurrencyName,
+    FormatDate,
+    FormatNumber,
+} from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -61,7 +65,7 @@ const ExceptionTransactions = () => {
     const { response: exceptionTransactions, loading: l_loading } = useSelector(
         (state) => state.get_exception_transactions
     );
-    const { success: u_success } = useSelector(
+    const { success: u_success, loading: u_loading } = useSelector(
         (state) => state.update_exception_transactions
     );
 
@@ -178,7 +182,9 @@ const ExceptionTransactions = () => {
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(data.value)
+                                : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -200,13 +206,17 @@ const ExceptionTransactions = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
+                            {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.payout_amount}
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(
+                                      data?.row?.original?.payout_amount
+                                  )
+                                : "N/A"}
                         </Typography>
                     </Box>
                 ),
@@ -245,9 +255,11 @@ const ExceptionTransactions = () => {
                             </IconButton>
                         </Tooltip>
                         <Release
-                            id={row.original.tid}
-                            handleRelease={handleRelease}
-                            loading={false}
+                            destroyOnUnmount
+                            initialValues={{ id: row.original.tid }}
+                            onSubmit={handleRelease}
+                            loading={u_loading}
+                            validatation={true}
                             tooltext="Release Transaction"
                         />
                     </Box>
@@ -321,8 +333,12 @@ const ExceptionTransactions = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleRelease = (id, data) => {
-        dispatch(actions.update_exception_transactions(id, data));
+    const handleRelease = (data) => {
+        dispatch(
+            actions.update_exception_transactions(data?.id, {
+                remarks: data.remarks,
+            })
+        );
     };
 
     return (

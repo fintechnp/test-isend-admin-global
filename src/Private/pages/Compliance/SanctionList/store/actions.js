@@ -37,9 +37,9 @@ const actions = {
         id,
     }),
 
-    import_sanction_list: (file) => ({
+    import_sanction_list: (data) => ({
         type: actions.IMPORT_SANCTION_LIST,
-        file,
+        data,
     }),
 
     add_sanction: (data) => ({

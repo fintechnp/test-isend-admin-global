@@ -72,7 +72,7 @@ export const getBlockedTransactions = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `utilities​/blocked_transaction`,
+                `utilities/blocked_transaction`,
                 action.query
             );
             yield put({
@@ -94,7 +94,7 @@ export const getAmlSuspicious = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `utilities​/aml_suspicious_transaction`,
+                `utilities/aml_suspicious_transaction`,
                 action.query
             );
             yield put({
@@ -162,9 +162,7 @@ export const updatePendingTransactions = takeEvery(
         try {
             const res = yield call(
                 api.put,
-                `
-                ​utilities​/pending_release​/${action.id}`,
-                action.data
+                `utilities/pending_release/${action.id}`
             );
             yield put({
                 type: actions.RELEASE_PENDING_TRANSACTIONS_SUCCESS,
@@ -187,8 +185,7 @@ export const updateBlockedTransactions = takeEvery(
         try {
             const res = yield call(
                 api.put,
-                `
-                ​utilities​/blocked_transaction/${action.id}`,
+                `utilitie​/blocked_transaction/${action.id}`,
                 action.data
             );
             yield put({
@@ -236,7 +233,7 @@ export const updateExceptionTransactions = takeEvery(
         try {
             const res = yield call(
                 api.put,
-                `utilities​/exception_release​/${action.id}`,
+                `utilities/exception_release/${action.id}`,
                 action.data
             );
             yield put({

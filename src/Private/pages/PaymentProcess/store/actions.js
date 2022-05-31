@@ -90,9 +90,8 @@ const actions = {
         data,
         id,
     }),
-    update_pending_transactions: (id, data) => ({
+    update_pending_transactions: (id) => ({
         type: actions.RELEASE_PENDING_TRANSACTIONS,
-        data,
         id,
     }),
     update_blocked_transactions: (id, data) => ({

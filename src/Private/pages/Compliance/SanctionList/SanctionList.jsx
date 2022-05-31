@@ -63,6 +63,9 @@ const SanctionList = () => {
     const { success: u_success } = useSelector(
         (state) => state.update_sanction
     );
+    const { success: i_success, loading: i_loading } = useSelector(
+        (state) => state.import_sanction
+    );
 
     useEffect(() => {
         dispatch(actions.get_sanction_list(filterSchema));
@@ -70,7 +73,7 @@ const SanctionList = () => {
         dispatch({ type: "UPDATE_SANCTION_RESET" });
         dispatch({ type: "DELETE_SANCTION_RESET" });
         dispatch({ type: "IMPORT_SANCTION_LIST_RESET" });
-    }, [dispatch, filterSchema, d_success, a_success, u_success]);
+    }, [dispatch, filterSchema, d_success, a_success, u_success, i_success]);
 
     const columns = useMemo(
         () => [
@@ -303,7 +306,7 @@ const SanctionList = () => {
 
     return (
         <MenuContainer>
-            <Header />
+            <Header loading={i_loading} />
             <Filter
                 handleSearch={handleSearch}
                 handleSort={handleSort}

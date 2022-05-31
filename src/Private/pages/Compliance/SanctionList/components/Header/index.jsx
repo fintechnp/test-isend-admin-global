@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import MuiButton from "@mui/material/Button";
 import { useDispatch } from "react-redux";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 import React from "react";
@@ -15,24 +16,27 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
-const Button = styled(MuiButton)(({ theme }) => ({
+const ImportButton = styled(LoadingButton)(({ theme }) => ({
+    opacity: 0.8,
     textTransform: "capitalize",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
+    "&: hover": {
+        color: theme.palette.border.dark,
+        opacity: 1,
+    },
 }));
 
 const Input = styled("input")({
     display: "none",
 });
 
-function Header() {
+function Header({ loading }) {
     const dispatch = useDispatch();
 
     const handleCsv = (e) => {
-        console.log(e.target.files[0]);
-        if (e.target.value) {
-            dispatch(actions.import_sanction_list(e.target.files[0]));
+        const formData = new FormData();
+        if (e.target.files[0]) {
+            formData.append("file", e.target.files[0]);
+            dispatch(actions.import_sanction_list(formData));
         }
     };
 
@@ -47,13 +51,25 @@ function Header() {
                         onChange={handleCsv}
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                     />
-                    <Button
+                    <ImportButton
+                        loading={loading}
                         variant="outlined"
+                        color="primary"
                         component="span"
-                        startIcon={<SimCardDownloadOutlinedIcon />}
+                        sx={{ minWidth: "3px" }}
+                        startIcon={
+                            <SimCardDownloadOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        }
                     >
                         Import
-                    </Button>
+                    </ImportButton>
                 </label>
                 <AddSanction update={false} />
             </Box>

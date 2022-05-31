@@ -1,5 +1,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
+import { Field, Form, reduxForm, reset } from "redux-form";
+import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -8,8 +10,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Tooltip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import MuiIconButton from "@mui/material/IconButton";
-import MuiTextareaAutosize from "@mui/material/TextareaAutosize";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import CallMissedOutgoingIcon from "@mui/icons-material/CallMissedOutgoing";
+
+import Validator from "../../../utils/validators";
+import TextAreaField from "../../Fields/TextAreaField";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -37,13 +42,6 @@ const ReleaseIcon = styled(MuiIconButton)(({ theme }) => ({
     },
 }));
 
-const TextareaAutosize = styled(MuiTextareaAutosize)(({ theme }) => ({
-    width: "100%",
-    padding: "8px",
-    borderRadius: "4px",
-    border: `1px solid ${theme.palette.border.main}`,
-}));
-
 const CancelButton = styled(Button)(({ theme }) => ({
     minWidth: "100px",
     color: "#fff",
@@ -66,27 +64,17 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function ReleaseDialog({ loading, id, handleRelease, tooltext }) {
+function ReleaseDialog({ loading, tooltext, handleSubmit, validatation }) {
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const [remarks, setRemarks] = React.useState("");
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
+        dispatch(reset("release_form_transaction"));
         setOpen(false);
-    };
-
-    const handleYes = () => {
-        setOpen(false);
-        if (remarks) {
-            handleRelease(id, { remarks: remarks });
-        }
-    };
-
-    const handleRemarks = (e) => {
-        setRemarks(e.target.value);
     };
 
     return (
@@ -94,7 +82,6 @@ function ReleaseDialog({ loading, id, handleRelease, tooltext }) {
             <Tooltip title={tooltext} arrow>
                 <ReleaseIcon
                     size="small"
-                    loading={loading}
                     color="primary"
                     component="span"
                     onClick={handleClickOpen}
@@ -119,43 +106,56 @@ function ReleaseDialog({ loading, id, handleRelease, tooltext }) {
                 <DialogTitle id="responsive-dialog-title">
                     {"Do you want to Release this Transaction?"}
                 </DialogTitle>
-                <DialogContent
-                    sx={{
-                        padding: "10px 28px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                    }}
-                >
-                    <TextareaAutosize
-                        minRows={8}
-                        required
-                        errorText="fill"
-                        placeholder="Write Remarks"
-                        onChange={handleRemarks}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <CancelButton
-                        size="small"
-                        variant="contained"
-                        onClick={handleClose}
+                <Form onSubmit={handleSubmit}>
+                    <DialogContent
+                        sx={{
+                            padding: "0px 24px 10px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                        }}
                     >
-                        Cancel
-                    </CancelButton>
-                    <ReleaseButton
-                        size="small"
-                        variant="outlined"
-                        loading={loading}
-                        onClick={handleYes}
-                    >
-                        Release
-                    </ReleaseButton>
-                </DialogActions>
+                        {validatation ? (
+                            <Field
+                                name="remarks"
+                                placeholder="Write Remarks"
+                                type="text"
+                                small={12}
+                                minRows={8}
+                                component={TextAreaField}
+                                validate={Validator.emptyValidator}
+                            />
+                        ) : (
+                            <CallMissedOutgoingIcon
+                                sx={{
+                                    fontSize: "80px",
+                                    color: "success.main",
+                                }}
+                            />
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <CancelButton
+                            size="small"
+                            variant="contained"
+                            onClick={handleClose}
+                        >
+                            Cancel
+                        </CancelButton>
+                        <ReleaseButton
+                            size="small"
+                            variant="outlined"
+                            loading={loading}
+                            type="submit"
+                        >
+                            Release
+                        </ReleaseButton>
+                    </DialogActions>
+                </Form>
             </BootstrapDialog>
         </div>
     );
 }
 
-export default ReleaseDialog;
+export default reduxForm({ form: "release_form_transaction" })(ReleaseDialog);

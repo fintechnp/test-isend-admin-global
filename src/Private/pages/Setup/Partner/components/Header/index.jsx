@@ -15,7 +15,7 @@ const AddButton = styled(Button)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-function Header({ title, buttonText, partner }) {
+function Header() {
     const navigate = useNavigate();
 
     const handleAdd = () => {

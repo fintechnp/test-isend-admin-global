@@ -11,7 +11,11 @@ import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import { Release } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CurrencyName, FormatDate } from "./../../../../App/helpers";
+import {
+    CurrencyName,
+    FormatDate,
+    FormatNumber,
+} from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -61,7 +65,7 @@ const AmlSuspicious = () => {
     const { response: amlSuspicious, loading: l_loading } = useSelector(
         (state) => state.get_aml_suspicious
     );
-    const { success: u_success } = useSelector(
+    const { success: u_success, loading: u_loading } = useSelector(
         (state) => state.update_aml_suspicious
     );
 
@@ -179,6 +183,7 @@ const AmlSuspicious = () => {
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value}
+                            {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -200,13 +205,17 @@ const AmlSuspicious = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
+                            {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.payout_amount}
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(
+                                      data?.row?.original?.payout_amount
+                                  )
+                                : "N/A"}
                         </Typography>
                     </Box>
                 ),
@@ -245,9 +254,11 @@ const AmlSuspicious = () => {
                             </IconButton>
                         </Tooltip>
                         <Release
-                            id={row.original.tid}
-                            handleRelease={handleRelease}
-                            loading={false}
+                            destroyOnUnmount
+                            onSubmit={handleRelease}
+                            loading={u_loading}
+                            validatation={true}
+                            initialValues={{ id: row.original.tid }}
                             tooltext="Release Transaction"
                         />
                     </Box>
@@ -321,8 +332,10 @@ const AmlSuspicious = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleRelease = (id, data) => {
-        dispatch(actions.update_aml_suspicious(id, data));
+    const handleRelease = (data) => {
+        dispatch(
+            actions.update_aml_suspicious(data?.id, { remarks: data.remarks })
+        );
     };
 
     return (
