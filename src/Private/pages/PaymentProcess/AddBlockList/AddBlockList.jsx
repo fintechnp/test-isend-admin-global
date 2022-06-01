@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Typography from "@mui/material/Typography";
-import MuiTextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import MuiTextareaAutosize from "@mui/material/TextareaAutosize";
 import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
+import Loading from "./../../../../App/components/Loading";
 import actions from "./../store/actions";
+import MessageBox from "./MessageBox";
+import Search from "./Search";
 import Details from "./Details";
+import Form from "./Form";
+import { useNavigate } from "react-router-dom";
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "8px",
@@ -31,43 +34,7 @@ const Title = styled(Typography)(({ theme }) => ({
     paddingLeft: "8px",
 }));
 
-const SearchBox = styled(Box)(({ theme }) => ({
-    width: "50%",
-    display: "flex",
-    [theme.breakpoints.down("sm")]: {
-        width: "100%",
-    },
-}));
-
-const BlockBox = styled(Box)(({ theme }) => ({
-    width: "100%",
-    height: "120px",
-    marginTop: "8px",
-    padding: "8px",
-    border: "1px solid black",
-}));
-
-const TextField = styled(MuiTextField)(({ theme }) => ({
-    borderColor: theme.palette.border.light,
-    width: "100%",
-    "& .MuiOutlinedInput-input.MuiInputBase-input": {
-        padding: "8px 0px",
-    },
-    "& .MuiInputBase-root.MuiOutlinedInput-root": {
-        paddingLeft: "10px",
-    },
-    "&: hover": {
-        "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: theme.palette.border.main,
-            borderWidth: "2px",
-        },
-    },
-    [theme.breakpoints.down("md")]: {
-        width: "100%",
-    },
-}));
-
-const SearchButton = styled(Button)(({ theme }) => ({
+const BackButton = styled(Button)(({ theme }) => ({
     fontSize: "12px",
     textTransform: "capitalize",
     color: theme.palette.border.main,
@@ -82,26 +49,37 @@ const SearchButton = styled(Button)(({ theme }) => ({
 }));
 
 function AddBlockList() {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [tid, setTId] = useState(null);
-    const { response, loading } = useSelector(
+    const { response, loading, success } = useSelector(
         (state) => state.get_transaction_details
     );
 
+    const { success: b_sucess, loading: b_loading } = useSelector(
+        (state) => state.block_transactions
+    );
+
     useEffect(() => {
-        setTId(null);
+        if (b_sucess) {
+            dispatch({ type: "BLOCK_TRANSACTIONS_RESET" });
+            dispatch({ type: "GET_TRANSACTION_DETAILS_RESET" });
+        }
+    }, [b_sucess]);
+
+    useEffect(() => {
+        dispatch({ type: "GET_TRANSACTION_DETAILS_RESET" });
     }, []);
 
-    const handleTid = (e) => {
-        if (e.target.value) {
-            setTId(e.target.value);
-        }
+    const handleSearch = (data) => {
+        dispatch(actions.get_transaction_details(data));
     };
 
-    const handleSearch = () => {
-        if (tid) {
-            dispatch(actions.get_transaction_details(tid));
-        }
+    const handleBlock = (id, data) => {
+        dispatch(actions.block_transactions(id, data));
+    };
+
+    const handleBack = () => {
+        navigate(-1);
     };
 
     return (
@@ -114,43 +92,41 @@ function AddBlockList() {
                         />
                         <Title> Add Transaction to Block List </Title>
                     </Box>
-                    <SearchBox sx={{ columnGap: 1 }}>
-                        <TextField
-                            type="number"
-                            variant="outlined"
-                            placeholder="Transaction Id"
-                            onChange={handleTid}
-                        />
-                        <SearchButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleSearch}
-                        >
-                            Search
-                        </SearchButton>
-                    </SearchBox>
+                    <BackButton
+                        variant="outlined"
+                        size="small"
+                        onClick={handleBack}
+                    >
+                        Back
+                    </BackButton>
                 </TitleWrapper>
             </Grid>
             <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2 }} />
+                <Search handleSearch={handleSearch} loading={loading} />
             </Grid>
+            {/* <Grid item xs={12}>
+                <Divider sx={{ mb: 1.2, mt: 1.2 }} />
+            </Grid> */}
             {loading && (
                 <Grid item xs={12}>
-                    <p>loading</p>
+                    <Loading loading={loading} />
                 </Grid>
             )}
-            <Grid item xs={12}>
-                <Details data={response?.data} />
-            </Grid>
-            <Grid item xs={12}>
-                <BlockBox>
-                    <MuiTextareaAutosize
-                        maxRows={4}
-                        placeholder="Write remarks"
-                    />
-                    <Button>Block</Button>
-                </BlockBox>
-            </Grid>
+            {!response?.data && !loading && success && (
+                <Grid item xs={12}>
+                    <MessageBox text="No Transaction Found" />
+                </Grid>
+            )}
+            {response?.data && !loading && (
+                <>
+                    <Grid item xs={12}>
+                        <Details data={response?.data} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Form onSubmit={handleBlock} loading={b_loading} />
+                    </Grid>
+                </>
+            )}
         </Grid>
     );
 }

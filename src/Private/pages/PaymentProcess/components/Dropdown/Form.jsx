@@ -14,7 +14,6 @@ const Container = styled(Grid)(({ theme }) => ({
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
     padding: "6px 0px 16px",
-    // backgroundColor: theme.palette.background.light,
 }));
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({

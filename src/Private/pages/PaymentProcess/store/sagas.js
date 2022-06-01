@@ -179,13 +179,37 @@ export const updatePendingTransactions = takeEvery(
     }
 );
 
+export const blockTransactions = takeEvery(
+    actions.BLOCK_TRANSACTIONS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.put,
+                `utilities/block_transaction/${action.id}`,
+                action.data
+            );
+            yield put({
+                type: actions.BLOCK_TRANSACTIONS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.BLOCK_TRANSACTIONS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const updateBlockedTransactions = takeEvery(
     actions.RELEASE_BLOCKED_TRANSACTIONS,
     function* (action) {
         try {
             const res = yield call(
                 api.put,
-                `utilitie​/blocked_transaction/${action.id}`,
+                `utilities/block_transaction_release/${action.id}`,
                 action.data
             );
             yield put({
@@ -261,6 +285,7 @@ export default function* saga() {
         getAmlSuspicious,
         updatePaymentPending,
         updatePendingTransactions,
+        blockTransactions,
         updateBlockedTransactions,
         updateAmlSuspicious,
         updateExceptionTransactions,
