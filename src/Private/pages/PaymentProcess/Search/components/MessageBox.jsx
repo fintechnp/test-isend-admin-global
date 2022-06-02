@@ -6,7 +6,7 @@ import { Typography } from "@mui/material";
 
 const Message = styled(Box)(({ theme }) => ({
     width: "100%",
-    marginTop: "8px",
+    marginTop: "4px",
     padding: "8px",
     height: "120px",
     border: `1px solid ${theme.palette.border.light}`,

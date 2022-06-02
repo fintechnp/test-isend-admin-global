@@ -9,11 +9,20 @@ import {
     CountryName,
     FormatDate,
     FormatNumber,
-} from "./../../../../App/helpers";
+} from "./../../../../../App/helpers";
+import { Button } from "@mui/material";
+
+const Container = styled(Grid)(({ theme }) => ({
+    padding: "6px 16px",
+    margin: 0,
+    borderRadius: "4px",
+    backgroundColor: theme.palette.background.light,
+    border: `1px solid ${theme.palette.border.main}`,
+}));
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
-    fontSize: "17px",
+    fontSize: "18px",
     fontWeight: 500,
     color: theme.palette.primary.main,
 }));
@@ -40,17 +49,36 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
-function Details({ data }) {
+const RefundButton = styled(Button)(({ theme }) => ({
+    minWidth: "200px",
+    borderRadius: "2px",
+    marginTop: "8px",
+    textTransform: "capitalize",
+    color: theme.palette.warning.dark,
+    borderColor: theme.palette.warning.main,
+    "&:hover": {
+        color: theme.palette.warning.main,
+        borderColor: theme.palette.warning.dark,
+    },
+}));
+
+const BlockButton = styled(Button)(({ theme }) => ({
+    minWidth: "200px",
+    borderRadius: "2px",
+    marginTop: "8px",
+    marginLeft: "8px",
+    textTransform: "capitalize",
+    color: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    "&:hover": {
+        color: theme.palette.primary.dark,
+        borderColor: theme.palette.primary.dark,
+    },
+}));
+
+function Details({ data, handleBlockOrCancel }) {
     return (
-        <Grid
-            container
-            rowSpacing={1}
-            sx={{
-                padding: "6px 16px",
-                margin: 0,
-                backgroundColor: "background.main",
-            }}
-        >
+        <Container container rowSpacing={1}>
             <Grid item xs={12}>
                 <Box>
                     <Header>Transaction Details</Header>
@@ -173,7 +201,7 @@ function Details({ data }) {
                             <LabelWrapper>Payout Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.payout_amount
-                                    ? data?.payout_amount
+                                    ? FormatNumber(data?.payout_amount)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -183,7 +211,7 @@ function Details({ data }) {
                             <LabelWrapper>Payout Location:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.payout_location_name
-                                    ? FormatNumber(data?.payout_location_name)
+                                    ? data?.payout_location_name
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -200,7 +228,23 @@ function Details({ data }) {
                     </Grid>
                 </Grid>
             </Grid>
-        </Grid>
+            <Grid item xs={12}>
+                <Box sx={{ pb: 1, pt: 0.5, ml: 0 }}>
+                    <RefundButton
+                        variant="outlined"
+                        onClick={() => handleBlockOrCancel("cancel")}
+                    >
+                        Refund this transaction
+                    </RefundButton>
+                    <BlockButton
+                        variant="outlined"
+                        onClick={() => handleBlockOrCancel("block")}
+                    >
+                        Block this transaction
+                    </BlockButton>
+                </Box>
+            </Grid>
+        </Container>
     );
 }
 

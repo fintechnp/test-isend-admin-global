@@ -189,6 +189,12 @@ const PrivateLayout = ({ children }) => {
                 ],
                 children: [
                     {
+                        path: "/payment/search",
+                        key: "payment-search",
+                        text: "Search",
+                        sub: false,
+                    },
+                    {
                         path: "/payment/pending",
                         key: "pending-payment",
                         text: "Payment Pending",

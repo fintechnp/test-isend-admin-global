@@ -341,7 +341,7 @@ const BlockedTransactions = () => {
 
     return (
         <BlockContainer>
-            <Header title="Blocked Transations" add={true} />
+            <Header title="Blocked Transations" />
             <Filter
                 handleSearch={handleSearch}
                 handleSort={handleSort}

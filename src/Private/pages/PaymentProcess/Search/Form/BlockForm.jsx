@@ -1,18 +1,17 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, reset } from "redux-form";
-import Button from "@mui/material/Button";
+import { Field, Form, reduxForm } from "redux-form";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import Validator from "../../../../App/utils/validators";
-import TextAreaField from "../../../../App/components/Fields/TextAreaField";
+import Validator from "../../../../../App/utils/validators";
+import TextAreaField from "../../../../../App/components/Fields/TextAreaField";
 
 const BlockBox = styled(Box)(({ theme }) => ({
     width: "100%",
-    marginTop: "8px",
-    padding: "8px",
+    marginTop: "12px",
+    padding: "12px",
     border: `1px solid ${theme.palette.border.main}`,
     display: "flex",
     flexDirection: "column",

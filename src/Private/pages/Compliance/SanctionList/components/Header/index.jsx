@@ -1,6 +1,5 @@
 import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
-import MuiButton from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -49,6 +48,9 @@ function Header({ loading }) {
                         id="contained-button-file"
                         type="file"
                         onChange={handleCsv}
+                        onClick={(event) => {
+                            event.target.value = null;
+                        }}
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                     />
                     <ImportButton

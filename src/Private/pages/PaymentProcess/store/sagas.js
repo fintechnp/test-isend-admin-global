@@ -22,6 +22,29 @@ export const getTransactionDetails = takeEvery(
     }
 );
 
+export const getTransactionRefundBlock = takeEvery(
+    actions.GET_TRANSACTION_REFUND_BLOCK,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `transaction/refund_block`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_TRANSACTION_REFUND_BLOCK_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_TRANSACTION_REFUND_BLOCK_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const getPaymentPending = takeEvery(
     actions.GET_PENDING_PAYMENT,
     function* (action) {
@@ -203,6 +226,30 @@ export const blockTransactions = takeEvery(
     }
 );
 
+export const refundTransactions = takeEvery(
+    actions.REFUND_TRANSACTIONS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.put,
+                `utilities/refund_transaction/${action.id}`,
+                action.data
+            );
+            yield put({
+                type: actions.REFUND_TRANSACTIONS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.REFUND_TRANSACTIONS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const updateBlockedTransactions = takeEvery(
     actions.RELEASE_BLOCKED_TRANSACTIONS,
     function* (action) {
@@ -278,6 +325,7 @@ export const updateExceptionTransactions = takeEvery(
 export default function* saga() {
     yield all([
         getTransactionDetails,
+        getTransactionRefundBlock,
         getPaymentPending,
         getPendingTransactions,
         getBlockedTransactions,
@@ -286,6 +334,7 @@ export default function* saga() {
         updatePaymentPending,
         updatePendingTransactions,
         blockTransactions,
+        refundTransactions,
         updateBlockedTransactions,
         updateAmlSuspicious,
         updateExceptionTransactions,

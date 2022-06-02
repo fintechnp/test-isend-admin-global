@@ -1,19 +1,43 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, reset } from "redux-form";
+import { Field, Form, reduxForm } from "redux-form";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useDispatch } from "react-redux";
+import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import Validator from "../../../../App/utils/validators";
-import SelectField from "../../../../App/components/Fields/SelectField";
-import TextField from "../../../../App/components/Fields/TextField";
+import Validator from "../../../../../App/utils/validators";
+import SelectField from "../../../../../App/components/Fields/SelectField";
+import TextField from "../../../../../App/components/Fields/TextField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
     marginTop: "8px",
+    marginBottom: "12px",
     padding: "8px 0px",
     borderRadius: "4px",
     border: `1px solid ${theme.palette.border.main}`,
+}));
+
+const TitleWrapper = styled(Box)(({ theme }) => ({
+    paddingBottom: "8px",
+    display: "flex",
+    paddingLeft: "14px",
+    alignItems: "center",
+    justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+        alignItems: "flex-start",
+        flexDirection: "column",
+    },
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontSize: "18px",
+    fontWeight: 600,
+    paddingLeft: "8px",
 }));
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
@@ -41,7 +65,8 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function Search({ handleSubmit, loading }) {
+function SearchForm({ handleSubmit }) {
+    const dispatch = useDispatch();
     const [id, setId] = React.useState("transaction_id");
     const [name, setName] = React.useState("Transaction Id");
 
@@ -52,10 +77,21 @@ function Search({ handleSubmit, loading }) {
         } else {
             setName("Transaction id");
         }
+        dispatch({ type: "GET_TRANSACTION_REFUND_BLOCK_RESET" });
     };
 
     return (
         <Container container>
+            <Grid item xs={12}>
+                <TitleWrapper>
+                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <ContentPasteSearchIcon
+                            sx={{ color: "primary.main", fontSize: "28px" }}
+                        />
+                        <Title> Search Transaction </Title>
+                    </Box>
+                </TitleWrapper>
+            </Grid>
             <Grid item xs={12}>
                 <Form onSubmit={handleSubmit}>
                     <FormWrapper container direction="row">
@@ -64,9 +100,7 @@ function Search({ handleSubmit, loading }) {
                                 name={id}
                                 placeholder={name}
                                 type={
-                                    name === "Transaction id"
-                                        ? "number"
-                                        : "text"
+                                    id === "transaction_id" ? "number" : "text"
                                 }
                                 small={12}
                                 component={TextField}
@@ -104,7 +138,6 @@ function Search({ handleSubmit, loading }) {
                                     <SearchButton
                                         size="small"
                                         variant="outlined"
-                                        loading={loading}
                                         type="submit"
                                     >
                                         Search
@@ -119,4 +152,4 @@ function Search({ handleSubmit, loading }) {
     );
 }
 
-export default reduxForm({ form: "search_form_transaction" })(Search);
+export default reduxForm({ form: "search_form_transaction" })(SearchForm);

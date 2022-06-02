@@ -15,7 +15,7 @@ const AddButton = styled(Button)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-function Header({ title, add = false }) {
+function Header({ title }) {
     const navigate = useNavigate();
 
     const addBlock = () => {
@@ -25,16 +25,6 @@ function Header({ title, add = false }) {
     return (
         <HeaderWrapper>
             <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
-            {add && (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={addBlock}
-                    endIcon={<AddIcon />}
-                >
-                    Add Block List
-                </AddButton>
-            )}
         </HeaderWrapper>
     );
 }

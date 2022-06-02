@@ -75,7 +75,7 @@ const PendingTransactions = lazy(() =>
 const BlockedTransactions = lazy(() =>
     import("../pages/PaymentProcess/BlockedTransactions")
 );
-const AddBlockList = lazy(() => import("../pages/PaymentProcess/AddBlockList"));
+const Search = lazy(() => import("../pages/PaymentProcess/Search"));
 const AmlSupicious = lazy(() => import("../pages/PaymentProcess/AmlSupicious"));
 const ExceptionTransactions = lazy(() =>
     import("../pages/PaymentProcess/ExceptionTransactions")
@@ -169,7 +169,7 @@ const privateRoutes = [
         component: <PendingTransactions />,
     },
     { path: "/payment/block-list", component: <BlockedTransactions /> },
-    { path: "/payment/block-list/add", component: <AddBlockList /> },
+    { path: "/payment/search", component: <Search /> },
     { path: "/payment/aml-suspicious", component: <AmlSupicious /> },
     {
         path: "/payment/exception-transactions",
