@@ -89,6 +89,10 @@ const validators = {
         value && value.length > 100
             ? `Must be 100 characters or less`
             : undefined,
+    maxLength160: (value) =>
+        value && value.length > 160
+            ? `Must be 160 characters or less`
+            : undefined,
     minValue1: (value) =>
         value && value.length < 1 ? `Must be at least 1` : undefined,
     minValue3: (value) =>

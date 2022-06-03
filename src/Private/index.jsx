@@ -140,6 +140,25 @@ import {
     PaymentProcessingSaga,
 } from "./pages/PaymentProcess/store";
 
+//Utilities
+import {
+    GetSmsReducer,
+    GetSmsByIdReducer,
+    CreateSmsReducer,
+    DeleteSmsReducer,
+    GetEmailReducer,
+    GetEmailByIdReducer,
+    CreateEmailReducer,
+    DeleteEmailReducer,
+    GetFcmReducer,
+    GetFcmByIdReducer,
+    GetFcmByCustomerIdReducer,
+    CreateFcmReducer,
+    UpdateFcmReducer,
+    DeleteFcmReducer,
+    UtilitiesSaga,
+} from "./pages/Utilities/store";
+
 //Manage Compliance payment rules
 import {
     GetPaymentRulesReducer,
@@ -283,6 +302,24 @@ export const privateReducer = {
     update_aml_suspicious: UpdateAmlSuspiciousReducer,
     update_exception_transactions: UpdateExceptionTransactionsReducer,
 
+    //reference type and data
+    get_sms: GetSmsReducer,
+    get_sms_byid: GetSmsByIdReducer,
+    create_sms: CreateSmsReducer,
+    delete_sms: DeleteSmsReducer,
+
+    get_email: GetEmailReducer,
+    get_email_byid: GetEmailByIdReducer,
+    create_email: CreateEmailReducer,
+    delete_email: DeleteEmailReducer,
+
+    get_fcm: GetFcmReducer,
+    get_fcm_byid: GetFcmByIdReducer,
+    get_fcm_by_customer_id: GetFcmByCustomerIdReducer,
+    create_fcm: CreateFcmReducer,
+    update_fcm: UpdateFcmReducer,
+    delete_fcm: DeleteFcmReducer,
+
     //Sanction
     get_sanction_list: GetSanctionListReducer,
     get_sanction_by_id: GetSanctionByIdReducer,
@@ -308,6 +345,7 @@ export const privateSaga = [
     PaymentRulesSaga(),
     SanctionSaga(),
     PaymentProcessingSaga(),
+    UtilitiesSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
