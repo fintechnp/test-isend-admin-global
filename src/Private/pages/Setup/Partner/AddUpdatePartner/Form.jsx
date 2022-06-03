@@ -205,6 +205,9 @@ function PartnerForm({ update_data, loading }) {
                                 "&:hover": {
                                     borderWidth: "2px",
                                 },
+                                "& .MuiCircularProgress-root": {
+                                    color: 'primary.contrastText',
+                                },
                             }}
                             onClick={() => handleSubmitForm(id)}
                         >

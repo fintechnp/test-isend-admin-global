@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import Validator from "../../../../../App/utils/validators";
-import TextAreaField from "../../../../../App/components/Fields/TextAreaField";
 import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
 
@@ -30,6 +29,9 @@ const RefundButton = styled(LoadingButton)(({ theme }) => ({
     "&:hover": {
         background: theme.palette.warning.dark,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 function RefundForm({ handleSubmit, loading }) {
@@ -40,17 +42,6 @@ function RefundForm({ handleSubmit, loading }) {
             <Grid item xs={12}>
                 <Form onSubmit={handleSubmit}>
                     <BlockBox>
-                        <Box sx={{ width: "100%", pb: 1 }}>
-                            <Field
-                                name="remarks"
-                                placeholder="Write Remarks"
-                                type="text"
-                                small={12}
-                                minRows={8}
-                                component={TextAreaField}
-                                validate={Validator.emptyValidator}
-                            />
-                        </Box>
                         <Box
                             sx={{
                                 width: "100%",
@@ -62,13 +53,14 @@ function RefundForm({ handleSubmit, loading }) {
                             }}
                         >
                             <Field
-                                name="reason"
+                                name="remarks"
                                 type="text"
                                 small={12}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength50,
                                 ]}
                             >
                                 <option value="" disabled>
@@ -95,6 +87,7 @@ function RefundForm({ handleSubmit, loading }) {
                                 small={4}
                                 reverse="row-reverse"
                                 component={CheckboxField}
+                                validate={Validator.emptyValidator}
                             />
                         </Box>
                         <RefundButton

@@ -46,6 +46,9 @@ const UnmapIcon = styled(LoadingButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
     "&: hover": { color: "border.dark", opacity: 1 },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -67,6 +70,9 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
+    },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
     },
 }));
 

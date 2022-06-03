@@ -19,7 +19,7 @@ function Search() {
         transaction_id: 0,
         pin_number: "",
     });
-    const { response, loading, success } = useSelector(
+    const { response, loading, error } = useSelector(
         (state) => state.get_transaction_refund_block
     );
 
@@ -40,7 +40,7 @@ function Search() {
             dispatch({ type: "REFUND_TRANSACTIONS_RESET" });
             dispatch({ type: "GET_TRANSACTION_REFUND_BLOCK_RESET" });
         }
-    }, [b_sucess]);
+    }, [b_sucess, r_sucess]);
 
     useEffect(() => {
         dispatch({ type: "GET_TRANSACTION_REFUND_BLOCK_RESET" });
@@ -87,7 +87,10 @@ function Search() {
 
     const handleRefund = (data) => {
         dispatch(
-            actions.refund_transactions(data?.id, { remarks: data?.remarks })
+            actions.refund_transactions(data?.id, {
+                remarks: data?.remarks,
+                refund_charge: data?.refund_charge,
+            })
         );
     };
 
@@ -104,7 +107,7 @@ function Search() {
                     <Loading loading={loading} />
                 </Grid>
             )}
-            {!response?.data && !loading && success && (
+            {!response?.data && !loading && error && (
                 <Grid item xs={12}>
                     <MessageBox text="No Transaction Found" />
                 </Grid>
@@ -136,6 +139,7 @@ function Search() {
                                 initialValues={
                                     response?.data?.tid && {
                                         id: response?.data?.tid,
+                                        refund_charge: false,
                                     }
                                 }
                             />

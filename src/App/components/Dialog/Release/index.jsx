@@ -62,6 +62,9 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
     "&:hover": {
         background: theme.palette.primary.dark,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 function ReleaseDialog({ loading, tooltext, handleSubmit, validatation }) {

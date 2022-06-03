@@ -1,6 +1,7 @@
 import React, { createContext, useContext, Component } from "react";
 import Cookies from "js-cookie";
 import authService from "./authHelper";
+import showToast from "../components/Toast";
 import store from "./../store";
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
             const res = await authService.signIn(credentials);
             return res;
         } catch (err) {
+            showToast(err?.data);
             throw err;
         }
     },

@@ -22,6 +22,9 @@ const ImportButton = styled(LoadingButton)(({ theme }) => ({
         color: theme.palette.border.dark,
         opacity: 1,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 const Input = styled("input")({
