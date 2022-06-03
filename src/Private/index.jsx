@@ -10,6 +10,7 @@ import {
     GetUserNumberReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
+
 //permission
 import {
     GetAllPermissionReducer,
@@ -120,6 +121,47 @@ import {
     ReferenceSaga,
 } from "./pages/Setup/Reference/store";
 
+//Payment Process
+import {
+    GetTransactionDetailsReducer,
+    GetPaymentPendingReducer,
+    GetPendingTransactionsReducer,
+    GetBlockedTransactionsReducer,
+    GetAmlSuspiciousReducer,
+    GetRefundBlockTransactionsReducer,
+    GetExceptionTransactionsReducer,
+    BlockTransactionsReducer,
+    RefundTransactionsReducer,
+    UpdatePaymentPendingReducer,
+    UpdatePendingTransactionsReducer,
+    UpdateBlockedTransactionsReducer,
+    UpdateAmlSuspiciousReducer,
+    UpdateExceptionTransactionsReducer,
+    PaymentProcessingSaga,
+} from "./pages/PaymentProcess/store";
+
+//Manage Compliance payment rules
+import {
+    GetPaymentRulesReducer,
+    GetPaymentRulesByIdReducer,
+    AddPaymentRulesReducer,
+    UpdatePaymentRulesReducer,
+    UpdatePaymentRulesStatusReducer,
+    DeletePaymentRulesReducer,
+    PaymentRulesSaga,
+} from "./pages/Compliance/PaymentRules/store";
+
+//Manage Compliance Sanction
+import {
+    GetSanctionListReducer,
+    GetSanctionByIdReducer,
+    AddSanctionReducer,
+    ImportSanctionReducer,
+    UpdateSanctionReducer,
+    DeleteSanctionReducer,
+    SanctionSaga,
+} from "./pages/Compliance/SanctionList/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -217,6 +259,37 @@ export const privateReducer = {
     add_reference_data: AddReferenceDataReducer,
     update_reference_data: UpdateReferenceDataReducer,
     delete_reference_data: DeleteReferenceDataReducer,
+
+    get_payment_rules: GetPaymentRulesReducer,
+    get_payment_rules_by_id: GetPaymentRulesByIdReducer,
+    add_payment_rules: AddPaymentRulesReducer,
+    update_payment_rules: UpdatePaymentRulesReducer,
+    update_payment_rules_status: UpdatePaymentRulesStatusReducer,
+    delete_payment_rules: DeletePaymentRulesReducer,
+
+    //Payment Process
+    get_transaction_details: GetTransactionDetailsReducer,
+    get_payment_pending: GetPaymentPendingReducer,
+    get_pending_transactions: GetPendingTransactionsReducer,
+    get_blocked_transactions: GetBlockedTransactionsReducer,
+    get_aml_suspicious: GetAmlSuspiciousReducer,
+    get_exception_transactions: GetExceptionTransactionsReducer,
+    get_transaction_refund_block: GetRefundBlockTransactionsReducer,
+    block_transactions: BlockTransactionsReducer,
+    refund_transactions: RefundTransactionsReducer,
+    update_payment_pending: UpdatePaymentPendingReducer,
+    update_pending_transactions: UpdatePendingTransactionsReducer,
+    update_blocked_transactions: UpdateBlockedTransactionsReducer,
+    update_aml_suspicious: UpdateAmlSuspiciousReducer,
+    update_exception_transactions: UpdateExceptionTransactionsReducer,
+
+    //Sanction
+    get_sanction_list: GetSanctionListReducer,
+    get_sanction_by_id: GetSanctionByIdReducer,
+    add_sanction: AddSanctionReducer,
+    import_sanction: ImportSanctionReducer,
+    update_sanction: UpdateSanctionReducer,
+    delete_sanction: DeleteSanctionReducer,
 };
 
 export const privateSaga = [
@@ -232,6 +305,9 @@ export const privateSaga = [
     ServiceChargeSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
+    PaymentRulesSaga(),
+    SanctionSaga(),
+    PaymentProcessingSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

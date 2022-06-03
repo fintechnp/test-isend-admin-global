@@ -205,6 +205,9 @@ function PartnerForm({ update_data, loading }) {
                                 "&:hover": {
                                     borderWidth: "2px",
                                 },
+                                "& .MuiCircularProgress-root": {
+                                    color: 'primary.contrastText',
+                                },
                             }}
                             onClick={() => handleSubmitForm(id)}
                         >
@@ -248,12 +251,19 @@ function PartnerForm({ update_data, loading }) {
                                                 memoizedData?.contact_person_mobile,
                                             contact_person_email:
                                                 memoizedData?.contact_person_email,
-                                            date_of_incorporation:
-                                                memoizedData?.date_of_incorporation,
+                                            date_of_incorporation: new Date(
+                                                memoizedData?.date_of_incorporation
+                                            )
+                                                .toISOString()
+                                                .slice(0, 10),
                                             business_license_number:
                                                 memoizedData?.business_license_number,
                                             business_license_expiry_date:
-                                                memoizedData?.business_license_expiry_date,
+                                                new Date(
+                                                    memoizedData?.business_license_expiry_date
+                                                )
+                                                    .toISOString()
+                                                    .slice(0, 10),
                                             balance: memoizedData?.balance,
                                             credit_limit:
                                                 memoizedData?.credit_limit,

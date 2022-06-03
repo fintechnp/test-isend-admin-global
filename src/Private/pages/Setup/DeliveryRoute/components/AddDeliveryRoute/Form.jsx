@@ -59,6 +59,9 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     "&:hover": {
         background: theme.palette.primary.dark,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 const DeliveryOptionForm = ({
@@ -206,7 +209,9 @@ const DeliveryOptionForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                disabled={partner_sending.length > 0 ? false : true}
+                                disabled={
+                                    partner_sending.length > 0 ? false : true
+                                }
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -233,7 +238,9 @@ const DeliveryOptionForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                disabled={partner_payout.length > 0 ? false : true}
+                                disabled={
+                                    partner_payout.length > 0 ? false : true
+                                }
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,

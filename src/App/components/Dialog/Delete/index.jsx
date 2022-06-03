@@ -51,6 +51,9 @@ const DeleteIcon = styled(LoadingButton)(({ theme }) => ({
         opacity: 1,
         background: theme.palette.border.light,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 const DeleteButton = styled(LoadingButton)(({ theme }) => ({
@@ -61,6 +64,9 @@ const DeleteButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.warning.main,
     "&:hover": {
         background: theme.palette.warning.dark,
+    },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
     },
 }));
 
@@ -83,6 +89,9 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
+    },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
     },
 }));
 

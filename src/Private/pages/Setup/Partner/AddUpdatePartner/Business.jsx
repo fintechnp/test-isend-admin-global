@@ -82,6 +82,9 @@ const Business = ({
                                 type="date"
                                 small={12}
                                 component={TextField}
+                                inputProps={{
+                                    max: new Date().toISOString().slice(0, 10),
+                                }}
                                 validate={Validator.emptyValidator}
                             />
                         </FieldWrapper>
@@ -106,6 +109,9 @@ const Business = ({
                                 small={12}
                                 component={TextField}
                                 validate={Validator.emptyValidator}
+                                inputProps={{
+                                    min: new Date().toISOString().slice(0, 10),
+                                }}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>

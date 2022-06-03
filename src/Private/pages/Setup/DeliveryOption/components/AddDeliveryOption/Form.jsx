@@ -60,6 +60,9 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     "&:hover": {
         background: theme.palette.primary.dark,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 const DeliveryOptionForm = ({
@@ -185,7 +188,7 @@ const DeliveryOptionForm = ({
                             <Field
                                 name="payment_type"
                                 label="Payment Type"
-                                type="number"
+                                type="text"
                                 small={12}
                                 component={SelectField}
                                 validate={[

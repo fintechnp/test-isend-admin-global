@@ -107,7 +107,7 @@ const Badge = styled(MuiBadge)(({ theme }) => ({
         right: 1,
         top: 1,
         fontSize: "11px",
-        border: `2px solid ${theme.palette.primary.contrastText}`,
+        border: `2.5px solid ${theme.palette.primary.contrastText}`,
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.primary.dark,
         padding: 0,
@@ -276,7 +276,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     }}
                 >
                     <IconButton
-                        edge="start"
+                        edge={false}
                         size="small"
                         disableRipple
                         color="inherit"
