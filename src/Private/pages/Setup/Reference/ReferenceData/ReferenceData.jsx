@@ -178,7 +178,7 @@ const ReferenceData = () => {
                     <Delete
                         handleDelete={handleDelete}
                         d_loading={d_loading}
-                        id={row.original.reference_id}
+                        id={row.original?.tid}
                         tooltext="Delete Reference Data"
                     />
                 </Box>
@@ -241,8 +241,8 @@ const ReferenceData = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleDelete = () => {
-        dispatch(actions.delete_reference_data(id));
+    const handleDelete = (d_id) => {
+        dispatch(actions.delete_reference_data(d_id));
     };
 
     return (
