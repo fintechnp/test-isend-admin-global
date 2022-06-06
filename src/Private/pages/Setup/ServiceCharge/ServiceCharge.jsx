@@ -47,7 +47,7 @@ const initialState = {
     currency: "",
     agent_type: "",
     search: "",
-    sort_by: "country",
+    sort_by: "",
     order_by: "ASC",
 };
 
