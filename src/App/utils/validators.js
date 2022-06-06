@@ -8,6 +8,15 @@ const validators = {
         }
         return undefined;
     },
+    urlValidator: (value) => {
+        if (
+            value &&
+            !/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(value)
+        ) {
+            return "Invalid image url";
+        }
+        return undefined;
+    },
     emptyValidator: (value) =>
         value || value === 0 ? undefined : "This field is required",
     passwordValidator: (value) => {
@@ -92,6 +101,10 @@ const validators = {
     maxLength160: (value) =>
         value && value.length > 160
             ? `Must be 160 characters or less`
+            : undefined,
+    maxLength500: (value) =>
+        value && value.length > 500
+            ? `Must be 500 characters or less`
             : undefined,
     minValue1: (value) =>
         value && value.length < 1 ? `Must be at least 1` : undefined,

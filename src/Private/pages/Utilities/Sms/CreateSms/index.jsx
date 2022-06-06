@@ -9,9 +9,7 @@ import Slide from "@mui/material/Slide";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { Box } from "@mui/material";
 
@@ -25,13 +23,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
     },
-}));
-
-const UpdateButton = styled(IconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const AddButton = styled(Button)(({ theme }) => ({

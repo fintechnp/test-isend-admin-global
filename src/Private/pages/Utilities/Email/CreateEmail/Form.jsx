@@ -2,12 +2,10 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
 
-import SelectField from "../../../../../App/components/Fields/SelectField";
 import TextField from "../../../../../App/components/Fields/TextField";
 import Validator from "../../../../../App/utils/validators";
 
@@ -26,12 +24,6 @@ const FormWrapper = styled(Grid)(({ theme }) => ({
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
-}));
-
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -64,7 +56,6 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const EmailForm = ({ handleSubmit, loading, handleClose }) => {
-    const country = JSON.parse(localStorage.getItem("country"));
 
     return (
         <Form onSubmit={handleSubmit}>

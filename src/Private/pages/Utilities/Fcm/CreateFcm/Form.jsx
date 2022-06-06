@@ -1,11 +1,12 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { Field, Form, reduxForm, change } from "redux-form";
+import { Grid, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
+import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
+import { useDispatch } from "react-redux";
 
 import SelectField from "../../../../../App/components/Fields/SelectField";
 import TextField from "../../../../../App/components/Fields/TextField";
@@ -57,9 +58,32 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const SmsForm = ({ handleSubmit, loading, handleClose }) => {
+const FCMForm = ({
+    handleSubmit,
+    loading,
+    update,
+    customer_id,
+    handleClose,
+}) => {
     const dispatch = useDispatch();
-    const country = JSON.parse(localStorage.getItem("country"));
+    const [id, setId] = React.useState("topic");
+    const [name, setName] = React.useState("Topic");
+
+    React.useEffect(() => {
+        if (update && !!customer_id) {
+            setName("Customer Id");
+            dispatch(change("update_fcm_form", "type", "customer_id"));
+        }
+    }, []);
+
+    const handleId = (e) => {
+        setId(e.target.value);
+        if (e.target.value === "customer_id") {
+            setName("Customer Id");
+        } else {
+            setName("Topic");
+        }
+    };
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -68,70 +92,67 @@ const SmsForm = ({ handleSubmit, loading, handleClose }) => {
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="sms_by"
-                                label="SMS By"
+                                name="title"
+                                label="Title"
                                 type="text"
                                 small={12}
                                 component={TextField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
-                                    Validator.maxLength20,
+                                    Validator.maxLength100,
                                 ]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="sms_to"
-                                label="SMS To"
+                                name="image_url"
+                                label="Image URL"
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength20,
-                                ]}
+                                validate={Validator.urlValidator}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="sms_country"
-                                label="Country"
+                                name="type"
+                                label="Select Customer / Topic"
                                 type="text"
                                 small={12}
+                                value={id}
+                                onChange={handleId}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
                             >
-                                <option value="" disabled>
-                                    Select Country
+                                <option value="topic" name="Topic">
+                                    Topic
                                 </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
+                                <option value="customer_id" name="Customer Id">
+                                    Customer Id
+                                </option>
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="sms_text"
-                                label="SMS Text"
+                                name={id}
+                                label={name}
+                                type={id === "topic" ? "text" : "number"}
+                                small={12}
+                                component={TextField}
+                                validate={Validator.emptyValidator}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="body"
+                                label="Body"
                                 type="text"
                                 small={12}
                                 component={TextField}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
-                                    Validator.maxLength160,
+                                    Validator.maxLength500,
                                 ]}
                             />
                         </FieldWrapper>
@@ -162,10 +183,10 @@ const SmsForm = ({ handleSubmit, loading, handleClose }) => {
                                 size="small"
                                 variant="outlined"
                                 loading={loading}
-                                endIcon={<AddIcon />}
+                                endIcon={update ? <UpdateIcon /> : <AddIcon />}
                                 type="submit"
                             >
-                                Create
+                                {update ? "Update" : "Create"}
                             </CreateButton>
                         </Grid>
                     </ButtonWrapper>
@@ -175,4 +196,4 @@ const SmsForm = ({ handleSubmit, loading, handleClose }) => {
     );
 };
 
-export default reduxForm({ form: ["form"] })(SmsForm);
+export default reduxForm({ form: ["form"] })(FCMForm);

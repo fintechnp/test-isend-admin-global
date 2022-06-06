@@ -15,7 +15,7 @@ import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { Box } from "@mui/material";
 
-import SmsForm from "./Form";
+import FCMForm from "./Form";
 import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -96,19 +96,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CreateFcm() {
+function CreateFcm({ update, update_data }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_sms
+        (state) => state.create_fcm
+    );
+
+    const { success: update_success, loading: update_loading } = useSelector(
+        (state) => state.update_fcm
     );
 
     React.useEffect(() => {
-        if (add_success) {
+        if (add_success || update_success) {
             setOpen(false);
         }
-    }, [add_success]);
+    }, [add_success, update_success]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -118,20 +123,75 @@ function CreateFcm() {
         setOpen(false);
     };
 
-    const handleFCM = (data) => {
-        dispatch(actions.create_fcm(data));
+    const handleFCMCreate = (data) => {
+        if (data?.type === "topic") {
+            dispatch(
+                actions.create_fcm({
+                    topic: data?.topic,
+                    title: data?.title,
+                    body: data?.body,
+                    image_url: data?.image_url,
+                })
+            );
+        } else {
+            dispatch(
+                actions.create_fcm({
+                    customer_id: data?.customer_id,
+                    title: data?.title,
+                    body: data?.body,
+                    image_url: data?.image_url,
+                })
+            );
+        }
+    };
+
+    const handleFCMUpdate = (data) => {
+        if (data?.type === "topic") {
+            dispatch(
+                actions.update_fcm(data?.tid, {
+                    topic: data?.topic,
+                    title: data?.title,
+                    body: data?.body,
+                    image_url: data?.image_url,
+                })
+            );
+        } else {
+            dispatch(
+                actions.update_fcm(data?.tid, {
+                    customer_id: data?.customer_id,
+                    title: data?.title,
+                    body: data?.body,
+                    image_url: data?.image_url,
+                })
+            );
+        }
     };
 
     return (
         <div>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleClickOpen}
-                endIcon={<AddIcon />}
-            >
-                Create FCM
-            </AddButton>
+            {update ? (
+                <Tooltip title="Edit FCM Message" arrow>
+                    <UpdateButton onClick={handleClickOpen}>
+                        <EditOutlinedIcon
+                            sx={{
+                                fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
+                            }}
+                        />
+                    </UpdateButton>
+                </Tooltip>
+            ) : (
+                <AddButton
+                    size="small"
+                    variant="outlined"
+                    onClick={handleClickOpen}
+                    endIcon={<AddIcon />}
+                >
+                    Create FCM
+                </AddButton>
+            )}
             <BootstrapDialog
                 onClose={handleClose}
                 TransitionComponent={Transition}
@@ -142,15 +202,38 @@ function CreateFcm() {
                     id="customized-dialog-title"
                     onClose={handleClose}
                 >
-                    Create FCM Message
+                    {update ? "Update" : "Create"} FCM Message
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    <SmsForm
-                        destroyOnUnmount={true}
-                        onSubmit={handleFCM}
-                        loading={add_loading}
-                        handleClose={handleClose}
-                    />
+                    {update ? (
+                        <FCMForm
+                            destroyOnUnmount
+                            enableReinitialize
+                            initialValues={{
+                                tid: memoizedData?.tid,
+                                title: memoizedData?.title,
+                                topic: memoizedData?.topic,
+                                body: memoizedData?.body,
+                                customer_id: memoizedData?.customer_id,
+                                image_url: memoizedData?.image_url,
+                            }}
+                            customer_id={memoizedData?.customer_id}
+                            onSubmit={handleFCMUpdate}
+                            update={update}
+                            loading={update_loading}
+                            form={`update_fcm_form`}
+                            handleClose={handleClose}
+                        />
+                    ) : (
+                        <FCMForm
+                            destroyOnUnmount={true}
+                            update={update}
+                            onSubmit={handleFCMCreate}
+                            loading={add_loading}
+                            handleClose={handleClose}
+                            form={`create_fcm_form`}
+                        />
+                    )}
                 </DialogContent>
             </BootstrapDialog>
         </div>

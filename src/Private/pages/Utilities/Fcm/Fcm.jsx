@@ -157,7 +157,7 @@ const Fcm = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Route Details" arrow>
+                                <Tooltip title="Hide FCM Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -170,7 +170,7 @@ const Fcm = () => {
                                     </IconButton>
                                 </Tooltip>
                             ) : (
-                                <Tooltip title="Email Details" arrow>
+                                <Tooltip title="FCM Details" arrow>
                                     <IconButton>
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
@@ -184,11 +184,12 @@ const Fcm = () => {
                                 </Tooltip>
                             )}
                         </span>
+                        <CreateFcm update={true} update_data={row?.original} />
                         <Delete
                             id={row.original.tid}
                             handleDelete={handleDelete}
                             loading={false}
-                            tooltext="Delete Email"
+                            tooltext="Delete FCM Message"
                         />
                     </Box>
                 ),
@@ -199,7 +200,7 @@ const Fcm = () => {
 
     const sub_columns = [
         { key: "tid", name: "Id" },
-        { key: "tilte", name: "Title" },
+        { key: "title", name: "Title" },
         { key: "topic", name: "Receiver" },
         { key: "body", name: "Body" },
         { key: "created_ts", name: "Created Date" },
@@ -207,7 +208,7 @@ const Fcm = () => {
 
     const sortData = [
         { key: "None", value: "" },
-        { key: "Title", value: "tilte" },
+        { key: "Title", value: "title" },
         { key: "Topic", value: "topic" },
         { key: "Body", value: "body" },
     ];

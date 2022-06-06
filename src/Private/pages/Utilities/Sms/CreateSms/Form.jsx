@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { Field, Form, reduxForm } from "redux-form";
+import { Grid, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
 
 import SelectField from "../../../../../App/components/Fields/SelectField";
@@ -27,12 +25,6 @@ const FormWrapper = styled(Grid)(({ theme }) => ({
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
-}));
-
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -65,7 +57,6 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
-    const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
