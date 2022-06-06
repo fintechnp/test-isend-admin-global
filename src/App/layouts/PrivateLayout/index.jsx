@@ -12,6 +12,8 @@ import {
     Payment,
 } from "@mui/icons-material";
 import roles from "../../global/roles";
+import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
+
 import Loading from "./../../../App/components/Loading";
 
 const PrivateLayout = ({ children }) => {
@@ -191,7 +193,7 @@ const PrivateLayout = ({ children }) => {
                     {
                         path: "/payment/search",
                         key: "payment-search",
-                        text: "Search",
+                        text: "Refund / Block",
                         sub: false,
                     },
                     {
@@ -250,6 +252,35 @@ const PrivateLayout = ({ children }) => {
                         path: "/report/country-wise-report",
                         key: "country-wise-report",
                         text: "Countrywise",
+                        sub: false,
+                    },
+                ],
+            },
+
+            //Utilities pannel
+            {
+                key: "utilites",
+                text: "Utilities",
+                sub: true,
+                icon: <ForwardToInboxIcon />,
+                permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER],
+                children: [
+                    {
+                        path: "/utilities/sms",
+                        key: "sms",
+                        text: "Sms",
+                        sub: false,
+                    },
+                    {
+                        path: "/utilities/email",
+                        key: "utilities-email",
+                        text: "Email",
+                        sub: false,
+                    },
+                    {
+                        path: "/utilities/fcm",
+                        key: "utilities-fcm",
+                        text: "Fcm",
                         sub: false,
                     },
                 ],

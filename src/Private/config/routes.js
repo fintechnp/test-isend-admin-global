@@ -84,6 +84,11 @@ const TransactionsDetails = lazy(() =>
     import("../pages/PaymentProcess/Details")
 );
 
+//Utilities
+const Sms = lazy(() => import("../pages/Utilities/Sms"));
+const Email = lazy(() => import("../pages/Utilities/Email"));
+const Fcm = lazy(() => import("../pages/Utilities/Fcm"));
+
 //Compliance
 const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
 const CompliancePaymentRules = lazy(() =>
@@ -179,6 +184,11 @@ const privateRoutes = [
         path: "/transactions/details/:id",
         component: <TransactionsDetails />,
     },
+
+    //Utilities
+    { path: "/utilities/sms", component: <Sms /> },
+    { path: "/utilities/email", component: <Email /> },
+    { path: "/utilities/fcm", component: <Fcm /> },
 
     //Compliance
     { path: "/compliance/sanction-list", component: <SanctionList /> },

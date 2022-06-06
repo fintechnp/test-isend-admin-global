@@ -142,7 +142,10 @@ export const deleteReferenceData = takeEvery(
     actions.DELETE_REFERENCE_DATA,
     function* (action) {
         try {
-            const res = yield call(api.delete, `common/${action.id}`);
+            const res = yield call(
+                api.delete,
+                `common/referencedata/${action.id}`
+            );
             yield put({
                 type: actions.DELETE_REFERENCE_DATA_SUCCESS,
                 response: res,
