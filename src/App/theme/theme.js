@@ -1,10 +1,12 @@
+import { default as DarkPalette } from "./dark";
 import { default as LightPalette } from "./light";
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
-    components: {
-        MuiCssBaseline: {
-            styleOverrides: `
+export const ChangeTheme = (mode = true) => {
+    const theme = createTheme({
+        components: {
+            MuiCssBaseline: {
+                styleOverrides: `
       "@global": {
         "*": {
             margin: 0,
@@ -33,28 +35,29 @@ const theme = createTheme({
             borderRadius: "99px",
         },
     },`,
-        },
-    },
-    overrides: {
-        MuiPaper: {
-            root: {
-                maxWidth: "100%",
             },
         },
-        MuiAppBar: {
-            root: {
-                width: "none",
+        overrides: {
+            MuiPaper: {
+                root: {
+                    maxWidth: "100%",
+                },
             },
-            positionFixed: {
-                right: "auto",
-                maxWidth: "100%",
+            MuiAppBar: {
+                root: {
+                    width: "none",
+                },
+                positionFixed: {
+                    right: "auto",
+                    maxWidth: "100%",
+                },
             },
         },
-    },
-    palette: LightPalette,
-    typography: {
-        fontFamily: ['"Helvetica"', "sans-serif"].join(","),
-    },
-});
+        palette: mode ? LightPalette : DarkPalette,
+        typography: {
+            fontFamily: ['"Helvetica"', "sans-serif"].join(","),
+        },
+    });
 
-export default theme;
+    return theme;
+};

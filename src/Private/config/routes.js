@@ -96,6 +96,15 @@ const CompliancePaymentRules = lazy(() =>
 );
 const ComplianceReport = lazy(() => import("../pages/Compliance/Report"));
 
+//Settings
+const Settings = lazy(() => import("../pages/Settings"));
+
+//Messages
+const Messages = lazy(() => import("../pages/Messages"));
+
+//My Account
+const MyAccount = lazy(() => import("../pages/MyAccount"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
     { path: "/user/accounts", component: <Accounts /> },
@@ -197,6 +206,15 @@ const privateRoutes = [
         component: <CompliancePaymentRules />,
     },
     { path: "/compliance/report", component: <ComplianceReport /> },
+
+    //Settings
+    { path: "/settings", component: <Settings /> },
+
+    //Messages
+    { path: "/messages", component: <Messages /> },
+
+    //MyAccount
+    { path: "/account", component: <MyAccount /> },
 ];
 
 export default privateRoutes;

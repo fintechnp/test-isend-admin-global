@@ -20,6 +20,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/styles";
+import { useSelector, useDispatch } from "react-redux";
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     minHeight: "56px",
@@ -104,8 +105,8 @@ const MenuCloseIcon = styled(MenuIcon)(({ theme }) => ({
 
 const Badge = styled(MuiBadge)(({ theme }) => ({
     "& .MuiBadge-badge": {
-        right: 1,
-        top: 1,
+        right: 2,
+        top: 2,
         fontSize: "11px",
         border: `2.5px solid ${theme.palette.primary.contrastText}`,
         color: theme.palette.primary.contrastText,
@@ -141,8 +142,10 @@ const OpenIcon = styled(KeyboardArrowDownIcon)(({ theme }) => ({
 export default function Appbar({ handleDrawerToggle, open }) {
     const theme = useTheme();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [hover, setHover] = React.useState(false);
+    const mode = useSelector((state) => state.change_theme?.mode);
 
     const isMenuOpen = Boolean(anchorEl);
 
@@ -152,6 +155,10 @@ export default function Appbar({ handleDrawerToggle, open }) {
 
     const handleMenuClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleTheme = () => {
+        dispatch({ type: "SET_THEME", mode: !mode });
     };
 
     const handleProfile = () => {
@@ -273,6 +280,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     sx={{
                         display: { xs: "none", sm: "flex" },
                         color: "primary.dark",
+                        columnGap: "4px",
                     }}
                 >
                     <IconButton
@@ -280,6 +288,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         size="small"
                         disableRipple
                         color="inherit"
+                        onClick={handleTheme}
                     >
                         <LightModeIcon fontSize="small" />
                     </IconButton>
@@ -288,9 +297,10 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         size="small"
                         disableRipple
                         color="inherit"
+                        onClick={() => navigate("/messages")}
                     >
                         <Badge badgeContent={4} color="error">
-                            <ChatBubbleOutlineIcon fontSize="small" />
+                            <ChatBubbleOutlineIcon fontSize="medium" />
                         </Badge>
                     </IconButton>
                     <ProfileIcon
