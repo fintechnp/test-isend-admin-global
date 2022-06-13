@@ -135,9 +135,9 @@ const PrivateLayout = ({ children }) => {
                         sub: false,
                     },
                     {
-                        path: "/customer/report",
-                        key: "customer-report",
-                        text: "Reports",
+                        path: "/customer/create",
+                        key: "customer-create",
+                        text: "Create New",
                         sub: false,
                     },
                 ],

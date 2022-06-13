@@ -1,0 +1,33 @@
+const actions = {
+    GET_CUSTOMER_BYID: "GET_CUSTOMER_BYID",
+    GET_CUSTOMER_BYID_SUCCESS: "GET_CUSTOMER_BYID_SUCCESS",
+    GET_CUSTOMER_BYID_FAILED: "GET_CUSTOMER_BYID_FAILED",
+
+    CREATE_CUSTOMERS: "CREATE_CUSTOMERS",
+    CREATE_CUSTOMERS_SUCCESS: "CREATE_CUSTOMERS_SUCCESS",
+    CREATE_CUSTOMERS_FAILED: "CREATE_CUSTOMERS_FAILED",
+    CREATE_CUSTOMERS_RESET: "CREATE_CUSTOMERS_RESET",
+
+    UPDATE_CUSTOMERS: "UPDATE_CUSTOMERS",
+    UPDATE_CUSTOMERS_SUCCESS: "UPDATE_CUSTOMERS_SUCCESS",
+    UPDATE_CUSTOMERS_FAILED: "UPDATE_CUSTOMERS_FAILED",
+    UPDATE_CUSTOMERS_RESET: "UPDATE_CUSTOMERS_RESET",
+
+    get_customer_byid: (id) => ({
+        type: actions.GET_CUSTOMER_BYID,
+        id,
+    }),
+
+    create_customers: (data) => ({
+        type: actions.CREATE_CUSTOMERS,
+        data,
+    }),
+
+    update_customers: (id, data) => ({
+        type: actions.UPDATE_CUSTOMERS,
+        data,
+        id,
+    }),
+};
+
+export default actions;

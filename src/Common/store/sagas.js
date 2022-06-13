@@ -19,9 +19,10 @@ export const refreshToken = takeEvery(
                 action.data,
                 headers
             );
+            console.log(res, "the resfresh tokken");
             yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
-            Cookies.set("token", res.data.token.value);
-            Cookies.set("refreshToken", res.data.refreshToken);
+            Cookies.set("token", res.token);
+            Cookies.set("refreshToken", res.refresh_token);
         } catch (error) {
             yield put({ type: actions.REFRESH_TOKEN_FAILED, error: error });
             yield put({ type: "SET_TOAST_DATA", data: error?.data });

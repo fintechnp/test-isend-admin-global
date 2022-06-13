@@ -31,8 +31,8 @@ const App = () => {
                                     styles={{
                                         h1: { color: "grey" },
                                         "*::-webkit-scrollbar": {
-                                            width: "0.4em",
-                                            height: "0.4em",
+                                            width: "0.3em",
+                                            height: "0.3em",
                                             right: "12px",
                                         },
                                         "*::-webkit-scrollbar-track": {
@@ -42,13 +42,13 @@ const App = () => {
                                         "*::-webkit-scrollbar-thumb": {
                                             backgroundColor: `${
                                                 ChangeTheme(mode).palette.border
-                                                    .light
+                                                    .dark
                                             }`,
                                             outline: `1px solid ${
                                                 ChangeTheme(mode).palette.border
-                                                    .main
+                                                    .dark
                                             }`,
-                                            borderRadius: "6px",
+                                            borderRadius: "4px",
                                         },
                                     }}
                                 />

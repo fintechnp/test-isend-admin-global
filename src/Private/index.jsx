@@ -121,6 +121,19 @@ import {
     ReferenceSaga,
 } from "./pages/Setup/Reference/store";
 
+//Customer Process
+import {
+    GetCustomersReducer,
+    CustomersSaga,
+} from "./pages/Customers/Search/store";
+
+import {
+    GetCustomersByIdReducer,
+    CreateCustomersReducer,
+    UpdateCustomersReducer,
+    CustomersCreateSaga,
+} from "./pages/Customers/CreateCustomer/store";
+
 //Payment Process
 import {
     GetTransactionDetailsReducer,
@@ -286,6 +299,12 @@ export const privateReducer = {
     update_payment_rules_status: UpdatePaymentRulesStatusReducer,
     delete_payment_rules: DeletePaymentRulesReducer,
 
+    //Customer
+    get_customers: GetCustomersReducer,
+    get_customer_byid: GetCustomersByIdReducer,
+    create_customers: CreateCustomersReducer,
+    update_customers: UpdateCustomersReducer,
+
     //Payment Process
     get_transaction_details: GetTransactionDetailsReducer,
     get_payment_pending: GetPaymentPendingReducer,
@@ -342,6 +361,8 @@ export const privateSaga = [
     ServiceChargeSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
+    CustomersSaga(),
+    CustomersCreateSaga(),
     PaymentRulesSaga(),
     SanctionSaga(),
     PaymentProcessingSaga(),

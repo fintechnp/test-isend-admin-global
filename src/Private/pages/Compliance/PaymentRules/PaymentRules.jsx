@@ -17,7 +17,7 @@ import Table, {
 import { CountryName } from "./../../../../App/helpers";
 import { Delete } from "./../../../../App/components";
 
-const MenuContainer = styled("div")(({ theme }) => ({
+const PaymentContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
     borderRadius: "6px",
     width: "100%",
@@ -245,7 +245,10 @@ const PaymentRules = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Payment Rules Details" arrow>
+                                <Tooltip
+                                    title="Hide Payment Rules Details"
+                                    arrow
+                                >
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -374,7 +377,7 @@ const PaymentRules = () => {
     };
 
     return (
-        <MenuContainer>
+        <PaymentContainer>
             <Header />
             <Filter
                 handleSearch={handleSearch}
@@ -398,7 +401,7 @@ const PaymentRules = () => {
                     />
                 )}
             />
-        </MenuContainer>
+        </PaymentContainer>
     );
 };
 

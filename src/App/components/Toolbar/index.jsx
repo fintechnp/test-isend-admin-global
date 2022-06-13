@@ -18,6 +18,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBoxOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -52,6 +53,7 @@ const StyledMenu = styled((props) => (
         overflow: "visible",
         marginTop: theme.spacing(1),
         minWidth: 220,
+        border: `1px solid ${theme.palette.border.light}`,
         color:
             theme.palette.mode === "light"
                 ? "rgba(205, 208, 213, 0.508)"
@@ -78,14 +80,13 @@ const StyledMenu = styled((props) => (
 }));
 
 const MenuIconButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.primary.dark,
+    color: theme.palette.appbar.icon,
     [theme.breakpoints.down("md")]: {
         display: "none",
     },
 }));
 
 const MenuOpenIcon = styled(MuiMenuOpenIcon)(({ theme, open }) => ({
-    color: theme.palette.primary.dark,
     "&:hover": {
         backgroundColor: "transparent",
         cursor: "default",
@@ -96,11 +97,14 @@ const MenuOpenIcon = styled(MuiMenuOpenIcon)(({ theme, open }) => ({
 }));
 
 const MenuCloseIcon = styled(MenuIcon)(({ theme }) => ({
-    color: theme.palette.primary.dark,
     "&:hover": {
         backgroundColor: "transparent",
         cursor: "default",
     },
+}));
+
+const RightIconButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.appbar.icon,
 }));
 
 const Badge = styled(MuiBadge)(({ theme }) => ({
@@ -108,9 +112,9 @@ const Badge = styled(MuiBadge)(({ theme }) => ({
         right: 2,
         top: 2,
         fontSize: "11px",
-        border: `2.5px solid ${theme.palette.primary.contrastText}`,
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.primary.dark,
+        border: `2.5px solid ${theme.palette.appbar.main}`,
+        color: theme.palette.appbar.main,
+        backgroundColor: theme.palette.appbar.icon,
         padding: 0,
     },
 }));
@@ -283,26 +287,28 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         columnGap: "4px",
                     }}
                 >
-                    <IconButton
+                    <RightIconButton
                         edge={false}
                         size="small"
                         disableRipple
-                        color="inherit"
                         onClick={handleTheme}
                     >
-                        <LightModeIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
+                        {mode ? (
+                            <LightModeIcon fontSize="small" />
+                        ) : (
+                            <SettingsBrightnessIcon fontSize="small" />
+                        )}
+                    </RightIconButton>
+                    <RightIconButton
                         edge="start"
                         size="small"
                         disableRipple
-                        color="inherit"
                         onClick={() => navigate("/messages")}
                     >
                         <Badge badgeContent={4} color="error">
                             <ChatBubbleOutlineIcon fontSize="medium" />
                         </Badge>
-                    </IconButton>
+                    </RightIconButton>
                     <ProfileIcon
                         size="small"
                         edge="end"

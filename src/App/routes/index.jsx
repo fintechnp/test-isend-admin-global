@@ -14,6 +14,10 @@ const MainRoutes = ({ setMode }) => {
     const { response: toast_data } = useSelector((state) => state.toast);
 
     useEffect(() => {
+        setMode(mode);
+    }, []);
+
+    useEffect(() => {
         if (toast_data?.message) {
             showToast(toast_data);
             dispatch({ type: "RESET_TOAST_DATA" });
@@ -23,10 +27,8 @@ const MainRoutes = ({ setMode }) => {
     useEffect(() => {
         if (token) {
             setMode(mode);
-        } else {
-            setMode(true);
         }
-    }, [mode, dispatch]);
+    }, [mode]);
 
     return (
         <Routes>

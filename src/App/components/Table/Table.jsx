@@ -22,12 +22,6 @@ const TableContainer = styled("div")(({ theme }) => ({
     [theme.breakpoints.up("md")]: {
         paddingTop: theme.spacing(0.5),
     },
-    "& .MuiCollapse-wrapper:hover": {
-        background: theme.palette.primary.contrastText,
-    },
-    "& .MuiCollapse-wrapperInner:hover": {
-        background: theme.palette.primary.contrastText,
-    },
 }));
 
 const GlobalTable = styled(MuiTable)(({ theme }) => ({
@@ -45,11 +39,13 @@ const HeadCell = styled(TableCell)(({ theme }) => ({
 
 const TableHead = styled(MuiTableHead)(({ theme }) => ({}));
 
-const BoxContainer = styled(Box)(({ theme }) => ({
+const BoxContainer = styled(Box)(({ theme, open }) => ({
     borderBottom: `1px solid ${theme.palette.border.light}`,
-    "& :hover": {
-        background: theme.palette.background.light,
-    },
+    ...(!open && {
+        "& :hover": {
+            background: theme.palette.background.light,
+        },
+    }),
 }));
 
 const Table = ({
@@ -162,7 +158,10 @@ const Table = ({
                             rows.map((row, i) => {
                                 prepareRow(row);
                                 return (
-                                    <BoxContainer key={i}>
+                                    <BoxContainer
+                                        key={i}
+                                        open={row?.isExpanded}
+                                    >
                                         <TableRow {...row.getRowProps()}>
                                             {row.cells.map((cell, index) => {
                                                 return (
@@ -182,7 +181,6 @@ const Table = ({
                                                 );
                                             })}
                                         </TableRow>
-                                        {/* {row.isExpanded ? ( */}
                                         <SubComponent
                                             index={row.index}
                                             title={title}
@@ -195,7 +193,6 @@ const Table = ({
                                                 toggleRowExpanded
                                             }
                                         />
-                                        {/* ) : null} */}
                                     </BoxContainer>
                                 );
                             })

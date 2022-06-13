@@ -35,6 +35,10 @@ const light = {
         main: "#e6e6e6",
         dark: "#e0e0e0",
     },
+    appbar: {
+        main: "#fff",
+        icon: "#2D6FB5",
+    },
 };
 
 export default light;
