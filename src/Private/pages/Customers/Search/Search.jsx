@@ -13,6 +13,7 @@ import Header from "./components/Header";
 import actions from "./store/actions";
 import SearchForm from "./components/Form";
 import NoResults from "./components/NoResults";
+import { Block } from "./../../../../App/components";
 import Loading from "./../../../../App/components/Loading";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
@@ -234,7 +235,7 @@ function Search() {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/setup/customer/update/${row.original.tid}`
+                                        `/customer/update/${row.original.tid}`
                                     )
                                 }
                             >
@@ -248,6 +249,14 @@ function Search() {
                                 />
                             </IconButton>
                         </Tooltip>
+                        <Block
+                            destroyOnUnmount
+                            initialValues={{ id: row.original.tid }}
+                            // onSubmit={handleBlock}
+                            // loading={u_loading}
+                            validatation={true}
+                            tooltext="Block Customer"
+                        />
                     </Box>
                 ),
             },

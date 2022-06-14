@@ -13,7 +13,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Basic from "./Basic";
 import AddressForm from "./AddressForm";
 import IdentityForm from "./IdentityForm";
-import actions from "./../store/actions";
+import actions from "./../../store/actions";
 
 const CompletedWrapper = styled(Box)(({ theme }) => ({
     marginTop: "16px",
@@ -46,7 +46,7 @@ const Fetching = styled(Typography)(({ theme }) => ({
 
 const steps = ["Basic Information", "Address Details", "Identity Information"];
 
-function PartnerForm({ update_data, loading }) {
+function TransactionForm({ update_data, loading }) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -346,4 +346,4 @@ function PartnerForm({ update_data, loading }) {
     );
 }
 
-export default PartnerForm;
+export default TransactionForm;
