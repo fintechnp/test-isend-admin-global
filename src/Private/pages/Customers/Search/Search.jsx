@@ -68,6 +68,9 @@ function Search() {
     const { response: customersData, loading: l_loading } = useSelector(
         (state) => state.get_customers
     );
+    const { success: b_success, loading: b_loading } = useSelector(
+        (state) => state.block_unblock_customer
+    );
 
     useEffect(() => {
         dispatch(reset("search_form_customer"));
@@ -80,7 +83,7 @@ function Search() {
         } else {
             isMounted.current = true;
         }
-    }, [dispatch, filterSchema]);
+    }, [dispatch, filterSchema, b_success]);
 
     const columns = useMemo(
         () => [
@@ -104,36 +107,6 @@ function Search() {
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
                             {data.value} {data?.row?.original?.middle_name}{" "}
                             {data?.row?.original?.last_name}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Partner",
-                accessor: "agent_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
-                        >
-                            {data?.row?.original?.payout_agent}
                         </StyledName>
                     </Box>
                 ),
@@ -164,6 +137,30 @@ function Search() {
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Address",
+                accessor: "address",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "4px",
+                                fontSize: "13px",
+                                opacity: 0.8,
+                            }}
+                        >
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -252,10 +249,9 @@ function Search() {
                         <Block
                             destroyOnUnmount
                             initialValues={{ id: row.original.tid }}
-                            // onSubmit={handleBlock}
-                            // loading={u_loading}
-                            validatation={true}
-                            tooltext="Block Customer"
+                            onSubmit={handleBlock}
+                            loading={b_loading}
+                            status={row?.original?.is_active}
                         />
                     </Box>
                 ),
@@ -284,6 +280,12 @@ function Search() {
         dispatch({ type: "GET_CUSTOMERS_RESET" });
     };
 
+    const handleBlock = (data) => {
+        dispatch(
+            actions.block_unblock_customer(data?.id, { remarks: data?.remarks })
+        );
+    };
+
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
@@ -305,11 +307,7 @@ function Search() {
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
-                <SearchForm
-                    onSubmit={handleSearch}
-                    handleReset={handleReset}
-                    initialValues={{ customer_id: "", id_number: "" }}
-                />
+                <SearchForm onSubmit={handleSearch} handleReset={handleReset} />
             </Grid>
             {l_loading && (
                 <Grid item xs={12}>

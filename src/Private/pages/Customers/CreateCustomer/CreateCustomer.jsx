@@ -89,7 +89,10 @@ function AddUpdateCustomer() {
                 <Divider sx={{ mb: 1.2, pt: 0.5 }} />
             </Grid>
             <Grid item xs={12}>
-                <CustomerForm update_data={response?.data} loading={loading} />
+                <CustomerForm
+                    update_data={response?.data || []}
+                    loading={loading}
+                />
             </Grid>
         </Container>
     );

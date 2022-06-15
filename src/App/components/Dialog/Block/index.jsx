@@ -10,9 +10,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Tooltip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import MuiIconButton from "@mui/material/IconButton";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import CallMissedOutgoingIcon from "@mui/icons-material/CallMissedOutgoing";
 
 import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
@@ -68,7 +67,7 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function BlockDialog({ loading, tooltext, handleSubmit, validatation, status }) {
+function BlockDialog({ loading, handleSubmit, status }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
@@ -83,25 +82,39 @@ function BlockDialog({ loading, tooltext, handleSubmit, validatation, status }) 
 
     return (
         <div>
-            <Tooltip title={tooltext} arrow>
-                <ReleaseIcon
-                    size="small"
-                    color="primary"
-                    component="span"
-                    onClick={handleClickOpen}
-                    sx={{ minWidth: "3px", borderRadius: "20px" }}
-                >
-                    <LockOpenOutlinedIcon
-                        sx={{
-                            fontSize: "20px",
-                            color: "border.dark",
-                            "&:hover": {
-                                background: "transparent",
-                            },
-                        }}
-                    />
-                </ReleaseIcon>
-            </Tooltip>
+            <ReleaseIcon
+                size="small"
+                color="primary"
+                component="span"
+                onClick={handleClickOpen}
+                sx={{ minWidth: "3px", borderRadius: "20px" }}
+            >
+                {status ? (
+                    <Tooltip title="Block Customer" arrow>
+                        <LockOpenOutlinedIcon
+                            sx={{
+                                fontSize: "20px",
+                                color: "success.main",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
+                            }}
+                        />
+                    </Tooltip>
+                ) : (
+                    <Tooltip title="Unblock Customer" arrow>
+                        <LockOutlinedIcon
+                            sx={{
+                                fontSize: "20px",
+                                color: "warning.main",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
+                            }}
+                        />
+                    </Tooltip>
+                )}
+            </ReleaseIcon>
             <BootstrapDialog
                 open={open}
                 onClose={handleClose}
@@ -120,24 +133,15 @@ function BlockDialog({ loading, tooltext, handleSubmit, validatation, status }) 
                             flexDirection: "column",
                         }}
                     >
-                        {validatation ? (
-                            <Field
-                                name="remarks"
-                                placeholder="Write Remarks"
-                                type="text"
-                                small={12}
-                                minRows={8}
-                                component={TextAreaField}
-                                validate={Validator.emptyValidator}
-                            />
-                        ) : (
-                            <CallMissedOutgoingIcon
-                                sx={{
-                                    fontSize: "80px",
-                                    color: "success.main",
-                                }}
-                            />
-                        )}
+                        <Field
+                            name="remarks"
+                            placeholder="Write Remarks"
+                            type="text"
+                            small={12}
+                            minRows={8}
+                            component={TextAreaField}
+                            validate={Validator.emptyValidator}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <CancelButton

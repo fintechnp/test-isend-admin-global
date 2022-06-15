@@ -56,6 +56,7 @@ const CreateCustomer = lazy(() => import("../pages/Customers/CreateCustomer"));
 const CustomerDetails = lazy(() =>
     import("../pages/Customers/CustomerDetails")
 );
+const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
 
 //Transactions
 const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
@@ -171,6 +172,7 @@ const privateRoutes = [
     { path: "/customer/create", component: <CreateCustomer /> },
     { path: "/customer/update/:id", component: <CreateCustomer /> },
     { path: "/customer/details/:id", component: <CustomerDetails /> },
+    { path: "/customer/all-beneficiary/:id", component: <AllBeneficiary /> },
 
     //Transactions
     { path: "/transaction/new", component: <CreateTransactions /> },

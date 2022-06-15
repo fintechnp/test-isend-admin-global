@@ -124,6 +124,7 @@ import {
 //Customer Process
 import {
     GetCustomersReducer,
+    BlockUnblockReducer,
     CustomersSaga,
 } from "./pages/Customers/Search/store";
 
@@ -133,6 +134,15 @@ import {
     UpdateCustomersReducer,
     CustomersCreateSaga,
 } from "./pages/Customers/CreateCustomer/store";
+
+//Beneficiary
+import {
+    GetBeneficiaryByCustomerReducer,
+    GetBeneficiaryByIdReducer,
+    CreateBeneficiaryReducer,
+    UpdateBeneficiaryReducer,
+    BeneficiarySaga,
+} from "./pages/Customers/Beneficiary/store";
 
 //Payment Process
 import {
@@ -301,9 +311,16 @@ export const privateReducer = {
 
     //Customer
     get_customers: GetCustomersReducer,
+    block_unblock_customer: BlockUnblockReducer,
     get_customer_byid: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
+
+    //Beneficiary
+    get_beneficiary_by_customer: GetBeneficiaryByCustomerReducer,
+    get_beneficiary_byid: GetBeneficiaryByIdReducer,
+    create_beneficiary: CreateBeneficiaryReducer,
+    update_beneficiary: UpdateBeneficiaryReducer,
 
     //Payment Process
     get_transaction_details: GetTransactionDetailsReducer,
@@ -363,6 +380,7 @@ export const privateSaga = [
     ReferenceSaga(),
     CustomersSaga(),
     CustomersCreateSaga(),
+    BeneficiarySaga(),
     PaymentRulesSaga(),
     SanctionSaga(),
     PaymentProcessingSaga(),

@@ -9,26 +9,26 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_CUSTOMERS:
+        case actions.BLOCK_UNBLOCK_CUSTOMER:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_CUSTOMERS_SUCCESS:
+        case actions.BLOCK_UNBLOCK_CUSTOMER_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_CUSTOMERS_FAILED:
+        case actions.BLOCK_UNBLOCK_CUSTOMER_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
             };
-        case actions.GET_CUSTOMERS_RESET:
+        case actions.BLOCK_UNBLOCK_CUSTOMER_RESET:
             return {
                 success: false,
                 loading: false,

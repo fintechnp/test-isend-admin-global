@@ -22,8 +22,31 @@ export const getCustomers = takeEvery(
     }
 );
 
+export const BlockUnblockCustomer = takeEvery(
+    actions.BLOCK_UNBLOCK_CUSTOMER,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(
+                api.patch,
+                `customer/${action.id}?${query}`
+            );
+            yield put({
+                type: actions.BLOCK_UNBLOCK_CUSTOMER_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.BLOCK_UNBLOCK_CUSTOMER_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
+
 export default function* saga() {
-    yield all([
-        getCustomers,
-    ]);
+    yield all([getCustomers, BlockUnblockCustomer]);
 }

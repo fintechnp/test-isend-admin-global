@@ -1,4 +1,4 @@
-import actions from "../../store/actions";
+import actions from "../actions";
 
 const initialState = {
     success: false,
@@ -9,31 +9,24 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_CUSTOMERS:
+        case actions.GET_BENEFICIARY_BYID:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_CUSTOMERS_SUCCESS:
+        case actions.GET_BENEFICIARY_BYID_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_CUSTOMERS_FAILED:
+        case actions.GET_BENEFICIARY_BYID_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
-            };
-        case actions.GET_CUSTOMERS_RESET:
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
             };
         default:
             return state;
