@@ -1,23 +1,15 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
-import { reset } from "redux-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MuiIconButton from "@mui/material/IconButton";
 import { Box, Tooltip, Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-import Header from "./components/Header";
 import actions from "./store/actions";
-import SearchForm from "./components/Form";
-import NoResults from "./components/NoResults";
-import { Block } from "./../../../../App/components";
-import Loading from "./../../../../App/components/Loading";
-import { CountryName } from "./../../../../App/helpers";
+import Header from "./components/Header";
+import Filter from "./components/Filter";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -62,31 +54,19 @@ const initialState = {
     order_by: "ASC",
 };
 
-function Search() {
+function Transactions() {
+    const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: customersData, loading: l_loading } = useSelector(
-        (state) => state.get_customers
-    );
-    const { success: b_success, loading: b_loading } = useSelector(
-        (state) => state.block_unblock_customer
+        (state) => state.get_beneficiary_by_customer
     );
 
     useEffect(() => {
-        dispatch(reset("search_form_customer"));
-        dispatch({ type: "GET_CUSTOMERS_RESET" });
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_customers(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
-    }, [dispatch, filterSchema, b_success]);
+        dispatch(actions.get_beneficiary_by_customer(id, filterSchema));
+    }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
@@ -107,27 +87,46 @@ function Search() {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p">
+                        <StyledName component="p" sx={{ fontSize: "13px" }}>
                             {data.value} {data?.row?.original?.middle_name}{" "}
                             {data?.row?.original?.last_name}
                         </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.customer_type_data
-                                ? data?.row?.original?.customer_type_data
-                                : "N/A"}
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Type</Typography>
+                    </Box>
+                ),
+                accessor: "customer_type_data",
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Country</Typography>
+                    </Box>
+                ),
+                accessor: "country_data",
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value}
                         </StyledName>
                     </Box>
                 ),
             },
             {
                 Header: "Address",
-                accessor: "country",
+                accessor: "address",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -136,20 +135,15 @@ function Search() {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CountryName(data.value)}
-                        </StyledName>
                         <StyledName
                             component="p"
                             sx={{
-                                paddingLeft: "2px",
+                                paddingLeft: "4px",
                                 fontSize: "13px",
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.address
-                                ? data?.row?.original?.address
-                                : "N/A"}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -170,51 +164,17 @@ function Search() {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "13px",
+                                opacity: 0.6,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledMail
                             component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
+                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
                         >
                             {data?.row?.original?.email}
                         </StyledMail>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Status</Typography>
-                    </Box>
-                ),
-                accessor: "is_active",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        {data.value ? (
-                            <Tooltip title="Active" arrow>
-                                <CheckCircleOutlineIcon
-                                    sx={{ color: "success.main" }}
-                                />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Blocked" arrow>
-                                <RemoveCircleOutlineIcon
-                                    sx={{ color: "border.main" }}
-                                />
-                            </Tooltip>
-                        )}
                     </Box>
                 ),
             },
@@ -269,14 +229,6 @@ function Search() {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Block
-                            name="Customer"
-                            destroyOnUnmount
-                            initialValues={{ id: row.original.tid }}
-                            onSubmit={handleBlock}
-                            loading={b_loading}
-                            status={row?.original?.is_active}
-                        />
                     </Box>
                 ),
             },
@@ -284,30 +236,40 @@ function Search() {
         []
     );
 
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            name: data?.name,
-            customer_id: data?.customer_id,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch(reset("search_form_customer"));
-        dispatch({ type: "GET_CUSTOMERS_RESET" });
-    };
-
     const handleBlock = (data) => {
         dispatch(
             actions.block_unblock_customer(data?.id, { remarks: data?.remarks })
         );
+    };
+
+    const handleSearch = useCallback(
+        (e) => {
+            const searchValue = e.target.value;
+            const updatedFilterSchema = {
+                ...filterSchema,
+                search: searchValue,
+            };
+            setFilterSchema(updatedFilterSchema);
+        },
+        [filterSchema]
+    );
+
+    const handleSort = (e) => {
+        const type = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: type,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleOrder = (e) => {
+        const order = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            order_by: order,
+        };
+        setFilterSchema(updatedFilterSchema);
     };
 
     const handleChangePage = (e, newPage) => {
@@ -329,46 +291,29 @@ function Search() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm onSubmit={handleSearch} handleReset={handleReset} />
-            </Grid>
-            {l_loading && (
-                <Grid item xs={12}>
-                    <Loading loading={l_loading} />
-                </Grid>
-            )}
-            {!l_loading &&
-                customersData?.data &&
-                customersData?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Customer Found" />
-                    </Grid>
+        <CustomerWrapper>
+            <Header />
+            <Filter
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                // handleFilter={handleFilter}
+            />
+            <Table
+                columns={columns}
+                data={customersData?.data || []}
+                loading={l_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={customersData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
                 )}
-            {!l_loading && customersData?.data?.length > 0 && (
-                <Grid item xs={12}>
-                    <CustomerWrapper>
-                        <Header />
-                        <Table
-                            columns={columns}
-                            data={customersData?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={customersData?.pagination}
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                />
-                            )}
-                        />
-                    </CustomerWrapper>
-                </Grid>
-            )}
-        </Grid>
+            />
+        </CustomerWrapper>
     );
 }
 
-export default Search;
+export default Transactions;

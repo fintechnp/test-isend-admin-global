@@ -1,4 +1,4 @@
-import actions from "../actions";
+import actions from "../../store/actions";
 
 const initialState = {
     success: false,
@@ -9,26 +9,26 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_BENEFICIARY_BYID:
+        case actions.BLOCK_UNBLOCK_BENEFICIARY:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_BENEFICIARY_BYID_SUCCESS:
+        case actions.BLOCK_UNBLOCK_BENEFICIARY_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_BENEFICIARY_BYID_FAILED:
+        case actions.BLOCK_UNBLOCK_BENEFICIARY_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
             };
-        case actions.GET_BENEFICIARY_BYID_RESET:
+        case actions.BLOCK_UNBLOCK_BENEFICIARY_RESET:
             return {
                 success: false,
                 loading: false,

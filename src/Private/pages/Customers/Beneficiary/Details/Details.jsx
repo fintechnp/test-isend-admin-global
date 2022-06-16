@@ -3,15 +3,19 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import actions from "./../CreateCustomer/store/actions";
-import { CountryName, FormatDate } from "./../../../../App/helpers";
+import actions from "./../store/actions";
+import {
+    CountryName,
+    FormatDate,
+    ReferenceName,
+    CurrencyName,
+} from "./../../../../../App/helpers";
 
 const DetailWrapper = styled(Grid)(({ theme }) => ({
     padding: "8px 16px 16px 16px",
@@ -46,27 +50,6 @@ const NameField = styled(Box)(({ theme }) => ({
     flexGrow: 1,
 }));
 
-const ButtonWrapper = styled(Box)(({ theme }) => ({
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-}));
-
-const BeneficiaryButton = styled(Button)(({ theme }) => ({
-    padding: "4px 10px",
-    textTransform: "capitalize",
-}));
-
-const TransactionButton = styled(Button)(({ theme }) => ({
-    padding: "4px 10px",
-    textTransform: "capitalize",
-    color: theme.palette.primary.contrastText,
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
-}));
-
 const TitleWrapper = styled(Box)(({ theme }) => ({
     width: "100%",
     paddingBottom: "2px",
@@ -92,12 +75,12 @@ const Label = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
 }));
 
-const Value = styled(Typography)(({ value }) => ({
+const Value = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     lineHeight: 1.5,
     fontSize: "15px",
     fontWeight: 400,
-    textTransform: value === "Email Address" ? "lowercase" : "capitalize",
+    textTransform: "capitalize",
 }));
 
 const Fetching = styled(Typography)(({ theme }) => ({
@@ -106,7 +89,7 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-const RenderField = ({ label, value }) => {
+const RenderField = ({ label, prevalue, value }) => {
     return (
         <Box
             sx={{
@@ -119,7 +102,12 @@ const RenderField = ({ label, value }) => {
                 <Label>{label}:</Label>
             </Box>
             <Box sx={{ width: "60%" }}>
-                <Value value={label}>{value ? value : "N/A"}</Value>
+                {prevalue && (
+                    <Value component="span" sx={{ paddingRight: "6px" }}>
+                        {prevalue}
+                    </Value>
+                )}
+                <Value component="span">{value ? value : "N/A"}</Value>
             </Box>
         </Box>
     );
@@ -147,24 +135,23 @@ const RenderTopField = ({ label, value }) => {
     );
 };
 
-function CustomerDetails() {
-    const { id } = useParams();
-    const navigate = useNavigate();
+function BeneficiaryDetails() {
     const dispatch = useDispatch();
+    const { bene_id } = useParams();
 
-    const { response: customersData, loading: l_loading } = useSelector(
-        (state) => state.get_customer_byid
+    const { response: beneficiaryData, loading: l_loading } = useSelector(
+        (state) => state.get_beneficiary_byid
     );
 
     useEffect(() => {
-        dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
+        dispatch({ type: "GET_BENEFICIARY_BYID_RESET" });
     }, []);
 
     useEffect(() => {
-        if (id) {
-            dispatch(actions.get_customer_byid(id));
+        if (bene_id) {
+            dispatch(actions.get_beneficiary_byid(bene_id));
         }
-    }, [dispatch, id]);
+    }, [dispatch, bene_id]);
 
     if (l_loading) {
         return (
@@ -177,7 +164,7 @@ function CustomerDetails() {
     return (
         <DetailWrapper container>
             <Grid item xs={12}>
-                <Header>Customer Details</Header>
+                <Header>Beneficiary Details</Header>
                 <Divider />
             </Grid>
             <Grid item xs={12}>
@@ -209,13 +196,13 @@ function CustomerDetails() {
                     <NameField>
                         <RenderTopField
                             label="Name"
-                            value={`${customersData?.data?.first_name}${" "}${
-                                customersData?.data?.middle_name
-                            }${" "}${customersData?.data?.last_name}`}
+                            value={`${beneficiaryData?.data?.first_name}${" "}${
+                                beneficiaryData?.data?.middle_name
+                            }${" "}${beneficiaryData?.data?.last_name}`}
                         />
                         <RenderTopField
-                            label="Customer Id"
-                            value={customersData?.data?.customer_id}
+                            label="Beneficiary Id"
+                            value={beneficiaryData?.data?.beneficiary_id}
                         />
                     </NameField>
                 </NameBox>
@@ -229,31 +216,177 @@ function CustomerDetails() {
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Firstname"
-                    value={customersData?.data?.first_name}
+                    value={beneficiaryData?.data?.first_name}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Mid-name"
-                    value={customersData?.data?.middle_name}
+                    value={beneficiaryData?.data?.middle_name}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Lastname"
-                    value={customersData?.data?.last_name}
+                    value={beneficiaryData?.data?.last_name}
                 />
             </Grid>{" "}
             <Grid item xs={12} sm={6}>
                 <RenderField
-                    label="Gender"
-                    value={customersData?.data?.gender}
+                    label="Mobile Number"
+                    value={beneficiaryData?.data?.mobile_number}
+                    prevalue={beneficiaryData?.data?.phone_country_code}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
-                    label="Mobile Number"
-                    value={customersData?.data?.mobile_number}
+                    label="Email"
+                    value={beneficiaryData?.data?.mobile_number}
+                    prevalue={beneficiaryData?.data?.email}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Type"
+                    value={beneficiaryData?.data?.receiver_type_data}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Customer Id"
+                    value={beneficiaryData?.data?.customer_id}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <TitleWrapper>
+                    <Title>Collection Information</Title>
+                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                </TitleWrapper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Payment Type"
+                    value={
+                        beneficiaryData?.data?.payment_type
+                            ? ReferenceName(
+                                  1,
+                                  beneficiaryData?.data?.payment_type
+                              )
+                            : ""
+                    }
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Bank Name"
+                    value={beneficiaryData?.data?.bank_name}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Account Number"
+                    value={beneficiaryData?.data?.account_number}
+                />
+            </Grid>{" "}
+            {beneficiaryData?.data?.account_type_data && (
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Account Type"
+                        value={beneficiaryData?.data?.account_type_data}
+                    />
+                </Grid>
+            )}
+            {beneficiaryData?.data?.branch_identifier_type && (
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Branch Identifier Type"
+                        value={beneficiaryData?.data?.branch_identifier_type}
+                    />
+                </Grid>
+            )}
+            {beneficiaryData?.data?.branch_identifier_value && (
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Branch Identifier"
+                        value={beneficiaryData?.data?.branch_identifier_value}
+                    />
+                </Grid>
+            )}
+            <Grid item xs={12}>
+                <TitleWrapper>
+                    <Title>Other Information</Title>
+                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                </TitleWrapper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Status"
+                    value={
+                        beneficiaryData?.data?.is_active ? "Active" : "Unknown"
+                    }
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField label="Unit" value={beneficiaryData?.data?.unit} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Street"
+                    value={beneficiaryData?.data?.street}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="State"
+                    value={beneficiaryData?.data?.state}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Address"
+                    value={beneficiaryData?.data?.address}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Country"
+                    value={CountryName(beneficiaryData?.data?.country)}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Currency"
+                    value={CurrencyName(beneficiaryData?.data?.currency)}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Post Code"
+                    value={beneficiaryData?.data?.postcode}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Date of Birth"
+                    value={FormatDate(beneficiaryData?.data?.date_of_birth)}
+                />
+            </Grid>{" "}
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Relation"
+                    value={beneficiaryData?.data?.relation}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Reason For Remittance"
+                    value={beneficiaryData?.data?.reason_for_remittance}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="Source Of Income"
+                    value={beneficiaryData?.data?.source_of_income}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -265,126 +398,41 @@ function CustomerDetails() {
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Id Type"
-                    value={customersData?.data?.id_type}
+                    value={beneficiaryData?.data?.id_type}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Id Number"
-                    value={customersData?.data?.id_number}
+                    value={beneficiaryData?.data?.id_number}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Id Issued State"
-                    value={customersData?.data?.id_issued_state}
+                    value={beneficiaryData?.data?.id_issued_state}
                 />
             </Grid>{" "}
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Id Issued Country"
-                    value={customersData?.data?.id_issued_country_data}
+                    value={beneficiaryData?.data?.id_issued_country_data}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Id Issued Date"
-                    value={FormatDate(customersData?.data?.id_issue_date)}
+                    value={FormatDate(beneficiaryData?.data?.id_issue_date)}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Id Expiry Date"
-                    value={FormatDate(customersData?.data?.id_expiry_date)}
+                    value={FormatDate(beneficiaryData?.data?.id_expiry_date)}
                 />
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Other Details</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Customer Type"
-                    value={customersData?.data?.customer_type}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Email Address"
-                    value={customersData?.data?.email}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Post Code"
-                    value={customersData?.data?.postcode}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Country"
-                    value={customersData?.data?.country_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Nationality"
-                    value={customersData?.data?.citizenship_country_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Date of Birth"
-                    value={FormatDate(customersData?.data?.date_of_birth)}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Birth Country"
-                    value={CountryName(customersData?.data?.birth_country)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Occupation"
-                    value={customersData?.data?.occupation}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Source Of Income"
-                    value={customersData?.data?.source_of_income}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <ButtonWrapper columnGap={1.5}>
-                    <BeneficiaryButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() =>
-                            navigate(`/customer/all-beneficiary/${id}`)
-                        }
-                    >
-                        Show Beneficiares
-                    </BeneficiaryButton>
-                    <TransactionButton
-                        size="small"
-                        disableElevation
-                        disableRipple
-                        onClick={() =>
-                            navigate(`/customer/all-transactions/${id}`)
-                        }
-                    >
-                        Show Transactions
-                    </TransactionButton>
-                </ButtonWrapper>
             </Grid>
         </DetailWrapper>
     );
 }
 
-export default CustomerDetails;
+export default BeneficiaryDetails;

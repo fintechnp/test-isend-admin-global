@@ -213,11 +213,11 @@ function Search() {
                             justifyContent: "center",
                         }}
                     >
-                        <Tooltip title="Customer Details" arrow>
+                        <Tooltip title="Transaction Details" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/details/${row.original.tid}`
+                                        `/transaction/details/${row.original.tid}`
                                     )
                                 }
                             >
@@ -231,11 +231,11 @@ function Search() {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Edit Customer" arrow>
+                        <Tooltip title="Edit Transaction" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/update/${row.original.tid}`
+                                        `/transaction/update/${row.original.tid}`
                                     )
                                 }
                             >

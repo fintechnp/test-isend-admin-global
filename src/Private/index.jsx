@@ -141,6 +141,7 @@ import {
     GetBeneficiaryByIdReducer,
     CreateBeneficiaryReducer,
     UpdateBeneficiaryReducer,
+    BlockUnblockBeneficiaryReducer,
     BeneficiarySaga,
 } from "./pages/Customers/Beneficiary/store";
 
@@ -321,6 +322,7 @@ export const privateReducer = {
     get_beneficiary_byid: GetBeneficiaryByIdReducer,
     create_beneficiary: CreateBeneficiaryReducer,
     update_beneficiary: UpdateBeneficiaryReducer,
+    block_unblock_beneficiary: BlockUnblockBeneficiaryReducer,
 
     //Payment Process
     get_transaction_details: GetTransactionDetailsReducer,

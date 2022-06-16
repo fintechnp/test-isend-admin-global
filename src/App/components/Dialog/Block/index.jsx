@@ -67,7 +67,7 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function BlockDialog({ loading, handleSubmit, status }) {
+function BlockDialog({ loading, handleSubmit, status, name }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
@@ -90,7 +90,7 @@ function BlockDialog({ loading, handleSubmit, status }) {
                 sx={{ minWidth: "3px", borderRadius: "20px" }}
             >
                 {status ? (
-                    <Tooltip title="Block Customer" arrow>
+                    <Tooltip title={`Block ${name}`} arrow>
                         <LockOpenOutlinedIcon
                             sx={{
                                 fontSize: "20px",
@@ -102,7 +102,7 @@ function BlockDialog({ loading, handleSubmit, status }) {
                         />
                     </Tooltip>
                 ) : (
-                    <Tooltip title="Unblock Customer" arrow>
+                    <Tooltip title={`Unblock ${name}`} arrow>
                         <LockOutlinedIcon
                             sx={{
                                 fontSize: "20px",

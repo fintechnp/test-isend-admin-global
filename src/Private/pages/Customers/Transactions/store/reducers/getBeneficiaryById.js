@@ -28,13 +28,6 @@ const reducer = (state = initialState, action) => {
                 loading: false,
                 error: action.error,
             };
-        case actions.GET_BENEFICIARY_BYID_RESET:
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
-            };
         default:
             return state;
     }

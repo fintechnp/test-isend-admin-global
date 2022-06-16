@@ -57,6 +57,15 @@ const CustomerDetails = lazy(() =>
     import("../pages/Customers/CustomerDetails")
 );
 const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
+const AddBeneficiary = lazy(() =>
+    import("../pages/Customers/Beneficiary/AddUpdateBeneficiary")
+);
+const BeneficiaryDetails = lazy(() =>
+    import("../pages/Customers/Beneficiary/Details")
+);
+const CustomerTransactions = lazy(() =>
+    import("../pages/Customers/Transactions")
+);
 
 //Transactions
 const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
@@ -64,6 +73,7 @@ const DailyTransactions = lazy(() =>
     import("../pages/Transactions/DailyTransactions")
 );
 const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
+const TransactionDetails = lazy(() => import("../pages/Transactions/Details"));
 
 //Reports
 const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
@@ -173,11 +183,28 @@ const privateRoutes = [
     { path: "/customer/update/:id", component: <CreateCustomer /> },
     { path: "/customer/details/:id", component: <CustomerDetails /> },
     { path: "/customer/all-beneficiary/:id", component: <AllBeneficiary /> },
+    {
+        path: "/customer/beneficiary/add/:id",
+        component: <AddBeneficiary />,
+    },
+    {
+        path: "/customer/beneficiary/update/:id/:bene_id",
+        component: <AddBeneficiary />,
+    },
+    {
+        path: "/customer/beneficiary/details/:id/:bene_id",
+        component: <BeneficiaryDetails />,
+    },
+    {
+        path: "/customer/all-transactions/:id",
+        component: <CustomerTransactions />,
+    },
 
     //Transactions
     { path: "/transaction/new", component: <CreateTransactions /> },
     { path: "/transaction/daily", component: <DailyTransactions /> },
     { path: "/transaction/search", component: <SearchTransactions /> },
+    { path: "/transaction/details/:id", component: <TransactionDetails /> },
 
     //Reports
     { path: "/report/country-wise-report", component: <ReportsCountrywise /> },

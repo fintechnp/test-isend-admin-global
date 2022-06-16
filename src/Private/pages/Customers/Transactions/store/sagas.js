@@ -88,36 +88,11 @@ export const updateBeneficiary = takeEvery(
     }
 );
 
-export const BlockUnblockBeneficiary = takeEvery(
-    actions.BLOCK_UNBLOCK_BENEFICIARY,
-    function* (action) {
-        const query = api.getJSONToQueryStr(action.data);
-        try {
-            const res = yield call(
-                api.patch,
-                `beneficiary/${action.id}?${query}`
-            );
-            yield put({
-                type: actions.BLOCK_UNBLOCK_BENEFICIARY_SUCCESS,
-                response: res,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: res });
-        } catch (error) {
-            yield put({
-                type: actions.BLOCK_UNBLOCK_BENEFICIARY_FAILED,
-                error: error.data,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
-        }
-    }
-);
-
 export default function* saga() {
     yield all([
         getBeneficiary,
         getBeneficiaryById,
         createBeneficiary,
         updateBeneficiary,
-        BlockUnblockBeneficiary,
     ]);
 }
