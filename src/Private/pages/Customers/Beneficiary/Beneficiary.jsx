@@ -68,6 +68,7 @@ function Beneficiary() {
 
     useEffect(() => {
         dispatch(actions.get_beneficiary_by_customer(id, filterSchema));
+        dispatch({ type: "BLOCK_UNBLOCK_BENEFICIARY_RESET" });
     }, [dispatch, filterSchema, b_success]);
 
     const columns = useMemo(
@@ -201,6 +202,7 @@ function Beneficiary() {
                     </Box>
                 ),
                 accessor: "is_active",
+                maxWidth: 100,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -279,7 +281,11 @@ function Beneficiary() {
                         <Block
                             name="Beneficiary"
                             destroyOnUnmount
-                            initialValues={{ id: row.original.tid }}
+                            enableReinitialize
+                            initialValues={{
+                                id: row.original.tid,
+                                is_active: row?.original?.is_active,
+                            }}
                             onSubmit={handleBlock}
                             loading={b_loading}
                             status={row?.original?.is_active}
@@ -294,7 +300,7 @@ function Beneficiary() {
     const handleBlock = (data) => {
         dispatch(
             actions.block_unblock_beneficiary(data?.id, {
-                remarks: data?.remarks,
+                is_active: !data?.is_active,
             })
         );
     };

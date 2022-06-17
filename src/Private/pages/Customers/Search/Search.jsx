@@ -272,6 +272,7 @@ function Search() {
                         <Block
                             name="Customer"
                             destroyOnUnmount
+                            remark={true}
                             initialValues={{ id: row.original.tid }}
                             onSubmit={handleBlock}
                             loading={b_loading}

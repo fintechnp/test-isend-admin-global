@@ -91,7 +91,7 @@ export const updateBeneficiary = takeEvery(
 export const BlockUnblockBeneficiary = takeEvery(
     actions.BLOCK_UNBLOCK_BENEFICIARY,
     function* (action) {
-        const query = api.getJSONToQueryStr(action.data);
+        const query = api.getJSONToQueryStr(action.query);
         try {
             const res = yield call(
                 api.patch,

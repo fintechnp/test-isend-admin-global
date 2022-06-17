@@ -16,11 +16,11 @@ import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+const BootstrapDialog = styled(Dialog)(({ theme, remark }) => ({
     "& .MuiDialog-paper": {
-        maxWidth: "90%",
+        width: remark ? "90%" : "60%",
         [theme.breakpoints.up("md")]: {
-            minWidth: "60%",
+            width: "60%",
         },
     },
     "& .MuiDialogActions-root": {
@@ -67,7 +67,7 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function BlockDialog({ loading, handleSubmit, status, name }) {
+function BlockDialog({ loading, handleSubmit, status, name, remark }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
@@ -91,18 +91,6 @@ function BlockDialog({ loading, handleSubmit, status, name }) {
             >
                 {status ? (
                     <Tooltip title={`Block ${name}`} arrow>
-                        <LockOpenOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                color: "success.main",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </Tooltip>
-                ) : (
-                    <Tooltip title={`Unblock ${name}`} arrow>
                         <LockOutlinedIcon
                             sx={{
                                 fontSize: "20px",
@@ -113,15 +101,31 @@ function BlockDialog({ loading, handleSubmit, status, name }) {
                             }}
                         />
                     </Tooltip>
+                ) : (
+                    <Tooltip title={`Unblock ${name}`} arrow>
+                        <LockOpenOutlinedIcon
+                            sx={{
+                                fontSize: "20px",
+                                color: "success.main",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
+                            }}
+                        />
+                    </Tooltip>
                 )}
             </ReleaseIcon>
             <BootstrapDialog
                 open={open}
+                remark={remark}
                 onClose={handleClose}
                 aria-labelledby="responsive-dialog-title"
             >
-                <DialogTitle id="responsive-dialog-title">
-                    {"Do you want to Block??"}
+                <DialogTitle
+                    id="responsive-dialog-title"
+                    sx={{ fontSize: "24px" }}
+                >
+                    {"Do you want to"} {status ? "Block?" : "Unblock?"}
                 </DialogTitle>
                 <Form onSubmit={handleSubmit}>
                     <DialogContent
@@ -133,15 +137,39 @@ function BlockDialog({ loading, handleSubmit, status, name }) {
                             flexDirection: "column",
                         }}
                     >
-                        <Field
-                            name="remarks"
-                            placeholder="Write Remarks"
-                            type="text"
-                            small={12}
-                            minRows={8}
-                            component={TextAreaField}
-                            validate={Validator.emptyValidator}
-                        />
+                        {remark && (
+                            <Field
+                                name="remarks"
+                                placeholder="Write Remarks"
+                                type="text"
+                                small={12}
+                                minRows={8}
+                                component={TextAreaField}
+                                validate={Validator.emptyValidator}
+                            />
+                        )}
+                        {!remark && !status && (
+                            <LockOpenOutlinedIcon
+                                sx={{
+                                    fontSize: "120px",
+                                    color: "success.main",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        )}
+                        {!remark && status && (
+                            <LockOutlinedIcon
+                                sx={{
+                                    fontSize: "120px",
+                                    color: "warning.main",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        )}
                     </DialogContent>
                     <DialogActions>
                         <CancelButton
@@ -157,7 +185,7 @@ function BlockDialog({ loading, handleSubmit, status, name }) {
                             loading={loading}
                             type="submit"
                         >
-                            Block
+                            {status ? "Block" : "UnBlock"}
                         </BlockButton>
                     </DialogActions>
                 </Form>
