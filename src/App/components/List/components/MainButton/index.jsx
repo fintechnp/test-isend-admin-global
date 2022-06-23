@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 
 import SubHeader from "./SubHeader";
 
-const ListItem = styled(MuiListItem)(({ theme, open }) => ({
+const ListItem = styled(MuiListItem)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     margin: "4px 0px",
@@ -193,9 +193,6 @@ function MainButton({
                     open={open}
                     selected={
                         selectedkey === item.key
-                        // item?.children.map((each) =>
-                        //     Object.values(each).includes(pathname)
-                        // )
                     }
                     onClick={() => handleMainButton(item.key)}
                 >
@@ -225,29 +222,6 @@ function MainButton({
                                 handleListItemSelect={handleListItemSelect}
                             />
                         ))}
-                        {/* {item?.children.map((child, ind) =>
-                            child.sub ? (
-                                <SubButton
-                                    key={ind}
-                                    index={index}
-                                    sub_item={child}
-                                    open={open}
-                                    selectedSub={selectedSub}
-                                    setSelectedIndex={setSelectedIndex}
-                                    handleListItemSelect={handleListItemSelect}
-                                />
-                            ) : (
-                                <SubHeader
-                                    key={ind}
-                                    index={index}
-                                    sub_item={child}
-                                    open={open}
-                                    selectedSub={selectedSub}
-                                    setSelectedIndex={setSelectedIndex}
-                                    handleListItemSelect={handleListItemSelect}
-                                />
-                            )
-                        )} */}
                     </List>
                 </StyledCollapse>
             </ListItem>

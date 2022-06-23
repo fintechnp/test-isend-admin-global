@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import Cookies from "js-cookie";
 import { styled, alpha } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
@@ -22,6 +23,9 @@ import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/styles";
 import { useSelector, useDispatch } from "react-redux";
+
+import SearchBar from "./Search";
+import { AuthContext } from "../../auth";
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     minHeight: "56px",
@@ -132,9 +136,10 @@ const ProfileName = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.dark,
 }));
 
-const ProfileId = styled(Typography)(({ theme }) => ({
+const RoleName = styled(Typography)(({ theme }) => ({
     fontSize: "12px",
     color: theme.palette.text.main,
+    textTransform: "capitalize",
 }));
 
 const OpenIcon = styled(KeyboardArrowDownIcon)(({ theme }) => ({
@@ -147,6 +152,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
     const theme = useTheme();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { currentUser } = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [hover, setHover] = React.useState(false);
     const mode = useSelector((state) => state.change_theme?.mode);
@@ -165,6 +171,8 @@ export default function Appbar({ handleDrawerToggle, open }) {
         dispatch({ type: "SET_THEME", mode: !mode });
     };
 
+    const handleSearch = (e) => {};
+
     const handleProfile = () => {
         setAnchorEl(null);
         navigate("/account");
@@ -182,6 +190,12 @@ export default function Appbar({ handleDrawerToggle, open }) {
         });
         localStorage.clear();
         window.location.reload();
+    };
+
+    const stringAvatar = (name) => {
+        return {
+            children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+        };
     };
 
     const menuId = "primary-search-account-menu";
@@ -240,12 +254,13 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         borderRadius: "6px",
                     }}
                     variant="rounded"
-                    alt="Remy Sharp"
-                    src="https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59095205-stock-illustration-businessman-profile-icon.jpg"
+                    {...stringAvatar(currentUser?.name || "Admin")}
                 />
-                <Box sx={{ paddingLeft: 2 }}>
-                    <ProfileName>Milan Korangi</ProfileName>
-                    <ProfileId>Admin</ProfileId>
+                <Box sx={{ paddingLeft: 1.5, paddingRight: 0.5 }}>
+                    <ProfileName>
+                        {currentUser && currentUser?.name}
+                    </ProfileName>
+                    <RoleName>{currentUser && currentUser?.user_type}</RoleName>
                 </Box>
             </MenuItem>
             <Divider sx={{ my: 0.5 }} />
@@ -287,6 +302,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         columnGap: "4px",
                     }}
                 >
+                    <SearchBar handleSearch={handleSearch} />
                     <RightIconButton
                         edge={false}
                         size="small"
@@ -324,10 +340,9 @@ export default function Appbar({ handleDrawerToggle, open }) {
                                 height: "36px",
                                 width: "36px",
                                 borderRadius: "6px",
+                                fontSize: "14px",
                             }}
-                            variant="rounded"
-                            alt="Remy Sharp"
-                            src="https://st2.depositphotos.com/1006318/5909/v/950/depositphotos_59095205-stock-illustration-businessman-profile-icon.jpg"
+                            {...stringAvatar(currentUser?.name || "Admin")}
                         />
                         <OpenIcon />
                     </ProfileIcon>
