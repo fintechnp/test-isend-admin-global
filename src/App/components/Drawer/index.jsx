@@ -63,7 +63,7 @@ const closedMixin = (theme) => ({
     background: theme.palette.primary.main,
     [theme.breakpoints.up("sm")]: {
         padding: "8px",
-        width: theme.spacing(8),
+        width: theme.spacing(8), 
     },
 });
 
@@ -74,11 +74,10 @@ const DrawerHeader = styled("div", {
     alignItems: "flex-start",
     justifyContent: "center",
     minHeight: "48px",
-    // necessary for content to be below app bar
 }));
 
 const LogoWrapper = styled(CardMedia)(({ theme }) => ({
-    maxHeight: "40px",
+    maxHeight: "56px",
     width: "100%",
     objectFit: "contain",
     display: "flex",
@@ -92,7 +91,7 @@ const AppBar = styled(MuiAppBar, {
     zIndex: theme.zIndex.drawer,
     boxShadow: "none",
     borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-    background: theme.palette.primary.contrastText,
+    background: theme.palette.appbar.main,
     [theme.breakpoints.down("md")]: {
         marginLeft: `calc(${theme.spacing(8)} + 1px)`,
         width: `calc(100% - ${theme.spacing(8)})`,
@@ -189,7 +188,7 @@ function SideDrawer({ children, menus }) {
                     sx={{
                         borderColor: "#ffffff",
                         opacity: 0.25,
-                        margin: "0px -8px",
+                        margin: "0px",
                     }}
                 />
                 {drawerMenu}

@@ -121,6 +121,40 @@ import {
     ReferenceSaga,
 } from "./pages/Setup/Reference/store";
 
+//Customer Process
+import {
+    GetCustomersReducer,
+    BlockUnblockReducer,
+    CustomersSaga,
+} from "./pages/Customers/Search/store";
+
+//Transactions
+import {
+    GetTransactionsReducer,
+    GetTransactionByIdReducer,
+    GetTransactionsByCustomerReducer,
+    CreateTransactionsReducer,
+    UpdateTransactionsReducer,
+    TransactionsSaga,
+} from "./pages/Transactions/store";
+
+import {
+    GetCustomersByIdReducer,
+    CreateCustomersReducer,
+    UpdateCustomersReducer,
+    CustomersCreateSaga,
+} from "./pages/Customers/CreateCustomer/store";
+
+//Beneficiary
+import {
+    GetBeneficiaryByCustomerReducer,
+    GetBeneficiaryByIdReducer,
+    CreateBeneficiaryReducer,
+    UpdateBeneficiaryReducer,
+    BlockUnblockBeneficiaryReducer,
+    BeneficiarySaga,
+} from "./pages/Customers/Beneficiary/store";
+
 //Payment Process
 import {
     GetTransactionDetailsReducer,
@@ -286,6 +320,27 @@ export const privateReducer = {
     update_payment_rules_status: UpdatePaymentRulesStatusReducer,
     delete_payment_rules: DeletePaymentRulesReducer,
 
+    //Customer
+    get_customers: GetCustomersReducer,
+    block_unblock_customer: BlockUnblockReducer,
+    get_customer_byid: GetCustomersByIdReducer,
+    create_customers: CreateCustomersReducer,
+    update_customers: UpdateCustomersReducer,
+
+    //Transactions
+    get_transactions: GetTransactionsReducer,
+    get_transactions_byid: GetTransactionByIdReducer,
+    get_transactions_by_customer: GetTransactionsByCustomerReducer,
+    create_transactions: CreateTransactionsReducer,
+    update_transactions: UpdateTransactionsReducer,
+
+    //Beneficiary
+    get_beneficiary_by_customer: GetBeneficiaryByCustomerReducer,
+    get_beneficiary_byid: GetBeneficiaryByIdReducer,
+    create_beneficiary: CreateBeneficiaryReducer,
+    update_beneficiary: UpdateBeneficiaryReducer,
+    block_unblock_beneficiary: BlockUnblockBeneficiaryReducer,
+
     //Payment Process
     get_transaction_details: GetTransactionDetailsReducer,
     get_payment_pending: GetPaymentPendingReducer,
@@ -342,6 +397,10 @@ export const privateSaga = [
     ServiceChargeSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
+    CustomersSaga(),
+    TransactionsSaga(),
+    CustomersCreateSaga(),
+    BeneficiarySaga(),
     PaymentRulesSaga(),
     SanctionSaga(),
     PaymentProcessingSaga(),

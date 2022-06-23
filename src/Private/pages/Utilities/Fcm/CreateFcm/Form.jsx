@@ -73,6 +73,8 @@ const FCMForm = ({
         if (update && !!customer_id) {
             setName("Customer Id");
             dispatch(change("update_fcm_form", "type", "customer_id"));
+        } else if (update && !customer_id) {
+            dispatch(change("update_fcm_form", "type", "topic"));
         }
     }, []);
 
@@ -120,7 +122,6 @@ const FCMForm = ({
                                 label="Select Customer / Topic"
                                 type="text"
                                 small={12}
-                                value={id}
                                 onChange={handleId}
                                 component={SelectField}
                             >

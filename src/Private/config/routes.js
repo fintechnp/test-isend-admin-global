@@ -52,7 +52,20 @@ const ServiceChargeDetails = lazy(() =>
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
-const CustomerReports = lazy(() => import("../pages/Customers/Reports"));
+const CreateCustomer = lazy(() => import("../pages/Customers/CreateCustomer"));
+const CustomerDetails = lazy(() =>
+    import("../pages/Customers/CustomerDetails")
+);
+const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
+const AddBeneficiary = lazy(() =>
+    import("../pages/Customers/Beneficiary/AddUpdateBeneficiary")
+);
+const BeneficiaryDetails = lazy(() =>
+    import("../pages/Customers/Beneficiary/Details")
+);
+const CustomerTransactions = lazy(() =>
+    import("../pages/Customers/Transactions")
+);
 
 //Transactions
 const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
@@ -95,6 +108,15 @@ const CompliancePaymentRules = lazy(() =>
     import("../pages/Compliance/PaymentRules")
 );
 const ComplianceReport = lazy(() => import("../pages/Compliance/Report"));
+
+//Settings
+const Settings = lazy(() => import("../pages/Settings"));
+
+//Messages
+const Messages = lazy(() => import("../pages/Messages"));
+
+//My Account
+const MyAccount = lazy(() => import("../pages/MyAccount"));
 
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
@@ -156,10 +178,30 @@ const privateRoutes = [
 
     //Customers
     { path: "/customer/search", component: <CustomerSearch /> },
-    { path: "/customer/report", component: <CustomerReports /> },
+    { path: "/customer/create", component: <CreateCustomer /> },
+    { path: "/customer/update/:id", component: <CreateCustomer /> },
+    { path: "/customer/details/:id", component: <CustomerDetails /> },
+    { path: "/customer/all-beneficiary/:id", component: <AllBeneficiary /> },
+    {
+        path: "/customer/beneficiary/add/:id",
+        component: <AddBeneficiary />,
+    },
+    {
+        path: "/customer/beneficiary/update/:id/:bene_id",
+        component: <AddBeneficiary />,
+    },
+    {
+        path: "/customer/beneficiary/details/:id/:bene_id",
+        component: <BeneficiaryDetails />,
+    },
+    {
+        path: "/customer/all-transactions/:id",
+        component: <CustomerTransactions />,
+    },
 
     //Transactions
     { path: "/transaction/new", component: <CreateTransactions /> },
+    { path: "/transaction/update/:id", component: <CreateTransactions /> },
     { path: "/transaction/daily", component: <DailyTransactions /> },
     { path: "/transaction/search", component: <SearchTransactions /> },
 
@@ -197,6 +239,15 @@ const privateRoutes = [
         component: <CompliancePaymentRules />,
     },
     { path: "/compliance/report", component: <ComplianceReport /> },
+
+    //Settings
+    { path: "/settings", component: <Settings /> },
+
+    //Messages
+    { path: "/messages", component: <Messages /> },
+
+    //MyAccount
+    { path: "/account", component: <MyAccount /> },
 ];
 
 export default privateRoutes;

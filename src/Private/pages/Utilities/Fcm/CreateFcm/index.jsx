@@ -227,6 +227,9 @@ function CreateFcm({ update, update_data }) {
                     ) : (
                         <FCMForm
                             destroyOnUnmount={true}
+                            initialValues={{
+                                type: "topic",
+                            }}
                             update={update}
                             onSubmit={handleFCMCreate}
                             loading={add_loading}

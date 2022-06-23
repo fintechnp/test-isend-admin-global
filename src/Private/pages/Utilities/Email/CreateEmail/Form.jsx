@@ -56,7 +56,6 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const EmailForm = ({ handleSubmit, loading, handleClose }) => {
-
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
@@ -69,6 +68,9 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -83,6 +85,9 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
                                 validate={[
                                     Validator.emailValidator,
                                     Validator.minValue1,
@@ -97,6 +102,9 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
@@ -110,6 +118,9 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 label="Body"
                                 type="text"
                                 small={12}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
                                 component={TextField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -124,6 +135,9 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
                                 validate={Validator.maxLength100}
                             />
                         </FieldWrapper>
@@ -134,6 +148,9 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
                                 validate={Validator.maxLength100}
                             />
                         </FieldWrapper>

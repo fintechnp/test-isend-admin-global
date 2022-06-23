@@ -36,15 +36,12 @@ export default class Api {
                 return response;
             },
             function (error) {
+                console.log(error, "error");
                 if (error?.response?.status === 401) {
+                    console.log(error?.response?.status, "status");
                     store.dispatch({
                         type: "INVALID_TOKEN",
                     });
-                    Object.keys(Cookies.get()).forEach(function (cookie) {
-                        Cookies.remove(cookie);
-                    });
-                    localStorage.clear();
-                    window.location.reload();
                 }
                 return Promise.reject(error);
             }

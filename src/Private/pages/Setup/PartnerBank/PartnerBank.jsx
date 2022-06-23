@@ -152,7 +152,9 @@ const PartnerBank = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {ReferenceName(1, data?.value)}
+                            {data?.value
+                                ? ReferenceName(1, data?.value)
+                                : "N/A"}
                         </StyledText>
                     </Box>
                 ),

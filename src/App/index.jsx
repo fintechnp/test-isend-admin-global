@@ -6,20 +6,21 @@ import { ThemeProvider } from "@mui/material/styles";
 import { PersistGate } from "redux-persist/integration/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
-import darkScrollbar from "@mui/material/darkScrollbar";
 
 import MainRoutes from "./routes";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { injectStore } from "./services/api";
 import store, { persistor } from "./store";
 import AuthProvider from "./auth";
-import theme from "./theme/theme";
+import { ChangeTheme } from "./theme/theme";
 
 injectStore(store);
 
 const App = () => {
+    const [mode, setMode] = React.useState(true);
+
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={ChangeTheme(mode)}>
             <AuthProvider>
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
@@ -30,8 +31,8 @@ const App = () => {
                                     styles={{
                                         h1: { color: "grey" },
                                         "*::-webkit-scrollbar": {
-                                            width: "0.4em",
-                                            height: "0.4em",
+                                            width: "0.3em",
+                                            height: "0.3em",
                                             right: "12px",
                                         },
                                         "*::-webkit-scrollbar-track": {
@@ -39,13 +40,19 @@ const App = () => {
                                                 "inset 0 0 6px rgba(0,0,0,0.00)",
                                         },
                                         "*::-webkit-scrollbar-thumb": {
-                                            backgroundColor: `${theme.palette.border.light}`,
-                                            outline: `1px solid ${theme.palette.border.main}`,
-                                            borderRadius: "6px",
+                                            backgroundColor: `${
+                                                ChangeTheme(mode).palette.border
+                                                    .dark
+                                            }`,
+                                            outline: `1px solid ${
+                                                ChangeTheme(mode).palette.border
+                                                    .dark
+                                            }`,
+                                            borderRadius: "4px",
                                         },
                                     }}
                                 />
-                                <MainRoutes />
+                                <MainRoutes setMode={setMode} />
                                 <Toaster />
                             </BrowserRouter>
                         </ErrorBoundary>

@@ -12,8 +12,9 @@ const CardWapper = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
+    background: theme.palette.appbar.main,
     "&:hover": {
-        background: theme.palette.background.light,
+        background: theme.palette.background.main,
     },
     border: `1px solid ${theme.palette.border.light}`,
 }));

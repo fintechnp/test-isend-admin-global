@@ -101,9 +101,11 @@ const Email = () => {
                 accessor: "email_by",
                 Cell: (data) => (
                     <Box>
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
+                        <Tooltip title={data.value} arrow>
+                            <Text component="span">
+                                {data.value ? data.value : "N/A"}
+                            </Text>
+                        </Tooltip>
                     </Box>
                 ),
             },
@@ -112,16 +114,11 @@ const Email = () => {
                 accessor: "email_to",
                 Cell: (data) => (
                     <Box>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "14px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
+                        <Tooltip title={data.value} arrow>
+                            <Text component="span">
+                                {data.value ? data.value : "N/A"}
+                            </Text>
+                        </Tooltip>
                     </Box>
                 ),
             },

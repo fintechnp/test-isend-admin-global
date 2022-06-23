@@ -27,7 +27,7 @@ function Header({ title, buttonText, name, agent_id }) {
             <Typography sx={{ fontSize: "22px" }}>
                 {title} {name && `of ${name}`}
             </Typography>
-            {buttonText && (
+           {buttonText && (
                 <AddButton
                     size="small"
                     variant="outlined"
@@ -36,7 +36,7 @@ function Header({ title, buttonText, name, agent_id }) {
                 >
                     {buttonText}
                 </AddButton>
-            )}
+            )} 
         </HeaderWrapper>
     );
 }
