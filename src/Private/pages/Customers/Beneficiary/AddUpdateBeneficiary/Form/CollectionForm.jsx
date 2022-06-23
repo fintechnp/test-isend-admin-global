@@ -70,6 +70,8 @@ const CollectionForm = ({
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
+    const [payment_type, setPaymentType] = useState(null);
+    const [bank_name, setBankName] = useState(null);
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
         payout_country: "",

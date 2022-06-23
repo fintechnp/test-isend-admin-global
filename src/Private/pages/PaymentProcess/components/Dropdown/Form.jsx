@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
-import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import TextField from "../../../../../App/components/Fields/TextField";
@@ -58,7 +57,6 @@ const FilterForm = ({
     handleClose,
     handlePayoutPartner,
 }) => {
-    const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
     const [id, setId] = React.useState("transaction_id");

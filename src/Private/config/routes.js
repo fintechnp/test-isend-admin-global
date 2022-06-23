@@ -73,7 +73,6 @@ const DailyTransactions = lazy(() =>
     import("../pages/Transactions/DailyTransactions")
 );
 const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
-const TransactionDetails = lazy(() => import("../pages/Transactions/Details"));
 
 //Reports
 const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
@@ -202,9 +201,9 @@ const privateRoutes = [
 
     //Transactions
     { path: "/transaction/new", component: <CreateTransactions /> },
+    { path: "/transaction/update/:id", component: <CreateTransactions /> },
     { path: "/transaction/daily", component: <DailyTransactions /> },
     { path: "/transaction/search", component: <SearchTransactions /> },
-    { path: "/transaction/details/:id", component: <TransactionDetails /> },
 
     //Reports
     { path: "/report/country-wise-report", component: <ReportsCountrywise /> },

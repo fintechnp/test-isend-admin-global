@@ -13,8 +13,12 @@ import Header from "../components/Header";
 import actions from "../store/actions";
 import SearchForm from "../components/SearchForm";
 import NoResults from "../components/NoResults";
-import { Block } from "./../../../../App/components";
 import Loading from "./../../../../App/components/Loading";
+import {
+    CurrencyName,
+    FormatDate,
+    FormatNumber,
+} from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -49,12 +53,16 @@ const StyledMail = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    name: "",
+    transaction_id: 0,
+    pin_number: "",
     customer_id: 0,
-    id_number: "",
-    mobile_number: "",
-    email: "",
-    date_of_birth: "",
+    sending_agent_id: 0,
+    payout_agent_id: 0,
+    payout_country: "",
+    payment_type: "",
+    status: "",
+    from_date: "",
+    to_date: "",
     sort_by: "created_ts",
     order_by: "ASC",
 };
@@ -65,22 +73,22 @@ function Search() {
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: customersData, loading: l_loading } = useSelector(
-        (state) => state.get_customers
+    const { response: transactionsData, loading: l_loading } = useSelector(
+        (state) => state.get_transactions
     );
 
-    // useEffect(() => {
-    //     dispatch(reset("search_form_customer"));
-    //     dispatch({ type: "GET_CUSTOMERS_RESET" });
-    // }, [dispatch]);
+    useEffect(() => {
+        dispatch(reset("search_form_transaction"));
+        dispatch({ type: "GET_TRANSACTIONS_RESET" });
+    }, [dispatch]);
 
-    // useEffect(() => {
-    //     if (isMounted.current) {
-    //         dispatch(actions.get_customers(filterSchema));
-    //     } else {
-    //         isMounted.current = true;
-    //     }
-    // }, [dispatch, filterSchema]);
+    useEffect(() => {
+        if (isMounted.current) {
+            dispatch(actions.get_transactions(filterSchema));
+        } else {
+            isMounted.current = true;
+        }
+    }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
@@ -91,7 +99,7 @@ function Search() {
             },
             {
                 Header: "Name",
-                accessor: "first_name",
+                accessor: "customer_name",
                 maxWidth: 140,
                 Cell: (data) => (
                     <Box
@@ -101,10 +109,15 @@ function Search() {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            {data.value} {data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name}
+                        <StyledName component="p" sx={{ fontSize: "14px" }}>
+                            {data.value}
                         </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.beneficiary_name}
+                        </Typography>
                     </Box>
                 ),
             },
@@ -133,7 +146,7 @@ function Search() {
                             component="p"
                             sx={{ paddingLeft: "4px", fontSize: "13px" }}
                         >
-                            {data?.row?.original?.payout_agent}
+                            {data?.row?.original?.payout_agent_name}
                         </StyledName>
                     </Box>
                 ),
@@ -141,36 +154,10 @@ function Search() {
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
-                        <Typography>Type</Typography>
+                        <Typography>Currency</Typography>
                     </Box>
                 ),
-                accessor: "customer_type_data",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Country</Typography>
-                    </Box>
-                ),
-                accessor: "country_data",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Contact",
-                accessor: "mobile_number",
+                accessor: "collected_currency",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -179,22 +166,78 @@ function Search() {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {CurrencyName(data.value)}
                         </StyledName>
-                        <StyledMail
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.email}
-                        </StyledMail>
+                            {CurrencyName(data?.row?.original?.payout_currency)}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Date</Typography>
+                    </Box>
+                ),
+                accessor: "created_ts",
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {FormatDate(data.value)}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Rate</Typography>
+                    </Box>
+                ),
+                accessor: "payout_cost_rate",
+                maxWidth: 80,
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? FormatNumber(data.value) : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Amount</Typography>
+                    </Box>
+                ),
+                accessor: "transfer_amount",
+                maxWidth: 80,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? FormatNumber(data.value) : "N/A"}
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(
+                                      data?.row?.original?.payout_amount
+                                  )
+                                : "N/A"}
+                        </Typography>
                     </Box>
                 ),
             },
@@ -217,7 +260,7 @@ function Search() {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/transaction/details/${row.original.tid}`
+                                        `/transactions/details/${row.original.tid}`
                                     )
                                 }
                             >
@@ -249,14 +292,6 @@ function Search() {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Block
-                            destroyOnUnmount
-                            initialValues={{ id: row.original.tid }}
-                            // onSubmit={handleBlock}
-                            // loading={u_loading}
-                            validatation={true}
-                            tooltext="Block Customer"
-                        />
                     </Box>
                 ),
             },
@@ -267,12 +302,16 @@ function Search() {
     const handleSearch = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            name: data?.name,
+            transaction_id: data?.transaction_id,
             customer_id: data?.customer_id,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
+            pin_number: data?.pin_number,
+            sending_agent_id: data?.sending_agent_id,
+            payout_agent_id: data?.payout_agent_id,
+            payment_type: data?.payment_type,
+            payout_country: data?.payout_country,
+            status: data?.status,
+            from_date: data?.from_date,
+            to_date: data?.to_date,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -280,8 +319,8 @@ function Search() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
-        dispatch(reset("search_form_customer"));
-        dispatch({ type: "GET_CUSTOMERS_RESET" });
+        dispatch(reset("search_form_transaction"));
+        dispatch({ type: "GET_TRANSACTIONS_RESET" });
     };
 
     const handleChangePage = (e, newPage) => {
@@ -305,11 +344,7 @@ function Search() {
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
-                <SearchForm
-                    onSubmit={handleSearch}
-                    handleReset={handleReset}
-                    initialValues={{ customer_id: "", id_number: "" }}
-                />
+                <SearchForm onSubmit={handleSearch} handleReset={handleReset} />
             </Grid>
             {l_loading && (
                 <Grid item xs={12}>
@@ -317,24 +352,26 @@ function Search() {
                 </Grid>
             )}
             {!l_loading &&
-                customersData?.data &&
-                customersData?.data?.length === 0 && (
+                transactionsData?.data &&
+                transactionsData?.data?.length === 0 && (
                     <Grid item xs={12}>
                         <NoResults text="No Customer Found" />
                     </Grid>
                 )}
-            {!l_loading && customersData?.data?.length > 0 && (
+            {!l_loading && transactionsData?.data?.length > 0 && (
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Header title="Transaction List" />
                         <Table
                             columns={columns}
-                            data={customersData?.data || []}
+                            data={transactionsData?.data || []}
                             loading={l_loading}
                             rowsPerPage={8}
                             renderPagination={() => (
                                 <TablePagination
-                                    paginationData={customersData?.pagination}
+                                    paginationData={
+                                        transactionsData?.pagination
+                                    }
                                     handleChangePage={handleChangePage}
                                     handleChangeRowsPerPage={
                                         handleChangeRowsPerPage

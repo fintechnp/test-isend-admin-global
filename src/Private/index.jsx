@@ -128,6 +128,16 @@ import {
     CustomersSaga,
 } from "./pages/Customers/Search/store";
 
+//Transactions
+import {
+    GetTransactionsReducer,
+    GetTransactionByIdReducer,
+    GetTransactionsByCustomerReducer,
+    CreateTransactionsReducer,
+    UpdateTransactionsReducer,
+    TransactionsSaga,
+} from "./pages/Transactions/store";
+
 import {
     GetCustomersByIdReducer,
     CreateCustomersReducer,
@@ -317,6 +327,13 @@ export const privateReducer = {
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
 
+    //Transactions
+    get_transactions: GetTransactionsReducer,
+    get_transactions_byid: GetTransactionByIdReducer,
+    get_transactions_by_customer: GetTransactionsByCustomerReducer,
+    create_transactions: CreateTransactionsReducer,
+    update_transactions: UpdateTransactionsReducer,
+
     //Beneficiary
     get_beneficiary_by_customer: GetBeneficiaryByCustomerReducer,
     get_beneficiary_byid: GetBeneficiaryByIdReducer,
@@ -381,6 +398,7 @@ export const privateSaga = [
     ExchangeRateSaga(),
     ReferenceSaga(),
     CustomersSaga(),
+    TransactionsSaga(),
     CustomersCreateSaga(),
     BeneficiarySaga(),
     PaymentRulesSaga(),

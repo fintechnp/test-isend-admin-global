@@ -120,11 +120,17 @@ const AmlSuspicious = () => {
                             component="p"
                             sx={{
                                 paddingLeft: "4px",
-                                fontSize: "14px",
+                                fontSize: "13px",
                                 opacity: 0.6,
                             }}
                         >
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                        >
+                            {data?.row?.original?.payout_agent_name}
                         </StyledName>
                     </Box>
                 ),
@@ -159,21 +165,6 @@ const AmlSuspicious = () => {
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
-                        <Typography>Date</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
                         <Typography>Rate</Typography>
                     </Box>
                 ),
@@ -182,7 +173,6 @@ const AmlSuspicious = () => {
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
                             {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -217,6 +207,21 @@ const AmlSuspicious = () => {
                                   )
                                 : "N/A"}
                         </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Date</Typography>
+                    </Box>
+                ),
+                accessor: "created_ts",
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {FormatDate(data.value)}
+                        </StyledName>
                     </Box>
                 ),
             },

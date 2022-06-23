@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import actions from "./../store/actions";
@@ -42,16 +43,8 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    search: "",
-    transaction_id: 0,
-    pin_number: "",
-    customer_id: 0,
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    payout_country: "",
-    payment_type: "",
-    from_date: "",
-    to_date: "",
+    from_date: new Date().toISOString().slice(0, 10),
+    to_date: new Date().toISOString().slice(0, 10),
     sort_by: "created_ts",
     order_by: "ASC",
 };
@@ -61,16 +54,13 @@ const DailyTransactions = () => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: amlSuspicious, loading: l_loading } = useSelector(
-        (state) => state.get_aml_suspicious
-    );
-    const { success: u_success, loading: u_loading } = useSelector(
-        (state) => state.update_aml_suspicious
+    const { response: dailyTransactions, loading: l_loading } = useSelector(
+        (state) => state.get_transactions
     );
 
-    // useEffect(() => {
-    //     dispatch(actions.get_aml_suspicious(filterSchema));
-    // }, [dispatch, filterSchema, u_success]);
+    useEffect(() => {
+        dispatch(actions.get_transactions(filterSchema));
+    }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
@@ -118,11 +108,17 @@ const DailyTransactions = () => {
                             component="p"
                             sx={{
                                 paddingLeft: "4px",
-                                fontSize: "14px",
+                                fontSize: "13px",
                                 opacity: 0.6,
                             }}
                         >
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                        >
+                            {data?.row?.original?.payout_agent_name}
                         </StyledName>
                     </Box>
                 ),
@@ -180,7 +176,6 @@ const DailyTransactions = () => {
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
                             {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -233,7 +228,7 @@ const DailyTransactions = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <Tooltip title="Transactions Details" arrow>
+                        <Tooltip title="Transaction Details" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
@@ -242,6 +237,24 @@ const DailyTransactions = () => {
                                 }
                             >
                                 <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Transaction" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/transaction/update/${row.original.tid}`
+                                    )
+                                }
+                            >
+                                <EditOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
                                         "&:hover": {
@@ -333,12 +346,12 @@ const DailyTransactions = () => {
             />
             <Table
                 columns={columns}
-                data={amlSuspicious?.data || []}
+                data={dailyTransactions?.data || []}
                 loading={l_loading}
                 rowsPerPage={8}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={amlSuspicious?.pagination}
+                        paginationData={dailyTransactions?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />

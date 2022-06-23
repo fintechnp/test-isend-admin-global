@@ -8,6 +8,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
 import TextField from "../../../../../App/components/Fields/TextField";
+import SelectField from "../../../../../App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -81,7 +82,24 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function SearchForm({ handleSubmit, handleReset }) {
+function SearchForm({
+    handleSubmit,
+    handleReset,
+    partner_sending,
+    partner_payout,
+    loading,
+}) {
+    const country = JSON.parse(localStorage.getItem("country"));
+    const reference = JSON.parse(localStorage.getItem("reference"));
+    const [minDate, setMinDate] = React.useState(null);
+    const [maxDate, setMaxDate] = React.useState(null);
+
+    const handleResetButton = (e) => {
+        setMinDate();
+        setMaxDate();
+        handleReset();
+    };
+
     return (
         <Container container>
             <Grid item xs={12}>
@@ -99,8 +117,17 @@ function SearchForm({ handleSubmit, handleReset }) {
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="name"
-                                placeholder="Customer Name"
+                                name="transaction_id"
+                                placeholder="Transaction Id"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="pin_number"
+                                placeholder="Pin Number"
                                 type="text"
                                 small={12}
                                 component={TextField}
@@ -117,38 +144,159 @@ function SearchForm({ handleSubmit, handleReset }) {
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="id_number"
-                                placeholder="Identity Number"
+                                name="payout_country"
+                                placeholder="Payout Country"
                                 type="text"
                                 small={12}
-                                component={TextField}
-                            />
+                                component={SelectField}
+                            >
+                                <option value="" disabled>
+                                    Select Payout Country
+                                </option>
+                                {country &&
+                                    country.map((data) => (
+                                        <option
+                                            value={data.iso3}
+                                            key={data.tid}
+                                        >
+                                            {data.country}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="mobile_number"
-                                placeholder="Mobile Number"
-                                type="text"
+                                name="send_agent_id"
+                                placeholder="Sending Agent"
+                                type="number"
                                 small={12}
-                                component={TextField}
-                            />
+                                component={SelectField}
+                            >
+                                <option value="" disabled>
+                                    Select Sending Agent
+                                </option>
+                                {partner_sending &&
+                                    partner_sending.map((data, index) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="email"
-                                placeholder="Email"
-                                type="text"
+                                name="payout_agent_id"
+                                placeholder="Payout Agent"
+                                type="number"
                                 small={12}
-                                component={TextField}
-                            />
+                                component={SelectField}
+                                disabled={
+                                    partner_payout &&
+                                    (partner_payout.length > 0 ? false : true)
+                                }
+                            >
+                                <option value="" disabled>
+                                    Select Payout Agent
+                                </option>
+                                {partner_payout &&
+                                    partner_payout.map((data) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="date_of_birth"
-                                placeholder="Date of Birth"
+                                name="payment_type"
+                                placeholder="Payment Type"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                            >
+                                <option disabled value="">
+                                    Select Payment Type
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 1
+                                        )[0]
+                                        .reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="status"
+                                placeholder="Status"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                            >
+                                <option disabled value="">
+                                    Select Status
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 66
+                                        )[0]
+                                        .reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="from_date"
+                                placeholder="Date From"
                                 type="date"
                                 small={12}
                                 component={TextField}
+                                onChange={(e) => setMinDate(e.target.value)}
+                                inputProps={{
+                                    max: maxDate
+                                        ? new Date(maxDate)
+                                              .toISOString()
+                                              .slice(0, 10)
+                                        : new Date().toISOString().slice(0, 10),
+                                }}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="to_date"
+                                placeholder="Date To"
+                                type="date"
+                                small={12}
+                                component={TextField}
+                                onChange={(e) => setMaxDate(e.target.value)}
+                                inputProps={{
+                                    min: new Date(minDate)
+                                        .toISOString()
+                                        .slice(0, 10),
+                                    max: new Date().toISOString().slice(0, 10),
+                                }}
                             />
                         </FieldWrapper>
                         <Grid item xs={12}>
@@ -163,13 +311,14 @@ function SearchForm({ handleSubmit, handleReset }) {
                                     <ResetButton
                                         size="small"
                                         variant="outlined"
-                                        onClick={handleReset}
+                                        onClick={handleResetButton}
                                     >
                                         Reset
                                     </ResetButton>
                                 </Grid>
                                 <Grid item>
                                     <SearchButton
+                                        loading={loading}
                                         size="small"
                                         variant="outlined"
                                         type="submit"
@@ -186,4 +335,4 @@ function SearchForm({ handleSubmit, handleReset }) {
     );
 }
 
-export default reduxForm({ form: "search_form_customer" })(SearchForm);
+export default reduxForm({ form: "search_form_transaction" })(SearchForm);

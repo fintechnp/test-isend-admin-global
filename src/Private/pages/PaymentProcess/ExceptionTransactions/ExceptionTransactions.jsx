@@ -120,11 +120,17 @@ const ExceptionTransactions = () => {
                             component="p"
                             sx={{
                                 paddingLeft: "4px",
-                                fontSize: "14px",
+                                fontSize: "13px",
                                 opacity: 0.6,
                             }}
                         >
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                        >
+                            {data?.row?.original?.payout_agent_name}
                         </StyledName>
                     </Box>
                 ),

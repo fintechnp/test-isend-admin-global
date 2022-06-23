@@ -22,7 +22,51 @@ export const getTransactions = takeEvery(
     }
 );
 
-export const createTransactions = takeEvery(
+export const getTransactionById = takeEvery(
+    actions.GET_TRANSACTIONS_BYID,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `transaction//${action.id}`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_TRANSACTIONS_BYID_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_TRANSACTIONS_BYID_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
+export const getTransactionsByCustomer = takeEvery(
+    actions.GET_TRANSACTIONS_BY_CUSTOMER,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `${action.id}/transaction`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_TRANSACTIONS_BY_CUSTOMER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_TRANSACTIONS_BY_CUSTOMER_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
+export const createTransaction = takeEvery(
     actions.CREATE_TRANSACTIONS,
     function* (action) {
         try {
@@ -40,7 +84,7 @@ export const createTransactions = takeEvery(
     }
 );
 
-export const updateTransactions = takeEvery(
+export const updateTransaction = takeEvery(
     actions.UPDATE_TRANSACTIONS,
     function* (action) {
         try {
@@ -63,5 +107,11 @@ export const updateTransactions = takeEvery(
 );
 
 export default function* saga() {
-    yield all([getTransactions, createTransactions, updateTransactions]);
+    yield all([
+        getTransactions,
+        getTransactionById,
+        getTransactionsByCustomer,
+        createTransaction,
+        updateTransaction,
+    ]);
 }
