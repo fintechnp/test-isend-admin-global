@@ -48,6 +48,7 @@ const StyledMail = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
+    search: "",
     sort_by: "created_ts",
     order_by: "ASC",
 };
@@ -65,6 +66,13 @@ function Beneficiary() {
     const { success: b_success, loading: b_loading } = useSelector(
         (state) => state.block_unblock_beneficiary
     );
+
+    useEffect(() => {
+        dispatch({ type: "CREATE_BENEFICIARY_RESET" });
+        dispatch({ type: "UPDATE_BENEFICIARY_RESET" });
+        dispatch({ type: "GET_BENEFICIARY_BYID_RESET" });
+        dispatch({ type: "BLOCK_UNBLOCK_BENEFICIARY_RESET" });
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(actions.get_beneficiary_by_customer(id, filterSchema));
@@ -246,7 +254,7 @@ function Beneficiary() {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/beneficiary/details/${row.original.customer_id}/${row.original.tid}`
+                                        `/customer/beneficiary/details/${row?.original?.customer_id}/${row?.original?.tid}`
                                     )
                                 }
                             >
@@ -264,7 +272,7 @@ function Beneficiary() {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/beneficiary/update/${row.original.customer_id}/${row.original.tid}`
+                                        `/customer/beneficiary/update/${row?.original.customer_id}/${row?.original?.tid}`
                                     )
                                 }
                             >

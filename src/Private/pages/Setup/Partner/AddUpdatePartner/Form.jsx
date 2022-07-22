@@ -222,7 +222,7 @@ function PartnerForm({ update_data, loading }) {
                             {activeStep === 0 && (
                                 <Basic
                                     destroyOnUnmount={false}
-                                    // enableReinitialize={true}
+                                    enableReinitialize={true}
                                     shouldError={() => true}
                                     form={`update_partner_form`}
                                     initialValues={

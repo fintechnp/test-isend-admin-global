@@ -110,8 +110,8 @@ export default function* saga() {
     yield all([
         getTransactions,
         getTransactionById,
-        getTransactionsByCustomer,
         createTransaction,
         updateTransaction,
+        getTransactionsByCustomer,
     ]);
 }

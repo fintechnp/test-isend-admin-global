@@ -113,6 +113,30 @@ const RenderField = ({ label, prevalue, value }) => {
     );
 };
 
+const RenderMobileField = ({ label, prevalue, value }) => {
+    return (
+        <Box
+            sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+            }}
+        >
+            <Box sx={{ width: "40%" }}>
+                <Label>{label}:</Label>
+            </Box>
+            <Box sx={{ width: "60%" }}>
+                {prevalue && (
+                    <Value component="span" sx={{ paddingRight: "6px" }}>
+                        +{prevalue}
+                    </Value>
+                )}
+                <Value component="span">{value ? value : "N/A"}</Value>
+            </Box>
+        </Box>
+    );
+};
+
 const RenderTopField = ({ label, value }) => {
     return (
         <Box
@@ -139,13 +163,11 @@ function BeneficiaryDetails() {
     const dispatch = useDispatch();
     const { bene_id } = useParams();
 
-    const { response: beneficiaryData, loading: l_loading } = useSelector(
-        (state) => state.get_beneficiary_byid
-    );
-
-    useEffect(() => {
-        dispatch({ type: "GET_BENEFICIARY_BYID_RESET" });
-    }, []);
+    const {
+        response: beneficiaryData,
+        loading: l_loading,
+        success,
+    } = useSelector((state) => state.get_beneficiary_byid);
 
     useEffect(() => {
         if (bene_id) {
@@ -153,7 +175,7 @@ function BeneficiaryDetails() {
         }
     }, [dispatch, bene_id]);
 
-    if (l_loading) {
+    if (l_loading && !success) {
         return (
             <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
                 <Fetching>Fetching...</Fetching>
@@ -232,7 +254,7 @@ function BeneficiaryDetails() {
                 />
             </Grid>{" "}
             <Grid item xs={12} sm={6}>
-                <RenderField
+                <RenderMobileField
                     label="Mobile Number"
                     value={beneficiaryData?.data?.mobile_number}
                     prevalue={beneficiaryData?.data?.phone_country_code}

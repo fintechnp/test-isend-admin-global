@@ -134,6 +134,7 @@ const ProfileName = styled(Typography)(({ theme }) => ({
     textAlign: "left",
     fontSize: "16px",
     color: theme.palette.text.dark,
+    textTransform: "capitalize",
 }));
 
 const RoleName = styled(Typography)(({ theme }) => ({
@@ -252,6 +253,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         height: "72px",
                         width: "72px",
                         borderRadius: "6px",
+                        textTransform: "capitalize",
                     }}
                     variant="rounded"
                     {...stringAvatar(currentUser?.name || "Admin")}
@@ -341,6 +343,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                                 width: "36px",
                                 borderRadius: "6px",
                                 fontSize: "14px",
+                                textTransform: "capitalize",
                             }}
                             {...stringAvatar(currentUser?.name || "Admin")}
                         />

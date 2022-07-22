@@ -10,9 +10,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import Basic from "./Basic";
-import AddressForm from "./AddressForm";
-import IdentityForm from "./IdentityForm";
+import CustomerForm from "./CustomerForm";
+import BeneficiaryForm from "./BeneficiaryForm";
+import SendAmountForm from "./SendAmountForm";
 import actions from "./../../store/actions";
 
 const CompletedWrapper = styled(Box)(({ theme }) => ({
@@ -44,7 +44,11 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-const steps = ["Basic Information", "Address Details", "Identity Information"];
+const steps = [
+    "Customer Information",
+    "Beneficiary Information",
+    "Sending Amount",
+];
 
 function TransactionForm({ update_data, loading }) {
     const { id } = useParams();
@@ -63,6 +67,15 @@ function TransactionForm({ update_data, loading }) {
         loading: update_loading,
         error: update_error,
     } = useSelector((state) => state.update_partner);
+    const { response: customer_list, loading: customer_loading } = useSelector(
+        (state) => state.get_customers
+    );
+    const { response: sending_partner, loading: sending_loading } = useSelector(
+        (state) => state.get_sending_partner
+    );
+    const { response: payout_partner, loading: payout_loading } = useSelector(
+        (state) => state.get_payout_partner
+    );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -124,15 +137,15 @@ function TransactionForm({ update_data, loading }) {
         }
     };
 
-    const handleBasicForm = (data) => {
+    const handleCustomerForm = (data) => {
         handleComplete();
     };
 
-    const handleContactForm = () => {
+    const handleBeneficiaryForm = () => {
         handleComplete();
     };
 
-    const handleBusinessForm = (data) => {
+    const handleAmountForm = (data) => {
         setData(data);
         handleComplete();
     };
@@ -185,7 +198,7 @@ function TransactionForm({ update_data, loading }) {
                             }}
                         >
                             All steps completed - Please submit to create
-                            Partner.
+                            Customer.
                         </Typography>
                         <CheckCircleOutlineIcon
                             sx={{ fontSize: "64px", color: "success.main" }}
@@ -216,11 +229,11 @@ function TransactionForm({ update_data, loading }) {
                     {id ? (
                         <Box>
                             {activeStep === 0 && (
-                                <Basic
+                                <CustomerForm
                                     destroyOnUnmount={false}
                                     // enableReinitialize={true}
                                     shouldError={() => true}
-                                    form={`update_customer_form`}
+                                    form={`update_transaction_form`}
                                     initialValues={
                                         memoizedData && {
                                             name: memoizedData?.name,
@@ -269,73 +282,79 @@ function TransactionForm({ update_data, loading }) {
                                         }
                                     }
                                     steps={steps}
-                                    buttonText="Update"
+                                    buttonText="Next"
+                                    customer_list={customer_list?.data}
+                                    sending_partner={sending_partner?.data}
+                                    payout_partner={payout_partner?.data}
                                     activeStep={activeStep}
                                     handleBack={handleBack}
-                                    onSubmit={handleBasicForm}
+                                    onSubmit={handleCustomerForm}
                                 />
                             )}
                             {activeStep === 1 && (
-                                <AddressForm
+                                <BeneficiaryForm
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
-                                    form={`update_customer_form`}
+                                    form={`update_transaction_form`}
                                     steps={steps}
                                     buttonText="Update"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
-                                    onSubmit={handleContactForm}
+                                    onSubmit={handleBeneficiaryForm}
                                 />
                             )}
                             {activeStep === 2 && (
-                                <IdentityForm
+                                <SendAmountForm
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
-                                    form={`update_customer_form`}
+                                    form={`update_transaction_form`}
                                     steps={steps}
                                     buttonText="Update All"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
-                                    onSubmit={handleBusinessForm}
+                                    onSubmit={handleAmountForm}
                                 />
                             )}
                         </Box>
                     ) : (
                         <Box>
                             {activeStep === 0 && (
-                                <Basic
+                                <CustomerForm
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
-                                    form={`add_customer_form`}
+                                    form={`create_transaction_form`}
                                     steps={steps}
                                     buttonText="Next"
+                                    customer_list={customer_list?.data}
+                                    sending_partner={sending_partner?.data}
+                                    payout_partner={payout_partner?.data}
                                     activeStep={activeStep}
                                     handleBack={handleBack}
-                                    onSubmit={handleBasicForm}
+                                    onSubmit={handleCustomerForm}
                                 />
                             )}
                             {activeStep === 1 && (
-                                <AddressForm
+                                <BeneficiaryForm
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
-                                    form={`add_customer_form`}
+                                    form={`create_transaction_form`}
                                     steps={steps}
                                     buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
-                                    onSubmit={handleContactForm}
+                                    onSubmit={handleBeneficiaryForm}
                                 />
                             )}
                             {activeStep === 2 && (
-                                <IdentityForm
+                                <SendAmountForm
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
-                                    form={`add_customer_form`}
+                                    form={`create_transaction_form`}
                                     steps={steps}
                                     buttonText="Finish"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
-                                    onSubmit={handleBusinessForm}
+                                    onSubmit={handleAmountForm}
                                 />
                             )}
                         </Box>

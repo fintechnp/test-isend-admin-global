@@ -46,10 +46,11 @@ const Fetching = styled(Typography)(({ theme }) => ({
 
 const steps = ["Basic Information", "Address Details", "Identity Information"];
 
-function PartnerForm({ update_data, loading }) {
+function CustomerForm({ update_data, loading }) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [code, setCode] = React.useState(null);
     const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
@@ -57,14 +58,38 @@ function PartnerForm({ update_data, loading }) {
         success: add_success,
         loading: add_loading,
         error: add_error,
-    } = useSelector((state) => state.add_partner);
+    } = useSelector((state) => state.create_customers);
     const {
         success: update_success,
         loading: update_loading,
         error: update_error,
-    } = useSelector((state) => state.update_partner);
+    } = useSelector((state) => state.update_customers);
+
+    const { response: partner_sending, loading: p_loading } = useSelector(
+        (state) => state.get_sending_partner
+    );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
+
+    React.useEffect(() => {
+        if (id) {
+            setCode(memoizedData?.phone_country_code);
+        }
+        if (id && memoizedData?.country) {
+            setCode(memoizedData?.phone_country_code);
+            dispatch({
+                type: "GET_SENDING_PARTNER",
+                query: {
+                    page_number: 1,
+                    page_size: 100,
+                    agent_type: "SEND",
+                    country: memoizedData?.country,
+                    sort_by: "name",
+                    order_by: "ASC",
+                },
+            });
+        }
+    }, [dispatch, id, memoizedData]);
 
     React.useEffect(() => {
         if (update_error || add_error) {
@@ -118,9 +143,9 @@ function PartnerForm({ update_data, loading }) {
 
     const handleSubmitForm = (id) => {
         if (id) {
-            dispatch(actions.update_partner(id, data));
+            dispatch(actions.update_customers(id, data));
         } else {
-            dispatch(actions.add_partner(data));
+            dispatch(actions.create_customers(data));
         }
     };
 
@@ -218,61 +243,79 @@ function PartnerForm({ update_data, loading }) {
                             {activeStep === 0 && (
                                 <Basic
                                     destroyOnUnmount={false}
-                                    // enableReinitialize={true}
+                                    enableReinitialize={true}
                                     shouldError={() => true}
                                     form={`update_customer_form`}
                                     initialValues={
                                         memoizedData && {
-                                            name: memoizedData?.name,
-                                            short_code:
-                                                memoizedData?.short_code,
-                                            agent_type:
-                                                memoizedData?.agent_type,
-                                            phone_number:
-                                                memoizedData?.phone_number,
-                                            email: memoizedData?.email,
+                                            customer_type:
+                                                memoizedData?.customer_type,
+                                            title: memoizedData?.title,
+                                            first_name:
+                                                memoizedData?.first_name,
+                                            middle_name:
+                                                memoizedData?.middle_name,
+                                            last_name: memoizedData?.last_name,
+                                            gender: memoizedData?.gender,
+                                            phone_country_code:
+                                                memoizedData?.phone_country_code,
                                             country: memoizedData?.country,
+                                            register_agent_id:
+                                                memoizedData?.register_agent_id,
                                             postcode: memoizedData?.postcode,
                                             unit: memoizedData?.unit,
                                             street: memoizedData?.street,
                                             city: memoizedData?.city,
                                             state: memoizedData?.state,
                                             address: memoizedData?.address,
-                                            website: memoizedData?.website,
-                                            contact_person_full_name:
-                                                memoizedData?.contact_person_full_name,
-                                            contact_person_post:
-                                                memoizedData?.contact_person_post,
-                                            contact_person_mobile:
-                                                memoizedData?.contact_person_mobile,
-                                            contact_person_email:
-                                                memoizedData?.contact_person_email,
-                                            business_license_number:
-                                                memoizedData?.business_license_number,
-                                            balance: memoizedData?.balance,
-                                            credit_limit:
-                                                memoizedData?.credit_limit,
-                                            transaction_currency:
-                                                memoizedData?.transaction_currency,
-                                            settlement_currency:
-                                                memoizedData?.settlement_currency,
-                                            tax_type: memoizedData?.tax_type,
-                                            time_zone: memoizedData?.time_zone,
-                                            transaction_limit:
-                                                memoizedData?.transaction_limit,
-                                            commission_currency:
-                                                memoizedData?.commission_currency,
-                                            bank_charge_currency:
-                                                memoizedData?.bank_charge_currency,
-                                            is_prefunding:
-                                                memoizedData?.is_prefunding,
+                                            mobile_number:
+                                                memoizedData?.mobile_number,
+                                            id_type: memoizedData?.id_type,
+                                            id_number: memoizedData?.id_number,
+                                            id_issue_date:
+                                                memoizedData?.id_issue_date &&
+                                                new Date(
+                                                    memoizedData?.id_issue_date
+                                                )
+                                                    .toISOString()
+                                                    .slice(0, 10),
+                                            id_expiry_date:
+                                                memoizedData?.id_expiry_date &&
+                                                new Date(
+                                                    memoizedData?.id_expiry_date
+                                                )
+                                                    .toISOString()
+                                                    .slice(0, 10),
+                                            id_issued_country:
+                                                memoizedData?.id_issued_country,
+                                            date_of_birth:
+                                                memoizedData?.date_of_birth &&
+                                                new Date(
+                                                    memoizedData?.date_of_birth
+                                                )
+                                                    .toISOString()
+                                                    .slice(0, 10),
+                                            birth_country:
+                                                memoizedData?.birth_country,
+                                            citizenship_country:
+                                                memoizedData?.citizenship_country,
+                                            occupation:
+                                                memoizedData?.occupation,
+                                            source_of_income:
+                                                memoizedData?.source_of_income,
+                                            language: memoizedData?.language,
+                                            is_active: memoizedData?.is_active,
                                         }
                                     }
                                     steps={steps}
-                                    buttonText="Update"
+                                    hasPartner={code}
+                                    setCode={setCode}
+                                    buttonText="Next"
+                                    loading={p_loading}
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleBasicForm}
+                                    partner_sending={partner_sending?.data}
                                 />
                             )}
                             {activeStep === 1 && (
@@ -281,7 +324,9 @@ function PartnerForm({ update_data, loading }) {
                                     shouldError={() => true}
                                     form={`update_customer_form`}
                                     steps={steps}
-                                    buttonText="Update"
+                                    code={code}
+                                    id={id}
+                                    buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleContactForm}
@@ -293,7 +338,7 @@ function PartnerForm({ update_data, loading }) {
                                     shouldError={() => true}
                                     form={`update_customer_form`}
                                     steps={steps}
-                                    buttonText="Update All"
+                                    buttonText="Update"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleBusinessForm}
@@ -307,11 +352,18 @@ function PartnerForm({ update_data, loading }) {
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
                                     form={`add_customer_form`}
+                                    initialValues={{
+                                        language: "en",
+                                    }}
                                     steps={steps}
                                     buttonText="Next"
+                                    hasPartner={code}
+                                    setCode={setCode}
+                                    loading={p_loading}
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleBasicForm}
+                                    partner_sending={partner_sending?.data}
                                 />
                             )}
                             {activeStep === 1 && (
@@ -319,6 +371,7 @@ function PartnerForm({ update_data, loading }) {
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
                                     form={`add_customer_form`}
+                                    code={code}
                                     steps={steps}
                                     buttonText="Next"
                                     activeStep={activeStep}
@@ -346,4 +399,4 @@ function PartnerForm({ update_data, loading }) {
     );
 }
 
-export default PartnerForm;
+export default CustomerForm;

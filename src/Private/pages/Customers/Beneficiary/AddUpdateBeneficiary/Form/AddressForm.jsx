@@ -60,7 +60,7 @@ const AddressForm = ({
     steps,
     buttonText,
 }) => {
-    const country = JSON.parse(localStorage.getItem("country"));
+    const reference = JSON.parse(localStorage.getItem("reference"));
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -126,8 +126,27 @@ const AddressForm = ({
                                 label="Relation"
                                 type="text"
                                 small={12}
-                                component={TextField}
-                            />
+                                component={SelectField}
+                                validate={Validator.emptyValidator}
+                            >
+                                <option value="" disabled>
+                                    Select Relation
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 18
+                                        )[0]
+                                        ?.reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -136,35 +155,53 @@ const AddressForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={Validator.emptyValidator}
                             >
                                 <option value="" disabled>
-                                    Select Source Of Income
+                                    Select Source of Income
                                 </option>
-                                <option value="i"> Salary </option>
-                                <option value="g"> Business Income </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 6
+                                        )[0]
+                                        ?.reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="reason_for_remittance	"
+                                name="reason_for_remittance"
                                 label="Reason For Remittance"
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={Validator.emptyValidator}
                             >
                                 <option value="" disabled>
-                                    Select Reason For Remittance
+                                    Select Reason for Remittance
                                 </option>
-                                <option value="i"> Personal Expense </option>
-                                <option value="g"> Loan </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 7
+                                        )[0]
+                                        ?.reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
                             </Field>
                         </FieldWrapper>
                     </FormWrapper>

@@ -14,7 +14,7 @@ import Table, {
     TablePagination,
     TableSwitch,
 } from "./../../../../App/components/Table";
-import { CountryName } from "./../../../../App/helpers";
+import { CountryName, FormatNumber } from "./../../../../App/helpers";
 import { Delete } from "./../../../../App/components";
 
 const PaymentContainer = styled("div")(({ theme }) => ({
@@ -38,19 +38,24 @@ const SwitchWrapper = styled(Box)(({ theme }) => ({
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
-    color: "border.main",
 }));
 
-const StyledText = styled(Typography)(({ theme }) => ({
+const StyledAction = styled(Typography)(({ theme, value }) => ({
     opacity: 0.8,
+    paddingTop: "3px",
+    paddingBottom: "3px",
     fontSize: "14px",
-    color: "border.main",
+    borderRadius: "6px",
+    color: theme.palette.primary.contrastText,
+    background: stringToColor(value),
+    "&: hover": {
+        background: stringToColor(value),
+    },
 }));
 
 const initialState = {
@@ -60,6 +65,24 @@ const initialState = {
     sort_by: "rule_name",
     order_by: "ASC",
 };
+
+function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 9) - hash);
+    }
+    let color = "#";
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}
 
 const PaymentRules = () => {
     const dispatch = useDispatch();
@@ -109,7 +132,7 @@ const PaymentRules = () => {
                         </StyledName>
                         <Typography
                             component="span"
-                            sx={{ fontSize: "10px", opacity: 0.8 }}
+                            sx={{ fontSize: "10px", opacity: 0.7 }}
                         >
                             {CountryName(data?.row?.original?.send_country)} to{" "}
                             {CountryName(data?.row?.original?.payout_country)}
@@ -131,17 +154,17 @@ const PaymentRules = () => {
                     >
                         <StyledName
                             component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
+                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
                         >
                             {data.value}
                         </StyledName>
                         <StyledName
                             component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                            sx={{
+                                paddingLeft: "4px",
+                                fontSize: "13px",
+                                opacity: 0.6,
+                            }}
                         >
                             {data?.row?.original?.payout_agent}
                         </StyledName>
@@ -150,30 +173,30 @@ const PaymentRules = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="right" sx={{}}>
+                    <Box textAlign="right">
                         <Typography>Amount</Typography>
                     </Box>
                 ),
                 accessor: "amount",
                 maxWidth: 90,
                 Cell: (data) => (
-                    <Box textAlign="right" sx={{}}>
+                    <Box textAlign="right">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {FormatNumber(data.value)}
                         </StyledName>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="center" sx={{}}>
+                    <Box textAlign="center">
                         <Typography>Transactions</Typography>
                     </Box>
                 ),
                 accessor: "no_of_transactions",
                 maxWidth: 90,
                 Cell: (data) => (
-                    <Box textAlign="center" sx={{}}>
+                    <Box textAlign="center">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
                             {data.value}
                         </StyledName>
@@ -182,7 +205,7 @@ const PaymentRules = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="center" sx={{}}>
+                    <Box textAlign="center">
                         <Typography>Days</Typography>
                     </Box>
                 ),
@@ -206,20 +229,22 @@ const PaymentRules = () => {
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="center">
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledAction component="p" value={data.value}>
+                            {data.value}
+                        </StyledAction>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="right" sx={{}}>
+                    <Box textAlign="right">
                         <Typography>Status</Typography>
                     </Box>
                 ),
                 accessor: "is_active",
                 width: 80,
                 Cell: (data) => (
-                    <SwitchWrapper textAlign="right" sx={{}}>
+                    <SwitchWrapper textAlign="right">
                         <TableSwitch
                             value={data?.value}
                             data={data?.row?.original}
