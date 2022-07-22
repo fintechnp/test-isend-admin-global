@@ -17,7 +17,7 @@ import SearchForm from "./components/Form";
 import NoResults from "./components/NoResults";
 import { Block } from "./../../../../App/components";
 import Loading from "./../../../../App/components/Loading";
-import { CountryName } from "./../../../../App/helpers";
+import { CountryName, ReferenceName } from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -78,6 +78,10 @@ function Search() {
     useEffect(() => {
         dispatch(reset("search_form_customer"));
         dispatch({ type: "GET_CUSTOMERS_RESET" });
+        dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
+        dispatch({ type: "CREATE_CUSTOMERS_RESET" });
+        dispatch({ type: "UPDATE_CUSTOMERS_RESET" });
+        dispatch({ type: "GET_SENDING_PARTNER_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
@@ -190,10 +194,43 @@ function Search() {
             {
                 Header: () => (
                     <Box textAlign="center">
-                        <Typography>Status</Typography>
+                        <Typography>KYC Status</Typography>
+                    </Box>
+                ),
+                accessor: "kyc_status",
+                maxWidth: 90,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
+                        {data.value ? (
+                            <Tooltip title="Active" arrow>
+                                <CheckCircleOutlineIcon
+                                    sx={{ color: "success.main" }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Blocked" arrow>
+                                <RemoveCircleOutlineIcon
+                                    sx={{ color: "border.main" }}
+                                />
+                            </Tooltip>
+                        )}
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Acc. Status</Typography>
                     </Box>
                 ),
                 accessor: "is_active",
+                maxWidth: 90,
                 Cell: (data) => (
                     <Box
                         sx={{

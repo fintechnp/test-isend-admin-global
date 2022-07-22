@@ -69,24 +69,33 @@ const Basic = ({
     steps,
     buttonText,
     update,
+    pcountry,
 }) => {
     const dispatch = useDispatch();
     const [code, setCode] = useState("01");
     const country = JSON.parse(localStorage.getItem("country"));
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
+        page_size: 100,
         payout_country: "",
-        sort_by: "payment_type",
+        sort_by: "created_ts",
         order_by: "ASC",
     });
 
     useEffect(() => {
-        dispatch({ type: "ADD_PARTNER_RESET" });
-        dispatch({ type: "UPDATE_PARTNER_RESET" });
-    }, [dispatch]);
+        if (pcountry) {
+            const updatedFilterSchema = {
+                ...filterSchema,
+                payout_country: pcountry,
+            };
+            setFilterSchema(updatedFilterSchema);
+        }
+    }, [pcountry]);
 
     useEffect(() => {
-        dispatch({ type: "GET_DELIVERY_OPTION", query: filterSchema });
+        if (filterSchema?.payout_country) {
+            dispatch({ type: "GET_DELIVERY_OPTION", query: filterSchema });
+        }
     }, [dispatch, filterSchema]);
 
     const convertCurrency = (iso3) => {
@@ -185,7 +194,7 @@ const Basic = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="receiver_type	"
+                                name="receiver_type"
                                 label="Receiver Type"
                                 type="text"
                                 small={12}

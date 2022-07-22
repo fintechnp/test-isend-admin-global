@@ -152,9 +152,11 @@ function CustomerDetails() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { response: customersData, loading: l_loading } = useSelector(
-        (state) => state.get_customer_byid
-    );
+    const {
+        response: customersData,
+        loading: l_loading,
+        success,
+    } = useSelector((state) => state.get_customer_byid);
 
     useEffect(() => {
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
@@ -166,7 +168,7 @@ function CustomerDetails() {
         }
     }, [dispatch, id]);
 
-    if (l_loading) {
+    if (l_loading && !success) {
         return (
             <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
                 <Fetching>Fetching...</Fetching>

@@ -7,10 +7,15 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import actions from "./store/actions";
+import actions from "./../../Transactions/store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import Table, { TablePagination } from "./../../../../App/components/Table";
+import {
+    CurrencyName,
+    FormatDate,
+    FormatNumber,
+} from "./../../../../App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -36,20 +41,9 @@ const StyledName = styled(Typography)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-const StyledMail = styled(Typography)(({ theme }) => ({
-    fontSize: "14px",
-    color: "border.main",
-}));
-
 const initialState = {
     page_number: 1,
     page_size: 15,
-    name: "",
-    customer_id: 0,
-    id_number: "",
-    mobile_number: "",
-    email: "",
-    date_of_birth: "",
     sort_by: "created_ts",
     order_by: "ASC",
 };
@@ -60,12 +54,14 @@ function Transactions() {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: customersData, loading: l_loading } = useSelector(
-        (state) => state.get_beneficiary_by_customer
+    const { response: TransactionData, loading: l_loading } = useSelector(
+        (state) => state.get_transactions_by_customer
     );
 
     useEffect(() => {
-        dispatch(actions.get_beneficiary_by_customer(id, filterSchema));
+        if (id) {
+            dispatch(actions.get_transactions_by_customer(id, filterSchema));
+        }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
@@ -77,7 +73,7 @@ function Transactions() {
             },
             {
                 Header: "Name",
-                accessor: "first_name",
+                accessor: "customer_name",
                 maxWidth: 140,
                 Cell: (data) => (
                     <Box
@@ -87,46 +83,21 @@ function Transactions() {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            {data.value} {data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Type</Typography>
-                    </Box>
-                ),
-                accessor: "customer_type_data",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                        <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value}
                         </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.beneficiary_name}
+                        </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Country</Typography>
-                    </Box>
-                ),
-                accessor: "country_data",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Address",
-                accessor: "address",
+                Header: "Partner",
+                accessor: "agent_name",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -140,25 +111,10 @@ function Transactions() {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "13px",
-                                opacity: 0.8,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Contact",
-                accessor: "mobile_number",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
                         <StyledName
                             component="p"
                             sx={{
@@ -167,14 +123,98 @@ function Transactions() {
                                 opacity: 0.6,
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {data?.row?.original?.payout_agent_name}
                         </StyledName>
-                        <StyledMail
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Currency</Typography>
+                    </Box>
+                ),
+                accessor: "collected_currency",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {CurrencyName(data.value)}
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.email}
-                        </StyledMail>
+                            {CurrencyName(data?.row?.original?.payout_currency)}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Date</Typography>
+                    </Box>
+                ),
+                accessor: "created_ts",
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {FormatDate(data.value)}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Rate</Typography>
+                    </Box>
+                ),
+                accessor: "payout_cost_rate",
+                maxWidth: 80,
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? FormatNumber(data.value) : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Amount</Typography>
+                    </Box>
+                ),
+                accessor: "transfer_amount",
+                maxWidth: 80,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? FormatNumber(data.value) : "N/A"}
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(
+                                      data?.row?.original?.payout_amount
+                                  )
+                                : "N/A"}
+                        </Typography>
                     </Box>
                 ),
             },
@@ -193,11 +233,11 @@ function Transactions() {
                             justifyContent: "center",
                         }}
                     >
-                        <Tooltip title="Customer Details" arrow>
+                        <Tooltip title="Transaction Details" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/details/${row.original.tid}`
+                                        `/transactions/details/${row.original.tid}`
                                     )
                                 }
                             >
@@ -211,11 +251,11 @@ function Transactions() {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Edit Customer" arrow>
+                        <Tooltip title="Edit Transaction" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/update/${row.original.tid}`
+                                        `/transaction/update/${row.original.tid}`
                                     )
                                 }
                             >
@@ -235,12 +275,6 @@ function Transactions() {
         ],
         []
     );
-
-    const handleBlock = (data) => {
-        dispatch(
-            actions.block_unblock_customer(data?.id, { remarks: data?.remarks })
-        );
-    };
 
     const handleSearch = useCallback(
         (e) => {
@@ -301,12 +335,12 @@ function Transactions() {
             />
             <Table
                 columns={columns}
-                data={customersData?.data || []}
+                data={TransactionData?.data || []}
                 loading={l_loading}
                 rowsPerPage={8}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={customersData?.pagination}
+                        paginationData={TransactionData?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />

@@ -61,12 +61,12 @@ function BeneficiaryForm({ update_data, loading }) {
         success: add_success,
         loading: add_loading,
         error: add_error,
-    } = useSelector((state) => state.add_partner);
+    } = useSelector((state) => state.create_beneficiary);
     const {
         success: update_success,
         loading: update_loading,
         error: update_error,
-    } = useSelector((state) => state.update_partner);
+    } = useSelector((state) => state.update_beneficiary);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -120,11 +120,11 @@ function BeneficiaryForm({ update_data, loading }) {
         handleNext();
     };
 
-    const handleSubmitForm = (id) => {
-        if (id) {
-            dispatch(actions.update_partner(id, data));
+    const handleSubmitForm = (bene_id) => {
+        if (bene_id) {
+            dispatch(actions.update_beneficiary(bene_id, data));
         } else {
-            dispatch(actions.add_partner(data));
+            dispatch(actions.create_beneficiary(data));
         }
     };
 
@@ -206,10 +206,10 @@ function BeneficiaryForm({ update_data, loading }) {
                                     borderWidth: "2px",
                                 },
                                 "& .MuiCircularProgress-root": {
-                                    color: "primary.contrastText",
+                                    color: "primary.main",
                                 },
                             }}
-                            onClick={() => handleSubmitForm(id)}
+                            onClick={() => handleSubmitForm(bene_id)}
                         >
                             Submit
                         </LoadingButton>
@@ -222,59 +222,58 @@ function BeneficiaryForm({ update_data, loading }) {
                             {activeStep === 0 && (
                                 <BasicForm
                                     destroyOnUnmount={false}
-                                    // enableReinitialize={true}
+                                    enableReinitialize={true}
                                     shouldError={() => true}
                                     form={`update_beneficiary_form`}
                                     initialValues={
                                         memoizedData && {
                                             customer_id: id,
-                                            name: memoizedData?.name,
-                                            short_code:
-                                                memoizedData?.short_code,
-                                            agent_type:
-                                                memoizedData?.agent_type,
-                                            phone_number:
-                                                memoizedData?.phone_number,
-                                            email: memoizedData?.email,
+                                            first_name:
+                                                memoizedData?.first_name,
+                                            middle_name:
+                                                memoizedData?.middle_name,
+                                            last_name: memoizedData?.last_name,
+                                            receiver_type:
+                                                memoizedData?.receiver_type,
+                                            title: memoizedData?.title,
                                             country: memoizedData?.country,
+                                            currency: memoizedData?.currency,
+                                            phone_country_code:
+                                                memoizedData?.phone_country_code,
+                                            mobile_number:
+                                                memoizedData?.mobile_number,
+                                            email: memoizedData?.email,
                                             postcode: memoizedData?.postcode,
                                             unit: memoizedData?.unit,
                                             street: memoizedData?.street,
                                             city: memoizedData?.city,
                                             state: memoizedData?.state,
                                             address: memoizedData?.address,
-                                            website: memoizedData?.website,
-                                            contact_person_full_name:
-                                                memoizedData?.contact_person_full_name,
-                                            contact_person_post:
-                                                memoizedData?.contact_person_post,
-                                            contact_person_mobile:
-                                                memoizedData?.contact_person_mobile,
-                                            contact_person_email:
-                                                memoizedData?.contact_person_email,
-                                            business_license_number:
-                                                memoizedData?.business_license_number,
-                                            balance: memoizedData?.balance,
-                                            credit_limit:
-                                                memoizedData?.credit_limit,
-                                            transaction_currency:
-                                                memoizedData?.transaction_currency,
-                                            settlement_currency:
-                                                memoizedData?.settlement_currency,
-                                            tax_type: memoizedData?.tax_type,
-                                            time_zone: memoizedData?.time_zone,
-                                            transaction_limit:
-                                                memoizedData?.transaction_limit,
-                                            commission_currency:
-                                                memoizedData?.commission_currency,
-                                            bank_charge_currency:
-                                                memoizedData?.bank_charge_currency,
-                                            is_prefunding:
-                                                memoizedData?.is_prefunding,
+                                            relation: memoizedData?.relation,
+                                            reason_for_remittance:
+                                                memoizedData?.reason_for_remittance,
+                                            source_of_income:
+                                                memoizedData?.source_of_income,
+                                            delivery_option_id:
+                                                memoizedData?.delivery_option_id,
+                                            payment_type:
+                                                memoizedData?.payment_type,
+                                            payout_location_id:
+                                                memoizedData?.payout_location_id,
+                                            account_number:
+                                                memoizedData?.account_number,
+                                            account_type:
+                                                memoizedData?.account_type,
+                                            branch_identifier_type:
+                                                memoizedData?.branch_identifier_type,
+                                            branch_identifier_value:
+                                                memoizedData?.branch_identifier_value,
+                                            is_active: memoizedData?.is_active,
                                         }
                                     }
                                     steps={steps}
-                                    buttonText="Update"
+                                    pcountry={memoizedData?.country}
+                                    buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleBasicForm}
@@ -286,7 +285,7 @@ function BeneficiaryForm({ update_data, loading }) {
                                     shouldError={() => true}
                                     form={`update_beneficiary_form`}
                                     steps={steps}
-                                    buttonText="Update"
+                                    buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleContactForm}
@@ -298,7 +297,13 @@ function BeneficiaryForm({ update_data, loading }) {
                                     shouldError={() => true}
                                     form={`update_beneficiary_form`}
                                     steps={steps}
-                                    buttonText="Update All"
+                                    update={true}
+                                    buttonText="Update"
+                                    pcountry={memoizedData?.country}
+                                    payment_type={memoizedData?.payment_type}
+                                    delivery_option_id={
+                                        memoizedData?.delivery_option_id
+                                    }
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleBusinessForm}

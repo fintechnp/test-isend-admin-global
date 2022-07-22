@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
+import { Field, Form, change, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import { useDispatch } from "react-redux";
@@ -53,16 +53,62 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
+const Basic = ({
+    handleSubmit,
+    handleBack,
+    activeStep,
+    steps,
+    update,
+    loading,
+    hasPartner,
+    setCode,
+    buttonText,
+    partner_sending,
+}) => {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
-    useEffect(() => {
-        dispatch({ type: "ADD_PARTNER_RESET" });
-        dispatch({ type: "UPDATE_PARTNER_RESET" });
-    }, [dispatch]);
+    const convertCode = (iso3) => {
+        const result = country.filter((data) => data.iso3 === iso3);
+        if (result) {
+            setCode(result[0]?.phone_code);
+            return result[0].phone_code;
+        }
+    };
 
+    const handleCountry = (e) => {
+        if (e.target.value) {
+            dispatch({
+                type: "GET_SENDING_PARTNER",
+                query: {
+                    page_number: 1,
+                    page_size: 100,
+                    agent_type: "SEND",
+                    country: e.target.value,
+                    sort_by: "name",
+                    order_by: "ASC",
+                },
+            });
+        }
+        if (update) {
+            dispatch(
+                change(
+                    "update_customer_form",
+                    "phone_country_code",
+                    convertCode(e.target.value)
+                )
+            );
+        } else {
+            dispatch(
+                change(
+                    "add_customer_form",
+                    "phone_country_code",
+                    convertCode(e.target.value)
+                )
+            );
+        }
+    };
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
@@ -78,6 +124,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength50,
                                 ]}
                             />
                         </FieldWrapper>
@@ -88,10 +135,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.minValue3,
-                                    Validator.maxLength10,
-                                ]}
+                                validate={[Validator.maxLength50]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -101,10 +145,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.minValue3,
-                                    Validator.maxLength10,
-                                ]}
+                                validate={[Validator.maxLength50]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -117,6 +158,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength1,
                                 ]}
                             >
                                 <option value="" disabled>
@@ -126,20 +168,16 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                     reference
                                         ?.filter(
                                             (ref_data) =>
-                                                ref_data.reference_type === 3
+                                                ref_data.reference_type === 37
                                         )[0]
-                                        .reference_data.map((data) => {
-                                            if (data?.name !== "CORRIDOR") {
-                                                return (
-                                                    <option
-                                                        value={data.value}
-                                                        key={data.reference_id}
-                                                    >
-                                                        {data.name}
-                                                    </option>
-                                                );
-                                            }
-                                        })}
+                                        .reference_data.map((data, index) => (
+                                            <option
+                                                value={data.value}
+                                                key={index}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -148,9 +186,31 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 label="Gender"
                                 type="text"
                                 small={12}
-                                component={TextField}
-                                validate={Validator.mobileValidator}
-                            />
+                                component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                    Validator.maxLength1,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Gender
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 42
+                                        )[0]
+                                        .reference_data.map((data, index) => (
+                                            <option
+                                                value={data.value}
+                                                key={index}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -158,12 +218,31 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 label="Occupation"
                                 type="text"
                                 small={12}
-                                component={TextField}
+                                component={SelectField}
                                 validate={[
-                                    Validator.emailValidator,
+                                    Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength100,
                                 ]}
-                            />
+                            >
+                                <option value="" disabled>
+                                    Select Occupation
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 17
+                                        )[0]
+                                        .reference_data.map((data, index) => (
+                                            <option
+                                                value={data.value}
+                                                key={index}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -171,6 +250,39 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 label="Soucrce of Income"
                                 type="text"
                                 small={12}
+                                component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                    Validator.maxLength100,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Source of Income
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 6
+                                        )[0]
+                                        .reference_data.map((data, index) => (
+                                            <option
+                                                value={data.value}
+                                                key={index}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="country"
+                                label="Country"
+                                type="text"
+                                small={12}
+                                onChange={handleCountry}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
@@ -192,6 +304,37 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                     ))}
                             </Field>
                         </FieldWrapper>
+                        {hasPartner && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Field
+                                    name="register_agent_id"
+                                    label="Partner"
+                                    type="number"
+                                    small={12}
+                                    disabled={loading}
+                                    component={SelectField}
+                                    validate={[
+                                        Validator.emptyValidator,
+                                        Validator.minValue1,
+                                    ]}
+                                >
+                                    <option value="" disabled>
+                                        {loading
+                                            ? "Fetching Partner ..."
+                                            : "Select Partner"}
+                                    </option>
+                                    {partner_sending &&
+                                        partner_sending?.map((data, index) => (
+                                            <option
+                                                value={data.agent_id}
+                                                key={data?.tid}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                                </Field>
+                            </FieldWrapper>
+                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>

@@ -2,11 +2,11 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
-import { useDispatch } from "react-redux";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 
 import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
 import Validator from "../../../../../App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
@@ -25,6 +25,12 @@ const FormWrapper = styled(Grid)(({ theme }) => ({
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
+}));
+
+const CodeText = styled(Typography)(({ theme }) => ({
+    opacity: 0.8,
+    fontSize: "14px",
+    paddingLeft: "8px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -58,10 +64,10 @@ const AddressForm = ({
     handleBack,
     activeStep,
     steps,
+    id,
+    code = 977,
     buttonText,
 }) => {
-    const country = JSON.parse(localStorage.getItem("country"));
-
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
@@ -69,57 +75,56 @@ const AddressForm = ({
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="country"
-                                label="Country"
+                                name="mobile_number"
+                                label="Mobile"
                                 type="text"
                                 small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
+                                component={TextField}
+                                validate={Validator.mobileValidator}
+                                InputProps={{
+                                    startAdornment: (
+                                        <Box
+                                            sx={{
+                                                minWidth: "52px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
                                         >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
+                                            <CodeText>+{code}</CodeText>
+                                        </Box>
+                                    ),
+                                }}
+                            />
                         </FieldWrapper>
+                        {!id && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Field
+                                    name="email"
+                                    label="Email"
+                                    type="email"
+                                    small={12}
+                                    component={TextField}
+                                    validate={[
+                                        Validator.emailValidator,
+                                        Validator.minValue1,
+                                    ]}
+                                />
+                            </FieldWrapper>
+                        )}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="phone_country_code"
-                                label="Country Code"
+                                name="postcode"
+                                label="Post Code"
                                 type="text"
                                 small={12}
-                                component={SelectField}
+                                component={TextField}
                                 validate={[
                                     Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
+                                    Validator.minValue1,
+                                    Validator.maxLength10,
                                 ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
+                            />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -128,6 +133,7 @@ const AddressForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
+                                validate={Validator.maxLength20}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -140,6 +146,7 @@ const AddressForm = ({
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength50,
                                 ]}
                             />
                         </FieldWrapper>
@@ -153,6 +160,7 @@ const AddressForm = ({
                                 validate={[
                                     Validator.emptyValidator,
                                     Validator.minValue1,
+                                    Validator.maxLength50,
                                 ]}
                             />
                         </FieldWrapper>
@@ -163,6 +171,7 @@ const AddressForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
+                                validate={Validator.maxLength50}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -172,15 +181,7 @@ const AddressForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="website"
-                                label="Website"
-                                type="text"
-                                small={12}
-                                component={TextField}
+                                validate={Validator.maxLength100}
                             />
                         </FieldWrapper>
                     </FormWrapper>

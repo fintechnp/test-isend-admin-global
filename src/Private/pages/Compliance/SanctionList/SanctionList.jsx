@@ -39,6 +39,7 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
     color: "border.main",
+    textTransform: "capitalize",
 }));
 
 const initialState = {
@@ -108,7 +109,7 @@ const SanctionList = () => {
             },
             {
                 Header: "Address",
-                accessor: "address",
+                accessor: "country",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -122,26 +123,15 @@ const SanctionList = () => {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "14px",
-                                opacity: 0.6,
                             }}
                         >
-                            {data.value}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Country</Typography>
-                    </Box>
-                ),
-                accessor: "country",
-                maxWidth: 90,
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {CountryName(data.value)}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", opacity: 0.7 }}
+                        >
+                            {data?.row?.original?.address}
                         </StyledName>
                     </Box>
                 ),

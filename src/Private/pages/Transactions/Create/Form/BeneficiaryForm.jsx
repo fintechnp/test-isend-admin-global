@@ -1,7 +1,8 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
+import { Grid, Button } from "@mui/material";
+import { useDispatch } from "react-redux";
 import Divider from "@mui/material/Divider";
 
 import TextField from "../../../../../App/components/Fields/TextField";
@@ -24,12 +25,6 @@ const FormWrapper = styled(Grid)(({ theme }) => ({
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
-}));
-
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -58,14 +53,13 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const IdentityForm = ({
+const BeneficiaryForm = ({
     handleSubmit,
     handleBack,
     activeStep,
     steps,
     buttonText,
 }) => {
-    const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
@@ -75,67 +69,8 @@ const IdentityForm = ({
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="date_of_birth"
-                                label="Date of Birth"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    max: new Date().toISOString().slice(0, 10),
-                                }}
-                                validate={Validator.emptyValidator}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="birth_country"
-                                label="Birth Country"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="citizenship_country"
-                                label="Citizenship Country"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                validate={Validator.emptyValidator}
-                                inputProps={{
-                                    min: new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_type"
-                                label="Id Type"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={Validator.emptyValidator}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_number"
-                                label="Id Number"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={Validator.emptyValidator}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_issue_date"
-                                label="Id Issue Date"
+                                name="country"
+                                label="Country"
                                 type="text"
                                 small={12}
                                 component={SelectField}
@@ -146,72 +81,107 @@ const IdentityForm = ({
                                 ]}
                             >
                                 <option value="" disabled>
-                                    Select Transaction Currency
+                                    Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
                                         <option
-                                            value={data.currency}
+                                            value={data.iso3}
                                             key={data.iso3}
                                         >
-                                            {data.currency_name}
+                                            {data.country}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="id_expiry_date"
-                                label="Id Expiry Date"
+                                name="phone_country_code"
+                                label="Country Code"
                                 type="text"
                                 small={12}
                                 component={SelectField}
                                 validate={[
                                     Validator.emptyValidator,
-                                    Validator.minValue1,
+                                    Validator.minValue3,
                                     Validator.maxLength3,
                                 ]}
                             >
                                 <option value="" disabled>
-                                    Select Settlement Currency
+                                    Select Country Code
                                 </option>
                                 {country &&
                                     country.map((data) => (
                                         <option
-                                            value={data.currency}
+                                            value={data.iso3}
                                             key={data.iso3}
                                         >
-                                            {data.currency_name}
+                                            {data.country}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="id_issued_country"
-                                label="Id Issued Country"
+                                name="unit"
+                                label="Unit"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="street"
+                                label="Street"
                                 type="text"
                                 small={12}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    Select Tax Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 4
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="city"
+                                label="City"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="state"
+                                label="State"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="address"
+                                label="Address"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="website"
+                                label="Website"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -254,4 +224,4 @@ const IdentityForm = ({
     );
 };
 
-export default reduxForm({ form: ["form"] })(IdentityForm);
+export default reduxForm({ form: ["form"] })(BeneficiaryForm);
