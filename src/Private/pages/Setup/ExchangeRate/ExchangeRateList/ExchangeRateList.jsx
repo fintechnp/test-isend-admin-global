@@ -58,7 +58,7 @@ const initialState = {
     agent_type: "",
     search: "",
     sort_by: "country",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const ExchangeRateList = () => {

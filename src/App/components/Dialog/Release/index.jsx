@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, reset } from "redux-form";
+import { Field, Form, reduxForm, reset, change } from "redux-form";
 import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -67,9 +67,16 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function ReleaseDialog({ loading, tooltext, handleSubmit, validatation }) {
+function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    console.log(id, "tghis ids");
+
+    React.useEffect(() => {
+        if (id) {
+            dispatch(change("release_form_transaction", "id", id));
+        }
+    }, [dispatch]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -161,4 +168,4 @@ function ReleaseDialog({ loading, tooltext, handleSubmit, validatation }) {
     );
 }
 
-export default reduxForm({ form: "release_form_transaction" })(ReleaseDialog);
+export default reduxForm({ form: ["form"] })(ReleaseDialog);

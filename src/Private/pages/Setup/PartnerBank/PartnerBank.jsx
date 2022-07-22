@@ -62,7 +62,7 @@ const filter = {
     agent_type: "PAY",
     country: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const PartnerBank = () => {
@@ -74,7 +74,7 @@ const PartnerBank = () => {
         agent_id: "",
         search: "",
         sort_by: "bank_name",
-        order_by: "ASC",
+        order_by: "DESC",
     });
 
     const { response: partnerbank_data, loading: g_loading } = useSelector(

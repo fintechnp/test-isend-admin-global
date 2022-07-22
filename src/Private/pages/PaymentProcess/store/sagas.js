@@ -179,29 +179,6 @@ export const updatePaymentPending = takeEvery(
     }
 );
 
-export const updatePendingTransactions = takeEvery(
-    actions.RELEASE_PENDING_TRANSACTIONS,
-    function* (action) {
-        try {
-            const res = yield call(
-                api.put,
-                `utilities/pending_release/${action.id}`
-            );
-            yield put({
-                type: actions.RELEASE_PENDING_TRANSACTIONS_SUCCESS,
-                response: res,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: res });
-        } catch (error) {
-            yield put({
-                type: actions.RELEASE_PENDING_TRANSACTIONS_FAILED,
-                error: error.data,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: error?.data });
-        }
-    }
-);
-
 export const blockTransactions = takeEvery(
     actions.BLOCK_TRANSACTIONS,
     function* (action) {
@@ -332,7 +309,6 @@ export default function* saga() {
         getExceptionTransactions,
         getAmlSuspicious,
         updatePaymentPending,
-        updatePendingTransactions,
         blockTransactions,
         refundTransactions,
         updateBlockedTransactions,

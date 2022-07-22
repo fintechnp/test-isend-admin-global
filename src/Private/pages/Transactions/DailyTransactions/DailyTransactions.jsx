@@ -46,7 +46,7 @@ const initialState = {
     from_date: new Date().toISOString().slice(0, 10),
     to_date: new Date().toISOString().slice(0, 10),
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const DailyTransactions = () => {

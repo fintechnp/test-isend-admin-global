@@ -50,7 +50,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function Beneficiary() {

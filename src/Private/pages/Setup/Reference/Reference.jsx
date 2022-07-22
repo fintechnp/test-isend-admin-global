@@ -55,7 +55,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "type_name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const Reference = () => {

@@ -75,8 +75,20 @@ const DailyTransactions = lazy(() =>
 const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
 
 //Reports
-const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
-const ReportsSummary = lazy(() => import("../pages/Reports/Summary"));
+const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
+const BeneficiaryReport = lazy(() => import("../pages/Reports/Beneficiary"));
+const TransactionsSummary = lazy(() =>
+    import("../pages/Reports/TransactionsSummary")
+);
+const CancelledTransactions = lazy(() =>
+    import("../pages/Reports/CancelledTransactions")
+);
+const YearlyTransactions = lazy(() =>
+    import("../pages/Reports/YearlyTransactions")
+);
+const SuspiciousTransactions = lazy(() =>
+    import("../pages/Reports/SuspiciousTransactions")
+);
 
 //PaymentProcess
 const PendingPayment = lazy(() =>
@@ -206,8 +218,18 @@ const privateRoutes = [
     { path: "/transaction/search", component: <SearchTransactions /> },
 
     //Reports
-    { path: "/report/country-wise-report", component: <ReportsCountrywise /> },
-    { path: "/report/summary", component: <ReportsSummary /> },
+    { path: "/report/customer", component: <CustomerReport /> },
+    { path: "/report/beneficiary", component: <BeneficiaryReport /> },
+    { path: "/report/yearly-transactions", component: <YearlyTransactions /> },
+    { path: "/report/transaction-summary", component: <TransactionsSummary /> },
+    {
+        path: "/report/cancelled-transactions",
+        component: <CancelledTransactions />,
+    },
+    {
+        path: "/report/suspicious-transactions",
+        component: <SuspiciousTransactions />,
+    },
 
     //PaymentProcess
     { path: "/payment/pending", component: <PendingPayment /> },

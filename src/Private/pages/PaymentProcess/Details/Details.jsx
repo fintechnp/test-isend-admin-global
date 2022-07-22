@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { Link } from "react-router-dom";
 
 import {
     CurrencyName,
@@ -66,7 +67,25 @@ function Details({ data }) {
                 >
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Partner Name:</LabelWrapper>
+                            <LabelWrapper>Sending Partner Id:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.agent_id ? data?.agent_id : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Payout Partner Id:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_agent_id
+                                    ? data?.payout_agent_id
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Sending Partner:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.agent_name ? data?.agent_name : "N/A"}
                             </ValueWrapper>
@@ -74,55 +93,21 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Branch Name:</LabelWrapper>
+                            <LabelWrapper>Payout Partner:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.short_code
+                                {data?.payout_agent_name
+                                    ? data?.payout_agent_name
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Sending Branch:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.agent_branch_name
                                     ? data?.agent_branch_name
                                     : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Partner Type:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.agent_type ? data?.agent_type : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Phone Number:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.phone_number
-                                    ? data?.phone_number
-                                    : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Email:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.email ? data?.email : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Country:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.country
-                                    ? CountryName(data?.country)
-                                    : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Post Code:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.postcode ? data?.postcode : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -130,7 +115,7 @@ function Details({ data }) {
             </Grid>
             <Grid item xs={12}>
                 <Box>
-                    <Header>Sender Information</Header>
+                    <Header>Customer Information</Header>
                     <Divider />
                 </Box>
             </Grid>
@@ -143,10 +128,34 @@ function Details({ data }) {
                 >
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Fullname:</LabelWrapper>
+                            <LabelWrapper>Customer Id:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                <Link
+                                    to={`/customer/details/${data?.customer_id}`}
+                                >
+                                    {data?.customer_id
+                                        ? data?.customer_id
+                                        : "N/A"}
+                                </Link>
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Customer Name:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.customer_name
                                     ? data?.customer_name
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Country:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.beneficiary_relation
+                                    ? data?.beneficiary_relation
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -173,10 +182,10 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Email:</LabelWrapper>
+                            <LabelWrapper>Relation:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.contact_person_email
-                                    ? data?.contact_person_email
+                                {data?.beneficiary_relation
+                                    ? data?.beneficiary_relation
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -198,7 +207,21 @@ function Details({ data }) {
                 >
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Fullname:</LabelWrapper>
+                            <LabelWrapper>Beneficiary Id:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                <Link
+                                    to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
+                                >
+                                    {data?.beneficiary_id
+                                        ? data?.beneficiary_id
+                                        : "N/A"}
+                                </Link>
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Beneficiary Name:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.beneficiary_name
                                     ? data?.beneficiary_name
@@ -228,20 +251,10 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Relation:</LabelWrapper>
+                            <LabelWrapper>Reason:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.beneficiary_relation
-                                    ? data?.beneficiary_relation
-                                    : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Email:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.contact_person_email
-                                    ? data?.contact_person_email
+                                {data?.reason_for_remittance
+                                    ? data?.reason_for_remittance
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -273,10 +286,28 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Customer Rate:</LabelWrapper>
+                            <LabelWrapper>Pin Number:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.customer_rate
-                                    ? FormatNumber(data?.customer_rate)
+                                {data?.pin_number ? data?.pin_number : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Collected Amount:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_amount
+                                    ? FormatNumber(data?.collected_amount)
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Service Charge:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.service_charge
+                                    ? FormatNumber(data?.service_charge)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -303,86 +334,20 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Service Charge:</LabelWrapper>
+                            <LabelWrapper>Customer Rate:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.service_charge
-                                    ? FormatNumber(data?.service_charge)
+                                {data?.customer_rate
+                                    ? FormatNumber(data?.customer_rate)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Collected Amount:</LabelWrapper>
+                            <LabelWrapper>Payout Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_amount
-                                    ? FormatNumber(data?.collected_amount)
-                                    : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Transaction Currency:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.transaction_currency
-                                    ? CurrencyName(data?.transaction_currency)
-                                    : "N/A"}
-                                {data?.transaction_currency &&
-                                    `[${data?.transaction_currency}]`}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Settlement Currency:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.settlement_currency
-                                    ? CurrencyName(data?.settlement_currency)
-                                    : "N/A"}
-                                {data?.settlement_currency &&
-                                    `[${data?.settlement_currency}]`}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Tax Type:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.tax_type ? data?.tax_type : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Date Format:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.date_format ? data?.date_format : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Time Zone:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.time_zone ? data?.time_zone : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Pin Number:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.pin_number ? data?.pin_number : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Reason For Remittance:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.reason_for_remittance
-                                    ? data?.reason_for_remittance
+                                {data?.payout_amount
+                                    ? FormatNumber(data?.payout_amount)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>

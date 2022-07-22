@@ -50,7 +50,7 @@ const MapBank = () => {
         payment_type: payment,
         search: "",
         sort_by: "location_name",
-        order_by: "ASC",
+        order_by: "DESC",
     });
 
     const { response: payoutloaction_data, loading: g_loading } = useSelector(

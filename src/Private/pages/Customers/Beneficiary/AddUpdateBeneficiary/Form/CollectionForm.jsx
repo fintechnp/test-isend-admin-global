@@ -74,7 +74,7 @@ const CollectionForm = ({
         country: "",
         payment_type: "",
         sort_by: "created_ts",
-        order_by: "ASC",
+        order_by: "DESC",
     });
     const { response: deliveryoption_data, loading: d_loading } = useSelector(
         (state) => state.get_all_delivery_option

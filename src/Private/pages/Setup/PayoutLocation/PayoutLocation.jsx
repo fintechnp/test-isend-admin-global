@@ -65,7 +65,7 @@ const initialState = {
     payment_type: "",
     search: "",
     sort_by: "location_name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const PayoutLocation = () => {

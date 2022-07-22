@@ -66,7 +66,7 @@ const initialState = {
     payment_type: "",
     search: "",
     sort_by: "country_code",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const DeliveryOption = () => {

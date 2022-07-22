@@ -65,7 +65,7 @@ const initialState = {
     payment_type: "",
     search: "",
     sort_by: "sending_agent",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const DeliveryRoute = () => {

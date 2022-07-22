@@ -48,7 +48,7 @@ const stateSend = {
     agent_type: "SEND",
     country: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const statePay = {
@@ -57,7 +57,7 @@ const statePay = {
     agent_type: "PAY",
     country: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 export default function TransactionFilter({ handleFilter }) {

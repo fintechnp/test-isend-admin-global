@@ -43,10 +43,6 @@ const TextAreaField = ({
     input,
     placeholder,
     small,
-    customClass,
-    defaultValue,
-    inputProps,
-    InputProps,
     meta: { touched, invalid, error },
     ...rest
 }) => {

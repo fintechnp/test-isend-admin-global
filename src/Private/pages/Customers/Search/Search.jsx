@@ -59,7 +59,7 @@ const initialState = {
     email: "",
     date_of_birth: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function Search() {

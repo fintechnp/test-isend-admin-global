@@ -106,7 +106,7 @@ function AddDeliveryOption({ update_data, update }) {
         agent_type: "PAY",
         country: "",
         sort_by: "name",
-        order_by: "ASC",
+        order_by: "DESC",
     });
     const { response: partner_data } = useSelector(
         (state) => state.get_payout_partner

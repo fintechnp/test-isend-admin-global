@@ -54,7 +54,7 @@ const initialState = {
     from_date: "",
     to_date: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const AmlSuspicious = () => {
@@ -93,7 +93,13 @@ const AmlSuspicious = () => {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                fontSize: "14px",
+                                textTransform: "capitalize",
+                            }}
+                        >
                             {data.value}
                         </StyledName>
                         <Typography
@@ -260,11 +266,13 @@ const AmlSuspicious = () => {
                         </Tooltip>
                         <Release
                             destroyOnUnmount
+                            enableReinitialize
+                            initialValues={{ id: row?.original?.tid }}
                             onSubmit={handleRelease}
                             loading={u_loading}
                             validatation={true}
-                            initialValues={{ id: row.original.tid }}
                             tooltext="Release Transaction"
+                            form={`aml_release_form_${row?.original?.tid}`}
                         />
                     </Box>
                 ),

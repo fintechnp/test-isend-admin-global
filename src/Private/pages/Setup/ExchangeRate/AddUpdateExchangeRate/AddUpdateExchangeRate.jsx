@@ -53,7 +53,7 @@ const filter = {
     agent_type: "SEND",
     country: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function AddUpdateExchangeRate() {

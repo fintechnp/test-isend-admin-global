@@ -62,7 +62,7 @@ const initialState = {
     user_type: "",
     search: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function AccountTable() {

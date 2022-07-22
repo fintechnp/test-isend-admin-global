@@ -64,7 +64,7 @@ const initialState = {
     from_date: "",
     to_date: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function Search() {

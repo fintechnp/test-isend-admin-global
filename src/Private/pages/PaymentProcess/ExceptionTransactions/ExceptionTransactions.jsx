@@ -54,7 +54,7 @@ const initialState = {
     from_date: "",
     to_date: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const ExceptionTransactions = () => {
@@ -262,11 +262,13 @@ const ExceptionTransactions = () => {
                         </Tooltip>
                         <Release
                             destroyOnUnmount
-                            initialValues={{ id: row.original.tid }}
+                            enableReinitialize
+                            initialValues={{ id: row?.original?.tid }}
                             onSubmit={handleRelease}
                             loading={u_loading}
                             validatation={true}
                             tooltext="Release Transaction"
+                            form={`ex_release_form_${row?.original?.tid}`}
                         />
                     </Box>
                 ),

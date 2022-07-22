@@ -48,7 +48,7 @@ const initialState = {
     currency: "",
     search: "",
     sort_by: "",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const ExchangeRate = () => {
