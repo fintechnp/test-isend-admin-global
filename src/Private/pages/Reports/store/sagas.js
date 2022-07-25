@@ -8,11 +8,7 @@ export const getCustomerReport = takeEvery(
     actions.CUSTOMER_REPORT,
     function* (action) {
         try {
-            const res = yield call(
-                api.get,
-                `transaction/refund_block`,
-                action.query
-            );
+            const res = yield call(api.get, `report/customer`, action.query);
             yield put({
                 type: actions.CUSTOMER_REPORT_SUCCESS,
                 response: res,
@@ -31,11 +27,7 @@ export const getBeneficiaryReport = takeEvery(
     actions.BENEFICIARY_REPORT,
     function* (action) {
         try {
-            const res = yield call(
-                api.get,
-                `transaction/refund_block`,
-                action.query
-            );
+            const res = yield call(api.get, `report/beneficiary`, action.query);
             yield put({
                 type: actions.BENEFICIARY_REPORT_SUCCESS,
                 response: res,
@@ -56,7 +48,7 @@ export const getTransactionsSummaryReport = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `transaction/refund_block`,
+                `report/transaction_summary`,
                 action.query
             );
             yield put({
@@ -79,7 +71,7 @@ export const getYearlyTransactionsReport = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `transaction/refund_block`,
+                `report/transaction_yearly`,
                 action.query
             );
             yield put({
@@ -102,7 +94,7 @@ export const getCancelledTransactionsReport = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `transaction/refund_block`,
+                `report/transaction_cancel`,
                 action.query
             );
             yield put({
@@ -125,7 +117,7 @@ export const getSuspiciousTransactionsReport = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `transaction/refund_block`,
+                `report/transaction_suspicious`,
                 action.query
             );
             yield put({

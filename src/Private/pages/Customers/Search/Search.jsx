@@ -44,10 +44,50 @@ const StyledName = styled(Typography)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
+const StyledStatus = styled(Typography)(({ theme, value }) => ({
+    opacity: 0.8,
+    paddingTop: "4px",
+    paddingBottom: "4px",
+    fontSize: "11px",
+    borderRadius: "6px",
+    textTransform: "capitalize",
+    color: theme.palette.primary.contrastText,
+    background: stringToColor(value),
+    "&: hover": {
+        background: stringToColor(value),
+    },
+}));
+
 const StyledMail = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
+    width: "100%",
+    display: "block",
     fontSize: "14px",
     color: "border.main",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
 }));
+
+function stringToColor(string) {
+    switch (string.toUpperCase()) {
+        case "R":
+            // code block
+            return "#b81220";
+        case "P":
+            // code block
+            return "#bbd14d";
+        case "N":
+            // code block
+            return "#848581";
+        case "C":
+            // code block
+            return "#117308";
+        default:
+            // code block
+            return "#1a4b87";
+    }
+}
 
 const initialState = {
     page_number: 1,
@@ -178,16 +218,18 @@ function Search() {
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                        <StyledMail
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data?.row?.original?.email}
-                        </StyledMail>
+                        <Tooltip title={data?.row?.original?.email} arrow>
+                            <StyledMail
+                                component="p"
+                                sx={{
+                                    paddingLeft: "4px",
+                                    fontSize: "13px",
+                                    opacity: 0.6,
+                                }}
+                            >
+                                {data?.row?.original?.email}
+                            </StyledMail>
+                        </Tooltip>
                     </Box>
                 ),
             },
@@ -198,28 +240,11 @@ function Search() {
                     </Box>
                 ),
                 accessor: "kyc_status",
-                maxWidth: 90,
                 Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        {data.value ? (
-                            <Tooltip title="Active" arrow>
-                                <CheckCircleOutlineIcon
-                                    sx={{ color: "success.main" }}
-                                />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Blocked" arrow>
-                                <RemoveCircleOutlineIcon
-                                    sx={{ color: "border.main" }}
-                                />
-                            </Tooltip>
-                        )}
+                    <Box textAlign="center" sx={{ margin: "0px 12px" }}>
+                        <StyledStatus component="p" value={data.value}>
+                            {ReferenceName(21, data.value)}
+                        </StyledStatus>
                     </Box>
                 ),
             },

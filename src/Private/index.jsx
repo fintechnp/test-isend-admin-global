@@ -173,6 +173,17 @@ import {
     PaymentProcessingSaga,
 } from "./pages/PaymentProcess/store";
 
+//Transactions
+import {
+    GetCustomerReportsReducer,
+    GetBeneficiaryReportsReducer,
+    GetTransactionsSummaryReportsReducer,
+    GetYearlyTransactionsReportsReducer,
+    GetSuspiciousTransactionsReportsReducer,
+    GetCancelledTransactionsReportsReducer,
+    ReportsSaga,
+} from "./pages/Reports/store";
+
 //Utilities
 import {
     GetSmsReducer,
@@ -355,6 +366,14 @@ export const privateReducer = {
     update_aml_suspicious: UpdateAmlSuspiciousReducer,
     update_exception_transactions: UpdateExceptionTransactionsReducer,
 
+    //Reports
+    get_customer_report: GetCustomerReportsReducer,
+    get_beneficiary_report: GetBeneficiaryReportsReducer,
+    get_transactions_summary_report: GetTransactionsSummaryReportsReducer,
+    get_yearly_transactions_report: GetYearlyTransactionsReportsReducer,
+    get_suspicious_transactions_report: GetSuspiciousTransactionsReportsReducer,
+    get_cancelled_report: GetCancelledTransactionsReportsReducer,
+
     //reference type and data
     get_sms: GetSmsReducer,
     get_sms_byid: GetSmsByIdReducer,
@@ -402,6 +421,7 @@ export const privateSaga = [
     PaymentRulesSaga(),
     SanctionSaga(),
     PaymentProcessingSaga(),
+    ReportsSaga(),
     UtilitiesSaga(),
 ];
 
