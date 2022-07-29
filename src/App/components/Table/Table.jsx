@@ -32,7 +32,7 @@ const GlobalTable = styled(MuiTable)(({ theme }) => ({
 
 const HeadCell = styled(TableCell)(({ theme }) => ({
     borderBottom: "none",
-    fontSize: "16px",
+    fontSize: "15px",
     padding: "10px",
     color: theme.palette.primary.contrastText,
 }));
@@ -65,7 +65,7 @@ const Table = ({
     const defaultColumn = useMemo(
         () => ({
             minWidth: 30,
-            width: 150,
+            width: 140,
             maxWidth: 200,
         }),
         []

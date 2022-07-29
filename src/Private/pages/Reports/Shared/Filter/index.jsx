@@ -1,53 +1,86 @@
-import { styled } from "@mui/material/styles";
+import * as React from "react";
+import { styled, alpha } from "@mui/material/styles";
+import Menu from "@mui/material/Menu";
 import { Box, Typography } from "@mui/material";
-import MuiTextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import Divider from "@mui/material/Divider";
+import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
-
-import React from "react";
-// import FilterTransactions from "../Dropdown";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DataObjectIcon from "@mui/icons-material/DataObject";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
-    paddingTop: "8px",
     paddingBottom: "2px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
 }));
 
-const SearchBox = styled(Box)(({ theme }) => ({
+const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
-    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "space-between",
 }));
 
-const TextField = styled(MuiTextField)(({ theme }) => ({
-    borderColor: theme.palette.border.light,
-    width: "60%",
-    "& .MuiOutlinedInput-input.MuiInputBase-input": {
-        padding: "8px 0px",
-    },
-    "& .MuiInputBase-root.MuiOutlinedInput-root": {
-        paddingLeft: "10px",
-    },
-    "&: hover": {
-        "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: theme.palette.border.main,
-            borderWidth: "2px",
+const DropWrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+}));
+
+const StyledMenu = styled((props) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+        }}
+        transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+    "& .MuiPaper-root": {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        minWidth: 180,
+        color:
+            theme.palette.mode === "light"
+                ? "rgb(55, 65, 81)"
+                : theme.palette.grey[300],
+        boxShadow:
+            "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+        "& .MuiMenu-list": {
+            padding: "4px 0",
+        },
+        "& .MuiMenuItem-root": {
+            "& .MuiSvgIcon-root": {
+                fontSize: 18,
+                color: theme.palette.text.secondary,
+                marginRight: theme.spacing(1.5),
+            },
+            "&:active": {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity
+                ),
+            },
         },
     },
-    "& .MuiSvgIcon-root": {
-        fill: theme.palette.border.main,
-    },
-    [theme.breakpoints.down("md")]: {
-        width: "60%",
+}));
+
+const FormControl = styled(MuiFormControl)(({ theme }) => ({
+    "& .MuiPaper-root.MuiMenu-paper.MuiPaper-root.MuiPopover-paper": {
+        marginTop: "20px",
     },
 }));
 
 const Select = styled(MuiSelect)(({ theme }) => ({
-    // minWidth: "max-content",
     "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
         padding: "8px 10px",
         paddingRight: "28px",
@@ -60,59 +93,98 @@ const Select = styled(MuiSelect)(({ theme }) => ({
     "& .MuiSvgIcon-root.MuiSelect-icon": {
         color: theme.palette.border.main,
     },
-    "& .MuiPaper-root.MuiMenu-paper.MuiPaper-root.MuiPopover-paper": {
-        maxHeight: "400px !important",
-        maxWidth: "320px",
-        background: "red",
+}));
+
+const ExportButton = styled(LoadingButton)(({ theme }) => ({
+    opacity: 0.8,
+    padding: "7px 15px",
+    textTransform: "capitalize",
+    "&: hover": {
+        color: theme.palette.border.dark,
+        opacity: 1,
+    },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
     },
 }));
 
-const DropWrapper = styled(Box)(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-}));
+function Filter({
+    handleSort,
+    handleOrder,
+    title,
+    state,
+    sortData,
+    orderData,
+}) {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-const sortData = [
-    { key: "None", value: "" },
-    { key: "Partner Name", value: "agent_name" },
-    { key: "Payout Country", value: "payout_country" },
-    { key: "Payment Type", value: "payment_type" },
-];
-
-const orderData = [
-    { key: "Ascending", value: "ASC" },
-    { key: "Descending", value: "DESC" },
-];
-
-function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
     return (
         <FilterWrapper>
-            <SearchBox sx={{ columnGap: 1 }}>
-                <TextField
-                    variant="outlined"
-                    placeholder="Search"
-                    onChange={handleSearch}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                {/* <FilterTransactions handleFilter={handleFilter} /> */}
-            </SearchBox>
+            <HeaderWrapper>
+                <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+            </HeaderWrapper>
 
             <DropWrapper>
-                <Box>
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Box>
+                        <ExportButton
+                            variant="outlined"
+                            color="primary"
+                            component="span"
+                            sx={{ minWidth: "3px" }}
+                            disableElevation
+                            onClick={handleClick}
+                            startIcon={
+                                <SimCardDownloadOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            }
+                        >
+                            Export
+                        </ExportButton>
+                        <StyledMenu
+                            id="demo-customized-menu"
+                            MenuListProps={{
+                                "aria-labelledby": "demo-customized-button",
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <MenuItem onClick={handleClose} disableRipple>
+                                <PictureAsPdfIcon />
+                                Pdf
+                            </MenuItem>
+                            <Divider sx={{ my: 0.5 }} />
+                            <MenuItem onClick={handleClose} disableRipple>
+                                <DataObjectIcon />
+                                CSV
+                            </MenuItem>
+                            <MenuItem onClick={handleClose} disableRipple>
+                                <ListAltIcon />
+                                xlsx
+                            </MenuItem>
+                        </StyledMenu>
+                    </Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleSort}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue={state.sort_by}
                             renderValue={(selected) => {
-                                if (selected.length === 0) {
+                                if (selected === "created_ts") {
                                     return (
                                         <Typography
                                             component="p"
@@ -139,7 +211,7 @@ function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

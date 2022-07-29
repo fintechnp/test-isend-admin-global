@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import {
     CurrencyName,
     CountryName,
-    FormatDate,
     FormatNumber,
 } from "./../../../../App/helpers";
 
@@ -129,7 +128,7 @@ function Details({ data }) {
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Customer Id:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            <ValueWrapper sx={{ opacity: 0.8 }}>
                                 <Link
                                     to={`/customer/details/${data?.customer_id}`}
                                 >
@@ -208,7 +207,7 @@ function Details({ data }) {
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Beneficiary Id:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            <ValueWrapper sx={{ opacity: 0.8 }}>
                                 <Link
                                     to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
                                 >

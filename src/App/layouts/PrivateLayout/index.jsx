@@ -330,12 +330,6 @@ const PrivateLayout = ({ children }) => {
                         text: "Sanction List",
                         sub: false,
                     },
-                    {
-                        path: "/compliance/report",
-                        key: "report-compliance",
-                        text: "Suspicious Reports",
-                        sub: false,
-                    },
                 ],
             },
 

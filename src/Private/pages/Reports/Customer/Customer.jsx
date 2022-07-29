@@ -3,18 +3,21 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
+import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-import Header from "../Shared/Header";
+import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "./../../../../App/components/Loading";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import { CountryName, ReferenceName } from "./../../../../App/helpers";
+import {
+    CountryName,
+    ReferenceName,
+    FormatDate,
+} from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -34,18 +37,13 @@ const StyledName = styled(Typography)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-const StyledStatus = styled(Typography)(({ theme, value }) => ({
+const StyledStatus = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     paddingTop: "4px",
     paddingBottom: "4px",
     fontSize: "11px",
     borderRadius: "6px",
     textTransform: "capitalize",
-    color: theme.palette.primary.contrastText,
-    background: stringToColor(value),
-    "&: hover": {
-        background: stringToColor(value),
-    },
 }));
 
 const StyledMail = styled(Typography)(({ theme }) => ({
@@ -58,29 +56,6 @@ const StyledMail = styled(Typography)(({ theme }) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
 }));
-
-function stringToColor(string) {
-    switch (string) {
-        case "R":
-            // code block
-            return "#b81220";
-        case "P":
-            // code block
-            return "#bbd14d";
-        case "N":
-            // code block
-            return "#848581";
-        case "C":
-            // code block
-            return "#117308";
-        case "c":
-            // code block
-            return "#117308";
-        default:
-            // code block
-            return "#1a4b87";
-    }
-}
 
 const initialState = {
     page_number: 1,
@@ -157,7 +132,6 @@ function CustomerReports() {
             {
                 Header: "Name",
                 accessor: "first_name",
-                maxWidth: 140,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -185,8 +159,8 @@ function CustomerReports() {
                 ),
             },
             {
-                Header: "Address",
-                accessor: "country",
+                Header: "Identity",
+                accessor: "id_type",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -196,7 +170,7 @@ function CustomerReports() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CountryName(data.value)}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -206,9 +180,44 @@ function CustomerReports() {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.address
-                                ? data?.row?.original?.address
+                            {data?.row?.original?.id_number
+                                ? data?.row?.original?.id_number
                                 : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Address",
+                accessor: "country",
+                minWidth: 170,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "13px",
+                            }}
+                        >
+                            {data?.row?.original?.postcode}{" "}
+                            {data?.row?.original?.unit}{" "}
+                            {data?.row?.original?.street}{" "}
+                            {data?.row?.original?.address}
+                        </StyledName>
+                        <StyledName
+                            component="span"
+                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.state}
+                            {data?.row?.original?.state && ","}{" "}
+                            {CountryName(data.value)}
                         </StyledName>
                     </Box>
                 ),
@@ -216,6 +225,7 @@ function CustomerReports() {
             {
                 Header: "Contact",
                 accessor: "mobile_number",
+                minWidth: 160,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -250,54 +260,92 @@ function CustomerReports() {
             },
             {
                 Header: () => (
-                    <Box textAlign="center">
-                        <Typography>KYC Status</Typography>
+                    <Box textAlign="left">
+                        <Typography sx={{ fontSize: "15px" }}>
+                            KYC Status
+                        </Typography>
                     </Box>
                 ),
                 accessor: "kyc_status",
+                maxWidth: 110,
                 Cell: (data) => (
-                    <Box textAlign="center" sx={{ margin: "0px 12px" }}>
-                        <StyledStatus component="p" value={data.value}>
+                    <Box textAlign="left">
+                        <StyledStatus
+                            component="p"
+                            value={data.value}
+                            sx={{ opacity: 1 }}
+                        >
                             {ReferenceName(21, data.value)}
                         </StyledStatus>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "13px",
+                                opacity: 0.8,
+                            }}
+                        >
+                            {data?.row?.original?.address
+                                ? data?.row?.original?.address
+                                : "N/A"}
+                        </StyledName>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Acc. Status</Typography>
+                    <Box textAlign="left">
+                        <Typography sx={{ fontSize: "15px" }}>
+                            Since/Status
+                        </Typography>
                     </Box>
                 ),
-                accessor: "is_active",
-                maxWidth: 90,
+                accessor: "created_ts",
+                maxWidth: 100,
                 Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        {data.value ? (
-                            <Tooltip title="Active" arrow>
-                                <CheckCircleOutlineIcon
-                                    sx={{ color: "success.main" }}
-                                />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Blocked" arrow>
-                                <RemoveCircleOutlineIcon
-                                    sx={{ color: "border.main" }}
-                                />
-                            </Tooltip>
-                        )}
+                    <Box textAlign="left">
+                        <StyledName component="p" value={data.value}>
+                            {FormatDate(data?.value)}
+                        </StyledName>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            {data?.row?.original?.is_active ? (
+                                <Tooltip title="Active" arrow>
+                                    <StyledName sx={{ opacity: 0.8 }}>
+                                        Active
+                                    </StyledName>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Blocked" arrow>
+                                    <StyledName sx={{ opacity: 0.8 }}>
+                                        Inactive
+                                    </StyledName>
+                                </Tooltip>
+                            )}
+                        </Box>
                     </Box>
                 ),
             },
         ],
         []
     );
+
+    const sortData = [
+        { key: "None", value: "created_ts" },
+        { key: "Name", value: "first_name" },
+        { key: "Partner", value: "register_agent_id" },
+        { key: "Country", value: "country" },
+    ];
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
 
     const handlePartner = (e) => {
         const updatedFilterSchema = {
@@ -310,16 +358,20 @@ function CustomerReports() {
     const handleSearch = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            transaction_id: data?.transaction_id,
+            agent_id: data?.agent_id,
             customer_id: data?.customer_id,
-            pin_number: data?.pin_number,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payment_type: data?.payment_type,
-            payout_country: data?.payout_country,
-            status: data?.status,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
+            id_number: data?.id_number,
+            name: data?.name,
+            mobile_number: data?.mobile_number,
+            email: data?.email,
+            date_of_birth: data?.date_of_birth,
+            created_from_date: data?.created_from_date,
+            created_to_date: data?.created_to_date,
+            kyc_status: data?.kyc_status,
+            kyc_from_date: data?.kyc_from_date,
+            kyc_to_date: data?.kyc_to_date,
+            country: data?.country,
+            nationality: data?.kyc_to_date,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -330,6 +382,24 @@ function CustomerReports() {
         dispatch(reset("search_form_customer_reports"));
         dispatch({ type: "CUSTOMER_REPORT_RESET" });
         dispatch({ type: "GET_SENDING_PARTNER_RESET" });
+    };
+
+    const handleSort = (e) => {
+        const type = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: type,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleOrder = (e) => {
+        const order = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            order_by: order,
+        };
+        setFilterSchema(updatedFilterSchema);
     };
 
     const handleChangePage = (e, newPage) => {
@@ -359,6 +429,10 @@ function CustomerReports() {
                     handleReset={handleReset}
                     loading={p_loading}
                     partner={SendingPartner?.data}
+                    initialValues={{
+                        created_from_date: moment().format("YYYY-MM-DD"),
+                        created_to_date: moment().format("YYYY-MM-DD"),
+                    }}
                 />
             </Grid>
             {l_loading && (
@@ -376,7 +450,14 @@ function CustomerReports() {
             {!l_loading && CustomerReports?.data?.length > 0 && (
                 <Grid item xs={12}>
                     <CustomerWrapper>
-                        <Header title="Customer List" />
+                        <Filter
+                            sortData={sortData}
+                            orderData={orderData}
+                            title="Customers List"
+                            state={filterSchema}
+                            handleOrder={handleOrder}
+                            handleSort={handleSort}
+                        />
                         <Table
                             columns={columns}
                             data={CustomerReports?.data || []}

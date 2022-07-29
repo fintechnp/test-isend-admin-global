@@ -119,7 +119,6 @@ const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
 const CompliancePaymentRules = lazy(() =>
     import("../pages/Compliance/PaymentRules")
 );
-const ComplianceReport = lazy(() => import("../pages/Compliance/Report"));
 
 //Settings
 const Settings = lazy(() => import("../pages/Settings"));
@@ -260,7 +259,6 @@ const privateRoutes = [
         path: "/compliance/payment-rules",
         component: <CompliancePaymentRules />,
     },
-    { path: "/compliance/report", component: <ComplianceReport /> },
 
     //Settings
     { path: "/settings", component: <Settings /> },

@@ -89,25 +89,14 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function SearchForm({
-    handleSubmit,
-    handleReset,
-    handlePartner,
-    partner,
-    loading,
-}) {
+function SearchForm({ handleSubmit, handleReset }) {
     const country = JSON.parse(localStorage.getItem("country"));
-    const reference = JSON.parse(localStorage.getItem("reference"));
     const [minDate, setMinDate] = React.useState(null);
     const [maxDate, setMaxDate] = React.useState(null);
-    const [minKycDate, setMinKycDate] = React.useState(null);
-    const [maxKycDate, setMaxKycDate] = React.useState(null);
 
     const handleResetButton = (e) => {
         setMinDate(null);
         setMaxDate(null);
-        setMinKycDate(null);
-        setMaxKycDate(null);
         handleReset();
     };
 
@@ -119,13 +108,22 @@ function SearchForm({
                         <ContentPasteSearchIcon
                             sx={{ color: "primary.main", fontSize: "28px" }}
                         />
-                        <Title> Filter Customers </Title>
+                        <Title> Filter Beneficiary </Title>
                     </Box>
                 </TitleWrapper>
             </Grid>
             <Grid item xs={12}>
                 <Form onSubmit={handleSubmit}>
                     <FormWrapper container direction="row">
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="beneficiary_id"
+                                placeholder="Beneficiary Id"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="customer_id"
@@ -150,7 +148,6 @@ function SearchForm({
                                 placeholder="Country"
                                 type="text"
                                 small={12}
-                                onChange={handlePartner}
                                 component={SelectField}
                             >
                                 <option value="" disabled>
@@ -163,60 +160,6 @@ function SearchForm({
                                             key={data.tid}
                                         >
                                             {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="nationality"
-                                placeholder="Nationality"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    Select Nationality
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="agent_id"
-                                placeholder="Partner"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    {loading ? "Loading..." : "Select Partner"}
-                                </option>
-                                {!loading && partner?.length === 0 && (
-                                    <option value="" disabled>
-                                        No Partners
-                                    </option>
-                                )}
-                                {!loading && !partner && (
-                                    <option value="" disabled>
-                                        Select Country First
-                                    </option>
-                                )}
-                                {partner &&
-                                    partner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
-                                            {data.name}
                                         </option>
                                     ))}
                             </Field>
@@ -289,90 +232,6 @@ function SearchForm({
                                 }}
                             />
                         </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="date_of_birth"
-                                showLabel={true}
-                                placeholder="Date of Birth"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    max: new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="kyc_status"
-                                placeholder="Kyc Status"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option disabled value="">
-                                    Select Status
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 21
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="kyc_from_date"
-                                showLabel={true}
-                                placeholder="Kyc Date From"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMinKycDate(e.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    max: maxKycDate
-                                        ? new Date(maxKycDate)
-                                              .toISOString()
-                                              .slice(0, 10)
-                                        : new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="kyc_to_date"
-                                showLabel={true}
-                                placeholder="Kyc Date To"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMaxKycDate(e.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    min: new Date(minKycDate)
-                                        .toISOString()
-                                        .slice(0, 10),
-                                    max: new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapperLabel>
                         <Grid item xs={12}>
                             <ButtonWrapper
                                 container
@@ -408,4 +267,6 @@ function SearchForm({
     );
 }
 
-export default reduxForm({ form: "search_form_customer_reports" })(SearchForm);
+export default reduxForm({ form: "search_form_beneficiary_reports" })(
+    SearchForm
+);

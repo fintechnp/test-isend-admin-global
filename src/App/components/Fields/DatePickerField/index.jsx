@@ -3,6 +3,10 @@ import { styled } from "@mui/material/styles";
 import { Grid, Typography } from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
 import MuiFormControl from "@mui/material/FormControl";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TextField from "@mui/material/TextField";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 const Wrapper = styled(Grid)(({ theme }) => ({
     paddingTop: "4px",
@@ -67,7 +71,7 @@ const DatePickerField = ({
     defaultValue,
     inputProps,
     InputProps,
-    meta: { touched, invalid, error },
+    showLabel,
     ...rest
 }) => {
     return (
@@ -78,17 +82,15 @@ const DatePickerField = ({
                 </Grid>
             )}
             <Grid item xs={12} md={small ? small : 8}>
-                <Input
-                    variant="outlined"
-                    placeholder={placeholder ? placeholder : label}
-                    error={touched && invalid}
-                    helperText={touched && error}
-                    inputProps={inputProps}
-                    InputProps={InputProps}
-                    defaultValue={defaultValue}
-                    {...input}
-                    {...rest}
-                />
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <DatePicker
+                        label={showLabel ? placeholder : ""}
+                        placeholder={placeholder ? placeholder : label}
+                        renderInput={(params) => <TextField {...params} />}
+                        {...input}
+                        {...rest}
+                    />
+                </LocalizationProvider>
             </Grid>
         </Wrapper>
     );

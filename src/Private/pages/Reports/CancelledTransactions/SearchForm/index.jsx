@@ -92,22 +92,17 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
 function SearchForm({
     handleSubmit,
     handleReset,
-    handlePartner,
-    partner,
-    loading,
+    s_loading,
+    p_loading,
+    PayPartner,
+    SendPartner,
 }) {
-    const country = JSON.parse(localStorage.getItem("country"));
-    const reference = JSON.parse(localStorage.getItem("reference"));
     const [minDate, setMinDate] = React.useState(null);
     const [maxDate, setMaxDate] = React.useState(null);
-    const [minKycDate, setMinKycDate] = React.useState(null);
-    const [maxKycDate, setMaxKycDate] = React.useState(null);
 
     const handleResetButton = (e) => {
         setMinDate(null);
         setMaxDate(null);
-        setMinKycDate(null);
-        setMaxKycDate(null);
         handleReset();
     };
 
@@ -119,13 +114,22 @@ function SearchForm({
                         <ContentPasteSearchIcon
                             sx={{ color: "primary.main", fontSize: "28px" }}
                         />
-                        <Title> Filter Customers </Title>
+                        <Title> Filter Transaction </Title>
                     </Box>
                 </TitleWrapper>
             </Grid>
             <Grid item xs={12}>
                 <Form onSubmit={handleSubmit}>
                     <FormWrapper container direction="row">
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="transaction_id"
+                                placeholder="Transaction Id"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="customer_id"
@@ -137,81 +141,24 @@ function SearchForm({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="name"
-                                placeholder="Name"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="country"
-                                placeholder="Country"
-                                type="text"
-                                small={12}
-                                onChange={handlePartner}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="nationality"
-                                placeholder="Nationality"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    Select Nationality
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="agent_id"
-                                placeholder="Partner"
+                                name="sending_agent_id"
+                                placeholder="Send Partner"
                                 type="number"
                                 small={12}
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {loading ? "Loading..." : "Select Partner"}
+                                    {s_loading
+                                        ? "Loading..."
+                                        : "Select Send Partner"}
                                 </option>
-                                {!loading && partner?.length === 0 && (
+                                {!s_loading && SendPartner?.length === 0 && (
                                     <option value="" disabled>
                                         No Partners
                                     </option>
                                 )}
-                                {!loading && !partner && (
-                                    <option value="" disabled>
-                                        Select Country First
-                                    </option>
-                                )}
-                                {partner &&
-                                    partner.map((data) => (
+                                {SendPartner &&
+                                    SendPartner.map((data) => (
                                         <option
                                             value={data.agent_id}
                                             key={data?.tid}
@@ -223,36 +170,38 @@ function SearchForm({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="id_number"
-                                placeholder="Id Number"
-                                type="text"
+                                name="payout_agent_id"
+                                placeholder="Payout Partner"
+                                type="number"
                                 small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="mobile_number"
-                                placeholder="Mobile Number"
-                                type="tel"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email"
-                                placeholder="Email"
-                                type="email"
-                                small={12}
-                                component={TextField}
-                            />
+                                component={SelectField}
+                            >
+                                <option value="" disabled>
+                                    {p_loading
+                                        ? "Loading..."
+                                        : "Select Payout Partner"}
+                                </option>
+                                {!p_loading && PayPartner?.length === 0 && (
+                                    <option value="" disabled>
+                                        No Partners
+                                    </option>
+                                )}
+                                {PayPartner &&
+                                    PayPartner.map((data) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapperLabel item xs={12} sm={6}>
                             <Field
-                                name="created_from_date"
+                                name="from_date"
                                 showLabel={true}
-                                placeholder="Member From"
+                                placeholder="From Date"
                                 type="date"
                                 small={12}
                                 component={TextField}
@@ -271,9 +220,9 @@ function SearchForm({
                         </FieldWrapperLabel>
                         <FieldWrapperLabel item xs={12} sm={6}>
                             <Field
-                                name="created_to_date"
+                                name="to_date"
                                 showLabel={true}
-                                placeholder="Member To"
+                                placeholder="To Date"
                                 type="date"
                                 small={12}
                                 component={TextField}
@@ -283,90 +232,6 @@ function SearchForm({
                                 }}
                                 inputProps={{
                                     min: new Date(minDate)
-                                        .toISOString()
-                                        .slice(0, 10),
-                                    max: new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="date_of_birth"
-                                showLabel={true}
-                                placeholder="Date of Birth"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    max: new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="kyc_status"
-                                placeholder="Kyc Status"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option disabled value="">
-                                    Select Status
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 21
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="kyc_from_date"
-                                showLabel={true}
-                                placeholder="Kyc Date From"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMinKycDate(e.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    max: maxKycDate
-                                        ? new Date(maxKycDate)
-                                              .toISOString()
-                                              .slice(0, 10)
-                                        : new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapperLabel>
-                        <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="kyc_to_date"
-                                showLabel={true}
-                                placeholder="Kyc Date To"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMaxKycDate(e.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    min: new Date(minKycDate)
                                         .toISOString()
                                         .slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
@@ -408,4 +273,4 @@ function SearchForm({
     );
 }
 
-export default reduxForm({ form: "search_form_customer_reports" })(SearchForm);
+export default reduxForm({ form: "search_form_cancel_reports" })(SearchForm);
