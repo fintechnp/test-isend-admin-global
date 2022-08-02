@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
 
 import Filter from "../Shared/Filter";
@@ -89,7 +88,6 @@ const stateSend = {
 };
 
 function CustomerReports() {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -371,7 +369,7 @@ function CustomerReports() {
             kyc_from_date: data?.kyc_from_date,
             kyc_to_date: data?.kyc_to_date,
             country: data?.country,
-            nationality: data?.kyc_to_date,
+            nationality: data?.nationality,
         };
         setFilterSchema(updatedFilterSchema);
     };

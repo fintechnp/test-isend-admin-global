@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { SubmissionError } from "redux-form";
+import { SubmissionError, reset } from "redux-form";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -19,6 +19,7 @@ function Login() {
     } = useSelector((state) => state.get_user);
 
     useEffect(() => {
+        dispatch(reset("login_form"));
         dispatch({ type: "REFRESH_TOKEN_RESET" });
     }, [dispatch]);
 

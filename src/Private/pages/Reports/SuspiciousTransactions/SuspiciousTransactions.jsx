@@ -122,7 +122,7 @@ function TransactionsSuspiciousReports() {
         () => [
             {
                 Header: "Id",
-                accessor: "tid",
+                accessor: "transaction_id",
                 maxWidth: 40,
                 Cell: (data) => (
                     <Box
@@ -132,12 +132,10 @@ function TransactionsSuspiciousReports() {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{ opacity: 0.8, textDecoration: "none" }}
-                        >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
                             <Link
                                 to={`/transactions/details/${data.row.original.tid}`}
+                                style={{ textDecoration: "none" }}
                             >
                                 {data.value ? data.value : "N/A"}
                             </Link>
@@ -215,7 +213,7 @@ function TransactionsSuspiciousReports() {
             },
             {
                 Header: "Rate/Charge",
-                accessor: "average_customer_rate",
+                accessor: "customer_rate",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -241,9 +239,9 @@ function TransactionsSuspiciousReports() {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.total_charge
+                            {data?.row?.original?.service_charge
                                 ? FormatNumber(
-                                      data?.row?.original?.total_charge
+                                      data?.row?.original?.service_charge
                                   )
                                 : "N/A"}
                         </StyledName>
@@ -251,8 +249,8 @@ function TransactionsSuspiciousReports() {
                 ),
             },
             {
-                Header: "Payout Amount",
-                accessor: "payout_amount",
+                Header: "Amount",
+                accessor: "collected_amount",
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box
@@ -270,6 +268,20 @@ function TransactionsSuspiciousReports() {
                             }}
                         >
                             {data.value ? FormatNumber(data.value) : "N/A"}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "13px",
+                                opacity: 0.8,
+                            }}
+                        >
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(
+                                      data?.row?.original?.payout_amount
+                                  )
+                                : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -417,7 +429,7 @@ function TransactionsSuspiciousReports() {
                             }}
                             sortData={sortData}
                             orderData={orderData}
-                            title="Transaction Suspicious Lists"
+                            title="Suspicious Transactions Report"
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}

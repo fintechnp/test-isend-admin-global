@@ -46,6 +46,13 @@ const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 4px",
 }));
 
+const FieldLevelWrapper = styled(Grid)(({ theme }) => ({
+    padding: "4px 4px",
+    "& .MuiInputBase-input": {
+        opacity: 0.8,
+    },
+}));
+
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
     padding: "4px 0px",
     paddingRight: "4px",
@@ -95,8 +102,8 @@ function SearchForm({
     const [maxDate, setMaxDate] = React.useState(null);
 
     const handleResetButton = (e) => {
-        setMinDate();
-        setMaxDate();
+        setMinDate(null);
+        setMaxDate(null);
         handleReset();
     };
 
@@ -266,14 +273,18 @@ function SearchForm({
                                         ))}
                             </Field>
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
+                        <FieldLevelWrapper item xs={12} sm={6}>
                             <Field
                                 name="from_date"
                                 placeholder="Date From"
+                                showLabel={true}
                                 type="date"
                                 small={12}
                                 component={TextField}
                                 onChange={(e) => setMinDate(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                                 inputProps={{
                                     max: maxDate
                                         ? new Date(maxDate)
@@ -282,15 +293,19 @@ function SearchForm({
                                         : new Date().toISOString().slice(0, 10),
                                 }}
                             />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
+                        </FieldLevelWrapper>
+                        <FieldLevelWrapper item xs={12} sm={6}>
                             <Field
                                 name="to_date"
                                 placeholder="Date To"
+                                showLabel={true}
                                 type="date"
                                 small={12}
                                 component={TextField}
                                 onChange={(e) => setMaxDate(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                                 inputProps={{
                                     min: new Date(minDate)
                                         .toISOString()
@@ -298,7 +313,7 @@ function SearchForm({
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
-                        </FieldWrapper>
+                        </FieldLevelWrapper>
                         <Grid item xs={12}>
                             <ButtonWrapper
                                 container

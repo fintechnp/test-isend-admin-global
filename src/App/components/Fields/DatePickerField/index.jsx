@@ -29,36 +29,10 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
     "& .MuiFormHelperText-root": {
         background: "transparent",
     },
-}));
-
-const Input = styled(MuiTextField)(({ theme }) => ({
-    // border: "1px solid #D0D3D5",
-    width: "100%",
-    "& .MuiOutlinedInput-multiline": {
-        padding: "0px",
-    },
-    "& .MuiInputBase-input": {
+    "& .MuiInputBase-input.MuiOutlinedInput-input": {
         padding: "9px 10px",
         color: theme.palette.secondary.contrastText,
         fontSize: "14px",
-    },
-    " & .MuiInputBase-root.MuiOutlinedInput-root": {
-        padding: 0,
-    },
-    "& .MuiFormHelperText-contained": {
-        marginLeft: "0px",
-    },
-    "& .MuiInputBase-root.Mui-disabled::placeholder": {
-        color: "#000",
-    },
-    "&:focus": {
-        border: "1px solid #D0D3D5",
-    },
-    "&:before": {
-        // border: "1px solid #D0D3D5",
-    },
-    "&:after": {
-        border: "1px solid #D0D3D5",
     },
 }));
 
@@ -72,6 +46,7 @@ const DatePickerField = ({
     inputProps,
     InputProps,
     showLabel,
+    meta: { touched, invalid },
     ...rest
 }) => {
     return (
@@ -82,15 +57,17 @@ const DatePickerField = ({
                 </Grid>
             )}
             <Grid item xs={12} md={small ? small : 8}>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <DatePicker
-                        label={showLabel ? placeholder : ""}
-                        placeholder={placeholder ? placeholder : label}
-                        renderInput={(params) => <TextField {...params} />}
-                        {...input}
-                        {...rest}
-                    />
-                </LocalizationProvider>
+                <FormControl error={touched && invalid}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <DatePicker
+                            label={showLabel ? placeholder : ""}
+                            placeholder={placeholder ? placeholder : label}
+                            renderInput={(params) => <TextField {...params} />}
+                            {...input}
+                            {...rest}
+                        />
+                    </LocalizationProvider>
+                </FormControl>
             </Grid>
         </Wrapper>
     );

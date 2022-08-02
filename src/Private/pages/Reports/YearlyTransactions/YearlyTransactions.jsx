@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
+import moment from "moment";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
@@ -43,8 +44,8 @@ const initialState = {
     page_size: 15,
     sending_agent_id: 0,
     transaction_year: 0,
-    sort_by: "created_ts",
-    order_by: "DESC",
+    sort_by: "agent_name",
+    order_by: "ASC",
 };
 
 const stateSend = {
@@ -89,20 +90,43 @@ function YearlyTransactions() {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 40,
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography sx={{ fontSize: "15px" }}>
+                            Partner
+                        </Typography>
+                    </Box>
+                ),
+                accessor: "agent_name",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            fontSize: "12px",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? data.value : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
             },
             {
-                Header: "Partner",
-                accessor: "agent_name",
+                Header: () => (
+                    <Box textAlign="right">
+                        <Typography sx={{ fontSize: "15px" }}>JAN</Typography>
+                    </Box>
+                ),
+                accessor: "txn_cnt",
                 minWidth: 190,
                 Cell: (data) => (
                     <Box
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: "flex-start",
+                            alignItems: "flex-end",
                         }}
                     >
                         <StyledName component="p">
@@ -112,128 +136,61 @@ function YearlyTransactions() {
                 ),
             },
             {
-                Header: "Send Country",
-                accessor: "send_country",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            fontSize: "12px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
-                        </StyledName>
+                Header: () => (
+                    <Box textAlign="right">
+                        <Typography sx={{ fontSize: "15px" }}>FEB</Typography>
                     </Box>
                 ),
-            },
-            {
-                Header: "Payout Country",
-                accessor: "payout_country",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            fontSize: "12px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
-                                : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Rate/Charge",
-                accessor: "average_customer_rate",
+                accessor: "txn_month_no",
+                minWidth: 190,
                 Cell: (data) => (
                     <Box
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: "flex-start",
+                            alignItems: "flex-end",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.total_charge
-                                ? FormatNumber(
-                                      data?.row?.original?.total_charge
-                                  )
-                                : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Payout Amount",
-                accessor: "payout_amount",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                        <StyledName component="p">
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>Date</Typography>
+                    <Box textAlign="right">
+                        <Typography sx={{ fontSize: "15px" }}>MAR</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
+                accessor: "total_charge",
+                minWidth: 190,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                        }}
+                    >
+                        <StyledName component="p">
+                            {data.value ? data.value : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right">
+                        <Typography sx={{ fontSize: "15px" }}>Total</Typography>
+                    </Box>
+                ),
+                accessor: "collected_amount",
                 maxWidth: 120,
                 Cell: (data) => (
-                    <Box textAlign="left">
+                    <Box textAlign="right">
                         <StyledName component="p" value={data.value}>
-                            {FormatDate(data?.value)}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -256,10 +213,11 @@ function YearlyTransactions() {
     ];
 
     const handleSearch = (data) => {
+        const d = new Date(data?.transaction_year);
         const updatedFilterSchema = {
             ...filterSchema,
             sending_agent_id: data?.sending_agent_id,
-            transaction_year: data?.transaction_year,
+            transaction_year: d.getFullYear(),
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -307,10 +265,30 @@ function YearlyTransactions() {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const getRowTotal = (data, key) => {
+        let total = 0;
+        data.forEach((item) => {
+            total += item[key];
+        });
+        return total;
+    };
+
+    const getColumnTotal = (data, key) => {
+        let total = 0;
+        data.forEach((item) => {
+            total += item[key];
+        });
+        return total;
+    };
+
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
                 <SearchForm
+                    enableReinitialize
+                    initialValues={{
+                        transaction_year: moment().format("YYYY-MM-DD"),
+                    }}
                     onSubmit={handleSearch}
                     s_loading={s_loading}
                     SendPartner={SendPartner?.data}
@@ -326,7 +304,7 @@ function YearlyTransactions() {
                 YearlyTransactions?.data &&
                 YearlyTransactions?.data?.length === 0 && (
                     <Grid item xs={12}>
-                        <NoResults text="No Transaction Found" />
+                        <NoResults text="No Data Found" />
                     </Grid>
                 )}
             {!l_loading && YearlyTransactions?.data?.length > 0 && (
@@ -335,7 +313,7 @@ function YearlyTransactions() {
                         <Filter
                             sortData={sortData}
                             orderData={orderData}
-                            title="Transaction Summary Lists"
+                            title={`Yearly Transactions Report [${filterSchema?.transaction_year}]`}
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}

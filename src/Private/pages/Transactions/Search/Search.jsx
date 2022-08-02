@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
+import moment from "moment";
 import { reset } from "redux-form";
 import { useNavigate } from "react-router-dom";
 import MuiIconButton from "@mui/material/IconButton";
@@ -344,7 +345,15 @@ function Search() {
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
-                <SearchForm onSubmit={handleSearch} handleReset={handleReset} />
+                <SearchForm
+                    enableReinitialize
+                    initialValues={{
+                        from_date: moment().format("YYYY-MM-DD"),
+                        to_date: moment().format("YYYY-MM-DD"),
+                    }}
+                    onSubmit={handleSearch}
+                    handleReset={handleReset}
+                />
             </Grid>
             {l_loading && (
                 <Grid item xs={12}>
