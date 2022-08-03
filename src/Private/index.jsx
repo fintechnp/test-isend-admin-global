@@ -173,9 +173,10 @@ import {
     PaymentProcessingSaga,
 } from "./pages/PaymentProcess/store";
 
-//Transactions
+//Reports
 import {
     GetCustomerReportsReducer,
+    DownloadCustomerReportsReducer,
     GetBeneficiaryReportsReducer,
     GetTransactionsSummaryReportsReducer,
     GetYearlyTransactionsReportsReducer,
@@ -368,6 +369,7 @@ export const privateReducer = {
 
     //Reports
     get_customer_report: GetCustomerReportsReducer,
+    download_customer_report: DownloadCustomerReportsReducer,
     get_beneficiary_report: GetBeneficiaryReportsReducer,
     get_transactions_summary_report: GetTransactionsSummaryReportsReducer,
     get_yearly_transactions_report: GetYearlyTransactionsReportsReducer,

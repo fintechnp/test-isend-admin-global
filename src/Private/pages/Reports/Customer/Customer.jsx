@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import { Box, Tooltip, Typography } from "@mui/material";
 
@@ -101,6 +102,12 @@ function CustomerReports() {
         (state) => state.get_sending_partner
     );
 
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_customer_report);
+
     useEffect(() => {
         dispatch(reset("search_form_customer_reports"));
         dispatch({ type: "CUSTOMER_REPORT_RESET" });
@@ -126,6 +133,24 @@ function CustomerReports() {
                 Header: "Id",
                 accessor: "tid",
                 maxWidth: 50,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            <Link
+                                to={`/customer/details/${data.row.original.tid}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
             },
             {
                 Header: "Name",
@@ -309,7 +334,7 @@ function CustomerReports() {
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
-                                alignItems: "center",
+                                alignItems: "flex-start",
                             }}
                         >
                             {data?.row?.original?.is_active ? (
@@ -333,6 +358,7 @@ function CustomerReports() {
         []
     );
 
+    //Filter
     const sortData = [
         { key: "None", value: "created_ts" },
         { key: "Name", value: "first_name" },
@@ -400,6 +426,7 @@ function CustomerReports() {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //Pagination
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
@@ -417,6 +444,74 @@ function CustomerReports() {
         };
         setFilterSchema(updatedFilterSchema);
     };
+
+    //Downloads
+    const headers = [
+        { label: "Title", key: "title" },
+        { label: "First Name", key: "first_name" },
+        { label: "Middle Name", key: "middle_name" },
+        { label: "Last Name", key: "last_name" },
+        { label: "Address", key: "address" },
+        { label: "Birth Country", key: "birth_country" },
+        { label: "Citizenship Country", key: "citizenship_country" },
+        { label: "City", key: "city" },
+        { label: "Country", key: "country" },
+        { label: "Country Ios2", key: "country_ios2" },
+        { label: "Created By", key: "created_by" },
+        { label: "Created Time", key: "created_ts" },
+        { label: "Customer Id", key: "customer_id" },
+        { label: "Customer Type", key: "customer_type" },
+        { label: "Date of Birth", key: "date_of_birth" },
+        { label: "Email", key: "email" },
+        { label: "Gender", key: "gender" },
+        { label: "Id Expiry Date", key: "id_expiry_date" },
+        { label: "Id Issue Date", key: "id_issue_date" },
+        { label: "Id Issued Country", key: "id_issued_country" },
+        { label: "Id Issued State", key: "id_issued_state" },
+        { label: "Id Number", key: "id_number" },
+        { label: "Id Type", key: "id_type" },
+        { label: "Is Active", key: "is_active" },
+        { label: "Kyc Status", key: "kyc_status" },
+        { label: "Language", key: "language" },
+        { label: "Mobile Number", key: "mobile_number" },
+        { label: "Occupation", key: "occupation" },
+        { label: "Phone Country Code", key: "phone_country_code" },
+        { label: "Phone Number", key: "phone_number" },
+        { label: "Post Code", key: "postcode" },
+        { label: "Register Agent Id", key: "register_agent_id" },
+        { label: "Source of Income", key: "source_of_income" },
+        { label: "State", key: "state" },
+        { label: "Street", key: "street" },
+        { label: "Status", key: "status" },
+        { label: "Tid", key: "tid" },
+        { label: "Unit", key: "unit" },
+        { label: "Updated By", key: "updated_by" },
+        { label: "Updated Time", key: "updated_ts" },
+    ];
+
+    const csvReport = {
+        filename: "CustomerReport.csv",
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadPdf = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(actions.download_customer_report(updatedFilterSchema));
+    };
+
+    const downloadCsv = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(actions.download_customer_report(updatedFilterSchema));
+    };
+
+    const downloadXlsx = () => {};
 
     return (
         <Grid container sx={{ pb: "24px" }}>
@@ -449,12 +544,18 @@ function CustomerReports() {
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Filter
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
                             sortData={sortData}
                             orderData={orderData}
                             title="Customers List"
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
+                            downloadPdf={downloadPdf}
+                            downloadCsv={downloadCsv}
+                            downloadXlsx={downloadXlsx}
                         />
                         <Table
                             columns={columns}

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
+import { CSVLink } from "react-csv";
 import { Box, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
@@ -111,17 +112,46 @@ const ExportButton = styled(LoadingButton)(({ theme }) => ({
 function Filter({
     handleSort,
     handleOrder,
+    loading,
+    success,
     title,
     state,
     sortData,
     orderData,
+    csvReport,
+    downloadPdf,
+    downloadCsv,
+    downloadXlsx,
 }) {
+    const downRef = React.useRef(null);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+
+    React.useEffect(() => {
+        console.log(downRef, "ref");
+        if (success) {
+            // downRef.current.link.click();
+        }
+    }, [success]);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handlePdf = () => {
+        downloadPdf();
+        setAnchorEl(null);
+    };
+
+    const handleCsv = () => {
+        downloadCsv();
+        setAnchorEl(null);
+    };
+    const handleXlsx = () => {
+        downloadXlsx();
         setAnchorEl(null);
     };
 
@@ -152,7 +182,7 @@ function Filter({
                                 />
                             }
                         >
-                            Export
+                            {loading ? "Downloading...." : "Export"}
                         </ExportButton>
                         <StyledMenu
                             id="demo-customized-menu"
@@ -163,16 +193,19 @@ function Filter({
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose} disableRipple>
+                            <MenuItem onClick={handlePdf} disableRipple>
                                 <PictureAsPdfIcon />
                                 Pdf
                             </MenuItem>
                             <Divider sx={{ my: 0.5 }} />
-                            <MenuItem onClick={handleClose} disableRipple>
-                                <DataObjectIcon />
-                                CSV
-                            </MenuItem>
-                            <MenuItem onClick={handleClose} disableRipple>
+                            <div>
+                                <MenuItem onClick={handleCsv} disableRipple>
+                                    <DataObjectIcon />
+                                    CSV
+                                </MenuItem>
+                                <CSVLink {...csvReport} ref={downRef} />
+                            </div>
+                            <MenuItem onClick={handleXlsx} disableRipple>
                                 <ListAltIcon />
                                 xlsx
                             </MenuItem>
