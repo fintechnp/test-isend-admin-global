@@ -1,7 +1,8 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import { CSVLink } from "react-csv";
+import { useDispatch } from "react-redux";
 import { Box, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
@@ -12,6 +13,9 @@ import DataObjectIcon from "@mui/icons-material/DataObject";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+
+import DocumentPdf from "./DocumentPdf";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "2px",
@@ -119,20 +123,17 @@ function Filter({
     sortData,
     orderData,
     csvReport,
-    downloadPdf,
-    downloadCsv,
-    downloadXlsx,
+    downloadData,
 }) {
-    const downRef = React.useRef(null);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const dispatch = useDispatch();
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
-    React.useEffect(() => {
-        console.log(downRef, "ref");
-        if (success) {
-            // downRef.current.link.click();
+    useEffect(() => {
+        if (!success && open) {
+            downloadData();
         }
-    }, [success]);
+    }, [success, open]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -142,17 +143,11 @@ function Filter({
     };
 
     const handlePdf = () => {
-        downloadPdf();
-        setAnchorEl(null);
+        handleClose();
     };
 
-    const handleCsv = () => {
-        downloadCsv();
-        setAnchorEl(null);
-    };
     const handleXlsx = () => {
-        downloadXlsx();
-        setAnchorEl(null);
+        handleClose();
     };
 
     return (
@@ -182,7 +177,7 @@ function Filter({
                                 />
                             }
                         >
-                            {loading ? "Downloading...." : "Export"}
+                            {loading ? "Wait.." : "Export"}
                         </ExportButton>
                         <StyledMenu
                             id="demo-customized-menu"
@@ -193,18 +188,23 @@ function Filter({
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handlePdf} disableRipple>
-                                <PictureAsPdfIcon />
-                                Pdf
-                            </MenuItem>
+                            <PDFDownloadLink
+                                onClick={handlePdf}
+                                document={<DocumentPdf csvReport={csvReport} />}
+                                fileName="CustomerReports.pdf"
+                            >
+                                <MenuItem disableRipple>
+                                    <PictureAsPdfIcon />
+                                    Pdf
+                                </MenuItem>
+                            </PDFDownloadLink>
                             <Divider sx={{ my: 0.5 }} />
-                            <div>
-                                <MenuItem onClick={handleCsv} disableRipple>
+                            <CSVLink {...csvReport}>
+                                <MenuItem onClick={handleClose} disableRipple>
                                     <DataObjectIcon />
                                     CSV
                                 </MenuItem>
-                                <CSVLink {...csvReport} ref={downRef} />
-                            </div>
+                            </CSVLink>
                             <MenuItem onClick={handleXlsx} disableRipple>
                                 <ListAltIcon />
                                 xlsx
