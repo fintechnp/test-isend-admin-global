@@ -4,10 +4,12 @@ import MuiPaper from "@mui/material/Paper";
 import MuiButton from "@mui/material/Button";
 import { Grid, Typography } from "@mui/material";
 import { Field, Form, reduxForm } from "redux-form";
+import CardMedia from "@mui/material/CardMedia";
 
 import TextField from "../../../App/components/Fields/TextField";
 import Validator from "../../../App/utils/validators";
 import Loading from "../../../App/components/Loading";
+import Logo from "../../../assets/long-logo.svg";
 
 const FORM_NAME = "login_form";
 
@@ -22,13 +24,13 @@ const Paper = styled(MuiPaper)(({ theme }) => ({
 }));
 
 const FormContainer = styled(Grid)(({ theme }) => ({
-    padding: "16px",
+    padding: "16px 20px",
     paddingBottom: "30px",
     maxWidth: "300px",
     backgroundColor: "#fcfcfc",
     borderRadius: "6px",
     [theme.breakpoints.up("sm")]: {
-        minWidth: "320px",
+        minWidth: "340px",
     },
     boxShadow: "10px 0px 8px 5px rgba(0, 0, 0, .1)",
     "&:hover": {
@@ -36,11 +38,14 @@ const FormContainer = styled(Grid)(({ theme }) => ({
     },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-    fontWeight: 500,
-    fontSize: "30px",
-    textAlign: "center",
-    color: "#071170",
+const LogoWrapper = styled(CardMedia)(({ theme }) => ({
+    minHeight: "108px",
+    maxHeight: "108px",
+    width: "100%",
+    objectFit: "contain",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 }));
 
 const Button = styled(MuiButton)(({ theme }) => ({
@@ -60,12 +65,22 @@ const LoginForm = ({ handleSubmit, loading }) => {
     return (
         <Paper square={true}>
             <Form onSubmit={handleSubmit} data-testid="login_form">
-                <FormContainer container spacing={1} direction="column">
+                <FormContainer container rowSpacing={1} direction="column">
                     <Grid item>
-                        <Title component="h6">iSend Global</Title>
+                        <LogoWrapper
+                            component="img"
+                            image={Logo}
+                            alt="isend logo"
+                        />
                     </Grid>
                     <Grid item>
-                        <Typography sx={{ fontWeight: 400, fontSize: "15px" }}>
+                        <Typography
+                            sx={{
+                                fontWeight: 400,
+                                fontSize: "15px",
+                                opacity: 0.8,
+                            }}
+                        >
                             Sign In to your account
                         </Typography>
                     </Grid>
@@ -105,11 +120,7 @@ const LoginForm = ({ handleSubmit, loading }) => {
                             alignItems="center"
                         >
                             <Grid item>
-                                <Button
-                                    data-testid="login_button"
-                                    variant="contained"
-                                    type="submit"
-                                >
+                                <Button variant="contained" type="submit">
                                     Login
                                 </Button>
                             </Grid>

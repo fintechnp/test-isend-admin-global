@@ -90,7 +90,14 @@ function TransactionsSummaryReports() {
         (state) => state.get_payout_partner
     );
 
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
     useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_summary_reports"));
         dispatch({ type: "TRANSACTIONS_SUMMARY_REPORT_RESET" });
         dispatch({ type: "GET_SENDING_PARTNER_RESET" });
@@ -364,6 +371,7 @@ function TransactionsSummaryReports() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_summary_reports"));
         dispatch({ type: "TRANSACTIONS_SUMMARY_REPORT_RESET" });
         dispatch({ type: "GET_SENDING_PARTNER_RESET" });
@@ -406,6 +414,37 @@ function TransactionsSummaryReports() {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //Downloads
+    const headers = [
+        { label: "First Name", key: "first_name" },
+        { label: "Middle Name", key: "middle_name" },
+        { label: "Last Name", key: "last_name" },
+        { label: "Country", key: "country" },
+        { label: "Customer Id", key: "customer_id" },
+        { label: "Date of Birth", key: "date_of_birth" },
+        { label: "Kyc Status", key: "kyc_status" },
+        { label: "Mobile Number", key: "mobile_number" },
+        { label: "Email", key: "email" },
+        { label: "Created By", key: "created_by" },
+        { label: "Created Time", key: "created_ts" },
+    ];
+
+    const csvReport = {
+        title: "Report on Transactions Summary",
+        start: filterSchema?.from_date,
+        end: filterSchema?.to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, "transaction_summary"));
+    };
+
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
@@ -441,12 +480,17 @@ function TransactionsSummaryReports() {
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Filter
+                            fileName="SummaryReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
                             sortData={sortData}
                             orderData={orderData}
                             title="Transactions Summary Report"
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
+                            downloadData={downloadData}
                         />
                         <Table
                             columns={columns}

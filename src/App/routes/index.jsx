@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 
+import { PublicLayout, PrivateLayout } from "../layouts";
 import showToast from "../components/Toast";
 import { publicRoutes } from "../../Public";
-import PrivateArea from "../components/PrivateArea";
+import { privateRoutes } from "../../Private";
 
 const MainRoutes = ({ setMode }) => {
     const dispatch = useDispatch();
@@ -32,14 +33,25 @@ const MainRoutes = ({ setMode }) => {
 
     return (
         <Routes>
-            {publicRoutes.map((route) => (
-                <Route
-                    path={route.path}
-                    element={route.component}
-                    key={route.path}
-                />
-            ))}
-            <Route path={"*"} element={<PrivateArea />} />
+            <Route element={<PublicLayout />}>
+                {publicRoutes.map((route) => (
+                    <Route
+                        path={route.path}
+                        element={route.component}
+                        key={route.path}
+                    />
+                ))}
+            </Route>
+            <Route element={<PrivateLayout />}>
+                {privateRoutes.map((route) => (
+                    <Route
+                        key={route.path}
+                        path={route.path}
+                        element={route.component}
+                    />
+                ))}
+            </Route>
+            <Route path="*" element={<p>404 Page Not Found</p>} />
         </Routes>
     );
 };

@@ -70,7 +70,14 @@ function YearlyTransactions() {
         (state) => state.get_sending_partner
     );
 
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
     useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_yearly_reports"));
         dispatch({ type: "YEARLY_TRANSACTIONS_REPORT_RESET" });
     }, [dispatch]);
@@ -225,6 +232,7 @@ function YearlyTransactions() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_yearly_reports"));
         dispatch({ type: "YEARLY_TRANSACTIONS_REPORT_RESET" });
     };
@@ -265,20 +273,34 @@ function YearlyTransactions() {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const getRowTotal = (data, key) => {
-        let total = 0;
-        data.forEach((item) => {
-            total += item[key];
-        });
-        return total;
+    //Downloads
+    const headers = [
+        { label: "First Name", key: "first_name" },
+        { label: "Middle Name", key: "middle_name" },
+        { label: "Last Name", key: "last_name" },
+        { label: "Country", key: "country" },
+        { label: "Customer Id", key: "customer_id" },
+        { label: "Date of Birth", key: "date_of_birth" },
+        { label: "Kyc Status", key: "kyc_status" },
+        { label: "Mobile Number", key: "mobile_number" },
+        { label: "Email", key: "email" },
+        { label: "Created By", key: "created_by" },
+        { label: "Created Time", key: "created_ts" },
+    ];
+
+    const csvReport = {
+        title: "Report on Yearly Transactions",
+        year: filterSchema?.transaction_year,
+        headers: headers,
+        data: ReportsDownload?.data || [],
     };
 
-    const getColumnTotal = (data, key) => {
-        let total = 0;
-        data.forEach((item) => {
-            total += item[key];
-        });
-        return total;
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, "transaction_yearly"));
     };
 
     return (
@@ -311,12 +333,17 @@ function YearlyTransactions() {
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Filter
+                            fileName="YearlyReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
                             sortData={sortData}
                             orderData={orderData}
                             title={`Yearly Transactions Report [${filterSchema?.transaction_year}]`}
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
+                            downloadData={downloadData}
                         />
                         <Table
                             columns={columns}

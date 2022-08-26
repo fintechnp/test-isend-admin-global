@@ -23,18 +23,22 @@ export const getCustomerReport = takeEvery(
     }
 );
 
-export const downloadCustomerReport = takeEvery(
-    actions.DOWNLOAD_CUSTOMER_REPORT,
+export const downloadReport = takeEvery(
+    actions.DOWNLOAD_REPORT,
     function* (action) {
         try {
-            const res = yield call(api.get, `report/customer`, action.query);
+            const res = yield call(
+                api.get,
+                `report/${action.path}`,
+                action.query
+            );
             yield put({
-                type: actions.DOWNLOAD_CUSTOMER_REPORT_SUCCESS,
+                type: actions.DOWNLOAD_REPORT_SUCCESS,
                 response: res,
             });
         } catch (error) {
             yield put({
-                type: actions.DOWNLOAD_CUSTOMER_REPORT_FAILED,
+                type: actions.DOWNLOAD_REPORT_FAILED,
                 error: error.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
@@ -156,7 +160,7 @@ export const getSuspiciousTransactionsReport = takeEvery(
 export default function* saga() {
     yield all([
         getCustomerReport,
-        downloadCustomerReport,
+        downloadReport,
         getBeneficiaryReport,
         getTransactionsSummaryReport,
         getYearlyTransactionsReport,

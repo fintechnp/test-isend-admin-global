@@ -19,7 +19,7 @@ const dark = {
     },
     warning: {
         light: "#ffe5e5",
-        main: "#ff4949",
+        main: "#9b9292",
         dark: "#e61717",
     },
     text: {

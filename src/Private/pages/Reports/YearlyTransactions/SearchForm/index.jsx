@@ -68,6 +68,7 @@ const ResetButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.warning.main,
     "&:hover": {
         background: theme.palette.warning.dark,
+        border: `1px solid ${theme.palette.warning.main}`,
     },
     "& .MuiCircularProgress-root": {
         color: theme.palette.primary.contrastText,
@@ -83,6 +84,7 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
+        border: `1px solid ${theme.palette.primary.main}`,
     },
     "& .MuiCircularProgress-root": {
         color: theme.palette.primary.contrastText,

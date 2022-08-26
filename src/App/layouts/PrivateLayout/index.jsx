@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import Drawer from "../../components/Drawer";
+import { Navigate, Outlet } from "react-router-dom";
 import {
     Dashboard,
     Settings,
@@ -14,9 +15,10 @@ import {
 import roles from "../../global/roles";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 
+import { AuthConsumer } from "../../auth";
 import Loading from "./../../../App/components/Loading";
 
-const PrivateLayout = ({ children }) => {
+const PrivateLayout = () => {
     const getMainItems = () => {
         return [
             {
@@ -346,11 +348,19 @@ const PrivateLayout = ({ children }) => {
     };
 
     return (
-        <Drawer menus={getMainItems}>
-            <Suspense fallback={<Loading loading={true} />}>
-                {children}
-            </Suspense>
-        </Drawer>
+        <AuthConsumer>
+            {(authContext) =>
+                authContext && authContext.isUserLoggedIn ? (
+                    <Drawer menus={getMainItems}>
+                        <Suspense fallback={<Loading loading={true} />}>
+                            <Outlet />
+                        </Suspense>
+                    </Drawer>
+                ) : (
+                    <Navigate to="/login" replace />
+                )
+            }
+        </AuthConsumer>
     );
 };
 

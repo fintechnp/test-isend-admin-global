@@ -25,7 +25,7 @@ const showToast = (data) => {
                     position: "top-right",
                 });
             default:
-                return toast(data.message, {
+                return toast("Something went wrong.", {
                     position: "top-right",
                     icon: "ℹ️",
                 });

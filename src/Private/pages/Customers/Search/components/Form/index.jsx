@@ -45,6 +45,13 @@ const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 4px",
 }));
 
+const FieldWrapperLabel = styled(Grid)(({ theme }) => ({
+    padding: "4px 4px",
+    "& .MuiInputBase-input": {
+        opacity: 0.6,
+    },
+}));
+
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
     padding: "4px 0px",
     paddingRight: "4px",
@@ -60,6 +67,7 @@ const ResetButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.warning.main,
     "&:hover": {
         background: theme.palette.warning.dark,
+        border: `1px solid ${theme.palette.warning.main}`,
     },
     "& .MuiCircularProgress-root": {
         color: theme.palette.primary.contrastText,
@@ -75,6 +83,7 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
+        border: `1px solid ${theme.palette.primary.main}`,
     },
     "& .MuiCircularProgress-root": {
         color: theme.palette.primary.contrastText,
@@ -142,15 +151,19 @@ function SearchForm({ handleSubmit, handleReset }) {
                                 component={TextField}
                             />
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
+                        <FieldWrapperLabel item xs={12} sm={6}>
                             <Field
                                 name="date_of_birth"
+                                showLabel={true}
                                 placeholder="Date of Birth"
                                 type="date"
                                 small={12}
                                 component={TextField}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                        </FieldWrapper>
+                        </FieldWrapperLabel>
                         <Grid item xs={12}>
                             <ButtonWrapper
                                 container

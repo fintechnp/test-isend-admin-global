@@ -129,6 +129,9 @@ const Messages = lazy(() => import("../pages/Messages"));
 //My Account
 const MyAccount = lazy(() => import("../pages/MyAccount"));
 
+//Accounting
+const Accounting = lazy(() => import("../pages/Accounting"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
     { path: "/user/accounts", component: <Accounts /> },
@@ -268,6 +271,9 @@ const privateRoutes = [
 
     //MyAccount
     { path: "/account", component: <MyAccount /> },
+
+    //Accounting
+    { path: "/accounting", component: <Accounting /> },
 ];
 
 export default privateRoutes;

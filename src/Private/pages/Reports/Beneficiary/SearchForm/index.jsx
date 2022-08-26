@@ -68,6 +68,7 @@ const ResetButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.warning.main,
     "&:hover": {
         background: theme.palette.warning.dark,
+        border: `1px solid ${theme.palette.warning.main}`,
     },
     "& .MuiCircularProgress-root": {
         color: theme.palette.primary.contrastText,
@@ -83,6 +84,7 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
+        border: `1px solid ${theme.palette.primary.main}`,
     },
     "& .MuiCircularProgress-root": {
         color: theme.palette.primary.contrastText,
@@ -141,28 +143,6 @@ function SearchForm({ handleSubmit, handleReset }) {
                                 small={12}
                                 component={TextField}
                             />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="country"
-                                placeholder="Country"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -232,6 +212,28 @@ function SearchForm({ handleSubmit, handleReset }) {
                                 }}
                             />
                         </FieldWrapperLabel>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="country"
+                                placeholder="Country"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                            >
+                                <option value="" disabled>
+                                    Select Country
+                                </option>
+                                {country &&
+                                    country.map((data) => (
+                                        <option
+                                            value={data.iso3}
+                                            key={data.tid}
+                                        >
+                                            {data.country}
+                                        </option>
+                                    ))}
+                            </Field>
+                        </FieldWrapper>
                         <Grid item xs={12}>
                             <ButtonWrapper
                                 container

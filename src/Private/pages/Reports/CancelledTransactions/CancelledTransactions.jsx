@@ -49,8 +49,8 @@ const initialState = {
     payout_agent_id: 0,
     from_date: "",
     to_date: "",
-    sort_by: "created_ts",
-    order_by: "DESC",
+    sort_by: "agent_name",
+    order_by: "ASC",
 };
 
 const stateSend = {
@@ -88,7 +88,14 @@ function CancelledTransactions() {
         (state) => state.get_payout_partner
     );
 
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
     useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_cancel_reports"));
         dispatch({ type: "CANCELLED_TRANSACTIONS_REPORT_RESET" });
     }, [dispatch]);
@@ -321,6 +328,7 @@ function CancelledTransactions() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_cancel_reports"));
         dispatch({ type: "CANCELLED_TRANSACTIONS_REPORT_RESET" });
     };
@@ -361,6 +369,37 @@ function CancelledTransactions() {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //Downloads
+    const headers = [
+        { label: "First Name", key: "first_name" },
+        { label: "Middle Name", key: "middle_name" },
+        { label: "Last Name", key: "last_name" },
+        { label: "Country", key: "country" },
+        { label: "Customer Id", key: "customer_id" },
+        { label: "Date of Birth", key: "date_of_birth" },
+        { label: "Kyc Status", key: "kyc_status" },
+        { label: "Mobile Number", key: "mobile_number" },
+        { label: "Email", key: "email" },
+        { label: "Created By", key: "created_by" },
+        { label: "Created Time", key: "created_ts" },
+    ];
+
+    const csvReport = {
+        title: "Report on Cancelled Transactions",
+        start: filterSchema?.from_date,
+        end: filterSchema?.to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, "transaction_cancel"));
+    };
+
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
@@ -394,12 +433,17 @@ function CancelledTransactions() {
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Filter
+                            fileName="CancelledReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
                             sortData={sortData}
                             orderData={orderData}
                             title="Cancelled Transaction Lists"
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
+                            downloadData={downloadData}
                         />
                         <Table
                             columns={columns}

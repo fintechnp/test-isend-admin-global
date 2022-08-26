@@ -3,7 +3,6 @@ import { SubmissionError, reset } from "redux-form";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 
-import { PublicLayout } from "../../../App/layouts";
 import { AuthContext } from "../../../App/auth";
 import LoginForm from "../components/LoginForm";
 import actions from "../../../Common/store/actions";
@@ -26,6 +25,7 @@ function Login() {
     useEffect(() => {
         if (success) {
             authContext.setUserData(user?.data);
+            dispatch({ type: "USER_DETAILS_RESET" });
         }
     }, [success]);
 
@@ -61,12 +61,7 @@ function Login() {
     };
 
     return (
-        <PublicLayout>
-            <LoginForm
-                onSubmit={handleLogin}
-                loading={loading || user_loading}
-            />
-        </PublicLayout>
+        <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
     );
 }
 

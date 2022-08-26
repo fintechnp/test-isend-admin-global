@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { reset } from "redux-form";
+import { Link } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
 
 import Filter from "../Shared/Filter";
@@ -74,7 +75,14 @@ function BeneficiaryReports() {
         (state) => state.get_beneficiary_report
     );
 
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
     useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_beneficiary_reports"));
         dispatch({ type: "BENEFICIARY_REPORT_RESET" });
     }, [dispatch]);
@@ -93,6 +101,24 @@ function BeneficiaryReports() {
                 Header: "Id",
                 accessor: "tid",
                 maxWidth: 50,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            <Link
+                                to={`/customer/beneficiary/details/${data?.row?.original?.customer_id}/${data.value}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
             },
             {
                 Header: "Name",
@@ -159,8 +185,8 @@ function BeneficiaryReports() {
                 ),
             },
             {
-                Header: "Identity",
-                accessor: "id_number",
+                Header: "Customer",
+                accessor: "customer_id",
                 maxWidth: 130,
                 Cell: (data) => (
                     <Box
@@ -171,19 +197,12 @@ function BeneficiaryReports() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.id_type
-                                ? data?.row?.original?.id_type
-                                : "N/A"}
+                            <Link
+                                to={`/customer/details/${data.value}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
                         </StyledName>
                     </Box>
                 ),
@@ -350,6 +369,7 @@ function BeneficiaryReports() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_beneficiary_reports"));
         dispatch({ type: "BENEFICIARY_REPORT_RESET" });
     };
@@ -390,6 +410,37 @@ function BeneficiaryReports() {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //Downloads
+    const headers = [
+        { label: "Id", key: "tid" },
+        { label: "First Name", key: "first_name" },
+        { label: "Middle Name", key: "middle_name" },
+        { label: "Last Name", key: "last_name" },
+        { label: "Country", key: "country" },
+        { label: "Customer", key: "customer_id" },
+        { label: "Payment Type", key: "payment_type" },
+        { label: "Bank Name", key: "bank_name" },
+        { label: "Account Number", key: "account_number" },
+        { label: "Contact", key: "mobile_number" },
+        { label: "Created Time", key: "created_ts" },
+    ];
+
+    const csvReport = {
+        title: "Report on Beneficiary",
+        start: filterSchema?.created_from_date,
+        end: filterSchema?.created_to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, "beneficiary"));
+    };
+
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
@@ -419,12 +470,17 @@ function BeneficiaryReports() {
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Filter
+                            fileName="BeneficiaryReport"
+                            success={pd_success}
+                            loading={pd_loading}
                             sortData={sortData}
+                            csvReport={csvReport}
                             orderData={orderData}
                             title="Beneficiary List"
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
+                            downloadData={downloadData}
                         />
                         <Table
                             columns={columns}

@@ -67,7 +67,6 @@ const CollectionForm = ({
 }) => {
     const dispatch = useDispatch();
     const [option, setOption] = useState(null);
-    const [bank_name, setBankName] = useState(null);
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
         page_size: 100,

@@ -106,10 +106,10 @@ function CustomerReports() {
         response: ReportsDownload,
         loading: pd_loading,
         success: pd_success,
-    } = useSelector((state) => state.download_customer_report);
+    } = useSelector((state) => state.download_report);
 
     useEffect(() => {
-        dispatch({ type: "DOWNLOAD_CUSTOMER_REPORT_RESET" });
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_customer_reports"));
         dispatch({ type: "CUSTOMER_REPORT_RESET" });
     }, [dispatch]);
@@ -404,7 +404,7 @@ function CustomerReports() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_CUSTOMER_REPORT_RESET" });
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_customer_reports"));
         dispatch({ type: "CUSTOMER_REPORT_RESET" });
         dispatch({ type: "GET_SENDING_PARTNER_RESET" });
@@ -463,7 +463,9 @@ function CustomerReports() {
     ];
 
     const csvReport = {
-        filename: "CustomerReport.csv",
+        title: "Report on Customers",
+        start: filterSchema?.created_from_date,
+        end: filterSchema?.created_to_date,
         headers: headers,
         data: ReportsDownload?.data || [],
     };
@@ -473,7 +475,7 @@ function CustomerReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_customer_report(updatedFilterSchema));
+        dispatch(actions.download_report(updatedFilterSchema, "customer"));
     };
 
     return (
@@ -507,6 +509,7 @@ function CustomerReports() {
                 <Grid item xs={12}>
                     <CustomerWrapper>
                         <Filter
+                            fileName="CustomerReport"
                             success={pd_success}
                             loading={pd_loading}
                             csvReport={csvReport}

@@ -2,6 +2,7 @@ import React, { createContext, useContext, Component } from "react";
 import Cookies from "js-cookie";
 import authService from "./authHelper";
 import showToast from "../components/Toast";
+import Api from "./../services/api";
 import store from "./../store";
 
 const initialState = {
@@ -32,7 +33,6 @@ const initialState = {
         return Cookies.get("token");
     },
     setUserData: () => {},
-    setUserRegister: () => {},
 };
 
 export const AuthContext = createContext(initialState);
@@ -43,7 +43,6 @@ export default class AuthProvider extends Component {
     componentDidMount = async () => {
         this.setState({
             setUserData: (data) => {
-                localStorage.setItem("user", JSON.stringify(data));
                 this.setState({
                     authStatusReported: true,
                     isUserLoggedIn: true,
@@ -52,23 +51,8 @@ export default class AuthProvider extends Component {
             },
         });
 
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
-            this.setState({
-                authStatusReported: true,
-                isUserLoggedIn: true,
-                currentUser: user,
-            });
-        } else {
-            this.setState({
-                authStatusReported: true,
-                isUserLoggedIn: false,
-                currentUser: {},
-            });
-        }
-
         const token = Cookies.get("token");
-        if (token === "undefined" || token === undefined || token === "") {
+        if (token === "undefined" || token === undefined) {
             Object.keys(Cookies.get()).forEach(function (cookie) {
                 Cookies.remove(cookie);
             });
@@ -79,18 +63,57 @@ export default class AuthProvider extends Component {
                 currentUser: {},
             });
         } else {
-            store.dispatch({
-                type: "USER_DETAILS",
+            await this.verifyToken(token);
+        }
+    };
+
+    verifyToken = async (token) => {
+        const api = new Api(false);
+        const user = JSON.parse(localStorage.getItem("user"));
+        try {
+            const res = await api.post("/health-check", {
+                token,
             });
-            store.dispatch({
-                type: "GET_ALL_COUNTRY",
+            if (res?.code == 200 && user) {
+                this.setState({
+                    authStatusReported: true,
+                    isUserLoggedIn: true,
+                    currentUser: user,
+                });
+                store.dispatch({
+                    type: "GET_ALL_COUNTRY",
+                });
+                store.dispatch({
+                    type: "GET_ALL_REFERENCE",
+                    query: {
+                        page_number: 1,
+                        page_size: 100,
+                    },
+                });
+            } else {
+                this.setState({
+                    authStatusReported: true,
+                    isUserLoggedIn: false,
+                    currentUser: {},
+                });
+                Object.keys(Cookies.get()).forEach(function (cookie) {
+                    Cookies.remove(cookie);
+                });
+                localStorage.clear();
+            }
+        } catch (err) {
+            this.setState({
+                authStatusReported: true,
+                isUserLoggedIn: false,
+                currentUser: {},
             });
+            Object.keys(Cookies.get()).forEach(function (cookie) {
+                Cookies.remove(cookie);
+            });
+            localStorage.clear();
             store.dispatch({
-                type: "GET_ALL_REFERENCE",
-                query: {
-                    page_number: 1,
-                    page_size: 100,
-                },
+                type: "SET_TOAST_DATA",
+                data: err?.data,
             });
         }
     };

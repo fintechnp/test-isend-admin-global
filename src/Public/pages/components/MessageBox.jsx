@@ -1,9 +1,13 @@
 import React from "react";
+import Grid from "@mui/material/Grid";
 import { styled } from "@mui/system";
 import MuiPaper from "@mui/material/Paper";
 import MuiButton from "@mui/material/Button";
-import { Grid, Typography } from "@mui/material";
+import CardMedia from "@mui/material/CardMedia";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+
+import Logo from "../../../assets/long-logo.svg";
 
 const Paper = styled(MuiPaper)(({ theme }) => ({
     minWidth: "100%",
@@ -18,7 +22,7 @@ const Paper = styled(MuiPaper)(({ theme }) => ({
 const FormContainer = styled(Grid)(({ theme }) => ({
     padding: "16px",
     paddingBottom: "30px",
-    maxWidth: "300px",
+    maxWidth: "320px",
     backgroundColor: "#fcfcfc",
     borderRadius: "6px",
     [theme.breakpoints.up("sm")]: {
@@ -30,12 +34,14 @@ const FormContainer = styled(Grid)(({ theme }) => ({
     },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-    fontWeight: 500,
-    fontSize: "30px",
-    textAlign: "center",
-    color: "#071170",
-    padding: "20px",
+const LogoWrapper = styled(CardMedia)(({ theme }) => ({
+    minHeight: "108px",
+    maxHeight: "108px",
+    width: "100%",
+    objectFit: "contain",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 }));
 
 const Button = styled(MuiButton)(({ theme }) => ({
@@ -56,11 +62,25 @@ const MessageBox = ({ message }) => {
 
     return (
         <Paper square={true}>
-            <FormContainer container spacing={1} direction="column">
+            <FormContainer container rowSpacing={1} direction="column">
                 <Grid item>
-                    <Title component="h6">iSend Global</Title>
+                    <LogoWrapper
+                        component="img"
+                        image={Logo}
+                        alt="isend logo"
+                    />
                 </Grid>
-                <Grid item>{message}</Grid>
+                <Grid item>
+                    <Typography
+                        sx={{
+                            fontWeight: 400,
+                            fontSize: "15px",
+                            opacity: 0.9,
+                        }}
+                    >
+                        {message}.
+                    </Typography>
+                </Grid>
                 <Grid item>
                     <Grid
                         container

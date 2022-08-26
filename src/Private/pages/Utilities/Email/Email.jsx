@@ -80,7 +80,7 @@ const Email = () => {
                 return "SENT";
             case "R":
                 return "REJECTED";
-            case "R":
+            case "P":
                 return "PROCESSING";
             case "E":
                 return "EXCEPTION";

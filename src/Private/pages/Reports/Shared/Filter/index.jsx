@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
+import { useDispatch, useSelector } from "react-redux";
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
-import { CSVLink } from "react-csv";
-import { useDispatch } from "react-redux";
 import { Box, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
 import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 import LoadingButton from "@mui/lab/LoadingButton";
-import DataObjectIcon from "@mui/icons-material/DataObject";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import ListAltIcon from "@mui/icons-material/ListAlt";
+import { pdf } from "@react-pdf/renderer";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 
-import DocumentPdf from "./DocumentPdf";
+import ExportToPdf from "./ExportToPdf";
+import ExportToCsv from "./ExportToCsv";
+import ExportToExcel from "./ExportToExcel";
+import { PdfDocument } from "./ExportToPdf";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "2px",
@@ -123,31 +123,66 @@ function Filter({
     sortData,
     orderData,
     csvReport,
+    fileName,
     downloadData,
 }) {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
+    const [down, setDown] = useState(null);
     const open = Boolean(anchorEl);
 
+    const {
+        response: ReportsDownload,
+    } = useSelector((state) => state.download_report);
+
     useEffect(() => {
-        if (!success && open) {
-            downloadData();
+        if (csvReport?.data !== undefined || csvReport?.data.length > 0) {
+            if (success && down === "xlsx") {
+                const fileType =
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+                const fileExtension = ".xlsx";
+                const ws = XLSX.utils.json_to_sheet(csvReport?.data);
+                const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+                const excelBuffer = XLSX.write(wb, {
+                    bookType: "xlsx",
+                    type: "array",
+                });
+                const data = new Blob([excelBuffer], { type: fileType });
+                FileSaver.saveAs(data, fileName + fileExtension);
+                dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+                setDown(null);
+            } else if (success && down === "csv") {
+                const fileExtension = ".csv";
+                const ws = XLSX.utils.json_to_sheet(csvReport?.data);
+                const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+                const excelBuffer = XLSX.write(wb, {
+                    bookType: "csv",
+                    type: "array",
+                });
+                const data = new Blob([excelBuffer], { type: "text/csv" });
+                FileSaver.saveAs(data, fileName + fileExtension);
+                dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+                setDown(null);
+            } else if (success && down === "pdf") {
+                const generatePdfDocument = async (csvReport, ReportsDownload, fileName) => {
+                    const blob = await pdf(
+                        <PdfDocument csvReport={csvReport} ReportsDownload={ReportsDownload?.data}/>
+                    ).toBlob();
+                    console.log(blob, "askfsadjfj");
+                    FileSaver.saveAs(blob, fileName);
+                    dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+                    setDown(null);
+                };
+                generatePdfDocument(csvReport, ReportsDownload, fileName);
+            }
         }
-    }, [success, open]);
+    }, [csvReport?.data, fileName, down, success, ReportsDownload?.data]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const handlePdf = () => {
-        handleClose();
-    };
-
-    const handleXlsx = () => {
-        handleClose();
     };
 
     return (
@@ -177,7 +212,7 @@ function Filter({
                                 />
                             }
                         >
-                            {loading ? "Wait.." : "Export"}
+                            {loading ? "Downloading" : "Export"}
                         </ExportButton>
                         <StyledMenu
                             id="demo-customized-menu"
@@ -188,27 +223,21 @@ function Filter({
                             open={open}
                             onClose={handleClose}
                         >
-                            <PDFDownloadLink
-                                onClick={handlePdf}
-                                document={<DocumentPdf csvReport={csvReport} />}
-                                fileName="CustomerReports.pdf"
-                            >
-                                <MenuItem disableRipple>
-                                    <PictureAsPdfIcon />
-                                    Pdf
-                                </MenuItem>
-                            </PDFDownloadLink>
-                            <Divider sx={{ my: 0.5 }} />
-                            <CSVLink {...csvReport}>
-                                <MenuItem onClick={handleClose} disableRipple>
-                                    <DataObjectIcon />
-                                    CSV
-                                </MenuItem>
-                            </CSVLink>
-                            <MenuItem onClick={handleXlsx} disableRipple>
-                                <ListAltIcon />
-                                xlsx
-                            </MenuItem>
+                            <ExportToPdf
+                                setDown={setDown}
+                                handleClose={handleClose}
+                                downloadData={downloadData}
+                            />
+                            <ExportToCsv
+                                setDown={setDown}
+                                handleClose={handleClose}
+                                downloadData={downloadData}
+                            />
+                            <ExportToExcel
+                                setDown={setDown}
+                                handleClose={handleClose}
+                                downloadData={downloadData}
+                            />
                         </StyledMenu>
                     </Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
