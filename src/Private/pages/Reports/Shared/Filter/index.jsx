@@ -168,7 +168,6 @@ function Filter({
                     const blob = await pdf(
                         <PdfDocument csvReport={csvReport} ReportsDownload={ReportsDownload?.data}/>
                     ).toBlob();
-                    console.log(blob, "askfsadjfj");
                     FileSaver.saveAs(blob, fileName);
                     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                     setDown(null);

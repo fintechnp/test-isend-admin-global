@@ -108,69 +108,34 @@ const Table = ({
             <div>
                 <GlobalTable {...getTableProps()}>
                     {!hideTableHead && (
-                        <TableHead value={headerGroups?.length}>
-                            {headerGroups.map((headerGroup, index) =>
-                                headerGroups?.length <= 1 ? (
-                                    <TableRow
-                                        key={index}
-                                        {...headerGroup.getHeaderGroupProps()}
-                                        sx={{
-                                            marginTop: "2px",
-                                            borderRadius: "6px",
-                                            backgroundColor: "primary.dark",
-                                        }}
-                                    >
-                                        {headerGroup.headers.map(
-                                            (column, index) => {
-                                                return (
-                                                    <HeadCell
-                                                        {...column.getHeaderProps()}
-                                                        key={index}
-                                                    >
-                                                        {column.render(
-                                                            "Header"
-                                                        )}
-                                                    </HeadCell>
-                                                );
-                                            }
-                                        )}
-                                    </TableRow>
-                                ) : (
-                                    <TableRow
-                                        key={index}
-                                        {...headerGroup.getHeaderGroupProps()}
-                                        sx={{
-                                            marginTop: "2px",
-                                            borderTopLeftRadius:
-                                                index === 0 ? "6px" : 0,
-                                            borderTopRightRadius:
-                                                index === 0 ? "6px" : 0,
-                                            borderBottomLeftRadius:
-                                                index === 1 ? "6px" : 0,
-                                            borderBottomRightRadius:
-                                                index === 1 ? "6px" : 0,
-                                            backgroundColor: "primary.dark",
-                                        }}
-                                    >
-                                        {headerGroup.headers.map(
-                                            (column, index) => {
-                                                return (
-                                                    <HeadCell
-                                                        {...column.getHeaderProps()}
-                                                        key={index}
-                                                    >
-                                                        {column.render(
-                                                            "Header"
-                                                        )}
-                                                    </HeadCell>
-                                                );
-                                            }
-                                        )}
-                                    </TableRow>
-                                )
-                            )}
+                        <TableHead>
+                            {headerGroups.map((headerGroup, index) => (
+                                <TableRow
+                                    key={index}
+                                    {...headerGroup.getHeaderGroupProps()}
+                                    sx={{
+                                        marginTop: "2px",
+                                        borderRadius: "6px",
+                                        backgroundColor: "primary.dark",
+                                    }}
+                                >
+                                    {headerGroup.headers.map(
+                                        (column, index) => {
+                                            return (
+                                                <HeadCell
+                                                    {...column.getHeaderProps()}
+                                                    key={index}
+                                                >
+                                                    {column.render("Header")}
+                                                </HeadCell>
+                                            );
+                                        }
+                                    )}
+                                </TableRow>
+                            ))}
                         </TableHead>
                     )}
+
                     <TableBody>
                         {loading ? (
                             Array.from(new Array(+rowsPerPage)).map(

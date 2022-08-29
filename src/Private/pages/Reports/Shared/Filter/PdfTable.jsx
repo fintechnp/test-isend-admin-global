@@ -6,14 +6,12 @@ import {
     FormatNumber,
 } from "./../../../../../App/helpers";
 
-const borderColor = "#1761AE";
 const styles = StyleSheet.create({
     tableContainer: {
         margin: "12px 0px",
         borderRadius: "6px",
         width: "100%",
         display: "flex",
-        justifyContent: "space-between",
         flexDirection: "column",
         padding: "8px",
         borderWidth: 1,
@@ -24,7 +22,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#bff0fd",
         height: 24,
         fontStyle: "bold",
-        flexGrow: 1,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -33,26 +30,22 @@ const styles = StyleSheet.create({
     cellContainer: {
         width: "100%",
         backgroundColor: "#fff",
-        flexGrow: 1,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
     },
     row: {
         width: "100%",
         height: 24,
         backgroundColor: "#fff",
-        flexGrow: 1,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
     },
     serial: {
         paddingLeft: "6px",
     },
     head: {
-        minWidth: "8.5%",
         paddingRight: "6px",
         paddingLeft: "8px",
         textAlign: "center",
@@ -63,18 +56,15 @@ const styles = StyleSheet.create({
     },
     cellSn: {
         width: "4%",
-        flexGrow: 1,
         paddingLeft: "8px",
         textAlign: "left",
     },
     cell: {
-        flexGrow: 1,
         paddingLeft: "8px",
         textAlign: "left",
     },
     cellMail: {
         width: "11%",
-        flexGrow: 1,
         paddingLeft: "8px",
         textAlign: "left",
     },
@@ -109,7 +99,7 @@ const PdfTable = ({ csvReport, ReportsDownload }) => {
                     ReportsDownload.length >= 0 &&
                     ReportsDownload.map((customer, index) => {
                         return (
-                            <div style={styles.row} key={index}>
+                            <View style={styles.row} key={index}>
                                 <Text style={styles.cellSn}>{index + 1}</Text>
                                 {apiData?.headers &&
                                     apiData?.headers.map((header, index) => {
@@ -155,7 +145,7 @@ const PdfTable = ({ csvReport, ReportsDownload }) => {
                                                     style={styles.head}
                                                     key={index}
                                                 >
-                                                    <Text fixed>
+                                                    <Text>
                                                         {customer[header?.key]
                                                             ? customer[
                                                                   header?.key
@@ -166,7 +156,7 @@ const PdfTable = ({ csvReport, ReportsDownload }) => {
                                             );
                                         }
                                     })}
-                            </div>
+                            </View>
                         );
                     })}
             </View>

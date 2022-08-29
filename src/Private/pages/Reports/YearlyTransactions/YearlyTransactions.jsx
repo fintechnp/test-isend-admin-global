@@ -104,7 +104,7 @@ function YearlyTransactions() {
                         </Typography>
                     </Box>
                 ),
-                accessor: "agent_name",
+                accessor: "agent",
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -120,13 +120,39 @@ function YearlyTransactions() {
                     </Box>
                 ),
             },
+            // {
+            //     Header: () => (
+            //         <Box textAlign="center">
+            //             <Typography sx={{ fontSize: "15px" }}>
+            //                 Jan
+            //             </Typography>
+            //         </Box>
+            //     ),
+            //     accessor: "month",
+            //     Cell: (data) => (
+            //         <Box
+            //             sx={{
+            //                 display: "flex",
+            //                 fontSize: "12px",
+            //                 flexDirection: "column",
+            //                 alignItems: "flex-start",
+            //             }}
+            //         >
+            //             <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+            //                 {data.value ? data.value : "N/A"}
+            //             </StyledName>
+            //         </Box>
+            //     ),
+            // },
             {
                 Header: () => (
                     <Box textAlign="right">
-                        <Typography sx={{ fontSize: "15px" }}>JAN</Typography>
+                        <Typography sx={{ fontSize: "15px" }}>
+                            Total Txn
+                        </Typography>
                     </Box>
                 ),
-                accessor: "txn_cnt",
+                accessor: "total_txn",
                 minWidth: 190,
                 Cell: (data) => (
                     <Box
@@ -145,54 +171,12 @@ function YearlyTransactions() {
             {
                 Header: () => (
                     <Box textAlign="right">
-                        <Typography sx={{ fontSize: "15px" }}>FEB</Typography>
+                        <Typography sx={{ fontSize: "15px" }}>
+                            Total Amt
+                        </Typography>
                     </Box>
                 ),
-                accessor: "txn_month_no",
-                minWidth: 190,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right">
-                        <Typography sx={{ fontSize: "15px" }}>MAR</Typography>
-                    </Box>
-                ),
-                accessor: "total_charge",
-                minWidth: 190,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right">
-                        <Typography sx={{ fontSize: "15px" }}>Total</Typography>
-                    </Box>
-                ),
-                accessor: "collected_amount",
+                accessor: "total_amt",
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="right">
@@ -300,7 +284,9 @@ function YearlyTransactions() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "transaction_yearly"));
+        dispatch(
+            actions.download_report(updatedFilterSchema, "transaction_yearly")
+        );
     };
 
     return (

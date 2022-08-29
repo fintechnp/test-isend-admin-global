@@ -16,7 +16,7 @@ const showToast = (data) => {
                         secondary: "#fff",
                     },
                 });
-            case 400:
+            case 400 || 406:
                 return toast.error(data.message, {
                     position: "top-right",
                 });

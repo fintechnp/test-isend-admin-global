@@ -276,7 +276,9 @@ function CustomerReports() {
                                     opacity: 0.6,
                                 }}
                             >
-                                {data?.row?.original?.email}
+                                {data?.row?.original?.email
+                                    ? data?.row?.original?.email
+                                    : "N/A"}
                             </StyledMail>
                         </Tooltip>
                     </Box>
@@ -299,7 +301,7 @@ function CustomerReports() {
                             value={data.value}
                             sx={{ opacity: 1 }}
                         >
-                            {ReferenceName(21, data.value)}
+                            {data.value ? ReferenceName(21, data.value) : "N/A"}
                         </StyledStatus>
                         <StyledName
                             component="p"
@@ -452,14 +454,14 @@ function CustomerReports() {
         { label: "First Name", key: "first_name" },
         { label: "Middle Name", key: "middle_name" },
         { label: "Last Name", key: "last_name" },
-        { label: "Country", key: "country" },
-        { label: "Customer Id", key: "customer_id" },
-        { label: "Date of Birth", key: "date_of_birth" },
-        { label: "Kyc Status", key: "kyc_status" },
-        { label: "Mobile Number", key: "mobile_number" },
-        { label: "Email", key: "email" },
-        { label: "Created By", key: "created_by" },
-        { label: "Created Time", key: "created_ts" },
+        // { label: "Country", key: "country" },
+        // { label: "Customer Id", key: "customer_id" },
+        // { label: "Date of Birth", key: "date_of_birth" },
+        // { label: "Kyc Status", key: "kyc_status" },
+        // { label: "Mobile Number", key: "mobile_number" },
+        // { label: "Email", key: "email" },
+        // { label: "Created By", key: "created_by" },
+        // { label: "Created Time", key: "created_ts" },
     ];
 
     const csvReport = {

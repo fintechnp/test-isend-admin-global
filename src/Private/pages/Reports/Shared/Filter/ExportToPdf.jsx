@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         paddingTop: 22,
         paddingLeft: 20,
         paddingRight: 20,
+        paddingBottom: 20,
         lineHeight: 1.2,
         flexDirection: "column",
     },
@@ -38,6 +39,13 @@ const styles = StyleSheet.create({
         height: 76,
         marginLeft: "auto",
         marginRight: "auto",
+    },
+    page_number: {
+        position: "absolute",
+        bottom: 10,
+        left: 0,
+        right: 0,
+        textAlign: "center",
     },
 });
 
@@ -57,7 +65,17 @@ export const PdfDocument = ({ csvReport, ReportsDownload }) => {
                         {csvReport?.end ? csvReport?.end : "To"}{" "}
                     </Text>
                 </View>
-                <Table csvReport={csvReport} ReportsDownload={ReportsDownload}/>
+                <Table
+                    csvReport={csvReport}
+                    ReportsDownload={ReportsDownload}
+                />
+                <Text
+                    style={styles.page_number}
+                    render={({ pageNumber, totalPages }) =>
+                        `${pageNumber} / ${totalPages}`
+                    }
+                    fixed
+                />
             </Page>
         </Document>
     );
@@ -73,7 +91,7 @@ const ExportToPdf = ({ setDown, downloadData, handleClose }) => {
     return (
         <MenuItem onClick={fetchData} disableRipple>
             <PictureAsPdfIcon />
-            Pdf
+            PDF
         </MenuItem>
     );
 };
