@@ -53,11 +53,8 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    country: "",
-    currency: "",
-    agent_type: "",
     search: "",
-    sort_by: "country",
+    sort_by: "",
     order_by: "DESC",
 };
 
@@ -227,6 +224,18 @@ const ExchangeRateList = () => {
         []
     );
 
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Rate", value: "customer_rate" },
+        { key: "Sending Currency", value: "sending_currency" },
+        { key: "Receiving Currency", value: "receiving_currency" },
+    ];
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
     const handleSearch = useCallback(
         (e) => {
             const searchValue = e.target.value;
@@ -289,6 +298,9 @@ const ExchangeRateList = () => {
                 sending_currency={sending_currency}
             />
             <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
                 handleSearch={handleSearch}
                 handleSort={handleSort}
                 handleOrder={handleOrder}

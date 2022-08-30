@@ -397,7 +397,7 @@ function CancelledTransactions() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "transaction_cancel"));
+        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_cancel"));
     };
 
     return (

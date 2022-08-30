@@ -97,8 +97,25 @@ function YearlyTransactions() {
     const columns = useMemo(
         () => [
             {
+                Header: "SN",
+                maxWidth: 50,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data?.row?.index + 1}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
                 Header: () => (
-                    <Box textAlign="center">
+                    <Box textAlign="left">
                         <Typography sx={{ fontSize: "15px" }}>
                             Partner
                         </Typography>
@@ -189,6 +206,34 @@ function YearlyTransactions() {
         ],
         []
     );
+
+    // const columns = useMemo(
+    //     () => [
+    //         {
+    //             Header: "Id",
+    //             accessor: "agent_id",
+    //         },
+    //         {
+    //             // Header: () => (
+    //             //     <Box textAlign="center">
+    //             //         <Typography sx={{ fontSize: "15px" }}>Info</Typography>
+    //             //     </Box>
+    //             // ),
+    //             Header: "Info",
+    //             columns: [
+    //                 {
+    //                     Header: "No Txn",
+    //                     accessor: "total_txn",
+    //                 },
+    //                 {
+    //                     Header: "Total Amt",
+    //                     accessor: "total_amt",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    //     []
+    // );
 
     const sortData = [
         { key: "None", value: "created_ts" },
@@ -285,7 +330,10 @@ function YearlyTransactions() {
             page_size: 10000,
         };
         dispatch(
-            actions.download_report(updatedFilterSchema, "transaction_yearly")
+            actions.download_report(
+                updatedFilterSchema,
+                "report/transaction_yearly"
+            )
         );
     };
 

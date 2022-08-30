@@ -102,11 +102,14 @@ const ExchangeRateForm = ({
     useEffect(() => {
         if (id) {
             setFormName("update_exchange_rate");
+        } else if (agent_id == 0) {
+            dispatch(change("add_exchange_rate", "sending_agent_id", ""));
+            dispatch(change("add_exchange_rate", "sending_currency", ""));
         } else {
             dispatch(change("add_exchange_rate", "sending_agent_id", agent_id));
             dispatch(change("add_exchange_rate", "sending_currency", currency));
         }
-    }, [id, dispatch]);
+    }, [id, agent_id, currency, dispatch]);
 
     useEffect(() => {
         if (id) {
@@ -468,7 +471,7 @@ const ExchangeRateForm = ({
                                         type="number"
                                         small={12}
                                         component={SelectField}
-                                        disabled
+                                        disabled={agent_id == 0 ? false : true}
                                         validate={[
                                             Validator.emptyValidator,
                                             Validator.minValue1,
@@ -496,7 +499,9 @@ const ExchangeRateForm = ({
                                         label="Sending Currency"
                                         type="text"
                                         small={12}
-                                        disabled
+                                        disabled={
+                                            currency !== "all" ? true : false
+                                        }
                                         component={SelectField}
                                         validate={[
                                             Validator.emptyValidator,

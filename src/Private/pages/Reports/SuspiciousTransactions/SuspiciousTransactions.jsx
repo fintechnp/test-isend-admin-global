@@ -424,7 +424,7 @@ function TransactionsSuspiciousReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "transaction_suspicious"));
+        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_suspicious"));
     };
 
     return (

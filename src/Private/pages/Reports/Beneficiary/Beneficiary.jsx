@@ -438,7 +438,7 @@ function BeneficiaryReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "beneficiary"));
+        dispatch(actions.download_report(updatedFilterSchema, "report/beneficiary"));
     };
 
     return (

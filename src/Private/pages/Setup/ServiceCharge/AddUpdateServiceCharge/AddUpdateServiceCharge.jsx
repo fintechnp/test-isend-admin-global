@@ -11,6 +11,7 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 
 import ServiceChargeForm from "./Form";
 import actions from "./../store/actions";
+import PartnerActions from "./../../Partner/store/actions";
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "8px",
@@ -46,6 +47,15 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+const filter = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "SEND",
+    country: "",
+    sort_by: "name",
+    order_by: "DESC",
+};
+
 function AddUpdateServiceCharge() {
     const { id, agent_id } = useParams();
     const dispatch = useDispatch();
@@ -66,6 +76,12 @@ function AddUpdateServiceCharge() {
             dispatch(actions.get_service_charge_details(id));
         }
     }, [dispatch, id]);
+
+    React.useEffect(() => {
+        if (agent_id == 0) {
+            dispatch(PartnerActions.get_sending_partner(filter));
+        }
+    }, [dispatch, agent_id]);
 
     useEffect(() => {
         if (add_success || update_success) {
@@ -175,16 +191,27 @@ function AddUpdateServiceCharge() {
                         handleClose={handleClose}
                         loading={update_loading}
                         form={`update_service_charge_form`}
+                        agent_id={agent_id}
                     />
                 ) : (
                     <ServiceChargeForm
+                        destroyOnUnmount
                         enableReinitialize={true}
                         onSubmit={handleChargeCreate}
                         buttonText="Create"
                         handleClose={handleClose}
                         form={`add_service_charge_form`}
-                        initialValues={{ sending_agent_id: agent_id }}
+                        initialValues={
+                            agent_id == 0
+                                ? {
+                                      sending_agent_id: "",
+                                  }
+                                : {
+                                      sending_agent_id: agent_id,
+                                  }
+                        }
                         loading={add_loading}
+                        agent_id={agent_id}
                     />
                 )}
             </Grid>

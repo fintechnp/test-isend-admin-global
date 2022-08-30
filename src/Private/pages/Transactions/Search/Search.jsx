@@ -4,13 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { reset } from "redux-form";
-import { useNavigate } from "react-router-dom";
 import MuiIconButton from "@mui/material/IconButton";
-import { Box, Tooltip, Typography } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
-import Header from "../components/Header";
+import Filter from "../../Reports/Shared/Filter";
+import downloadActions from "../../Reports/store/actions";
 import actions from "../store/actions";
 import SearchForm from "../components/SearchForm";
 import NoResults from "../components/NoResults";
@@ -19,6 +18,7 @@ import {
     CurrencyName,
     FormatDate,
     FormatNumber,
+    ReferenceName,
 } from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
@@ -33,22 +33,10 @@ const CustomerWrapper = styled("div")(({ theme }) => ({
     border: `1px solid ${theme.palette.border.light}`,
 }));
 
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
     color: "border.main",
     textTransform: "capitalize",
-}));
-
-const StyledMail = styled(Typography)(({ theme }) => ({
-    fontSize: "14px",
-    color: "border.main",
 }));
 
 const initialState = {
@@ -69,7 +57,6 @@ const initialState = {
 };
 
 function Search() {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -78,7 +65,14 @@ function Search() {
         (state) => state.get_transactions
     );
 
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
     useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_transaction"));
         dispatch({ type: "GET_TRANSACTIONS_RESET" });
     }, [dispatch]);
@@ -97,6 +91,24 @@ function Search() {
                 Header: "Id",
                 accessor: "tid",
                 maxWidth: 50,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            <Link
+                                to={`/transactions/details/${data?.value}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
             },
             {
                 Header: "Name",
@@ -111,13 +123,51 @@ function Search() {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.beneficiary_name}
+                            {data?.row?.original?.beneficiary_name
+                                ? data?.row?.original?.beneficiary_name
+                                : "n/a"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: "C/B Id",
+                accessor: "customer_id",
+                maxWidth: 120,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ fontSize: "13px" }}>
+                            <Link
+                                to={`/customer/details/${data.value}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            <Link
+                                to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data?.row?.original?.beneficiary_id
+                                    ? data?.row?.original?.beneficiary_id
+                                    : "n/a"}
+                            </Link>
                         </Typography>
                     </Box>
                 ),
@@ -138,14 +188,17 @@ function Search() {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "13px",
-                                opacity: 0.6,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                            sx={{
+                                paddingLeft: "4px",
+                                fontSize: "13px",
+                                opacity: 0.6,
+                            }}
                         >
                             {data?.row?.original?.payout_agent_name}
                         </StyledName>
@@ -244,61 +297,60 @@ function Search() {
             },
             {
                 Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>S/T Status</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessor: "send_status",
+                Cell: (data) => (
                     <Box
                         sx={{
                             display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            textAlign: "right",
                         }}
                     >
-                        <Tooltip title="Transaction Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transactions/details/${row.original.tid}`
-                                    )
-                                }
-                            >
-                                <RemoveRedEyeOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit Transaction" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transaction/update/${row.original.tid}`
-                                    )
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "12px",
+                                lineHeight: 1.2,
+                            }}
+                        >
+                            {data.value ? ReferenceName(66, data.value) : "N/A"}
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.transaction_status
+                                ? ReferenceName(
+                                      66,
+                                      data?.row?.original?.transaction_status
+                                  )
+                                : "N/A"}
+                        </Typography>
                     </Box>
                 ),
             },
         ],
         []
     );
+
+    //Filter
+    const sortData = [
+        { key: "None", value: "created_ts" },
+        { key: "Name", value: "first_name" },
+        { key: "Partner", value: "register_agent_id" },
+        { key: "Country", value: "country" },
+    ];
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
 
     const handleSearch = (data) => {
         const updatedFilterSchema = {
@@ -317,13 +369,34 @@ function Search() {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //reset search form
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
         dispatch(reset("search_form_transaction"));
         dispatch({ type: "GET_TRANSACTIONS_RESET" });
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
     };
 
+    const handleSort = (e) => {
+        const type = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: type,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleOrder = (e) => {
+        const order = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            order_by: order,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    //Pagination
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
@@ -340,6 +413,39 @@ function Search() {
             page_size: +pageSize,
         };
         setFilterSchema(updatedFilterSchema);
+    };
+
+    //Downloads
+    const headers = [
+        { label: "First Name", key: "first_name" },
+        { label: "Middle Name", key: "middle_name" },
+        { label: "Last Name", key: "last_name" },
+        // { label: "Country", key: "country" },
+        // { label: "Customer Id", key: "customer_id" },
+        // { label: "Date of Birth", key: "date_of_birth" },
+        // { label: "Kyc Status", key: "kyc_status" },
+        // { label: "Mobile Number", key: "mobile_number" },
+        // { label: "Email", key: "email" },
+        // { label: "Created By", key: "created_by" },
+        // { label: "Created Time", key: "created_ts" },
+    ];
+
+    const csvReport = {
+        title: "Report on Transactions",
+        start: filterSchema?.from_date,
+        end: filterSchema?.to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(
+            downloadActions.download_report(updatedFilterSchema, "transaction")
+        );
     };
 
     return (
@@ -370,7 +476,19 @@ function Search() {
             {!l_loading && transactionsData?.data?.length > 0 && (
                 <Grid item xs={12}>
                     <CustomerWrapper>
-                        <Header title="Transaction List" />
+                        <Filter
+                            fileName="TransactionReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            sortData={sortData}
+                            orderData={orderData}
+                            title="Transaction List"
+                            state={filterSchema}
+                            handleOrder={handleOrder}
+                            handleSort={handleSort}
+                            downloadData={downloadData}
+                        />
                         <Table
                             columns={columns}
                             data={transactionsData?.data || []}

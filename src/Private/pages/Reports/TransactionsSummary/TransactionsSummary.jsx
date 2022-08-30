@@ -442,7 +442,7 @@ function TransactionsSummaryReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "transaction_summary"));
+        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_summary"));
     };
 
     return (

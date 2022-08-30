@@ -29,7 +29,7 @@ export const downloadReport = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `report/${action.path}`,
+                `${action.path}`,
                 action.query
             );
             yield put({

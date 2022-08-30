@@ -69,6 +69,7 @@ const ServiceChargeForm = ({
     update,
     loading,
     c_mode,
+    agent_id,
     buttonText,
     handleClose,
 }) => {
@@ -77,6 +78,10 @@ const ServiceChargeForm = ({
     const [mode, setMode] = useState("F");
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
+
+    const { response: SendPartner, loading: s_loading } = useSelector(
+        (state) => state.get_sending_partner
+    );
 
     useEffect(() => {
         if (c_mode) {
@@ -126,6 +131,36 @@ const ServiceChargeForm = ({
                                 <Divider sx={{ margin: "0px 12px" }} />
                             </Box>
                         </Grid>
+                        {agent_id == 0 && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Field
+                                    name="sending_agent_id"
+                                    label="Sending Agent"
+                                    type="number"
+                                    small={12}
+                                    component={SelectField}
+                                    validate={[
+                                        Validator.emptyValidator,
+                                        Validator.minValue1,
+                                    ]}
+                                >
+                                    <option value="" disabled>
+                                        {s_loading
+                                            ? "loading..."
+                                            : "Select Sending Agent"}
+                                    </option>
+                                    {SendPartner?.data &&
+                                        SendPartner?.data.map((data) => (
+                                            <option
+                                                value={data.agent_id}
+                                                key={data?.tid}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                                </Field>
+                            </FieldWrapper>
+                        )}
                         {!id && (
                             <>
                                 <FieldWrapper item xs={12} sm={6}>

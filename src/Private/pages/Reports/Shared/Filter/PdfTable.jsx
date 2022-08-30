@@ -4,6 +4,8 @@ import {
     CurrencyName,
     FormatDate,
     FormatNumber,
+    CountryName,
+    ReferenceName,
 } from "./../../../../../App/helpers";
 
 const styles = StyleSheet.create({
@@ -25,7 +27,6 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
     },
     cellContainer: {
         width: "100%",
@@ -40,33 +41,34 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
     },
     serial: {
+        width: "4%",
         paddingLeft: "6px",
-    },
-    head: {
-        paddingRight: "6px",
-        paddingLeft: "8px",
-        textAlign: "center",
-    },
-    rowMail: {
-        paddingLeft: "8px",
-        textAlign: "center",
+        textAlign: "left",
     },
     cellSn: {
         width: "4%",
-        paddingLeft: "8px",
+        paddingLeft: "6px",
         textAlign: "left",
     },
-    cell: {
-        paddingLeft: "8px",
+    name: {
+        width: "15%",
+        padding: "0px 4px",
         textAlign: "left",
+        textTransform: "capitalize",
     },
-    cellMail: {
+    head: {
+        width: "10%",
+        padding: "0px 4px",
+        textAlign: "left",
+        textTransform: "capitalize",
+    },
+    headMail: {
         width: "11%",
-        paddingLeft: "8px",
+        padding: "0px 4px",
         textAlign: "left",
+        textTransform: "capitalize",
     },
 });
 
@@ -81,7 +83,13 @@ const PdfTable = ({ csvReport, ReportsDownload }) => {
                     apiData?.headers.map((header, index) => {
                         if (header?.key === "email") {
                             return (
-                                <View style={styles.rowMail} key={index}>
+                                <View style={styles.headMail} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        } else if (header?.key === "first_name") {
+                            return (
+                                <View style={styles.name} key={index}>
                                     <Text>{header?.label}</Text>
                                 </View>
                             );
@@ -108,51 +116,94 @@ const PdfTable = ({ csvReport, ReportsDownload }) => {
                                             header?.key === "created_ts"
                                         ) {
                                             return (
-                                                <View
+                                                <Text
                                                     style={styles.head}
                                                     key={index}
                                                 >
-                                                    <Text>
-                                                        {customer[header?.key]
-                                                            ? FormatDate(
-                                                                  customer[
-                                                                      header
-                                                                          ?.key
-                                                                  ]
-                                                              )
-                                                            : "n/a"}
-                                                    </Text>
-                                                </View>
+                                                    {customer[header?.key]
+                                                        ? FormatDate(
+                                                              customer[
+                                                                  header?.key
+                                                              ]
+                                                          )
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (
+                                            header?.key === "first_name"
+                                        ) {
+                                            return (
+                                                <Text
+                                                    style={styles.name}
+                                                    key={index}
+                                                >
+                                                    {customer[header?.key]
+                                                        ? customer[header?.key]
+                                                        : ""}
+                                                    {customer.middle_name
+                                                        ? " " +
+                                                          customer.middle_name +
+                                                          " "
+                                                        : " "}
+                                                    {customer.last_name
+                                                        ? customer.last_name
+                                                        : ""}
+                                                </Text>
                                             );
                                         } else if (header?.key === "email") {
                                             return (
-                                                <View
-                                                    style={styles.cellMail}
+                                                <Text
+                                                    style={styles.headMail}
                                                     key={index}
                                                 >
-                                                    <Text>
-                                                        {customer[header?.key]
-                                                            ? customer[
+                                                    {customer[header?.key]
+                                                        ? customer[header?.key]
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (
+                                            header?.key === "kyc_status"
+                                        ) {
+                                            return (
+                                                <Text
+                                                    style={styles.headMail}
+                                                    key={index}
+                                                >
+                                                    {customer[header?.key]
+                                                        ? ReferenceName(
+                                                              21,
+                                                              customer[
                                                                   header?.key
                                                               ]
-                                                            : "n/a"}
-                                                    </Text>
-                                                </View>
+                                                          )
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "country") {
+                                            return (
+                                                <Text
+                                                    style={styles.headMail}
+                                                    key={index}
+                                                >
+                                                    {customer[header?.key]
+                                                        ? CountryName(
+                                                              customer[
+                                                                  header?.key
+                                                              ]
+                                                          )
+                                                        : "n/a"}
+                                                </Text>
                                             );
                                         } else {
                                             return (
-                                                <View
+                                                <Text
                                                     style={styles.head}
                                                     key={index}
                                                 >
-                                                    <Text>
-                                                        {customer[header?.key]
-                                                            ? customer[
-                                                                  header?.key
-                                                              ]
-                                                            : "n/a"}
-                                                    </Text>
-                                                </View>
+                                                    {customer[header?.key]
+                                                        ? customer[header?.key]
+                                                        : "n/a"}
+                                                </Text>
                                             );
                                         }
                                     })}

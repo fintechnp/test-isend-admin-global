@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
@@ -19,6 +19,7 @@ import {
     CountryName,
     CurrencyName,
     ReferenceName,
+    FormatNumber,
 } from "./../../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -60,9 +61,6 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    country: "",
-    currency: "",
-    agent_type: "",
     search: "",
     sort_by: "",
     order_by: "DESC",
@@ -168,7 +166,7 @@ const ServiceChargeList = () => {
                             component="p"
                             sx={{ textAlign: "right", paddingRight: "4px" }}
                         >
-                            {data.value}
+                            {data.value ? FormatNumber(data.value) : "n/a"}
                         </StyledText>
                         <Typography
                             sx={{
@@ -179,7 +177,9 @@ const ServiceChargeList = () => {
                                 textAlign: "right",
                             }}
                         >
-                            {data?.row?.original?.max_amount}
+                            {data?.row?.original?.max_amount
+                                ? FormatNumber(data?.row?.original?.max_amount)
+                                : "n/a"}
                         </Typography>
                     </Box>
                 ),
@@ -267,6 +267,18 @@ const ServiceChargeList = () => {
         []
     );
 
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Country", value: "receiving_country" },
+        { key: "Payment Type", value: "payment_type" },
+        { key: "Customer Type", value: "customer_type" },
+    ];
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
     const handleStatus = useCallback((is_active, id) => {
         dispatch(
             actions.update_service_charge_status(id, { is_active: is_active })
@@ -334,6 +346,9 @@ const ServiceChargeList = () => {
                 agent_id={id}
             />
             <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
                 handleSearch={handleSearch}
                 handleSort={handleSort}
                 handleOrder={handleOrder}

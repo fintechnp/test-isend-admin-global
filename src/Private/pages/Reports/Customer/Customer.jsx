@@ -451,14 +451,12 @@ function CustomerReports() {
 
     //Downloads
     const headers = [
-        { label: "First Name", key: "first_name" },
-        { label: "Middle Name", key: "middle_name" },
-        { label: "Last Name", key: "last_name" },
-        // { label: "Country", key: "country" },
-        // { label: "Customer Id", key: "customer_id" },
-        // { label: "Date of Birth", key: "date_of_birth" },
-        // { label: "Kyc Status", key: "kyc_status" },
-        // { label: "Mobile Number", key: "mobile_number" },
+        { label: "Name", key: "first_name" },
+        { label: "Country", key: "country" },
+        { label: "Customer Id", key: "customer_id" },
+        { label: "Date of Birth", key: "date_of_birth" },
+        { label: "Kyc Status", key: "kyc_status" },
+        { label: "Mobile Number", key: "mobile_number" },
         // { label: "Email", key: "email" },
         // { label: "Created By", key: "created_by" },
         // { label: "Created Time", key: "created_ts" },
@@ -477,7 +475,9 @@ function CustomerReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "customer"));
+        dispatch(
+            actions.download_report(updatedFilterSchema, "report/customer")
+        );
     };
 
     return (

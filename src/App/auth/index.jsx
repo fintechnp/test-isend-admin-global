@@ -74,7 +74,7 @@ export default class AuthProvider extends Component {
             const res = await api.post("/health-check", {
                 token,
             });
-            if (res?.code == 200 && user) {
+            if (res?.code === 200 && user) {
                 this.setState({
                     authStatusReported: true,
                     isUserLoggedIn: true,
