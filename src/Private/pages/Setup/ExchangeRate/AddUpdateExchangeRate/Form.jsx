@@ -129,6 +129,27 @@ const ExchangeRateForm = ({
         }
     }, [id]);
 
+    const handleTxnCurrency = (e) => {
+        if (
+            partner_sending !== undefined &&
+            partner_sending.length > 0 &&
+            agent_id == 0
+        ) {
+            const currency = partner_sending.filter(
+                (data) => data.tid == e.target.value
+            );
+            if (currency) {
+                dispatch(
+                    change(
+                        "add_exchange_rate",
+                        "sending_currency",
+                        currency[0]?.transaction_currency
+                    )
+                );
+            }
+        }
+    };
+
     const convertCurrency = (iso3) => {
         const currency = country.filter((data) => data.iso3 === iso3);
         if (currency) {
@@ -472,6 +493,7 @@ const ExchangeRateForm = ({
                                         small={12}
                                         component={SelectField}
                                         disabled={agent_id == 0 ? false : true}
+                                        onChange={handleTxnCurrency}
                                         validate={[
                                             Validator.emptyValidator,
                                             Validator.minValue1,
@@ -499,9 +521,7 @@ const ExchangeRateForm = ({
                                         label="Sending Currency"
                                         type="text"
                                         small={12}
-                                        disabled={
-                                            currency !== "all" ? true : false
-                                        }
+                                        disabled
                                         component={SelectField}
                                         validate={[
                                             Validator.emptyValidator,

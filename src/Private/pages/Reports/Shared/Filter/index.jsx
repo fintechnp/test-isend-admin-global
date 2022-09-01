@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import { Box, Typography } from "@mui/material";
@@ -114,6 +114,9 @@ const ExportButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 function Filter({
+    show,
+    handleShow,
+    showData,
     handleSort,
     handleOrder,
     loading,
@@ -130,10 +133,6 @@ function Filter({
     const [anchorEl, setAnchorEl] = useState(null);
     const [down, setDown] = useState(null);
     const open = Boolean(anchorEl);
-
-    const {
-        response: ReportsDownload,
-    } = useSelector((state) => state.download_report);
 
     useEffect(() => {
         if (csvReport?.data !== undefined || csvReport?.data.length > 0) {
@@ -164,18 +163,18 @@ function Filter({
                 dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                 setDown(null);
             } else if (success && down === "pdf") {
-                const generatePdfDocument = async (csvReport, ReportsDownload, fileName) => {
+                const generatePdfDocument = async (csvReport, fileName) => {
                     const blob = await pdf(
-                        <PdfDocument csvReport={csvReport} ReportsDownload={ReportsDownload?.data}/>
+                        <PdfDocument csvReport={csvReport} />
                     ).toBlob();
                     FileSaver.saveAs(blob, fileName);
                     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                     setDown(null);
                 };
-                generatePdfDocument(csvReport, ReportsDownload, fileName);
+                generatePdfDocument(csvReport, fileName);
             }
         }
-    }, [csvReport?.data, fileName, down, success, ReportsDownload?.data]);
+    }, [csvReport?.data, fileName, down, success]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -239,6 +238,40 @@ function Filter({
                             />
                         </StyledMenu>
                     </Box>
+                    {handleShow && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleShow}
+                                displayEmpty
+                                defaultValue={show}
+                                renderValue={(selected) => {
+                                    if (selected.length === 0) {
+                                        return (
+                                            <Typography
+                                                component="p"
+                                                sx={{ opacity: 0.6 }}
+                                            >
+                                                Filter
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = showData.filter(
+                                        (type) => type.value === selected
+                                    );
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {showData.map((sort) => (
+                                    <MenuItem
+                                        value={sort.value}
+                                        key={sort.value}
+                                    >
+                                        {sort.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleSort}

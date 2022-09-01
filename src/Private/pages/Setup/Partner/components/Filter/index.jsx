@@ -88,7 +88,13 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleCountry, handleOrder, handleAgentType }) {
+function Filter({
+    handleSearch,
+    handleCountry,
+    handleOrder,
+    handleAgentType,
+    state,
+}) {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
@@ -159,7 +165,7 @@ function Filter({ handleSearch, handleCountry, handleOrder, handleAgentType }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

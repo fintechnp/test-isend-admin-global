@@ -13,12 +13,7 @@ import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "./../../../../App/components/Loading";
 
-import {
-    CountryName,
-    CurrencyName,
-    FormatNumber,
-    FormatDate,
-} from "./../../../../App/helpers";
+import { FormatNumber } from "./../../../../App/helpers";
 import PartnerActions from "../../Setup/Partner/store/actions";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
@@ -60,6 +55,7 @@ const stateSend = {
 function YearlyTransactions() {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
+    const [show, setShow] = useState("txn_count");
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: YearlyTransactions, loading: l_loading } = useSelector(
@@ -98,7 +94,7 @@ function YearlyTransactions() {
         () => [
             {
                 Header: "SN",
-                maxWidth: 50,
+                maxWidth: 40,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -116,124 +112,400 @@ function YearlyTransactions() {
             {
                 Header: () => (
                     <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>
+                        <Typography
+                            sx={{
+                                fontSize: "15px",
+                            }}
+                        >
                             Partner
                         </Typography>
                     </Box>
                 ),
                 accessor: "agent",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            fontSize: "12px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            // {
-            //     Header: () => (
-            //         <Box textAlign="center">
-            //             <Typography sx={{ fontSize: "15px" }}>
-            //                 Jan
-            //             </Typography>
-            //         </Box>
-            //     ),
-            //     accessor: "month",
-            //     Cell: (data) => (
-            //         <Box
-            //             sx={{
-            //                 display: "flex",
-            //                 fontSize: "12px",
-            //                 flexDirection: "column",
-            //                 alignItems: "flex-start",
-            //             }}
-            //         >
-            //             <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-            //                 {data.value ? data.value : "N/A"}
-            //             </StyledName>
-            //         </Box>
-            //     ),
-            // },
-            {
-                Header: () => (
-                    <Box textAlign="right">
-                        <Typography sx={{ fontSize: "15px" }}>
-                            Total Txn
-                        </Typography>
-                    </Box>
-                ),
-                accessor: "total_txn",
-                minWidth: 190,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
             },
             {
                 Header: () => (
-                    <Box textAlign="right">
-                        <Typography sx={{ fontSize: "15px" }}>
-                            Total Amt
+                    <Box
+                        textAlign="center"
+                        sx={{
+                            borderLeft: "1px solid #fff",
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontSize: "15px",
+                            }}
+                        >
+                            Months
                         </Typography>
                     </Box>
                 ),
-                accessor: "total_amt",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box textAlign="right">
-                        <StyledName component="p" value={data.value}>
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
+                id: "Months",
+                columns: [
+                    {
+                        Header: "Jan",
+                        accessor: "jan",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "JANUARY"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Feb",
+                        accessor: "feb",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "FEBRUARY"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Mar",
+                        accessor: "mar",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "MARCH"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Apr",
+                        accessor: "apr",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "APRIL"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "May",
+                        accessor: "may",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "MAY"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Jun",
+                        accessor: "jun",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "JUNE"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Jul",
+                        accessor: "jul",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "JULY"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Aug",
+                        accessor: "aug",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "AUGUST"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Sep",
+                        accessor: "sep",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "SEPTEMBER"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Oct",
+                        accessor: "oct",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "OCTOBER"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Nov",
+                        accessor: "nov",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "NOVEMBER"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                    {
+                        Header: "Dec",
+                        accessor: "dec",
+                        width: "60",
+                        Cell: ({ row }) => {
+                            const fmonth = row.original.month.find(
+                                (x) => x.txn_month === "DECEMBER"
+                            );
+                            if (fmonth) {
+                                if (show === "avg_rate") {
+                                    return fmonth.avg_rate.toFixed(2);
+                                } else if (show === "charge") {
+                                    return fmonth.charge.toFixed(2);
+                                } else if (show === "txn_amount") {
+                                    return FormatNumber(fmonth.txn_amount);
+                                } else if (show === "txn_count") {
+                                    return fmonth.txn_count;
+                                } else {
+                                    return "0";
+                                }
+                            } else {
+                                return "0";
+                            }
+                        },
+                    },
+                ],
+            },
+            {
+                Header: () => (
+                    <Box
+                        textAlign="center"
+                        sx={{
+                            borderLeft: "1px solid #fff",
+                        }}
+                    >
+                        <Typography sx={{ fontSize: "15px" }}>Info</Typography>
                     </Box>
                 ),
+                id: "Info",
+                columns: [
+                    {
+                        Header: () => (
+                            <Box textAlign="center">
+                                <Typography sx={{ fontSize: "15px" }}>
+                                    Total Txn
+                                </Typography>
+                            </Box>
+                        ),
+                        accessor: "total_txn",
+                        width: 100,
+                        Cell: (data) => (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <StyledName component="p">
+                                    {data.value ? data.value : "N/A"}
+                                </StyledName>
+                            </Box>
+                        ),
+                    },
+                    {
+                        Header: () => (
+                            <Box textAlign="right">
+                                <Typography sx={{ fontSize: "15px" }}>
+                                    Total Amt
+                                </Typography>
+                            </Box>
+                        ),
+                        accessor: "total_amt",
+                        width: 100,
+                        Cell: (data) => (
+                            <Box textAlign="right">
+                                <StyledName component="p" value={data.value}>
+                                    {data.value
+                                        ? FormatNumber(data.value)
+                                        : "N/A"}
+                                </StyledName>
+                            </Box>
+                        ),
+                    },
+                ],
             },
         ],
-        []
+        [show]
     );
-
-    // const columns = useMemo(
-    //     () => [
-    //         {
-    //             Header: "Id",
-    //             accessor: "agent_id",
-    //         },
-    //         {
-    //             // Header: () => (
-    //             //     <Box textAlign="center">
-    //             //         <Typography sx={{ fontSize: "15px" }}>Info</Typography>
-    //             //     </Box>
-    //             // ),
-    //             Header: "Info",
-    //             columns: [
-    //                 {
-    //                     Header: "No Txn",
-    //                     accessor: "total_txn",
-    //                 },
-    //                 {
-    //                     Header: "Total Amt",
-    //                     accessor: "total_amt",
-    //                 },
-    //             ],
-    //         },
-    //     ],
-    //     []
-    // );
 
     const sortData = [
         { key: "None", value: "created_ts" },
@@ -246,6 +518,13 @@ function YearlyTransactions() {
     const orderData = [
         { key: "Ascending", value: "ASC" },
         { key: "Descending", value: "DESC" },
+    ];
+
+    const showData = [
+        { key: "Rate", value: "avg_rate" },
+        { key: "Charge", value: "charge" },
+        { key: "Amount", value: "txn_amount" },
+        { key: "No. Count", value: "txn_count" },
     ];
 
     const handleSearch = (data) => {
@@ -264,6 +543,10 @@ function YearlyTransactions() {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_yearly_reports"));
         dispatch({ type: "YEARLY_TRANSACTIONS_REPORT_RESET" });
+    };
+
+    const handleShow = (e) => {
+        setShow(e.target.value);
     };
 
     const handleSort = (e) => {
@@ -304,17 +587,14 @@ function YearlyTransactions() {
 
     //Downloads
     const headers = [
-        { label: "First Name", key: "first_name" },
-        { label: "Middle Name", key: "middle_name" },
-        { label: "Last Name", key: "last_name" },
-        { label: "Country", key: "country" },
-        { label: "Customer Id", key: "customer_id" },
-        { label: "Date of Birth", key: "date_of_birth" },
-        { label: "Kyc Status", key: "kyc_status" },
-        { label: "Mobile Number", key: "mobile_number" },
-        { label: "Email", key: "email" },
-        { label: "Created By", key: "created_by" },
-        { label: "Created Time", key: "created_ts" },
+        { label: "Partner", key: "agent" },
+        {label: "Months", key: "months"},
+        {label: "Rate", key: "avg_rate"},
+        {label: "Charge", key: "charge"},
+        {label: "No. Txn", key: "txn_count"},
+        {label: "Tot. Amt", key: "txn_amount"},
+        { label: "Total Txn", key: "total_txn" },
+        { label: "Toatal Amount", key: "total_amt" },
     ];
 
     const csvReport = {
@@ -373,13 +653,17 @@ function YearlyTransactions() {
                             csvReport={csvReport}
                             sortData={sortData}
                             orderData={orderData}
-                            title={`Yearly Transactions Report [${filterSchema?.transaction_year}]`}
+                            showData={showData}
                             state={filterSchema}
+                            show={show}
+                            handleShow={handleShow}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
                             downloadData={downloadData}
+                            title={`Yearly Transactions Report [${filterSchema?.transaction_year}]`}
                         />
                         <Table
+                            group={true}
                             columns={columns}
                             data={YearlyTransactions?.data || []}
                             loading={l_loading}

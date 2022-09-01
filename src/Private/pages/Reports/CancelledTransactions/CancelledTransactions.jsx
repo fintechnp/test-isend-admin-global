@@ -371,17 +371,15 @@ function CancelledTransactions() {
 
     //Downloads
     const headers = [
-        { label: "First Name", key: "first_name" },
-        { label: "Middle Name", key: "middle_name" },
-        { label: "Last Name", key: "last_name" },
-        { label: "Country", key: "country" },
-        { label: "Customer Id", key: "customer_id" },
-        { label: "Date of Birth", key: "date_of_birth" },
-        { label: "Kyc Status", key: "kyc_status" },
-        { label: "Mobile Number", key: "mobile_number" },
-        { label: "Email", key: "email" },
-        { label: "Created By", key: "created_by" },
-        { label: "Created Time", key: "created_ts" },
+        { label: "Customer Name", key: "customer_name" },
+        { label: "Txn Id", key: "tid" },
+        { label: "S. Currency", key: "collected_currency" },
+        { label: "Rate", key: "customer_rate" },
+        { label: "Charge", key: "service_charge" },
+        { label: "Collected", key: "collected_amount" },
+        { label: "Payout", key: "payout_amount" },
+        { label: "Status", key: "transaction_status" },
+        { label: "Created", key: "created_ts" },
     ];
 
     const csvReport = {
@@ -397,7 +395,12 @@ function CancelledTransactions() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_cancel"));
+        dispatch(
+            actions.download_report(
+                updatedFilterSchema,
+                "report/transaction_cancel"
+            )
+        );
     };
 
     return (

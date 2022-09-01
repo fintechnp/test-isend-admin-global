@@ -186,6 +186,37 @@ const ServiceChargeList = () => {
             },
             {
                 Header: () => (
+                    <Box sx={{ textAlign: "right" }}>
+                        <Typography>Flat/Per Charge</Typography>
+                    </Box>
+                ),
+                accessor: "charge_flat",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText
+                            component="p"
+                            sx={{ textAlign: "right", paddingRight: "4px" }}
+                        >
+                            {data.value ? FormatNumber(data.value) : "n/a"}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                paddingRight: "4px",
+                                opacity: 0.6,
+                                fontSize: "13px",
+                                lineHeight: 1,
+                                textAlign: "right",
+                            }}
+                        >
+                            {data?.row?.original?.charge_per
+                                ? data?.row?.original?.charge_per
+                                : "n/a"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Status</Typography>
                     </Box>

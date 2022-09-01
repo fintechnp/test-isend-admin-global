@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         marginRight: "auto",
     },
     page_number: {
+        paddingTop: "8px",
         position: "absolute",
         bottom: 10,
         left: 0,
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export const PdfDocument = ({ csvReport, ReportsDownload }) => {
+export const PdfDocument = ({ csvReport }) => {
     return (
         <Document>
             <Page size="A4" orientation="landscape" wrap style={styles.page}>
@@ -65,10 +66,7 @@ export const PdfDocument = ({ csvReport, ReportsDownload }) => {
                         {csvReport?.end ? csvReport?.end : "To"}{" "}
                     </Text>
                 </View>
-                <Table
-                    csvReport={csvReport}
-                    ReportsDownload={ReportsDownload}
-                />
+                <Table csvReport={csvReport} />
                 <Text
                     style={styles.page_number}
                     render={({ pageNumber, totalPages }) =>

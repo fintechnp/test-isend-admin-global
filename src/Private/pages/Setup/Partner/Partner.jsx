@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import {reset} from 'redux-form';
+import { reset } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -106,7 +106,7 @@ const Partner = () => {
         dispatch({ type: "DELETE_PARTNER_RESET" });
         dispatch({ type: "ADD_PARTNER_RESET" });
         dispatch({ type: "UPDATE_PARTNER_RESET" });
-        dispatch(reset('update_partner_form'));
+        dispatch(reset("update_partner_form"));
     }, [dispatch, filterSchema, d_success]);
 
     const columns = useMemo(
@@ -331,6 +331,7 @@ const Partner = () => {
         <MenuContainer>
             <Header />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}
                 handleOrder={handleOrder}

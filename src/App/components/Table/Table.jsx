@@ -57,10 +57,12 @@ const Table = ({
     columns,
     data,
     title,
+    group,
     loading,
     sub_columns,
     handleDelete,
     handleEdit,
+    enableExpand,
     enableRowSelect,
     rowsPerPage = 10,
     hideTableHead,
@@ -82,6 +84,7 @@ const Table = ({
 
     const usePaginationHook = renderPagination ? usePagination : "";
     const useRowSelectHook = enableRowSelect ? useRowSelect : "";
+    const useExpandedHook = enableExpand ? useExpanded : "";
 
     const {
         getTableProps,
@@ -114,8 +117,11 @@ const Table = ({
                                     key={index}
                                     {...headerGroup.getHeaderGroupProps()}
                                     sx={{
-                                        marginTop: "2px",
-                                        borderRadius: "6px",
+                                        marginTop: group ? "0px" : "2px",
+                                        borderTop: group
+                                            ? "1px solid #fff"
+                                            : "0px",
+                                        borderRadius: group ? "0px" : "6px",
                                         backgroundColor: "primary.dark",
                                     }}
                                 >

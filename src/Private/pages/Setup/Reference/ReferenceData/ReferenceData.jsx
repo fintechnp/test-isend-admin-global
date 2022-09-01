@@ -250,6 +250,7 @@ const ReferenceData = () => {
             <Header title="Reference Data" type={false} id={id} name={name} />
             <Filter
                 type={false}
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
                 handleSortBy={handleSortBy}

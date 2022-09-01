@@ -64,7 +64,7 @@ const initialState = {
     currency: "",
     payment_type: "",
     search: "",
-    sort_by: "location_name",
+    sort_by: "",
     order_by: "DESC",
 };
 
@@ -111,7 +111,7 @@ const PayoutLocation = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -125,7 +125,9 @@ const PayoutLocation = () => {
                 accessor: "location_code",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -139,7 +141,7 @@ const PayoutLocation = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {ReferenceName(1, data.value)}
+                            {data.value ? ReferenceName(1, data.value) : "n/a"}
                         </StyledText>
                     </Box>
                 ),
@@ -163,7 +165,9 @@ const PayoutLocation = () => {
                                 lineHeight: 1,
                             }}
                         >
-                            {CurrencyName(data?.row?.original?.currency)}
+                            {data?.row?.original?.currency
+                                ? CurrencyName(data?.row?.original?.currency)
+                                : "n/a"}
                         </Typography>
                     </Box>
                 ),
@@ -334,6 +338,7 @@ const PayoutLocation = () => {
         <MenuContainer>
             <Header />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}
                 handleOrder={handleOrder}

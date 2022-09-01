@@ -233,6 +233,7 @@ const MapBank = () => {
         <MapContainer>
             <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
                 handleSort={handleSort}

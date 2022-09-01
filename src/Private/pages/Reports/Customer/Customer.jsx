@@ -454,12 +454,10 @@ function CustomerReports() {
         { label: "Name", key: "first_name" },
         { label: "Country", key: "country" },
         { label: "Customer Id", key: "customer_id" },
-        { label: "Date of Birth", key: "date_of_birth" },
         { label: "Kyc Status", key: "kyc_status" },
         { label: "Mobile Number", key: "mobile_number" },
-        // { label: "Email", key: "email" },
-        // { label: "Created By", key: "created_by" },
-        // { label: "Created Time", key: "created_ts" },
+        { label: "Created By", key: "created_by" },
+        { label: "Created", key: "created_ts" },
     ];
 
     const csvReport = {

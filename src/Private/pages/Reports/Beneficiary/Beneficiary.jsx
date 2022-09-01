@@ -412,17 +412,13 @@ function BeneficiaryReports() {
 
     //Downloads
     const headers = [
-        { label: "Id", key: "tid" },
-        { label: "First Name", key: "first_name" },
-        { label: "Middle Name", key: "middle_name" },
-        { label: "Last Name", key: "last_name" },
+        { label: "Name", key: "first_name" },
         { label: "Country", key: "country" },
         { label: "Customer", key: "customer_id" },
-        { label: "Payment Type", key: "payment_type" },
-        { label: "Bank Name", key: "bank_name" },
-        { label: "Account Number", key: "account_number" },
         { label: "Contact", key: "mobile_number" },
-        { label: "Created Time", key: "created_ts" },
+        { label: "Bank Name", key: "bank_name" },
+        { label: "Pay. Type", key: "payment_type" },
+        { label: "Created", key: "created_ts" },
     ];
 
     const csvReport = {
@@ -438,7 +434,9 @@ function BeneficiaryReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "report/beneficiary"));
+        dispatch(
+            actions.download_report(updatedFilterSchema, "report/beneficiary")
+        );
     };
 
     return (

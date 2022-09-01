@@ -416,16 +416,13 @@ function TransactionsSummaryReports() {
 
     //Downloads
     const headers = [
-        { label: "First Name", key: "first_name" },
-        { label: "Middle Name", key: "middle_name" },
-        { label: "Last Name", key: "last_name" },
-        { label: "Country", key: "country" },
-        { label: "Customer Id", key: "customer_id" },
-        { label: "Date of Birth", key: "date_of_birth" },
-        { label: "Kyc Status", key: "kyc_status" },
-        { label: "Mobile Number", key: "mobile_number" },
-        { label: "Email", key: "email" },
-        { label: "Created By", key: "created_by" },
+        { label: "Name", key: "agent_name" },
+        { label: "S. Country", key: "send_country" },
+        { label: "P. Country", key: "payout_country" },
+        { label: "No. Txn", key: "txn_cnt" },
+        { label: "T. Charge", key: "total_charge" },
+        { label: "Avg. Rate", key: "average_customer_rate" },
+        { label: "Payout Amount", key: "payout_amount" },
         { label: "Created Time", key: "created_ts" },
     ];
 
@@ -442,7 +439,12 @@ function TransactionsSummaryReports() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_summary"));
+        dispatch(
+            actions.download_report(
+                updatedFilterSchema,
+                "report/transaction_summary"
+            )
+        );
     };
 
     return (

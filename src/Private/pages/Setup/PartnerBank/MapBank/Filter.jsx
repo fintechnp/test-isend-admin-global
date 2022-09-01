@@ -83,7 +83,7 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleOrder, handleSort }) {
+function Filter({ state, handleSearch, handleOrder, handleSort }) {
     return (
         <FilterWrapper>
             <SearchBox>
@@ -107,7 +107,7 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
                         <Select
                             onChange={handleSort}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue={state.sort_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
@@ -136,7 +136,7 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

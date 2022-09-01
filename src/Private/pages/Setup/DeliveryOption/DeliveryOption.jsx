@@ -110,7 +110,7 @@ const DeliveryOption = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -124,7 +124,9 @@ const DeliveryOption = () => {
                 accessor: "payout_agent",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -138,7 +140,7 @@ const DeliveryOption = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {ReferenceName(1, data.value)}
+                            {data.value ? ReferenceName(1, data.value) : "n/a"}
                         </StyledText>
                     </Box>
                 ),
@@ -337,6 +339,7 @@ const DeliveryOption = () => {
         <MenuContainer>
             <Header />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}
                 handleOrder={handleOrder}

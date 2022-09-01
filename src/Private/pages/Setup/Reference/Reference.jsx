@@ -244,6 +244,7 @@ const Reference = () => {
             <Header title="All Reference Type" type={true} />
             <Filter
                 type={true}
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
                 handleSortBy={handleSortBy}

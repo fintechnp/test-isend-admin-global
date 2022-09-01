@@ -380,6 +380,7 @@ const PartnerBank = () => {
         <PartnerBankContainer>
             <Header handleCloseDialog={handleCloseDialog} />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleFilterAgent={handleFilterAgent}
                 handleOrder={handleOrder}
