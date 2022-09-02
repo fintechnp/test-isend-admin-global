@@ -25,11 +25,12 @@ export const getCustomers = takeEvery(
 export const BlockUnblockCustomer = takeEvery(
     actions.BLOCK_UNBLOCK_CUSTOMER,
     function* (action) {
-        const query = api.getJSONToQueryStr(action.data);
+        const query = api.getJSONToQueryStr(action.query);
         try {
             const res = yield call(
                 api.patch,
-                `customer/${action.id}?${query}`
+                `customer/${action.id}?${query}`,
+                action.data
             );
             yield put({
                 type: actions.BLOCK_UNBLOCK_CUSTOMER_SUCCESS,
@@ -45,7 +46,6 @@ export const BlockUnblockCustomer = takeEvery(
         }
     }
 );
-
 
 export default function* saga() {
     yield all([getCustomers, BlockUnblockCustomer]);

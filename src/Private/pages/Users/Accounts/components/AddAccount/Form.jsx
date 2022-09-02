@@ -233,8 +233,7 @@ const AccountForm = ({
                         <FieldWrapper item xs={12} sm={6}>
                             <Grid
                                 container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
+                                sx={{height: "100%"}}
                             >
                                 <Grid item xs={12}>
                                     <StatusText component="p">

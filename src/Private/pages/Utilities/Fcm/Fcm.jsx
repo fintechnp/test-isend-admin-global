@@ -203,6 +203,8 @@ const Fcm = () => {
         { key: "title", name: "Title" },
         { key: "topic", name: "Receiver" },
         { key: "body", name: "Body" },
+        { key: "display_notification", name: "Display Notification" },
+        { key: "detail_content", name: "Detail Contents" },
         { key: "created_ts", name: "Created Date" },
     ];
 

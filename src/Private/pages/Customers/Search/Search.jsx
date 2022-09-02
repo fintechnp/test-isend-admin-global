@@ -127,6 +127,7 @@ function Search() {
     useEffect(() => {
         if (isMounted.current) {
             dispatch(actions.get_customers(filterSchema));
+            dispatch({ type: "BLOCK_UNBLOCK_CUSTOMER_RESET" });
         } else {
             isMounted.current = true;
         }
@@ -335,7 +336,11 @@ function Search() {
                             name="Customer"
                             destroyOnUnmount
                             remark={true}
-                            initialValues={{ id: row.original.tid }}
+                            initialValues={{
+                                id: row.original.tid,
+                                is_active: row.original.is_active,
+                                remarks: "",
+                            }}
                             onSubmit={handleBlock}
                             loading={b_loading}
                             status={row?.original?.is_active}
@@ -369,7 +374,11 @@ function Search() {
 
     const handleBlock = (data) => {
         dispatch(
-            actions.block_unblock_customer(data?.id, { remarks: data?.remarks })
+            actions.block_unblock_customer(
+                data?.id,
+                { is_active: !data?.is_active },
+                { remarks: data?.remarks }
+            )
         );
     };
 

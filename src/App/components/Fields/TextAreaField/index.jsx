@@ -6,7 +6,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import { renderFromHelper } from "../helpers";
 
 const Wrapper = styled(Grid)(({ theme }) => ({
-    paddingTop: "0px",
+    paddingTop: "4px",
 }));
 
 const Label = styled(Typography)(({ theme }) => ({
@@ -36,6 +36,7 @@ const Input = styled(MuiTextareaAutosize)(({ theme }) => ({
     fontSize: "14px",
     border: "1px solid #D0D3D5",
     borderRadius: "6px",
+    background: "transparent",
 }));
 
 const TextAreaField = ({

@@ -1,14 +1,18 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm, change } from "redux-form";
-import { Grid, Button } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import UpdateIcon from "@mui/icons-material/Update";
+import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { useDispatch } from "react-redux";
 
 import SelectField from "../../../../../App/components/Fields/SelectField";
+import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
+import TextAreaField from "../../../../../App/components/Fields/TextAreaField";
 import TextField from "../../../../../App/components/Fields/TextField";
 import Validator from "../../../../../App/utils/validators";
 
@@ -31,6 +35,12 @@ const FieldWrapper = styled(Grid)(({ theme }) => ({
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingTop: "12px",
+}));
+
+const StatusText = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
+    paddingTop: "6px",
+    paddingBottom: "-6px",
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -155,6 +165,35 @@ const FCMForm = ({
                                     Validator.minValue1,
                                     Validator.maxLength500,
                                 ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Grid container sx={{ height: "100%" }}>
+                                <Grid item xs={12}>
+                                    <StatusText component="p">
+                                        Display Notification
+                                    </StatusText>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Field
+                                        name="display_notification"
+                                        label="Show"
+                                        small={12}
+                                        reverse="row-reverse"
+                                        component={CheckboxField}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12}>
+                            <Field
+                                name="detail_content"
+                                label="Content"
+                                placeholder="Write content..."
+                                type="text"
+                                small={12}
+                                minRows={4}
+                                component={TextAreaField}
                             />
                         </FieldWrapper>
                     </FormWrapper>
