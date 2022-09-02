@@ -75,8 +75,20 @@ const DailyTransactions = lazy(() =>
 const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
 
 //Reports
-const ReportsCountrywise = lazy(() => import("../pages/Reports/Countrywise"));
-const ReportsSummary = lazy(() => import("../pages/Reports/Summary"));
+const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
+const BeneficiaryReport = lazy(() => import("../pages/Reports/Beneficiary"));
+const TransactionsSummary = lazy(() =>
+    import("../pages/Reports/TransactionsSummary")
+);
+const CancelledTransactions = lazy(() =>
+    import("../pages/Reports/CancelledTransactions")
+);
+const YearlyTransactions = lazy(() =>
+    import("../pages/Reports/YearlyTransactions")
+);
+const SuspiciousTransactions = lazy(() =>
+    import("../pages/Reports/SuspiciousTransactions")
+);
 
 //PaymentProcess
 const PendingPayment = lazy(() =>
@@ -107,7 +119,6 @@ const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
 const CompliancePaymentRules = lazy(() =>
     import("../pages/Compliance/PaymentRules")
 );
-const ComplianceReport = lazy(() => import("../pages/Compliance/Report"));
 
 //Settings
 const Settings = lazy(() => import("../pages/Settings"));
@@ -117,6 +128,9 @@ const Messages = lazy(() => import("../pages/Messages"));
 
 //My Account
 const MyAccount = lazy(() => import("../pages/MyAccount"));
+
+//Accounting
+const Accounting = lazy(() => import("../pages/Accounting"));
 
 const privateRoutes = [
     { path: "/", component: <Dashboard /> },
@@ -206,8 +220,18 @@ const privateRoutes = [
     { path: "/transaction/search", component: <SearchTransactions /> },
 
     //Reports
-    { path: "/report/country-wise-report", component: <ReportsCountrywise /> },
-    { path: "/report/summary", component: <ReportsSummary /> },
+    { path: "/report/customer", component: <CustomerReport /> },
+    { path: "/report/beneficiary", component: <BeneficiaryReport /> },
+    { path: "/report/yearly-transactions", component: <YearlyTransactions /> },
+    { path: "/report/transaction-summary", component: <TransactionsSummary /> },
+    {
+        path: "/report/cancelled-transactions",
+        component: <CancelledTransactions />,
+    },
+    {
+        path: "/report/suspicious-transactions",
+        component: <SuspiciousTransactions />,
+    },
 
     //PaymentProcess
     { path: "/payment/pending", component: <PendingPayment /> },
@@ -238,7 +262,6 @@ const privateRoutes = [
         path: "/compliance/payment-rules",
         component: <CompliancePaymentRules />,
     },
-    { path: "/compliance/report", component: <ComplianceReport /> },
 
     //Settings
     { path: "/settings", component: <Settings /> },
@@ -248,6 +271,9 @@ const privateRoutes = [
 
     //MyAccount
     { path: "/account", component: <MyAccount /> },
+
+    //Accounting
+    { path: "/accounting", component: <Accounting /> },
 ];
 
 export default privateRoutes;

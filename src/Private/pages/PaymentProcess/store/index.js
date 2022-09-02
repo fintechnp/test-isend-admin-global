@@ -10,7 +10,6 @@ export { default as GetRefundBlockTransactionsReducer } from "./reducers/getRefu
 export { default as BlockTransactionsReducer } from "./reducers/blockTransactions";
 export { default as RefundTransactionsReducer } from "./reducers/refundTransactions";
 export { default as UpdatePaymentPendingReducer } from "./reducers/updatePaymentPending";
-export { default as UpdatePendingTransactionsReducer } from "./reducers/updatePendingTransactions";
 export { default as UpdateBlockedTransactionsReducer } from "./reducers/updateBlockedTransactions";
 export { default as UpdateAmlSuspiciousReducer } from "./reducers/updateAmlSuspicious";
 export { default as UpdateExceptionTransactionsReducer } from "./reducers/updateExceptionTransactions";

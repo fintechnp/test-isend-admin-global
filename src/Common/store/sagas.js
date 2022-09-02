@@ -83,6 +83,31 @@ export const get_all_reference = takeEvery(
     }
 );
 
+export const resetPassword = takeEvery(
+    actions.PASSWORD_RESET,
+    function* (action) {
+        const api = new Api();
+        try {
+            const res = yield call(
+                api.post,
+                `account/resetpassword`,
+                action.data
+            );
+            yield put({
+                type: actions.PASSWORD_RESET_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.PASSWORD_RESET_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const logout = takeEvery(actions.LOG_OUT, function* () {
     const api = new Api();
     try {
@@ -107,6 +132,7 @@ export default function* saga() {
         getUser,
         get_all_country,
         get_all_reference,
+        resetPassword,
         logout,
     ]);
 }

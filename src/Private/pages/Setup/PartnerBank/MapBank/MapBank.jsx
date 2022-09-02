@@ -50,7 +50,7 @@ const MapBank = () => {
         payment_type: payment,
         search: "",
         sort_by: "location_name",
-        order_by: "ASC",
+        order_by: "DESC",
     });
 
     const { response: payoutloaction_data, loading: g_loading } = useSelector(
@@ -233,6 +233,7 @@ const MapBank = () => {
         <MapContainer>
             <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
                 handleSort={handleSort}

@@ -79,7 +79,7 @@ const Basic = ({
         page_size: 100,
         payout_country: "",
         sort_by: "created_ts",
-        order_by: "ASC",
+        order_by: "DESC",
     });
 
     useEffect(() => {

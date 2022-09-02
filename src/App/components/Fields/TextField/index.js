@@ -61,6 +61,7 @@ const Input = styled(MuiTextField)(({ theme }) => ({
 const TextField = ({
     label,
     input,
+    showLabel,
     placeholder,
     small,
     customClass,
@@ -81,6 +82,7 @@ const TextField = ({
                 <FormControl error={touched && invalid}>
                     <Input
                         variant="outlined"
+                        label={showLabel ? placeholder : ""}
                         placeholder={placeholder ? placeholder : label}
                         error={touched && invalid}
                         helperText={touched && error}

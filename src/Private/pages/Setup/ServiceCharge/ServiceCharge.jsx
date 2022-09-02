@@ -43,12 +43,9 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    country: "",
-    currency: "",
-    agent_type: "",
     search: "",
     sort_by: "",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const ServiceCharge = () => {
@@ -62,6 +59,7 @@ const ServiceCharge = () => {
 
     useEffect(() => {
         dispatch(actions.get_all_service_charge(filterSchema));
+        dispatch({ type: "GET_SENDING_PARTNER_RESET" });
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
@@ -142,6 +140,16 @@ const ServiceCharge = () => {
         []
     );
 
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Partner Id", value: "sending_agent_id" },
+        { key: "Partner Name", value: "agent_name" },
+    ];
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
     const handleSearch = useCallback(
         (e) => {
             const searchValue = e.target.value;
@@ -153,6 +161,15 @@ const ServiceCharge = () => {
         },
         [filterSchema]
     );
+
+    const handleSort = (e) => {
+        const sort = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: sort,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const handleOrder = (e) => {
         const order = e.target.value;
@@ -183,10 +200,18 @@ const ServiceCharge = () => {
 
     return (
         <MenuContainer>
-            <Header title="Partnerwise Service Charge" />
+            <Header
+                title="Partnerwise Service Charge"
+                buttonText="Add Service Charge"
+            />
+
             <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
+                handleSort={handleSort}
             />
             <Table
                 columns={columns}

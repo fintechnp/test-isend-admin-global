@@ -24,7 +24,7 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
     },
@@ -72,19 +72,14 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "center",
 }));
 
-const sortData = [
-    { key: "None", value: "" },
-    { key: "Country", value: "receiving_country" },
-    { key: "Payment Type", value: "payment_type" },
-    { key: "Customer Type", value: "customer_type" },
-];
-
-const orderData = [
-    { key: "Ascending", value: "ASC" },
-    { key: "Descending", value: "DESC" },
-];
-
-function Filter({ handleSearch, handleOrder, handleSort }) {
+function Filter({
+    state,
+    handleSearch,
+    handleOrder,
+    handleSort,
+    sortData,
+    orderData,
+}) {
     return (
         <FilterWrapper>
             <SearchBox>
@@ -109,7 +104,7 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
                             <Select
                                 onChange={handleSort}
                                 displayEmpty
-                                defaultValue=""
+                                defaultValue={state.sort_by}
                                 renderValue={(selected) => {
                                     if (selected.length === 0) {
                                         return (
@@ -142,7 +137,7 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

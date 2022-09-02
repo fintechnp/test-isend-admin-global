@@ -45,7 +45,7 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function Transactions() {
@@ -242,24 +242,6 @@ function Transactions() {
                                 }
                             >
                                 <RemoveRedEyeOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit Transaction" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transaction/update/${row.original.tid}`
-                                    )
-                                }
-                            >
-                                <EditOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
                                         "&:hover": {

@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import Drawer from "../../components/Drawer";
+import { Navigate, Outlet } from "react-router-dom";
 import {
     Dashboard,
     Settings,
@@ -14,9 +15,10 @@ import {
 import roles from "../../global/roles";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 
+import { AuthConsumer } from "../../auth";
 import Loading from "./../../../App/components/Loading";
 
-const PrivateLayout = ({ children }) => {
+const PrivateLayout = () => {
     const getMainItems = () => {
         return [
             {
@@ -243,15 +245,39 @@ const PrivateLayout = ({ children }) => {
                 ],
                 children: [
                     {
-                        path: "/report/summary",
-                        key: "report-summary",
-                        text: "Summary",
+                        path: "/report/customer",
+                        key: "report-customer",
+                        text: "Customers",
                         sub: false,
                     },
                     {
-                        path: "/report/country-wise-report",
-                        key: "country-wise-report",
-                        text: "Countrywise",
+                        path: "/report/beneficiary",
+                        key: "report-beneficiary",
+                        text: "Beneficiary",
+                        sub: false,
+                    },
+                    {
+                        path: "/report/transaction-summary",
+                        key: "report-transactions-summary",
+                        text: "Transactions Summary",
+                        sub: false,
+                    },
+                    {
+                        path: "/report/cancelled-transactions",
+                        key: "report-cancelled-transactions",
+                        text: "Cancelled Transactions",
+                        sub: false,
+                    },
+                    {
+                        path: "/report/yearly-transactions",
+                        key: "report-yearly-transactions",
+                        text: "Yearly Transactions",
+                        sub: false,
+                    },
+                    {
+                        path: "/report/suspicious-transactions",
+                        key: "report-suspicious-transactions",
+                        text: "Suspicious Transactions",
                         sub: false,
                     },
                 ],
@@ -306,12 +332,6 @@ const PrivateLayout = ({ children }) => {
                         text: "Sanction List",
                         sub: false,
                     },
-                    {
-                        path: "/compliance/report",
-                        key: "report-compliance",
-                        text: "Suspicious Reports",
-                        sub: false,
-                    },
                 ],
             },
 
@@ -328,11 +348,19 @@ const PrivateLayout = ({ children }) => {
     };
 
     return (
-        <Drawer menus={getMainItems}>
-            <Suspense fallback={<Loading loading={true} />}>
-                {children}
-            </Suspense>
-        </Drawer>
+        <AuthConsumer>
+            {(authContext) =>
+                authContext && authContext.isUserLoggedIn ? (
+                    <Drawer menus={getMainItems}>
+                        <Suspense fallback={<Loading loading={true} />}>
+                            <Outlet />
+                        </Suspense>
+                    </Drawer>
+                ) : (
+                    <Navigate to="/login" replace />
+                )
+            }
+        </AuthConsumer>
     );
 };
 

@@ -55,7 +55,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "type_name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const Reference = () => {
@@ -244,6 +244,7 @@ const Reference = () => {
             <Header title="All Reference Type" type={true} />
             <Filter
                 type={true}
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
                 handleSortBy={handleSortBy}

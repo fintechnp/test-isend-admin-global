@@ -9,7 +9,6 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import { Release } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 import {
     CurrencyName,
@@ -54,7 +53,7 @@ const initialState = {
     from_date: "",
     to_date: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const PendingTransactions = () => {
@@ -65,14 +64,10 @@ const PendingTransactions = () => {
     const { response: pendingTransactions, loading: l_loading } = useSelector(
         (state) => state.get_pending_transactions
     );
-    const { success: u_success, loading: u_loading } = useSelector(
-        (state) => state.update_pending_transactions
-    );
 
     useEffect(() => {
         dispatch(actions.get_pending_transactions(filterSchema));
-        dispatch({ type: "RELEASE_PENDING_TRANSACTIONS_RESET" });
-    }, [dispatch, filterSchema, u_success]);
+    }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
@@ -258,14 +253,6 @@ const PendingTransactions = () => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Release
-                            destroyOnUnmount
-                            initialValues={{ id: row.original.tid }}
-                            onSubmit={handleRelease}
-                            loading={u_loading}
-                            validatation={false}
-                            tooltext="Release Transaction"
-                        />
                     </Box>
                 ),
             },
@@ -335,10 +322,6 @@ const PendingTransactions = () => {
             page_size: +pageSize,
         };
         setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleRelease = (data) => {
-        dispatch(actions.update_pending_transactions(data?.id));
     };
 
     return (

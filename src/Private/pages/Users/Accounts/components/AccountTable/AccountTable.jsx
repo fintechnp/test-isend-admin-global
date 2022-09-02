@@ -62,7 +62,7 @@ const initialState = {
     user_type: "",
     search: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function AccountTable() {
@@ -315,6 +315,10 @@ function AccountTable() {
         dispatch(actions.delete_user(id));
     };
 
+    const handleForgotPassword = (email) => {
+        dispatch(actions.forgot_password({email: email}));
+    };
+
     return (
         <TransactionsContainer>
             <Header />
@@ -330,6 +334,7 @@ function AccountTable() {
                 data={user_list?.data || []}
                 sub_columns={sub_columns}
                 handleDelete={handleDelete}
+                handleForgotPassword={handleForgotPassword}
                 loading={loading}
                 rowsPerPage={8}
                 renderPagination={() => (

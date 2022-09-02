@@ -53,7 +53,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const Email = () => {
@@ -80,7 +80,7 @@ const Email = () => {
                 return "SENT";
             case "R":
                 return "REJECTED";
-            case "R":
+            case "P":
                 return "PROCESSING";
             case "E":
                 return "EXCEPTION";
@@ -202,7 +202,7 @@ const Email = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Route Details" arrow>
+                                <Tooltip title="Hide Email Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{

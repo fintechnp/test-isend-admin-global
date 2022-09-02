@@ -103,7 +103,7 @@ const filter = {
     agent_type: "SEND",
     country: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function AddDeliveryRoute({ update_data, update }) {
@@ -115,7 +115,7 @@ function AddDeliveryRoute({ update_data, update }) {
         agent_type: "PAY",
         country: "",
         sort_by: "name",
-        order_by: "ASC",
+        order_by: "DESC",
     });
     const { response: partner_sending } = useSelector(
         (state) => state.get_sending_partner

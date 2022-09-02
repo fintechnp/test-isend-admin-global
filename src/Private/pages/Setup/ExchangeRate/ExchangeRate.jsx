@@ -44,11 +44,9 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    country: "",
-    currency: "",
     search: "",
     sort_by: "",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const ExchangeRate = () => {
@@ -142,6 +140,17 @@ const ExchangeRate = () => {
         []
     );
 
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Partner Id", value: "sending_agent_id" },
+        { key: "Partner Name", value: "agent_name" },
+    ];
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
     const handleSearch = useCallback(
         (e) => {
             const searchValue = e.target.value;
@@ -153,6 +162,15 @@ const ExchangeRate = () => {
         },
         [filterSchema]
     );
+
+    const handleSort = (e) => {
+        const sort = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: sort,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const handleOrder = (e) => {
         const order = e.target.value;
@@ -183,10 +201,17 @@ const ExchangeRate = () => {
 
     return (
         <MenuContainer>
-            <Header title="Partnerwise Exchange Rate" />
+            <Header
+                title="Partnerwise Exchange Rate"
+                buttonText="Add Exchange Rate"
+            />
             <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
                 handleSearch={handleSearch}
                 handleOrder={handleOrder}
+                handleSort={handleSort}
             />
             <Table
                 columns={columns}

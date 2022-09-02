@@ -148,6 +148,30 @@ export const deleteUser = takeEvery(
     }
 );
 
+export const forgotPassword = takeEvery(
+    actions.FORGOT_PASSWORD,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.post,
+                `account/forgotpassword`,
+                action.data
+            );
+            yield put({
+                type: actions.FORGOT_PASSWORD_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.FORGOT_PASSWORD_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export default function* saga() {
     yield all([
         getAllUser,
@@ -158,5 +182,6 @@ export default function* saga() {
         updateUser,
         updateUserStatus,
         deleteUser,
+        forgotPassword,
     ]);
 }

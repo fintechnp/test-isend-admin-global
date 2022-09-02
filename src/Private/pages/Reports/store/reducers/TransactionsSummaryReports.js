@@ -9,26 +9,26 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.RELEASE_PENDING_TRANSACTIONS:
+        case actions.TRANSACTIONS_SUMMARY_REPORT:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.RELEASE_PENDING_TRANSACTIONS_SUCCESS:
+        case actions.TRANSACTIONS_SUMMARY_REPORT_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.RELEASE_PENDING_TRANSACTIONS_FAILED:
+        case actions.TRANSACTIONS_SUMMARY_REPORT_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
             };
-        case actions.RELEASE_PENDING_TRANSACTIONS_RESET:
+        case actions.TRANSACTIONS_SUMMARY_REPORT_RESET:
             return {
                 success: false,
                 loading: false,

@@ -53,7 +53,7 @@ const filter = {
     agent_type: "SEND",
     country: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function AddUpdateExchangeRate() {
@@ -206,17 +206,22 @@ function AddUpdateExchangeRate() {
                     />
                 ) : (
                     <ExchangeRateForm
-                        enableReinitialize={true}
+                        destroyOnUnmount
+                        enableReinitialize
                         onSubmit={handleChargeCreate}
                         buttonText="Create"
                         form={`add_exchange_rate`}
                         handleClose={handleClose}
                         initialValues={
-                            currency &&
-                            agent_id && {
-                                sending_agent_id: agent_id,
-                                sending_currency: currency,
-                            }
+                            agent_id == 0
+                                ? {
+                                      sending_agent_id: "",
+                                      sending_currency: "",
+                                  }
+                                : {
+                                      sending_agent_id: agent_id,
+                                      sending_currency: currency,
+                                  }
                         }
                         loading={add_loading}
                         partner_sending={partner_sending?.data || []}

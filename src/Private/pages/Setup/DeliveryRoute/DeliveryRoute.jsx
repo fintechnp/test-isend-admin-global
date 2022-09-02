@@ -65,7 +65,7 @@ const initialState = {
     payment_type: "",
     search: "",
     sort_by: "sending_agent",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const DeliveryRoute = () => {
@@ -96,11 +96,12 @@ const DeliveryRoute = () => {
             {
                 Header: "Id",
                 accessor: "delivery_route_id",
-                maxWidth: 80,
+                maxWidth: 50,
             },
             {
                 Header: "Sending Agent",
                 accessor: "sending_agent",
+                minWidth: 220,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -327,6 +328,7 @@ const DeliveryRoute = () => {
         <MenuContainer>
             <Header />
             <Filter
+                state={filterSchema}
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}
                 handleOrder={handleOrder}

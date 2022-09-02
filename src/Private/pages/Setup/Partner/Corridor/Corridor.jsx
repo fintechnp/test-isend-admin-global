@@ -76,7 +76,7 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const Corridor = () => {

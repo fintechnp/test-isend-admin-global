@@ -19,15 +19,33 @@ function Header({ title, buttonText, name, agent_id }) {
     const navigate = useNavigate();
 
     const handleAdd = () => {
-        navigate(`/setup/service-charge/${agent_id}/create`);
+        if (agent_id) {
+            navigate(`/setup/service-charge/${agent_id}/create`);
+        } else {
+            navigate(`/setup/service-charge/0/create`);
+        }
     };
 
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>
-                {title} {name && `of ${name}`}
-            </Typography>
-           {buttonText && (
+            <Box>
+                <Typography sx={{ fontSize: "22px", display: "inline-block" }}>
+                    {title}{" "}
+                </Typography>
+                {name && (
+                    <Typography
+                        sx={{
+                            paddingLeft: "8px",
+                            fontSize: "21px",
+                            fontWeight: "500",
+                            display: "inline-block",
+                        }}
+                    >
+                        {` of ${name}`}
+                    </Typography>
+                )}
+            </Box>
+            {buttonText && (
                 <AddButton
                     size="small"
                     variant="outlined"
@@ -36,7 +54,7 @@ function Header({ title, buttonText, name, agent_id }) {
                 >
                     {buttonText}
                 </AddButton>
-            )} 
+            )}
         </HeaderWrapper>
     );
 }

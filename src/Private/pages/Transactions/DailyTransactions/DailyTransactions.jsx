@@ -2,10 +2,9 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { Link } from "react-router-dom";
 
 import actions from "./../store/actions";
 import Header from "./../components/Header";
@@ -15,6 +14,7 @@ import {
     CurrencyName,
     FormatDate,
     FormatNumber,
+    ReferenceName,
 } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -28,13 +28,6 @@ const MenuContainer = styled("div")(({ theme }) => ({
     border: `1px solid ${theme.palette.border.light}`,
 }));
 
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
     color: "border.main",
@@ -46,12 +39,11 @@ const initialState = {
     from_date: new Date().toISOString().slice(0, 10),
     to_date: new Date().toISOString().slice(0, 10),
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const DailyTransactions = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: dailyTransactions, loading: l_loading } = useSelector(
@@ -68,6 +60,24 @@ const DailyTransactions = () => {
                 Header: "Id",
                 accessor: "tid",
                 maxWidth: 50,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            <Link
+                                to={`/transactions/details/${data?.value}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
             },
             {
                 Header: "Name",
@@ -82,13 +92,51 @@ const DailyTransactions = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.beneficiary_name}
+                            {data?.row?.original?.beneficiary_name
+                                ? data?.row?.original?.beneficiary_name
+                                : "n/a"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: "C/B Id",
+                accessor: "customer_id",
+                maxWidth: 120,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ fontSize: "13px" }}>
+                            <Link
+                                to={`/customer/details/${data.value}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            <Link
+                                to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {data?.row?.original?.beneficiary_id
+                                    ? data?.row?.original?.beneficiary_id
+                                    : "n/a"}
+                            </Link>
                         </Typography>
                     </Box>
                 ),
@@ -109,14 +157,17 @@ const DailyTransactions = () => {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "13px",
-                                opacity: 0.6,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                            sx={{
+                                paddingLeft: "4px",
+                                fontSize: "13px",
+                                opacity: 0.6,
+                            }}
                         >
                             {data?.row?.original?.payout_agent_name}
                         </StyledName>
@@ -215,55 +266,41 @@ const DailyTransactions = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>S/T Status</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessor: "send_status",
+                Cell: (data) => (
                     <Box
                         sx={{
                             display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            textAlign: "right",
                         }}
                     >
-                        <Tooltip title="Transaction Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transactions/details/${row.original.tid}`
-                                    )
-                                }
-                            >
-                                <RemoveRedEyeOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit Transaction" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transaction/update/${row.original.tid}`
-                                    )
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "12px",
+                                lineHeight: 1.2,
+                            }}
+                        >
+                            {data.value ? ReferenceName(66, data.value) : "N/A"}
+                        </StyledName>
+                        <Typography
+                            component="span"
+                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                        >
+                            {data?.row?.original?.transaction_status
+                                ? ReferenceName(
+                                      66,
+                                      data?.row?.original?.transaction_status
+                                  )
+                                : "N/A"}
+                        </Typography>
                     </Box>
                 ),
             },

@@ -33,7 +33,7 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
 const Select = styled(MuiSelect)(({ theme }) => ({
     width: "100%",
     "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
-        opacity: 0.7,
+        opacity: 0.5,
         padding: "9px 10px",
         fontSize: "15px",
     },

@@ -32,12 +32,17 @@ const GlobalTable = styled(MuiTable)(({ theme }) => ({
 
 const HeadCell = styled(TableCell)(({ theme }) => ({
     borderBottom: "none",
-    fontSize: "16px",
+    fontSize: "15px",
     padding: "10px",
     color: theme.palette.primary.contrastText,
 }));
 
-const TableHead = styled(MuiTableHead)(({ theme }) => ({}));
+const TableHead = styled(MuiTableHead)(({ theme, value }) => ({
+    borderRadius: "6px",
+    "& .MuiTableCell-root": {
+        textAlign: value > 1 ? "center" : "left",
+    },
+}));
 
 const BoxContainer = styled(Box)(({ theme, open }) => ({
     borderBottom: `1px solid ${theme.palette.border.light}`,
@@ -52,20 +57,23 @@ const Table = ({
     columns,
     data,
     title,
+    group,
     loading,
     sub_columns,
     handleDelete,
     handleEdit,
+    enableExpand,
     enableRowSelect,
     rowsPerPage = 10,
     hideTableHead,
     renderPagination,
     renderTableFooter,
+    handleForgotPassword,
 }) => {
     const defaultColumn = useMemo(
         () => ({
             minWidth: 30,
-            width: 150,
+            width: 140,
             maxWidth: 200,
         }),
         []
@@ -77,6 +85,7 @@ const Table = ({
 
     const usePaginationHook = renderPagination ? usePagination : "";
     const useRowSelectHook = enableRowSelect ? useRowSelect : "";
+    const useExpandedHook = enableExpand ? useExpanded : "";
 
     const {
         getTableProps,
@@ -109,8 +118,11 @@ const Table = ({
                                     key={index}
                                     {...headerGroup.getHeaderGroupProps()}
                                     sx={{
-                                        marginTop: "2px",
-                                        borderRadius: "6px",
+                                        marginTop: group ? "0px" : "2px",
+                                        borderTop: group
+                                            ? "1px solid #fff"
+                                            : "0px",
+                                        borderRadius: group ? "0px" : "6px",
                                         backgroundColor: "primary.dark",
                                     }}
                                 >
@@ -130,6 +142,7 @@ const Table = ({
                             ))}
                         </TableHead>
                     )}
+
                     <TableBody>
                         {loading ? (
                             Array.from(new Array(+rowsPerPage)).map(
@@ -189,6 +202,7 @@ const Table = ({
                                             handleDelete={handleDelete}
                                             sub_data={row?.original}
                                             sub_columns={sub_columns}
+                                            handleForgotPassword={handleForgotPassword}
                                             toggleRowExpanded={
                                                 toggleRowExpanded
                                             }

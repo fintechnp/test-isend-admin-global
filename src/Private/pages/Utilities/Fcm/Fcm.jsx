@@ -53,7 +53,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "created_ts",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 const Fcm = () => {
@@ -127,13 +127,13 @@ const Fcm = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <Typography>Created Date</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
                 Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>

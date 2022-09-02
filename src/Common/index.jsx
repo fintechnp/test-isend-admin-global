@@ -6,6 +6,7 @@ import {
     AllCountryReducer,
     ToastReducer,
     AllReferenceReducer,
+    ResetPasswordReducer,
     LogOutReducer,
 } from "./store";
 
@@ -16,6 +17,7 @@ export const commonReducer = {
     all_country: AllCountryReducer,
     all_reference: AllReferenceReducer,
     toast: ToastReducer,
+    reset_password: ResetPasswordReducer,
     logout: LogOutReducer,
 };
 

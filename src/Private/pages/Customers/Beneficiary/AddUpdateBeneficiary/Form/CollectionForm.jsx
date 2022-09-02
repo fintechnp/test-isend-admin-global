@@ -67,14 +67,13 @@ const CollectionForm = ({
 }) => {
     const dispatch = useDispatch();
     const [option, setOption] = useState(null);
-    const [bank_name, setBankName] = useState(null);
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
         page_size: 100,
         country: "",
         payment_type: "",
         sort_by: "created_ts",
-        order_by: "ASC",
+        order_by: "DESC",
     });
     const { response: deliveryoption_data, loading: d_loading } = useSelector(
         (state) => state.get_all_delivery_option

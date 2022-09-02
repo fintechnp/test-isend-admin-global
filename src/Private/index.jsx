@@ -8,6 +8,7 @@ import {
     DeleteUserReducer,
     UpdateUserStatusReducer,
     GetUserNumberReducer,
+    ForgotPasswordReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 
@@ -167,12 +168,23 @@ import {
     BlockTransactionsReducer,
     RefundTransactionsReducer,
     UpdatePaymentPendingReducer,
-    UpdatePendingTransactionsReducer,
     UpdateBlockedTransactionsReducer,
     UpdateAmlSuspiciousReducer,
     UpdateExceptionTransactionsReducer,
     PaymentProcessingSaga,
 } from "./pages/PaymentProcess/store";
+
+//Reports
+import {
+    GetCustomerReportsReducer,
+    DownloadReportsReducer,
+    GetBeneficiaryReportsReducer,
+    GetTransactionsSummaryReportsReducer,
+    GetYearlyTransactionsReportsReducer,
+    GetSuspiciousTransactionsReportsReducer,
+    GetCancelledTransactionsReportsReducer,
+    ReportsSaga,
+} from "./pages/Reports/store";
 
 //Utilities
 import {
@@ -224,6 +236,7 @@ export const privateReducer = {
     delete_user: DeleteUserReducer,
     update_user_status: UpdateUserStatusReducer,
     get_user_number: GetUserNumberReducer,
+    forgot_password: ForgotPasswordReducer,
 
     //permission
     get_all_permission: GetAllPermissionReducer,
@@ -352,10 +365,18 @@ export const privateReducer = {
     block_transactions: BlockTransactionsReducer,
     refund_transactions: RefundTransactionsReducer,
     update_payment_pending: UpdatePaymentPendingReducer,
-    update_pending_transactions: UpdatePendingTransactionsReducer,
     update_blocked_transactions: UpdateBlockedTransactionsReducer,
     update_aml_suspicious: UpdateAmlSuspiciousReducer,
     update_exception_transactions: UpdateExceptionTransactionsReducer,
+
+    //Reports
+    get_customer_report: GetCustomerReportsReducer,
+    download_report: DownloadReportsReducer,
+    get_beneficiary_report: GetBeneficiaryReportsReducer,
+    get_transactions_summary_report: GetTransactionsSummaryReportsReducer,
+    get_yearly_transactions_report: GetYearlyTransactionsReportsReducer,
+    get_suspicious_transactions_report: GetSuspiciousTransactionsReportsReducer,
+    get_cancelled_report: GetCancelledTransactionsReportsReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,
@@ -404,6 +425,7 @@ export const privateSaga = [
     PaymentRulesSaga(),
     SanctionSaga(),
     PaymentProcessingSaga(),
+    ReportsSaga(),
     UtilitiesSaga(),
 ];
 

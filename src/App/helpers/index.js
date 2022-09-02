@@ -31,12 +31,20 @@ export const CurrencyName = (currency) => {
 
 export const ReferenceName = (id, value) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
+    if (!value) {
+        return "N/A";
+    }
     if (id) {
         const ref = reference.find((ct) => ct.reference_type === id);
         if (ref) {
-            const referenceValue = ref?.reference_data.find(
-                (data) => data.value === value
-            );
+            const referenceValue = ref?.reference_data.find((data) => {
+                if (value) {
+                    return (
+                        data.value === value ||
+                        data.value === value.toUpperCase()
+                    );
+                }
+            });
             return referenceValue?.name;
         } else {
             return "N/A";

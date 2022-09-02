@@ -90,6 +90,7 @@ const orderData = [
 ];
 
 function Filter({
+    state,
     handleSearch,
     handleCountry,
     handleOrder,
@@ -165,7 +166,7 @@ function Filter({
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

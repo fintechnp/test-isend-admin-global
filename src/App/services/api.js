@@ -36,9 +36,7 @@ export default class Api {
                 return response;
             },
             function (error) {
-                console.log(error, "error");
                 if (error?.response?.status === 401) {
-                    console.log(error?.response?.status, "status");
                     store.dispatch({
                         type: "INVALID_TOKEN",
                     });

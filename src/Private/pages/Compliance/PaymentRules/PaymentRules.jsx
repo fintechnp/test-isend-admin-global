@@ -49,8 +49,9 @@ const StyledAction = styled(Typography)(({ theme, value }) => ({
     opacity: 0.8,
     paddingTop: "3px",
     paddingBottom: "3px",
-    fontSize: "14px",
+    fontSize: "12px",
     borderRadius: "6px",
+    textTransform: "capitalize",
     color: theme.palette.primary.contrastText,
     background: stringToColor(value),
     "&: hover": {
@@ -63,7 +64,7 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "rule_name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
 function stringToColor(string) {

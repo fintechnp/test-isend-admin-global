@@ -202,7 +202,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Is enabled?:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.is_enable ? (
+                                {data?.is_active ? (
                                     <Tooltip
                                         title="Service charge enabled."
                                         arrow
