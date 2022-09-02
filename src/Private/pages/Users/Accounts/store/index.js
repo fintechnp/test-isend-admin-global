@@ -7,4 +7,5 @@ export { default as AddUserReducer } from "./reducers/addUser";
 export { default as UpdateUserReducer } from "./reducers/updateUser";
 export { default as UpdateUserStatusReducer } from "./reducers/updateUserStatus";
 export { default as DeleteUserReducer } from "./reducers/deleteUser";
+export { default as ForgotPasswordReducer } from "./reducers/forgotPassword";
 export { default as AccountAction } from "./actions";

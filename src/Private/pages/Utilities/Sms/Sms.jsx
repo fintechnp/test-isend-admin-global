@@ -177,14 +177,14 @@ const Sms = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <Typography>Created Date</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
                 maxWidth: 120,
                 Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
@@ -209,7 +209,7 @@ const Sms = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Route Details" arrow>
+                                <Tooltip title="Hide SMS Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{

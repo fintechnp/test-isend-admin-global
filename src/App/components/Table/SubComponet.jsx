@@ -4,6 +4,7 @@ import { Typography, Box, Grid, Tooltip } from "@mui/material";
 import MuiButton from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import Collapse from "@mui/material/Collapse";
+import LockResetIcon from '@mui/icons-material/LockReset';
 
 import Delete from "./../Dialog/Delete";
 
@@ -32,57 +33,24 @@ function SubComponent({
     checked,
     handleDelete,
     sub_columns,
+    handleForgotPassword,
     toggleRowExpanded,
 }) {
     return (
-            <Collapse in={checked} timeout={500}> 
-                <ExtendedContainer>
-                    <ContentContainer>
-                        <Box>
-                            <Typography
-                                sx={{ color: "primary.dark", fontSize: "18px" }}
-                            >
-                                {title}
-                            </Typography>
-                        </Box>
-                        <Grid
-                            container
-                            spacing={1}
-                            sx={{ paddingBottom: "8px" }}
+        <Collapse in={checked} timeout={500}>
+            <ExtendedContainer>
+                <ContentContainer>
+                    <Box>
+                        <Typography
+                            sx={{ color: "primary.dark", fontSize: "18px" }}
                         >
-                            {sub_columns &&
-                                sub_columns.map((col, index) => {
-                                    if (col.key === "is_active") {
-                                        return (
-                                            <Grid
-                                                item
-                                                xs={6}
-                                                md={4}
-                                                key={index}
-                                            >
-                                                <Typography
-                                                    sx={{
-                                                        opacity: 0.9,
-                                                        fontSize: "16px",
-                                                        lineHeight: 1.2,
-                                                    }}
-                                                >
-                                                    {col.name}:
-                                                </Typography>
-                                                <Typography
-                                                    sx={{
-                                                        opacity: 0.6,
-                                                        fontSize: "14px",
-                                                        lineHeight: 1.2,
-                                                    }}
-                                                >
-                                                    {sub_data[col.key]
-                                                        ? "Active"
-                                                        : "Inactive"}
-                                                </Typography>
-                                            </Grid>
-                                        );
-                                    }
+                            {title}
+                        </Typography>
+                    </Box>
+                    <Grid container spacing={1} sx={{ paddingBottom: "8px" }}>
+                        {sub_columns &&
+                            sub_columns.map((col, index) => {
+                                if (col.key === "is_active") {
                                     return (
                                         <Grid item xs={6} md={4} key={index}>
                                             <Typography
@@ -101,46 +69,85 @@ function SubComponent({
                                                     lineHeight: 1.2,
                                                 }}
                                             >
-                                                {sub_data[col.key]}
+                                                {sub_data[col.key]
+                                                    ? "Active"
+                                                    : "Inactive"}
                                             </Typography>
                                         </Grid>
                                     );
-                                })}
-                        </Grid>
-                    </ContentContainer>
+                                }
+                                return (
+                                    <Grid item xs={6} md={4} key={index}>
+                                        <Typography
+                                            sx={{
+                                                opacity: 0.9,
+                                                fontSize: "16px",
+                                                lineHeight: 1.2,
+                                            }}
+                                        >
+                                            {col.name}:
+                                        </Typography>
+                                        <Typography
+                                            sx={{
+                                                opacity: 0.6,
+                                                fontSize: "14px",
+                                                lineHeight: 1.2,
+                                            }}
+                                        >
+                                            {sub_data[col.key]}
+                                        </Typography>
+                                    </Grid>
+                                );
+                            })}
+                    </Grid>
+                </ContentContainer>
+                <Box
+                    gap={2}
+                    pt={1.5}
+                    pr={1}
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                    }}
+                >
                     {handleDelete && (
-                        <Box
-                            gap={2}
-                            pt={1.5}
-                            pr={1}
-                            sx={{
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "flex-end",
-                            }}
-                        >
-                            <Tooltip title="Minimize" arrow>
-                                <CloseButton
-                                    size="small"
-                                    variant="outlined"
-                                    onClick={() =>
-                                        toggleRowExpanded(index, false)
-                                    }
-                                    endIcon={<CloseIcon />}
-                                >
-                                    Close
-                                </CloseButton>
-                            </Tooltip>
-                            <Delete
-                                id={sub_data?.tid}
-                                button={true}
-                                tooltext="Delete"
-                                handleDelete={handleDelete}
-                            />
-                        </Box>
+                        <Tooltip title="Minimize" arrow>
+                            <CloseButton
+                                size="small"
+                                variant="outlined"
+                                onClick={() => toggleRowExpanded(index, false)}
+                                endIcon={<CloseIcon />}
+                            >
+                                Close
+                            </CloseButton>
+                        </Tooltip>
                     )}
-                </ExtendedContainer>
-            </Collapse>
+                    {handleForgotPassword && (
+                        <Tooltip title="Reset Password" arrow>
+                            <CloseButton
+                                size="small"
+                                variant="outlined"
+                                onClick={() =>
+                                    handleForgotPassword(sub_data?.email)
+                                }
+                                endIcon={<LockResetIcon />}
+                            >
+                                Reset Password
+                            </CloseButton>
+                        </Tooltip>
+                    )}
+                    {handleDelete && (
+                        <Delete
+                            id={sub_data?.tid}
+                            button={true}
+                            tooltext="Delete"
+                            handleDelete={handleDelete}
+                        />
+                    )}
+                </Box>
+            </ExtendedContainer>
+        </Collapse>
     );
 }
 

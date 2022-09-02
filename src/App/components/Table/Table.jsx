@@ -68,6 +68,7 @@ const Table = ({
     hideTableHead,
     renderPagination,
     renderTableFooter,
+    handleForgotPassword,
 }) => {
     const defaultColumn = useMemo(
         () => ({
@@ -201,6 +202,7 @@ const Table = ({
                                             handleDelete={handleDelete}
                                             sub_data={row?.original}
                                             sub_columns={sub_columns}
+                                            handleForgotPassword={handleForgotPassword}
                                             toggleRowExpanded={
                                                 toggleRowExpanded
                                             }

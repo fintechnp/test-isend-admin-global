@@ -202,7 +202,7 @@ const Email = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Route Details" arrow>
+                                <Tooltip title="Hide Email Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{

@@ -8,6 +8,7 @@ import {
     DeleteUserReducer,
     UpdateUserStatusReducer,
     GetUserNumberReducer,
+    ForgotPasswordReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 
@@ -235,6 +236,7 @@ export const privateReducer = {
     delete_user: DeleteUserReducer,
     update_user_status: UpdateUserStatusReducer,
     get_user_number: GetUserNumberReducer,
+    forgot_password: ForgotPasswordReducer,
 
     //permission
     get_all_permission: GetAllPermissionReducer,

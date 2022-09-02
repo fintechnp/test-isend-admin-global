@@ -127,13 +127,13 @@ const Fcm = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <Typography>Created Date</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
                 Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
