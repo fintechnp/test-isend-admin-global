@@ -129,6 +129,32 @@ import {
     CustomersSaga,
 } from "./pages/Customers/Search/store";
 
+import {
+    GetCustomersByIdReducer,
+    CreateCustomersReducer,
+    UpdateCustomersReducer,
+    CustomersCreateSaga,
+} from "./pages/Customers/CreateCustomer/store";
+
+//Documents
+import {
+    GetDocumentsReducer,
+    GetDocumentsByIdReducer,
+    UploadDocumentsReducer,
+    UpdateKycReducer,
+    UpdateDocumentsReducer,
+    DeleteDocumentsReducer,
+    DocumentsCustomerSaga,
+} from "./pages/Customers/Documents/store";
+
+//Remarks
+import {
+    GetRemarksReducer,
+    GetRemarksByIdReducer,
+    CreateRemarksReducer,
+    RemarksCustomerSaga,
+} from "./pages/Customers/Remarks/store";
+
 //Transactions
 import {
     GetTransactionsReducer,
@@ -138,13 +164,6 @@ import {
     UpdateTransactionsReducer,
     TransactionsSaga,
 } from "./pages/Transactions/store";
-
-import {
-    GetCustomersByIdReducer,
-    CreateCustomersReducer,
-    UpdateCustomersReducer,
-    CustomersCreateSaga,
-} from "./pages/Customers/CreateCustomer/store";
 
 //Beneficiary
 import {
@@ -340,6 +359,19 @@ export const privateReducer = {
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
 
+    //Documents
+    get_documents: GetDocumentsReducer,
+    get_documents_byid: GetDocumentsByIdReducer,
+    upload_documents: UploadDocumentsReducer,
+    update_kyc: UpdateKycReducer,
+    update_documents: UpdateDocumentsReducer,
+    delete_documents: DeleteDocumentsReducer,
+
+    //Remarks
+    get_remarks: GetRemarksReducer,
+    get_remarks_byid: GetRemarksByIdReducer,
+    create_remarks: CreateRemarksReducer,
+
     //Transactions
     get_transactions: GetTransactionsReducer,
     get_transactions_byid: GetTransactionByIdReducer,
@@ -419,6 +451,8 @@ export const privateSaga = [
     ExchangeRateSaga(),
     ReferenceSaga(),
     CustomersSaga(),
+    DocumentsCustomerSaga(),
+    RemarksCustomerSaga(),
     TransactionsSaga(),
     CustomersCreateSaga(),
     BeneficiarySaga(),

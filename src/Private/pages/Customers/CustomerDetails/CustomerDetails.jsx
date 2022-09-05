@@ -10,8 +10,13 @@ import { styled } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import UpdateKyc from "./UpdateKyc";
 import actions from "./../CreateCustomer/store/actions";
-import { CountryName, FormatDate } from "./../../../../App/helpers";
+import {
+    CountryName,
+    FormatDate,
+    ReferenceName,
+} from "./../../../../App/helpers";
 
 const DetailWrapper = styled(Grid)(({ theme }) => ({
     padding: "8px 16px 16px 16px",
@@ -49,22 +54,14 @@ const NameField = styled(Box)(({ theme }) => ({
 const ButtonWrapper = styled(Box)(({ theme }) => ({
     width: "100%",
     display: "flex",
-    justifyContent: "flex-end",
+    paddingTop: "16px",
+    justifyContent: "flex-start",
 }));
 
-const BeneficiaryButton = styled(Button)(({ theme }) => ({
+const BottomButton = styled(Button)(({ theme }) => ({
+    minWidth: "120px",
     padding: "4px 10px",
     textTransform: "capitalize",
-}));
-
-const TransactionButton = styled(Button)(({ theme }) => ({
-    padding: "4px 10px",
-    textTransform: "capitalize",
-    color: theme.palette.primary.contrastText,
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
 }));
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
@@ -105,6 +102,37 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontSize: "16px",
     fontWeight: 400,
 }));
+
+function stringToColor(string = "Avatar") {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}
+
+function stringAvatar(first = "A", last = "V") {
+    return {
+        sx: {
+            bgcolor: stringToColor(first),
+            height: "50px",
+            width: "50px",
+        },
+        children: `${first.split(" ")[0][0]}${last.split(" ")[0][0]}`,
+    };
+}
 
 const RenderField = ({ label, value }) => {
     return (
@@ -193,18 +221,19 @@ function CustomerDetails() {
                             }}
                             badgeContent={
                                 <SmallAvatar
-                                    alt="Remy Sharp"
-                                    src="https://cdn11.bigcommerce.com/s-6e1n67clqw/product_images/uploaded_images/world-flag-decals-cat.jpg"
+                                    alt="flag iso3"
+                                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
+                                        customersData?.data?.country_iso2 ||
+                                        "US"
+                                    }.svg`}
                                 />
                             }
                         >
                             <Avatar
-                                sx={{
-                                    height: "50px",
-                                    width: "50px",
-                                }}
-                                alt="Remy Sharp"
-                                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80"
+                                {...stringAvatar(
+                                    customersData?.data?.first_name,
+                                    customersData?.data?.last_name
+                                )}
                             />
                         </Badge>
                     </Box>
@@ -213,7 +242,11 @@ function CustomerDetails() {
                             label="Name"
                             value={`${customersData?.data?.first_name}${" "}${
                                 customersData?.data?.middle_name
-                            }${" "}${customersData?.data?.last_name}`}
+                                    ? " " +
+                                      customersData?.data?.middle_name +
+                                      " "
+                                    : " "
+                            }${customersData?.data?.last_name}`}
                         />
                         <RenderTopField
                             label="Customer Id"
@@ -249,7 +282,11 @@ function CustomerDetails() {
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Gender"
-                    value={customersData?.data?.gender}
+                    value={
+                        customersData?.data?.gender
+                            ? ReferenceName(42, customersData?.data?.gender)
+                            : ""
+                    }
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -309,7 +346,14 @@ function CustomerDetails() {
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Customer Type"
-                    value={customersData?.data?.customer_type}
+                    value={
+                        customersData?.data?.customer_type
+                            ? ReferenceName(
+                                  37,
+                                  customersData?.data?.customer_type
+                              )
+                            : ""
+                    }
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -361,8 +405,8 @@ function CustomerDetails() {
                 />
             </Grid>
             <Grid item xs={12}>
-                <ButtonWrapper columnGap={1.5}>
-                    <BeneficiaryButton
+                <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
+                    <BottomButton
                         size="small"
                         variant="outlined"
                         disableElevation
@@ -371,18 +415,38 @@ function CustomerDetails() {
                             navigate(`/customer/all-beneficiary/${id}`)
                         }
                     >
-                        Show Beneficiares
-                    </BeneficiaryButton>
-                    <TransactionButton
+                        Beneficiares
+                    </BottomButton>
+                    <BottomButton
                         size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => navigate(`/customer/remarks/${id}`)}
+                    >
+                        Remarks
+                    </BottomButton>
+                    <BottomButton
+                        size="small"
+                        variant="outlined"
                         disableElevation
                         disableRipple
                         onClick={() =>
                             navigate(`/customer/all-transactions/${id}`)
                         }
                     >
-                        Show Transactions
-                    </TransactionButton>
+                        Transactions
+                    </BottomButton>
+                    <BottomButton
+                        size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => navigate(`/customer/documents/${id}`)}
+                    >
+                        Documents
+                    </BottomButton>
+                    <UpdateKyc />
                 </ButtonWrapper>
             </Grid>
         </DetailWrapper>

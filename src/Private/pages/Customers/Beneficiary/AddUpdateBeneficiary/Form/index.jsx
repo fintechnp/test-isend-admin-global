@@ -273,6 +273,7 @@ function BeneficiaryForm({ update_data, loading }) {
                                     }
                                     steps={steps}
                                     pcountry={memoizedData?.country}
+                                    phone_code={memoizedData?.phone_country_code}
                                     buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}

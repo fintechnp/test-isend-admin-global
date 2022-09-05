@@ -89,6 +89,37 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
+function stringToColor(string = "Avatar") {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}
+
+function stringAvatar(first = "A", last = "V") {
+    return {
+        sx: {
+            bgcolor: stringToColor(first),
+            height: "50px",
+            width: "50px",
+        },
+        children: `${first.split(" ")[0][0]}${last.split(" ")[0][0]}`,
+    };
+}
+
 const RenderField = ({ label, prevalue, value }) => {
     return (
         <Box
@@ -200,18 +231,19 @@ function BeneficiaryDetails() {
                             }}
                             badgeContent={
                                 <SmallAvatar
-                                    alt="Remy Sharp"
-                                    src="https://cdn11.bigcommerce.com/s-6e1n67clqw/product_images/uploaded_images/world-flag-decals-cat.jpg"
+                                    alt="flag iso3"
+                                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
+                                        beneficiaryData?.data?.country_iso2 ||
+                                        "US"
+                                    }.svg`}
                                 />
                             }
                         >
                             <Avatar
-                                sx={{
-                                    height: "50px",
-                                    width: "50px",
-                                }}
-                                alt="Remy Sharp"
-                                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80"
+                                {...stringAvatar(
+                                    beneficiaryData?.data?.first_name,
+                                    beneficiaryData?.data?.last_name
+                                )}
                             />
                         </Badge>
                     </Box>
@@ -220,7 +252,11 @@ function BeneficiaryDetails() {
                             label="Name"
                             value={`${beneficiaryData?.data?.first_name}${" "}${
                                 beneficiaryData?.data?.middle_name
-                            }${" "}${beneficiaryData?.data?.last_name}`}
+                                    ? " " +
+                                      beneficiaryData?.data?.middle_name +
+                                      " "
+                                    : " "
+                            }${beneficiaryData?.data?.last_name}`}
                         />
                         <RenderTopField
                             label="Beneficiary Id"

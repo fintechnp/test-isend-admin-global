@@ -67,6 +67,12 @@ const CustomerTransactions = lazy(() =>
     import("../pages/Customers/Transactions")
 );
 
+//Documents
+const Documents = lazy(() => import("../pages/Customers/Documents"));
+
+//remarks
+const CustomerRemarks = lazy(() => import("../pages/Customers/Remarks"));
+
 //Transactions
 const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
 const DailyTransactions = lazy(() =>
@@ -211,6 +217,15 @@ const privateRoutes = [
     {
         path: "/customer/all-transactions/:id",
         component: <CustomerTransactions />,
+    },
+    {
+        path: "/customer/documents/:id",
+        component: <Documents />,
+    },
+
+    {
+        path: "/customer/remarks/:id",
+        component: <CustomerRemarks />,
     },
 
     //Transactions

@@ -131,6 +131,7 @@ function Details({ data }) {
                             <ValueWrapper sx={{ opacity: 0.8 }}>
                                 <Link
                                     to={`/customer/details/${data?.customer_id}`}
+                                    style={{ textDecoration: "none" }}
                                 >
                                     {data?.customer_id
                                         ? data?.customer_id
@@ -153,8 +154,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.beneficiary_relation
-                                    ? data?.beneficiary_relation
+                                {data?.send_country
+                                    ? CountryName(data?.send_country)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -210,6 +211,7 @@ function Details({ data }) {
                             <ValueWrapper sx={{ opacity: 0.8 }}>
                                 <Link
                                     to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
+                                    style={{ textDecoration: "none" }}
                                 >
                                     {data?.beneficiary_id
                                         ? data?.beneficiary_id
@@ -287,6 +289,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Pin Number:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.pin_number ? data?.pin_number : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -295,6 +299,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Collected Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.collected_amount
                                     ? FormatNumber(data?.collected_amount)
                                     : "N/A"}
@@ -305,6 +311,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Service Charge:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.service_charge
                                     ? FormatNumber(data?.service_charge)
                                     : "N/A"}
@@ -315,6 +323,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Discount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.discount
                                     ? FormatNumber(data?.discount)
                                     : "0.00"}
@@ -325,6 +335,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Transfer Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.transfer_amount
                                     ? FormatNumber(data?.transfer_amount)
                                     : "N/A"}
@@ -335,6 +347,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Customer Rate:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_currency && data?.payout_currency}{" "}
                                 {data?.customer_rate
                                     ? FormatNumber(data?.customer_rate)
                                     : "N/A"}
@@ -345,6 +358,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_currency && data?.payout_currency}{" "}
                                 {data?.payout_amount
                                     ? FormatNumber(data?.payout_amount)
                                     : "N/A"}
