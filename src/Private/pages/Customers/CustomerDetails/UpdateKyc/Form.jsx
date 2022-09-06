@@ -14,6 +14,7 @@ const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
     borderRadius: "5px",
     [theme.breakpoints.up("sm")]: {
+        width: "100%",
         minWidth: "500px",
     },
 }));

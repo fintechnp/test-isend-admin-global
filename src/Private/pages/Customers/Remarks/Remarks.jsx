@@ -40,11 +40,11 @@ function Remarks() {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const {
-        response: remarksData,
-        success,
-        loading,
-    } = useSelector((state) => state.get_remarks);
+    const { response: remarksData, loading } = useSelector(
+        (state) => state.get_remarks
+    );
+
+    const { success } = useSelector((state) => state.create_remarks);
 
     useEffect(() => {
         if (id) {

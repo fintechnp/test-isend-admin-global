@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
 import {
     CurrencyName,
     CountryName,
     FormatNumber,
 } from "./../../../../App/helpers";
+import MessageBox from "./../Search/components/MessageBox";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -40,7 +43,40 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
+const PinWrapper = styled(Typography)(({ theme }) => ({
+    opacitLy: 0.8,
+    paddingLeft: "8px",
+    fontSize: "15px",
+    wordBreak: "break-all",
+    color: theme.palette.text.main,
+}));
+
 function Details({ data }) {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const timer = setTimeout(
+            () => (count === 2 ? setCount(0) : null),
+            5000
+        );
+        return () => clearTimeout(timer);
+    }, [count]);
+
+    const handleCopy = async (e, text) => {
+        if (e.detail === 2) {
+            setCount(2);
+            if ("clipboard" in navigator) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                document.execCommand("copy", true, text);
+            }
+        }
+    };
+
+    if (data === undefined || data.length == 0) {
+        return <MessageBox text="Invalid Transaction Id" />;
+    }
+
     return (
         <Grid
             container
@@ -288,11 +324,24 @@ function Details({ data }) {
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Pin Number:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency &&
-                                    data?.collected_currency}{" "}
-                                {data?.pin_number ? data?.pin_number : "N/A"}
-                            </ValueWrapper>
+                            <Tooltip
+                                title={
+                                    count === 0
+                                        ? "Double Click to Copy."
+                                        : "Copied to Clipboard."
+                                }
+                            >
+                                <PinWrapper
+                                    sx={{ wordBreak: "break-all" }}
+                                    onClick={(e) =>
+                                        handleCopy(e, data?.pin_number)
+                                    }
+                                >
+                                    {data?.pin_number
+                                        ? data?.pin_number
+                                        : "N/A"}
+                                </PinWrapper>
+                            </Tooltip>
                         </InfoWrapper>
                     </Grid>
                     <Grid item xs={12} md={6}>

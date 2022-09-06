@@ -8,7 +8,11 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Tooltip from "@mui/material/Tooltip";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 
+import NoResults from "./../../Search/components/NoResults";
 import actions from "./../store/actions";
 import {
     CountryName,
@@ -83,6 +87,34 @@ const Value = styled(Typography)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
+const EmailValue = styled(Typography)(({ theme }) => ({
+    opacity: 0.8,
+    lineHeight: 1.5,
+    fontSize: "15px",
+    fontWeight: 400,
+}));
+
+const InfoWrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+}));
+
+const LabelWrapper = styled(Box)(({ theme }) => ({
+    opacitLy: 0.9,
+    minWidth: "40%",
+    fontSize: "15px",
+    wordBreak: "break-all",
+    color: theme.palette.text.dark,
+}));
+
+const ValueWrapper = styled(Box)(({ theme }) => ({
+    opacitLy: 0.8,
+    fontSize: "15px",
+    wordBreak: "break-all",
+    color: theme.palette.text.main,
+}));
+
 const Fetching = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.main,
     fontSize: "16px",
@@ -109,14 +141,17 @@ function stringToColor(string = "Avatar") {
     return color;
 }
 
-function stringAvatar(first = "A", last = "V") {
+function stringAvatar(first = "A", last) {
     return {
         sx: {
             bgcolor: stringToColor(first),
             height: "50px",
             width: "50px",
+            textTransform: "uppercase",
         },
-        children: `${first.split(" ")[0][0]}${last.split(" ")[0][0]}`,
+        children: `${first.split(" ")[0][0]}${
+            last ? last.split(" ")[0][0] : ""
+        }`,
     };
 }
 
@@ -139,6 +174,27 @@ const RenderField = ({ label, prevalue, value }) => {
                     </Value>
                 )}
                 <Value component="span">{value ? value : "N/A"}</Value>
+            </Box>
+        </Box>
+    );
+};
+
+const RenderEmailField = ({ label, prevalue, email }) => {
+    return (
+        <Box
+            sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+            }}
+        >
+            <Box sx={{ width: "40%" }}>
+                <Label>{label}:</Label>
+            </Box>
+            <Box sx={{ width: "60%" }}>
+                <EmailValue component="span">
+                    {email ? email : "N/A"}
+                </EmailValue>
             </Box>
         </Box>
     );
@@ -212,6 +268,22 @@ function BeneficiaryDetails() {
                 <Fetching>Fetching...</Fetching>
             </Box>
         );
+    } else if (
+        beneficiaryData?.data === undefined ||
+        beneficiaryData?.data === null ||
+        (beneficiaryData?.data != null && beneficiaryData?.data.length == 0)
+    ) {
+        return (
+            <Grid container rowGap={1}>
+                <Grid item xs={12}>
+                    <Header>Beneficiary Details</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <NoResults text="Invalid Beneficiary Id" />
+                </Grid>
+            </Grid>
+        );
     }
 
     return (
@@ -256,7 +328,11 @@ function BeneficiaryDetails() {
                                       beneficiaryData?.data?.middle_name +
                                       " "
                                     : " "
-                            }${beneficiaryData?.data?.last_name}`}
+                            }${
+                                beneficiaryData?.data?.last_name
+                                    ? beneficiaryData?.data?.last_name
+                                    : ""
+                            }`}
                         />
                         <RenderTopField
                             label="Beneficiary Id"
@@ -297,10 +373,9 @@ function BeneficiaryDetails() {
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
-                <RenderField
+                <RenderEmailField
                     label="Email"
-                    value={beneficiaryData?.data?.mobile_number}
-                    prevalue={beneficiaryData?.data?.email}
+                    email={beneficiaryData?.data?.email}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -377,12 +452,26 @@ function BeneficiaryDetails() {
                 </TitleWrapper>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Status"
-                    value={
-                        beneficiaryData?.data?.is_active ? "Active" : "Unknown"
-                    }
-                />
+                <InfoWrapper>
+                    <LabelWrapper>Status:</LabelWrapper>
+                    <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                        {beneficiaryData?.data?.is_active ? (
+                            <Tooltip title="Active Beneficiary" arrow>
+                                <CheckCircleOutlineIcon
+                                    fontSize="small"
+                                    sx={{ color: "success.main" }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Inactive Beneficiary." arrow>
+                                <DoNotDisturbOnIcon
+                                    fontSize="small"
+                                    sx={{ color: "warning.main" }}
+                                />
+                            </Tooltip>
+                        )}
+                    </ValueWrapper>
+                </InfoWrapper>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <RenderField label="Unit" value={beneficiaryData?.data?.unit} />

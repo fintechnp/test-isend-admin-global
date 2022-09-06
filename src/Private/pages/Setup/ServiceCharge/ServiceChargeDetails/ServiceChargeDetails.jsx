@@ -60,7 +60,7 @@ function ServiceChargeDetails() {
     };
 
     return (
-        <Grid container >
+        <Grid container>
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
@@ -81,7 +81,7 @@ function ServiceChargeDetails() {
             <Grid item xs={12}>
                 <Divider sx={{ mb: 1.2 }} />
             </Grid>
-            {loading ? <Skeleton /> : <Details data={response?.data} />}
+            {loading ? <Skeleton /> : <Details data={response?.data || []} />}
         </Grid>
     );
 }

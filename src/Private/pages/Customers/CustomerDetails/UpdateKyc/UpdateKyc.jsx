@@ -18,7 +18,7 @@ import actions from "./../../Documents/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
-        width: "90%",
+        maxWidth: "90%",
     },
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),

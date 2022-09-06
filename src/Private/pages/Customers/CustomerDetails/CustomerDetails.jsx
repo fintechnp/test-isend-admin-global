@@ -5,10 +5,13 @@ import Badge from "@mui/material/Badge";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 
 import UpdateKyc from "./UpdateKyc";
 import actions from "./../CreateCustomer/store/actions";
@@ -17,6 +20,7 @@ import {
     FormatDate,
     ReferenceName,
 } from "./../../../../App/helpers";
+import NoResults from "./../Search/components/NoResults";
 
 const DetailWrapper = styled(Grid)(({ theme }) => ({
     padding: "8px 16px 16px 16px",
@@ -97,6 +101,27 @@ const Value = styled(Typography)(({ value }) => ({
     textTransform: value === "Email Address" ? "lowercase" : "capitalize",
 }));
 
+const InfoWrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+}));
+
+const LabelWrapper = styled(Box)(({ theme }) => ({
+    opacitLy: 0.9,
+    minWidth: "40%",
+    fontSize: "15px",
+    wordBreak: "break-all",
+    color: theme.palette.text.dark,
+}));
+
+const ValueWrapper = styled(Box)(({ theme }) => ({
+    opacitLy: 0.8,
+    fontSize: "15px",
+    wordBreak: "break-all",
+    color: theme.palette.text.main,
+}));
+
 const Fetching = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.main,
     fontSize: "16px",
@@ -123,14 +148,17 @@ function stringToColor(string = "Avatar") {
     return color;
 }
 
-function stringAvatar(first = "A", last = "V") {
+function stringAvatar(first = "A", last) {
     return {
         sx: {
             bgcolor: stringToColor(first),
             height: "50px",
             width: "50px",
+            textTransform: "uppercase",
         },
-        children: `${first.split(" ")[0][0]}${last.split(" ")[0][0]}`,
+        children: `${first.split(" ")[0][0]}${
+            last ? last.split(" ")[0][0] : ""
+        }`,
     };
 }
 
@@ -186,6 +214,10 @@ function CustomerDetails() {
         success,
     } = useSelector((state) => state.get_customer_byid);
 
+    const { success: update_success } = useSelector(
+        (state) => state.update_kyc
+    );
+
     useEffect(() => {
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
     }, []);
@@ -193,14 +225,31 @@ function CustomerDetails() {
     useEffect(() => {
         if (id) {
             dispatch(actions.get_customer_byid(id));
+            dispatch({ type: "UPDATE_KYC_RESET" });
         }
-    }, [dispatch, id]);
+    }, [dispatch, id, update_success]);
 
     if (l_loading && !success) {
         return (
             <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
                 <Fetching>Fetching...</Fetching>
             </Box>
+        );
+    } else if (
+        customersData?.data === undefined ||
+        customersData?.data === null ||
+        (customersData?.data != null && customersData?.data.length == 0)
+    ) {
+        return (
+            <Grid container rowGap={1}>
+                <Grid item xs={12}>
+                    <Header>Customer Details</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <NoResults text="Invalid Customer Id" />
+                </Grid>
+            </Grid>
         );
     }
 
@@ -246,7 +295,11 @@ function CustomerDetails() {
                                       customersData?.data?.middle_name +
                                       " "
                                     : " "
-                            }${customersData?.data?.last_name}`}
+                            }${
+                                customersData?.data?.last_name
+                                    ? customersData?.data?.last_name
+                                    : ""
+                            }`}
                         />
                         <RenderTopField
                             label="Customer Id"
@@ -337,6 +390,16 @@ function CustomerDetails() {
                     value={FormatDate(customersData?.data?.id_expiry_date)}
                 />
             </Grid>
+            <Grid item xs={12} sm={6}>
+                <RenderField
+                    label="KYC Status"
+                    value={
+                        customersData?.data?.kyc_status
+                            ? ReferenceName(21, customersData?.data?.kyc_status)
+                            : ""
+                    }
+                />
+            </Grid>
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Title>Other Details</Title>
@@ -403,6 +466,28 @@ function CustomerDetails() {
                     label="Source Of Income"
                     value={customersData?.data?.source_of_income}
                 />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <InfoWrapper>
+                    <LabelWrapper>Status:</LabelWrapper>
+                    <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                        {customersData?.data?.is_active ? (
+                            <Tooltip title="Active Customer" arrow>
+                                <CheckCircleOutlineIcon
+                                    fontSize="small"
+                                    sx={{ color: "success.main" }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Inactive Customer." arrow>
+                                <DoNotDisturbOnIcon
+                                    fontSize="small"
+                                    sx={{ color: "warning.main" }}
+                                />
+                            </Tooltip>
+                        )}
+                    </ValueWrapper>
+                </InfoWrapper>
             </Grid>
             <Grid item xs={12}>
                 <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
