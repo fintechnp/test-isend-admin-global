@@ -70,6 +70,7 @@ const Basic = ({
     buttonText,
     update,
     pcountry,
+    phone_code,
 }) => {
     const dispatch = useDispatch();
     const [code, setCode] = useState("01");
@@ -81,6 +82,12 @@ const Basic = ({
         sort_by: "created_ts",
         order_by: "DESC",
     });
+
+    useEffect(() => {
+        if (phone_code) {
+            setCode(phone_code);
+        }
+    }, [phone_code]);
 
     useEffect(() => {
         if (pcountry) {

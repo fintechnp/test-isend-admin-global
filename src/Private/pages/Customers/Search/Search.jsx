@@ -72,19 +72,14 @@ const StyledMail = styled(Typography)(({ theme }) => ({
 function stringToColor(string) {
     switch (string.toUpperCase()) {
         case "R":
-            // code block
             return "#b81220";
         case "P":
-            // code block
             return "#bbd14d";
         case "N":
-            // code block
             return "#848581";
         case "C":
-            // code block
             return "#117308";
         default:
-            // code block
             return "#1a4b87";
     }
 }
@@ -127,6 +122,7 @@ function Search() {
     useEffect(() => {
         if (isMounted.current) {
             dispatch(actions.get_customers(filterSchema));
+            dispatch({ type: "BLOCK_UNBLOCK_CUSTOMER_RESET" });
         } else {
             isMounted.current = true;
         }
@@ -152,7 +148,8 @@ function Search() {
                         }}
                     >
                         <StyledName component="p">
-                            {data.value} {data?.row?.original?.middle_name}{" "}
+                            {data.value && data.value}{" "}
+                            {data?.row?.original?.middle_name}{" "}
                             {data?.row?.original?.last_name}
                         </StyledName>
                         <StyledName
@@ -181,7 +178,7 @@ function Search() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : ""}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -227,7 +224,9 @@ function Search() {
                                     opacity: 0.6,
                                 }}
                             >
-                                {data?.row?.original?.email}
+                                {data?.row?.original?.email
+                                    ? data?.row?.original?.email
+                                    : ""}
                             </StyledMail>
                         </Tooltip>
                     </Box>
@@ -243,7 +242,7 @@ function Search() {
                 Cell: (data) => (
                     <Box textAlign="center" sx={{ margin: "0px 12px" }}>
                         <StyledStatus component="p" value={data.value}>
-                            {ReferenceName(21, data.value)}
+                            {data.value ? ReferenceName(21, data.value) : ""}
                         </StyledStatus>
                     </Box>
                 ),
@@ -335,7 +334,11 @@ function Search() {
                             name="Customer"
                             destroyOnUnmount
                             remark={true}
-                            initialValues={{ id: row.original.tid }}
+                            initialValues={{
+                                id: row.original.tid,
+                                is_active: row.original.is_active,
+                                remarks: "",
+                            }}
                             onSubmit={handleBlock}
                             loading={b_loading}
                             status={row?.original?.is_active}
@@ -369,7 +372,11 @@ function Search() {
 
     const handleBlock = (data) => {
         dispatch(
-            actions.block_unblock_customer(data?.id, { remarks: data?.remarks })
+            actions.block_unblock_customer(
+                data?.id,
+                { is_active: !data?.is_active },
+                { remarks: data?.remarks }
+            )
         );
     };
 

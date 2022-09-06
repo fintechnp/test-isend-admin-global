@@ -16,9 +16,9 @@ import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
 
-const BootstrapDialog = styled(Dialog)(({ theme, remark }) => ({
+const BootstrapDialog = styled(Dialog)(({ theme, value }) => ({
     "& .MuiDialog-paper": {
-        width: remark ? "90%" : "60%",
+        width: value ? "90%" : "60%",
         [theme.breakpoints.up("md")]: {
             width: "60%",
         },
@@ -73,6 +73,7 @@ function BlockDialog({ loading, handleSubmit, status, name, remark }) {
 
     const handleClickOpen = () => {
         setOpen(true);
+        dispatch(reset("block_form_customer"));
     };
 
     const handleClose = () => {
@@ -117,7 +118,7 @@ function BlockDialog({ loading, handleSubmit, status, name, remark }) {
             </ReleaseIcon>
             <BootstrapDialog
                 open={open}
-                remark={remark}
+                value={remark}
                 onClose={handleClose}
                 aria-labelledby="responsive-dialog-title"
             >

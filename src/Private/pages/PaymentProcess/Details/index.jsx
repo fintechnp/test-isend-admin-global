@@ -84,7 +84,7 @@ function TransactionDetails() {
             {loading ? (
                 <TransactionSkeleton />
             ) : (
-                <Details data={response?.data} />
+                <Details data={response?.data || []} />
             )}
         </Grid>
     );

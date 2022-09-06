@@ -131,6 +131,8 @@ function CreateFcm({ update, update_data }) {
                     title: data?.title,
                     body: data?.body,
                     image_url: data?.image_url,
+                    display_notification: data?.display_notification,
+                    detail_content: data?.detail_content,
                 })
             );
         } else {
@@ -140,6 +142,8 @@ function CreateFcm({ update, update_data }) {
                     title: data?.title,
                     body: data?.body,
                     image_url: data?.image_url,
+                    display_notification: data?.display_notification,
+                    detail_content: data?.detail_content,
                 })
             );
         }

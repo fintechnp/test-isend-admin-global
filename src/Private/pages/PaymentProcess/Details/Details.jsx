@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
 import {
     CurrencyName,
     CountryName,
     FormatNumber,
 } from "./../../../../App/helpers";
+import MessageBox from "./../Search/components/MessageBox";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -40,7 +43,40 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
+const PinWrapper = styled(Typography)(({ theme }) => ({
+    opacitLy: 0.8,
+    paddingLeft: "8px",
+    fontSize: "15px",
+    wordBreak: "break-all",
+    color: theme.palette.text.main,
+}));
+
 function Details({ data }) {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const timer = setTimeout(
+            () => (count === 2 ? setCount(0) : null),
+            5000
+        );
+        return () => clearTimeout(timer);
+    }, [count]);
+
+    const handleCopy = async (e, text) => {
+        if (e.detail === 2) {
+            setCount(2);
+            if ("clipboard" in navigator) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                document.execCommand("copy", true, text);
+            }
+        }
+    };
+
+    if (data === undefined || data.length == 0) {
+        return <MessageBox text="Invalid Transaction Id" />;
+    }
+
     return (
         <Grid
             container
@@ -131,6 +167,7 @@ function Details({ data }) {
                             <ValueWrapper sx={{ opacity: 0.8 }}>
                                 <Link
                                     to={`/customer/details/${data?.customer_id}`}
+                                    style={{ textDecoration: "none" }}
                                 >
                                     {data?.customer_id
                                         ? data?.customer_id
@@ -153,8 +190,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.beneficiary_relation
-                                    ? data?.beneficiary_relation
+                                {data?.send_country
+                                    ? CountryName(data?.send_country)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -210,6 +247,7 @@ function Details({ data }) {
                             <ValueWrapper sx={{ opacity: 0.8 }}>
                                 <Link
                                     to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
+                                    style={{ textDecoration: "none" }}
                                 >
                                     {data?.beneficiary_id
                                         ? data?.beneficiary_id
@@ -286,15 +324,32 @@ function Details({ data }) {
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Pin Number:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.pin_number ? data?.pin_number : "N/A"}
-                            </ValueWrapper>
+                            <Tooltip
+                                title={
+                                    count === 0
+                                        ? "Double Click to Copy."
+                                        : "Copied to Clipboard."
+                                }
+                            >
+                                <PinWrapper
+                                    sx={{ wordBreak: "break-all" }}
+                                    onClick={(e) =>
+                                        handleCopy(e, data?.pin_number)
+                                    }
+                                >
+                                    {data?.pin_number
+                                        ? data?.pin_number
+                                        : "N/A"}
+                                </PinWrapper>
+                            </Tooltip>
                         </InfoWrapper>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Collected Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.collected_amount
                                     ? FormatNumber(data?.collected_amount)
                                     : "N/A"}
@@ -305,6 +360,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Service Charge:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.service_charge
                                     ? FormatNumber(data?.service_charge)
                                     : "N/A"}
@@ -315,6 +372,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Discount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.discount
                                     ? FormatNumber(data?.discount)
                                     : "0.00"}
@@ -325,6 +384,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Transfer Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.collected_currency &&
+                                    data?.collected_currency}{" "}
                                 {data?.transfer_amount
                                     ? FormatNumber(data?.transfer_amount)
                                     : "N/A"}
@@ -335,6 +396,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Customer Rate:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_currency && data?.payout_currency}{" "}
                                 {data?.customer_rate
                                     ? FormatNumber(data?.customer_rate)
                                     : "N/A"}
@@ -345,6 +407,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_currency && data?.payout_currency}{" "}
                                 {data?.payout_amount
                                     ? FormatNumber(data?.payout_amount)
                                     : "N/A"}

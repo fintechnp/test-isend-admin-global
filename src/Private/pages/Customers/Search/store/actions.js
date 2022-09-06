@@ -14,10 +14,11 @@ const actions = {
         query,
     }),
 
-    block_unblock_customer: (id, query) => ({
+    block_unblock_customer: (id, query, data) => ({
         type: actions.BLOCK_UNBLOCK_CUSTOMER,
         id,
         query,
+        data,
     }),
 };
 
