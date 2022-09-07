@@ -14,11 +14,6 @@ const actions = {
     UPLOAD_DOCUMENTS_FAILED: "UPLOAD_DOCUMENTS_FAILED",
     UPLOAD_DOCUMENTS_RESET: "UPLOAD_DOCUMENTS_RESET",
 
-    UPDATE_DOCUMENTS: "UPDATE_DOCUMENTS",
-    UPDATE_DOCUMENTS_SUCCESS: "UPDATE_DOCUMENTS_SUCCESS",
-    UPDATE_DOCUMENTS_FAILED: "UPDATE_DOCUMENTS_FAILED",
-    UPDATE_DOCUMENTS_RESET: "UPDATE_DOCUMENTS_RESET",
-
     DELETE_DOCUMENTS: "DELETE_DOCUMENTS",
     DELETE_DOCUMENTS_SUCCESS: "DELETE_DOCUMENTS_SUCCESS",
     DELETE_DOCUMENTS_FAILED: "DELETE_DOCUMENTS_FAILED",
@@ -29,9 +24,10 @@ const actions = {
     UPDATE_KYC_FAILED: "UPDATE_KYC_FAILED",
     UPDATE_KYC_RESET: "UPDATE_KYC_RESET",
 
-    get_documents: (customer_id) => ({
+    get_documents: (customer_id, query) => ({
         type: actions.GET_DOCUMENTS,
         customer_id,
+        query,
     }),
 
     get_documents_byid: (id) => ({
@@ -45,15 +41,9 @@ const actions = {
         data,
     }),
 
-    update_documents: (customer_id, id, data) => ({
-        type: actions.UPDATE_DOCUMENTS,
-        customer_id,
-        data,
-        id,
-    }),
-
     delete_documents: (customer_id, id) => ({
         type: actions.DELETE_DOCUMENTS,
+        customer_id,
         id,
     }),
 

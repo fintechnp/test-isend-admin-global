@@ -142,7 +142,6 @@ import {
     GetDocumentsByIdReducer,
     UploadDocumentsReducer,
     UpdateKycReducer,
-    UpdateDocumentsReducer,
     DeleteDocumentsReducer,
     DocumentsCustomerSaga,
 } from "./pages/Customers/Documents/store";
@@ -364,7 +363,6 @@ export const privateReducer = {
     get_documents_byid: GetDocumentsByIdReducer,
     upload_documents: UploadDocumentsReducer,
     update_kyc: UpdateKycReducer,
-    update_documents: UpdateDocumentsReducer,
     delete_documents: DeleteDocumentsReducer,
 
     //Remarks
