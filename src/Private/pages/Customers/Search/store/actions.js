@@ -4,6 +4,11 @@ const actions = {
     GET_CUSTOMERS_FAILED: "GET_CUSTOMERS_FAILED",
     GET_CUSTOMERS_RESET: "GET_CUSTOMERS_RESET",
 
+    GET_CUSTOMERS_BY_PARTNER: "GET_CUSTOMERS_BY_PARTNER",
+    GET_CUSTOMERS_BY_PARTNER_SUCCESS: "GET_CUSTOMERS_BY_PARTNER_SUCCESS",
+    GET_CUSTOMERS_BY_PARTNER_FAILED: "GET_CUSTOMERS_BY_PARTNER_FAILED",
+    GET_CUSTOMERS_BY_PARTNER_RESET: "GET_CUSTOMERS_BY_PARTNER_RESET",
+
     BLOCK_UNBLOCK_CUSTOMER: "BLOCK_UNBLOCK_CUSTOMER",
     BLOCK_UNBLOCK_CUSTOMER_SUCCESS: "BLOCK_UNBLOCK_CUSTOMER_SUCCESS",
     BLOCK_UNBLOCK_CUSTOMER_FAILED: "BLOCK_UNBLOCK_CUSTOMER_FAILED",
@@ -12,6 +17,12 @@ const actions = {
     get_customers: (query) => ({
         type: actions.GET_CUSTOMERS,
         query,
+    }),
+
+    get_customers_by_partner: (id, query) => ({
+        type: actions.GET_CUSTOMERS_BY_PARTNER,
+        query,
+        id,
     }),
 
     block_unblock_customer: (id, query, data) => ({

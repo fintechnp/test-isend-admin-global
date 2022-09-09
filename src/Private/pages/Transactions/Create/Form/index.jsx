@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import MuiStepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import CustomerForm from "./CustomerForm";
 import BeneficiaryForm from "./BeneficiaryForm";
 import SendAmountForm from "./SendAmountForm";
 import actions from "./../../store/actions";
+import PartnerActions from "../../../Setup/Partner/store/actions";
 
 const CompletedWrapper = styled(Box)(({ theme }) => ({
     marginTop: "16px",
@@ -50,49 +51,70 @@ const steps = [
     "Sending Amount",
 ];
 
-function TransactionForm({ update_data, loading }) {
-    const { id } = useParams();
+const stateSend = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "SEND",
+    country: "",
+    sort_by: "name",
+    order_by: "DESC",
+};
+
+const stateCustomer = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "SEND",
+    country: "",
+    sort_by: "name",
+    order_by: "DESC",
+};
+
+function TransactionForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const isMounted = React.useRef(false);
     const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
+    const [filterPartner, setFilterPartner] = React.useState(stateSend);
+    const [filterCustomer, setFilterCustomer] = React.useState(stateCustomer);
+
     const {
         success: add_success,
         loading: add_loading,
         error: add_error,
-    } = useSelector((state) => state.add_partner);
-    const {
-        success: update_success,
-        loading: update_loading,
-        error: update_error,
-    } = useSelector((state) => state.update_partner);
+    } = useSelector((state) => state.create_transactions);
+
     const { response: customer_list, loading: customer_loading } = useSelector(
         (state) => state.get_customers
     );
+
     const { response: sending_partner, loading: sending_loading } = useSelector(
         (state) => state.get_sending_partner
     );
-    const { response: payout_partner, loading: payout_loading } = useSelector(
-        (state) => state.get_payout_partner
-    );
-
-    const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
-        if (update_error || add_error) {
+        if (add_error) {
             setActiveStep(0);
             let keys = Object.keys(completed);
             delete completed[keys[keys.length - 1]];
         }
-    }, [update_error, add_error]);
+    }, [add_error]);
 
     React.useEffect(() => {
-        if (add_success || update_success) {
+        if (add_success) {
             navigate(-1);
             setCompleted({});
         }
-    }, [add_success, update_success]);
+    }, [add_success]);
+
+    React.useEffect(() => {
+        if (isMounted.current) {
+            dispatch(PartnerActions.get_sending_partner(filterPartner));
+        } else {
+            isMounted.current = true;
+        }
+    }, [dispatch, filterPartner]);
 
     const totalSteps = () => {
         return steps.length;
@@ -129,12 +151,9 @@ function TransactionForm({ update_data, loading }) {
         handleNext();
     };
 
-    const handleSubmitForm = (id) => {
-        if (id) {
-            dispatch(actions.update_partner(id, data));
-        } else {
-            dispatch(actions.add_partner(data));
-        }
+    //Form
+    const handleSubmitForm = () => {
+        dispatch(actions.add_partner(data));
     };
 
     const handleCustomerForm = (data) => {
@@ -150,27 +169,25 @@ function TransactionForm({ update_data, loading }) {
         handleComplete();
     };
 
-    if (loading) {
-        return (
-            <Box sx={{ width: "100%", pt: "16px" }}>
-                <Stepper
-                    nonLinear
-                    activeStep={activeStep}
-                    alternativeLabel
-                    sx={{ width: "100%", padding: "16px 0px" }}
-                >
-                    {steps.map((label, index) => (
-                        <Step key={label} completed={completed[index]}>
-                            <StepLabel color="inherit">{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-                <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
-                    <Fetching>Fetching...</Fetching>
-                </Box>
-            </Box>
-        );
-    }
+    //Partner
+    const handlePartner = (e) => {
+        const country = e.target.value;
+        const updatedFilterSchema = {
+            ...filterPartner,
+            country: country,
+        };
+        setFilterPartner(updatedFilterSchema);
+    };
+
+    //Customer
+    const handleUCustomer = (e) => {
+        const sending_agent_id = e.target.value;
+        const updatedFilterSchema = {
+            ...filterCustomer,
+            sending_agent_id: sending_agent_id,
+        };
+        setFilterCustomer(updatedFilterSchema);
+    };
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
@@ -198,7 +215,7 @@ function TransactionForm({ update_data, loading }) {
                             }}
                         >
                             All steps completed - Please submit to create
-                            Customer.
+                            Transaction.
                         </Typography>
                         <CheckCircleOutlineIcon
                             sx={{ fontSize: "64px", color: "success.main" }}
@@ -206,7 +223,7 @@ function TransactionForm({ update_data, loading }) {
                         <LoadingButton
                             size="small"
                             variant="outlined"
-                            loading={add_loading || update_loading}
+                            loading={add_loading}
                             sx={{
                                 mt: 2,
                                 borderWidth: "2px",
@@ -218,7 +235,7 @@ function TransactionForm({ update_data, loading }) {
                                     color: "primary.contrastText",
                                 },
                             }}
-                            onClick={() => handleSubmitForm(id)}
+                            onClick={() => handleSubmitForm()}
                         >
                             Submit
                         </LoadingButton>
@@ -226,139 +243,45 @@ function TransactionForm({ update_data, loading }) {
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    {id ? (
-                        <Box>
-                            {activeStep === 0 && (
-                                <CustomerForm
-                                    destroyOnUnmount={false}
-                                    // enableReinitialize={true}
-                                    shouldError={() => true}
-                                    form={`update_transaction_form`}
-                                    initialValues={
-                                        memoizedData && {
-                                            name: memoizedData?.name,
-                                            short_code:
-                                                memoizedData?.short_code,
-                                            agent_type:
-                                                memoizedData?.agent_type,
-                                            phone_number:
-                                                memoizedData?.phone_number,
-                                            email: memoizedData?.email,
-                                            country: memoizedData?.country,
-                                            postcode: memoizedData?.postcode,
-                                            unit: memoizedData?.unit,
-                                            street: memoizedData?.street,
-                                            city: memoizedData?.city,
-                                            state: memoizedData?.state,
-                                            address: memoizedData?.address,
-                                            website: memoizedData?.website,
-                                            contact_person_full_name:
-                                                memoizedData?.contact_person_full_name,
-                                            contact_person_post:
-                                                memoizedData?.contact_person_post,
-                                            contact_person_mobile:
-                                                memoizedData?.contact_person_mobile,
-                                            contact_person_email:
-                                                memoizedData?.contact_person_email,
-                                            business_license_number:
-                                                memoizedData?.business_license_number,
-                                            balance: memoizedData?.balance,
-                                            credit_limit:
-                                                memoizedData?.credit_limit,
-                                            transaction_currency:
-                                                memoizedData?.transaction_currency,
-                                            settlement_currency:
-                                                memoizedData?.settlement_currency,
-                                            tax_type: memoizedData?.tax_type,
-                                            time_zone: memoizedData?.time_zone,
-                                            transaction_limit:
-                                                memoizedData?.transaction_limit,
-                                            commission_currency:
-                                                memoizedData?.commission_currency,
-                                            bank_charge_currency:
-                                                memoizedData?.bank_charge_currency,
-                                            is_prefunding:
-                                                memoizedData?.is_prefunding,
-                                        }
-                                    }
-                                    steps={steps}
-                                    buttonText="Next"
-                                    customer_list={customer_list?.data}
-                                    sending_partner={sending_partner?.data}
-                                    payout_partner={payout_partner?.data}
-                                    activeStep={activeStep}
-                                    handleBack={handleBack}
-                                    onSubmit={handleCustomerForm}
-                                />
-                            )}
-                            {activeStep === 1 && (
-                                <BeneficiaryForm
-                                    destroyOnUnmount={false}
-                                    shouldError={() => true}
-                                    form={`update_transaction_form`}
-                                    steps={steps}
-                                    buttonText="Update"
-                                    activeStep={activeStep}
-                                    handleBack={handleBack}
-                                    onSubmit={handleBeneficiaryForm}
-                                />
-                            )}
-                            {activeStep === 2 && (
-                                <SendAmountForm
-                                    destroyOnUnmount={false}
-                                    shouldError={() => true}
-                                    form={`update_transaction_form`}
-                                    steps={steps}
-                                    buttonText="Update All"
-                                    activeStep={activeStep}
-                                    handleBack={handleBack}
-                                    onSubmit={handleAmountForm}
-                                />
-                            )}
-                        </Box>
-                    ) : (
-                        <Box>
-                            {activeStep === 0 && (
-                                <CustomerForm
-                                    destroyOnUnmount={false}
-                                    shouldError={() => true}
-                                    form={`create_transaction_form`}
-                                    steps={steps}
-                                    buttonText="Next"
-                                    customer_list={customer_list?.data}
-                                    sending_partner={sending_partner?.data}
-                                    payout_partner={payout_partner?.data}
-                                    activeStep={activeStep}
-                                    handleBack={handleBack}
-                                    onSubmit={handleCustomerForm}
-                                />
-                            )}
-                            {activeStep === 1 && (
-                                <BeneficiaryForm
-                                    destroyOnUnmount={false}
-                                    shouldError={() => true}
-                                    form={`create_transaction_form`}
-                                    steps={steps}
-                                    buttonText="Next"
-                                    activeStep={activeStep}
-                                    handleBack={handleBack}
-                                    onSubmit={handleBeneficiaryForm}
-                                />
-                            )}
-                            {activeStep === 2 && (
-                                <SendAmountForm
-                                    destroyOnUnmount={false}
-                                    shouldError={() => true}
-                                    form={`create_transaction_form`}
-                                    steps={steps}
-                                    buttonText="Finish"
-                                    activeStep={activeStep}
-                                    handleBack={handleBack}
-                                    onSubmit={handleAmountForm}
-                                />
-                            )}
-                        </Box>
-                    )}
+                    <Box>
+                        {activeStep === 0 && (
+                            <CustomerForm
+                                destroyOnUnmount={false}
+                                shouldError={() => true}
+                                form={`create_transaction_form`}
+                                steps={steps}
+                                customer_list={customer_list?.data}
+                                sending_partner={sending_partner?.data}
+                                activeStep={activeStep}
+                                handleBack={handleBack}
+                                handlePartner={handlePartner}
+                                handleUCustomer={handleUCustomer}
+                                onSubmit={handleCustomerForm}
+                            />
+                        )}
+                        {activeStep === 1 && (
+                            <BeneficiaryForm
+                                destroyOnUnmount={false}
+                                shouldError={() => true}
+                                form={`create_transaction_form`}
+                                steps={steps}
+                                activeStep={activeStep}
+                                handleBack={handleBack}
+                                onSubmit={handleBeneficiaryForm}
+                            />
+                        )}
+                        {activeStep === 2 && (
+                            <SendAmountForm
+                                destroyOnUnmount={false}
+                                shouldError={() => true}
+                                form={`create_transaction_form`}
+                                steps={steps}
+                                activeStep={activeStep}
+                                handleBack={handleBack}
+                                onSubmit={handleAmountForm}
+                            />
+                        )}
+                    </Box>
                 </React.Fragment>
             )}
         </Box>

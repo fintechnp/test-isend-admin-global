@@ -262,6 +262,9 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
+                                    min: new Date("2021-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
                                     max: maxDate
                                         ? new Date(maxDate)
                                               .toISOString()
@@ -283,9 +286,13 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date(minDate)
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: minDate
+                                        ? new Date(minDate)
+                                              .toISOString()
+                                              .slice(0, 10)
+                                        : new Date("2021-01-01")
+                                              .toISOString()
+                                              .slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />

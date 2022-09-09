@@ -114,6 +114,12 @@ const PrivateLayout = () => {
                         text: "Service Charge",
                         sub: false,
                     },
+                    {
+                        path: "/setup/promo-setup",
+                        key: "setup-promo",
+                        text: "Promo Setup",
+                        sub: false,
+                    },
                 ],
             },
 

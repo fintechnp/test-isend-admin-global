@@ -123,7 +123,7 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 imagefile={image}
                                 handleOnDrop={handleOnDrop}
                                 component={ImageUploadField}
-                                // validate={Validator.imageValidator}
+                                validate={Validator.imageValidator}
                             />
                         </FieldWrapper>
                     </FormWrapper>

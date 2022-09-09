@@ -66,6 +66,24 @@ export const getTransactionsByCustomer = takeEvery(
     }
 );
 
+export const calculateTransaction = takeEvery(
+    actions.CALCULATE_TRANSACTIONS,
+    function* (action) {
+        try {
+            const res = yield call(api.post, `transaction`, action.data);
+            yield put({
+                type: actions.CALCULATE_TRANSACTIONS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.CALCULATE_TRANSACTIONS_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 export const createTransaction = takeEvery(
     actions.CREATE_TRANSACTIONS,
     function* (action) {
@@ -110,6 +128,7 @@ export default function* saga() {
     yield all([
         getTransactions,
         getTransactionById,
+        calculateTransaction,
         createTransaction,
         updateTransaction,
         getTransactionsByCustomer,

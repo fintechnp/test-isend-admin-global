@@ -82,6 +82,9 @@ const IdentityForm = ({
                                 small={12}
                                 component={TextField}
                                 inputProps={{
+                                    min: new Date("1920-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
                                     max: `${moment()
                                         .subtract(18, "years")
                                         .format("YYYY-MM-DD")}`,
@@ -172,6 +175,9 @@ const IdentityForm = ({
                                 small={12}
                                 component={TextField}
                                 inputProps={{
+                                    min: new Date("1920-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                                 validate={Validator.emptyValidator}
@@ -186,6 +192,9 @@ const IdentityForm = ({
                                 component={TextField}
                                 inputProps={{
                                     min: new Date().toISOString().slice(0, 10),
+                                    max: new Date("2050-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
                                 }}
                                 validate={Validator.emptyValidator}
                             />

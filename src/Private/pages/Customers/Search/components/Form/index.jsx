@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import Box from "@mui/material/Box";
@@ -161,6 +162,14 @@ function SearchForm({ handleSubmit, handleReset }) {
                                 component={TextField}
                                 InputLabelProps={{
                                     shrink: true,
+                                }}
+                                inputProps={{
+                                    min: new Date("1920-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
+                                    max: `${moment()
+                                        .subtract(18, "years")
+                                        .format("YYYY-MM-DD")}`,
                                 }}
                             />
                         </FieldWrapperLabel>

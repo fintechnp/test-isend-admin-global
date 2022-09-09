@@ -48,14 +48,18 @@ function Documents() {
     );
 
     const { success } = useSelector((state) => state.upload_documents);
+    const { success: del_success, loading: d_loading } = useSelector(
+        (state) => state.delete_documents
+    );
 
     useEffect(() => {
         if (id) {
             dispatch(actions.get_documents(id, filterSchema));
         }
-    }, [dispatch, id, success, filterSchema]);
+    }, [dispatch, id, success, del_success, filterSchema]);
 
     useEffect(() => {
+        dispatch({ type: "DELETE_DOCUMENTS_RESET" });
         dispatch({ type: "UPLOAD_DOCUMENTS_RESET" });
         dispatch({ type: "GET_DOCUMENTS_BYID_RESET" });
     }, [dispatch]);
@@ -193,6 +197,7 @@ function Documents() {
                         />
                         <Delete
                             fontSize="25px"
+                            loading={d_loading}
                             id={row.original.tid}
                             handleDelete={handleDelete}
                             tooltext="Delete Documents"

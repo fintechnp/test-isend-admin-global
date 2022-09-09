@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { reset } from "redux-form";
-import MuiIconButton from "@mui/material/IconButton";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -468,7 +467,7 @@ function Search() {
                 transactionsData?.data &&
                 transactionsData?.data?.length === 0 && (
                     <Grid item xs={12}>
-                        <NoResults text="No Customer Found" />
+                        <NoResults text="No Transaction Found" />
                     </Grid>
                 )}
             {!l_loading && transactionsData?.data?.length > 0 && (

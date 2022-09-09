@@ -1,0 +1,53 @@
+const actions = {
+    GET_PROMO_SETUP: "GET_PROMO_SETUP",
+    GET_PROMO_SETUP_SUCCESS: "GET_PROMO_SETUP_SUCCESS",
+    GET_PROMO_SETUP_FAILED: "GET_PROMO_SETUP_FAILED",
+
+    GET_PROMO_SETUP_DETAILS: "GET_PROMO_SETUP_DETAILS",
+    GET_PROMO_SETUP_DETAILS_SUCCESS: "GET_PROMO_SETUP_DETAILS_SUCCESS",
+    GET_PROMO_SETUP_DETAILS_FAILED: "GET_PROMO_SETUP_DETAILS_FAILED",
+
+    ADD_PROMO_SETUP: "ADD_PROMO_SETUP",
+    ADD_PROMO_SETUP_SUCCESS: "ADD_PROMO_SETUP_SUCCESS",
+    ADD_PROMO_SETUP_FAILED: "ADD_PROMO_SETUP_FAILED",
+    ADD_PROMO_SETUP_RESET: "ADD_PROMO_SETUP_RESET",
+
+    UPDATE_PROMO_SETUP: "UPDATE_PROMO_SETUP",
+    UPDATE_PROMO_SETUP_SUCCESS: "UPDATE_PROMO_SETUP_SUCCESS",
+    UPDATE_PROMO_SETUP_FAILED: "UPDATE_PROMO_SETUP_FAILED",
+    UPDATE_PROMO_SETUP_RESET: "UPDATE_PROMO_SETUP_RESET",
+
+    UPDATE_PROMO_SETUP_STATUS: "UPDATE_PROMO_SETUP_STATUS",
+    UPDATE_PROMO_SETUP_STATUS_SUCCESS: "UPDATE_PROMO_SETUP_STATUS_SUCCESS",
+    UPDATE_PROMO_SETUP_STATUS_FAILED: "UPDATE_PROMO_SETUP_STATUS_FAILED",
+    UPDATE_PROMO_SETUP_STATUS_RESET: "UPDATE_PROMO_SETUP_STATUS_RESET",
+
+    get_promo_setup: (query) => ({
+        type: actions.GET_PROMO_SETUP,
+        query,
+    }),
+
+    get_promo_setup_details: (id) => ({
+        type: actions.GET_PROMO_SETUP_DETAILS,
+        id,
+    }),
+
+    add_promo_setup: (data) => ({
+        type: actions.ADD_PROMO_SETUP,
+        data,
+    }),
+
+    update_promo_setup: (id, data) => ({
+        type: actions.UPDATE_PROMO_SETUP,
+        data,
+        id,
+    }),
+
+    update_promo_setup_status: (id, data) => ({
+        type: actions.UPDATE_PROMO_SETUP_STATUS,
+        data,
+        id,
+    }),
+};
+
+export default actions;

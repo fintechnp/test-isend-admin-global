@@ -58,7 +58,6 @@ const BeneficiaryForm = ({
     handleBack,
     activeStep,
     steps,
-    buttonText,
 }) => {
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -69,16 +68,12 @@ const BeneficiaryForm = ({
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="country"
-                                label="Country"
-                                type="text"
+                                name="beneficiary_id"
+                                label="Beneficiary"
+                                type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={Validator.emptyValidator}
                             >
                                 <option value="" disabled>
                                     Select Country
@@ -96,16 +91,12 @@ const BeneficiaryForm = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="phone_country_code"
-                                label="Country Code"
-                                type="text"
+                                name="delivery_option_id"
+                                label="Delivery Option"
+                                type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={Validator.emptyValidator}
                             >
                                 <option value="" disabled>
                                     Select Country Code
@@ -120,68 +111,6 @@ const BeneficiaryForm = ({
                                         </option>
                                     ))}
                             </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="unit"
-                                label="Unit"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="street"
-                                label="Street"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="city"
-                                label="City"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="state"
-                                label="State"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="address"
-                                label="Address"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="website"
-                                label="Website"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -213,7 +142,7 @@ const BeneficiaryForm = ({
                                     variant="outlined"
                                     type="submit"
                                 >
-                                    {buttonText}
+                                    Next
                                 </NextButton>
                             )}
                         </Grid>
