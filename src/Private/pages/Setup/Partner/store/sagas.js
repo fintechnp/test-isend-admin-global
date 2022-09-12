@@ -159,7 +159,7 @@ export const getAllCorridor = takeEvery(
     }
 );
 
-export const getCorridorDetails = takeEvery(
+export const getBranchDetails = takeEvery(
     actions.GET_CORRIDOR_DETAILS,
     function* (action) {
         try {
@@ -231,6 +231,144 @@ export const deleteCorridor = takeEvery(
     }
 );
 
+//Branch
+export const getBranchByPartner = takeEvery(
+    actions.GET_AGENT_BRANCH,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `${action.agent_id}/agentbranch`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_AGENT_BRANCH_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_AGENT_BRANCH_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const getCorridorDetails = takeEvery(
+    actions.GET_AGENT_BRANCH_DETAILS,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `agentbranch/${action.branch_id}`);
+            yield put({
+                type: actions.GET_AGENT_BRANCH_DETAILS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_AGENT_BRANCH_DETAILS_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const addBranch = takeEvery(
+    actions.ADD_AGENT_BRANCH,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.post,
+                `agentbranch/${action.agent_id}`,
+                action.data
+            );
+            yield put({
+                type: actions.ADD_AGENT_BRANCH_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.ADD_AGENT_BRANCH_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const updateBranch = takeEvery(
+    actions.UPDATE_AGENT_BRANCH,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.put,
+                `agentbranch/${action.branch_id}`,
+                action.data
+            );
+            yield put({
+                type: actions.UPDATE_AGENT_BRANCH_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_AGENT_BRANCH_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const deleteBranch = takeEvery(
+    actions.DELETE_AGENT_BRANCH,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.delete,
+                `agentbranch/${action.branch_id}`
+            );
+            yield put({
+                type: actions.DELETE_AGENT_BRANCH_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.DELETE_AGENT_BRANCH_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
+export const updateBranchStatus = takeEvery(
+    actions.UPDATE_AGENT_BRANCH_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(
+                api.patch,
+                `agentbranch/${action.branch_id}?${query}`
+            );
+            yield put({
+                type: actions.UPDATE_AGENT_BRANCH_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_AGENT_BRANCH_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
 export default function* saga() {
     yield all([
         getAllAgent,
@@ -246,5 +384,11 @@ export default function* saga() {
         addCorridor,
         updateCorridor,
         deleteCorridor,
+        getBranchByPartner,
+        getBranchDetails,
+        addBranch,
+        updateBranch,
+        deleteBranch,
+        updateBranchStatus,
     ]);
 }

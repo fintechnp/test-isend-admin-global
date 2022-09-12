@@ -101,7 +101,7 @@ const ExchangeRateList = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : ""}
                         </StyledText>
                         <Typography
                             sx={{
@@ -129,7 +129,7 @@ const ExchangeRateList = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CurrencyName(data.value)}
+                            {data.value ? CurrencyName(data.value) : ""}
                         </StyledText>
                         <Typography
                             sx={{
@@ -156,7 +156,9 @@ const ExchangeRateList = () => {
                 accessor: "customer_rate",
                 Cell: (data) => (
                     <Box sx={{ textAlign: "center" }}>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : ""}
+                        </StyledText>
                     </Box>
                 ),
             },

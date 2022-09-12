@@ -64,6 +64,14 @@ import {
 } from "./pages/Setup/Partner/store";
 
 import {
+    GetBranchByPartnerReducer,
+    GetBranchDetailsReducer,
+    AddBranchReducer,
+    UpdateBranchReducer,
+    DeleteBranchReducer,
+} from "./pages/Setup/Partner/store";
+
+import {
     GetAllCorridorReducer,
     GetCorridorDetailsReducer,
     AddCorridorReducer,
@@ -296,6 +304,13 @@ export const privateReducer = {
     add_partner: AddPartnerReducer,
     update_partner: UpdatePartnerReducer,
     delete_partner: DeletePartnerReducer,
+
+    //branch
+    get_all_branch_by_partner: GetBranchByPartnerReducer,
+    get_branch_details: GetBranchDetailsReducer,
+    add_branch: AddBranchReducer,
+    update_branch: UpdateBranchReducer,
+    delete_branch: DeleteBranchReducer,
 
     //corridor
     get_all_corridor: GetAllCorridorReducer,

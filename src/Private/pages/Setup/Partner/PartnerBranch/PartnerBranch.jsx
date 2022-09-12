@@ -1,17 +1,22 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { Box, Tooltip, Button, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import MuiIconButton from "@mui/material/IconButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-import Header from "./../components/Header";
-import AddCorridor from "./AddCorridor";
 import actions from "../store/actions";
+import Header from "./../components/Header";
+import { Delete } from "./../../../../../App/components";
 import { CountryName, CurrencyName } from "./../../../../../App/helpers";
-import Table, { TablePagination } from "./../../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../../App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -38,13 +43,18 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
+const AddButton = styled(Button)(({ theme }) => ({
+    padding: "6px 12px",
+    textTransform: "capitalize",
+}));
+
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
     color: theme.palette.border.dark,
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
+    opacity: 0.8,
     fontSize: "15px",
     color: theme.palette.border.dark,
 }));
@@ -75,17 +85,19 @@ const Blocked = styled(Box)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    sort_by: "name",
-    order_by: "DESC",
+    search: "",
+    sort_by: "",
+    order_by: "ASC",
 };
 
-const Corridor = () => {
+const PartnerBranch = () => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: corridor_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_corridor
+    const { response: BranchData, loading: g_loading } = useSelector(
+        (state) => state.get_all_branch_by_partner
     );
     const { loading: d_loading, success: d_success } = useSelector(
         (state) => state.delete_corridor
@@ -97,7 +109,7 @@ const Corridor = () => {
 
     useEffect(() => {
         if (id) {
-            dispatch(actions.get_all_corridor(id, filterSchema));
+            dispatch(actions.get_all_branch_by_partner(id, filterSchema));
         }
         dispatch({ type: "ADD_CORRIDOR_RESET" });
         dispatch({ type: "UPDATE_CORRIDOR_RESET" });
@@ -108,11 +120,11 @@ const Corridor = () => {
         () => [
             {
                 Header: "Id",
-                accessor: "agent_id",
+                accessor: "tid",
                 maxWidth: 50,
             },
             {
-                Header: "Partner Name",
+                Header: "Branch Name",
                 accessor: "name",
                 width: 180,
                 maxWidth: 280,
@@ -125,7 +137,7 @@ const Corridor = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -136,24 +148,11 @@ const Corridor = () => {
                         <Typography>Type</Typography>
                     </Box>
                 ),
-                accessor: "agent_type",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value}</StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box>
-                        <Typography>Country</Typography>
-                    </Box>
-                ),
-                accessor: "country",
+                accessor: "branch_type",
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? data.value : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -161,36 +160,93 @@ const Corridor = () => {
             {
                 Header: () => (
                     <Box>
-                        <Typography>T.Currency</Typography>
+                        <Typography>Short Code</Typography>
                     </Box>
                 ),
-                accessor: "transaction_currency",
+                accessor: "short_code",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {CurrencyName(data.value)}
+                        <StyledText component="p" sx={{ opacity: 0.9 }}>
+                            {data.value ? data.value : "n/a"}
                         </StyledText>
                     </Box>
                 ),
             },
             {
                 Header: () => (
-                    <Box textAlign="center" sx={{}}>
+                    <Box>
+                        <Typography>Time</Typography>
+                    </Box>
+                ),
+                accessor: "start_time",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
+                        <StyledText component="p" sx={{ opacity: 0.9 }}>
+                            {data?.row?.original?.end_time
+                                ? data?.row?.original?.end_time
+                                : ""}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Address</Typography>
+                    </Box>
+                ),
+                accessor: "city",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
+                        <StyledText component="p">
+                            {data?.row?.original?.country
+                                ? CountryName(data?.row?.original?.country)
+                                : ""}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Contact</Typography>
+                    </Box>
+                ),
+                accessor: "phone_number",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data?.value : ""}
+                        </StyledText>
+                        <StyledText component="p" sx={{ opacity: 0.9 }}>
+                            {data?.row?.original?.email
+                                ? data?.row?.original?.email
+                                : ""}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
                         <Typography>Status</Typography>
                     </Box>
                 ),
                 accessor: "is_active",
+                width: 120,
                 Cell: (data) => (
-                    <SwitchWrapper textAlign="center" sx={{}}>
-                        {data.value ? (
-                            <Tooltip title="Unblocked" arrow>
-                                <UnBlocked>Active</UnBlocked>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Blocked" arrow>
-                                <Blocked>Blocked</Blocked>
-                            </Tooltip>
-                        )}
+                    <SwitchWrapper textAlign="right" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
                     </SwitchWrapper>
                 ),
             },
@@ -211,7 +267,7 @@ const Corridor = () => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip title="Hide Corridor Details" arrow>
+                                <Tooltip title="Hide Branch Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -224,7 +280,7 @@ const Corridor = () => {
                                     </IconButton>
                                 </Tooltip>
                             ) : (
-                                <Tooltip title="Show Corridor Details" arrow>
+                                <Tooltip title="Show Branch Details" arrow>
                                     <IconButton>
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
@@ -238,9 +294,29 @@ const Corridor = () => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddCorridor
-                            update={true}
-                            update_data={row?.original}
+                        <Tooltip title="Edit Branch" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/branch/update/${id}/${row?.original?.tid}`
+                                    )
+                                }
+                            >
+                                <EditOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Remove Partner"
                         />
                     </Box>
                 ),
@@ -251,11 +327,14 @@ const Corridor = () => {
 
     const sub_columns = [
         { key: "tid", name: "Id" },
-        { key: "name", name: "Name" },
-        { key: "agent_type", name: "Agent Type" },
+        { key: "name", name: "Branch Name" },
+        { key: "branch_type", name: "Branch Type" },
         { key: "agent_id", name: "Agent" },
+        { key: "city", name: "City" },
         { key: "country", name: "Country" },
-        { key: "transaction_currency", name: "Currency" },
+        { key: "phone_number", name: "Phone Number" },
+        { key: "email", name: "Email" },
+        { key: "external_branch_code", name: "External Branch Code" },
         { key: "is_active", name: "Status" },
     ];
 
@@ -277,21 +356,41 @@ const Corridor = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleStatus = useCallback((is_active, id) => {
+        dispatch(actions.update_branch_status(id, { is_active: is_active }));
+    }, []);
+
+    //Add branch
+    const handleAdd = () => {
+        navigate(`/setup/partner/branch/add/${id}`);
+    };
+
+    const handleDelete = (id) => {
+        dispatch(actions.delete_branch(id));
+    };
+
     return (
         <MenuContainer>
-            <Header title={`Corridor List of ${name}`}>
-                <AddCorridor />
+            <Header title={`Branch List of ${name}`}>
+                <AddButton
+                    size="small"
+                    variant="outlined"
+                    onClick={handleAdd}
+                    endIcon={<AddIcon />}
+                >
+                    Add Branch
+                </AddButton>
             </Header>
             <Table
                 columns={columns}
-                title="Corridor Details"
-                data={corridor_data?.data || []}
+                title="Branch Details"
+                data={BranchData?.data || []}
                 sub_columns={sub_columns}
                 loading={g_loading}
                 rowsPerPage={8}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={corridor_data?.pagination}
+                        paginationData={BranchData?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />
@@ -301,4 +400,4 @@ const Corridor = () => {
     );
 };
 
-export default Corridor;
+export default PartnerBranch;

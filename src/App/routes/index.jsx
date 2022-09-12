@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 
 import { PublicLayout, PrivateLayout } from "../layouts";
 import showToast from "../components/Toast";
+import PageNotFound from "../components/PageNotFound";
 import { publicRoutes } from "../../Public";
 import { privateRoutes } from "../../Private";
 
@@ -50,8 +51,8 @@ const MainRoutes = ({ setMode }) => {
                         element={route.component}
                     />
                 ))}
+                <Route path="*" element={<PageNotFound />} />
             </Route>
-            <Route path="*" element={<p>404 Page Not Found</p>} />
         </Routes>
     );
 };

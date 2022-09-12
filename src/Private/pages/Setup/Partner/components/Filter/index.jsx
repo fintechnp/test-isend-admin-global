@@ -101,6 +101,7 @@ function Filter({
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -116,22 +117,27 @@ function Filter({
 
             <DropWrapper>
                 <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            native
-                            onChange={handleCountry}
-                            displayEmpty
-                            defaultValue=""
-                        >
-                            <option value="">All Country</option>
-                            {country &&
-                                country.map((sort) => (
-                                    <option value={sort.iso3} key={sort.iso3}>
-                                        {sort.country}
-                                    </option>
-                                ))}
-                        </Select>
-                    </FormControl>
+                    {handleCountry && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                native
+                                onChange={handleCountry}
+                                displayEmpty
+                                defaultValue=""
+                            >
+                                <option value="">All Country</option>
+                                {country &&
+                                    country.map((sort) => (
+                                        <option
+                                            value={sort.iso3}
+                                            key={sort.iso3}
+                                        >
+                                            {sort.country}
+                                        </option>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    )}
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleAgentType}
