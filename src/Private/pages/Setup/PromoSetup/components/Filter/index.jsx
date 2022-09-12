@@ -78,13 +78,6 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "center",
 }));
 
-const paymentTypeData = [
-    { key: "None", value: "" },
-    { key: "Bank Transfer", value: "B" },
-    { key: "Cash Payment", value: "C" },
-    { key: "Wallet", value: "W" },
-];
-
 function Filter({
     state,
     handleSearch,
@@ -93,8 +86,6 @@ function Filter({
     handleOrder,
     handleSort,
 }) {
-    const country = JSON.parse(localStorage.getItem("country"));
-
     return (
         <FilterWrapper>
             <SearchBox>

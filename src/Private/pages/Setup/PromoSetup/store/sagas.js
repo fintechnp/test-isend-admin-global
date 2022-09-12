@@ -108,6 +108,122 @@ export const updatePromoSetupStatus = takeEvery(
     }
 );
 
+//promo code
+export const getPromoCode = takeEvery(
+    actions.GET_PROMO_CODE,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `${action.promo_id}/promocode`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_PROMO_CODE_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_PROMO_CODE_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
+export const getPromoCodeDetails = takeEvery(
+    actions.GET_PROMO_CODE_DETAILS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `promocode/${action.promo_code_id}`
+            );
+            yield put({
+                type: actions.GET_PROMO_CODE_DETAILS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_PROMO_CODE_DETAILS_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
+export const addPromoCode = takeEvery(
+    actions.ADD_PROMO_CODE,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.post,
+                `${action.promo_id}/promocode`,
+                action.data
+            );
+            yield put({
+                type: actions.ADD_PROMO_CODE_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.ADD_PROMO_CODE_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
+export const importPromoCode = takeEvery(
+    actions.PROMO_CODE_IMPORT,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.post,
+                `${action.promo_id}/promocode/import`,
+                action.data
+            );
+            yield put({
+                type: actions.PROMO_CODE_IMPORT_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.PROMO_CODE_IMPORT_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
+export const updatePromoCodeStatus = takeEvery(
+    actions.UPDATE_PROMO_CODE_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(
+                api.patch,
+                `${action.promo_id}/promocode/${action.promo_code_id}?${query}`
+            );
+            yield put({
+                type: actions.UPDATE_PROMO_CODE_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_PROMO_CODE_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export default function* saga() {
     yield all([
         getPromoSetup,
@@ -115,5 +231,10 @@ export default function* saga() {
         addPromoSetup,
         updatePromoSetup,
         updatePromoSetupStatus,
+        getPromoCode,
+        getPromoCodeDetails,
+        addPromoCode,
+        importPromoCode,
+        updatePromoCodeStatus,
     ]);
 }

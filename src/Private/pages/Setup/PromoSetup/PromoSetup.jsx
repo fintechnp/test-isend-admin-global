@@ -369,7 +369,7 @@ const PromoSetup = () => {
 
     return (
         <MenuContainer>
-            <Header />
+            <Header title="Promo Setup" />
             <Filter
                 state={filterSchema}
                 sortData={sortData}

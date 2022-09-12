@@ -2,8 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
+import { Box, Typography } from "@mui/material";
 
 import actions from "./store/actions";
 import Image from "./components/Image";

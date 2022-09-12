@@ -107,6 +107,10 @@ import {
     GetPromoSetupDetailsReducer,
     AddPromoSetupReducer,
     UpdatePromoSetupReducer,
+    GetPromoCodeReducer,
+    GetPromoCodeDetailsReducer,
+    AddPromoCodeReducer,
+    ImportPromoCodeReducer,
     PromoSetupSaga,
 } from "./pages/Setup/PromoSetup/store";
 
@@ -351,6 +355,12 @@ export const privateReducer = {
     get_promo_setup_details: GetPromoSetupDetailsReducer,
     add_promo_setup: AddPromoSetupReducer,
     update_promo_setup: UpdatePromoSetupReducer,
+
+    //promo code
+    get_promo_code: GetPromoCodeReducer,
+    get_promo_code_details: GetPromoCodeDetailsReducer,
+    add_promo_code: AddPromoCodeReducer,
+    import_promo_code: ImportPromoCodeReducer,
 
     //exchange charge
     get_all_exchange_rate: GetAllExchangeRateReducer,

@@ -10,10 +10,12 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
-function Header() {
+function Header({ title, name }) {
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>Promo Setup</Typography>
+            <Typography sx={{ fontSize: "22px" }}>
+                {title} {name && `of ${name}`}
+            </Typography>
             <AddPromoSetup update={false} />
         </HeaderWrapper>
     );

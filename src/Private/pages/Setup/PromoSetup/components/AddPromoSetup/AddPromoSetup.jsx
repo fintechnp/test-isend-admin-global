@@ -133,8 +133,10 @@ function AddPromoSetup({ update_data, update }) {
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
-        dispatch(PartnerActions.get_sending_partner(sendState));
-    }, [dispatch]);
+        if (open) {
+            dispatch(PartnerActions.get_sending_partner(sendState));
+        }
+    }, [dispatch, open]);
 
     React.useEffect(() => {
         if (filterSchema?.country) {

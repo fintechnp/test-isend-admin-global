@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, reset } from "redux-form";
+import { Field, Form, reduxForm, change, reset } from "redux-form";
 import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -67,9 +67,10 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function BlockDialog({ loading, handleSubmit, status, name, remark }) {
+function BlockDialog({ loading, handleSubmit, status, name, remark, ...rest }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    console.log(rest, "dfdf");
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -79,6 +80,10 @@ function BlockDialog({ loading, handleSubmit, status, name, remark }) {
     const handleClose = () => {
         dispatch(reset("block_form_customer"));
         setOpen(false);
+    };
+
+    const handleChange = (e) => {
+        dispatch(change("block_form_customer", "remarks", e.target.value));
     };
 
     return (
@@ -145,6 +150,7 @@ function BlockDialog({ loading, handleSubmit, status, name, remark }) {
                                 type="text"
                                 small={12}
                                 minRows={8}
+                                onChange={handleChange}
                                 component={TextAreaField}
                                 validate={Validator.emptyValidator}
                             />
@@ -195,4 +201,4 @@ function BlockDialog({ loading, handleSubmit, status, name, remark }) {
     );
 }
 
-export default reduxForm({ form: "block_form_customer" })(BlockDialog);
+export default reduxForm({ form: ["form"] })(BlockDialog);
