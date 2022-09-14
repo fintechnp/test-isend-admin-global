@@ -60,6 +60,7 @@ import {
     DeletePartnerReducer,
     GetSendingPartnerReducer,
     GetPayoutPartnerReducer,
+    GetPartnerBranchReducer,
     PartnerSaga,
 } from "./pages/Setup/Partner/store";
 
@@ -102,6 +103,19 @@ import {
 } from "./pages/Setup/ServiceCharge/store";
 
 import {
+    GetPromoSetupReducer,
+    GetPromoSetupDetailsReducer,
+    AddPromoSetupReducer,
+    UpdatePromoSetupReducer,
+    DeletePromoSetupReducer,
+    GetPromoCodeReducer,
+    DeletePromoCodeReducer,
+    AddPromoCodeReducer,
+    ImportPromoCodeReducer,
+    PromoSetupSaga,
+} from "./pages/Setup/PromoSetup/store";
+
+import {
     GetAllExchangeRateReducer,
     GetExchangeRateByPartnerReducer,
     GetExchangeRateDetailsReducer,
@@ -125,6 +139,7 @@ import {
 //Customer Process
 import {
     GetCustomersReducer,
+    GetCustomerByPartnersReducer,
     BlockUnblockReducer,
     CustomersSaga,
 } from "./pages/Customers/Search/store";
@@ -142,7 +157,6 @@ import {
     GetDocumentsByIdReducer,
     UploadDocumentsReducer,
     UpdateKycReducer,
-    UpdateDocumentsReducer,
     DeleteDocumentsReducer,
     DocumentsCustomerSaga,
 } from "./pages/Customers/Documents/store";
@@ -160,10 +174,18 @@ import {
     GetTransactionsReducer,
     GetTransactionByIdReducer,
     GetTransactionsByCustomerReducer,
+    CalculateTransactionsReducer,
     CreateTransactionsReducer,
     UpdateTransactionsReducer,
     TransactionsSaga,
 } from "./pages/Transactions/store";
+
+import {
+    GetTransactionRemarksReducer,
+    GetTransactionRemarksByIdReducer,
+    CreateTransactionRemarksReducer,
+    RemarksTransactionSaga,
+} from "./pages/Transactions/Remarks/store";
 
 //Beneficiary
 import {
@@ -296,6 +318,7 @@ export const privateReducer = {
     add_partner: AddPartnerReducer,
     update_partner: UpdatePartnerReducer,
     delete_partner: DeletePartnerReducer,
+    get_partner_branch: GetPartnerBranchReducer,
 
     //corridor
     get_all_corridor: GetAllCorridorReducer,
@@ -328,6 +351,19 @@ export const privateReducer = {
     update_service_charge: UpdateServiceChargeReducer,
     delete_service_charge: DeleteServiceChargeReducer,
 
+    //setup promo
+    get_promo_setup: GetPromoSetupReducer,
+    get_promo_setup_details: GetPromoSetupDetailsReducer,
+    add_promo_setup: AddPromoSetupReducer,
+    update_promo_setup: UpdatePromoSetupReducer,
+    delete_promo_setup: DeletePromoSetupReducer,
+
+    //promo code
+    get_promo_code: GetPromoCodeReducer,
+    delete_promo_code: DeletePromoCodeReducer,
+    add_promo_code: AddPromoCodeReducer,
+    import_promo_code: ImportPromoCodeReducer,
+
     //exchange charge
     get_all_exchange_rate: GetAllExchangeRateReducer,
     get_exchange_rate_by_partner: GetExchangeRateByPartnerReducer,
@@ -354,6 +390,7 @@ export const privateReducer = {
 
     //Customer
     get_customers: GetCustomersReducer,
+    get_customers_by_partner: GetCustomerByPartnersReducer,
     block_unblock_customer: BlockUnblockReducer,
     get_customer_byid: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
@@ -364,7 +401,6 @@ export const privateReducer = {
     get_documents_byid: GetDocumentsByIdReducer,
     upload_documents: UploadDocumentsReducer,
     update_kyc: UpdateKycReducer,
-    update_documents: UpdateDocumentsReducer,
     delete_documents: DeleteDocumentsReducer,
 
     //Remarks
@@ -376,8 +412,13 @@ export const privateReducer = {
     get_transactions: GetTransactionsReducer,
     get_transactions_byid: GetTransactionByIdReducer,
     get_transactions_by_customer: GetTransactionsByCustomerReducer,
+    calculate_transactions: CalculateTransactionsReducer,
     create_transactions: CreateTransactionsReducer,
     update_transactions: UpdateTransactionsReducer,
+
+    get_transaction_remarks: GetTransactionRemarksReducer,
+    get_transaction_remarks_byid: GetTransactionRemarksByIdReducer,
+    create_transaction_remarks: CreateTransactionRemarksReducer,
 
     //Beneficiary
     get_beneficiary_by_customer: GetBeneficiaryByCustomerReducer,
@@ -448,12 +489,14 @@ export const privateSaga = [
     PartnerBankSaga(),
     PayoutLocationSaga(),
     ServiceChargeSaga(),
+    PromoSetupSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
     CustomersSaga(),
     DocumentsCustomerSaga(),
     RemarksCustomerSaga(),
     TransactionsSaga(),
+    RemarksTransactionSaga(),
     CustomersCreateSaga(),
     BeneficiarySaga(),
     PaymentRulesSaga(),

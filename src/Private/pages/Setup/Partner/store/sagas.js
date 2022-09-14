@@ -231,6 +231,30 @@ export const deleteCorridor = takeEvery(
     }
 );
 
+//Branch Partner
+export const getPartnerBranch = takeEvery(
+    actions.GET_PARTNER_BRANCH,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `agent/${action.id}/branch`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_PARTNER_BRANCH_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_PARTNER_BRANCH_FAILED,
+                error: error?.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export default function* saga() {
     yield all([
         getAllAgent,
@@ -246,5 +270,6 @@ export default function* saga() {
         addCorridor,
         updateCorridor,
         deleteCorridor,
+        getPartnerBranch,
     ]);
 }

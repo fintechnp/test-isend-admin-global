@@ -111,6 +111,7 @@ function Search() {
     );
 
     useEffect(() => {
+        dispatch(reset("block_customer_form"));
         dispatch(reset("search_form_customer"));
         dispatch({ type: "GET_CUSTOMERS_RESET" });
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
@@ -127,6 +128,16 @@ function Search() {
             isMounted.current = true;
         }
     }, [dispatch, filterSchema, b_success]);
+
+    const handleBlock = (data) => {
+        dispatch(
+            actions.block_unblock_customer(
+                data?.id,
+                { is_active: !data?.is_active },
+                { remarks: data?.remarks }
+            )
+        );
+    };
 
     const columns = useMemo(
         () => [
@@ -286,7 +297,7 @@ function Search() {
                     </Box>
                 ),
                 accessor: "show",
-                Cell: ({ row }) => (
+                Cell: (data) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -298,7 +309,7 @@ function Search() {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/details/${row.original.tid}`
+                                        `/customer/details/${data.row.original.tid}`
                                     )
                                 }
                             >
@@ -316,7 +327,7 @@ function Search() {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/customer/update/${row.original.tid}`
+                                        `/customer/update/${data.row.original.tid}`
                                     )
                                 }
                             >
@@ -333,21 +344,23 @@ function Search() {
                         <Block
                             name="Customer"
                             destroyOnUnmount
+                            enableReinitialize
                             remark={true}
                             initialValues={{
-                                id: row.original.tid,
-                                is_active: row.original.is_active,
+                                id: data?.row.original.tid,
+                                is_active: data.row.original.is_active,
                                 remarks: "",
                             }}
                             onSubmit={handleBlock}
                             loading={b_loading}
-                            status={row?.original?.is_active}
+                            form={`block_form_customer`}
+                            status={data?.row?.original?.is_active}
                         />
                     </Box>
                 ),
             },
         ],
-        []
+        [handleBlock]
     );
 
     const handleSearch = (data) => {
@@ -368,16 +381,6 @@ function Search() {
         setFilterSchema(initialState);
         dispatch(reset("search_form_customer"));
         dispatch({ type: "GET_CUSTOMERS_RESET" });
-    };
-
-    const handleBlock = (data) => {
-        dispatch(
-            actions.block_unblock_customer(
-                data?.id,
-                { is_active: !data?.is_active },
-                { remarks: data?.remarks }
-            )
-        );
     };
 
     const handleChangePage = (e, newPage) => {

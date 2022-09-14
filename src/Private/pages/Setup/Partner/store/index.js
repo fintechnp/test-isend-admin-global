@@ -12,4 +12,7 @@ export { default as GetCorridorDetailsReducer } from "./reducers/getCorridorDeta
 export { default as AddCorridorReducer } from "./reducers/addCorridor";
 export { default as UpdateCorridorReducer } from "./reducers/updateCorridor";
 export { default as DeleteCorridorReducer } from "./reducers/deleteCorridor";
+
+export { default as GetPartnerBranchReducer } from "./reducers/getPartnerBranch";
+
 export { default as PartnerAction } from "./actions";

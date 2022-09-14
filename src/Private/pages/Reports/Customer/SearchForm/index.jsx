@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import Box from "@mui/material/Box";
@@ -263,6 +264,9 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
+                                    min: new Date("2021-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
                                     max: maxDate
                                         ? new Date(maxDate)
                                               .toISOString()
@@ -284,9 +288,13 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date(minDate)
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: minDate
+                                        ? new Date(minDate)
+                                              .toISOString()
+                                              .slice(0, 10)
+                                        : new Date("2021-01-01")
+                                              .toISOString()
+                                              .slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -303,7 +311,12 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    max: new Date().toISOString().slice(0, 10),
+                                    min: new Date("1920-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
+                                    max: `${moment()
+                                        .subtract(18, "years")
+                                        .format("YYYY-MM-DD")}`,
                                 }}
                             />
                         </FieldWrapperLabel>
@@ -347,6 +360,9 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
+                                    min: new Date("2021-01-01")
+                                        .toISOString()
+                                        .slice(0, 10),
                                     max: maxKycDate
                                         ? new Date(maxKycDate)
                                               .toISOString()
@@ -368,9 +384,13 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date(minKycDate)
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: minKycDate
+                                        ? new Date(minKycDate)
+                                              .toISOString()
+                                              .slice(0, 10)
+                                        : new Date("2021-01-01")
+                                              .toISOString()
+                                              .slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />

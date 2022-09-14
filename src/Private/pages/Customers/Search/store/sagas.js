@@ -22,6 +22,28 @@ export const getCustomers = takeEvery(
     }
 );
 
+export const getCustomersByPartner = takeEvery(
+    actions.GET_CUSTOMERS_BY_PARTNER,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `customer/${action.id}`,
+                action.query
+            );
+            yield put({
+                type: actions.GET_CUSTOMERS_BY_PARTNER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_CUSTOMERS_BY_PARTNER_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 export const BlockUnblockCustomer = takeEvery(
     actions.BLOCK_UNBLOCK_CUSTOMER,
     function* (action) {
@@ -48,5 +70,5 @@ export const BlockUnblockCustomer = takeEvery(
 );
 
 export default function* saga() {
-    yield all([getCustomers, BlockUnblockCustomer]);
+    yield all([getCustomers, getCustomersByPartner, BlockUnblockCustomer]);
 }

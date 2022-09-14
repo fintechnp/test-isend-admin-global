@@ -60,6 +60,10 @@ const actions = {
     DELETE_CORRIDOR_FAILED: "DELETE_CORRIDOR_FAILED",
     DELETE_CORRIDOR_RESET: "DELETE_CORRIDOR_RESET",
 
+    GET_PARTNER_BRANCH: "GET_PARTNER_BRANCH",
+    GET_PARTNER_BRANCH_SUCCESS: "GET_PARTNER_BRANCH_SUCCESS",
+    GET_PARTNER_BRANCH_FAILED: "GET_PARTNER_BRANCH_FAILED",
+
     //PARTNER
     get_all_partner: (query) => ({
         type: actions.GET_PARTNER,
@@ -130,6 +134,13 @@ const actions = {
 
     delete_corridor: (id) => ({
         type: actions.DELETE_CORRIDOR,
+        id,
+    }),
+
+    //get Branch
+    get_partner_branch: (id, query) => ({
+        type: actions.GET_PARTNER_BRANCH,
+        query,
         id,
     }),
 };

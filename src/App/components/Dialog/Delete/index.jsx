@@ -96,6 +96,7 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 function DeleteDialog({
+    fontSize,
     loading,
     parent_id,
     id,
@@ -140,11 +141,14 @@ function DeleteDialog({
                         color="primary"
                         component="span"
                         onClick={handleClickOpen}
-                        sx={{ minWidth: "3px", borderRadius: "20px" }}
+                        sx={{
+                            minWidth: "3px",
+                            borderRadius: fontSize ? fontSize : "20px",
+                        }}
                     >
                         <DeleteOutlinedIcon
                             sx={{
-                                fontSize: "20px",
+                                fontSize: fontSize ? fontSize : "20px",
                                 color: "warning.main",
                                 "&:hover": {
                                     background: "transparent",

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { reset } from "redux-form";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -45,22 +45,12 @@ const BackButton = styled(Button)(({ theme }) => ({
 }));
 
 function AddUpdateTransactions() {
-    const { id } = useParams();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, loading } = useSelector(
-        (state) => state.get_customer_byid
-    );
+    const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     if (id) {
-    //         dispatch(actions.get_customer_byid(id));
-    //     }
-    // }, [id]);
-
-    // useEffect(() => {
-    //     dispatch(reset("add_customer_form"));
-    // }, []);
+    useEffect(() => {
+        dispatch(reset("create_transaction_form"));
+    }, []);
 
     const handleBack = () => {
         navigate(-1);
@@ -74,7 +64,7 @@ function AddUpdateTransactions() {
                         <PersonAddAltOutlinedIcon
                             sx={{ color: "primary.main", fontSize: "28px" }}
                         />
-                        <Title>{id ? "Update" : "Create"} Transaction </Title>
+                        <Title>Create Transaction </Title>
                     </Box>
                     <BackButton
                         variant="outlined"
@@ -89,10 +79,7 @@ function AddUpdateTransactions() {
                 <Divider sx={{ mb: 1.2, pt: 0.5 }} />
             </Grid>
             <Grid item xs={12}>
-                <TransactionForm
-                    update_data={response?.data}
-                    loading={loading}
-                />
+                <TransactionForm />
             </Grid>
         </Container>
     );

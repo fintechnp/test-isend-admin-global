@@ -28,6 +28,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
     width: "100%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "7px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -53,6 +54,7 @@ function SearchTransactions({ handleSearch }) {
         <SearchContainer>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     onClick={handleSearch}
                     placeholder="Search Transaction"

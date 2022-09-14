@@ -8,6 +8,16 @@ const validators = {
         }
         return undefined;
     },
+    imageValidator: (value) => {
+        console.log(value, "image");
+        if (!value) {
+            return "This field is required";
+        }
+        if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+            return "Invalid email address";
+        }
+        return undefined;
+    },
     urlValidator: (value) => {
         if (
             value &&
