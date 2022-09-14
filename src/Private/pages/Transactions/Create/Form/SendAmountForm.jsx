@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button, Typography } from "@mui/material";
@@ -75,47 +76,8 @@ const SendAmountForm = ({
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="date_of_birth"
-                                label="Date of Birth"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    max: new Date().toISOString().slice(0, 10),
-                                }}
-                                validate={Validator.emptyValidator}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="birth_country"
-                                label="Birth Country"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="citizenship_country"
-                                label="Citizenship Country"
-                                type="date"
-                                small={12}
-                                component={TextField}
-                                validate={Validator.emptyValidator}
-                                inputProps={{
-                                    min: new Date().toISOString().slice(0, 10),
-                                }}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_type"
-                                label="Id Type"
+                                name="send_amount"
+                                label="Send Amount"
                                 type="text"
                                 small={12}
                                 component={TextField}
@@ -124,94 +86,13 @@ const SendAmountForm = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="id_number"
-                                label="Id Number"
-                                type="number"
+                                name="payout_amount"
+                                label="Recieve Amount"
+                                type="text"
                                 small={12}
                                 component={TextField}
                                 validate={Validator.emptyValidator}
                             />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_issue_date"
-                                label="Id Issue Date"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Transaction Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
-                                            {data.currency_name}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_expiry_date"
-                                label="Id Expiry Date"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Settlement Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
-                                            {data.currency_name}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="id_issued_country"
-                                label="Id Issued Country"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
-                                <option value="" disabled>
-                                    Select Tax Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 4
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -243,7 +124,7 @@ const SendAmountForm = ({
                                     variant="outlined"
                                     type="submit"
                                 >
-                                    {buttonText}
+                                    Calculate
                                 </NextButton>
                             )}
                         </Grid>

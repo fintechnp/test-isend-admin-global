@@ -2,7 +2,6 @@ import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
-
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 import React from "react";
 
@@ -34,7 +33,7 @@ const Input = styled("input")({
 function Header({ loading }) {
     const dispatch = useDispatch();
 
-    const handleCsv = (e) => {
+    const handleImport = (e) => {
         const formData = new FormData();
         if (e.target.files[0]) {
             formData.append("file", e.target.files[0]);
@@ -50,7 +49,7 @@ function Header({ loading }) {
                     <Input
                         id="contained-button-file"
                         type="file"
-                        onChange={handleCsv}
+                        onChange={handleImport}
                         onClick={(event) => {
                             event.target.value = null;
                         }}

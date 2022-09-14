@@ -181,6 +181,7 @@ const actions = {
     }),
 
     update_branch: (branch_id, data) => ({
+        type: actions.UPDATE_AGENT_BRANCH,
         branch_id,
         data,
     }),

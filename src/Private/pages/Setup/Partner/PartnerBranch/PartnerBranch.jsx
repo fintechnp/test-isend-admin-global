@@ -11,8 +11,9 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 
 import actions from "../store/actions";
 import Header from "./../components/Header";
+import Filter from "./../components/Filter";
 import { Delete } from "./../../../../../App/components";
-import { CountryName, CurrencyName } from "./../../../../../App/helpers";
+import { CountryName } from "./../../../../../App/helpers";
 import Table, {
     TablePagination,
     TableSwitch,
@@ -49,44 +50,21 @@ const AddButton = styled(Button)(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
+    fontSize: "14px",
     color: theme.palette.border.dark,
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
-    fontSize: "15px",
+    fontSize: "14px",
     color: theme.palette.border.dark,
-}));
-
-const UnBlocked = styled(Box)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    borderRadius: "6px",
-    padding: "3px 12px",
-    color: theme.palette.border.light,
-    background: theme.palette.success.main,
-    "&:hover": {
-        background: theme.palette.success.main,
-    },
-}));
-
-const Blocked = styled(Box)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    borderRadius: "6px",
-    padding: "3px 12px",
-    background: theme.palette.border.light,
-    "&:hover": {
-        background: theme.palette.border.light,
-    },
 }));
 
 const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    sort_by: "",
+    sort_by: "name",
     order_by: "ASC",
 };
 
@@ -100,20 +78,18 @@ const PartnerBranch = () => {
         (state) => state.get_all_branch_by_partner
     );
     const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_corridor
+        (state) => state.delete_branch
     );
-    const { success: a_success } = useSelector((state) => state.add_corridor);
-    const { success: u_success } = useSelector(
-        (state) => state.update_corridor
-    );
+    const { success: a_success } = useSelector((state) => state.add_branch);
+    const { success: u_success } = useSelector((state) => state.update_branch);
 
     useEffect(() => {
         if (id) {
             dispatch(actions.get_all_branch_by_partner(id, filterSchema));
         }
-        dispatch({ type: "ADD_CORRIDOR_RESET" });
-        dispatch({ type: "UPDATE_CORRIDOR_RESET" });
-        dispatch({ type: "DELETE_CORRIDOR_RESET" });
+        dispatch({ type: "ADD_AGENT_BRANCH_RESET" });
+        dispatch({ type: "UPDATE_AGENT_BRANCH_RESET" });
+        dispatch({ type: "DELETE_AGENT_BRANCH_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
     const columns = useMemo(
@@ -121,12 +97,12 @@ const PartnerBranch = () => {
             {
                 Header: "Id",
                 accessor: "tid",
-                maxWidth: 50,
+                maxWidth: 40,
             },
             {
                 Header: "Branch Name",
                 accessor: "name",
-                width: 180,
+                width: 160,
                 maxWidth: 280,
                 Cell: (data) => (
                     <Box
@@ -145,29 +121,20 @@ const PartnerBranch = () => {
             {
                 Header: () => (
                     <Box>
-                        <Typography>Type</Typography>
+                        <Typography>Type/Code</Typography>
                     </Box>
                 ),
                 accessor: "branch_type",
+                width: 120,
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
                             {data.value ? data.value : ""}
                         </StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box>
-                        <Typography>Short Code</Typography>
-                    </Box>
-                ),
-                accessor: "short_code",
-                Cell: (data) => (
-                    <Box>
                         <StyledText component="p" sx={{ opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {data?.row?.original?.short_code
+                                ? data?.row?.original?.short_code
+                                : "n/a"}
                         </StyledText>
                     </Box>
                 ),
@@ -179,6 +146,7 @@ const PartnerBranch = () => {
                     </Box>
                 ),
                 accessor: "start_time",
+                width: 120,
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
@@ -325,6 +293,17 @@ const PartnerBranch = () => {
         []
     );
 
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Name", value: "name" },
+        { key: "Partner", value: "Agent" },
+        { key: "Country", value: "country" },
+    ];
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
     const sub_columns = [
         { key: "tid", name: "Id" },
         { key: "name", name: "Branch Name" },
@@ -337,6 +316,36 @@ const PartnerBranch = () => {
         { key: "external_branch_code", name: "External Branch Code" },
         { key: "is_active", name: "Status" },
     ];
+
+    const handleSearch = useCallback(
+        (e) => {
+            const searchValue = e.target.value;
+            const updatedFilterSchema = {
+                ...filterSchema,
+                search: searchValue,
+            };
+            setFilterSchema(updatedFilterSchema);
+        },
+        [filterSchema]
+    );
+
+    const handleSort = (e) => {
+        const sort = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: sort,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleOrder = (e) => {
+        const order = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            order_by: order,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
@@ -381,6 +390,14 @@ const PartnerBranch = () => {
                     Add Branch
                 </AddButton>
             </Header>
+            <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+            />
             <Table
                 columns={columns}
                 title="Branch Details"

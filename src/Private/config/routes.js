@@ -55,6 +55,8 @@ const AddUpdateServiceCharge = lazy(() =>
 const ServiceChargeDetails = lazy(() =>
     import("../pages/Setup/ServiceCharge/ServiceChargeDetails")
 );
+const PromoSetup = lazy(() => import("../pages/Setup/PromoSetup"));
+const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -85,6 +87,7 @@ const DailyTransactions = lazy(() =>
     import("../pages/Transactions/DailyTransactions")
 );
 const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
+const TransactionRemarks = lazy(() => import("../pages/Transactions/Remarks"));
 
 //Reports
 const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
@@ -210,6 +213,14 @@ const privateRoutes = [
         path: "/setup/service-charge/details/:id",
         component: <ServiceChargeDetails />,
     },
+    {
+        path: "/setup/promo-setup",
+        component: <PromoSetup />,
+    },
+    {
+        path: "/setup/promo-code/:name/:id",
+        component: <PromoCode />,
+    },
 
     //Customers
     { path: "/customer/search", component: <CustomerSearch /> },
@@ -248,6 +259,10 @@ const privateRoutes = [
     { path: "/transaction/update/:id", component: <CreateTransactions /> },
     { path: "/transaction/daily", component: <DailyTransactions /> },
     { path: "/transaction/search", component: <SearchTransactions /> },
+    {
+        path: "/transaction/remarks/:id",
+        component: <TransactionRemarks />,
+    },
 
     //Reports
     { path: "/report/customer", component: <CustomerReport /> },

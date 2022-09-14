@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
     CurrencyName,
@@ -43,6 +45,19 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
+const ButtonWrapper = styled(Box)(({ theme }) => ({
+    width: "100%",
+    display: "flex",
+    paddingTop: "16px",
+    justifyContent: "flex-start",
+}));
+
+const BottomButton = styled(Button)(({ theme }) => ({
+    minWidth: "120px",
+    padding: "4px 10px",
+    textTransform: "capitalize",
+}));
+
 const PinWrapper = styled(Typography)(({ theme }) => ({
     opacitLy: 0.8,
     paddingLeft: "8px",
@@ -52,6 +67,8 @@ const PinWrapper = styled(Typography)(({ theme }) => ({
 }));
 
 function Details({ data }) {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [count, setCount] = useState(0);
 
     useEffect(() => {
@@ -415,6 +432,19 @@ function Details({ data }) {
                         </InfoWrapper>
                     </Grid>
                 </Grid>
+            </Grid>
+            <Grid item xs={12}>
+                <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
+                    <BottomButton
+                        size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => navigate(`/transaction/remarks/${id}`)}
+                    >
+                        Remarks
+                    </BottomButton>
+                </ButtonWrapper>
             </Grid>
         </Grid>
     );

@@ -9,7 +9,6 @@ import Divider from "@mui/material/Divider";
 
 import TextField from "../../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
 import Validator from "../../../../../../App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
@@ -27,12 +26,6 @@ const FormWrapper = styled(Grid)(({ theme }) => ({
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
-}));
-
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -224,30 +217,6 @@ const AddBranchForm = ({
                                 component={TextField}
                             />
                         </FieldWrapper>
-                        {branch_id && (
-                            <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
-                                    <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            name="is_active"
-                                            label="Active"
-                                            small={12}
-                                            reverse="row-reverse"
-                                            component={CheckboxField}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </FieldWrapper>
-                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>

@@ -51,7 +51,7 @@ function AddBranch() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { response: exchangeData, loading: get_loading } = useSelector(
+    const { response: BranchData, loading: get_loading } = useSelector(
         (state) => state.get_branch_details
     );
 
@@ -83,6 +83,7 @@ function AddBranch() {
     };
 
     const handleBranchUpdate = (data) => {
+        console.log(data, "hhdsfhsupdate");
         dispatch(actions.update_branch(branch_id, data));
     };
 
@@ -150,14 +151,22 @@ function AddBranch() {
                         branch_id={branch_id}
                         destroyOnUnmount
                         enableReinitialize={true}
-                        initialValues={
-                            exchangeData?.data && {
-                                base_to_sending:
-                                    exchangeData?.data?.base_to_sending,
-                                base_to_sending_margin:
-                                    exchangeData?.data?.base_to_sending_margin,
-                            }
-                        }
+                        initialValues={{
+                            name: BranchData?.data?.name,
+                            short_code: BranchData?.data?.short_code,
+                            external_branch_code:
+                                BranchData?.data?.external_branch_code,
+                            branch_type: BranchData?.data?.branch_type,
+                            phone_number: BranchData?.data?.phone_number,
+                            email: BranchData?.data?.email,
+                            postcode: BranchData?.data?.postcode,
+                            unit: BranchData?.data?.unit,
+                            street: BranchData?.data?.street,
+                            city: BranchData?.data?.city,
+                            state: BranchData?.data?.state,
+                            start_time: BranchData?.data?.start_time,
+                            end_time: BranchData?.data?.end_time,
+                        }}
                         onSubmit={handleBranchUpdate}
                         buttonText="Update"
                         handleClose={handleClose}
@@ -166,7 +175,6 @@ function AddBranch() {
                     />
                 ) : (
                     <BranchForm
-                        branch_id={branch_id}
                         destroyOnUnmount
                         enableReinitialize
                         onSubmit={handleBranchSubmit}

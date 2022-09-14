@@ -276,6 +276,11 @@ const Partner = () => {
         []
     );
 
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
     const handleStatus = useCallback((is_active, id) => {
         dispatch(actions.update_partner_status(id, { is_active: is_active }));
     }, []);
@@ -359,6 +364,7 @@ const Partner = () => {
                 </AddButton>
             </Header>
             <Filter
+                orderData={orderData}
                 state={filterSchema}
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}

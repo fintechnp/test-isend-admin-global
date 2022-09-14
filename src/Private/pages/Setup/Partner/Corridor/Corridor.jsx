@@ -10,6 +10,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import Header from "./../components/Header";
 import AddCorridor from "./AddCorridor";
 import actions from "../store/actions";
+import { Delete } from "./../../../../../App/components";
 import { CountryName, CurrencyName } from "./../../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
 
@@ -242,6 +243,12 @@ const Corridor = () => {
                             update={true}
                             update_data={row?.original}
                         />
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Remove Partner"
+                        />
                     </Box>
                 ),
             },
@@ -275,6 +282,10 @@ const Corridor = () => {
             page_size: +pageSize,
         };
         setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleDelete = (id) => {
+        dispatch(actions.delete_corridor(id));
     };
 
     return (

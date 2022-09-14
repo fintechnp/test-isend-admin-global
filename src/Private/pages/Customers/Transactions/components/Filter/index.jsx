@@ -8,7 +8,6 @@ import FormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
-// import FilterTransactions from "../Dropdown";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -28,6 +27,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
     width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -90,6 +90,7 @@ function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
         <FilterWrapper>
             <SearchBox sx={{ columnGap: 1 }}>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -101,7 +102,6 @@ function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
                         ),
                     }}
                 />
-                {/* <FilterTransactions handleFilter={handleFilter} /> */}
             </SearchBox>
 
             <DropWrapper>

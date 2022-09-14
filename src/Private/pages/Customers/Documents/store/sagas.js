@@ -10,7 +10,8 @@ export const getDocuments = takeEvery(
         try {
             const res = yield call(
                 api.get,
-                `customer/${action.customer_id}/document`
+                `customer/${action.customer_id}/document`,
+                action.query
             );
             yield put({
                 type: actions.GET_DOCUMENTS_SUCCESS,
@@ -51,7 +52,7 @@ export const uploadDocuments = takeEvery(
         try {
             const res = yield call(
                 api.post,
-                `customer/${action.customer_id}/uploaddoc`,
+                `customer/${action.customer_id}/document`,
                 action.data
             );
             yield put({
@@ -62,30 +63,6 @@ export const uploadDocuments = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPLOAD_DOCUMENTS_FAILED,
-                error: error.data,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: error?.data });
-        }
-    }
-);
-
-export const updateDocuments = takeEvery(
-    actions.UPDATE_DOCUMENTS,
-    function* (action) {
-        try {
-            const res = yield call(
-                api.put,
-                `customer/document/${action.customer_id}/${action.id}`,
-                action.data
-            );
-            yield put({
-                type: actions.UPDATE_DOCUMENTS_SUCCESS,
-                response: res,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: res });
-        } catch (error) {
-            yield put({
-                type: actions.UPDATE_DOCUMENTS_FAILED,
                 error: error.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
@@ -120,7 +97,7 @@ export const deleteDocuments = takeEvery(
         try {
             const res = yield call(
                 api.delete,
-                `customer/document/${action.id}`
+                `customer/${action.customer_id}/document/${action.id}`
             );
             yield put({
                 type: actions.DELETE_DOCUMENTS_SUCCESS,
@@ -143,7 +120,6 @@ export default function* saga() {
         getDocumentsById,
         uploadDocuments,
         updateKyc,
-        updateDocuments,
         deleteDocuments,
     ]);
 }
