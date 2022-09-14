@@ -12,7 +12,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import AddPromoSetup from "./../components/AddPromoSetup";
+import AddPromoCode from "./AddPromoCode";
 import { FormatDate } from "./../../../../../App/helpers";
 import Table, {
     TablePagination,
@@ -46,24 +46,23 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
+    fontSize: "14px",
     color: "border.main",
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
-    fontSize: "15px",
+    fontSize: "14px",
     color: "border.main",
 }));
 
 const initialState = {
     page_number: 1,
     page_size: 15,
-    // search: "",
-    sort_by: "",
+    search: "",
+    sort_by: "created_ts",
     order_by: "DESC",
 };
-
 const PromoCode = () => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
@@ -73,6 +72,9 @@ const PromoCode = () => {
         (state) => state.get_promo_code
     );
     const { loading: d_loading, success: d_success } = useSelector(
+        (state) => state.delete_promo_code
+    );
+    const { loading: i_loading, success: i_success } = useSelector(
         (state) => state.import_promo_code
     );
     const { success: a_success } = useSelector((state) => state.add_promo_code);
@@ -83,159 +85,158 @@ const PromoCode = () => {
         }
         dispatch({ type: "ADD_PROMO_CODE_RESET" });
         dispatch({ type: "PROMO_CODE_IMPORT_RESET" });
-    }, [dispatch, filterSchema, d_success, a_success]);
+        dispatch({ type: "DELETE_PROMO_CODE_RESET" });
+    }, [dispatch, filterSchema, d_success, a_success, i_success]);
 
-    const columns = useMemo(() => [
-        // {
-        //     Header: "Id",
-        //     accessor: "tid",
-        //     maxWidth: 60,
-        // },
-        // {
-        //     Header: "Code",
-        //     accessor: "code",
-        //     Cell: (data) => (
-        //         <Box
-        //             sx={{
-        //                 display: "flex",
-        //                 flexDirection: "row",
-        //                 alignItems: "center",
-        //             }}
-        //         >
-        //             <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-        //                 {data.value ? data.value : ""}
-        //             </StyledName>
-        //         </Box>
-        //     ),
-        // },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Ex. Date</Typography>
-                </Box>
-            ),
-            accessor: "expiry_date",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {data.value ? FormatDate(data.value) : ""}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        // {
-        //     Header: () => (
-        //         <Box textAlign="center">
-        //             <Typography>Multiple</Typography>
-        //         </Box>
-        //     ),
-        //     accessor: "multiple_use",
-        //     Cell: (data) => (
-        //         <Box
-        //             sx={{
-        //                 display: "flex",
-        //                 flexDirection: "column",
-        //                 alignItems: "center",
-        //             }}
-        //         >
-        //             {data.value ? (
-        //                 <Tooltip title="Multiple Use" arrow>
-        //                     <CheckCircleOutlineIcon
-        //                         sx={{ color: "success.main" }}
-        //                     />
-        //                 </Tooltip>
-        //             ) : (
-        //                 <Tooltip title="No Multiple Use" arrow>
-        //                     <RemoveCircleOutlineIcon
-        //                         sx={{ color: "border.main" }}
-        //                     />
-        //                 </Tooltip>
-        //             )}
-        //         </Box>
-        //     ),
-        // },
-        // {
-        //     Header: () => (
-        //         <Box textAlign="center" sx={{}}>
-        //             <Typography>Status</Typography>
-        //         </Box>
-        //     ),
-        //     accessor: "is_active",
-        //     width: 120,
-        //     Cell: (data) => (
-        //         <SwitchWrapper textAlign="center" sx={{}}>
-        //             <TableSwitch
-        //                 value={data?.value ? data?.value : false}
-        //                 data={data.row.original || []}
-        //                 handleStatus={handleStatus}
-        //             />
-        //         </SwitchWrapper>
-        //     ),
-        // },
-        // {
-        //     Header: () => (
-        //         <Box textAlign="center">
-        //             <Typography>Actions</Typography>
-        //         </Box>
-        //     ),
-        //     accessor: "show",
-        //     Cell: ({ row }) => (
-        //         <Box
-        //             sx={{
-        //                 display: "flex",
-        //                 flexDirection: "row",
-        //                 justifyContent: "center",
-        //             }}
-        //         >
-        //             <span {...row.getToggleRowExpandedProps({})}>
-        //                 {row.isExpanded ? (
-        //                     <Tooltip title="Hide Details" arrow>
-        //                         <IconButton>
-        //                             <VisibilityOffOutlinedIcon
-        //                                 sx={{
-        //                                     fontSize: "20px",
-        //                                     "&:hover": {
-        //                                         background: "transparent",
-        //                                     },
-        //                                 }}
-        //                             />
-        //                         </IconButton>
-        //                     </Tooltip>
-        //                 ) : (
-        //                     <Tooltip title="Show Details" arrow>
-        //                         <IconButton>
-        //                             <RemoveRedEyeOutlinedIcon
-        //                                 sx={{
-        //                                     fontSize: "20px",
-        //                                     "&:hover": {
-        //                                         background: "transparent",
-        //                                     },
-        //                                 }}
-        //                             />
-        //                         </IconButton>
-        //                     </Tooltip>
-        //                 )}
-        //             </span>
-        //             <AddPromoSetup update={true} update_data={row?.original} />
-        //             <Delete
-        //                 handleDelete={handleDelete}
-        //                 d_loading={d_loading}
-        //                 id={row.original?.tid}
-        //                 tooltext="Delete Reference Data"
-        //             />
-        //         </Box>
-        //     ),
-        // },
-    ]);
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "tid",
+                maxWidth: 60,
+            },
+            {
+                Header: "Code",
+                accessor: "code",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value ? data.value : ""}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Ex. Date</Typography>
+                    </Box>
+                ),
+                accessor: "expiry_date",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? FormatDate(data.value) : ""}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Multiple</Typography>
+                    </Box>
+                ),
+                accessor: "multiple_use",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
+                        {data.value ? (
+                            <Tooltip title="Multiple Use" arrow>
+                                <CheckCircleOutlineIcon
+                                    sx={{ color: "success.main" }}
+                                />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="No Multiple Use" arrow>
+                                <RemoveCircleOutlineIcon
+                                    sx={{ color: "border.main" }}
+                                />
+                            </Tooltip>
+                        )}
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="center" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <span {...row.getToggleRowExpandedProps({})}>
+                            {row.isExpanded ? (
+                                <Tooltip title="Hide Details" arrow>
+                                    <IconButton>
+                                        <VisibilityOffOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Show Details" arrow>
+                                    <IconButton>
+                                        <RemoveRedEyeOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </span>
+                        <Delete
+                            handleDelete={handleDelete}
+                            d_loading={d_loading}
+                            id={row.original?.tid}
+                            tooltext="Delete Promo Code"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const sortData = [
         { key: "None", value: "" },
-        { key: "Code", value: "code" },
-        { key: "Customer Id", value: "customer_id" },
-        { key: "Status", value: "is_active" },
-        { key: "Multiple Use", value: "multiple_use" },
-        { key: "Created By", value: "created_by" },
-        { key: "Created Date", value: "created_ts" },
+        { key: "Latest", value: "created_ts" },
+        { key: "Customer", value: "customer_id" },
         { key: "Expiry Date", value: "expiry_date" },
     ];
     const orderData = [
@@ -244,10 +245,14 @@ const PromoCode = () => {
     ];
 
     const sub_columns = [
-        { key: "reference_type_id", name: "Id" },
-        { key: "type_name", name: "Type Name" },
-        { key: "name", name: "Name" },
-        { key: "description", name: "Description" },
+        { name: "Id", key: "code_id" },
+        { name: "Code", key: "code" },
+        { name: "Customer Id", key: "customer_id" },
+        { name: "Status", key: "is_active" },
+        { name: "Multiple Use", key: "multiple_use" },
+        { name: "Created By", key: "created_by" },
+        { name: "Created Date", key: "created_ts" },
+        { name: "Expiry Date", key: "expiry_date" },
     ];
 
     const handleSearch = useCallback(
@@ -299,20 +304,22 @@ const PromoCode = () => {
     };
 
     const handleDelete = (d_id) => {
-        dispatch(actions.import_promo_code(d_id));
+        dispatch(actions.delete_promo_code(id, d_id));
     };
 
-    // const handleStatus = useCallback((is_active, id, p_id, promo_id) => {
-    //     dispatch(
-    //         actions.update_promo_code_status(id, promo_id, {
-    //             is_active: is_active,
-    //         })
-    //     );
-    // }, []);
+    const handleStatus = useCallback((is_active, id, p_id, promo_id) => {
+        dispatch(
+            actions.update_promo_code_status(id, promo_id, {
+                is_active: is_active,
+            })
+        );
+    }, []);
 
     return (
         <MenuContainer>
-            <Header title="Promo Code" id={id} name={name} />
+            <Header title="Promo Code" id={id} name={name} loading={i_loading}>
+                <AddPromoCode promo_id={id} />
+            </Header>
             <Filter
                 state={filterSchema}
                 sortData={sortData}

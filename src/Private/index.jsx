@@ -107,8 +107,9 @@ import {
     GetPromoSetupDetailsReducer,
     AddPromoSetupReducer,
     UpdatePromoSetupReducer,
+    DeletePromoSetupReducer,
     GetPromoCodeReducer,
-    GetPromoCodeDetailsReducer,
+    DeletePromoCodeReducer,
     AddPromoCodeReducer,
     ImportPromoCodeReducer,
     PromoSetupSaga,
@@ -355,10 +356,11 @@ export const privateReducer = {
     get_promo_setup_details: GetPromoSetupDetailsReducer,
     add_promo_setup: AddPromoSetupReducer,
     update_promo_setup: UpdatePromoSetupReducer,
+    delete_promo_setup: DeletePromoSetupReducer,
 
     //promo code
     get_promo_code: GetPromoCodeReducer,
-    get_promo_code_details: GetPromoCodeDetailsReducer,
+    delete_promo_code: DeletePromoCodeReducer,
     add_promo_code: AddPromoCodeReducer,
     import_promo_code: ImportPromoCodeReducer,
 

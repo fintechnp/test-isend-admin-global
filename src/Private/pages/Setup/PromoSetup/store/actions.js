@@ -22,14 +22,20 @@ const actions = {
     UPDATE_PROMO_SETUP_STATUS_FAILED: "UPDATE_PROMO_SETUP_STATUS_FAILED",
     UPDATE_PROMO_SETUP_STATUS_RESET: "UPDATE_PROMO_SETUP_STATUS_RESET",
 
+    DELETE_PROMO_SETUP: "DELETE_PROMO_SETUP",
+    DELETE_PROMO_SETUP_SUCCESS: "DELETE_PROMO_SETUP_SUCCESS",
+    DELETE_PROMO_SETUP_FAILED: "DELETE_PROMO_SETUP_FAILED",
+    DELETE_PROMO_SETUP_RESET: "DELETE_PROMO_SETUP_RESET",
+
     //promo codes
     GET_PROMO_CODE: "GET_PROMO_CODE",
     GET_PROMO_CODE_SUCCESS: "GET_PROMO_CODE_SUCCESS",
     GET_PROMO_CODE_FAILED: "GET_PROMO_CODE_FAILED",
 
-    GET_PROMO_CODE_DETAILS: "GET_PROMO_CODE_DETAILS",
-    GET_PROMO_CODE_DETAILS_SUCCESS: "GET_PROMO_CODE_DETAILS_SUCCESS",
-    GET_PROMO_CODE_DETAILS_FAILED: "GET_PROMO_CODE_DETAILS_FAILED",
+    DELETE_PROMO_CODE: "DELETE_PROMO_CODE",
+    DELETE_PROMO_CODE_SUCCESS: "DELETE_PROMO_CODE_SUCCESS",
+    DELETE_PROMO_CODE_FAILED: "DELETE_PROMO_CODE_FAILED",
+    DELETE_PROMO_CODE_RESET: "DELETE_PROMO_CODE_RESET",
 
     PROMO_CODE_IMPORT: "PROMO_CODE_IMPORT",
     PROMO_CODE_IMPORT_SUCCESS: "PROMO_CODE_IMPORT_SUCCESS",
@@ -73,6 +79,11 @@ const actions = {
         id,
     }),
 
+    delete_promo_setup: (promo_id) => ({
+        type: actions.DELETE_PROMO_SETUP,
+        promo_id,
+    }),
+
     //ACTION CREATOR FOR PROMO CODE
     import_promo_code: (promo_id, data) => ({
         type: actions.PROMO_CODE_IMPORT,
@@ -86,9 +97,10 @@ const actions = {
         query,
     }),
 
-    get_promo_code_details: (promo_code_id) => ({
-        type: actions.GET_PROMO_CODE_DETAILS,
+    delete_promo_code: (promo_id, promo_code_id) => ({
+        type: actions.DELETE_PROMO_CODE,
         promo_code_id,
+        promo_id,
     }),
 
     add_promo_code: (promo_id, data) => ({

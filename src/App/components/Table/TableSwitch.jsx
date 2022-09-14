@@ -22,7 +22,7 @@ function TableSwitch({ value, data, handleStatus }) {
     const handleCheck = React.useCallback(
         (status) => {
             setChecked(status);
-            handleStatus(status, data?.tid, data?.parent_id);
+            handleStatus(status, data?.tid, data?.parent_id, data?.promo_id);
         },
         [value]
     );

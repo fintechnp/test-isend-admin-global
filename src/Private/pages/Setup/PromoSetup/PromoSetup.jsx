@@ -48,13 +48,13 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
+    fontSize: "14px",
     color: "border.main",
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
-    fontSize: "15px",
+    fontSize: "14px",
     color: theme.palette.secondary.contrastText,
     textTransform: "capitalize",
 }));
@@ -63,8 +63,8 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    sort_by: "",
-    order_by: "ASC",
+    sort_by: "created_ts",
+    order_by: "DESC",
 };
 
 const PromoSetup = () => {
@@ -82,21 +82,25 @@ const PromoSetup = () => {
         (state) => state.update_promo_setup
     );
 
+    const { success: d_success } = useSelector(
+        (state) => state.delete_promo_setup
+    );
+
     useEffect(() => {
         dispatch(actions.get_promo_setup(filterSchema));
-    }, [dispatch, filterSchema, a_success, u_success]);
+    }, [dispatch, filterSchema, a_success, u_success, d_success]);
 
     const columns = useMemo(
         () => [
             {
                 Header: "Id",
                 accessor: "promo_id",
-                maxWidth: 60,
+                maxWidth: 40,
             },
             {
                 Header: "Name",
                 accessor: "name",
-                minWidth: 200,
+                minWidth: 160,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -117,7 +121,7 @@ const PromoSetup = () => {
                         <Typography>Sending Partner</Typography>
                     </Box>
                 ),
-                minWidth: 200,
+                minWidth: 160,
                 accessor: "sending_agent_id",
                 Cell: (data) => (
                     <Box>
@@ -144,10 +148,11 @@ const PromoSetup = () => {
             {
                 Header: () => (
                     <Box>
-                        <Typography>Country/Currency</Typography>
+                        <Typography>Country</Typography>
                     </Box>
                 ),
                 accessor: "payout_country",
+                width: 130,
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
@@ -176,6 +181,7 @@ const PromoSetup = () => {
                     </Box>
                 ),
                 accessor: "fee_discount",
+                width: 120,
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p" sx={{ textAlign: "right" }}>
@@ -191,6 +197,7 @@ const PromoSetup = () => {
                     </Box>
                 ),
                 accessor: "premium_rate",
+                width: 125,
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p" sx={{ textAlign: "right" }}>
@@ -292,6 +299,7 @@ const PromoSetup = () => {
 
     const sortData = [
         { key: "None", value: "" },
+        { key: "Latest", value: "created_ts" },
         { key: "Name", value: "name" },
         { key: "Fee Discount", value: "fee_discount" },
         { key: "Premium Rate", value: "premium_rate" },
@@ -361,6 +369,10 @@ const PromoSetup = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleDelete = (id) => {
+        dispatch(actions.delete_promo_setup(id));
+    };
+
     const handleStatus = useCallback((is_active, id) => {
         dispatch(
             actions.update_promo_setup_status(id, { is_active: is_active })
@@ -369,7 +381,9 @@ const PromoSetup = () => {
 
     return (
         <MenuContainer>
-            <Header title="Promo Setup" />
+            <Header title="Promo Setup">
+                <AddPromoSetup />
+            </Header>
             <Filter
                 state={filterSchema}
                 sortData={sortData}
@@ -380,6 +394,7 @@ const PromoSetup = () => {
             />
             <Table
                 columns={columns}
+                handleDelete={handleDelete}
                 title="Promo Setup Details"
                 data={PromoSetData?.data || []}
                 sub_columns={sub_columns}

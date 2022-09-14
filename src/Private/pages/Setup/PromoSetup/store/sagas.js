@@ -108,6 +108,24 @@ export const updatePromoSetupStatus = takeEvery(
     }
 );
 
+export const deletePromoSetup = takeEvery(
+    actions.DELETE_PROMO_SETUP,
+    function* (action) {
+        try {
+            const res = yield call(api.delete, `promosetup/${action.promo_id}`);
+            yield put({
+                type: actions.DELETE_PROMO_SETUP_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.DELETE_PROMO_SETUP_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 //promo code
 export const getPromoCode = takeEvery(
     actions.GET_PROMO_CODE,
@@ -131,21 +149,21 @@ export const getPromoCode = takeEvery(
     }
 );
 
-export const getPromoCodeDetails = takeEvery(
-    actions.GET_PROMO_CODE_DETAILS,
+export const deletePromoCode = takeEvery(
+    actions.DELETE_PROMO_CODE,
     function* (action) {
         try {
             const res = yield call(
-                api.get,
-                `promocode/${action.promo_code_id}`
+                api.delete,
+                `${action.promo_id}/promocode/${action.promo_code_id}`
             );
             yield put({
-                type: actions.GET_PROMO_CODE_DETAILS_SUCCESS,
+                type: actions.DELETE_PROMO_CODE_SUCCESS,
                 response: res,
             });
         } catch (error) {
             yield put({
-                type: actions.GET_PROMO_CODE_DETAILS_FAILED,
+                type: actions.DELETE_PROMO_CODE_FAILED,
                 error: error.data,
             });
         }
@@ -231,8 +249,9 @@ export default function* saga() {
         addPromoSetup,
         updatePromoSetup,
         updatePromoSetupStatus,
+        deletePromoSetup,
         getPromoCode,
-        getPromoCodeDetails,
+        deletePromoCode,
         addPromoCode,
         importPromoCode,
         updatePromoCodeStatus,
