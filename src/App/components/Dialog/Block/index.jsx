@@ -70,7 +70,6 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
 function BlockDialog({ loading, handleSubmit, status, name, remark, ...rest }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    console.log(rest, "dfdf");
 
     const handleClickOpen = () => {
         setOpen(true);

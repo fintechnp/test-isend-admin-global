@@ -124,7 +124,7 @@ const PartnerBank = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -138,7 +138,9 @@ const PartnerBank = () => {
                 accessor: "external_bank_code",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -165,7 +167,7 @@ const PartnerBank = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : ""}
                         </StyledText>
                         <Typography
                             sx={{
@@ -174,7 +176,9 @@ const PartnerBank = () => {
                                 lineHeight: 1,
                             }}
                         >
-                            {CurrencyName(data?.row?.original?.currency)}
+                            {data?.row?.original?.currency
+                                ? CurrencyName(data?.row?.original?.currency)
+                                : ""}
                         </Typography>
                     </Box>
                 ),

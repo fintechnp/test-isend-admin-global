@@ -9,7 +9,7 @@ import Image from "./components/Image";
 import LargeImage from "./components/LargeImage";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import { FormatDate } from "./../../../../App/helpers";
+import { FormatDate, ReferenceName } from "./../../../../App/helpers";
 import { Delete } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
@@ -100,7 +100,15 @@ function Documents() {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data?.value : ""}
+                            {data?.value ? ReferenceName(2, data?.value) : ""}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{ fontSize: "13px", opacity: 0.9 }}
+                        >
+                            {data?.row.original?.side
+                                ? ReferenceName(48, data?.row.original?.side)
+                                : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -117,7 +125,7 @@ function Documents() {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data?.value : ""}
+                            {data?.value ? data?.value : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -188,6 +196,7 @@ function Documents() {
                         }}
                     >
                         <LargeImage
+                            side={row.original.side}
                             title={row.original.type}
                             image={row.original?.document}
                         />

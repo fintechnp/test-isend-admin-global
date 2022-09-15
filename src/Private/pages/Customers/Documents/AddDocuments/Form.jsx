@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
+import { Field, Form, change, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
@@ -10,6 +10,7 @@ import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
 import ImageUploadField from "../../../../../App/components/Fields/ImageUploadField";
 import Validator from "../../../../../App/utils/validators";
+import { useDispatch } from "react-redux";
 
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
@@ -58,10 +59,14 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
+    const dispatch = useDispatch();
     const [image, setImage] = useState([]);
     const reference = JSON.parse(localStorage.getItem("reference"));
 
-    const handleOnDrop = (img) => setImage(img);
+    const handleOnDrop = (img) => {
+        setImage(img);
+        dispatch(change("add_documents_form", "format", img[0].type));
+    };
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -114,6 +119,51 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                         ))}
                             </Field>
                         </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="side"
+                                label="Side"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            >
+                                <option value="" disabled>
+                                    Select Type
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data.reference_type === 48
+                                        )[0]
+                                        .reference_data.map((data) => (
+                                            <option
+                                                value={data.value}
+                                                key={data.reference_id}
+                                            >
+                                                {data.name}
+                                            </option>
+                                        ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="format"
+                                label="Format"
+                                type="text"
+                                small={12}
+                                disabled
+                                component={TextField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
+                            />
+                        </FieldWrapper>
                         <FieldWrapper item xs={12}>
                             <Field
                                 name="document"
@@ -123,7 +173,11 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 imagefile={image}
                                 handleOnDrop={handleOnDrop}
                                 component={ImageUploadField}
-                                validate={Validator.imageValidator}
+                                // validate={Validator.imageValidator}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.imageValidator,
+                                ]}
                             />
                         </FieldWrapper>
                     </FormWrapper>

@@ -19,7 +19,6 @@ export const refreshToken = takeEvery(
                 action.data,
                 headers
             );
-            console.log(res, "the resfresh tokken");
             yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
             Cookies.set("token", res.token);
             Cookies.set("refreshToken", res.refresh_token);

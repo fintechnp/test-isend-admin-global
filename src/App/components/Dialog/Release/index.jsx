@@ -70,7 +70,6 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
 function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    console.log(id, "tghis ids");
 
     React.useEffect(() => {
         if (id) {

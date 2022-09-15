@@ -83,7 +83,6 @@ function AddBranch() {
     };
 
     const handleBranchUpdate = (data) => {
-        console.log(data, "hhdsfhsupdate");
         dispatch(actions.update_branch(branch_id, data));
     };
 

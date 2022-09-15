@@ -126,7 +126,7 @@ const Corridor = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -140,7 +140,9 @@ const Corridor = () => {
                 accessor: "agent_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -154,7 +156,7 @@ const Corridor = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -169,7 +171,7 @@ const Corridor = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CurrencyName(data.value)}
+                            {data.value ? CurrencyName(data.value) : ""}
                         </StyledText>
                     </Box>
                 ),

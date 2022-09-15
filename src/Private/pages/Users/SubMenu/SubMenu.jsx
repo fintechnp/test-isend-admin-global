@@ -98,7 +98,7 @@ const SubMenu = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -112,7 +112,9 @@ const SubMenu = () => {
                 accessor: "menu_order",
                 Cell: (data) => (
                     <Box textAlign="center">
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },

@@ -156,7 +156,7 @@ const PayoutLocation = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : ""}
                         </StyledText>
                         <Typography
                             sx={{

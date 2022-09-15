@@ -96,7 +96,7 @@ const ReferenceData = () => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
+                        {data.value ? data.value : "n/a"}
                     </StyledName>
                 </Box>
             ),
@@ -110,7 +110,9 @@ const ReferenceData = () => {
             accessor: "value",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? data.value : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -123,7 +125,9 @@ const ReferenceData = () => {
             accessor: "description",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? data.value : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },

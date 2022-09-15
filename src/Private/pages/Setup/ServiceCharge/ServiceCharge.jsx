@@ -76,7 +76,7 @@ const ServiceCharge = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data?.row?.index + 1}
+                            {data?.row?.index ? data?.row?.index + 1 : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -95,7 +95,7 @@ const ServiceCharge = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),

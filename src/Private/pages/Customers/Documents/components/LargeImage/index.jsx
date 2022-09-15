@@ -12,6 +12,7 @@ import MuiIconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import FitScreenOutlinedIcon from "@mui/icons-material/FitScreenOutlined";
 import SettingsOverscanIcon from "@mui/icons-material/SettingsOverscan";
+import { ReferenceName } from "./../../../../../../App/helpers";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-paper": {
@@ -111,7 +112,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function LargeImage({ image, title }) {
+function LargeImage({ image, side, title }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -149,7 +150,7 @@ function LargeImage({ image, title }) {
                     id="customized-dialog-title"
                     onClose={handleClose}
                 >
-                    {title}
+                    {ReferenceName(2, title)} [{ReferenceName(48, side)}]
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <ImageWrapper>

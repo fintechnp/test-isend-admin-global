@@ -9,12 +9,18 @@ const validators = {
         return undefined;
     },
     imageValidator: (value) => {
-        console.log(value, "image");
-        if (!value) {
-            return "This field is required";
+        if (
+            value &&
+            value.type !== "image/jpeg" &&
+            value.type !== "image/png"
+        ) {
+            return "Upload Png or Jpeg format only";
         }
-        if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-            return "Invalid email address";
+        if (value && value.size < 50000) {
+            return "Must be greater than 50Kb";
+        }
+        if (value && value.type > 5000000) {
+            return "Must be less than 5Mb";
         }
         return undefined;
     },

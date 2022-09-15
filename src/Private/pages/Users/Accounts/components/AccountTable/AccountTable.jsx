@@ -120,7 +120,7 @@ function AccountTable() {
                             {/* {data?.value.split(" ")[1][0]} */}
                         </Avatar>
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -134,7 +134,9 @@ function AccountTable() {
                 accessor: "user_type",
                 Cell: (data) => (
                     <Box textAlign="center">
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -143,7 +145,9 @@ function AccountTable() {
                 accessor: "phone_number",
                 Cell: (data) => (
                     <>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </>
                 ),
             },
@@ -153,7 +157,9 @@ function AccountTable() {
                 maxWidth: 250,
                 Cell: (data) => (
                     <>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </>
                 ),
             },
@@ -316,7 +322,7 @@ function AccountTable() {
     };
 
     const handleForgotPassword = (email) => {
-        dispatch(actions.forgot_password({email: email}));
+        dispatch(actions.forgot_password({ email: email }));
     };
 
     return (

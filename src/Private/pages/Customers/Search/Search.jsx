@@ -160,8 +160,10 @@ function Search() {
                     >
                         <StyledName component="p">
                             {data.value && data.value}{" "}
-                            {data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name}
+                            {data?.row?.original?.middle_name &&
+                                data?.row?.original?.middle_name}{" "}
+                            {data?.row?.original?.last_name &&
+                                data?.row?.original?.last_name}
                         </StyledName>
                         <StyledName
                             component="p"

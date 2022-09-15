@@ -116,9 +116,11 @@ const ServiceChargeList = () => {
                                 lineHeight: 1,
                             }}
                         >
-                            {CurrencyName(
-                                data?.row?.original?.receiving_currency
-                            )}
+                            {data?.row?.original?.receiving_currency
+                                ? CurrencyName(
+                                      data?.row?.original?.receiving_currency
+                                  )
+                                : ""}
                         </Typography>
                     </Box>
                 ),
@@ -135,7 +137,7 @@ const ServiceChargeList = () => {
                 Cell: (data) => (
                     <Box sx={{ textAlign: "center" }}>
                         <StyledText component="p">
-                            {ReferenceName(37, data.value)}
+                            {data.value ? ReferenceName(37, data.value) : ""}
                         </StyledText>
                         <Typography
                             component="p"
@@ -145,10 +147,12 @@ const ServiceChargeList = () => {
                                 lineHeight: 1,
                             }}
                         >
-                            {ReferenceName(
-                                1,
-                                data?.row?.original?.payment_type
-                            )}
+                            {data?.row?.original?.payment_type
+                                ? ReferenceName(
+                                      1,
+                                      data?.row?.original?.payment_type
+                                  )
+                                : ""}
                         </Typography>
                     </Box>
                 ),
