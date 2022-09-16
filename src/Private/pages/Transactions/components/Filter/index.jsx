@@ -85,7 +85,7 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
+function Filter({ handleSearch, handleSort, handleOrder }) {
     return (
         <FilterWrapper>
             <SearchBox sx={{ columnGap: 1 }}>
@@ -101,7 +101,6 @@ function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
                         ),
                     }}
                 />
-                {/* <FilterTransactions handleFilter={handleFilter} /> */}
             </SearchBox>
 
             <DropWrapper>
