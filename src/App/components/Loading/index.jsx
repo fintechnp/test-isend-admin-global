@@ -22,7 +22,15 @@ const Loader = styled(Box)(({ theme }) => ({
     justifyContent: "center",
 }));
 
-function Loading({ loading, box }) {
+const LoginLoader = styled(Box)(({ theme }) => ({
+    height: "96vh",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+}));
+
+function Loading({ loading, box, login_loading }) {
     if (box && loading) {
         return (
             <BoxLoader>
@@ -32,8 +40,15 @@ function Loading({ loading, box }) {
     } else if (loading) {
         return (
             <Loader>
-                <CircularProgress size={20} sx={{color: "border.main"}} />
+                <CircularProgress size={20} sx={{ color: "primary.main" }} />
             </Loader>
+        );
+    } else if (login_loading) {
+        return (
+            <LoginLoader>
+                <CircularProgress size={40} sx={{ color: "primary.main" }} />
+                <p>Loading...</p>
+            </LoginLoader>
         );
     } else {
         return <></>;

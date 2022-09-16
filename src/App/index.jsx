@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
@@ -18,6 +18,10 @@ injectStore(store);
 
 const App = () => {
     const [mode, setMode] = React.useState(true);
+
+    useEffect(() => {
+
+    }, []);
 
     return (
         <ThemeProvider theme={ChangeTheme(mode)}>
