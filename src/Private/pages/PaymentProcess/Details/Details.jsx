@@ -464,6 +464,26 @@ function Details({ data }) {
                     </Grid>
                 </Grid>
             </Grid>
+            {data?.compliance_msg && (
+                <>
+                    <Grid item xs={12}>
+                        <Box>
+                            <Header>Compliance Message</Header>
+                            <Divider />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InfoWrapper>
+                            <LabelWrapper>Message:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.compliance_msg
+                                    ? data?.compliance_msg
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                </>
+            )}
             <Grid item xs={12}>
                 <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
                     <BottomButton

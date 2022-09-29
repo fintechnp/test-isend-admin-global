@@ -82,7 +82,7 @@ const DailyTransactions = () => {
             {
                 Header: "Name",
                 accessor: "customer_name",
-                maxWidth: 140,
+                width: 130,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -108,7 +108,7 @@ const DailyTransactions = () => {
             {
                 Header: "C/B Id",
                 accessor: "customer_id",
-                maxWidth: 120,
+                width: 100,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -223,7 +223,7 @@ const DailyTransactions = () => {
                     </Box>
                 ),
                 accessor: "payout_cost_rate",
-                maxWidth: 80,
+                width: 80,
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
@@ -239,7 +239,7 @@ const DailyTransactions = () => {
                     </Box>
                 ),
                 accessor: "transfer_amount",
-                maxWidth: 80,
+                width: 80,
                 Cell: (data) => (
                     <Box
                         sx={{

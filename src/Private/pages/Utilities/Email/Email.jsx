@@ -3,13 +3,12 @@ import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import CreateEmail from "./CreateEmail";
+import ViewMail from "./ViewMail";
 import { Delete } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 import { FormatDate } from "./../../../../App/helpers";
@@ -28,13 +27,13 @@ const EmailContainer = styled("div")(({ theme }) => ({
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.border.dark,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.border.dark,
 }));
 
 const Text = styled(Typography)(({ theme }) => ({
@@ -42,7 +41,7 @@ const Text = styled(Typography)(({ theme }) => ({
     width: "100%",
     display: "block",
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.border.dark,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -137,21 +136,21 @@ const Email = () => {
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Body</Typography>
-                    </Box>
-                ),
-                accessor: "email_body",
-                Cell: (data) => (
-                    <Box>
-                        <Text component="span">
-                            {data?.value ? data?.value : "N/A"}
-                        </Text>
-                    </Box>
-                ),
-            },
+            // {
+            //     Header: () => (
+            //         <Box textAlign="left" sx={{}}>
+            //             <Typography>Body</Typography>
+            //         </Box>
+            //     ),
+            //     accessor: "email_body",
+            //     Cell: (data) => (
+            //         <Box>
+            //             <Text component="span">
+            //                 {data?.value ? data?.value : "N/A"}
+            //             </Text>
+            //         </Box>
+            //     ),
+            // },
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -200,35 +199,7 @@ const Email = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
-                                <Tooltip title="Hide Email Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Email Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </span>
+                        <ViewMail id={row.original.tid} />
                         <Delete
                             id={row.original.tid}
                             handleDelete={handleDelete}
@@ -327,8 +298,7 @@ const Email = () => {
             <Table
                 columns={columns}
                 data={EmailData?.data || []}
-                title="SMS Details"
-                sub_columns={sub_columns}
+                title="Email Details"
                 loading={l_loading}
                 rowsPerPage={8}
                 renderPagination={() => (

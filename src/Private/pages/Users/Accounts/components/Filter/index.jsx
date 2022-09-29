@@ -24,9 +24,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "65%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -79,6 +80,7 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -122,14 +124,18 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                             }}
                         >
                             <MenuItem value="">All</MenuItem>
-                            {reference?.filter((ref_data) => ref_data.reference_type === 55)[0]?.reference_data.map((type) => (
-                                <MenuItem
-                                    value={type.value}
-                                    key={type.value}
-                                >
-                                    {type.value}
-                                </MenuItem>
-                            ))}
+                            {reference
+                                ?.filter(
+                                    (ref_data) => ref_data.reference_type === 55
+                                )[0]
+                                ?.reference_data.map((type) => (
+                                    <MenuItem
+                                        value={type.value}
+                                        key={type.value}
+                                    >
+                                        {type.value}
+                                    </MenuItem>
+                                ))}
                         </Select>
                     </FormControl>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>

@@ -53,7 +53,7 @@ const initialState = {
     payment_type: "",
     from_date: "",
     to_date: "",
-    sort_by: "created_ts",
+    sort_by: "",
     order_by: "DESC",
 };
 
