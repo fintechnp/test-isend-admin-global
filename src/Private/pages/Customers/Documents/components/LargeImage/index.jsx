@@ -15,6 +15,9 @@ import SettingsOverscanIcon from "@mui/icons-material/SettingsOverscan";
 import { ReferenceName } from "./../../../../../../App/helpers";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         minWidth: "70%",
         [theme.breakpoints.down("md")]: {

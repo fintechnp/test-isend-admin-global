@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
 
 import actions from "./../store/actions";
 import Header from "./../components/Header";
@@ -22,13 +21,6 @@ const EmailContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
-}));
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: theme.palette.border.dark,
-    "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
@@ -100,7 +92,10 @@ const Email = () => {
                 accessor: "email_by",
                 Cell: (data) => (
                     <Box>
-                        <Tooltip title={data.value} arrow>
+                        <Tooltip
+                            title={data.value ? data.value : "empty"}
+                            arrow
+                        >
                             <Text component="span">
                                 {data.value ? data.value : "N/A"}
                             </Text>
@@ -113,7 +108,10 @@ const Email = () => {
                 accessor: "email_to",
                 Cell: (data) => (
                     <Box>
-                        <Tooltip title={data.value} arrow>
+                        <Tooltip
+                            title={data.value ? data.value : "empty"}
+                            arrow
+                        >
                             <Text component="span">
                                 {data.value ? data.value : "N/A"}
                             </Text>

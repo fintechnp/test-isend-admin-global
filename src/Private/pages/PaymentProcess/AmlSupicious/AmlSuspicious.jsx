@@ -218,15 +218,18 @@ const AmlSuspicious = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <Typography>Date</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
                 Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
+                    <Box textAlign="center" sx={{}}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", textAlign: "center" }}
+                        >
+                            {data.value ? FormatDate(data.value) : ""}
                         </StyledName>
                     </Box>
                 ),

@@ -19,6 +19,9 @@ import actions from "./../../store/actions";
 import { Box } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
     },

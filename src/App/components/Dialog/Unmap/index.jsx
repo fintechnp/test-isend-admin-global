@@ -12,6 +12,9 @@ import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 import CableIcon from "@mui/icons-material/Cable";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "600px",
     },

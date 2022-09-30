@@ -7,10 +7,11 @@ import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
 
 import TextField from "../../../../../App/components/Fields/TextField";
+import CkEditorField from "../../../../../App/components/Fields/CkEditorField";
 import Validator from "../../../../../App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
-    maxWidth: "900px",
+    width: "100%",
     borderRadius: "5px",
     [theme.breakpoints.up("sm")]: {
         minWidth: "350px",
@@ -97,39 +98,6 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="email_subject"
-                                label="Subject"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email_body"
-                                label="Body"
-                                type="text"
-                                small={12}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
                                 name="email_cc"
                                 label="Cc"
                                 type="text"
@@ -152,6 +120,37 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                     autoComplete: "new-password",
                                 }}
                                 validate={Validator.maxLength100}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12}>
+                            <Field
+                                name="email_subject"
+                                label="Subject"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                                inputProps={{
+                                    autoComplete: "new-password",
+                                }}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                    Validator.maxLength100,
+                                ]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12}>
+                            <Field
+                                name="email_body"
+                                label="Body"
+                                placeholder="Write mail..."
+                                type="text"
+                                small={12}
+                                component={CkEditorField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
                             />
                         </FieldWrapper>
                     </FormWrapper>

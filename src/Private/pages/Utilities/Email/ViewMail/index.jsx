@@ -2,7 +2,6 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -18,8 +17,11 @@ import View from "./View";
 import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
-        width: "80%",
+        minWidth: "75%",
         minHeight: "300px",
         [theme.breakpoints.down("md")]: {
             width: "90%",

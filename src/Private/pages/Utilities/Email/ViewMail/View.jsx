@@ -42,6 +42,17 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
+const EmailBody = styled(Box)(({ theme }) => ({
+    width: "100%",
+    opacitLy: 0.8,
+    padding: "8px",
+    fontSize: "15px",
+    marginBottom: "8px",
+    wordBreak: "break-all",
+    color: theme.palette.text.main,
+    background: theme.palette.background.light,
+}));
+
 function Details({ data, loading }) {
     if (loading) {
         return (
@@ -118,9 +129,10 @@ function Details({ data, loading }) {
             <Grid item xs={12}>
                 <InfoWrapper>
                     <LabelWrapper>Body:</LabelWrapper>
-                    <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                        {data?.email_body ? data?.email_body : "N/A"}
-                    </ValueWrapper>
+                    <EmailBody
+                        sx={{ wordBreak: "break-all" }}
+                        dangerouslySetInnerHTML={{ __html: data?.email_body }}
+                    />
                 </InfoWrapper>
             </Grid>
         </Container>

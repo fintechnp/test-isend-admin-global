@@ -19,6 +19,9 @@ import AccountForm from "./Form";
 import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
     },

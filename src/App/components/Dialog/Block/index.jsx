@@ -17,6 +17,9 @@ import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
 
 const BootstrapDialog = styled(Dialog)(({ theme, value }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         width: value ? "90%" : "60%",
         [theme.breakpoints.up("md")]: {
