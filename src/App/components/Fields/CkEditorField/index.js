@@ -18,6 +18,12 @@ const Label = styled(Typography)(({ theme }) => ({
     color: theme.palette.secondary.contrastText,
 }));
 
+const CKEditorWrapper = styled(CKEditor)(({ theme }) => ({
+    "& .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused)": {
+        minHeight: "300px !important",
+    },
+}));
+
 const editorConfiguration = {
     toolbar: {
         items: [
@@ -50,11 +56,15 @@ const editorConfiguration = {
             "redo",
         ],
     },
+    ui: {
+        minHeight: 300,
+    },
 };
 
 const TextField = ({
     label,
     input,
+    height,
     showLabel,
     placeholder,
     small,
@@ -62,7 +72,7 @@ const TextField = ({
     defaultValue,
     inputProps,
     InputProps,
-    meta: { touched, invalid, error },
+    meta: { touched, error },
     ...rest
 }) => {
     return (
@@ -73,11 +83,31 @@ const TextField = ({
                 </Grid>
             )}
             <Grid item xs={12} md={small ? small : 8}>
-                <CKEditor
-                    style={{ minHeight: "400px" }}
+                <CKEditorWrapper
                     editor={ClassicEditor}
                     config={editorConfiguration}
                     data={`<p>${placeholder}</p>`}
+                    onReady={(editor) => {
+                        editor.ui.view.editable.element.style.minHeight = `${height}`;
+                    }}
+                    onBlur={(event, editor) => {
+                        editor.editing.view.change((writer) => {
+                            writer.setStyle(
+                                "height",
+                                `${height}`,
+                                editor.editing.view.document.getRoot()
+                            );
+                        });
+                    }}
+                    onFocus={(event, editor) => {
+                        editor.editing.view.change((writer) => {
+                            writer.setStyle(
+                                "height",
+                                `${height}`,
+                                editor.editing.view.document.getRoot()
+                            );
+                        });
+                    }}
                     onChange={(event, editor) => {
                         const data = editor.getData();
                         input.onChange(data);

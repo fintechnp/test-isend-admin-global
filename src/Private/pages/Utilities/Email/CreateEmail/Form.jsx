@@ -146,6 +146,7 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 placeholder="Write mail..."
                                 type="text"
                                 small={12}
+                                height="100px"
                                 component={CkEditorField}
                                 validate={[
                                     Validator.emptyValidator,

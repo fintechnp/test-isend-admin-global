@@ -361,6 +361,7 @@ function Search() {
                             </IconButton>
                         </Tooltip>
                         <Block
+                            id={data?.row.original.tid}
                             name="Customer"
                             destroyOnUnmount
                             enableReinitialize
@@ -372,14 +373,14 @@ function Search() {
                             }}
                             onSubmit={handleBlock}
                             loading={b_loading}
-                            form={`block_form_customer`}
+                            form={`block_form_customer${data?.row.original.tid}`}
                             status={data?.row?.original?.is_active}
                         />
                     </Box>
                 ),
             },
         ],
-        [handleBlock]
+        [handleBlock, b_loading]
     );
 
     const sortData = [
