@@ -57,6 +57,7 @@ const ServiceChargeDetails = lazy(() =>
 );
 const PromoSetup = lazy(() => import("../pages/Setup/PromoSetup"));
 const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
+const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -220,6 +221,10 @@ const privateRoutes = [
     {
         path: "/setup/promo-code/:name/:id",
         component: <PromoCode />,
+    },
+    {
+        path: "/setup/api-configuration",
+        component: <ApiConfiguration />,
     },
 
     //Customers

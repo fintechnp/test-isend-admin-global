@@ -4,7 +4,7 @@ import { Typography, Box, Grid, Tooltip } from "@mui/material";
 import MuiButton from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import Collapse from "@mui/material/Collapse";
-import LockResetIcon from '@mui/icons-material/LockReset';
+import LockResetIcon from "@mui/icons-material/LockReset";
 
 import Delete from "./../Dialog/Delete";
 
@@ -92,6 +92,7 @@ function SubComponent({
                                                 opacity: 0.6,
                                                 fontSize: "14px",
                                                 lineHeight: 1.2,
+                                                wordWrap: "break-word",
                                             }}
                                         >
                                             {sub_data[col.key]}

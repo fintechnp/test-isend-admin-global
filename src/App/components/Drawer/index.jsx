@@ -63,7 +63,8 @@ const closedMixin = (theme) => ({
     background: theme.palette.primary.main,
     [theme.breakpoints.up("sm")]: {
         padding: "8px",
-        width: theme.spacing(8), 
+        paddingTop: "0px",
+        width: theme.spacing(8),
     },
 });
 

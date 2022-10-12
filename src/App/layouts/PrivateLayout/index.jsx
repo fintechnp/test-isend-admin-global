@@ -120,6 +120,12 @@ const PrivateLayout = () => {
                         text: "Promo Setup",
                         sub: false,
                     },
+                    {
+                        path: "/setup/api-configuration",
+                        key: "api-configuration",
+                        text: "API Configuration",
+                        sub: false,
+                    },
                 ],
             },
 

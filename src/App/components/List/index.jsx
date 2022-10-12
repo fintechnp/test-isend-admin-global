@@ -10,7 +10,6 @@ import { AuthContext } from "../../auth";
 const List = styled(MuiList)(({ theme, open }) => ({
     ...(open && {
         padding: "8px",
-        // margin: "0px 4px",
     }),
     ...(!open && {
         margin: "0px",

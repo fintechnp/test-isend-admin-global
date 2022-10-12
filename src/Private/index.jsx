@@ -123,6 +123,14 @@ import {
 } from "./pages/Setup/PromoSetup/store";
 
 import {
+    GetApiConfigReducer,
+    GetApiConfigDetailsReducer,
+    AddApiConfigReducer,
+    UpdateApiConfigReducer,
+    ApiConfigSaga,
+} from "./pages/Setup/ApiConfiguration/store";
+
+import {
     GetAllExchangeRateReducer,
     GetExchangeRateByPartnerReducer,
     GetExchangeRateDetailsReducer,
@@ -401,6 +409,12 @@ export const privateReducer = {
     update_payment_rules_status: UpdatePaymentRulesStatusReducer,
     delete_payment_rules: DeletePaymentRulesReducer,
 
+    //api config
+    get_api_config: GetApiConfigReducer,
+    get_api_config_details: GetApiConfigDetailsReducer,
+    add_api_config: AddApiConfigReducer,
+    update_api_config: UpdateApiConfigReducer,
+
     //Customer
     get_customers: GetCustomersReducer,
     get_customers_by_partner: GetCustomerByPartnersReducer,
@@ -505,6 +519,7 @@ export const privateSaga = [
     PromoSetupSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
+    ApiConfigSaga(),
     CustomersSaga(),
     DocumentsCustomerSaga(),
     RemarksCustomerSaga(),
