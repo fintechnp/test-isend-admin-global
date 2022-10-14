@@ -12,7 +12,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 
 import actions from "./../../../Common/store/actions";
-import { FormatDate } from "./../../../App/helpers";
+import { FormatDate, FormatDateTime } from "./../../../App/helpers";
 
 const DetailWrapper = styled(Grid)(({ theme }) => ({
     padding: "8px 16px 16px 16px",
@@ -38,8 +38,8 @@ const NameBox = styled(Box)(({ theme }) => ({
 }));
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
-    width: 18,
-    height: 18,
+    width: 8,
+    height: 8,
     border: `1px solid ${theme.palette.primary.contrastText}`,
 }));
 
@@ -226,14 +226,6 @@ function MyAccount() {
                                 vertical: "bottom",
                                 horizontal: "left",
                             }}
-                            badgeContent={
-                                <SmallAvatar
-                                    alt="flag iso3"
-                                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
-                                        UserData?.data?.country_iso2 || "US"
-                                    }.svg`}
-                                />
-                            }
                         >
                             <Avatar
                                 {...stringAvatar(
@@ -294,7 +286,7 @@ function MyAccount() {
             <Grid item xs={12} sm={6}>
                 <RenderField
                     label="Last Login"
-                    value={FormatDate(UserData?.data?.last_login_ts)}
+                    value={FormatDateTime(UserData?.data?.last_login_ts)}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>

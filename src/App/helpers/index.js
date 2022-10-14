@@ -63,6 +63,15 @@ export const FormatDate = (date) => {
     }
 };
 
+export const FormatDateTime = (date) => {
+    if (date) {
+        const newDate = new Date(date);
+        return format(newDate, "MMM dd yyyy, h: m a");
+    } else {
+        return "N/A";
+    }
+};
+
 export const FormatNumber = (value) => {
     if (value) {
         return (
