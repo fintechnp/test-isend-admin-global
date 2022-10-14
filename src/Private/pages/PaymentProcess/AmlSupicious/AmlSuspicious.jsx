@@ -53,7 +53,7 @@ const initialState = {
     payment_type: "",
     from_date: "",
     to_date: "",
-    sort_by: "created_ts",
+    sort_by: "",
     order_by: "DESC",
 };
 
@@ -100,13 +100,15 @@ const AmlSuspicious = () => {
                                 textTransform: "capitalize",
                             }}
                         >
-                            {data.value}
+                            {data.value ? data.value : ""}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.beneficiary_name}
+                            {data?.row?.original?.beneficiary_name
+                                ? data?.row?.original?.beneficiary_name
+                                : ""}
                         </Typography>
                     </Box>
                 ),
@@ -136,7 +138,9 @@ const AmlSuspicious = () => {
                             component="p"
                             sx={{ paddingLeft: "4px", fontSize: "13px" }}
                         >
-                            {data?.row?.original?.payout_agent_name}
+                            {data?.row?.original?.payout_agent_name
+                                ? data?.row?.original?.payout_agent_name
+                                : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -157,13 +161,17 @@ const AmlSuspicious = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
+                            {data.value ? CurrencyName(data.value) : ""}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {CurrencyName(data?.row?.original?.payout_currency)}
+                            {data?.row?.original?.payout_currency
+                                ? CurrencyName(
+                                      data?.row?.original?.payout_currency
+                                  )
+                                : ""}
                         </Typography>
                     </Box>
                 ),
@@ -218,15 +226,18 @@ const AmlSuspicious = () => {
             },
             {
                 Header: () => (
-                    <Box textAlign="left" sx={{}}>
+                    <Box textAlign="center" sx={{}}>
                         <Typography>Date</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
                 Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
+                    <Box textAlign="center" sx={{}}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", textAlign: "center" }}
+                        >
+                            {data.value ? FormatDate(data.value) : ""}
                         </StyledName>
                     </Box>
                 ),

@@ -28,6 +28,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
     width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -85,11 +86,12 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
+function Filter({ handleSearch, handleSort, handleOrder }) {
     return (
         <FilterWrapper>
             <SearchBox sx={{ columnGap: 1 }}>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -101,7 +103,6 @@ function Filter({ handleSearch, handleSort, handleOrder, handleFilter }) {
                         ),
                     }}
                 />
-                {/* <FilterTransactions handleFilter={handleFilter} /> */}
             </SearchBox>
 
             <DropWrapper>

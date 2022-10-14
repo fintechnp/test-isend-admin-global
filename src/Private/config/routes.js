@@ -32,6 +32,12 @@ const PartnerDetails = lazy(() =>
     import("../pages/Setup/Partner/PartnerDetails")
 );
 const Corridor = lazy(() => import("../pages/Setup/Partner/Corridor"));
+const PartnerBranch = lazy(() =>
+    import("../pages/Setup/Partner/PartnerBranch")
+);
+const AddPartnerBranch = lazy(() =>
+    import("../pages/Setup/Partner/PartnerBranch/AddBranch")
+);
 const PartnerBank = lazy(() => import("../pages/Setup/PartnerBank"));
 const MapBank = lazy(() => import("../pages/Setup/PartnerBank/MapBank"));
 const PayoutLocation = lazy(() => import("../pages/Setup/PayoutLocation"));
@@ -51,6 +57,7 @@ const ServiceChargeDetails = lazy(() =>
 );
 const PromoSetup = lazy(() => import("../pages/Setup/PromoSetup"));
 const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
+const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -172,7 +179,16 @@ const privateRoutes = [
     { path: "/setup/partner/create", component: <AddUpdatePartner /> },
     { path: "/setup/partner/update/:id", component: <AddUpdatePartner /> },
     { path: "/setup/partner/details/:id", component: <PartnerDetails /> },
-    { path: "/setup/partner/corridor/:id", component: <Corridor /> },
+    { path: "/setup/partner/corridor/:name/:id", component: <Corridor /> },
+    { path: "/setup/partner/branch/:name/:id", component: <PartnerBranch /> },
+    {
+        path: "/setup/partner/branch/add/:agent_id",
+        component: <AddPartnerBranch />,
+    },
+    {
+        path: "/setup/partner/branch/update/:agent_id/:branch_id",
+        component: <AddPartnerBranch />,
+    },
     { path: "/setup/partner-bank", component: <PartnerBank /> },
     {
         path: "/setup/partner-bank/map/:payment/:country/:currency/:id",
@@ -205,6 +221,10 @@ const privateRoutes = [
     {
         path: "/setup/promo-code/:name/:id",
         component: <PromoCode />,
+    },
+    {
+        path: "/setup/api-configuration",
+        component: <ApiConfiguration />,
     },
 
     //Customers

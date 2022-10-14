@@ -1,4 +1,4 @@
-import actions from "../actions";
+import actions from "../../actions";
 
 const initialState = {
     success: false,
@@ -9,27 +9,26 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.UPDATE_PARTNER:
+        case actions.DELETE_PARTNER:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.UPDATE_PARTNER_SUCCESS:
+        case actions.DELETE_PARTNER_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.UPDATE_PARTNER_FAILED:
+        case actions.DELETE_PARTNER_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
-                response: [],
-                error: true,
+                error: action.error,
             };
-        case actions.UPDATE_PARTNER_RESET:
+        case actions.DELETE_PARTNER_RESET:
             return {
                 success: false,
                 loading: false,

@@ -10,12 +10,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
 
 function ImageCard({ document }) {
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 320 }}>
             <CardMedia
                 component="img"
-                height="140"
-                // image={document}
-                image={`https://images.unsplash.com/photo-1635859890085-ec8cb5466806?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80`}
+                height="120"
+                image={document}
                 alt="document image"
             />
         </Card>

@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { Grid, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import MuiTextareaAutosize from "@mui/material/TextareaAutosize";
 import MuiFormControl from "@mui/material/FormControl";
 import { renderFromHelper } from "../helpers";

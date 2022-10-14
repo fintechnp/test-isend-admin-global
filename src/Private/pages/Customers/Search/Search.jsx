@@ -11,7 +11,7 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-import Header from "./components/Header";
+import Filter from "./components/Header";
 import actions from "./store/actions";
 import SearchForm from "./components/Form";
 import NoResults from "./components/NoResults";
@@ -97,6 +97,15 @@ const initialState = {
     order_by: "DESC",
 };
 
+const filter = {
+    page_number: 1,
+    page_size: 500,
+    agent_type: "SEND",
+    country: "",
+    sort_by: "",
+    order_by: "DESC",
+};
+
 function Search() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -108,6 +117,10 @@ function Search() {
     );
     const { success: b_success, loading: b_loading } = useSelector(
         (state) => state.block_unblock_customer
+    );
+
+    const { response: SendPartner, loading: p_loading } = useSelector(
+        (state) => state.get_sending_partner
     );
 
     useEffect(() => {
@@ -126,6 +139,10 @@ function Search() {
             dispatch({ type: "BLOCK_UNBLOCK_CUSTOMER_RESET" });
         } else {
             isMounted.current = true;
+            dispatch({
+                type: "GET_SENDING_PARTNER",
+                query: filter,
+            });
         }
     }, [dispatch, filterSchema, b_success]);
 
@@ -160,8 +177,10 @@ function Search() {
                     >
                         <StyledName component="p">
                             {data.value && data.value}{" "}
-                            {data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name}
+                            {data?.row?.original?.middle_name &&
+                                data?.row?.original?.middle_name}{" "}
+                            {data?.row?.original?.last_name &&
+                                data?.row?.original?.last_name}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -342,6 +361,7 @@ function Search() {
                             </IconButton>
                         </Tooltip>
                         <Block
+                            id={data?.row.original.tid}
                             name="Customer"
                             destroyOnUnmount
                             enableReinitialize
@@ -353,15 +373,44 @@ function Search() {
                             }}
                             onSubmit={handleBlock}
                             loading={b_loading}
-                            form={`block_form_customer`}
+                            form={`block_form_customer${data?.row.original.tid}`}
                             status={data?.row?.original?.is_active}
                         />
                     </Box>
                 ),
             },
         ],
-        [handleBlock]
+        [handleBlock, b_loading]
     );
+
+    const sortData = [
+        { key: "None", value: "created_ts" },
+        { key: "Name", value: "first_name" },
+        { key: "Country", value: "country" },
+    ];
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
+
+    const handleSort = (e) => {
+        const type = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            sort_by: type,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleOrder = (e) => {
+        const order = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            order_by: order,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const handleSearch = (data) => {
         const updatedFilterSchema = {
@@ -404,7 +453,12 @@ function Search() {
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
-                <SearchForm onSubmit={handleSearch} handleReset={handleReset} />
+                <SearchForm
+                    onSubmit={handleSearch}
+                    handleReset={handleReset}
+                    SendPartner={SendPartner?.data || []}
+                    loading={p_loading}
+                />
             </Grid>
             {l_loading && (
                 <Grid item xs={12}>
@@ -421,7 +475,14 @@ function Search() {
             {!l_loading && customersData?.data?.length > 0 && (
                 <Grid item xs={12}>
                     <CustomerWrapper>
-                        <Header />
+                        <Filter
+                            sortData={sortData}
+                            orderData={orderData}
+                            title="Customer List"
+                            state={filterSchema}
+                            handleOrder={handleOrder}
+                            handleSort={handleSort}
+                        />
                         <Table
                             columns={columns}
                             data={customersData?.data || []}

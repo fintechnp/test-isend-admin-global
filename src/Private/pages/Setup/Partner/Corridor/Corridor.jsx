@@ -7,9 +7,10 @@ import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-import Header from "./Header";
+import Header from "./../components/Header";
 import AddCorridor from "./AddCorridor";
 import actions from "../store/actions";
+import { Delete } from "./../../../../../App/components";
 import { CountryName, CurrencyName } from "./../../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
 
@@ -44,7 +45,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
+    opacity: 0.9,
     fontSize: "15px",
     color: theme.palette.border.dark,
 }));
@@ -80,7 +81,7 @@ const initialState = {
 };
 
 const Corridor = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -94,12 +95,6 @@ const Corridor = () => {
     const { success: u_success } = useSelector(
         (state) => state.update_corridor
     );
-
-    useEffect(() => {
-        if (id) {
-            dispatch(actions.get_partner_details(id));
-        }
-    }, [dispatch]);
 
     useEffect(() => {
         if (id) {
@@ -131,7 +126,7 @@ const Corridor = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -145,7 +140,9 @@ const Corridor = () => {
                 accessor: "agent_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -159,7 +156,7 @@ const Corridor = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -174,7 +171,7 @@ const Corridor = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CurrencyName(data.value)}
+                            {data.value ? CurrencyName(data.value) : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -248,6 +245,12 @@ const Corridor = () => {
                             update={true}
                             update_data={row?.original}
                         />
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Remove Partner"
+                        />
                     </Box>
                 ),
             },
@@ -283,9 +286,15 @@ const Corridor = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleDelete = (id) => {
+        dispatch(actions.delete_corridor(id));
+    };
+
     return (
         <MenuContainer>
-            <Header />
+            <Header title={`Corridor List of ${name}`}>
+                <AddCorridor />
+            </Header>
             <Table
                 columns={columns}
                 title="Corridor Details"

@@ -17,6 +17,9 @@ import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
 
 const BootstrapDialog = styled(Dialog)(({ theme, value }) => ({
+    "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         width: value ? "90%" : "60%",
         [theme.breakpoints.up("md")]: {
@@ -67,23 +70,37 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function BlockDialog({ loading, handleSubmit, status, name, remark, ...rest }) {
+function BlockDialog({
+    loading,
+    handleSubmit,
+    status,
+    id,
+    name,
+    remark,
+    ...rest
+}) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    console.log(rest, "dfdf");
+
+    React.useEffect(() => {
+        if (open) {
+            dispatch(change(`block_form_customer${id}`, "id", id));
+            dispatch(change(`block_form_customer${id}`, "is_active", status));
+        }
+    }, [id, open]);
 
     const handleClickOpen = () => {
         setOpen(true);
-        dispatch(reset("block_form_customer"));
+        dispatch(reset(`block_form_customer${id}`));
     };
 
     const handleClose = () => {
-        dispatch(reset("block_form_customer"));
+        dispatch(reset(`block_form_customer${id}`));
         setOpen(false);
     };
 
     const handleChange = (e) => {
-        dispatch(change("block_form_customer", "remarks", e.target.value));
+        dispatch(change(`block_form_customer${id}`, "remarks", e.target.value));
     };
 
     return (
@@ -95,8 +112,8 @@ function BlockDialog({ loading, handleSubmit, status, name, remark, ...rest }) {
                 onClick={handleClickOpen}
                 sx={{ minWidth: "3px", borderRadius: "20px" }}
             >
-                {status ? (
-                    <Tooltip title={`Block ${name}`} arrow>
+                {!status ? (
+                    <Tooltip title={`Unblock ${name}`} arrow>
                         <LockOutlinedIcon
                             sx={{
                                 fontSize: "20px",
@@ -108,7 +125,7 @@ function BlockDialog({ loading, handleSubmit, status, name, remark, ...rest }) {
                         />
                     </Tooltip>
                 ) : (
-                    <Tooltip title={`Unblock ${name}`} arrow>
+                    <Tooltip title={`Block ${name}`} arrow>
                         <LockOpenOutlinedIcon
                             sx={{
                                 fontSize: "20px",

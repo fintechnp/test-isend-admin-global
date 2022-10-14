@@ -13,6 +13,7 @@ import {
     CurrencyName,
     CountryName,
     FormatNumber,
+    ReferenceName,
 } from "./../../../../App/helpers";
 import MessageBox from "./../Search/components/MessageBox";
 
@@ -313,6 +314,36 @@ function Details({ data }) {
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Payment Type:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payment_type
+                                    ? ReferenceName(1, data?.payment_type)
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Location Name:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_location_name
+                                    ? data?.payout_location_name
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Location Branch:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_location_branch
+                                    ? data?.payout_location_branch
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -363,12 +394,23 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Collected Amount:</LabelWrapper>
+                            <LabelWrapper>Customer Rate:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.payout_currency && data?.payout_currency}{" "}
+                                {data?.customer_rate
+                                    ? FormatNumber(data?.customer_rate)
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <InfoWrapper>
+                            <LabelWrapper>Transfer Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.collected_currency &&
                                     data?.collected_currency}{" "}
-                                {data?.collected_amount
-                                    ? FormatNumber(data?.collected_amount)
+                                {data?.transfer_amount
+                                    ? FormatNumber(data?.transfer_amount)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -399,23 +441,12 @@ function Details({ data }) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>Transfer Amount:</LabelWrapper>
+                            <LabelWrapper>Collected Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.collected_currency &&
                                     data?.collected_currency}{" "}
-                                {data?.transfer_amount
-                                    ? FormatNumber(data?.transfer_amount)
-                                    : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Customer Rate:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_currency && data?.payout_currency}{" "}
-                                {data?.customer_rate
-                                    ? FormatNumber(data?.customer_rate)
+                                {data?.collected_amount
+                                    ? FormatNumber(data?.collected_amount)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -433,6 +464,26 @@ function Details({ data }) {
                     </Grid>
                 </Grid>
             </Grid>
+            {data?.compliance_msg && (
+                <>
+                    <Grid item xs={12}>
+                        <Box>
+                            <Header>Compliance Message</Header>
+                            <Divider />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InfoWrapper>
+                            <LabelWrapper>Message:</LabelWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                {data?.compliance_msg
+                                    ? data?.compliance_msg
+                                    : "N/A"}
+                            </ValueWrapper>
+                        </InfoWrapper>
+                    </Grid>
+                </>
+            )}
             <Grid item xs={12}>
                 <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
                     <BottomButton

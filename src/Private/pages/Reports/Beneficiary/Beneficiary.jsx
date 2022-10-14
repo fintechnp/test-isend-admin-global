@@ -186,8 +186,8 @@ function BeneficiaryReports() {
             },
             {
                 Header: "Customer",
-                accessor: "customer_id",
-                maxWidth: 130,
+                accessor: "customer_name",
+                maxWidth: 125,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -198,8 +198,11 @@ function BeneficiaryReports() {
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             <Link
-                                to={`/customer/details/${data.value}`}
-                                style={{ textDecoration: "none" }}
+                                to={`/customer/details/${data?.row?.original?.customer_id}`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "gray",
+                                }}
                             >
                                 {data.value ? data.value : "N/A"}
                             </Link>
@@ -260,7 +263,7 @@ function BeneficiaryReports() {
             {
                 Header: "Contact",
                 accessor: "mobile_number",
-                maxWidth: 120,
+                maxWidth: 110,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -302,7 +305,7 @@ function BeneficiaryReports() {
                     </Box>
                 ),
                 accessor: "created_ts",
-                maxWidth: 100,
+                maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="left">
                         <StyledName component="p" value={data.value}>

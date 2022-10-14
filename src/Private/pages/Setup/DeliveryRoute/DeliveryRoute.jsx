@@ -111,7 +111,7 @@ const DeliveryRoute = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
                 ),
@@ -125,7 +125,9 @@ const DeliveryRoute = () => {
                 accessor: "payout_agent",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -139,7 +141,7 @@ const DeliveryRoute = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {ReferenceName(1, data.value)}
+                            {data.value ? ReferenceName(1, data.value) : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -163,7 +165,11 @@ const DeliveryRoute = () => {
                                 lineHeight: 1,
                             }}
                         >
-                            {CurrencyName(data?.row?.original?.payout_currency)}
+                            {data.value
+                                ? CurrencyName(
+                                      data?.row?.original?.payout_currency
+                                  )
+                                : ""}
                         </Typography>
                     </Box>
                 ),

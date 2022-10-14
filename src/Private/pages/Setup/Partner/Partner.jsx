@@ -2,12 +2,13 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { reset } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Tooltip, Button, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
@@ -40,52 +41,34 @@ const SwitchWrapper = styled(Box)(({ theme }) => ({
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
+    color: theme.palette.border.main,
+    "&: hover": { color: theme.palette.border.dark, opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.border.dark,
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
+    opacity: 0.9,
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.border.dark,
 }));
 
-const UnBlocked = styled(Box)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    borderRadius: "6px",
-    padding: "3px 12px",
-    color: theme.palette.border.light,
-    background: theme.palette.success.main,
-    "&:hover": {
-        background: theme.palette.success.main,
-    },
-}));
-
-const Blocked = styled(Box)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    borderRadius: "6px",
-    padding: "3px 12px",
-    background: theme.palette.border.light,
-    "&:hover": {
-        background: theme.palette.border.light,
-    },
+const AddButton = styled(Button)(({ theme }) => ({
+    padding: "6px 12px",
+    textTransform: "capitalize",
 }));
 
 const initialState = {
     page_number: 1,
-    page_size: 10,
+    page_size: 15,
     country: "",
     currency: "",
     agent_type: "",
     search: "",
-    sort_by: "country",
+    sort_by: "created_ts",
     order_by: "DESC",
 };
 
@@ -113,8 +96,29 @@ const Partner = () => {
         () => [
             {
                 Header: "Id",
-                accessor: "agent_id",
+                accessor: "tid",
                 maxWidth: 70,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            <Link
+                                to={`/setup/partner/details/${data?.row.original.agent_id}`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "border.dark",
+                                }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
             },
             {
                 Header: "Partner Name",
@@ -129,8 +133,16 @@ const Partner = () => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            <Link
+                                to={`/setup/partner/details/${data?.row.original.agent_id}`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "border.dark",
+                                }}
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
                         </StyledName>
                     </Box>
                 ),
@@ -144,7 +156,9 @@ const Partner = () => {
                 accessor: "agent_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">{data.value}</StyledText>
+                        <StyledText component="p">
+                            {data.value ? data.value : "N/A"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -158,7 +172,7 @@ const Partner = () => {
                 Cell: (data) => (
                     <Box>
                         <StyledText component="p">
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : "N/A"}
                         </StyledText>
                     </Box>
                 ),
@@ -195,15 +209,33 @@ const Partner = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <Tooltip title="Partner Details" arrow>
+                        <Tooltip title="Branch" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/setup/partner/details/${row.original.agent_id}`
+                                        `/setup/partner/branch/${row.original.name}/${row.original.agent_id}`
                                     )
                                 }
                             >
-                                <RemoveRedEyeOutlinedIcon
+                                <AltRouteIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="See Corridor" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/corridor/${row.original.name}/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <ShuffleIcon
                                     sx={{
                                         fontSize: "20px",
                                         "&:hover": {
@@ -237,30 +269,17 @@ const Partner = () => {
                             loading={d_loading}
                             tooltext="Remove Partner"
                         />
-                        <Tooltip title="See Corridor" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/setup/partner/corridor/${row.original.agent_id}`
-                                    )
-                                }
-                            >
-                                <SubdirectoryArrowRightOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
                     </Box>
                 ),
             },
         ],
         []
     );
+
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
+    ];
 
     const handleStatus = useCallback((is_active, id) => {
         dispatch(actions.update_partner_status(id, { is_active: is_active }));
@@ -323,14 +342,29 @@ const Partner = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //Add Partner
+    const handleAdd = () => {
+        navigate("/setup/partner/create");
+    };
+
     const handleDelete = (id) => {
         dispatch(actions.delete_partner(id));
     };
 
     return (
         <MenuContainer>
-            <Header />
+            <Header title="Our Partner List">
+                <AddButton
+                    size="small"
+                    variant="outlined"
+                    onClick={handleAdd}
+                    endIcon={<AddIcon />}
+                >
+                    Add Partner
+                </AddButton>
+            </Header>
             <Filter
+                orderData={orderData}
                 state={filterSchema}
                 handleSearch={handleSearch}
                 handleCountry={handleCountry}

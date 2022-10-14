@@ -99,7 +99,7 @@ const Reference = () => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
+                        {data.value ? data.value : "n/a"}
                     </StyledName>
                 </Box>
             ),
@@ -113,7 +113,9 @@ const Reference = () => {
             accessor: "description",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? data.value : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },

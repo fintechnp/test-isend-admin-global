@@ -12,8 +12,12 @@ import MuiIconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import FitScreenOutlinedIcon from "@mui/icons-material/FitScreenOutlined";
 import SettingsOverscanIcon from "@mui/icons-material/SettingsOverscan";
+import { ReferenceName } from "./../../../../../../App/helpers";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         minWidth: "70%",
         [theme.breakpoints.down("md")]: {
@@ -34,9 +38,8 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const ImageWrapper = styled(Box)(({ theme }) => ({
     width: "100%",
-    height: "500px",
+    height: "420px",
     minHeight: "200px",
-    margin: "4px 0px",
     padding: "8px",
     display: "flex",
     flexDirection: "column",
@@ -112,7 +115,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function LargeImage({ image, title }) {
+function LargeImage({ image, side, title }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -150,14 +153,13 @@ function LargeImage({ image, title }) {
                     id="customized-dialog-title"
                     onClose={handleClose}
                 >
-                    {title}
+                    {ReferenceName(2, title)} [{ReferenceName(48, side)}]
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <ImageWrapper>
                         <CardMedia
                             component="img"
-                            height="140"
-                            image={`https://images.unsplash.com/photo-1661347333279-66f30d127efc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80`}
+                            image={image}
                             alt="doc img"
                         />
                     </ImageWrapper>

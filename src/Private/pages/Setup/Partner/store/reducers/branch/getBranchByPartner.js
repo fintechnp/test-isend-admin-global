@@ -1,4 +1,4 @@
-import actions from "../actions";
+import actions from "../../actions";
 
 const initialState = {
     success: false,
@@ -9,19 +9,19 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_CORRIDOR:
+        case actions.GET_AGENT_BRANCH:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_CORRIDOR_SUCCESS:
+        case actions.GET_AGENT_BRANCH_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_CORRIDOR_FAILED:
+        case actions.GET_AGENT_BRANCH_FAILED:
             return {
                 ...state,
                 success: false,

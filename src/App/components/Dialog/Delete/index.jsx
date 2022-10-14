@@ -13,6 +13,9 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
     },

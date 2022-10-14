@@ -20,6 +20,7 @@ const ImageWrapper = styled(Box)(({ theme }) => ({
         minHeight: "150px",
     },
     "& .MuiCardMedia-root": {
+        width: "auto",
         height: "100%",
         objectFit: "cover",
     },

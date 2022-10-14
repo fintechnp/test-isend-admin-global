@@ -17,6 +17,9 @@ import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
         [theme.breakpoints.up("md")]: {
@@ -70,7 +73,6 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
 function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    console.log(id, "tghis ids");
 
     React.useEffect(() => {
         if (id) {

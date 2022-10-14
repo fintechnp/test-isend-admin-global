@@ -18,6 +18,9 @@ import actions from "../store/actions";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "100%",
     },
@@ -112,7 +115,13 @@ function AddDocuments() {
     };
 
     const handleDocument = (data) => {
-        dispatch(actions.upload_documents(id, data));
+        var formData = new FormData();
+        formData.append("name", data?.name);
+        formData.append("type", data?.type);
+        formData.append("side", data?.side);
+        formData.append("format", data?.format);
+        formData.append("document", data?.document);
+        dispatch(actions.upload_documents(id, formData));
     };
 
     return (
@@ -139,6 +148,7 @@ function AddDocuments() {
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <DocumentForm
+                        touchOnChange
                         enableReinitialize={true}
                         onSubmit={handleDocument}
                         loading={add_loading}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
@@ -19,6 +19,10 @@ injectStore(store);
 const App = () => {
     const [mode, setMode] = React.useState(true);
 
+    useEffect(() => {
+
+    }, []);
+
     return (
         <ThemeProvider theme={ChangeTheme(mode)}>
             <AuthProvider>
@@ -36,7 +40,7 @@ const App = () => {
                                             right: "12px",
                                         },
                                         "*::-webkit-scrollbar-track": {
-                                            "-webkit-box-shadow":
+                                            WebkitBoxShadow:
                                                 "inset 0 0 6px rgba(0,0,0,0.00)",
                                         },
                                         "*::-webkit-scrollbar-thumb": {

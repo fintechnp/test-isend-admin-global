@@ -9,7 +9,7 @@ import Image from "./components/Image";
 import LargeImage from "./components/LargeImage";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import { FormatDate } from "./../../../../App/helpers";
+import { FormatDate, ReferenceName } from "./../../../../App/helpers";
 import { Delete } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
@@ -54,14 +54,11 @@ function Documents() {
     useEffect(() => {
         if (id) {
             dispatch(actions.get_documents(id, filterSchema));
+            dispatch({ type: "DELETE_DOCUMENTS_RESET" });
+            dispatch({ type: "UPLOAD_DOCUMENTS_RESET" });
+            dispatch({ type: "GET_DOCUMENTS_BYID_RESET" });
         }
     }, [dispatch, id, success, del_success, filterSchema]);
-
-    useEffect(() => {
-        dispatch({ type: "DELETE_DOCUMENTS_RESET" });
-        dispatch({ type: "UPLOAD_DOCUMENTS_RESET" });
-        dispatch({ type: "GET_DOCUMENTS_BYID_RESET" });
-    }, [dispatch]);
 
     const columns = useMemo(
         () => [
@@ -73,7 +70,7 @@ function Documents() {
             {
                 Header: "Image",
                 accessor: "document",
-                minWidth: 300,
+                minWidth: 250,
                 Cell: (data) => {
                     return (
                         <>
@@ -82,9 +79,9 @@ function Documents() {
                                 sx={{ fontSize: "14px", lineHeight: 1.2 }}
                             >
                                 {data?.value ? (
-                                    <Image document={document} />
+                                    <Image document={data?.value} />
                                 ) : (
-                                    ""
+                                    <Image document="https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg" />
                                 )}
                             </Typography>
                         </>
@@ -103,7 +100,15 @@ function Documents() {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data?.value : ""}
+                            {data?.value ? ReferenceName(2, data?.value) : ""}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{ fontSize: "13px", opacity: 0.9 }}
+                        >
+                            {data?.row.original?.side
+                                ? ReferenceName(48, data?.row.original?.side)
+                                : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -120,7 +125,7 @@ function Documents() {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data?.value : ""}
+                            {data?.value ? data?.value : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -191,8 +196,9 @@ function Documents() {
                         }}
                     >
                         <LargeImage
+                            side={row.original.side}
                             title={row.original.type}
-                            image={document}
+                            image={row.original?.document}
                         />
                         <Delete
                             fontSize="25px"

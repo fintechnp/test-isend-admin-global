@@ -9,26 +9,26 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.ADD_CORRIDOR:
+        case actions.UPDATE_API_CONFIG:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.ADD_CORRIDOR_SUCCESS:
+        case actions.UPDATE_API_CONFIG_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.ADD_CORRIDOR_FAILED:
+        case actions.UPDATE_API_CONFIG_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
             };
-        case actions.ADD_CORRIDOR_RESET:
+        case actions.UPDATE_API_CONFIG_RESET:
             return {
                 success: false,
                 loading: false,

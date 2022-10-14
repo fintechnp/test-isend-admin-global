@@ -9,31 +9,24 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.DELETE_CORRIDOR:
+        case actions.GET_API_CONFIG_DETAILS:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.DELETE_CORRIDOR_SUCCESS:
+        case actions.GET_API_CONFIG_DETAILS_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.DELETE_CORRIDOR_FAILED:
+        case actions.GET_API_CONFIG_DETAILS_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
-            };
-        case actions.DELETE_CORRIDOR_RESET:
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
             };
         default:
             return state;

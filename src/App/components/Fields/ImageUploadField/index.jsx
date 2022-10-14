@@ -5,20 +5,16 @@ import Placeholder from "./Placeholder";
 import { renderFromHelper } from "../helpers";
 
 const ImageUploadField = ({
-    name,
     dragText,
     selectText,
     handleOnDrop,
     input,
     imagefile,
     meta: { error, touched },
-    ...rest
 }) => {
     const onDrop = useCallback((acceptedFiles) => {
         handleOnDrop(acceptedFiles);
-        // input.onChange(acceptedFiles[0].name);
-        console.log(input, "loaded files");
-        console.log(acceptedFiles, "loaded files");
+        input.onChange(acceptedFiles[0]);
     }, []);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -28,13 +24,7 @@ const ImageUploadField = ({
 
     return (
         <div {...getRootProps()}>
-            <input
-                name={input.name}
-                onChange={(files) => console.log(files, "uuu files")}
-                {...getInputProps()}
-                {...input}
-                {...rest}
-            />
+            <input {...getInputProps()} />
             {isDragActive ? (
                 <Placeholder error={error} touched={touched} text={dragText} />
             ) : imagefile && imagefile.length > 0 ? (

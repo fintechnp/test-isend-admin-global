@@ -20,6 +20,9 @@ import { Box } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
     },

@@ -60,8 +60,15 @@ import {
     DeletePartnerReducer,
     GetSendingPartnerReducer,
     GetPayoutPartnerReducer,
-    GetPartnerBranchReducer,
     PartnerSaga,
+} from "./pages/Setup/Partner/store";
+
+import {
+    GetBranchByPartnerReducer,
+    GetBranchDetailsReducer,
+    AddBranchReducer,
+    UpdateBranchReducer,
+    DeleteBranchReducer,
 } from "./pages/Setup/Partner/store";
 
 import {
@@ -114,6 +121,14 @@ import {
     ImportPromoCodeReducer,
     PromoSetupSaga,
 } from "./pages/Setup/PromoSetup/store";
+
+import {
+    GetApiConfigReducer,
+    GetApiConfigDetailsReducer,
+    AddApiConfigReducer,
+    UpdateApiConfigReducer,
+    ApiConfigSaga,
+} from "./pages/Setup/ApiConfiguration/store";
 
 import {
     GetAllExchangeRateReducer,
@@ -318,7 +333,13 @@ export const privateReducer = {
     add_partner: AddPartnerReducer,
     update_partner: UpdatePartnerReducer,
     delete_partner: DeletePartnerReducer,
-    get_partner_branch: GetPartnerBranchReducer,
+
+    //branch
+    get_all_branch_by_partner: GetBranchByPartnerReducer,
+    get_branch_details: GetBranchDetailsReducer,
+    add_branch: AddBranchReducer,
+    update_branch: UpdateBranchReducer,
+    delete_branch: DeleteBranchReducer,
 
     //corridor
     get_all_corridor: GetAllCorridorReducer,
@@ -387,6 +408,12 @@ export const privateReducer = {
     update_payment_rules: UpdatePaymentRulesReducer,
     update_payment_rules_status: UpdatePaymentRulesStatusReducer,
     delete_payment_rules: DeletePaymentRulesReducer,
+
+    //api config
+    get_api_config: GetApiConfigReducer,
+    get_api_config_details: GetApiConfigDetailsReducer,
+    add_api_config: AddApiConfigReducer,
+    update_api_config: UpdateApiConfigReducer,
 
     //Customer
     get_customers: GetCustomersReducer,
@@ -492,6 +519,7 @@ export const privateSaga = [
     PromoSetupSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
+    ApiConfigSaga(),
     CustomersSaga(),
     DocumentsCustomerSaga(),
     RemarksCustomerSaga(),

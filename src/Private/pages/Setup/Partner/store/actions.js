@@ -37,6 +37,7 @@ const actions = {
     DELETE_PARTNER_FAILED: "DELETE_PARTNER_FAILED",
     DELETE_PARTNER_RESET: "DELETE_PARTNER_RESET",
 
+    //corridor
     GET_CORRIDOR: "GET_CORRIDOR",
     GET_CORRIDOR_SUCCESS: "GET_CORRIDOR_SUCCESS",
     GET_CORRIDOR_FAILED: "GET_CORRIDOR_FAILED",
@@ -60,9 +61,33 @@ const actions = {
     DELETE_CORRIDOR_FAILED: "DELETE_CORRIDOR_FAILED",
     DELETE_CORRIDOR_RESET: "DELETE_CORRIDOR_RESET",
 
-    GET_PARTNER_BRANCH: "GET_PARTNER_BRANCH",
-    GET_PARTNER_BRANCH_SUCCESS: "GET_PARTNER_BRANCH_SUCCESS",
-    GET_PARTNER_BRANCH_FAILED: "GET_PARTNER_BRANCH_FAILED",
+    //branch
+    GET_AGENT_BRANCH: "GET_AGENT_BRANCH",
+    GET_AGENT_BRANCH_SUCCESS: "GET_AGENT_BRANCH_SUCCESS",
+    GET_AGENT_BRANCH_FAILED: "GET_AGENT_BRANCH_FAILED",
+
+    GET_AGENT_BRANCH_DETAILS: "GET_AGENT_BRANCH_DETAILS",
+    GET_AGENT_BRANCH_DETAILS_SUCCESS: "GET_AGENT_BRANCH_DETAILS_SUCCESS",
+    GET_AGENT_BRANCH_DETAILS_FAILED: "GET_AGENT_BRANCH_DETAILS_FAILED",
+
+    ADD_AGENT_BRANCH: "ADD_AGENT_BRANCH",
+    ADD_AGENT_BRANCH_SUCCESS: "ADD_AGENT_BRANCH_SUCCESS",
+    ADD_AGENT_BRANCH_FAILED: "ADD_AGENT_BRANCH_FAILED",
+    ADD_AGENT_BRANCH_RESET: "ADD_AGENT_BRANCH_RESET",
+
+    UPDATE_AGENT_BRANCH: "UPDATE_AGENT_BRANCH",
+    UPDATE_AGENT_BRANCH_SUCCESS: "UPDATE_AGENT_BRANCH_SUCCESS",
+    UPDATE_AGENT_BRANCH_FAILED: "UPDATE_AGENT_BRANCH_FAILED",
+    UPDATE_AGENT_BRANCH_RESET: "UPDATE_AGENT_BRANCH_RESET",
+
+    UPDATE_AGENT_BRANCH_STATUS: "UPDATE_AGENT_BRANCH_STATUS",
+    UPDATE_AGENT_BRANCH_STATUS_SUCCESS: "UPDATE_AGENT_BRANCH_STATUS_SUCCESS",
+    UPDATE_AGENT_BRANCH_STATUS_FAILED: "UPDATE_AGENT_BRANCH_STATUS_FAILED",
+
+    DELETE_AGENT_BRANCH: "DELETE_AGENT_BRANCH",
+    DELETE_AGENT_BRANCH_SUCCESS: "DELETE_AGENT_BRANCH_SUCCESS",
+    DELETE_AGENT_BRANCH_FAILED: "DELETE_AGENT_BRANCH_FAILED",
+    DELETE_AGENT_BRANCH_RESET: "DELETE_AGENT_BRANCH_RESET",
 
     //PARTNER
     get_all_partner: (query) => ({
@@ -137,11 +162,39 @@ const actions = {
         id,
     }),
 
-    //get Branch
-    get_partner_branch: (id, query) => ({
-        type: actions.GET_PARTNER_BRANCH,
+    //BRANCH
+    get_all_branch_by_partner: (agent_id, query) => ({
+        type: actions.GET_AGENT_BRANCH,
+        agent_id,
         query,
-        id,
+    }),
+
+    get_branch_details: (branch_id) => ({
+        type: actions.GET_AGENT_BRANCH_DETAILS,
+        branch_id,
+    }),
+
+    add_branch: (agent_id, data) => ({
+        type: actions.ADD_AGENT_BRANCH,
+        data,
+        agent_id,
+    }),
+
+    update_branch: (branch_id, data) => ({
+        type: actions.UPDATE_AGENT_BRANCH,
+        branch_id,
+        data,
+    }),
+
+    delete_branch: (branch_id) => ({
+        type: actions.DELETE_AGENT_BRANCH,
+        branch_id,
+    }),
+
+    update_branch_status: (branch_id, data) => ({
+        type: actions.UPDATE_AGENT_BRANCH_STATUS,
+        branch_id,
+        data,
     }),
 };
 

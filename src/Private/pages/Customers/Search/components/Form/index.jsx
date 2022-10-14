@@ -9,6 +9,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
 import TextField from "../../../../../../App/components/Fields/TextField";
+import SelectField from "../../../../../../App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -91,7 +92,7 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function SearchForm({ handleSubmit, handleReset }) {
+function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
     return (
         <Container container>
             <Grid item xs={12}>
@@ -151,6 +152,31 @@ function SearchForm({ handleSubmit, handleReset }) {
                                 small={12}
                                 component={TextField}
                             />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="agent_id"
+                                placeholder="Partner"
+                                type="number"
+                                small={12}
+                                disabled={loading}
+                                component={SelectField}
+                            >
+                                <option value="" disabled>
+                                    {loading
+                                        ? "Fetching Partner ..."
+                                        : "Select Partner"}
+                                </option>
+                                {SendPartner &&
+                                    SendPartner?.map((data) => (
+                                        <option
+                                            value={data.agent_id}
+                                            key={data?.tid}
+                                        >
+                                            {data.name}
+                                        </option>
+                                    ))}
+                            </Field>
                         </FieldWrapper>
                         <FieldWrapperLabel item xs={12} sm={6}>
                             <Field

@@ -9,31 +9,24 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_PARTNER:
+        case actions.GET_API_CONFIG:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_PARTNER_SUCCESS:
+        case actions.GET_API_CONFIG_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_PARTNER_FAILED:
+        case actions.GET_API_CONFIG_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
-            };
-        case actions.GET_PARTNER_RESET:
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
             };
         default:
             return state;
