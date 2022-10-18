@@ -62,6 +62,7 @@ const StyledMenu = styled((props) => (
             theme.palette.mode === "light"
                 ? "rgba(205, 208, 213, 0.508)"
                 : theme.palette.grey[300],
+        background: theme.palette.background.dark,
         boxShadow:
             "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
         "& .MuiMenu-list": {
@@ -133,7 +134,7 @@ const ProfileIcon = styled(IconButton)(({ theme }) => ({
 const ProfileName = styled(Typography)(({ theme }) => ({
     textAlign: "left",
     fontSize: "16px",
-    color: theme.palette.text.dark,
+    color: theme.palette.text.main,
     textTransform: "capitalize",
 }));
 
@@ -244,7 +245,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     justifyContent: "flex-start",
                     alignItems: "flex-start",
                     flexDirection: "row",
-                    backgroundColor: "background.light",
+                    backgroundColor: "background.main",
                     borderRadius: "4px",
                 }}
             >

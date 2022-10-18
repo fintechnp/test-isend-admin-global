@@ -63,9 +63,9 @@ const ListText = styled(ListItemText)(({ theme, open }) => ({
     padding: theme.spacing(0, 1),
     textDecoration: "none",
     color: theme.palette.primary.contrastText,
-    ...(!open && {
-        display: "none",
-    }),
+    // ...(!open && {
+    //     display: "none",
+    // }),
 }));
 
 function SubHeader({

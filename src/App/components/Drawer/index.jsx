@@ -196,7 +196,11 @@ function SideDrawer({ children, menus }) {
             </Drawer>
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, position: "relative" }}
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    position: "relative",
+                }}
             >
                 <DrawerHeader />
                 {children}

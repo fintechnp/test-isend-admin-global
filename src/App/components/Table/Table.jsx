@@ -123,7 +123,7 @@ const Table = ({
                                             ? "1px solid #fff"
                                             : "0px",
                                         borderRadius: group ? "0px" : "6px",
-                                        backgroundColor: "primary.dark",
+                                        backgroundColor: "primary.main",
                                     }}
                                 >
                                     {headerGroup.headers.map(
@@ -202,7 +202,9 @@ const Table = ({
                                             handleDelete={handleDelete}
                                             sub_data={row?.original}
                                             sub_columns={sub_columns}
-                                            handleForgotPassword={handleForgotPassword}
+                                            handleForgotPassword={
+                                                handleForgotPassword
+                                            }
                                             toggleRowExpanded={
                                                 toggleRowExpanded
                                             }

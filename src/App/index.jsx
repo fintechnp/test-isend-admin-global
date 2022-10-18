@@ -13,15 +13,19 @@ import { injectStore } from "./services/api";
 import store, { persistor } from "./store";
 import AuthProvider from "./auth";
 import { ChangeTheme } from "./theme/theme";
+import Cookies from "js-cookie";
 
 injectStore(store);
 
 const App = () => {
     const [mode, setMode] = React.useState(true);
+    const token = Cookies.get("token");
 
     useEffect(() => {
-
-    }, []);
+        if (token === "undefined" || token === undefined) {
+            setMode(true);
+        }
+    }, [token]);
 
     return (
         <ThemeProvider theme={ChangeTheme(mode)}>

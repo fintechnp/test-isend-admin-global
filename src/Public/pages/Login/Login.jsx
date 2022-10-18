@@ -20,6 +20,7 @@ function Login() {
     useEffect(() => {
         dispatch(reset("login_form"));
         dispatch({ type: "REFRESH_TOKEN_RESET" });
+        dispatch({ type: "SET_THEME", mode: true });
     }, [dispatch]);
 
     useEffect(() => {

@@ -28,14 +28,14 @@ const dark = {
         dark: "rgba(0, 0, 0, 0.87)",
     },
     border: {
-        light: "#757373",
+        light: "#233044",
         main: "#6b6a6a",
         dark: "#595959",
     },
     background: {
-        light: "#304070",
+        light: "#2c3c55",
         main: "#233044",
-        dark: "#eaeaea",
+        dark: "#0a1121",
     },
     appbar: {
         main: "#233044",

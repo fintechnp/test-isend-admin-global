@@ -23,12 +23,11 @@ const DetailWrapper = styled(Grid)(({ theme }) => ({
 }));
 
 const Header = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
+    opacity: 0.8,
     lineHeight: 1.5,
     fontSize: "20px",
     fontWeight: 600,
     padding: "4px 0px",
-    color: theme.palette.primary.dark,
 }));
 
 const NameBox = styled(Box)(({ theme }) => ({
@@ -37,17 +36,12 @@ const NameBox = styled(Box)(({ theme }) => ({
     alignItems: "center",
 }));
 
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
-    width: 8,
-    height: 8,
-    border: `1px solid ${theme.palette.primary.contrastText}`,
-}));
-
 const NameField = styled(Box)(({ theme }) => ({
     flexGrow: 1,
 }));
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
+    opacity: 0.8,
     width: "100%",
     paddingBottom: "2px",
     paddingTop: "8px",
@@ -62,7 +56,6 @@ const Title = styled(Typography)(({ theme }) => ({
     lineHeight: 1.4,
     fontSize: "16px",
     fontWeight: 600,
-    color: theme.palette.primary.dark,
 }));
 
 const Label = styled(Typography)(({ theme }) => ({
@@ -91,7 +84,6 @@ const LabelWrapper = styled(Box)(({ theme }) => ({
     minWidth: "40%",
     fontSize: "15px",
     wordBreak: "break-all",
-    color: theme.palette.text.dark,
 }));
 
 const ValueWrapper = styled(Box)(({ theme }) => ({
