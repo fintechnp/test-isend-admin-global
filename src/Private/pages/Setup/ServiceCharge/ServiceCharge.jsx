@@ -20,6 +20,7 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
+    background: theme.palette.background.dark,
 }));
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -76,7 +77,7 @@ const ServiceCharge = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data?.row?.index ? data?.row?.index + 1 : ""}
+                            {data?.row?.index ? data?.row?.index + 1 : "1"}
                         </StyledName>
                     </Box>
                 ),

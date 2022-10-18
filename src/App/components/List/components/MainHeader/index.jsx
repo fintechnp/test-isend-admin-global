@@ -6,7 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Tooltip } from "@mui/material";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 const ListItem = styled(MuiListItem)(({ theme, open }) => ({
     flex: 1,
@@ -85,6 +85,25 @@ const ListText = styled(ListItemText)(({ theme, open }) => ({
     }),
 }));
 
+const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.white,
+        "&::before": {
+            background: theme.palette.primary.main,
+            border: `1px solid ${theme.palette.primary.dark}`,
+        },
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        padding: "8px",
+        background: theme.palette.primary.main,
+        width: 250,
+        fontSize: "16px",
+        border: `1px solid ${theme.palette.primary.dark}`,
+    },
+}));
+
 function MainHeader({
     item,
     index,
@@ -102,7 +121,7 @@ function MainHeader({
 
     return (
         <Link to={item.path} color="inherit" style={{ textDecoration: "none" }}>
-            <Tooltip
+            <HtmlTooltip
                 title={item.text}
                 disableHoverListener={open}
                 arrow
@@ -120,7 +139,7 @@ function MainHeader({
                         <ListText primary={item.text} open={open} />
                     </ListButton>
                 </ListItem>
-            </Tooltip>
+            </HtmlTooltip>
         </Link>
     );
 }

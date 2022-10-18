@@ -8,7 +8,7 @@ import Collapse from "@mui/material/Collapse";
 import MuiExpandLess from "@mui/icons-material/ExpandLess";
 import MuiExpandMore from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useLocation } from "react-router-dom";
 
 import SubHeader from "./SubHeader";
@@ -55,11 +55,27 @@ const ListItem = styled(MuiListItem)(({ theme }) => ({
         },
         "&:hover": {
             color: theme.palette.primary.dark,
-            background: theme.palette.background.dark,
+            background: theme.palette.background.light,
         },
         [theme.breakpoints.down("sm")]: {
             display: "none",
         },
+    },
+}));
+
+const ListHeader = styled(ListItemButton)(({ theme, open }) => ({
+    width: "100%",
+    padding: "6px 8px !important",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: "6px",
+    background: theme.palette.background.dark,
+    "& .MuiSvgIcon-root": {
+        color: theme.palette.text.main,
+    },
+    "& .MuiListItemText-root": {
+        color: theme.palette.text.main,
     },
 }));
 
@@ -75,7 +91,7 @@ const ListButton = styled(ListItemButton)(({ theme, open }) => ({
     "&:hover": {
         borderRadius: "6px",
         color: theme.palette.primary.dark,
-        background: theme.palette.background.dark,
+        background: theme.palette.background.light,
         "& .MuiSvgIcon-root": {
             color: theme.palette.primary.dark,
         },
@@ -140,6 +156,9 @@ const List = styled(MuiList)(({ theme, open }) => ({
     "&:hover": {
         background: theme.palette.primary.dark,
     },
+    ...(!open && {
+        margin: "4px 0px",
+    }),
 }));
 
 const StyledCollapse = styled(Collapse)(({ theme, open }) => ({
@@ -147,6 +166,23 @@ const StyledCollapse = styled(Collapse)(({ theme, open }) => ({
     ...(!open && {
         display: "none",
     }),
+}));
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.white,
+        "&::before": {
+            background: theme.palette.primary.main,
+            border: `1px solid ${theme.palette.primary.dark}`,
+        },
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        background: theme.palette.primary.main,
+        width: 260,
+        border: `1px solid ${theme.palette.primary.dark}`,
+    },
 }));
 
 function MainButton({
@@ -182,8 +218,28 @@ function MainButton({
     };
 
     return (
-        <Tooltip
-            title={item.text}
+        <HtmlTooltip
+            title={
+                <React.Fragment>
+                    <List>
+                        <ListHeader disabled>
+                            <ListIcon>{item.icon}</ListIcon>
+                            <ListText primary={item.text} open={!open} />
+                        </ListHeader>
+                        {item?.children.map((child, ind) => (
+                            <SubHeader
+                                key={ind}
+                                index={index}
+                                sub_item={child}
+                                open={open}
+                                selectedSub={selectedSub}
+                                setSelectedIndex={setSelectedIndex}
+                                handleListItemSelect={handleListItemSelect}
+                            />
+                        ))}
+                    </List>
+                </React.Fragment>
+            }
             disableHoverListener={open}
             arrow
             placement="right"
@@ -191,9 +247,7 @@ function MainButton({
             <ListItem dense disablePadding open={open}>
                 <ListButton
                     open={open}
-                    selected={
-                        selectedkey === item.key
-                    }
+                    selected={selectedkey === item.key}
                     onClick={() => handleMainButton(item.key)}
                 >
                     <ListIcon>{item.icon}</ListIcon>
@@ -225,7 +279,7 @@ function MainButton({
                     </List>
                 </StyledCollapse>
             </ListItem>
-        </Tooltip>
+        </HtmlTooltip>
     );
 }
 

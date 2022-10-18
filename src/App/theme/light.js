@@ -33,7 +33,7 @@ const light = {
     background: {
         light: "#f5f5f5",
         main: "#e6e6e6",
-        dark: "#e0e0e0",
+        dark: "#fefefe",
     },
     appbar: {
         main: "#fff",

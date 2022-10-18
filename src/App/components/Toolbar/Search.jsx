@@ -35,7 +35,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
         borderColor: theme.palette.primary.main,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: theme.palette.border.light,
+        borderColor: theme.palette.border.main,
         borderWidth: "1px",
     },
     "&: hover": {
