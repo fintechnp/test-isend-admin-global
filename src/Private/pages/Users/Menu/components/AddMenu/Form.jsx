@@ -157,6 +157,7 @@ const MenuForm = ({
                         <Grid item>
                             <CancelButton
                                 size="small"
+                                disableElevation
                                 variant="contained"
                                 onClick={handleClose}
                             >
