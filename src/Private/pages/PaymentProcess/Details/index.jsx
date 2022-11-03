@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -41,12 +42,16 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-function TransactionDetails() {
-    const { id } = useParams();
+function TransactionDetails(props) {
+    const { id, tid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { response, loading } = useSelector(
         (state) => state.get_transaction_details
+    );
+
+    const { aml_response, aml_loading } = useSelector(
+        (state) => state.get_aml_suspicious_details
     );
 
     useEffect(() => {
@@ -55,38 +60,53 @@ function TransactionDetails() {
         }
     }, [id]);
 
+    useEffect(() => {
+        if (tid) {
+            dispatch(actions.get_aml_suspicious_details(tid));
+        }
+    }, [tid]);
+
     const handleBack = () => {
         navigate(-1);
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <ReceiptLongIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title> Transaction Details </Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleBack}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                            <ReceiptLongIcon
+                                sx={{ color: "primary.main", fontSize: "28px" }}
+                            />
+                            <Title> Transaction Details </Title>
+                        </Box>
+                        <BackButton
+                            variant="outlined"
+                            size="small"
+                            onClick={handleBack}
+                        >
+                            Back
+                        </BackButton>
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mb: 1.2 }} />
+                </Grid>
+                {loading || aml_loading ? (
+                    <TransactionSkeleton />
+                ) : (
+                    <Details
+                        data={
+                            id ? response?.data || [] : aml_response?.data || []
+                        }
+                    />
+                )}
             </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2 }} />
-            </Grid>
-            {loading ? (
-                <TransactionSkeleton />
-            ) : (
-                <Details data={response?.data || []} />
-            )}
-        </Grid>
+        </>
     );
 }
 

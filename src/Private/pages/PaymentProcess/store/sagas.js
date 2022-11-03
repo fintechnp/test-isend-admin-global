@@ -133,6 +133,27 @@ export const getAmlSuspicious = takeEvery(
     }
 );
 
+export const getDetailsAmlSuspicious = takeEvery(
+    actions.GET_AML_SUSPICIOUS_DETAILS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.get,
+                `utilities/${action.transaction_id}/aml_suspicious_transaction`
+            );
+            yield put({
+                type: actions.GET_AML_SUSPICIOUS_DETAILS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_AML_SUSPICIOUS_DETAILS_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 export const getExceptionTransactions = takeEvery(
     actions.GET_EXCEPTION_TRANSACTIONS,
     function* (action) {
@@ -308,6 +329,7 @@ export default function* saga() {
         getBlockedTransactions,
         getExceptionTransactions,
         getAmlSuspicious,
+        getDetailsAmlSuspicious,
         updatePaymentPending,
         blockTransactions,
         refundTransactions,

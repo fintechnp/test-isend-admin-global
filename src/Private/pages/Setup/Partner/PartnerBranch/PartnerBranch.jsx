@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Tooltip, Button, Typography } from "@mui/material";
@@ -71,7 +72,7 @@ const initialState = {
     order_by: "ASC",
 };
 
-const PartnerBranch = () => {
+const PartnerBranch = (props) => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -382,41 +383,46 @@ const PartnerBranch = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title={`Branch List of ${name}`}>
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleAdd}
-                    endIcon={<AddIcon />}
-                >
-                    Add Branch
-                </AddButton>
-            </Header>
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Branch Details"
-                data={BranchData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={BranchData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title={`Branch List of ${name}`}>
+                    <AddButton
+                        size="small"
+                        variant="outlined"
+                        onClick={handleAdd}
+                        endIcon={<AddIcon />}
+                    >
+                        Add Branch
+                    </AddButton>
+                </Header>
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Branch Details"
+                    data={BranchData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={BranchData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

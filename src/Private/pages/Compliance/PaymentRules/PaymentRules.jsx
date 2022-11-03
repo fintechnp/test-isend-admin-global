@@ -5,6 +5,7 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { Helmet } from "react-helmet-async";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
@@ -86,7 +87,7 @@ function stringToColor(string) {
     return color;
 }
 
-const PaymentRules = () => {
+const PaymentRules = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -404,31 +405,36 @@ const PaymentRules = () => {
     };
 
     return (
-        <PaymentContainer>
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                handleFilterAgent={handleFilterAgent}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Payment Rules"
-                data={paymentRules?.data || []}
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                handleDelete={handleDelete}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={paymentRules?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </PaymentContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <PaymentContainer>
+                <Header />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleFilterAgent={handleFilterAgent}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Payment Rules"
+                    data={paymentRules?.data || []}
+                    sub_columns={sub_columns}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    handleDelete={handleDelete}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={paymentRules?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </PaymentContainer>
+        </>
     );
 };
 

@@ -3,9 +3,15 @@ import EmailVerification from "../pages/EmailVerification";
 import ResetPassword from "../pages/ResetPassword";
 
 const publicRoutes = [
-    { path: "/login", component: <Login /> },
-    { path: "/click/:code/:message", component: <EmailVerification /> },
-    { path: "/reset/:user_id/:code/:string", component: <ResetPassword /> },
+    { path: "/login", component: <Login title="Login" /> },
+    {
+        path: "/click/:code/:message",
+        component: <EmailVerification title="Account Verificaion" />,
+    },
+    {
+        path: "/reset/:user_id/:code/:string",
+        component: <ResetPassword title="Password Reset" />,
+    },
 ];
 
 export default publicRoutes;

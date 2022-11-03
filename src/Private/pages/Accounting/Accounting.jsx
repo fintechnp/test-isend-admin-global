@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import { Helmet } from "react-helmet-async";
 
-function Accounting() {
-  return (
-    <div>Accounting</div>
-  )
+function Accounting(props) {
+    return (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <div>Accounting</div>
+        </>
+    );
 }
 
-export default Accounting
+export default Accounting;

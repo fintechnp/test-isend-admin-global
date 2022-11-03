@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -56,7 +57,7 @@ const filter = {
     order_by: "DESC",
 };
 
-function AddUpdateServiceCharge() {
+function AddUpdateServiceCharge(props) {
     const { id, agent_id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -103,6 +104,53 @@ function AddUpdateServiceCharge() {
 
     if (get_loading) {
         return (
+            <>
+                <Helmet>
+                    <title>Isend Global Admin | {props.title}</title>
+                </Helmet>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <TitleWrapper>
+                            <Box
+                                sx={{ display: "flex", alignItems: "flex-end" }}
+                            >
+                                <PublishedWithChangesIcon
+                                    sx={{
+                                        color: "primary.main",
+                                        fontSize: "28px",
+                                    }}
+                                />
+                                <Title>
+                                    {id ? "Update" : "Add"} Service Charge
+                                </Title>
+                            </Box>
+                            <BackButton
+                                variant="outlined"
+                                size="small"
+                                onClick={handleClose}
+                            >
+                                Back
+                            </BackButton>
+                        </TitleWrapper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider sx={{ mb: 1.2 }} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box sx={{ display: "flex", justifyContent: "center" }}>
+                            <Fetching>Fetching...</Fetching>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </>
+        );
+    }
+
+    return (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
@@ -127,95 +175,67 @@ function AddUpdateServiceCharge() {
                     <Divider sx={{ mb: 1.2 }} />
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fetching>Fetching...</Fetching>
-                    </Box>
+                    {id ? (
+                        <ServiceChargeForm
+                            destroyOnUnmount
+                            enableReinitialize={true}
+                            initialValues={
+                                chargeData?.data && {
+                                    min_amount: chargeData?.data?.min_amount,
+                                    max_amount: chargeData?.data?.max_amount,
+                                    charge_mode: chargeData?.data?.charge_mode,
+                                    charge_flat: chargeData?.data?.charge_flat,
+                                    charge_per: chargeData?.data?.charge_per,
+                                    send_commission_type:
+                                        chargeData?.data?.send_commission_type,
+                                    send_commission_amount:
+                                        chargeData?.data
+                                            ?.send_commission_amount,
+                                    pay_commission_type:
+                                        chargeData?.data?.pay_commission_type,
+                                    pay_commission_amount:
+                                        chargeData?.data?.pay_commission_amount,
+                                    additional_fee:
+                                        chargeData?.data?.additional_fee,
+                                    is_enable: chargeData?.data?.is_enable,
+                                }
+                            }
+                            onSubmit={handleChargeUpdate}
+                            buttonText="Update"
+                            update={true}
+                            c_mode={
+                                chargeData?.data &&
+                                chargeData?.data?.charge_mode
+                            }
+                            handleClose={handleClose}
+                            loading={update_loading}
+                            form={`update_service_charge_form`}
+                            agent_id={agent_id}
+                        />
+                    ) : (
+                        <ServiceChargeForm
+                            destroyOnUnmount
+                            enableReinitialize={true}
+                            onSubmit={handleChargeCreate}
+                            buttonText="Create"
+                            handleClose={handleClose}
+                            form={`add_service_charge_form`}
+                            initialValues={
+                                agent_id == 0
+                                    ? {
+                                          sending_agent_id: "",
+                                      }
+                                    : {
+                                          sending_agent_id: agent_id,
+                                      }
+                            }
+                            loading={add_loading}
+                            agent_id={agent_id}
+                        />
+                    )}
                 </Grid>
             </Grid>
-        );
-    }
-
-    return (
-        <Grid container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <PublishedWithChangesIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title>{id ? "Update" : "Add"} Service Charge</Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleClose}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2 }} />
-            </Grid>
-            <Grid item xs={12}>
-                {id ? (
-                    <ServiceChargeForm
-                        destroyOnUnmount
-                        enableReinitialize={true}
-                        initialValues={
-                            chargeData?.data && {
-                                min_amount: chargeData?.data?.min_amount,
-                                max_amount: chargeData?.data?.max_amount,
-                                charge_mode: chargeData?.data?.charge_mode,
-                                charge_flat: chargeData?.data?.charge_flat,
-                                charge_per: chargeData?.data?.charge_per,
-                                send_commission_type:
-                                    chargeData?.data?.send_commission_type,
-                                send_commission_amount:
-                                    chargeData?.data?.send_commission_amount,
-                                pay_commission_type:
-                                    chargeData?.data?.pay_commission_type,
-                                pay_commission_amount:
-                                    chargeData?.data?.pay_commission_amount,
-                                additional_fee:
-                                    chargeData?.data?.additional_fee,
-                                is_enable: chargeData?.data?.is_enable,
-                            }
-                        }
-                        onSubmit={handleChargeUpdate}
-                        buttonText="Update"
-                        update={true}
-                        c_mode={
-                            chargeData?.data && chargeData?.data?.charge_mode
-                        }
-                        handleClose={handleClose}
-                        loading={update_loading}
-                        form={`update_service_charge_form`}
-                        agent_id={agent_id}
-                    />
-                ) : (
-                    <ServiceChargeForm
-                        destroyOnUnmount
-                        enableReinitialize={true}
-                        onSubmit={handleChargeCreate}
-                        buttonText="Create"
-                        handleClose={handleClose}
-                        form={`add_service_charge_form`}
-                        initialValues={
-                            agent_id == 0
-                                ? {
-                                      sending_agent_id: "",
-                                  }
-                                : {
-                                      sending_agent_id: agent_id,
-                                  }
-                        }
-                        loading={add_loading}
-                        agent_id={agent_id}
-                    />
-                )}
-            </Grid>
-        </Grid>
+        </>
     );
 }
 

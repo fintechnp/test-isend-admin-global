@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -58,7 +59,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const ExceptionTransactions = () => {
+const ExceptionTransactions = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -351,28 +352,33 @@ const ExceptionTransactions = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title="Exception Transations" />
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={exceptionTransactions?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={exceptionTransactions?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="Exception Transations" />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                    handleFilter={handleFilter}
+                />
+                <Table
+                    columns={columns}
+                    data={exceptionTransactions?.data || []}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={exceptionTransactions?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { reset } from "redux-form";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 
@@ -11,7 +12,7 @@ import RefundForm from "./Form/RefundForm";
 import Details from "./components/Details";
 import BlockForm from "./Form/BlockForm";
 
-function Search() {
+function Search(props) {
     const dispatch = useDispatch();
     const [search, setSearch] = useState(null);
     const [button, setButton] = useState(null);
@@ -95,59 +96,64 @@ function Search() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm
-                    onSubmit={handleSearch}
-                    initialValues={{ transaction_id: "", pin_number: "" }}
-                />
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
+                <Grid item xs={12}>
+                    <SearchForm
+                        onSubmit={handleSearch}
+                        initialValues={{ transaction_id: "", pin_number: "" }}
+                    />
+                </Grid>
+                {loading && (
+                    <Grid item xs={12}>
+                        <Loading loading={loading} />
+                    </Grid>
+                )}
+                {!response?.data && !loading && error && (
+                    <Grid item xs={12}>
+                        <MessageBox text="No Transaction Found" />
+                    </Grid>
+                )}
+                {response?.data && !loading && (
+                    <>
+                        <Grid item xs={12}>
+                            <Details
+                                data={response?.data}
+                                handleBlockOrCancel={setButton}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            {button === "block" && (
+                                <BlockForm
+                                    onSubmit={handleBlock}
+                                    loading={b_loading}
+                                    initialValues={
+                                        response?.data?.tid && {
+                                            id: response?.data?.tid,
+                                        }
+                                    }
+                                />
+                            )}
+                            {button === "cancel" && (
+                                <RefundForm
+                                    onSubmit={handleRefund}
+                                    loading={r_loading}
+                                    initialValues={
+                                        response?.data?.tid && {
+                                            id: response?.data?.tid,
+                                            refund_charge: false,
+                                        }
+                                    }
+                                />
+                            )}
+                        </Grid>
+                    </>
+                )}
             </Grid>
-            {loading && (
-                <Grid item xs={12}>
-                    <Loading loading={loading} />
-                </Grid>
-            )}
-            {!response?.data && !loading && error && (
-                <Grid item xs={12}>
-                    <MessageBox text="No Transaction Found" />
-                </Grid>
-            )}
-            {response?.data && !loading && (
-                <>
-                    <Grid item xs={12}>
-                        <Details
-                            data={response?.data}
-                            handleBlockOrCancel={setButton}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        {button === "block" && (
-                            <BlockForm
-                                onSubmit={handleBlock}
-                                loading={b_loading}
-                                initialValues={
-                                    response?.data?.tid && {
-                                        id: response?.data?.tid,
-                                    }
-                                }
-                            />
-                        )}
-                        {button === "cancel" && (
-                            <RefundForm
-                                onSubmit={handleRefund}
-                                loading={r_loading}
-                                initialValues={
-                                    response?.data?.tid && {
-                                        id: response?.data?.tid,
-                                        refund_charge: false,
-                                    }
-                                }
-                            />
-                        )}
-                    </Grid>
-                </>
-            )}
-        </Grid>
+        </>
     );
 }
 

@@ -20,7 +20,7 @@ import { Box } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -35,7 +35,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UpdateButton = styled(IconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.border.dark,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 

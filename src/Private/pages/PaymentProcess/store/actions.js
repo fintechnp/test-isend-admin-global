@@ -47,6 +47,10 @@ const actions = {
     GET_AML_SUSPICIOUS_SUCCESS: "GET_AML_SUSPICIOUS_SUCCESS",
     GET_AML_SUSPICIOUS_FAILED: "GET_AML_SUSPICIOUS_FAILED",
 
+    GET_AML_SUSPICIOUS_DETAILS: "GET_AML_SUSPICIOUS_DETAILS",
+    GET_AML_SUSPICIOUS_DETAILS_SUCCESS: "GET_AML_SUSPICIOUS_DETAILS_SUCCESS",
+    GET_AML_SUSPICIOUS_DETAILS_FAILED: "GET_AML_SUSPICIOUS_DETAILS_FAILED",
+
     RELEASE_AML_SUSPICIOUS: "RELEASE_AML_SUSPICIOUS",
     RELEASE_AML_SUSPICIOUS_SUCCESS: "RELEASE_AML_SUSPICIOUS_SUCCESS",
     RELEASE_AML_SUSPICIOUS_FAILED: "RELEASE_AML_SUSPICIOUS_FAILED",
@@ -93,6 +97,11 @@ const actions = {
     get_aml_suspicious: (query) => ({
         type: actions.GET_AML_SUSPICIOUS,
         query,
+    }),
+
+    get_aml_suspicious_details: (transaction_id) => ({
+        type: actions.GET_AML_SUSPICIOUS_DETAILS,
+        transaction_id,
     }),
 
     get_exception_transactions: (query) => ({

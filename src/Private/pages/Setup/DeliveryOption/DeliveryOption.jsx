@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
@@ -70,7 +71,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const DeliveryOption = () => {
+const DeliveryOption = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -337,32 +338,37 @@ const DeliveryOption = () => {
     }, []);
 
     return (
-        <MenuContainer>
-            <Header />
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handlePayemntType={handlePayemntType}
-            />
-            <Table
-                columns={columns}
-                title="Delivery Option Details"
-                data={deliveryoption_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                totalPage={deliveryoption_data?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={deliveryoption_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleCountry={handleCountry}
+                    handleOrder={handleOrder}
+                    handlePayemntType={handlePayemntType}
+                />
+                <Table
+                    columns={columns}
+                    title="Delivery Option Details"
+                    data={deliveryoption_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    totalPage={deliveryoption_data?.pagination?.totalPage || 1}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={deliveryoption_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

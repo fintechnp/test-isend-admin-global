@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid, Button, Typography, Box } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -47,7 +48,7 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const UserPermission = () => {
+const UserPermission = (props) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -97,6 +98,9 @@ const UserPermission = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
             <PermissionContainer container>
                 <Grid item xs={12}>
                     <TitleWrapper container columnGap={1} alignItems="center">

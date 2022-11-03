@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
@@ -107,7 +108,7 @@ const filter = {
     order_by: "DESC",
 };
 
-function Search() {
+function Search(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isMounted = useRef(false);
@@ -452,57 +453,64 @@ function Search() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm
-                    onSubmit={handleSearch}
-                    handleReset={handleReset}
-                    SendPartner={SendPartner?.data || []}
-                    loading={p_loading}
-                />
-            </Grid>
-            {l_loading && (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <Loading loading={l_loading} />
+                    <SearchForm
+                        onSubmit={handleSearch}
+                        handleReset={handleReset}
+                        SendPartner={SendPartner?.data || []}
+                        loading={p_loading}
+                    />
                 </Grid>
-            )}
-            {!l_loading &&
-                customersData?.data &&
-                customersData?.data?.length === 0 && (
+                {l_loading && (
                     <Grid item xs={12}>
-                        <NoResults text="No Customer Found" />
+                        <Loading loading={l_loading} />
                     </Grid>
                 )}
-            {!l_loading && customersData?.data?.length > 0 && (
-                <Grid item xs={12}>
-                    <CustomerWrapper>
-                        <Filter
-                            sortData={sortData}
-                            orderData={orderData}
-                            title="Customer List"
-                            state={filterSchema}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                        />
-                        <Table
-                            columns={columns}
-                            data={customersData?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={customersData?.pagination}
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                />
-                            )}
-                        />
-                    </CustomerWrapper>
-                </Grid>
-            )}
-        </Grid>
+                {!l_loading &&
+                    customersData?.data &&
+                    customersData?.data?.length === 0 && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Customer Found" />
+                        </Grid>
+                    )}
+                {!l_loading && customersData?.data?.length > 0 && (
+                    <Grid item xs={12}>
+                        <CustomerWrapper>
+                            <Filter
+                                sortData={sortData}
+                                orderData={orderData}
+                                title="Customer List"
+                                state={filterSchema}
+                                handleOrder={handleOrder}
+                                handleSort={handleSort}
+                            />
+                            <Table
+                                columns={columns}
+                                data={customersData?.data || []}
+                                loading={l_loading}
+                                rowsPerPage={8}
+                                renderPagination={() => (
+                                    <TablePagination
+                                        paginationData={
+                                            customersData?.pagination
+                                        }
+                                        handleChangePage={handleChangePage}
+                                        handleChangeRowsPerPage={
+                                            handleChangeRowsPerPage
+                                        }
+                                    />
+                                )}
+                            />
+                        </CustomerWrapper>
+                    </Grid>
+                )}
+            </Grid>
+        </>
     );
 }
 

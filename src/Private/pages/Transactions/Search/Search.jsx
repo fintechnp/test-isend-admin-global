@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
@@ -56,7 +57,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-function Search() {
+function Search(props) {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -139,7 +140,7 @@ function Search() {
             {
                 Header: "C/B Id",
                 accessor: "customer_id",
-                maxWidth: 120,
+                maxWidth: 100,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -302,6 +303,7 @@ function Search() {
                     </Box>
                 ),
                 accessor: "send_status",
+                maxWidth: 120,
                 Cell: (data) => (
                     <Box
                         sx={{
@@ -447,67 +449,72 @@ function Search() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm
-                    enableReinitialize
-                    initialValues={{
-                        from_date: moment().format("YYYY-MM-DD"),
-                        to_date: moment().format("YYYY-MM-DD"),
-                    }}
-                    onSubmit={handleSearch}
-                    handleReset={handleReset}
-                />
-            </Grid>
-            {l_loading && (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <Loading loading={l_loading} />
+                    <SearchForm
+                        enableReinitialize
+                        initialValues={{
+                            from_date: moment().format("YYYY-MM-DD"),
+                            to_date: moment().format("YYYY-MM-DD"),
+                        }}
+                        onSubmit={handleSearch}
+                        handleReset={handleReset}
+                    />
                 </Grid>
-            )}
-            {!l_loading &&
-                transactionsData?.data &&
-                transactionsData?.data?.length === 0 && (
+                {l_loading && (
                     <Grid item xs={12}>
-                        <NoResults text="No Transaction Found" />
+                        <Loading loading={l_loading} />
                     </Grid>
                 )}
-            {!l_loading && transactionsData?.data?.length > 0 && (
-                <Grid item xs={12}>
-                    <CustomerWrapper>
-                        <Filter
-                            fileName="TransactionReport"
-                            success={pd_success}
-                            loading={pd_loading}
-                            csvReport={csvReport}
-                            sortData={sortData}
-                            orderData={orderData}
-                            title="Transaction List"
-                            state={filterSchema}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                            downloadData={downloadData}
-                        />
-                        <Table
-                            columns={columns}
-                            data={transactionsData?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={
-                                        transactionsData?.pagination
-                                    }
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                />
-                            )}
-                        />
-                    </CustomerWrapper>
-                </Grid>
-            )}
-        </Grid>
+                {!l_loading &&
+                    transactionsData?.data &&
+                    transactionsData?.data?.length === 0 && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Transaction Found" />
+                        </Grid>
+                    )}
+                {!l_loading && transactionsData?.data?.length > 0 && (
+                    <Grid item xs={12}>
+                        <CustomerWrapper>
+                            <Filter
+                                fileName="TransactionReport"
+                                success={pd_success}
+                                loading={pd_loading}
+                                csvReport={csvReport}
+                                sortData={sortData}
+                                orderData={orderData}
+                                title="Transaction List"
+                                state={filterSchema}
+                                handleOrder={handleOrder}
+                                handleSort={handleSort}
+                                downloadData={downloadData}
+                            />
+                            <Table
+                                columns={columns}
+                                data={transactionsData?.data || []}
+                                loading={l_loading}
+                                rowsPerPage={8}
+                                renderPagination={() => (
+                                    <TablePagination
+                                        paginationData={
+                                            transactionsData?.pagination
+                                        }
+                                        handleChangePage={handleChangePage}
+                                        handleChangeRowsPerPage={
+                                            handleChangeRowsPerPage
+                                        }
+                                    />
+                                )}
+                            />
+                        </CustomerWrapper>
+                    </Grid>
+                )}
+            </Grid>
+        </>
     );
 }
 

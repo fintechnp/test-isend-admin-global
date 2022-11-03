@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -56,7 +57,7 @@ const filter = {
     order_by: "DESC",
 };
 
-function AddUpdateExchangeRate() {
+function AddUpdateExchangeRate(props) {
     const { id, currency, agent_id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -136,99 +137,109 @@ function AddUpdateExchangeRate() {
     }
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <PublishedWithChangesIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title>{id ? "Update" : "Add"} Exchange Rate </Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleClose}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2 }} />
-            </Grid>
-            <Grid item xs={12}>
-                {id ? (
-                    <ExchangeRateForm
-                        destroyOnUnmount
-                        enableReinitialize={true}
-                        initialValues={
-                            exchangeData?.data && {
-                                base_to_sending:
-                                    exchangeData?.data?.base_to_sending,
-                                base_to_sending_margin:
-                                    exchangeData?.data?.base_to_sending_margin,
-                                base_to_sending_settle:
-                                    exchangeData?.data?.base_to_sending_settle,
-                                send_min_amount:
-                                    exchangeData?.data?.send_min_amount,
-                                send_max_amount:
-                                    exchangeData?.data?.send_max_amount,
-                                round_send_amount:
-                                    exchangeData?.data?.round_send_amount,
-                                base_to_receiving:
-                                    exchangeData?.data?.base_to_receiving,
-                                base_to_receiving_margin:
-                                    exchangeData?.data
-                                        ?.base_to_receiving_margin,
-                                base_to_receiving_settle:
-                                    exchangeData?.data
-                                        ?.base_to_receiving_settle,
-                                receive_min_amount:
-                                    exchangeData?.data?.receive_min_amount,
-                                receive_max_amount:
-                                    exchangeData?.data?.receive_max_amount,
-                                round_receiving_amount:
-                                    exchangeData?.data?.round_receiving_amount,
-                                customer_rate:
-                                    exchangeData?.data?.customer_rate,
-                                round_customer_rate:
-                                    exchangeData?.data?.round_customer_rate,
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                            <PublishedWithChangesIcon
+                                sx={{ color: "primary.main", fontSize: "28px" }}
+                            />
+                            <Title>
+                                {id ? "Update" : "Add"} Exchange Rate{" "}
+                            </Title>
+                        </Box>
+                        <BackButton
+                            variant="outlined"
+                            size="small"
+                            onClick={handleClose}
+                        >
+                            Back
+                        </BackButton>
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mb: 1.2 }} />
+                </Grid>
+                <Grid item xs={12}>
+                    {id ? (
+                        <ExchangeRateForm
+                            destroyOnUnmount
+                            enableReinitialize={true}
+                            initialValues={
+                                exchangeData?.data && {
+                                    base_to_sending:
+                                        exchangeData?.data?.base_to_sending,
+                                    base_to_sending_margin:
+                                        exchangeData?.data
+                                            ?.base_to_sending_margin,
+                                    base_to_sending_settle:
+                                        exchangeData?.data
+                                            ?.base_to_sending_settle,
+                                    send_min_amount:
+                                        exchangeData?.data?.send_min_amount,
+                                    send_max_amount:
+                                        exchangeData?.data?.send_max_amount,
+                                    round_send_amount:
+                                        exchangeData?.data?.round_send_amount,
+                                    base_to_receiving:
+                                        exchangeData?.data?.base_to_receiving,
+                                    base_to_receiving_margin:
+                                        exchangeData?.data
+                                            ?.base_to_receiving_margin,
+                                    base_to_receiving_settle:
+                                        exchangeData?.data
+                                            ?.base_to_receiving_settle,
+                                    receive_min_amount:
+                                        exchangeData?.data?.receive_min_amount,
+                                    receive_max_amount:
+                                        exchangeData?.data?.receive_max_amount,
+                                    round_receiving_amount:
+                                        exchangeData?.data
+                                            ?.round_receiving_amount,
+                                    customer_rate:
+                                        exchangeData?.data?.customer_rate,
+                                    round_customer_rate:
+                                        exchangeData?.data?.round_customer_rate,
+                                }
                             }
-                        }
-                        data={exchangeData?.data}
-                        onSubmit={handleChargeUpdate}
-                        buttonText="Update"
-                        handleClose={handleClose}
-                        loading={update_loading}
-                        form={`update_exchange_rate`}
-                        partner_sending={partner_sending?.data || []}
-                    />
-                ) : (
-                    <ExchangeRateForm
-                        destroyOnUnmount
-                        enableReinitialize
-                        onSubmit={handleChargeCreate}
-                        buttonText="Create"
-                        form={`add_exchange_rate`}
-                        handleClose={handleClose}
-                        initialValues={
-                            agent_id == 0
-                                ? {
-                                      sending_agent_id: "",
-                                      sending_currency: "",
-                                  }
-                                : {
-                                      sending_agent_id: agent_id,
-                                      sending_currency: currency,
-                                  }
-                        }
-                        loading={add_loading}
-                        partner_sending={partner_sending?.data || []}
-                    />
-                )}
+                            data={exchangeData?.data}
+                            onSubmit={handleChargeUpdate}
+                            buttonText="Update"
+                            handleClose={handleClose}
+                            loading={update_loading}
+                            form={`update_exchange_rate`}
+                            partner_sending={partner_sending?.data || []}
+                        />
+                    ) : (
+                        <ExchangeRateForm
+                            destroyOnUnmount
+                            enableReinitialize
+                            onSubmit={handleChargeCreate}
+                            buttonText="Create"
+                            form={`add_exchange_rate`}
+                            handleClose={handleClose}
+                            initialValues={
+                                agent_id == 0
+                                    ? {
+                                          sending_agent_id: "",
+                                          sending_currency: "",
+                                      }
+                                    : {
+                                          sending_agent_id: agent_id,
+                                          sending_currency: currency,
+                                      }
+                            }
+                            loading={add_loading}
+                            partner_sending={partner_sending?.data || []}
+                        />
+                    )}
+                </Grid>
             </Grid>
-        </Grid>
+        </>
     );
 }
 

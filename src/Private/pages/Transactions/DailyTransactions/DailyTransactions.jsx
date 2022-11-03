@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 
 import actions from "./../store/actions";
@@ -43,7 +42,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const DailyTransactions = () => {
+const DailyTransactions = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -374,28 +373,33 @@ const DailyTransactions = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title="Daily Transacations" />
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={dailyTransactions?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={dailyTransactions?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="Daily Transacations" />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                    handleFilter={handleFilter}
+                />
+                <Table
+                    columns={columns}
+                    data={dailyTransactions?.data || []}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={dailyTransactions?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

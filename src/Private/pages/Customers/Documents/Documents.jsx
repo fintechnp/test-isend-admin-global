@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
@@ -38,7 +39,7 @@ const initialState = {
     order_by: "ASC",
 };
 
-function Documents() {
+function Documents(props) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -268,28 +269,33 @@ function Documents() {
     };
 
     return (
-        <CustomerWrapper>
-            <Header />
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                data={Documents?.data || []}
-                loading={loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={Documents?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </CustomerWrapper>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <CustomerWrapper>
+                <Header />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    data={Documents?.data || []}
+                    loading={loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={Documents?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </CustomerWrapper>
+        </>
     );
 }
 

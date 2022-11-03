@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 
@@ -48,7 +49,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Email = () => {
+const Email = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -212,18 +213,6 @@ const Email = () => {
         []
     );
 
-    const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "email_by", name: "Sender" },
-        { key: "email_to", name: "Receiver" },
-        { key: "status", name: "Status" },
-        { key: "email_subject", name: "Subject" },
-        { key: "email_cc", name: "CC" },
-        { key: "email_bcc", name: "BCC" },
-        { key: "email_body", name: "Body" },
-        { key: "created_ts", name: "Created Date" },
-    ];
-
     const sortData = [
         { key: "None", value: "" },
         { key: "Sender", value: "email_by" },
@@ -284,31 +273,36 @@ const Email = () => {
     };
 
     return (
-        <EmailContainer>
-            <Header title="Email List">
-                <CreateEmail />
-            </Header>
-            <Filter
-                sortData={sortData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                data={EmailData?.data || []}
-                title="Email Details"
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={EmailData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </EmailContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <EmailContainer>
+                <Header title="Email List">
+                    <CreateEmail />
+                </Header>
+                <Filter
+                    sortData={sortData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    data={EmailData?.data || []}
+                    title="Email Details"
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={EmailData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </EmailContainer>
+        </>
     );
 };
 

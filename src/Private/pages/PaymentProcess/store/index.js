@@ -4,6 +4,7 @@ export { default as GetPaymentPendingReducer } from "./reducers/getPaymentPendin
 export { default as GetPendingTransactionsReducer } from "./reducers/getPendingTransactions";
 export { default as GetBlockedTransactionsReducer } from "./reducers/getBlockedTransactions";
 export { default as GetAmlSuspiciousReducer } from "./reducers/getAmlSuspicious";
+export { default as GetAmlSuspiciousDetailsReducer } from "./reducers/getAmlSuspiciousDetails";
 export { default as GetExceptionTransactionsReducer } from "./reducers/getExceptionTransactions";
 export { default as GetRefundBlockTransactionsReducer } from "./reducers/getRefundBlockTransactions";
 

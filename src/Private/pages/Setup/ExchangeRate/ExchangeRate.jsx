@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -50,7 +51,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const ExchangeRate = () => {
+const ExchangeRate = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -201,33 +202,38 @@ const ExchangeRate = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header
-                title="Partnerwise Exchange Rate"
-                buttonText="Add Exchange Rate"
-            />
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSort={handleSort}
-            />
-            <Table
-                columns={columns}
-                data={servicecharge_data?.data || []}
-                loading={g_loading || false}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={servicecharge_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header
+                    title="Partnerwise Exchange Rate"
+                    buttonText="Add Exchange Rate"
+                />
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleOrder={handleOrder}
+                    handleSort={handleSort}
+                />
+                <Table
+                    columns={columns}
+                    data={servicecharge_data?.data || []}
+                    loading={g_loading || false}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={servicecharge_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

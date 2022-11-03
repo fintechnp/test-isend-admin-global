@@ -34,7 +34,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UpdateButton = styled(IconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    border: `1px solid ${theme.palette.border.main}`,
+    color: theme.palette.border.dark,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 

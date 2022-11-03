@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import { SubmissionError, reset } from "redux-form";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 import { AuthContext } from "../../../App/auth";
 import LoginForm from "../components/LoginForm";
 import actions from "../../../Common/store/actions";
 
-function Login() {
+function Login(props) {
     const dispatch = useDispatch();
     const authContext = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
@@ -62,7 +63,15 @@ function Login() {
     };
 
     return (
-        <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <LoginForm
+                onSubmit={handleLogin}
+                loading={loading || user_loading}
+            />
+        </>
     );
 }
 

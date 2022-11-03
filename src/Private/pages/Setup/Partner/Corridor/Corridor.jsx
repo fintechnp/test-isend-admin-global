@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -81,7 +82,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Corridor = () => {
+const Corridor = (props) => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -292,26 +293,31 @@ const Corridor = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title={`Corridor List of ${name}`}>
-                <AddCorridor />
-            </Header>
-            <Table
-                columns={columns}
-                title="Corridor Details"
-                data={corridor_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={corridor_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title={`Corridor List of ${name}`}>
+                    <AddCorridor />
+                </Header>
+                <Table
+                    columns={columns}
+                    title="Corridor Details"
+                    data={corridor_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={corridor_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

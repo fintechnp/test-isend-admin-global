@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -58,7 +59,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const AmlSuspicious = () => {
+const AmlSuspicious = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -262,7 +263,7 @@ const AmlSuspicious = () => {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/transactions/details/${row.original.tid}`
+                                        `/transactions/details/aml-suspicious/${row.original.tid}`
                                     )
                                 }
                             >
@@ -364,28 +365,33 @@ const AmlSuspicious = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title="AML Suspicious" />
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={amlSuspicious?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={amlSuspicious?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="AML Suspicious" />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                    handleFilter={handleFilter}
+                />
+                <Table
+                    columns={columns}
+                    data={amlSuspicious?.data || []}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={amlSuspicious?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

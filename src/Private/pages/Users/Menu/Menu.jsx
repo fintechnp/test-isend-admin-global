@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Switch, Tooltip, Typography } from "@mui/material";
@@ -62,7 +63,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Menu = () => {
+const Menu = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -274,30 +275,35 @@ const Menu = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Menu"
-                data={menu_data?.data || []}
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                handleDelete={handleDelete}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={menu_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Menu"
+                    data={menu_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    handleDelete={handleDelete}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={menu_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

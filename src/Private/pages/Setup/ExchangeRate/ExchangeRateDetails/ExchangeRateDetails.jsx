@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -41,7 +42,7 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-function ExchangeRateDetails() {
+function ExchangeRateDetails(props) {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -60,29 +61,34 @@ function ExchangeRateDetails() {
     };
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <CurrencyExchangeIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title> Exchange Rate Details </Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleBack}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                            <CurrencyExchangeIcon
+                                sx={{ color: "primary.main", fontSize: "28px" }}
+                            />
+                            <Title> Exchange Rate Details </Title>
+                        </Box>
+                        <BackButton
+                            variant="outlined"
+                            size="small"
+                            onClick={handleBack}
+                        >
+                            Back
+                        </BackButton>
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mb: 1.2 }} />
+                </Grid>
+                {loading ? <Skeleton /> : <Details data={response?.data} />}
             </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2 }} />
-            </Grid>
-            {loading ? <Skeleton /> : <Details data={response?.data} />}
-        </Grid>
+        </>
     );
 }
 

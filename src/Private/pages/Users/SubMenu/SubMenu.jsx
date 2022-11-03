@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -53,7 +54,7 @@ const StyledText = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
-const SubMenu = () => {
+const SubMenu = (props) => {
     const dispatch = useDispatch();
     const { id, name } = useParams();
     const [filterSchema, setFilterSchema] = useState({
@@ -234,24 +235,29 @@ const SubMenu = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header name={name} />
-            <Table
-                columns={columns}
-                title="Sub Menu"
-                data={menu_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={5}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={menu_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header name={name} />
+                <Table
+                    columns={columns}
+                    title="Sub Menu"
+                    data={menu_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={5}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={menu_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { reset } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -75,7 +76,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Partner = () => {
+const Partner = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -355,39 +356,44 @@ const Partner = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title="Our Partner List">
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleAdd}
-                    endIcon={<AddIcon />}
-                >
-                    Add Partner
-                </AddButton>
-            </Header>
-            <Filter
-                orderData={orderData}
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
-            />
-            <Table
-                columns={columns}
-                data={partner_data?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={partner_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="Our Partner List">
+                    <AddButton
+                        size="small"
+                        variant="outlined"
+                        onClick={handleAdd}
+                        endIcon={<AddIcon />}
+                    >
+                        Add Partner
+                    </AddButton>
+                </Header>
+                <Filter
+                    orderData={orderData}
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleCountry={handleCountry}
+                    handleOrder={handleOrder}
+                    handleAgentType={handleAgentType}
+                />
+                <Table
+                    columns={columns}
+                    data={partner_data?.data || []}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={partner_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 
