@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { reset } from "redux-form";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -44,10 +45,10 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-function AddUpdateBeneficiary() {
+function AddUpdateBeneficiary(props) {
     const { id, bene_id } = useParams();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { response, loading } = useSelector(
         (state) => state.get_beneficiary_byid
     );
@@ -67,34 +68,41 @@ function AddUpdateBeneficiary() {
     };
 
     return (
-        <Container container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <PersonAddAltOutlinedIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title>{bene_id ? "Update" : "Add"} Beneficiary </Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleBack}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2, pt: 0.5 }} />
-            </Grid>
-            <Grid item xs={12}>
-                <BeneficiaryForm
-                    update_data={response?.data || []}
-                    loading={loading}
-                />
-            </Grid>
-        </Container>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Container container>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                            <PersonAddAltOutlinedIcon
+                                sx={{ color: "primary.main", fontSize: "28px" }}
+                            />
+                            <Title>
+                                {bene_id ? "Update" : "Add"} Beneficiary{" "}
+                            </Title>
+                        </Box>
+                        <BackButton
+                            variant="outlined"
+                            size="small"
+                            onClick={handleBack}
+                        >
+                            Back
+                        </BackButton>
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mb: 1.2, pt: 0.5 }} />
+                </Grid>
+                <Grid item xs={12}>
+                    <BeneficiaryForm
+                        update_data={response?.data || []}
+                        loading={loading}
+                    />
+                </Grid>
+            </Container>
+        </>
     );
 }
 

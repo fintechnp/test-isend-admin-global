@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
@@ -46,7 +47,7 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-function AddBranch() {
+function AddBranch(props) {
     const { agent_id, branch_id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -88,6 +89,54 @@ function AddBranch() {
 
     if (get_loading) {
         return (
+            <>
+                <Helmet>
+                    <title>Isend Global Admin | {props.title}</title>
+                </Helmet>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <TitleWrapper>
+                            <Box
+                                sx={{ display: "flex", alignItems: "flex-end" }}
+                            >
+                                <PublishedWithChangesIcon
+                                    sx={{
+                                        color: "primary.main",
+                                        fontSize: "28px",
+                                    }}
+                                />
+                                <Title>
+                                    {branch_id ? "Update" : "Add"} Partner
+                                    Branch
+                                </Title>
+                            </Box>
+                            <BackButton
+                                variant="outlined"
+                                size="small"
+                                onClick={handleClose}
+                            >
+                                Back
+                            </BackButton>
+                        </TitleWrapper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider sx={{ mb: 1.2 }} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box sx={{ display: "flex", justifyContent: "center" }}>
+                            <Fetching>Fetching...</Fetching>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </>
+        );
+    }
+
+    return (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
@@ -96,7 +145,7 @@ function AddBranch() {
                                 sx={{ color: "primary.main", fontSize: "28px" }}
                             />
                             <Title>
-                                {branch_id ? "Update" : "Add"} Partner Branch
+                                {branch_id ? "Update" : "Add"} Partner Branch{" "}
                             </Title>
                         </Box>
                         <BackButton
@@ -112,82 +161,50 @@ function AddBranch() {
                     <Divider sx={{ mb: 1.2 }} />
                 </Grid>
                 <Grid item xs={12}>
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fetching>Fetching...</Fetching>
-                    </Box>
+                    {branch_id ? (
+                        <BranchForm
+                            branch_id={branch_id}
+                            destroyOnUnmount
+                            enableReinitialize={true}
+                            initialValues={{
+                                name: BranchData?.data?.name,
+                                short_code: BranchData?.data?.short_code,
+                                external_branch_code:
+                                    BranchData?.data?.external_branch_code,
+                                branch_type: BranchData?.data?.branch_type,
+                                phone_number: BranchData?.data?.phone_number,
+                                email: BranchData?.data?.email,
+                                postcode: BranchData?.data?.postcode,
+                                unit: BranchData?.data?.unit,
+                                street: BranchData?.data?.street,
+                                city: BranchData?.data?.city,
+                                state: BranchData?.data?.state,
+                                start_time: BranchData?.data?.start_time,
+                                end_time: BranchData?.data?.end_time,
+                            }}
+                            onSubmit={handleBranchUpdate}
+                            buttonText="Update"
+                            handleClose={handleClose}
+                            loading={update_loading}
+                            form={`update_agent_branch_form`}
+                        />
+                    ) : (
+                        <BranchForm
+                            destroyOnUnmount
+                            enableReinitialize
+                            onSubmit={handleBranchSubmit}
+                            buttonText="Add"
+                            form={`add_agent_branch_form`}
+                            handleClose={handleClose}
+                            initialValues={{
+                                agent_id: agent_id || 0,
+                            }}
+                            loading={add_loading}
+                        />
+                    )}
                 </Grid>
             </Grid>
-        );
-    }
-
-    return (
-        <Grid container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <PublishedWithChangesIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title>
-                            {branch_id ? "Update" : "Add"} Partner Branch{" "}
-                        </Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleClose}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2 }} />
-            </Grid>
-            <Grid item xs={12}>
-                {branch_id ? (
-                    <BranchForm
-                        branch_id={branch_id}
-                        destroyOnUnmount
-                        enableReinitialize={true}
-                        initialValues={{
-                            name: BranchData?.data?.name,
-                            short_code: BranchData?.data?.short_code,
-                            external_branch_code:
-                                BranchData?.data?.external_branch_code,
-                            branch_type: BranchData?.data?.branch_type,
-                            phone_number: BranchData?.data?.phone_number,
-                            email: BranchData?.data?.email,
-                            postcode: BranchData?.data?.postcode,
-                            unit: BranchData?.data?.unit,
-                            street: BranchData?.data?.street,
-                            city: BranchData?.data?.city,
-                            state: BranchData?.data?.state,
-                            start_time: BranchData?.data?.start_time,
-                            end_time: BranchData?.data?.end_time,
-                        }}
-                        onSubmit={handleBranchUpdate}
-                        buttonText="Update"
-                        handleClose={handleClose}
-                        loading={update_loading}
-                        form={`update_agent_branch_form`}
-                    />
-                ) : (
-                    <BranchForm
-                        destroyOnUnmount
-                        enableReinitialize
-                        onSubmit={handleBranchSubmit}
-                        buttonText="Add"
-                        form={`add_agent_branch_form`}
-                        handleClose={handleClose}
-                        initialValues={{
-                            agent_id: agent_id || 0,
-                        }}
-                        loading={add_loading}
-                    />
-                )}
-            </Grid>
-        </Grid>
+        </>
     );
 }
 

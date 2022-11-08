@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import moment from "moment";
+import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
@@ -53,7 +54,7 @@ const stateSend = {
     order_by: "DESC",
 };
 
-function YearlyTransactions() {
+function YearlyTransactions(props) {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [show, setShow] = useState("txn_count");
@@ -589,11 +590,11 @@ function YearlyTransactions() {
     //Downloads
     const headers = [
         { label: "Partner", key: "agent" },
-        {label: "Months", key: "months"},
-        {label: "Rate", key: "avg_rate"},
-        {label: "Charge", key: "charge"},
-        {label: "No. Txn", key: "txn_count"},
-        {label: "Tot. Amt", key: "txn_amount"},
+        { label: "Months", key: "months" },
+        { label: "Rate", key: "avg_rate" },
+        { label: "Charge", key: "charge" },
+        { label: "No. Txn", key: "txn_count" },
+        { label: "Tot. Amt", key: "txn_amount" },
         { label: "Total Txn", key: "total_txn" },
         { label: "Toatal Amount", key: "total_amt" },
     ];
@@ -619,72 +620,77 @@ function YearlyTransactions() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm
-                    enableReinitialize
-                    initialValues={{
-                        transaction_year: moment().format("YYYY-MM-DD"),
-                    }}
-                    onSubmit={handleSearch}
-                    s_loading={s_loading}
-                    SendPartner={SendPartner?.data}
-                    handleReset={handleReset}
-                />
-            </Grid>
-            {l_loading && (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <Loading loading={l_loading} />
+                    <SearchForm
+                        enableReinitialize
+                        initialValues={{
+                            transaction_year: moment().format("YYYY-MM-DD"),
+                        }}
+                        onSubmit={handleSearch}
+                        s_loading={s_loading}
+                        SendPartner={SendPartner?.data}
+                        handleReset={handleReset}
+                    />
                 </Grid>
-            )}
-            {!l_loading &&
-                YearlyTransactions?.data &&
-                YearlyTransactions?.data?.length === 0 && (
+                {l_loading && (
                     <Grid item xs={12}>
-                        <NoResults text="No Data Found" />
+                        <Loading loading={l_loading} />
                     </Grid>
                 )}
-            {!l_loading && YearlyTransactions?.data?.length > 0 && (
-                <Grid item xs={12}>
-                    <CustomerWrapper>
-                        <Filter
-                            fileName="YearlyReport"
-                            success={pd_success}
-                            loading={pd_loading}
-                            csvReport={csvReport}
-                            sortData={sortData}
-                            orderData={orderData}
-                            showData={showData}
-                            state={filterSchema}
-                            show={show}
-                            handleShow={handleShow}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                            downloadData={downloadData}
-                            title={`Yearly Transactions Report [${filterSchema?.transaction_year}]`}
-                        />
-                        <Table
-                            group={true}
-                            columns={columns}
-                            data={YearlyTransactions?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={
-                                        YearlyTransactions?.pagination
-                                    }
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                />
-                            )}
-                        />
-                    </CustomerWrapper>
-                </Grid>
-            )}
-        </Grid>
+                {!l_loading &&
+                    YearlyTransactions?.data &&
+                    YearlyTransactions?.data?.length === 0 && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Data Found" />
+                        </Grid>
+                    )}
+                {!l_loading && YearlyTransactions?.data?.length > 0 && (
+                    <Grid item xs={12}>
+                        <CustomerWrapper>
+                            <Filter
+                                fileName="YearlyReport"
+                                success={pd_success}
+                                loading={pd_loading}
+                                csvReport={csvReport}
+                                sortData={sortData}
+                                orderData={orderData}
+                                showData={showData}
+                                state={filterSchema}
+                                show={show}
+                                handleShow={handleShow}
+                                handleOrder={handleOrder}
+                                handleSort={handleSort}
+                                downloadData={downloadData}
+                                title={`Yearly Transactions Report [${filterSchema?.transaction_year}]`}
+                            />
+                            <Table
+                                group={true}
+                                columns={columns}
+                                data={YearlyTransactions?.data || []}
+                                loading={l_loading}
+                                rowsPerPage={8}
+                                renderPagination={() => (
+                                    <TablePagination
+                                        paginationData={
+                                            YearlyTransactions?.pagination
+                                        }
+                                        handleChangePage={handleChangePage}
+                                        handleChangeRowsPerPage={
+                                            handleChangeRowsPerPage
+                                        }
+                                    />
+                                )}
+                            />
+                        </CustomerWrapper>
+                    </Grid>
+                )}
+            </Grid>
+        </>
     );
 }
 

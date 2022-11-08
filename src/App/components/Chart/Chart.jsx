@@ -1,6 +1,7 @@
 import React from "react";
+import "chart.js/auto";
 import { Bar, Line, Pie } from "react-chartjs-2";
-// import HtmlLegendPlugin from "./htmlLegendPlugin";
+import HtmlLegendPlugin from "./htmlLegendPlugin";
 
 const Chart = ({ customLegend, plugins, type, ...props }) => {
     const renderChart = () => {
@@ -10,18 +11,17 @@ const Chart = ({ customLegend, plugins, type, ...props }) => {
                     <Line
                         {...props}
                         type={type}
-                        // plugins={customLegend ? [HtmlLegendPlugin] : plugins}
-                        plugins={plugins}
+                        plugins={customLegend ? [HtmlLegendPlugin] : plugins}
                     />
                 );
 
             case "bar":
                 return (
                     <Bar
+                    style={{flex: 1}}
                         {...props}
                         type={type}
-                        // plugins={customLegend ? [HtmlLegendPlugin] : plugins}
-                        plugins={plugins}
+                        plugins={customLegend ? [HtmlLegendPlugin] : plugins}
                     />
                 );
 
@@ -30,8 +30,7 @@ const Chart = ({ customLegend, plugins, type, ...props }) => {
                     <Pie
                         {...props}
                         type={type}
-                        // plugins={customLegend ? [HtmlLegendPlugin] : plugins}
-                        plugins={plugins}
+                        plugins={customLegend ? [HtmlLegendPlugin] : plugins}
                     />
                 );
             default:
@@ -41,8 +40,8 @@ const Chart = ({ customLegend, plugins, type, ...props }) => {
 
     return (
         <>
-            {/* {customLegend && <div id={LEGEND_CONTAINER_ID}></div>} */}
-            <div>{renderChart()}</div>
+            {customLegend && <div id="legend-container"></div>}
+            <div style={{ display: "flex" }}>{renderChart()}</div>
         </>
     );
 };

@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { reset } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 import ResetForm from "../components/ResetForm";
 import actions from "../../../Common/store/actions";
 import { useNavigate, useParams } from "react-router-dom";
 
-function ResetPassword() {
+function ResetPassword(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user_id, code } = useParams();
@@ -30,7 +31,14 @@ function ResetPassword() {
         dispatch(actions.reset_password(data));
     };
 
-    return <ResetForm onSubmit={handleReset} loading={loading} />;
+    return (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <ResetForm onSubmit={handleReset} loading={loading} />
+        </>
+    );
 }
 
 export default ResetPassword;

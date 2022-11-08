@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import { reset } from "redux-form";
 import { useParams, useNavigate } from "react-router-dom";
@@ -40,7 +41,7 @@ const BackButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-function AddUpdatePartner() {
+function AddUpdatePartner(props) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -63,31 +64,39 @@ function AddUpdatePartner() {
     };
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <PersonAddAltOutlinedIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title>{id ? "Update" : "Add"} Partner </Title>
-                    </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleBack}
-                    >
-                        Back
-                    </BackButton>
-                </TitleWrapper>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                            <PersonAddAltOutlinedIcon
+                                sx={{ color: "primary.main", fontSize: "28px" }}
+                            />
+                            <Title>{id ? "Update" : "Add"} Partner </Title>
+                        </Box>
+                        <BackButton
+                            variant="outlined"
+                            size="small"
+                            onClick={handleBack}
+                        >
+                            Back
+                        </BackButton>
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ mb: 1.2, pt: 0.5 }} />
+                </Grid>
+                <Grid item xs={12}>
+                    <PartnerForm
+                        update_data={response?.data}
+                        loading={loading}
+                    />
+                </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <Divider sx={{ mb: 1.2, pt: 0.5 }} />
-            </Grid>
-            <Grid item xs={12}>
-                <PartnerForm update_data={response?.data} loading={loading} />
-            </Grid>
-        </Grid>
+        </>
     );
 }
 

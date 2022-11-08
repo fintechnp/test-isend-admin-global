@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
@@ -60,7 +61,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const ApiConfiguration = () => {
+const ApiConfiguration = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -287,35 +288,40 @@ const ApiConfiguration = () => {
     };
 
     return (
-        <ConfigContainer>
-            <Header title="API Configuration">
-                <AddApiConfig />
-            </Header>
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Api Config Details"
-                data={ApiConfigData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                totalPage={ApiConfigData?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={ApiConfigData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </ConfigContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <ConfigContainer>
+                <Header title="API Configuration">
+                    <AddApiConfig />
+                </Header>
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Api Config Details"
+                    data={ApiConfigData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    totalPage={ApiConfigData?.pagination?.totalPage || 1}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={ApiConfigData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </ConfigContainer>
+        </>
     );
 };
 

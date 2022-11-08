@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { Helmet } from "react-helmet-async";
 import { Box, Tooltip, Typography } from "@mui/material";
 
 import Filter from "../Shared/Filter";
@@ -89,7 +90,7 @@ const stateSend = {
     order_by: "DESC",
 };
 
-function CustomerReports() {
+function CustomerReports(props) {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -480,67 +481,74 @@ function CustomerReports() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm
-                    onSubmit={handleSearch}
-                    handlePartner={handlePartner}
-                    handleReset={handleReset}
-                    loading={p_loading}
-                    partner={SendingPartner?.data}
-                    initialValues={{
-                        created_from_date: moment().format("YYYY-MM-DD"),
-                        created_to_date: moment().format("YYYY-MM-DD"),
-                    }}
-                />
-            </Grid>
-            {l_loading && (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <Loading loading={l_loading} />
+                    <SearchForm
+                        onSubmit={handleSearch}
+                        handlePartner={handlePartner}
+                        handleReset={handleReset}
+                        loading={p_loading}
+                        partner={SendingPartner?.data}
+                        initialValues={{
+                            created_from_date: moment().format("YYYY-MM-DD"),
+                            created_to_date: moment().format("YYYY-MM-DD"),
+                        }}
+                    />
                 </Grid>
-            )}
-            {!l_loading &&
-                CustomerReports?.data &&
-                CustomerReports?.data?.length === 0 && (
+                {l_loading && (
                     <Grid item xs={12}>
-                        <NoResults text="No Customer Found" />
+                        <Loading loading={l_loading} />
                     </Grid>
                 )}
-            {!l_loading && CustomerReports?.data?.length > 0 && (
-                <Grid item xs={12}>
-                    <CustomerWrapper>
-                        <Filter
-                            fileName="CustomerReport"
-                            success={pd_success}
-                            loading={pd_loading}
-                            csvReport={csvReport}
-                            sortData={sortData}
-                            orderData={orderData}
-                            title="Customers List"
-                            state={filterSchema}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                            downloadData={downloadData}
-                        />
-                        <Table
-                            columns={columns}
-                            data={CustomerReports?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={CustomerReports?.pagination}
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                />
-                            )}
-                        />
-                    </CustomerWrapper>
-                </Grid>
-            )}
-        </Grid>
+                {!l_loading &&
+                    CustomerReports?.data &&
+                    CustomerReports?.data?.length === 0 && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Customer Found" />
+                        </Grid>
+                    )}
+                {!l_loading && CustomerReports?.data?.length > 0 && (
+                    <Grid item xs={12}>
+                        <CustomerWrapper>
+                            <Filter
+                                fileName="CustomerReport"
+                                success={pd_success}
+                                loading={pd_loading}
+                                csvReport={csvReport}
+                                sortData={sortData}
+                                orderData={orderData}
+                                title="Customers List"
+                                state={filterSchema}
+                                handleOrder={handleOrder}
+                                handleSort={handleSort}
+                                downloadData={downloadData}
+                            />
+                            <Table
+                                columns={columns}
+                                data={CustomerReports?.data || []}
+                                loading={l_loading}
+                                rowsPerPage={8}
+                                renderPagination={() => (
+                                    <TablePagination
+                                        paginationData={
+                                            CustomerReports?.pagination
+                                        }
+                                        handleChangePage={handleChangePage}
+                                        handleChangeRowsPerPage={
+                                            handleChangeRowsPerPage
+                                        }
+                                    />
+                                )}
+                            />
+                        </CustomerWrapper>
+                    </Grid>
+                )}
+            </Grid>
+        </>
     );
 }
 

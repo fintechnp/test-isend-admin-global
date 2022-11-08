@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
@@ -67,7 +68,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-function BeneficiaryReports() {
+function BeneficiaryReports(props) {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -444,67 +445,72 @@ function BeneficiaryReports() {
     };
 
     return (
-        <Grid container sx={{ pb: "24px" }}>
-            <Grid item xs={12}>
-                <SearchForm
-                    enableReinitialize
-                    onSubmit={handleSearch}
-                    handleReset={handleReset}
-                    initialValues={{
-                        created_from_date: moment().format("YYYY-MM-DD"),
-                        created_to_date: moment().format("YYYY-MM-DD"),
-                    }}
-                />
-            </Grid>
-            {l_loading && (
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <Loading loading={l_loading} />
+                    <SearchForm
+                        enableReinitialize
+                        onSubmit={handleSearch}
+                        handleReset={handleReset}
+                        initialValues={{
+                            created_from_date: moment().format("YYYY-MM-DD"),
+                            created_to_date: moment().format("YYYY-MM-DD"),
+                        }}
+                    />
                 </Grid>
-            )}
-            {!l_loading &&
-                BeneficiaryReports?.data &&
-                BeneficiaryReports?.data?.length === 0 && (
+                {l_loading && (
                     <Grid item xs={12}>
-                        <NoResults text="No Beneficiary Found" />
+                        <Loading loading={l_loading} />
                     </Grid>
                 )}
-            {!l_loading && BeneficiaryReports?.data?.length > 0 && (
-                <Grid item xs={12}>
-                    <CustomerWrapper>
-                        <Filter
-                            fileName="BeneficiaryReport"
-                            success={pd_success}
-                            loading={pd_loading}
-                            sortData={sortData}
-                            csvReport={csvReport}
-                            orderData={orderData}
-                            title="Beneficiary List"
-                            state={filterSchema}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                            downloadData={downloadData}
-                        />
-                        <Table
-                            columns={columns}
-                            data={BeneficiaryReports?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={
-                                        BeneficiaryReports?.pagination
-                                    }
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={
-                                        handleChangeRowsPerPage
-                                    }
-                                />
-                            )}
-                        />
-                    </CustomerWrapper>
-                </Grid>
-            )}
-        </Grid>
+                {!l_loading &&
+                    BeneficiaryReports?.data &&
+                    BeneficiaryReports?.data?.length === 0 && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Beneficiary Found" />
+                        </Grid>
+                    )}
+                {!l_loading && BeneficiaryReports?.data?.length > 0 && (
+                    <Grid item xs={12}>
+                        <CustomerWrapper>
+                            <Filter
+                                fileName="BeneficiaryReport"
+                                success={pd_success}
+                                loading={pd_loading}
+                                sortData={sortData}
+                                csvReport={csvReport}
+                                orderData={orderData}
+                                title="Beneficiary List"
+                                state={filterSchema}
+                                handleOrder={handleOrder}
+                                handleSort={handleSort}
+                                downloadData={downloadData}
+                            />
+                            <Table
+                                columns={columns}
+                                data={BeneficiaryReports?.data || []}
+                                loading={l_loading}
+                                rowsPerPage={8}
+                                renderPagination={() => (
+                                    <TablePagination
+                                        paginationData={
+                                            BeneficiaryReports?.pagination
+                                        }
+                                        handleChangePage={handleChangePage}
+                                        handleChangeRowsPerPage={
+                                            handleChangeRowsPerPage
+                                        }
+                                    />
+                                )}
+                            />
+                        </CustomerWrapper>
+                    </Grid>
+                )}
+            </Grid>
+        </>
     );
 }
 

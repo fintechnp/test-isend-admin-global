@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import MuiIconButton from "@mui/material/IconButton";
 import { Box, Tooltip, Typography } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { Helmet } from "react-helmet-async";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import actions from "./../../Transactions/store/actions";
@@ -49,7 +49,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-function Transactions() {
+function Transactions(props) {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -308,28 +308,32 @@ function Transactions() {
     };
 
     return (
-        <CustomerWrapper>
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                // handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={TransactionData?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={TransactionData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </CustomerWrapper>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <CustomerWrapper>
+                <Header />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    data={TransactionData?.data || []}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={TransactionData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </CustomerWrapper>
+        </>
     );
 }
 

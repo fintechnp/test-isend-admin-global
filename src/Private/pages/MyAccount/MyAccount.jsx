@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -182,7 +183,7 @@ const RenderTopField = ({ label, value }) => {
     );
 };
 
-function MyAccount() {
+function MyAccount(props) {
     const dispatch = useDispatch();
 
     const {
@@ -204,122 +205,131 @@ function MyAccount() {
     }
 
     return (
-        <DetailWrapper container>
-            <Grid item xs={12}>
-                <Header>My Account</Header>
-                <Divider />
-            </Grid>
-            <Grid item xs={12}>
-                <NameBox>
-                    <Box sx={{ p: 1.5 }}>
-                        <Badge
-                            overlap="circular"
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                            }}
-                        >
-                            <Avatar
-                                {...stringAvatar(
-                                    UserData?.data?.first_name,
-                                    UserData?.data?.last_name
-                                )}
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <DetailWrapper container>
+                <Grid item xs={12}>
+                    <Header>My Account</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <NameBox>
+                        <Box sx={{ p: 1.5 }}>
+                            <Badge
+                                overlap="circular"
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                            >
+                                <Avatar
+                                    {...stringAvatar(
+                                        UserData?.data?.first_name,
+                                        UserData?.data?.last_name
+                                    )}
+                                />
+                            </Badge>
+                        </Box>
+                        <NameField>
+                            <RenderTopField
+                                label="Name"
+                                value={
+                                    UserData?.data?.name
+                                        ? UserData?.data?.name
+                                        : ""
+                                }
                             />
-                        </Badge>
-                    </Box>
-                    <NameField>
-                        <RenderTopField
-                            label="Name"
-                            value={
-                                UserData?.data?.name ? UserData?.data?.name : ""
-                            }
-                        />
-                        <RenderTopField
-                            label="Role"
-                            value={
-                                UserData?.data?.user_type
-                                    ? UserData?.data?.user_type
-                                    : ""
-                            }
-                        />
-                    </NameField>
-                </NameBox>
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>My Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Firstname"
-                    value={UserData?.data?.first_name}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Lastname"
-                    value={UserData?.data?.last_name}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Email"
-                    value={UserData?.data?.email ? UserData?.data?.email : ""}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Phone Number"
-                    value={UserData?.data?.phone_number}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Last Login"
-                    value={FormatDateTime(UserData?.data?.last_login_ts)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Created At"
-                    value={FormatDate(UserData?.data?.created_ts)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <InfoWrapper>
-                    <LabelWrapper>Status:</LabelWrapper>
-                    <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                        {UserData?.data?.is_active ? (
-                            <Tooltip title="Active" arrow>
-                                <StatusWrapper>
-                                    <CheckCircleOutlineIcon
-                                        fontSize="small"
-                                        sx={{ color: "success.main" }}
-                                    />
-                                    <Typography sx={{ paddingLeft: "8px" }}>
-                                        Active
-                                    </Typography>
-                                </StatusWrapper>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Inactive" arrow>
-                                <StatusWrapper>
-                                    <DoNotDisturbOnIcon
-                                        fontSize="small"
-                                        sx={{ color: "warning.main" }}
-                                    />
-                                    <Typography sx={{ paddingLeft: "8px" }}>
-                                        Inactive
-                                    </Typography>
-                                </StatusWrapper>
-                            </Tooltip>
-                        )}
-                    </ValueWrapper>
-                </InfoWrapper>
-            </Grid>
-        </DetailWrapper>
+                            <RenderTopField
+                                label="Role"
+                                value={
+                                    UserData?.data?.user_type
+                                        ? UserData?.data?.user_type
+                                        : ""
+                                }
+                            />
+                        </NameField>
+                    </NameBox>
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>My Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Firstname"
+                        value={UserData?.data?.first_name}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Lastname"
+                        value={UserData?.data?.last_name}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Email"
+                        value={
+                            UserData?.data?.email ? UserData?.data?.email : ""
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Phone Number"
+                        value={UserData?.data?.phone_number}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Last Login"
+                        value={FormatDateTime(UserData?.data?.last_login_ts)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Created At"
+                        value={FormatDate(UserData?.data?.created_ts)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <InfoWrapper>
+                        <LabelWrapper>Status:</LabelWrapper>
+                        <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            {UserData?.data?.is_active ? (
+                                <Tooltip title="Active" arrow>
+                                    <StatusWrapper>
+                                        <CheckCircleOutlineIcon
+                                            fontSize="small"
+                                            sx={{ color: "success.main" }}
+                                        />
+                                        <Typography sx={{ paddingLeft: "8px" }}>
+                                            Active
+                                        </Typography>
+                                    </StatusWrapper>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Inactive" arrow>
+                                    <StatusWrapper>
+                                        <DoNotDisturbOnIcon
+                                            fontSize="small"
+                                            sx={{ color: "warning.main" }}
+                                        />
+                                        <Typography sx={{ paddingLeft: "8px" }}>
+                                            Inactive
+                                        </Typography>
+                                    </StatusWrapper>
+                                </Tooltip>
+                            )}
+                        </ValueWrapper>
+                    </InfoWrapper>
+                </Grid>
+            </DetailWrapper>
+        </>
     );
 }
 

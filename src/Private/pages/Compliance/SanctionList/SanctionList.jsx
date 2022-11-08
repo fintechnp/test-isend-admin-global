@@ -5,6 +5,7 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { Helmet } from "react-helmet-async";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
@@ -51,7 +52,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const SanctionList = () => {
+const SanctionList = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -296,30 +297,35 @@ const SanctionList = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header loading={i_loading} />
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Payment Rules"
-                data={sanctionList?.data || []}
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                handleDelete={handleDelete}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={sanctionList?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header loading={i_loading} />
+                <Filter
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Payment Rules"
+                    data={sanctionList?.data || []}
+                    sub_columns={sub_columns}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    handleDelete={handleDelete}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={sanctionList?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

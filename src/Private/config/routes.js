@@ -149,181 +149,278 @@ const MyAccount = lazy(() => import("../pages/MyAccount"));
 const Accounting = lazy(() => import("../pages/Accounting"));
 
 const privateRoutes = [
-    { path: "/", component: <Dashboard /> },
-    { path: "/user/accounts", component: <Accounts /> },
-    { path: "/user/permission/:id", component: <UserPermission /> },
-    { path: "/user/menu", component: <Menu /> },
-    { path: "/user/menu/sub/:name/:id", component: <SubMenu /> },
+    { path: "/", component: <Dashboard title="Dashboard" /> },
+    { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
+    {
+        path: "/user/permission/:id",
+        component: <UserPermission title="User Permissions" />,
+    },
+    { path: "/user/menu", component: <Menu title="Menus" /> },
+    {
+        path: "/user/menu/sub/:name/:id",
+        component: <SubMenu title="Sub Menus" />,
+    },
 
     //Setup routes
-    { path: "/setup/delivery-option", component: <DeliveryOption /> },
-    { path: "/setup/delivery-route", component: <DeliveryRoute /> },
-    { path: "/setup/exchange-rate", component: <ExchangeRate /> },
+    {
+        path: "/setup/delivery-option",
+        component: <DeliveryOption title="Delivery Options" />,
+    },
+    {
+        path: "/setup/delivery-route",
+        component: <DeliveryRoute title="Delivery Route" />,
+    },
+    {
+        path: "/setup/exchange-rate",
+        component: <ExchangeRate title="Partnerwise Exchange Rate" />,
+    },
     {
         path: "/setup/exchange-rate/:name/:sending_currency/:id",
-        component: <ExchangeRateList />,
+        component: <ExchangeRateList title="Exchange Rate List" />,
     },
     {
         path: "/setup/exchange-rate/create/:currency/:agent_id",
-        component: <AddUpdateExchangeRate />,
+        component: <AddUpdateExchangeRate title="Create Exchange Rate" />,
     },
     {
         path: "/setup/exchange-rate/update/:id",
-        component: <AddUpdateExchangeRate />,
+        component: <AddUpdateExchangeRate title="Update Exchange Rate" />,
     },
     {
         path: "/setup/exchange-rate/details/:id",
-        component: <ExchangeRateDetails />,
+        component: <ExchangeRateDetails title="Exchange Rate Details" />,
     },
-    { path: "/setup/partner", component: <Partner /> },
-    { path: "/setup/partner/create", component: <AddUpdatePartner /> },
-    { path: "/setup/partner/update/:id", component: <AddUpdatePartner /> },
-    { path: "/setup/partner/details/:id", component: <PartnerDetails /> },
-    { path: "/setup/partner/corridor/:name/:id", component: <Corridor /> },
-    { path: "/setup/partner/branch/:name/:id", component: <PartnerBranch /> },
+    { path: "/setup/partner", component: <Partner title="Partner List" /> },
+    {
+        path: "/setup/partner/create",
+        component: <AddUpdatePartner title="Create Partner" />,
+    },
+    {
+        path: "/setup/partner/update/:id",
+        component: <AddUpdatePartner title="Update Partner" />,
+    },
+    {
+        path: "/setup/partner/details/:id",
+        component: <PartnerDetails title="Partner Details" />,
+    },
+    {
+        path: "/setup/partner/corridor/:name/:id",
+        component: <Corridor title="Corridor List" />,
+    },
+    {
+        path: "/setup/partner/branch/:name/:id",
+        component: <PartnerBranch title="Branch" />,
+    },
     {
         path: "/setup/partner/branch/add/:agent_id",
-        component: <AddPartnerBranch />,
+        component: <AddPartnerBranch title="Add Branch" />,
     },
     {
         path: "/setup/partner/branch/update/:agent_id/:branch_id",
-        component: <AddPartnerBranch />,
+        component: <AddPartnerBranch title="Update Branch" />,
     },
-    { path: "/setup/partner-bank", component: <PartnerBank /> },
+    {
+        path: "/setup/partner-bank",
+        component: <PartnerBank title="Partner Bank" />,
+    },
     {
         path: "/setup/partner-bank/map/:payment/:country/:currency/:id",
-        component: <MapBank />,
+        component: <MapBank title="Map Partner Bank" />,
     },
-    { path: "/setup/payout-location", component: <PayoutLocation /> },
-    { path: "/setup/reference", component: <Reference /> },
-    { path: "/setup/reference/data/:name/:id", component: <ReferenceData /> },
-    { path: "/setup/service-charge", component: <ServiceCharge /> },
+    {
+        path: "/setup/payout-location",
+        component: <PayoutLocation title="Payout Location" />,
+    },
+    { path: "/setup/reference", component: <Reference title="Reference" /> },
+    {
+        path: "/setup/reference/data/:name/:id",
+        component: <ReferenceData title="Reference Data" />,
+    },
+    {
+        path: "/setup/service-charge",
+        component: <ServiceCharge title="Partnerwise Service Charge" />,
+    },
     {
         path: "/setup/service-charge/:name/:id",
-        component: <ServiceChargeList />,
+        component: <ServiceChargeList title="Service Charge List" />,
     },
     {
         path: "/setup/service-charge/:agent_id/create",
-        component: <AddUpdateServiceCharge />,
+        component: <AddUpdateServiceCharge title="Create Service Charge" />,
     },
     {
         path: "/setup/service-charge/update/:id",
-        component: <AddUpdateServiceCharge />,
+        component: <AddUpdateServiceCharge title="Update Service Charge" />,
     },
     {
         path: "/setup/service-charge/details/:id",
-        component: <ServiceChargeDetails />,
+        component: <ServiceChargeDetails title="Service Charge Details" />,
     },
     {
         path: "/setup/promo-setup",
-        component: <PromoSetup />,
+        component: <PromoSetup title="Promo Setup" />,
     },
     {
         path: "/setup/promo-code/:name/:id",
-        component: <PromoCode />,
+        component: <PromoCode title="Promo Code" />,
     },
     {
         path: "/setup/api-configuration",
-        component: <ApiConfiguration />,
+        component: <ApiConfiguration title="Api Configuration" />,
     },
 
     //Customers
-    { path: "/customer/search", component: <CustomerSearch /> },
-    { path: "/customer/create", component: <CreateCustomer /> },
-    { path: "/customer/update/:id", component: <CreateCustomer /> },
-    { path: "/customer/details/:id", component: <CustomerDetails /> },
-    { path: "/customer/all-beneficiary/:id", component: <AllBeneficiary /> },
+    {
+        path: "/customer/search",
+        component: <CustomerSearch title="Customer Search" />,
+    },
+    {
+        path: "/customer/create",
+        component: <CreateCustomer title="Create Customer" />,
+    },
+    {
+        path: "/customer/update/:id",
+        component: <CreateCustomer title="Update Customer" />,
+    },
+    {
+        path: "/customer/details/:id",
+        component: <CustomerDetails title="Customer Details" />,
+    },
+    {
+        path: "/customer/all-beneficiary/:id",
+        component: <AllBeneficiary title="Beneficiary List" />,
+    },
     {
         path: "/customer/beneficiary/add/:id",
-        component: <AddBeneficiary />,
+        component: <AddBeneficiary title="Create Beneficiary" />,
     },
     {
         path: "/customer/beneficiary/update/:id/:bene_id",
-        component: <AddBeneficiary />,
+        component: <AddBeneficiary title="Update Beneficiary" />,
     },
     {
         path: "/customer/beneficiary/details/:id/:bene_id",
-        component: <BeneficiaryDetails />,
+        component: <BeneficiaryDetails title="Beneficiary Details" />,
     },
     {
         path: "/customer/all-transactions/:id",
-        component: <CustomerTransactions />,
+        component: <CustomerTransactions title="Customer's Transactions" />,
     },
     {
         path: "/customer/documents/:id",
-        component: <Documents />,
+        component: <Documents title="Customer's Documents" />,
     },
 
     {
         path: "/customer/remarks/:id",
-        component: <CustomerRemarks />,
+        component: <CustomerRemarks title="Customer's Remarks" />,
     },
 
     //Transactions
-    { path: "/transaction/new", component: <CreateTransactions /> },
-    { path: "/transaction/update/:id", component: <CreateTransactions /> },
-    { path: "/transaction/daily", component: <DailyTransactions /> },
-    { path: "/transaction/search", component: <SearchTransactions /> },
+    {
+        path: "/transaction/new",
+        component: <CreateTransactions title="Create Transaction" />,
+    },
+    {
+        path: "/transaction/update/:id",
+        component: <CreateTransactions title="Update Transaction" />,
+    },
+    {
+        path: "/transaction/daily",
+        component: <DailyTransactions title="Daily Transactions" />,
+    },
+    {
+        path: "/transaction/search",
+        component: <SearchTransactions title="Search Transactions" />,
+    },
     {
         path: "/transaction/remarks/:id",
-        component: <TransactionRemarks />,
+        component: <TransactionRemarks title="Transaction's Remarks" />,
     },
 
     //Reports
-    { path: "/report/customer", component: <CustomerReport /> },
-    { path: "/report/beneficiary", component: <BeneficiaryReport /> },
-    { path: "/report/yearly-transactions", component: <YearlyTransactions /> },
-    { path: "/report/transaction-summary", component: <TransactionsSummary /> },
+    {
+        path: "/report/customer",
+        component: <CustomerReport title="Customer Reports" />,
+    },
+    {
+        path: "/report/beneficiary",
+        component: <BeneficiaryReport title="Beneficiary Reports" />,
+    },
+    {
+        path: "/report/yearly-transactions",
+        component: <YearlyTransactions title="Yearly Transactions" />,
+    },
+    {
+        path: "/report/transaction-summary",
+        component: <TransactionsSummary title="Transaction Summary" />,
+    },
     {
         path: "/report/cancelled-transactions",
-        component: <CancelledTransactions />,
+        component: <CancelledTransactions title="Cancelled Transactions" />,
     },
     {
         path: "/report/suspicious-transactions",
-        component: <SuspiciousTransactions />,
+        component: <SuspiciousTransactions title="Suspicious Transactions" />,
     },
 
     //PaymentProcess
-    { path: "/payment/pending", component: <PendingPayment /> },
+    {
+        path: "/payment/pending",
+        component: <PendingPayment title="Pending Payment" />,
+    },
     {
         path: "/payment/pending-transactions",
-        component: <PendingTransactions />,
+        component: <PendingTransactions title="Pending Transactions" />,
     },
-    { path: "/payment/block-list", component: <BlockedTransactions /> },
-    { path: "/payment/search", component: <Search /> },
-    { path: "/payment/aml-suspicious", component: <AmlSupicious /> },
+    {
+        path: "/payment/block-list",
+        component: <BlockedTransactions title="Blocked Transactions" />,
+    },
+    { path: "/payment/search", component: <Search title="Block/Refund" /> },
+    {
+        path: "/payment/aml-suspicious",
+        component: <AmlSupicious title="AML Suspicious" />,
+    },
     {
         path: "/payment/exception-transactions",
-        component: <ExceptionTransactions />,
+        component: <ExceptionTransactions title="Exception Transactions" />,
     },
     {
         path: "/transactions/details/:id",
-        component: <TransactionsDetails />,
+        component: <TransactionsDetails title="Transaction Details" />,
+    },
+    {
+        path: "/transactions/details/aml-suspicious/:tid",
+        component: <TransactionsDetails title="Transaction Details" />,
     },
 
     //Utilities
-    { path: "/utilities/sms", component: <Sms /> },
-    { path: "/utilities/email", component: <Email /> },
-    { path: "/utilities/fcm", component: <Fcm /> },
+    { path: "/utilities/sms", component: <Sms title="SMS" /> },
+    { path: "/utilities/email", component: <Email title="Email" /> },
+    { path: "/utilities/fcm", component: <Fcm title="FCM" /> },
 
     //Compliance
-    { path: "/compliance/sanction-list", component: <SanctionList /> },
+    {
+        path: "/compliance/sanction-list",
+        component: <SanctionList title="Sanction List" />,
+    },
     {
         path: "/compliance/payment-rules",
-        component: <CompliancePaymentRules />,
+        component: <CompliancePaymentRules title="Payment Rules" />,
     },
 
     //Settings
-    { path: "/settings", component: <Settings /> },
+    { path: "/settings", component: <Settings title="Settings" /> },
 
     //Messages
-    { path: "/messages", component: <Messages /> },
+    { path: "/messages", component: <Messages title="Messages" /> },
 
     //MyAccount
-    { path: "/account", component: <MyAccount /> },
+    { path: "/account", component: <MyAccount title="My Account" /> },
 
     //Accounting
-    { path: "/accounting", component: <Accounting /> },
+    { path: "/accounting", component: <Accounting title="Accounting" /> },
 ];
 
 export default privateRoutes;

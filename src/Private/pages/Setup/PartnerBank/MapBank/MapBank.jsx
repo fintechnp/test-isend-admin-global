@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
@@ -39,7 +40,7 @@ const StyledText = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
-const MapBank = () => {
+const MapBank = (props) => {
     const { payment, country, currency, id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -231,29 +232,37 @@ const MapBank = () => {
     };
 
     return (
-        <MapContainer>
-            <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSort={handleSort}
-            />
-            <Table
-                columns={columns}
-                title="Exchange Rate Details"
-                data={payoutloaction_data?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={payoutloaction_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MapContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MapContainer>
+                <Header
+                    title="Exchange Rate List"
+                    buttonText="Add Exchange Rate"
+                />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleOrder={handleOrder}
+                    handleSort={handleSort}
+                />
+                <Table
+                    columns={columns}
+                    title="Exchange Rate Details"
+                    data={payoutloaction_data?.data || []}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={payoutloaction_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MapContainer>
+        </>
     );
 };
 

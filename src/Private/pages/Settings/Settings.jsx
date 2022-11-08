@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -22,7 +23,7 @@ const Header = styled(Typography)(({ theme }) => ({
     padding: "4px 0px",
 }));
 
-function Settings() {
+function Settings(props) {
     const dispatch = useDispatch();
     const mode = useSelector((state) => state.change_theme?.mode);
 
@@ -39,36 +40,41 @@ function Settings() {
     };
 
     return (
-        <SettingWrapper rowGap={1} container>
-            <Grid item xs={12}>
-                <Header>Settings</Header>
-                <Divider />
-            </Grid>
-            <Grid item xs={12}>
-                <SwitchBoxSettings
-                    checked={!mode}
-                    title="Change Theme"
-                    description="Swtich between light and dark theme."
-                    handleChange={handleTheme}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <SwitchBoxSettings
-                    // checked={false}
-                    title="Show chat notifications"
-                    description="To prevent chat notifications in desktop, turn off Chat notifications."
-                    handleChange={handleChat}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <SwitchBoxSettings
-                    // checked={false}
-                    title="On/Off Messages"
-                    description="Recieve messages from customer."
-                    handleChange={handleMessage}
-                />
-            </Grid>
-        </SettingWrapper>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <SettingWrapper rowGap={1} container>
+                <Grid item xs={12}>
+                    <Header>Settings</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <SwitchBoxSettings
+                        checked={!mode}
+                        title="Change Theme"
+                        description="Swtich between light and dark theme."
+                        handleChange={handleTheme}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <SwitchBoxSettings
+                        // checked={false}
+                        title="Show chat notifications"
+                        description="To prevent chat notifications in desktop, turn off Chat notifications."
+                        handleChange={handleChat}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <SwitchBoxSettings
+                        // checked={false}
+                        title="On/Off Messages"
+                        description="Recieve messages from customer."
+                        handleChange={handleMessage}
+                    />
+                </Grid>
+            </SettingWrapper>
+        </>
     );
 }
 

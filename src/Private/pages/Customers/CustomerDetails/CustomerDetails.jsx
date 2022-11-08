@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -203,7 +204,7 @@ const RenderTopField = ({ label, value }) => {
     );
 };
 
-function CustomerDetails() {
+function CustomerDetails(props) {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -254,287 +255,299 @@ function CustomerDetails() {
     }
 
     return (
-        <DetailWrapper container>
-            <Grid item xs={12}>
-                <Header>Customer Details</Header>
-                <Divider />
-            </Grid>
-            <Grid item xs={12}>
-                <NameBox>
-                    <Box sx={{ p: 1.5 }}>
-                        <Badge
-                            overlap="circular"
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                            }}
-                            badgeContent={
-                                <SmallAvatar
-                                    alt="flag iso3"
-                                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
-                                        customersData?.data?.country_iso2 ||
-                                        "US"
-                                    }.svg`}
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <DetailWrapper container>
+                <Grid item xs={12}>
+                    <Header>Customer Details</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <NameBox>
+                        <Box sx={{ p: 1.5 }}>
+                            <Badge
+                                overlap="circular"
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                badgeContent={
+                                    <SmallAvatar
+                                        alt="flag iso3"
+                                        src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
+                                            customersData?.data?.country_iso2 ||
+                                            "US"
+                                        }.svg`}
+                                    />
+                                }
+                            >
+                                <Avatar
+                                    {...stringAvatar(
+                                        customersData?.data?.first_name,
+                                        customersData?.data?.last_name
+                                    )}
                                 />
+                            </Badge>
+                        </Box>
+                        <NameField>
+                            <RenderTopField
+                                label="Name"
+                                value={`${
+                                    customersData?.data?.first_name
+                                }${" "}${
+                                    customersData?.data?.middle_name
+                                        ? " " +
+                                          customersData?.data?.middle_name +
+                                          " "
+                                        : " "
+                                }${
+                                    customersData?.data?.last_name
+                                        ? customersData?.data?.last_name
+                                        : ""
+                                }`}
+                            />
+                            <RenderTopField
+                                label="Customer Id"
+                                value={customersData?.data?.customer_id}
+                            />
+                        </NameField>
+                    </NameBox>
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Basic Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Firstname"
+                        value={customersData?.data?.first_name}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Mid-name"
+                        value={customersData?.data?.middle_name}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Lastname"
+                        value={customersData?.data?.last_name}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Gender"
+                        value={
+                            customersData?.data?.gender
+                                ? ReferenceName(42, customersData?.data?.gender)
+                                : ""
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Mobile Number"
+                        value={customersData?.data?.mobile_number}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Identity Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Type"
+                        value={customersData?.data?.id_type}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Number"
+                        value={customersData?.data?.id_number}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Issued State"
+                        value={customersData?.data?.id_issued_state}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Issued Country"
+                        value={customersData?.data?.id_issued_country_data}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Issued Date"
+                        value={FormatDate(customersData?.data?.id_issue_date)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Expiry Date"
+                        value={FormatDate(customersData?.data?.id_expiry_date)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="KYC Status"
+                        value={
+                            customersData?.data?.kyc_status
+                                ? ReferenceName(
+                                      21,
+                                      customersData?.data?.kyc_status
+                                  )
+                                : ""
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Other Details</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Customer Type"
+                        value={
+                            customersData?.data?.customer_type
+                                ? ReferenceName(
+                                      37,
+                                      customersData?.data?.customer_type
+                                  )
+                                : ""
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Email Address"
+                        value={customersData?.data?.email}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Post Code"
+                        value={customersData?.data?.postcode}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Country"
+                        value={customersData?.data?.country_data}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Nationality"
+                        value={customersData?.data?.citizenship_country_data}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Date of Birth"
+                        value={FormatDate(customersData?.data?.date_of_birth)}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Birth Country"
+                        value={CountryName(customersData?.data?.birth_country)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Occupation"
+                        value={customersData?.data?.occupation}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Source Of Income"
+                        value={customersData?.data?.source_of_income}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <InfoWrapper>
+                        <LabelWrapper>Status:</LabelWrapper>
+                        <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            {customersData?.data?.is_active ? (
+                                <Tooltip title="Active Customer" arrow>
+                                    <CheckCircleOutlineIcon
+                                        fontSize="small"
+                                        sx={{ color: "success.main" }}
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Inactive Customer." arrow>
+                                    <DoNotDisturbOnIcon
+                                        fontSize="small"
+                                        sx={{ color: "warning.main" }}
+                                    />
+                                </Tooltip>
+                            )}
+                        </ValueWrapper>
+                    </InfoWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
+                        <BottomButton
+                            size="small"
+                            variant="outlined"
+                            disableElevation
+                            disableRipple
+                            onClick={() =>
+                                navigate(`/customer/all-beneficiary/${id}`)
                             }
                         >
-                            <Avatar
-                                {...stringAvatar(
-                                    customersData?.data?.first_name,
-                                    customersData?.data?.last_name
-                                )}
-                            />
-                        </Badge>
-                    </Box>
-                    <NameField>
-                        <RenderTopField
-                            label="Name"
-                            value={`${customersData?.data?.first_name}${" "}${
-                                customersData?.data?.middle_name
-                                    ? " " +
-                                      customersData?.data?.middle_name +
-                                      " "
-                                    : " "
-                            }${
-                                customersData?.data?.last_name
-                                    ? customersData?.data?.last_name
-                                    : ""
-                            }`}
-                        />
-                        <RenderTopField
-                            label="Customer Id"
-                            value={customersData?.data?.customer_id}
-                        />
-                    </NameField>
-                </NameBox>
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Basic Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Firstname"
-                    value={customersData?.data?.first_name}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Mid-name"
-                    value={customersData?.data?.middle_name}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Lastname"
-                    value={customersData?.data?.last_name}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Gender"
-                    value={
-                        customersData?.data?.gender
-                            ? ReferenceName(42, customersData?.data?.gender)
-                            : ""
-                    }
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Mobile Number"
-                    value={customersData?.data?.mobile_number}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Identity Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Type"
-                    value={customersData?.data?.id_type}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Number"
-                    value={customersData?.data?.id_number}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Issued State"
-                    value={customersData?.data?.id_issued_state}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Issued Country"
-                    value={customersData?.data?.id_issued_country_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Issued Date"
-                    value={FormatDate(customersData?.data?.id_issue_date)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Expiry Date"
-                    value={FormatDate(customersData?.data?.id_expiry_date)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="KYC Status"
-                    value={
-                        customersData?.data?.kyc_status
-                            ? ReferenceName(21, customersData?.data?.kyc_status)
-                            : ""
-                    }
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Other Details</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Customer Type"
-                    value={
-                        customersData?.data?.customer_type
-                            ? ReferenceName(
-                                  37,
-                                  customersData?.data?.customer_type
-                              )
-                            : ""
-                    }
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Email Address"
-                    value={customersData?.data?.email}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Post Code"
-                    value={customersData?.data?.postcode}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Country"
-                    value={customersData?.data?.country_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Nationality"
-                    value={customersData?.data?.citizenship_country_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Date of Birth"
-                    value={FormatDate(customersData?.data?.date_of_birth)}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Birth Country"
-                    value={CountryName(customersData?.data?.birth_country)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Occupation"
-                    value={customersData?.data?.occupation}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Source Of Income"
-                    value={customersData?.data?.source_of_income}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <InfoWrapper>
-                    <LabelWrapper>Status:</LabelWrapper>
-                    <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                        {customersData?.data?.is_active ? (
-                            <Tooltip title="Active Customer" arrow>
-                                <CheckCircleOutlineIcon
-                                    fontSize="small"
-                                    sx={{ color: "success.main" }}
-                                />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Inactive Customer." arrow>
-                                <DoNotDisturbOnIcon
-                                    fontSize="small"
-                                    sx={{ color: "warning.main" }}
-                                />
-                            </Tooltip>
-                        )}
-                    </ValueWrapper>
-                </InfoWrapper>
-            </Grid>
-            <Grid item xs={12}>
-                <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
-                    <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() =>
-                            navigate(`/customer/all-beneficiary/${id}`)
-                        }
-                    >
-                        Beneficiares
-                    </BottomButton>
-                    <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() => navigate(`/customer/remarks/${id}`)}
-                    >
-                        Remarks
-                    </BottomButton>
-                    <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() =>
-                            navigate(`/customer/all-transactions/${id}`)
-                        }
-                    >
-                        Transactions
-                    </BottomButton>
-                    <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() => navigate(`/customer/documents/${id}`)}
-                    >
-                        Documents
-                    </BottomButton>
-                    <UpdateKyc />
-                </ButtonWrapper>
-            </Grid>
-        </DetailWrapper>
+                            Beneficiares
+                        </BottomButton>
+                        <BottomButton
+                            size="small"
+                            variant="outlined"
+                            disableElevation
+                            disableRipple
+                            onClick={() => navigate(`/customer/remarks/${id}`)}
+                        >
+                            Remarks
+                        </BottomButton>
+                        <BottomButton
+                            size="small"
+                            variant="outlined"
+                            disableElevation
+                            disableRipple
+                            onClick={() =>
+                                navigate(`/customer/all-transactions/${id}`)
+                            }
+                        >
+                            Transactions
+                        </BottomButton>
+                        <BottomButton
+                            size="small"
+                            variant="outlined"
+                            disableElevation
+                            disableRipple
+                            onClick={() =>
+                                navigate(`/customer/documents/${id}`)
+                            }
+                        >
+                            Documents
+                        </BottomButton>
+                        <UpdateKyc />
+                    </ButtonWrapper>
+                </Grid>
+            </DetailWrapper>
+        </>
     );
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -67,7 +68,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const ServiceChargeList = () => {
+const ServiceChargeList = (props) => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -374,36 +375,41 @@ const ServiceChargeList = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header
-                title="Service Charge List"
-                buttonText="Add Service Charge"
-                name={name}
-                agent_id={id}
-            />
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Service Charge Details"
-                data={servicecharge_data?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={servicecharge_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header
+                    title="Service Charge List"
+                    buttonText="Add Service Charge"
+                    name={name}
+                    agent_id={id}
+                />
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Service Charge Details"
+                    data={servicecharge_data?.data || []}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={servicecharge_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

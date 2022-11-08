@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
@@ -57,7 +58,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Fcm = () => {
+const Fcm = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -269,32 +270,37 @@ const Fcm = () => {
     };
 
     return (
-        <EmailContainer>
-            <Header title="FCM Message List">
-                <CreateFcm />
-            </Header>
-            <Filter
-                sortData={sortData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                data={FcmData?.data || []}
-                title="Fcm Message Details"
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={FcmData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </EmailContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <EmailContainer>
+                <Header title="FCM Message List">
+                    <CreateFcm />
+                </Header>
+                <Filter
+                    sortData={sortData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    data={FcmData?.data || []}
+                    title="Fcm Message Details"
+                    sub_columns={sub_columns}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={FcmData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </EmailContainer>
+        </>
     );
 };
 

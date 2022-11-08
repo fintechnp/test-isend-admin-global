@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
@@ -68,7 +69,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const PromoSetup = () => {
+const PromoSetup = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -381,36 +382,41 @@ const PromoSetup = () => {
     }, []);
 
     return (
-        <MenuContainer>
-            <Header title="Promo Setup">
-                <AddPromoSetup />
-            </Header>
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                handleDelete={handleDelete}
-                title="Promo Setup Details"
-                data={PromoSetData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                totalPage={PromoSetData?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={PromoSetData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="Promo Setup">
+                    <AddPromoSetup />
+                </Header>
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    handleDelete={handleDelete}
+                    title="Promo Setup Details"
+                    data={PromoSetData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    totalPage={PromoSetData?.pagination?.totalPage || 1}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={PromoSetData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

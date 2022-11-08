@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -59,7 +60,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const ExchangeRateList = () => {
+const ExchangeRateList = (props) => {
     const { id, name, sending_currency } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -292,37 +293,42 @@ const ExchangeRateList = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header
-                title="Exchange Rate List"
-                buttonText="Add Exchange Rate"
-                name={name}
-                id={id}
-                sending_currency={sending_currency}
-            />
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Exchange Rate Details"
-                data={rateList?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={rateList?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header
+                    title="Exchange Rate List"
+                    buttonText="Add Exchange Rate"
+                    name={name}
+                    id={id}
+                    sending_currency={sending_currency}
+                />
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Exchange Rate Details"
+                    data={rateList?.data || []}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={rateList?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

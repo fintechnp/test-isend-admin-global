@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -64,7 +65,7 @@ const initialState = {
     sort_by: "created_ts",
     order_by: "DESC",
 };
-const PromoCode = () => {
+const PromoCode = (props) => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -317,34 +318,44 @@ const PromoCode = () => {
     }, []);
 
     return (
-        <MenuContainer>
-            <Header title="Promo Code" id={id} name={name} loading={i_loading}>
-                <AddPromoCode promo_id={id} />
-            </Header>
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Promo Code Details"
-                data={PromoCodeData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={PromoCodeData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header
+                    title="Promo Code"
+                    id={id}
+                    name={name}
+                    loading={i_loading}
+                >
+                    <AddPromoCode promo_id={id} />
+                </Header>
+                <Filter
+                    state={filterSchema}
+                    sortData={sortData}
+                    orderData={orderData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Promo Code Details"
+                    data={PromoCodeData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={PromoCodeData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

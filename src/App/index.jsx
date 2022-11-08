@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { PersistGate } from "redux-persist/integration/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
+import { HelmetProvider } from "react-helmet-async";
 
 import MainRoutes from "./routes";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -32,38 +33,40 @@ const App = () => {
             <AuthProvider>
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
-                        <ErrorBoundary>
-                            <BrowserRouter>
-                                <CssBaseline enableColorScheme />
-                                <GlobalStyles
-                                    styles={{
-                                        h1: { color: "grey" },
-                                        "*::-webkit-scrollbar": {
-                                            width: "0.3em",
-                                            height: "0.3em",
-                                            right: "12px",
-                                        },
-                                        "*::-webkit-scrollbar-track": {
-                                            WebkitBoxShadow:
-                                                "inset 0 0 6px rgba(0,0,0,0.00)",
-                                        },
-                                        "*::-webkit-scrollbar-thumb": {
-                                            backgroundColor: `${
-                                                ChangeTheme(mode).palette.border
-                                                    .dark
-                                            }`,
-                                            outline: `1px solid ${
-                                                ChangeTheme(mode).palette.border
-                                                    .dark
-                                            }`,
-                                            borderRadius: "4px",
-                                        },
-                                    }}
-                                />
-                                <MainRoutes setMode={setMode} />
-                                <Toaster />
-                            </BrowserRouter>
-                        </ErrorBoundary>
+                        <HelmetProvider>
+                            <ErrorBoundary>
+                                <BrowserRouter>
+                                    <CssBaseline enableColorScheme />
+                                    <GlobalStyles
+                                        styles={{
+                                            h1: { color: "grey" },
+                                            "*::-webkit-scrollbar": {
+                                                width: "0.3em",
+                                                height: "0.3em",
+                                                right: "12px",
+                                            },
+                                            "*::-webkit-scrollbar-track": {
+                                                WebkitBoxShadow:
+                                                    "inset 0 0 6px rgba(0,0,0,0.00)",
+                                            },
+                                            "*::-webkit-scrollbar-thumb": {
+                                                backgroundColor: `${
+                                                    ChangeTheme(mode).palette
+                                                        .border.dark
+                                                }`,
+                                                outline: `1px solid ${
+                                                    ChangeTheme(mode).palette
+                                                        .border.dark
+                                                }`,
+                                                borderRadius: "4px",
+                                            },
+                                        }}
+                                    />
+                                    <MainRoutes setMode={setMode} />
+                                    <Toaster />
+                                </BrowserRouter>
+                            </ErrorBoundary>
+                        </HelmetProvider>
                     </PersistGate>
                 </Provider>
             </AuthProvider>

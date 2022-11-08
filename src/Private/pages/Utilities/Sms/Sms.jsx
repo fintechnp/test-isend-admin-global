@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
@@ -57,7 +58,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Sms = () => {
+const Sms = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -320,32 +321,37 @@ const Sms = () => {
     };
 
     return (
-        <SmsContainer>
-            <Header title="SMS List">
-                <CreateSms />
-            </Header>
-            <Filter
-                sortData={sortData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                data={SmsData?.data || []}
-                title="SMS Details"
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={SmsData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </SmsContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <SmsContainer>
+                <Header title="SMS List">
+                    <CreateSms />
+                </Header>
+                <Filter
+                    sortData={sortData}
+                    handleSearch={handleSearch}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    data={SmsData?.data || []}
+                    title="SMS Details"
+                    sub_columns={sub_columns}
+                    loading={l_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={SmsData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </SmsContainer>
+        </>
     );
 };
 

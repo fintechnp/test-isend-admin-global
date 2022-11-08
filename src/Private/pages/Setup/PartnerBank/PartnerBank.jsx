@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -66,7 +67,7 @@ const filter = {
     order_by: "DESC",
 };
 
-const PartnerBank = () => {
+const PartnerBank = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState({
@@ -382,32 +383,37 @@ const PartnerBank = () => {
     };
 
     return (
-        <PartnerBankContainer>
-            <Header handleCloseDialog={handleCloseDialog} />
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleFilterAgent={handleFilterAgent}
-                handleOrder={handleOrder}
-                handleSort={handleSort}
-            />
-            <Table
-                columns={columns}
-                handleDelete={handleDelete}
-                title="Partner Bank Details"
-                data={partnerbank_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={partnerbank_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </PartnerBankContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <PartnerBankContainer>
+                <Header handleCloseDialog={handleCloseDialog} />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleFilterAgent={handleFilterAgent}
+                    handleOrder={handleOrder}
+                    handleSort={handleSort}
+                />
+                <Table
+                    columns={columns}
+                    handleDelete={handleDelete}
+                    title="Partner Bank Details"
+                    data={partnerbank_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={partnerbank_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </PartnerBankContainer>
+        </>
     );
 };
 

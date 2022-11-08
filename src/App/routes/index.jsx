@@ -61,7 +61,10 @@ const MainRoutes = ({ setMode }) => {
                         element={route.component}
                     />
                 ))}
-                <Route path="*" element={<PageNotFound />} />
+                <Route
+                    path="*"
+                    element={<PageNotFound title="Page Not Found" />}
+                />
             </Route>
         </Routes>
     );

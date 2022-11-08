@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -246,7 +247,7 @@ const RenderTopField = ({ label, value }) => {
     );
 };
 
-function BeneficiaryDetails() {
+function BeneficiaryDetails(props) {
     const dispatch = useDispatch();
     const { bene_id } = useParams();
 
@@ -287,298 +288,314 @@ function BeneficiaryDetails() {
     }
 
     return (
-        <DetailWrapper container>
-            <Grid item xs={12}>
-                <Header>Beneficiary Details</Header>
-                <Divider />
-            </Grid>
-            <Grid item xs={12}>
-                <NameBox>
-                    <Box sx={{ p: 1.5 }}>
-                        <Badge
-                            overlap="circular"
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                            }}
-                            badgeContent={
-                                <SmallAvatar
-                                    alt="flag iso3"
-                                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
-                                        beneficiaryData?.data?.country_iso2 ||
-                                        "US"
-                                    }.svg`}
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <DetailWrapper container>
+                <Grid item xs={12}>
+                    <Header>Beneficiary Details</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <NameBox>
+                        <Box sx={{ p: 1.5 }}>
+                            <Badge
+                                overlap="circular"
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                badgeContent={
+                                    <SmallAvatar
+                                        alt="flag iso3"
+                                        src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
+                                            beneficiaryData?.data
+                                                ?.country_iso2 || "US"
+                                        }.svg`}
+                                    />
+                                }
+                            >
+                                <Avatar
+                                    {...stringAvatar(
+                                        beneficiaryData?.data?.first_name,
+                                        beneficiaryData?.data?.last_name
+                                    )}
                                 />
-                            }
-                        >
-                            <Avatar
-                                {...stringAvatar(
-                                    beneficiaryData?.data?.first_name,
+                            </Badge>
+                        </Box>
+                        <NameField>
+                            <RenderTopField
+                                label="Name"
+                                value={`${
+                                    beneficiaryData?.data?.first_name
+                                }${" "}${
+                                    beneficiaryData?.data?.middle_name
+                                        ? " " +
+                                          beneficiaryData?.data?.middle_name +
+                                          " "
+                                        : " "
+                                }${
                                     beneficiaryData?.data?.last_name
-                                )}
+                                        ? beneficiaryData?.data?.last_name
+                                        : ""
+                                }`}
                             />
-                        </Badge>
-                    </Box>
-                    <NameField>
-                        <RenderTopField
-                            label="Name"
-                            value={`${beneficiaryData?.data?.first_name}${" "}${
-                                beneficiaryData?.data?.middle_name
-                                    ? " " +
-                                      beneficiaryData?.data?.middle_name +
-                                      " "
-                                    : " "
-                            }${
-                                beneficiaryData?.data?.last_name
-                                    ? beneficiaryData?.data?.last_name
-                                    : ""
-                            }`}
+                            <RenderTopField
+                                label="Beneficiary Id"
+                                value={beneficiaryData?.data?.beneficiary_id}
+                            />
+                        </NameField>
+                    </NameBox>
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Basic Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Firstname"
+                        value={beneficiaryData?.data?.first_name}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Mid-name"
+                        value={beneficiaryData?.data?.middle_name}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Lastname"
+                        value={beneficiaryData?.data?.last_name}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderMobileField
+                        label="Mobile Number"
+                        value={beneficiaryData?.data?.mobile_number}
+                        prevalue={beneficiaryData?.data?.phone_country_code}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderEmailField
+                        label="Email"
+                        email={beneficiaryData?.data?.email}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Type"
+                        value={beneficiaryData?.data?.receiver_type_data}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Customer Id"
+                        value={beneficiaryData?.data?.customer_id}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Collection Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Payment Type"
+                        value={
+                            beneficiaryData?.data?.payment_type
+                                ? ReferenceName(
+                                      1,
+                                      beneficiaryData?.data?.payment_type
+                                  )
+                                : ""
+                        }
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Bank Name"
+                        value={beneficiaryData?.data?.bank_name}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Account Number"
+                        value={beneficiaryData?.data?.account_number}
+                    />
+                </Grid>{" "}
+                {beneficiaryData?.data?.account_type_data && (
+                    <Grid item xs={12} sm={6}>
+                        <RenderField
+                            label="Account Type"
+                            value={beneficiaryData?.data?.account_type_data}
                         />
-                        <RenderTopField
-                            label="Beneficiary Id"
-                            value={beneficiaryData?.data?.beneficiary_id}
+                    </Grid>
+                )}
+                {beneficiaryData?.data?.branch_identifier_type && (
+                    <Grid item xs={12} sm={6}>
+                        <RenderField
+                            label="Branch Identifier Type"
+                            value={
+                                beneficiaryData?.data?.branch_identifier_type
+                            }
                         />
-                    </NameField>
-                </NameBox>
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Basic Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Firstname"
-                    value={beneficiaryData?.data?.first_name}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Mid-name"
-                    value={beneficiaryData?.data?.middle_name}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Lastname"
-                    value={beneficiaryData?.data?.last_name}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderMobileField
-                    label="Mobile Number"
-                    value={beneficiaryData?.data?.mobile_number}
-                    prevalue={beneficiaryData?.data?.phone_country_code}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderEmailField
-                    label="Email"
-                    email={beneficiaryData?.data?.email}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Type"
-                    value={beneficiaryData?.data?.receiver_type_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Customer Id"
-                    value={beneficiaryData?.data?.customer_id}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Collection Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Payment Type"
-                    value={
-                        beneficiaryData?.data?.payment_type
-                            ? ReferenceName(
-                                  1,
-                                  beneficiaryData?.data?.payment_type
-                              )
-                            : ""
-                    }
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Bank Name"
-                    value={beneficiaryData?.data?.bank_name}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Account Number"
-                    value={beneficiaryData?.data?.account_number}
-                />
-            </Grid>{" "}
-            {beneficiaryData?.data?.account_type_data && (
+                    </Grid>
+                )}
+                {beneficiaryData?.data?.branch_identifier_value && (
+                    <Grid item xs={12} sm={6}>
+                        <RenderField
+                            label="Branch Identifier"
+                            value={
+                                beneficiaryData?.data?.branch_identifier_value
+                            }
+                        />
+                    </Grid>
+                )}
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Other Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <InfoWrapper>
+                        <LabelWrapper>Status:</LabelWrapper>
+                        <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            {beneficiaryData?.data?.is_active ? (
+                                <Tooltip title="Active Beneficiary" arrow>
+                                    <CheckCircleOutlineIcon
+                                        fontSize="small"
+                                        sx={{ color: "success.main" }}
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Inactive Beneficiary." arrow>
+                                    <DoNotDisturbOnIcon
+                                        fontSize="small"
+                                        sx={{ color: "warning.main" }}
+                                    />
+                                </Tooltip>
+                            )}
+                        </ValueWrapper>
+                    </InfoWrapper>
+                </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField
-                        label="Account Type"
-                        value={beneficiaryData?.data?.account_type_data}
+                        label="Unit"
+                        value={beneficiaryData?.data?.unit}
                     />
                 </Grid>
-            )}
-            {beneficiaryData?.data?.branch_identifier_type && (
                 <Grid item xs={12} sm={6}>
                     <RenderField
-                        label="Branch Identifier Type"
-                        value={beneficiaryData?.data?.branch_identifier_type}
+                        label="Street"
+                        value={beneficiaryData?.data?.street}
                     />
                 </Grid>
-            )}
-            {beneficiaryData?.data?.branch_identifier_value && (
                 <Grid item xs={12} sm={6}>
                     <RenderField
-                        label="Branch Identifier"
-                        value={beneficiaryData?.data?.branch_identifier_value}
+                        label="State"
+                        value={beneficiaryData?.data?.state}
                     />
                 </Grid>
-            )}
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Other Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <InfoWrapper>
-                    <LabelWrapper>Status:</LabelWrapper>
-                    <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                        {beneficiaryData?.data?.is_active ? (
-                            <Tooltip title="Active Beneficiary" arrow>
-                                <CheckCircleOutlineIcon
-                                    fontSize="small"
-                                    sx={{ color: "success.main" }}
-                                />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Inactive Beneficiary." arrow>
-                                <DoNotDisturbOnIcon
-                                    fontSize="small"
-                                    sx={{ color: "warning.main" }}
-                                />
-                            </Tooltip>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Address"
+                        value={beneficiaryData?.data?.address}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Country"
+                        value={CountryName(beneficiaryData?.data?.country)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Currency"
+                        value={CurrencyName(beneficiaryData?.data?.currency)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Post Code"
+                        value={beneficiaryData?.data?.postcode}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Date of Birth"
+                        value={FormatDate(beneficiaryData?.data?.date_of_birth)}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Relation"
+                        value={beneficiaryData?.data?.relation}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Reason For Remittance"
+                        value={beneficiaryData?.data?.reason_for_remittance}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Source Of Income"
+                        value={beneficiaryData?.data?.source_of_income}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Identity Information</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Type"
+                        value={beneficiaryData?.data?.id_type}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Number"
+                        value={beneficiaryData?.data?.id_number}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Issued State"
+                        value={beneficiaryData?.data?.id_issued_state}
+                    />
+                </Grid>{" "}
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Issued Country"
+                        value={beneficiaryData?.data?.id_issued_country_data}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Issued Date"
+                        value={FormatDate(beneficiaryData?.data?.id_issue_date)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Id Expiry Date"
+                        value={FormatDate(
+                            beneficiaryData?.data?.id_expiry_date
                         )}
-                    </ValueWrapper>
-                </InfoWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField label="Unit" value={beneficiaryData?.data?.unit} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Street"
-                    value={beneficiaryData?.data?.street}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="State"
-                    value={beneficiaryData?.data?.state}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Address"
-                    value={beneficiaryData?.data?.address}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Country"
-                    value={CountryName(beneficiaryData?.data?.country)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Currency"
-                    value={CurrencyName(beneficiaryData?.data?.currency)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Post Code"
-                    value={beneficiaryData?.data?.postcode}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Date of Birth"
-                    value={FormatDate(beneficiaryData?.data?.date_of_birth)}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Relation"
-                    value={beneficiaryData?.data?.relation}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Reason For Remittance"
-                    value={beneficiaryData?.data?.reason_for_remittance}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Source Of Income"
-                    value={beneficiaryData?.data?.source_of_income}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Title>Identity Information</Title>
-                    <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                </TitleWrapper>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Type"
-                    value={beneficiaryData?.data?.id_type}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Number"
-                    value={beneficiaryData?.data?.id_number}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Issued State"
-                    value={beneficiaryData?.data?.id_issued_state}
-                />
-            </Grid>{" "}
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Issued Country"
-                    value={beneficiaryData?.data?.id_issued_country_data}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Issued Date"
-                    value={FormatDate(beneficiaryData?.data?.id_issue_date)}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <RenderField
-                    label="Id Expiry Date"
-                    value={FormatDate(beneficiaryData?.data?.id_expiry_date)}
-                />
-            </Grid>
-        </DetailWrapper>
+                    />
+                </Grid>
+            </DetailWrapper>
+        </>
     );
 }
 
