@@ -273,7 +273,9 @@ function BeneficiaryForm({ update_data, loading }) {
                                     }
                                     steps={steps}
                                     pcountry={memoizedData?.country}
-                                    phone_code={memoizedData?.phone_country_code}
+                                    phone_code={
+                                        memoizedData?.phone_country_code
+                                    }
                                     buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
@@ -315,6 +317,7 @@ function BeneficiaryForm({ update_data, loading }) {
                         <Box>
                             {activeStep === 0 && (
                                 <BasicForm
+                                    enableReinitialize
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
                                     initialValues={{ customer_id: id }}

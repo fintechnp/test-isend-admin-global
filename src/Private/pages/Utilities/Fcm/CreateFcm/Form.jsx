@@ -25,16 +25,16 @@ const Container = styled(Grid)(({ theme }) => ({
 }));
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
+    padding: "0px 0px 16px",
     backgroundColor: theme.palette.background.light,
 }));
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
+    padding: "0px 16px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
-    paddingTop: "12px",
+    paddingTop: "10px",
 }));
 
 const StatusText = styled(Typography)(({ theme }) => ({
@@ -78,6 +78,7 @@ const FCMForm = ({
     const dispatch = useDispatch();
     const [id, setId] = React.useState("topic");
     const [name, setName] = React.useState("Topic");
+    const reference = JSON.parse(localStorage.getItem("reference"));
 
     React.useEffect(() => {
         if (update && !!customer_id) {
@@ -118,6 +119,43 @@ const FCMForm = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
+                                name="type"
+                                label="Select Type"
+                                type="text"
+                                small={12}
+                                component={SelectField}
+                            >
+                                <option value="" disabled>
+                                    Select Type
+                                </option>
+                                {reference &&
+                                    reference
+                                        ?.filter(
+                                            (ref_data) =>
+                                                ref_data?.reference_type === 89
+                                        )[0]
+                                        .reference_data.map((data) => (
+                                            <option
+                                                value={data?.value}
+                                                key={data?.reference_id}
+                                            >
+                                                {data?.name}
+                                            </option>
+                                        ))}
+                            </Field>
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="redirect_url"
+                                label="Redirect URL"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                                validate={Validator.urlValidator}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
                                 name="image_url"
                                 label="Image URL"
                                 type="text"
@@ -128,7 +166,7 @@ const FCMForm = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="type"
+                                name="type_topic"
                                 label="Select Customer / Topic"
                                 type="text"
                                 small={12}

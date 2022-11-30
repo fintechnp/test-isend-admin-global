@@ -46,7 +46,7 @@ const BackButton = styled(Button)(({ theme }) => ({
 }));
 
 function AddUpdateBeneficiary(props) {
-    const { id, bene_id } = useParams();
+    const { bene_id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { response, loading } = useSelector(
@@ -56,6 +56,8 @@ function AddUpdateBeneficiary(props) {
     useEffect(() => {
         if (bene_id) {
             dispatch(actions.get_beneficiary_byid(bene_id));
+        } else {
+            dispatch({ type: "GET_BENEFICIARY_BYID_RESET" });
         }
     }, [bene_id]);
 
