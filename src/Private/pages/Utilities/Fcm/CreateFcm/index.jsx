@@ -130,7 +130,7 @@ function CreateFcm({ update, update_data }) {
     };
 
     const handleFCMCreate = (data) => {
-        if (data?.type_topic === "topic") {
+        if (data?.target === "topic") {
             dispatch(
                 actions.create_fcm({
                     topic: data?.topic,
@@ -160,7 +160,7 @@ function CreateFcm({ update, update_data }) {
     };
 
     const handleFCMUpdate = (data) => {
-        if (data?.type_topic === "topic") {
+        if (data?.target === "topic") {
             dispatch(
                 actions.update_fcm(data?.tid, {
                     topic: data?.topic,
@@ -241,6 +241,9 @@ function CreateFcm({ update, update_data }) {
                                 customer_id: memoizedData?.customer_id,
                                 image_url: memoizedData?.image_url,
                                 redirect_url: memoizedData?.redirect_url,
+                                detail_content: memoizedData?.detail_content,
+                                display_notification:
+                                    memoizedData?.display_notification,
                             }}
                             customer_id={memoizedData?.customer_id}
                             onSubmit={handleFCMUpdate}
@@ -253,7 +256,7 @@ function CreateFcm({ update, update_data }) {
                         <FCMForm
                             destroyOnUnmount={true}
                             initialValues={{
-                                type_topic: "topic",
+                                target: "topic",
                             }}
                             update={update}
                             onSubmit={handleFCMCreate}

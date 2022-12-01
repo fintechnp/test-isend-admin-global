@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 import Toolbar from "./../Toolbar";
 import DrawerList from "../List";
-import Logo from "../../../assets/long-logo.svg";
+import Logo from "../../../assets/isend_long.png";
 import Logo_short from "../../../assets/short-logo.svg";
 
 const drawerWidth = 280;
@@ -77,7 +77,17 @@ const DrawerHeader = styled("div", {
     minHeight: "48px",
 }));
 
-const LogoWrapper = styled(CardMedia)(({ theme }) => ({
+const LongLogoWrapper = styled(CardMedia)(({ theme }) => ({
+    padding: "6px",
+    maxHeight: "56px",
+    width: "100%",
+    objectFit: "contain",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+}));
+
+const ShortLogoWrapper = styled(CardMedia)(({ theme }) => ({
     maxHeight: "56px",
     width: "100%",
     objectFit: "contain",
@@ -178,12 +188,21 @@ function SideDrawer({ children, menus }) {
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
-                    <LogoWrapper
-                        component="img"
-                        image={open ? Logo : Logo_short}
-                        alt="isend logo"
-                        onClick={handleDashboard}
-                    />
+                    {open ? (
+                        <LongLogoWrapper
+                            component="img"
+                            image={Logo}
+                            alt="isend logo"
+                            onClick={handleDashboard}
+                        />
+                    ) : (
+                        <ShortLogoWrapper
+                            component="img"
+                            image={Logo_short}
+                            alt="isend logo"
+                            onClick={handleDashboard}
+                        />
+                    )}
                 </DrawerHeader>
                 <Divider
                     sx={{

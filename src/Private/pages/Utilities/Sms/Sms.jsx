@@ -13,7 +13,11 @@ import Filter from "./../components/Filter";
 import CreateSms from "./CreateSms";
 import { Delete } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CountryName, FormatDate } from "./../../../../App/helpers";
+import {
+    CountryName,
+    FormatDate,
+    ReferenceName,
+} from "./../../../../App/helpers";
 
 const SmsContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -40,7 +44,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const Text = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
+    opacity: 0.8,
     width: "100%",
     display: "block",
     fontSize: "14px",
@@ -74,23 +78,6 @@ const Sms = (props) => {
         dispatch({ type: "DELETE_SMS_RESET" });
     }, [dispatch, filterSchema, d_success, c_success]);
 
-    const formatStatus = (status) => {
-        switch (status) {
-            case "I":
-                return "CREATED";
-            case "C":
-                return "SENT";
-            case "R":
-                return "REJECTED";
-            case "P":
-                return "PROCESSING";
-            case "E":
-                return "EXCEPTION";
-            default:
-                return "N/A";
-        }
-    };
-
     const columns = useMemo(
         () => [
             {
@@ -103,7 +90,10 @@ const Sms = (props) => {
                 accessor: "sms_by",
                 Cell: (data) => (
                     <Box>
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ fontSize: "14px", opacity: 0.9 }}
+                        >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
@@ -119,7 +109,7 @@ const Sms = (props) => {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "14px",
-                                opacity: 0.6,
+                                opacity: 0.9,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
@@ -139,7 +129,11 @@ const Sms = (props) => {
                     <Box>
                         <StyledName
                             component="p"
-                            sx={{ paddingLeft: "2px", fontSize: "14px" }}
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "14px",
+                                opacity: 0.8,
+                            }}
                         >
                             {data.value ? CountryName(data.value) : "N/A"}
                         </StyledName>
@@ -156,24 +150,12 @@ const Sms = (props) => {
                 maxWidth: 100,
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? formatStatus(data.value) : "N/A"}
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
+                        >
+                            {data.value ? ReferenceName(88, data.value) : "N/A"}
                         </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Text</Typography>
-                    </Box>
-                ),
-                accessor: "sms_text",
-                Cell: (data) => (
-                    <Box>
-                        <Text component="span">
-                            {data?.value ? data?.value : "N/A"}
-                        </Text>
                     </Box>
                 ),
             },
@@ -187,7 +169,10 @@ const Sms = (props) => {
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="center" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
+                        >
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -252,17 +237,17 @@ const Sms = (props) => {
     );
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "sms_by", name: "Sender" },
-        { key: "sms_to", name: "Receiver" },
-        { key: "sms_country", name: "Country" },
-        { key: "status", name: "Status" },
-        { key: "sms_text", name: "Text" },
-        { key: "created_ts", name: "Created Date" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "sms_by", name: "Sender", type: "default" },
+        { key: "sms_to", name: "Receiver", type: "default" },
+        { key: "sms_country", name: "Country", type: "country" },
+        { key: "status", name: "Status", type: "reference", ref_value: 88 },
+        { key: "sms_text", name: "Text", type: "default" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const sortData = [
-        { key: "None", value: "" },
+        { key: "None", value: "created_ts" },
         { key: "Sender", value: "sms_by" },
         { key: "Receiver", value: "sms_to" },
         { key: "Country", value: "sms_country" },
@@ -334,6 +319,7 @@ const Sms = (props) => {
                     handleSearch={handleSearch}
                     handleSort={handleSort}
                     handleOrder={handleOrder}
+                    filterSchema={filterSchema}
                 />
                 <Table
                     columns={columns}

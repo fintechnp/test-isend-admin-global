@@ -260,13 +260,19 @@ const PayoutLocation = (props) => {
     );
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "location_name", name: "Location Name" },
-        { key: "location_code", name: "Location Code" },
-        { key: "country", name: "Country" },
-        { key: "currency", name: "Currency" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "location_name", name: "Location Name", type: "default" },
+        { key: "location_code", name: "Location Code", type: "default" },
+        { key: "country", name: "Country", type: "country" },
+        { key: "currency", name: "Currency", type: "currency" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {

@@ -37,8 +37,9 @@ const CustomerWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.text.dark,
     textTransform: "capitalize",
 }));
 

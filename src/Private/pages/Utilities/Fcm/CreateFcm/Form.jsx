@@ -83,9 +83,9 @@ const FCMForm = ({
     React.useEffect(() => {
         if (update && !!customer_id) {
             setName("Customer Id");
-            dispatch(change("update_fcm_form", "type", "customer_id"));
+            dispatch(change("update_fcm_form", "target", "customer_id"));
         } else if (update && !customer_id) {
-            dispatch(change("update_fcm_form", "type", "topic"));
+            dispatch(change("update_fcm_form", "target", "topic"));
         }
     }, []);
 
@@ -124,6 +124,10 @@ const FCMForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
                             >
                                 <option value="" disabled>
                                     Select Type
@@ -166,7 +170,7 @@ const FCMForm = ({
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="type_topic"
+                                name="target"
                                 label="Select Customer / Topic"
                                 type="text"
                                 small={12}

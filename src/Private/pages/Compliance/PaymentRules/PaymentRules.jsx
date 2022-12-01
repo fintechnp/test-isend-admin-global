@@ -131,14 +131,21 @@ const PaymentRules = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "10px", opacity: 0.7 }}
                         >
-                            {CountryName(data?.row?.original?.send_country)} to{" "}
-                            {CountryName(data?.row?.original?.payout_country)}
+                            {data?.row?.original?.send_country
+                                ? CountryName(data?.row?.original?.send_country)
+                                : "null"}{" "}
+                            to{" "}
+                            {data?.row?.original?.payout_country
+                                ? CountryName(
+                                      data?.row?.original?.payout_country
+                                  )
+                                : "null"}
                         </Typography>
                     </Box>
                 ),
@@ -159,7 +166,7 @@ const PaymentRules = (props) => {
                             component="p"
                             sx={{ paddingLeft: "4px", fontSize: "13px" }}
                         >
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -169,7 +176,9 @@ const PaymentRules = (props) => {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_agent}
+                            {data?.row?.original?.payout_agent
+                                ? data?.row?.original?.payout_agent
+                                : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -185,7 +194,7 @@ const PaymentRules = (props) => {
                 Cell: (data) => (
                     <Box textAlign="right">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {FormatNumber(data.value)}
+                            {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -201,7 +210,7 @@ const PaymentRules = (props) => {
                 Cell: (data) => (
                     <Box textAlign="center">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -217,7 +226,7 @@ const PaymentRules = (props) => {
                 Cell: (data) => (
                     <Box textAlign="center">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -232,8 +241,11 @@ const PaymentRules = (props) => {
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="center">
-                        <StyledAction component="p" value={data.value}>
-                            {data.value}
+                        <StyledAction
+                            component="p"
+                            value={data.value ? data.value : "Null"}
+                        >
+                            {data.value ? data.value : "N/A"}
                         </StyledAction>
                     </Box>
                 ),
@@ -324,17 +336,25 @@ const PaymentRules = (props) => {
     );
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "sending_agent", name: "Sending Partner" },
-        { key: "send_country", name: "Sending Country" },
-        { key: "send_currency", name: "Sending Currency" },
-        { key: "payout_agent", name: "Payout Partner" },
-        { key: "payout_country", name: "Payout Country" },
-        { key: "amount", name: "Amount" },
-        { key: "no_of_transactions", name: "No of Transactions" },
-        { key: "no_of_days", name: "No of Days" },
-        { key: "compliance_action", name: "Compliance Action" },
-        { key: "is_active", name: "Status" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "sending_agent", name: "Sending Partner", type: "default" },
+        { key: "send_country", name: "Country", type: "country" },
+        { key: "send_currency", name: "Sending Currency", type: "currency" },
+        { key: "payout_agent", name: "Payout Partner", type: "default" },
+        { key: "payout_country", name: "Payout Country", type: "country" },
+        { key: "amount", name: "Amount", type: "number" },
+        {
+            key: "no_of_transactions",
+            name: "No of Transactions",
+            type: "default",
+        },
+        { key: "no_of_days", name: "No of Days", type: "default" },
+        {
+            key: "compliance_action",
+            name: "Compliance Action",
+            type: "default",
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {
@@ -416,6 +436,7 @@ const PaymentRules = (props) => {
                     handleFilterAgent={handleFilterAgent}
                     handleSort={handleSort}
                     handleOrder={handleOrder}
+                    filterSchema={filterSchema}
                 />
                 <Table
                     columns={columns}

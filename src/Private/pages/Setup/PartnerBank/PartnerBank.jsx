@@ -302,15 +302,21 @@ const PartnerBank = (props) => {
     );
 
     const sub_columns = [
-        { key: "partner_bank_id", name: "Id" },
-        { key: "agent_id", name: "Payout Agent" },
-        { key: "country", name: "Country" },
-        { key: "currency", name: "Currency" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "external_bank_code", name: "External Bank Code" },
-        { key: "external_bank_code1", name: "External Bank Code 1" },
-        { key: "external_bank_code2", name: "External Bank Code 2" },
-        { key: "is_mapped", name: "Mapping Status" },
+        { key: "partner_bank_id", name: "Id", type: "default"  },
+        { key: "agent_id", name: "Payout Agent", type: "default"  },
+        { key: "country", name: "Country", type: "country" },
+        { key: "currency", name: "Currency", type: "currency" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "external_bank_code", name: "External Bank Code", type: "default" },
+        { key: "external_bank_code1", name: "External Bank Code 1", type: "default" },
+        { key: "external_bank_code2", name: "External Bank Code 2", type: "default" },
+        { key: "is_mapped", name: "Mapping Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleUnmap = useCallback((id) => {

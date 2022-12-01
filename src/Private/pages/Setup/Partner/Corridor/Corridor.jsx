@@ -115,7 +115,7 @@ const Corridor = (props) => {
                 maxWidth: 50,
             },
             {
-                Header: "Partner Name",
+                Header: "Corridor Name",
                 accessor: "name",
                 width: 180,
                 maxWidth: 280,
@@ -130,21 +130,6 @@ const Corridor = (props) => {
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
                             {data.value ? data.value : "n/a"}
                         </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box>
-                        <Typography>Type</Typography>
-                    </Box>
-                ),
-                accessor: "agent_type",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
                     </Box>
                 ),
             },
@@ -261,13 +246,15 @@ const Corridor = (props) => {
     );
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "name", name: "Name" },
-        { key: "agent_type", name: "Agent Type" },
-        { key: "agent_id", name: "Agent" },
-        { key: "country", name: "Country" },
-        { key: "transaction_currency", name: "Currency" },
-        { key: "is_active", name: "Status" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "name", name: "Name", type: "default" },
+        { key: "short_code", name: "Short Code", type: "default" },
+        { key: "agent_type", name: "Agent Type", type: "default" },
+        { key: "parent_agent_id", name: "Agent", type: "default" },
+        { key: "country", name: "Country", type: "country" },
+        { key: "transaction_currency", name: "Currency", type: "currency" },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleChangePage = (e, newPage) => {

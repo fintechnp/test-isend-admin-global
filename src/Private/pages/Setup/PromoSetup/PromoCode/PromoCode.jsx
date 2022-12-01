@@ -247,14 +247,14 @@ const PromoCode = (props) => {
     ];
 
     const sub_columns = [
-        { name: "Id", key: "code_id" },
-        { name: "Code", key: "code" },
-        { name: "Customer Id", key: "customer_id" },
-        { name: "Status", key: "is_active" },
-        { name: "Multiple Use", key: "multiple_use" },
-        { name: "Created By", key: "created_by" },
-        { name: "Created Date", key: "created_ts" },
-        { name: "Expiry Date", key: "expiry_date" },
+        { name: "Id", key: "code_id", type: "default" },
+        { name: "Code", key: "code", type: "default" },
+        { name: "Customer Id", key: "customer_id", type: "default" },
+        { name: "Multiple Use", key: "multiple_use", type: "boolean" },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { name: "Created By", key: "created_by", type: "default" },
+        { key: "created_ts", name: "Created Date", type: "date" },
+        { name: "Expiry Date", key: "expiry_date", type: "date" },
     ];
 
     const handleSearch = useCallback(

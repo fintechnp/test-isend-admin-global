@@ -250,11 +250,15 @@ function AccountTable() {
     );
 
     const sub_columns = [
-        { key: "name", name: "Name" },
-        { key: "phone_number", name: "Phone Number" },
-        { key: "email", name: "Email" },
-        { key: "user_type", name: "User Type" },
-        { key: "is_active", name: "Status" },
+        { key: "name", name: "Name", type: "default" },
+        { key: "phone_number", name: "Phone Number", type: "default" },
+        { key: "email", name: "Email", type: "default" },
+        { key: "user_type", name: "User Type", type: "default" },
+        { key: "agent_id", name: "Agent", type: "default" },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_by", name: "Created By", type: "default" },
+        { key: "created_ts", name: "Created Date", type: "date" },
+        { key: "last_login_ts", name: "Last Login", type: "date" },
     ];
 
     const handleSearch = useCallback(

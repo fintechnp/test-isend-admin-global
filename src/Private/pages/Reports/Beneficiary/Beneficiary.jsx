@@ -34,8 +34,9 @@ const CustomerWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.text.dark,
     textTransform: "capitalize",
 }));
 
@@ -44,7 +45,7 @@ const StyledMail = styled(Typography)(({ theme }) => ({
     width: "90%",
     display: "block",
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.text.main,
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",

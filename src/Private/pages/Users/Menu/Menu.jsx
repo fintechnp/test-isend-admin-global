@@ -212,10 +212,11 @@ const Menu = (props) => {
     );
 
     const sub_columns = [
-        { key: "menu_id", name: "Id" },
-        { key: "name", name: "Name" },
-        { key: "menu_order", name: "Menu Order" },
-        { key: "is_active", name: "Status" },
+        { key: "menu_id", name: "Id", type: "default" },
+        { key: "name", name: "Name", type: "default" },
+        { key: "menu_order", name: "Menu Order", type: "default" },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {

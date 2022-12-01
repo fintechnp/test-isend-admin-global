@@ -5,8 +5,17 @@ import MuiButton from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import Collapse from "@mui/material/Collapse";
 import LockResetIcon from "@mui/icons-material/LockReset";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import Delete from "./../Dialog/Delete";
+import {
+    FormatDate,
+    ReferenceName,
+    CountryName,
+    CurrencyName,
+    FormatNumber,
+} from "../../helpers";
 
 const ExtendedContainer = styled(Box)(({ theme }) => ({
     padding: "12px",
@@ -19,6 +28,12 @@ const ContentContainer = styled(Box)(({ theme }) => ({
     padding: "8px 16px",
     borderTop: `1px dashed ${theme.palette.primary.light}`,
     borderBottom: `1px dashed ${theme.palette.primary.light}`,
+}));
+
+const EachRenderValue = styled(Box)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
 }));
 
 const CloseButton = styled(MuiButton)(({ theme }) => ({
@@ -36,6 +51,30 @@ function SubComponent({
     handleForgotPassword,
     toggleRowExpanded,
 }) {
+    const RenderData = (sub_data, col) => {
+        switch (col.type) {
+            case "boolean":
+                if (sub_data[col.key]) {
+                    return <CheckCircleIcon color="success" fontSize="small" />;
+                } else {
+                    return <CancelIcon color="warning" fontSize="small" />;
+                }
+            case "reference":
+                return ReferenceName(col.ref_value, sub_data[col.key]);
+            case "country":
+                return CountryName(sub_data[col.key]);
+
+            case "currency":
+                return CurrencyName(sub_data[col.key]);
+            case "number":
+                return FormatNumber(sub_data[col.key]);
+            case "date":
+                return FormatDate(sub_data[col.key]);
+            default:
+                return sub_data[col.key];
+        }
+    };
+
     return (
         <Collapse in={checked} timeout={500}>
             <ExtendedContainer>
@@ -50,13 +89,12 @@ function SubComponent({
                     <Grid container spacing={1} sx={{ paddingBottom: "8px" }}>
                         {sub_columns &&
                             sub_columns.map((col, index) => {
-                                if (col.key === "is_active") {
-                                    return (
-                                        <Grid item xs={6} md={4} key={index}>
+                                return (
+                                    <Grid item xs={6} md={4} key={index}>
+                                        <EachRenderValue>
                                             <Typography
                                                 sx={{
-                                                    opacity: 0.9,
-                                                    fontSize: "16px",
+                                                    fontSize: "15px",
                                                     lineHeight: 1.2,
                                                 }}
                                             >
@@ -64,39 +102,20 @@ function SubComponent({
                                             </Typography>
                                             <Typography
                                                 sx={{
-                                                    opacity: 0.6,
+                                                    opacity: 0.8,
                                                     fontSize: "14px",
                                                     lineHeight: 1.2,
+                                                    wordBreak: "break-word",
+                                                    paddingLeft: "8px",
                                                 }}
                                             >
-                                                {sub_data[col.key]
-                                                    ? "Active"
-                                                    : "Inactive"}
+                                                {col.type === "boolean"
+                                                    ? RenderData(sub_data, col)
+                                                    : sub_data[col.key]
+                                                    ? RenderData(sub_data, col)
+                                                    : "N/A"}
                                             </Typography>
-                                        </Grid>
-                                    );
-                                }
-                                return (
-                                    <Grid item xs={6} md={4} key={index}>
-                                        <Typography
-                                            sx={{
-                                                opacity: 0.9,
-                                                fontSize: "16px",
-                                                lineHeight: 1.2,
-                                            }}
-                                        >
-                                            {col.name}:
-                                        </Typography>
-                                        <Typography
-                                            sx={{
-                                                opacity: 0.6,
-                                                fontSize: "14px",
-                                                lineHeight: 1.2,
-                                                wordWrap: "break-word",
-                                            }}
-                                        >
-                                            {sub_data[col.key]}
-                                        </Typography>
+                                        </EachRenderValue>
                                     </Grid>
                                 );
                             })}
@@ -152,4 +171,4 @@ function SubComponent({
     );
 }
 
-export default SubComponent;
+export default React.memo(SubComponent);
