@@ -33,13 +33,14 @@ const MenuContainer = styled("div")(({ theme }) => ({
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.text.main,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.text.dark,
 }));
 
 const initialState = {
@@ -106,7 +107,11 @@ const AmlSuspicious = (props) => {
                         </StyledName>
                         <Typography
                             component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                            sx={{
+                                fontSize: "12px",
+                                opacity: 0.8,
+                                textTransform: "capitalize",
+                            }}
                         >
                             {data?.row?.original?.beneficiary_name
                                 ? data?.row?.original?.beneficiary_name
@@ -167,7 +172,7 @@ const AmlSuspicious = (props) => {
                         </StyledName>
                         <Typography
                             component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                            sx={{ fontSize: "12px", opacity: 0.7 }}
                         >
                             {data?.row?.original?.payout_currency
                                 ? CurrencyName(

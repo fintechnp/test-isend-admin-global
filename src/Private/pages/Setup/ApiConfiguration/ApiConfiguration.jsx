@@ -96,7 +96,10 @@ const ApiConfiguration = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
+                        >
                             {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
@@ -149,12 +152,9 @@ const ApiConfiguration = (props) => {
                 Cell: (data) => (
                     <Box>
                         <Tooltip title={data.value ? data.value : ""} arrow>
-                            <StyledText
-                                component="p"
-                                sx={{ textAlign: "left" }}
-                            >
-                                {data.value ? data.value : "n/a"}
-                            </StyledText>
+                            <UserIdText component="p">
+                                {data.value ? data.value : "N/A"}
+                            </UserIdText>
                         </Tooltip>
                     </Box>
                 ),
@@ -227,16 +227,16 @@ const ApiConfiguration = (props) => {
     ];
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "api_partner_code", name: "Api Partner Code" },
-        { key: "api_url", name: "Api Url" },
-        { key: "api_user_id", name: "Api User Id" },
-        { key: "api_user_secret", name: "Api User Secret" },
-        { key: "ref1", name: "Ref 1" },
-        { key: "ref2", name: "Ref 2" },
-        { key: "ref3", name: "Ref 3" },
-        { key: "remarks", name: "Remarks" },
-        { key: "created_ts", name: "Created At" },
+        { key: "config_id", name: "Id", type: "default" },
+        { key: "api_partner_code", name: "Api Partner Code", type: "default" },
+        { key: "api_url", name: "Api Url", type: "default" },
+        { key: "api_user_id", name: "Api User Id", type: "default" },
+        { key: "api_user_secret", name: "Api User Secret", type: "default" },
+        { key: "ref1", name: "Ref 1", type: "default" },
+        { key: "ref2", name: "Ref 2", type: "default" },
+        { key: "ref3", name: "Ref 3", type: "default" },
+        { key: "remarks", name: "Remarks", type: "default" },
+        { key: "created_ts", name: "Created At", type: "date" },
     ];
 
     const handleSearch = useCallback(

@@ -309,16 +309,21 @@ const PartnerBranch = (props) => {
     ];
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "name", name: "Branch Name" },
-        { key: "branch_type", name: "Branch Type" },
-        { key: "agent_id", name: "Agent" },
-        { key: "city", name: "City" },
-        { key: "country", name: "Country" },
-        { key: "phone_number", name: "Phone Number" },
-        { key: "email", name: "Email" },
-        { key: "external_branch_code", name: "External Branch Code" },
-        { key: "is_active", name: "Status" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "name", name: "Branch Name", type: "default" },
+        { key: "branch_type", name: "Branch Type", type: "default" },
+        { key: "agent_id", name: "Agent", type: "default" },
+        { key: "city", name: "City", type: "default" },
+        { key: "country", name: "Country", type: "country" },
+        { key: "phone_number", name: "Phone Number", type: "default" },
+        { key: "email", name: "Email", type: "default" },
+        {
+            key: "external_branch_code",
+            name: "External Branch Code",
+            type: "default",
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(

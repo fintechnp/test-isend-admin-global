@@ -18,7 +18,6 @@ import {
     CountryName,
     CurrencyName,
     FormatNumber,
-    FormatDate,
 } from "./../../../../App/helpers";
 import PartnerActions from "../../Setup/Partner/store/actions";
 import Table, { TablePagination } from "./../../../../App/components/Table";
@@ -36,8 +35,9 @@ const CustomerWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.text.dark,
     textTransform: "capitalize",
 }));
 

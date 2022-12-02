@@ -197,7 +197,12 @@ function Details({ data }) {
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Customer Name:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            <ValueWrapper
+                                sx={{
+                                    wordBreak: "break-all",
+                                    textTransform: "capitalize",
+                                }}
+                            >
                                 {data?.customer_name
                                     ? data?.customer_name
                                     : "N/A"}
@@ -277,7 +282,12 @@ function Details({ data }) {
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Beneficiary Name:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                            <ValueWrapper
+                                sx={{
+                                    wordBreak: "break-all",
+                                    textTransform: "capitalize",
+                                }}
+                            >
                                 {data?.beneficiary_name
                                     ? data?.beneficiary_name
                                     : "N/A"}

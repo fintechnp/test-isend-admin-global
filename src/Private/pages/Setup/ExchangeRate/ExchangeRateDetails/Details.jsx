@@ -2,16 +2,12 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 
 import {
     Mode,
     CurrencyName,
     CountryName,
     FormatNumber,
-    ReferenceName,
 } from "./../../../../../App/helpers";
 
 const InfoWrapper = styled(Box)(({ theme }) => ({
@@ -151,7 +147,7 @@ function ServiceDetails({ data }) {
                             <LabelWrapper>Receive Max Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.receive_max_amount
-                                    ? data?.receive_max_amount
+                                    ? FormatNumber(data?.receive_max_amount)
                                     : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -161,7 +157,7 @@ function ServiceDetails({ data }) {
                             <LabelWrapper>Receive Min Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.receive_min_amount
-                                    ? data?.receive_min_amount
+                                    ? FormatNumber(data?.receive_min_amount)
                                     : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -221,7 +217,7 @@ function ServiceDetails({ data }) {
                             <LabelWrapper>Send Max Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.send_max_amount
-                                    ? data?.send_max_amount
+                                    ? FormatNumber(data?.send_max_amount)
                                     : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -231,7 +227,7 @@ function ServiceDetails({ data }) {
                             <LabelWrapper>Send Min Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.send_min_amount
-                                    ? data?.send_min_amount
+                                    ? FormatNumber(data?.send_min_amount)
                                     : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>

@@ -39,6 +39,7 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
     fontSize: "14px",
     color: "border.main",
     textTransform: "capitalize",
@@ -98,13 +99,15 @@ const SanctionList = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {ReferenceName(37, data?.row?.original?.type)}
+                            {data?.row?.original?.type
+                                ? ReferenceName(30, data?.row?.original?.type)
+                                : "N/A"}
                         </Typography>
                     </Box>
                 ),
@@ -127,13 +130,15 @@ const SanctionList = (props) => {
                                 fontSize: "14px",
                             }}
                         >
-                            {CountryName(data.value)}
+                            {data.value ? CountryName(data.value) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
-                            sx={{ paddingLeft: "2px", opacity: 0.7 }}
+                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.address}
+                            {data?.row?.original?.address
+                                ? data?.row?.original?.address
+                                : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -148,7 +153,7 @@ const SanctionList = (props) => {
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
+                            {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -164,7 +169,7 @@ const SanctionList = (props) => {
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -231,17 +236,17 @@ const SanctionList = (props) => {
     );
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "type", name: "Type" },
-        { key: "name", name: "Name" },
-        { key: "address", name: "Address" },
-        { key: "country", name: "Country" },
-        { key: "dob", name: "DOB" },
-        { key: "source", name: "Source" },
-        { key: "amount", name: "Amount" },
-        { key: "remarks", name: "Remarks" },
-        { key: "ref1", name: "Ref 1" },
-        { key: "ref2", name: "Ref 2" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "name", name: "Name", type: "default" },
+        { key: "type", name: "Type", type: "reference", ref_value: 30 },
+        { key: "address", name: "Address", type: "default" },
+        { key: "country", name: "Country", type: "country" },
+        { key: "dob", name: "DOB", type: "date" },
+        { key: "source", name: "Source", type: "default" },
+        { key: "remarks", name: "Remarks", type: "default" },
+        { key: "ref1", name: "Ref 1", type: "default" },
+        { key: "ref2", name: "Ref 2", type: "default" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(

@@ -62,7 +62,7 @@ const Table = ({
     sub_columns,
     handleDelete,
     handleEdit,
-    enableExpand,
+    enableExpand = true,
     enableRowSelect,
     rowsPerPage = 10,
     hideTableHead,
@@ -102,7 +102,7 @@ const Table = ({
             data: memoizedData,
         },
         useFlexLayout,
-        useExpanded,
+        useExpandedHook,
         usePaginationHook,
         useRowSelectHook
     );

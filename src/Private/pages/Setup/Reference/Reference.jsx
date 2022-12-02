@@ -190,9 +190,10 @@ const Reference = (props) => {
     ]);
 
     const sub_columns = [
-        { key: "reference_type_id", name: "Id" },
-        { key: "type_name", name: "Type Name" },
-        { key: "description", name: "Description" },
+        { key: "reference_type_id", name: "Id", type: "default" },
+        { key: "type_name", name: "Type Name", type: "default" },
+        { key: "description", name: "Description", type: "defautl" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(

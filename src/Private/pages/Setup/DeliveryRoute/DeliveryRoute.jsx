@@ -49,7 +49,7 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
+    fontSize: "14px",
     color: "border.main",
 }));
 
@@ -112,7 +112,10 @@ const DeliveryRoute = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
+                        >
                             {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
@@ -256,13 +259,19 @@ const DeliveryRoute = (props) => {
     );
 
     const sub_columns = [
-        { key: "delivery_route_id", name: "Id" },
-        { key: "sending_agent", name: "Sending Agent" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "payout_country", name: "Country" },
-        { key: "payout_currency", name: "Currency" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
+        { key: "delivery_route_id", name: "Id", type: "default" },
+        { key: "sending_agent", name: "Sending Agent", type: "default" },
+        { key: "payout_agent", name: "Payout Agent", type: "default" },
+        { key: "payout_country", name: "Payout Country", type: "country" },
+        { key: "payout_currency", name: "Payout Currency", type: "currency" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {

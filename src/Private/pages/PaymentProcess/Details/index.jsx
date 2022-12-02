@@ -50,7 +50,7 @@ function TransactionDetails(props) {
         (state) => state.get_transaction_details
     );
 
-    const { aml_response, aml_loading } = useSelector(
+    const { response: aml_response, loading: aml_loading } = useSelector(
         (state) => state.get_aml_suspicious_details
     );
 
@@ -98,12 +98,10 @@ function TransactionDetails(props) {
                 </Grid>
                 {loading || aml_loading ? (
                     <TransactionSkeleton />
+                ) : id ? (
+                    <Details data={response?.data || []} />
                 ) : (
-                    <Details
-                        data={
-                            id ? response?.data || [] : aml_response?.data || []
-                        }
-                    />
+                    <Details data={aml_response?.data || []} />
                 )}
             </Grid>
         </>

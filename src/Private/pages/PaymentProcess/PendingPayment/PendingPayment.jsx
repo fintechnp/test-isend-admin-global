@@ -33,13 +33,14 @@ const MenuContainer = styled("div")(({ theme }) => ({
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.text.main,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
     fontSize: "14px",
-    color: "border.main",
+    color: theme.palette.text.dark,
 }));
 
 const initialState = {
@@ -96,13 +97,15 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value}
+                            {data.value ? data.value : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
                             sx={{ fontSize: "12px", opacity: 0.8 }}
                         >
-                            {data?.row?.original?.beneficiary_name}
+                            {data?.row?.original?.beneficiary_name
+                                ? data?.row?.original?.beneficiary_name
+                                : "N/A"}
                         </Typography>
                     </Box>
                 ),
@@ -123,16 +126,22 @@ const PendingPayment = (props) => {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "13px",
-                                opacity: 0.6,
+                                opacity: 0.7,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
+                            sx={{
+                                paddingLeft: "4px",
+                                fontSize: "13px",
+                                opacity: 0.7,
+                            }}
                         >
-                            {data?.row?.original?.payout_agent_name}
+                            {data?.row?.original?.payout_agent_name
+                                ? data?.row?.original?.payout_agent_name
+                                : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -152,14 +161,18 @@ const PendingPayment = (props) => {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
+                            {data.value ? CurrencyName(data.value) : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                            sx={{ fontSize: "12px", opacity: 0.7}}
                         >
-                            {CurrencyName(data?.row?.original?.payout_currency)}
+                            {data?.row?.original?.payout_currency
+                                ? CurrencyName(
+                                      data?.row?.original?.payout_currency
+                                  )
+                                : "N/A"}
                         </Typography>
                     </Box>
                 ),
@@ -173,8 +186,8 @@ const PendingPayment = (props) => {
                 accessor: "created_ts",
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
+                            {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -189,7 +202,7 @@ const PendingPayment = (props) => {
                 maxWidth: 80,
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
                             {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -211,12 +224,12 @@ const PendingPayment = (props) => {
                             alignItems: "flex-end",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
                             {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                         <Typography
                             component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
+                            sx={{ fontSize: "12px", opacity: 0.7 }}
                         >
                             {data?.row?.original?.payout_amount
                                 ? FormatNumber(

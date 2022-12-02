@@ -13,7 +13,7 @@ import Filter from "./../components/Filter";
 import CreateFcm from "./CreateFcm";
 import { Delete } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import { FormatDate } from "./../../../../App/helpers";
+import { FormatDate, ReferenceName } from "./../../../../App/helpers";
 
 const EmailContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -88,7 +88,10 @@ const Fcm = (props) => {
                 accessor: "title",
                 Cell: (data) => (
                     <Box>
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ fontSize: "14px", opacity: 0.9 }}
+                        >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
@@ -104,10 +107,29 @@ const Fcm = (props) => {
                             sx={{
                                 paddingLeft: "4px",
                                 fontSize: "14px",
-                                opacity: 0.6,
+                                opacity: 0.8,
                             }}
                         >
                             {data.value ? data.value : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Type",
+                accessor: "type",
+                maxWidth: 80,
+                Cell: (data) => (
+                    <Box>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "4px",
+                                fontSize: "14px",
+                                opacity: 0.8,
+                            }}
+                        >
+                            {data.value ? ReferenceName(89, data.value) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -129,6 +151,25 @@ const Fcm = (props) => {
             },
             {
                 Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "status",
+                maxWidth: 100,
+                Cell: (data) => (
+                    <Box textAlign="left" sx={{}}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
+                        >
+                            {data.value ? ReferenceName(88, data.value) : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Created Date</Typography>
                     </Box>
@@ -136,7 +177,10 @@ const Fcm = (props) => {
                 accessor: "created_ts",
                 Cell: (data) => (
                     <Box textAlign="center" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
+                        >
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -201,17 +245,26 @@ const Fcm = (props) => {
     );
 
     const sub_columns = [
-        { key: "tid", name: "Id" },
-        { key: "title", name: "Title" },
-        { key: "topic", name: "Receiver" },
-        { key: "body", name: "Body" },
-        { key: "display_notification", name: "Display Notification" },
-        { key: "detail_content", name: "Detail Contents" },
-        { key: "created_ts", name: "Created Date" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "title", name: "Title", type: "default" },
+        { key: "type", name: "Type", type: "reference", ref_value: 89 },
+        { key: "topic", name: "Receiver", type: "default" },
+        { key: "customer_id", name: "Customer Id", type: "default" },
+        { key: "status", name: "Status", type: "reference", ref_value: 88 },
+        { key: "body", name: "Body", type: "default" },
+        {
+            key: "display_notification",
+            name: "Display Notification",
+            type: "boolean",
+        },
+        { key: "detail_content", name: "Detail Contents", type: "default" },
+        { key: "image_url", name: "Image Url", type: "default" },
+        { key: "redirect_url", name: "Redirect Url", type: "default" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const sortData = [
-        { key: "None", value: "" },
+        { key: "None", value: "created_ts" },
         { key: "Title", value: "title" },
         { key: "Topic", value: "topic" },
         { key: "Body", value: "body" },
@@ -283,6 +336,7 @@ const Fcm = (props) => {
                     handleSearch={handleSearch}
                     handleSort={handleSort}
                     handleOrder={handleOrder}
+                    filterSchema={filterSchema}
                 />
                 <Table
                     columns={columns}

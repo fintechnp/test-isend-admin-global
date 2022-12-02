@@ -312,15 +312,20 @@ const PromoSetup = (props) => {
     ];
 
     const sub_columns = [
-        { key: "promo_id", name: "Id" },
-        { key: "name", name: "Name" },
-        { key: "sending_agent_id", name: "Payout Agent" },
-        { key: "payout_country", name: "Payout Country" },
-        { key: "fee_discount", name: "Fee Discount" },
-        { key: "premium_rate", name: "Premium Rate" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
-        { key: "created_ts", name: "Created At" },
+        { key: "promo_id", name: "Id", type: "default" },
+        { key: "name", name: "Name", type: "default" },
+        { key: "sending_agent_id", name: "Payout Agent", type: "default" },
+        { key: "payout_country", name: "Payout Country", type: "country" },
+        { key: "fee_discount", name: "Fee Discount", type: "default" },
+        { key: "premium_rate", name: "Premium Rate", type: "default" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(

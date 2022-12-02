@@ -136,21 +136,6 @@ const Email = (props) => {
                     </Box>
                 ),
             },
-            // {
-            //     Header: () => (
-            //         <Box textAlign="left" sx={{}}>
-            //             <Typography>Body</Typography>
-            //         </Box>
-            //     ),
-            //     accessor: "email_body",
-            //     Cell: (data) => (
-            //         <Box>
-            //             <Text component="span">
-            //                 {data?.value ? data?.value : "N/A"}
-            //             </Text>
-            //         </Box>
-            //     ),
-            // },
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -214,7 +199,7 @@ const Email = (props) => {
     );
 
     const sortData = [
-        { key: "None", value: "" },
+        { key: "None", value: "created_ts" },
         { key: "Sender", value: "email_by" },
         { key: "Receiver", value: "email_to" },
         { key: "Subject", value: "email_subject" },
@@ -286,6 +271,7 @@ const Email = (props) => {
                     handleSearch={handleSearch}
                     handleSort={handleSort}
                     handleOrder={handleOrder}
+                    filterSchema={filterSchema}
                 />
                 <Table
                     columns={columns}

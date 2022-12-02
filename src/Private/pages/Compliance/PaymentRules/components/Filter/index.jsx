@@ -86,7 +86,13 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleFilterAgent, handleSort, handleOrder }) {
+function Filter({
+    handleSearch,
+    handleFilterAgent,
+    handleSort,
+    handleOrder,
+    filterSchema,
+}) {
     const { response: partner_payout } = useSelector(
         (state) => state.get_payout_partner
     );
@@ -133,7 +139,7 @@ function Filter({ handleSearch, handleFilterAgent, handleSort, handleOrder }) {
                         <Select
                             onChange={handleSort}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue={filterSchema.sort_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
@@ -162,7 +168,7 @@ function Filter({ handleSearch, handleFilterAgent, handleSort, handleOrder }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={filterSchema.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

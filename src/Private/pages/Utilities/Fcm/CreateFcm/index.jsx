@@ -19,7 +19,7 @@ import FCMForm from "./Form";
 import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -130,13 +130,15 @@ function CreateFcm({ update, update_data }) {
     };
 
     const handleFCMCreate = (data) => {
-        if (data?.type === "topic") {
+        if (data?.target === "topic") {
             dispatch(
                 actions.create_fcm({
                     topic: data?.topic,
                     title: data?.title,
                     body: data?.body,
+                    type: data?.type,
                     image_url: data?.image_url,
+                    redirect_url: data?.redirect_url,
                     display_notification: data?.display_notification,
                     detail_content: data?.detail_content,
                 })
@@ -147,7 +149,9 @@ function CreateFcm({ update, update_data }) {
                     customer_id: data?.customer_id,
                     title: data?.title,
                     body: data?.body,
+                    type: data?.type,
                     image_url: data?.image_url,
+                    redirect_url: data?.redirect_url,
                     display_notification: data?.display_notification,
                     detail_content: data?.detail_content,
                 })
@@ -156,13 +160,18 @@ function CreateFcm({ update, update_data }) {
     };
 
     const handleFCMUpdate = (data) => {
-        if (data?.type === "topic") {
+        if (data?.target === "topic") {
             dispatch(
                 actions.update_fcm(data?.tid, {
                     topic: data?.topic,
                     title: data?.title,
                     body: data?.body,
+                    type: data?.type,
                     image_url: data?.image_url,
+                    redirect_url: data?.redirect_url,
+                    display_notification: data?.display_notification,
+                    detail_content: data?.detail_content,
+                    customer_id: 0,
                 })
             );
         } else {
@@ -171,7 +180,11 @@ function CreateFcm({ update, update_data }) {
                     customer_id: data?.customer_id,
                     title: data?.title,
                     body: data?.body,
+                    type: data?.type,
                     image_url: data?.image_url,
+                    redirect_url: data?.redirect_url,
+                    display_notification: data?.display_notification,
+                    detail_content: data?.detail_content,
                 })
             );
         }
@@ -223,9 +236,14 @@ function CreateFcm({ update, update_data }) {
                                 tid: memoizedData?.tid,
                                 title: memoizedData?.title,
                                 topic: memoizedData?.topic,
+                                type: memoizedData?.type,
                                 body: memoizedData?.body,
                                 customer_id: memoizedData?.customer_id,
                                 image_url: memoizedData?.image_url,
+                                redirect_url: memoizedData?.redirect_url,
+                                detail_content: memoizedData?.detail_content,
+                                display_notification:
+                                    memoizedData?.display_notification,
                             }}
                             customer_id={memoizedData?.customer_id}
                             onSubmit={handleFCMUpdate}
@@ -238,7 +256,7 @@ function CreateFcm({ update, update_data }) {
                         <FCMForm
                             destroyOnUnmount={true}
                             initialValues={{
-                                type: "topic",
+                                target: "topic",
                             }}
                             update={update}
                             onSubmit={handleFCMCreate}

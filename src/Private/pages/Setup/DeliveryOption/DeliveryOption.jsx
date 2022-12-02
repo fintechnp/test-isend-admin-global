@@ -55,7 +55,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
-    fontSize: "15px",
+    fontSize: "14px",
     color: theme.palette.secondary.contrastText,
     textTransform: "capitalize",
 }));
@@ -111,7 +111,10 @@ const DeliveryOption = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
+                        >
                             {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
@@ -261,13 +264,19 @@ const DeliveryOption = (props) => {
     );
 
     const sub_columns = [
-        { key: "delivery_option_id", name: "Id" },
-        { key: "delivery_name", name: "Name" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "country_code", name: "Country" },
-        { key: "currency_code", name: "Currency" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
+        { key: "delivery_option_id", name: "Id", type: "default" },
+        { key: "delivery_name", name: "Name", type: "default" },
+        { key: "payout_agent", name: "Payout Agent", type: "default" },
+        { key: "country_code", name: "Country", type: "country" },
+        { key: "currency_code", name: "Currency", type: "currency" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(
