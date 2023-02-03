@@ -1,0 +1,426 @@
+import { lazy } from "react";
+
+//Dashboard
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+
+//users
+const Accounts = lazy(() => import("../pages/Users/Accounts"));
+const Menu = lazy(() => import("../pages/Users/Menu"));
+const SubMenu = lazy(() => import("../pages/Users/SubMenu"));
+
+//users permission
+const UserPermission = lazy(() => import("../pages/Users/UserPermission"));
+
+//setup
+const DeliveryOption = lazy(() => import("../pages/Setup/DeliveryOption"));
+const DeliveryRoute = lazy(() => import("../pages/Setup/DeliveryRoute"));
+const ExchangeRate = lazy(() => import("../pages/Setup/ExchangeRate"));
+const ExchangeRateList = lazy(() =>
+  import("../pages/Setup/ExchangeRate/ExchangeRateList")
+);
+const AddUpdateExchangeRate = lazy(() =>
+  import("../pages/Setup/ExchangeRate/AddUpdateExchangeRate")
+);
+const ExchangeRateDetails = lazy(() =>
+  import("../pages/Setup/ExchangeRate/ExchangeRateDetails")
+);
+const Partner = lazy(() => import("../pages/Setup/Partner"));
+const AddUpdatePartner = lazy(() =>
+  import("../pages/Setup/Partner/AddUpdatePartner")
+);
+const PartnerDetails = lazy(() =>
+  import("../pages/Setup/Partner/PartnerDetails")
+);
+const Corridor = lazy(() => import("../pages/Setup/Partner/Corridor"));
+const PartnerBranch = lazy(() =>
+  import("../pages/Setup/Partner/PartnerBranch")
+);
+const AddPartnerBranch = lazy(() =>
+  import("../pages/Setup/Partner/PartnerBranch/AddBranch")
+);
+const PartnerBank = lazy(() => import("../pages/Setup/PartnerBank"));
+const MapBank = lazy(() => import("../pages/Setup/PartnerBank/MapBank"));
+const PayoutLocation = lazy(() => import("../pages/Setup/PayoutLocation"));
+const Reference = lazy(() => import("../pages/Setup/Reference"));
+const ReferenceData = lazy(() =>
+  import("../pages/Setup/Reference/ReferenceData")
+);
+const ServiceCharge = lazy(() => import("../pages/Setup/ServiceCharge"));
+const ServiceChargeList = lazy(() =>
+  import("../pages/Setup/ServiceCharge/ServiceChargeList")
+);
+const AddUpdateServiceCharge = lazy(() =>
+  import("../pages/Setup/ServiceCharge/AddUpdateServiceCharge")
+);
+const ServiceChargeDetails = lazy(() =>
+  import("../pages/Setup/ServiceCharge/ServiceChargeDetails")
+);
+const PromoSetup = lazy(() => import("../pages/Setup/PromoSetup"));
+const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
+const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
+
+//Customers
+const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
+const CreateCustomer = lazy(() => import("../pages/Customers/CreateCustomer"));
+const CustomerDetails = lazy(() =>
+  import("../pages/Customers/CustomerDetails")
+);
+const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
+const AddBeneficiary = lazy(() =>
+  import("../pages/Customers/Beneficiary/AddUpdateBeneficiary")
+);
+const BeneficiaryDetails = lazy(() =>
+  import("../pages/Customers/Beneficiary/Details")
+);
+const CustomerTransactions = lazy(() =>
+  import("../pages/Customers/Transactions")
+);
+
+//Documents
+const Documents = lazy(() => import("../pages/Customers/Documents"));
+
+//remarks
+const CustomerRemarks = lazy(() => import("../pages/Customers/Remarks"));
+
+//Transactions
+const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
+const DailyTransactions = lazy(() =>
+  import("../pages/Transactions/DailyTransactions")
+);
+const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
+const TransactionRemarks = lazy(() => import("../pages/Transactions/Remarks"));
+
+//Reports
+const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
+const BeneficiaryReport = lazy(() => import("../pages/Reports/Beneficiary"));
+const TransactionsSummary = lazy(() =>
+  import("../pages/Reports/TransactionsSummary")
+);
+const CancelledTransactions = lazy(() =>
+  import("../pages/Reports/CancelledTransactions")
+);
+const YearlyTransactions = lazy(() =>
+  import("../pages/Reports/YearlyTransactions")
+);
+const SuspiciousTransactions = lazy(() =>
+  import("../pages/Reports/SuspiciousTransactions")
+);
+
+//PaymentProcess
+const PendingPayment = lazy(() =>
+  import("../pages/PaymentProcess/PendingPayment")
+);
+const PendingTransactions = lazy(() =>
+  import("../pages/PaymentProcess/PendingTransactions")
+);
+const BlockedTransactions = lazy(() =>
+  import("../pages/PaymentProcess/BlockedTransactions")
+);
+const Search = lazy(() => import("../pages/PaymentProcess/Search"));
+const AmlSupicious = lazy(() => import("../pages/PaymentProcess/AmlSupicious"));
+const ExceptionTransactions = lazy(() =>
+  import("../pages/PaymentProcess/ExceptionTransactions")
+);
+const TransactionsDetails = lazy(() =>
+  import("../pages/PaymentProcess/Details")
+);
+
+//Utilities
+const Sms = lazy(() => import("../pages/Utilities/Sms"));
+const Email = lazy(() => import("../pages/Utilities/Email"));
+const Fcm = lazy(() => import("../pages/Utilities/Fcm"));
+
+//Compliance
+const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
+const CompliancePaymentRules = lazy(() =>
+  import("../pages/Compliance/PaymentRules")
+);
+
+//Settings
+const Settings = lazy(() => import("../pages/Settings"));
+
+//Messages
+const Messages = lazy(() => import("../pages/Messages"));
+
+//My Account
+const MyAccount = lazy(() => import("../pages/MyAccount"));
+
+//Accounting
+const Accounting = lazy(() => import("../pages/Accounting"));
+
+const privateRoutes = [
+  { path: "/", component: <Dashboard title="Dashboard" /> },
+  { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
+  {
+    path: "/user/permission/:id",
+    component: <UserPermission title="User Permissions" />,
+  },
+  { path: "/user/menu", component: <Menu title="Menus" /> },
+  {
+    path: "/user/menu/sub/:name/:id",
+    component: <SubMenu title="Sub Menus" />,
+  },
+
+  //Setup routes
+  {
+    path: "/setup/delivery-option",
+    component: <DeliveryOption title="Delivery Options" />,
+  },
+  {
+    path: "/setup/delivery-route",
+    component: <DeliveryRoute title="Delivery Route" />,
+  },
+  {
+    path: "/setup/exchange-rate",
+    component: <ExchangeRate title="Partnerwise Exchange Rate" />,
+  },
+  {
+    path: "/setup/exchange-rate/:name/:sending_currency/:id",
+    component: <ExchangeRateList title="Exchange Rate List" />,
+  },
+  {
+    path: "/setup/exchange-rate/create/:currency/:agent_id",
+    component: <AddUpdateExchangeRate title="Create Exchange Rate" />,
+  },
+  {
+    path: "/setup/exchange-rate/update/:id",
+    component: <AddUpdateExchangeRate title="Update Exchange Rate" />,
+  },
+  {
+    path: "/setup/exchange-rate/details/:id",
+    component: <ExchangeRateDetails title="Exchange Rate Details" />,
+  },
+  { path: "/setup/partner", component: <Partner title="Partner List" /> },
+  {
+    path: "/setup/partner/create",
+    component: <AddUpdatePartner title="Create Partner" />,
+  },
+  {
+    path: "/setup/partner/update/:id",
+    component: <AddUpdatePartner title="Update Partner" />,
+  },
+  {
+    path: "/setup/partner/details/:id",
+    component: <PartnerDetails title="Partner Details" />,
+  },
+  {
+    path: "/setup/partner/corridor/:name/:id",
+    component: <Corridor title="Corridor List" />,
+  },
+  {
+    path: "/setup/partner/branch/:name/:id",
+    component: <PartnerBranch title="Branch" />,
+  },
+  {
+    path: "/setup/partner/branch/add/:agent_id",
+    component: <AddPartnerBranch title="Add Branch" />,
+  },
+  {
+    path: "/setup/partner/branch/update/:agent_id/:branch_id",
+    component: <AddPartnerBranch title="Update Branch" />,
+  },
+  {
+    path: "/setup/partner-bank",
+    component: <PartnerBank title="Partner Bank" />,
+  },
+  {
+    path: "/setup/partner-bank/map/:payment/:country/:currency/:id",
+    component: <MapBank title="Map Partner Bank" />,
+  },
+  {
+    path: "/setup/payout-location",
+    component: <PayoutLocation title="Payout Location" />,
+  },
+  { path: "/setup/reference", component: <Reference title="Reference" /> },
+  {
+    path: "/setup/reference/data/:name/:id",
+    component: <ReferenceData title="Reference Data" />,
+  },
+  {
+    path: "/setup/service-charge",
+    component: <ServiceCharge title="Partnerwise Service Charge" />,
+  },
+  {
+    path: "/setup/service-charge/:name/:id",
+    component: <ServiceChargeList title="Service Charge List" />,
+  },
+  {
+    path: "/setup/service-charge/:agent_id/create",
+    component: <AddUpdateServiceCharge title="Create Service Charge" />,
+  },
+  {
+    path: "/setup/service-charge/update/:id",
+    component: <AddUpdateServiceCharge title="Update Service Charge" />,
+  },
+  {
+    path: "/setup/service-charge/details/:id",
+    component: <ServiceChargeDetails title="Service Charge Details" />,
+  },
+  {
+    path: "/setup/promo-setup",
+    component: <PromoSetup title="Promo Setup" />,
+  },
+  {
+    path: "/setup/promo-code/:name/:id",
+    component: <PromoCode title="Promo Code" />,
+  },
+  {
+    path: "/setup/api-configuration",
+    component: <ApiConfiguration title="Api Configuration" />,
+  },
+
+  //Customers
+  {
+    path: "/customer/search",
+    component: <CustomerSearch title="Customer Search" />,
+  },
+  {
+    path: "/customer/create",
+    component: <CreateCustomer title="Create Customer" />,
+  },
+  {
+    path: "/customer/update/:id",
+    component: <CreateCustomer title="Update Customer" />,
+  },
+  {
+    path: "/customer/details/:id",
+    component: <CustomerDetails title="Customer Details" />,
+  },
+  {
+    path: "/customer/all-beneficiary/:id",
+    component: <AllBeneficiary title="Beneficiary List" />,
+  },
+  {
+    path: "/customer/beneficiary/add/:id",
+    component: <AddBeneficiary title="Create Beneficiary" />,
+  },
+  {
+    path: "/customer/beneficiary/update/:id/:bene_id",
+    component: <AddBeneficiary title="Update Beneficiary" />,
+  },
+  {
+    path: "/customer/beneficiary/details/:id/:bene_id",
+    component: <BeneficiaryDetails title="Beneficiary Details" />,
+  },
+  {
+    path: "/customer/all-transactions/:id",
+    component: <CustomerTransactions title="Customer's Transactions" />,
+  },
+  {
+    path: "/customer/documents/:id",
+    component: <Documents title="Customer's Documents" />,
+  },
+
+  {
+    path: "/customer/remarks/:id",
+    component: <CustomerRemarks title="Customer's Remarks" />,
+  },
+
+  //Transactions
+  {
+    path: "/transaction/new",
+    component: <CreateTransactions title="Create Transaction" />,
+  },
+  {
+    path: "/transaction/update/:id",
+    component: <CreateTransactions title="Update Transaction" />,
+  },
+  {
+    path: "/transaction/daily",
+    component: <DailyTransactions title="Daily Transactions" />,
+  },
+  {
+    path: "/transaction/search",
+    component: <SearchTransactions title="Search Transactions" />,
+  },
+  {
+    path: "/transaction/remarks/:id",
+    component: <TransactionRemarks title="Transaction's Remarks" />,
+  },
+
+  //Reports
+  {
+    path: "/report/customer",
+    component: <CustomerReport title="Customer Reports" />,
+  },
+  {
+    path: "/report/beneficiary",
+    component: <BeneficiaryReport title="Beneficiary Reports" />,
+  },
+  {
+    path: "/report/yearly-transactions",
+    component: <YearlyTransactions title="Yearly Transactions" />,
+  },
+  {
+    path: "/report/transaction-summary",
+    component: <TransactionsSummary title="Transaction Summary" />,
+  },
+  {
+    path: "/report/cancelled-transactions",
+    component: <CancelledTransactions title="Cancelled Transactions" />,
+  },
+  {
+    path: "/report/suspicious-transactions",
+    component: <SuspiciousTransactions title="Suspicious Transactions" />,
+  },
+
+  //PaymentProcess
+  {
+    path: "/payment/pending",
+    component: <PendingPayment title="Pending Payment" />,
+  },
+  {
+    path: "/payment/pending-transactions",
+    component: <PendingTransactions title="Pending Transactions" />,
+  },
+  {
+    path: "/payment/block-list",
+    component: <BlockedTransactions title="Blocked Transactions" />,
+  },
+  { path: "/payment/search", component: <Search title="Block/Refund" /> },
+  {
+    path: "/payment/aml-suspicious",
+    component: <AmlSupicious title="AML Suspicious" />,
+  },
+  {
+    path: "/payment/exception-transactions",
+    component: <ExceptionTransactions title="Exception Transactions" />,
+  },
+  {
+    path: "/transactions/details/:id",
+    component: <TransactionsDetails title="Transaction Details" />,
+  },
+  {
+    path: "/transactions/details/aml-suspicious/:tid",
+    component: <TransactionsDetails title="Transaction Details" />,
+  },
+
+  //Utilities
+  { path: "/utilities/sms", component: <Sms title="SMS" /> },
+  { path: "/utilities/email", component: <Email title="Email" /> },
+  { path: "/utilities/fcm", component: <Fcm title="FCM" /> },
+
+  //Compliance
+  {
+    path: "/compliance/sanction-list",
+    component: <SanctionList title="Sanction List" />,
+  },
+  {
+    path: "/compliance/payment-rules",
+    component: <CompliancePaymentRules title="Payment Rules" />,
+  },
+
+  //Settings
+  { path: "/settings", component: <Settings title="Settings" /> },
+
+  //Messages
+  { path: "/messages", component: <Messages title="Messages" /> },
+
+  //MyAccount
+  { path: "/account", component: <MyAccount title="My Account" /> },
+
+  //Accounting
+  { path: "/accounting", component: <Accounting title="Accounting" /> },
+];
+
+export default privateRoutes ;

@@ -11,33 +11,32 @@ import Logo from "../src/assets/long-logo.svg";
 const App = lazy(() => import("./App"));
 
 const Card = styled(Box)(({ theme }) => ({
-    height: "96vh",
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+  height: "96vh",
+  width: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 function ImageCard() {
-    return (
-        <Card>
-            <CardMedia
-                component="img"
-                height="108"
-                image={Logo}
-                alt="document image"
-                sx={{ width: "124px" }}
-            />
-        </Card>
-    );
+  return (
+    <Card>
+      <CardMedia
+        component="img"
+        height="108"
+        image={Logo}
+        alt="document image"
+        sx={{ width: "124px" }}
+      />
+    </Card>
+  );
 }
 
 ReactDOM.render(
-    <Suspense fallback={<ImageCard />}>
-        <App />
-    </Suspense>,
-
-    document.getElementById("root")
+  <Suspense fallback={<ImageCard />}>
+    <App />
+  </Suspense>,
+  document.getElementById("root")
 );
 
 reportWebVitals();

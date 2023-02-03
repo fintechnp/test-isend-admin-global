@@ -20,14 +20,14 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
         maxWidth: "90%",
         backgroundColor: theme.palette.background.dark,
     },
-    "& .MuiDialogActions-root": {
-        paddingBottom: theme.spacing(2),
-        columnGap: 4,
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
+    // "& .MuiDialogActions-root": {
+    //     paddingBottom: theme.spacing(2),
+    //     columnGap: 4,
+    //     width: "100%",
+    //     display: "flex",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    // },
     "& .MuiDialogActions-root": {
         marginBottom: "8px",
         columnGap: "12px",
