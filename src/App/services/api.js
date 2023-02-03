@@ -9,7 +9,7 @@ export const injectStore = (_store) => {
 export default class Api {
     constructor(setToken = true) {
         this.axiosFunction = axios.create({
-            baseURL: (process.env.REACT_APP_API_BASE_URL || "") + "/api/",
+            baseURL: (import.meta.env.REACT_APP_API_BASE_URL || "") + "/api/",
         });
         if (setToken) {
             this.setToken();
