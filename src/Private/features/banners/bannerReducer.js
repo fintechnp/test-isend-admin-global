@@ -67,6 +67,7 @@ const getBannerReducer = (state = getBannerInitialState, action) => {
 };
 
 const addBannerInitialState = {
+  is_modal_open: false,
   success: false,
   loading: false,
   error: null,
@@ -83,6 +84,7 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
     case bannerActions.ADD_BANNER_SUCCESS:
       return {
         ...state,
+        is_modal_open: false,
         success: true,
         loading: false,
         response: action.response,
@@ -96,10 +98,27 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
       };
     case bannerActions.ADD_BANNER_RESET:
       return {
+        is_modal_open: false,
         success: false,
         loading: false,
         error: null,
-        response: [],
+        response: undefined,
+      };
+    case bannerActions.OPEN_ADD_BANNER_MODAL:
+      return {
+        is_modal_open: true,
+        success: false,
+        loading: false,
+        error: null,
+        response: undefined,
+      };
+    case bannerActions.CLOSE_ADD_BANNER_MODAL:
+      return {
+        is_modal_open: false,
+        success: false,
+        loading: false,
+        error: null,
+        response: undefined,
       };
     default:
       return state;
@@ -107,6 +126,8 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
 };
 
 const updateBannerInitialState = {
+  is_modal_open: false,
+  initial_form_state: undefined,
   success: false,
   loading: false,
   error: null,
@@ -123,6 +144,8 @@ const updateBannerReducer = (state = updateBannerInitialState, action) => {
     case bannerActions.UPDATE_BANNER_SUCCESS:
       return {
         ...state,
+        is_modal_open: false,
+        initial_form_state: undefined,
         success: true,
         loading: false,
         response: action.response,
@@ -136,17 +159,38 @@ const updateBannerReducer = (state = updateBannerInitialState, action) => {
       };
     case bannerActions.UPDATE_BANNER_RESET:
       return {
+        is_modal_open: false,
+        initial_form_state: undefined,
         success: false,
         loading: false,
         error: null,
         response: [],
+      };
+    case bannerActions.OPEN_UPDATE_BANNER_MODAL:
+      console.log(action);
+      return {
+        is_modal_open: true,
+        initial_form_state: action.payload,
+        success: false,
+        loading: false,
+        error: null,
+        response: undefined,
+      };
+    case bannerActions.CLOSE_UPDATE_BANNER_MODAL:
+      return {
+        is_modal_open: false,
+        initial_form_state: undefined,
+        success: false,
+        loading: false,
+        error: null,
+        response: undefined,
       };
     default:
       return state;
   }
 };
 
-const updateBannerStatusInitialState = {
+const WW = {
   success: false,
   loading: false,
   error: null,

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
@@ -13,6 +14,8 @@ import SelectField from "App/components/Fields/SelectField";
 import CheckboxField from "App/components/Fields/CheckboxField";
 
 import Validator from "App/utils/validators";
+import CancelButton from "App/components/Button/CancelButton";
+import SubmitButton from "App/components/Button/SubmitButton";
 
 const Container = styled(Grid)(({ theme }) => ({
   maxWidth: "900px",
@@ -41,78 +44,8 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
   paddingTop: "12px",
 }));
 
-const CancelButton = styled(Button)(({ theme }) => ({
-  minWidth: "100px",
-  color: "#fff",
-  borderRadius: "2px",
-  textTransform: "capitalize",
-  background: theme.palette.warning.main,
-  "&:hover": {
-    background: theme.palette.warning.dark,
-  },
-}));
-
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
-  minWidth: "100px",
-  color: "#fff",
-  borderRadius: "2px",
-  textTransform: "capitalize",
-  background: theme.palette.primary.main,
-  "&:hover": {
-    background: theme.palette.primary.dark,
-  },
-  "& .MuiCircularProgress-root": {
-    color: theme.palette.primary.contrastText,
-  },
-}));
-
-const BannerForm = ({
-  handleSubmit,
-  partnerList,
-  update,
-  handleAgent,
-  loading,
-  buttonText,
-  payout_country,
-  handleClose,
-}) => {
+const BannerForm = ({ handleSubmit, isAddMode, isProcessing, onCancel }) => {
   const dispatch = useDispatch();
-  const reference = JSON.parse(localStorage.getItem("reference"));
-  const country = JSON.parse(localStorage.getItem("country"));
-
-  useEffect(() => {
-    if (payout_country && update) {
-      handleAgent(payout_country);
-    }
-  }, [payout_country]);
-
-  const convertCurrency = (iso3) => {
-    const currency = country.filter((data) => data.iso3 === iso3);
-    if (currency) {
-      return currency[0].currency;
-    }
-  };
-
-  const handleCurrency = (e) => {
-    handleAgent(e.target.value);
-    if (update) {
-      dispatch(
-        change(
-          "update_delivery_option_form",
-          "currency_code",
-          convertCurrency(e.target.value)
-        )
-      );
-    } else {
-      dispatch(
-        change(
-          "add_delivery_option_form",
-          "currency_code",
-          convertCurrency(e.target.value)
-        )
-      );
-    }
-  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -121,8 +54,8 @@ const BannerForm = ({
           <FormWrapper container direction="row">
             <FieldWrapper item xs={12} sm={6}>
               <Field
-                name="delivery_name"
-                label="Delivery Name"
+                name="banner_name"
+                label="Banner Name"
                 type="text"
                 small={12}
                 component={TextField}
@@ -131,93 +64,19 @@ const BannerForm = ({
             </FieldWrapper>
             <FieldWrapper item xs={12} sm={6}>
               <Field
-                name="country_code"
-                label="Country"
-                type="number"
-                small={12}
-                onChange={handleCurrency}
-                component={SelectField}
-                validate={[Validator.emptyValidator, Validator.minValue1]}
-              >
-                <option value="" disabled>
-                  Select Country
-                </option>
-                {country &&
-                  country.map((data) => (
-                    <option value={data.iso3} key={data.tid}>
-                      {data.country}
-                    </option>
-                  ))}
-              </Field>
-            </FieldWrapper>
-            <FieldWrapper item xs={12} sm={6}>
-              <Field
-                name="currency_code"
-                label="Currency"
-                type="number"
-                small={12}
-                component={SelectField}
-                validate={[Validator.emptyValidator, Validator.minValue1]}
-              >
-                <option value="" disabled>
-                  Select Currency
-                </option>
-                {country &&
-                  country.map((data) => (
-                    <option value={data.currency} key={data.tid}>
-                      {data.currency_name}
-                    </option>
-                  ))}
-              </Field>
-            </FieldWrapper>
-            <FieldWrapper item xs={12} sm={6}>
-              <Field
-                name="payment_type"
-                label="Payment Type"
+                name="link"
+                label="Banner URL"
                 type="text"
                 small={12}
-                component={SelectField}
-                validate={[Validator.emptyValidator, Validator.minValue1]}
-              >
-                <option value="" disabled>
-                  Select Payment Type
-                </option>
-                {reference &&
-                  reference
-                    ?.filter((ref_data) => ref_data.reference_type === 1)[0]
-                    .reference_data.map((data) => (
-                      <option value={data.value} key={data.reference_id}>
-                        {data.name}
-                      </option>
-                    ))}
-              </Field>
+                component={TextField}
+                validate={[Validator.emptyValidator, Validator.urlValidator]}
+              />
             </FieldWrapper>
-            <FieldWrapper item xs={12} sm={6}>
-              <Field
-                name="payout_agent_id"
-                label="Payout Agent"
-                type="number"
-                small={12}
-                disabled={partnerList.length > 0 ? false : true}
-                component={SelectField}
-                validate={[Validator.emptyValidator, Validator.minValue1]}
-              >
-                <option value="" disabled>
-                  Select Payout Agent
-                </option>
-                {partnerList &&
-                  partnerList.map((data, index) => (
-                    <option value={data.agent_id} key={data?.tid}>
-                      {data.name}
-                    </option>
-                  ))}
-              </Field>
-            </FieldWrapper>
-            {update && (
+            {!isAddMode && (
               <FieldWrapper item xs={12} sm={6}>
                 <Grid container alignItems="flex-end" justifyContent="flex-end">
                   <Grid item xs={12}>
-                    <StatusText component="p">Status</StatusText>
+                    <StatusText component="p">Is Active ?</StatusText>
                   </Grid>
                   <Grid item xs={12}>
                     <Field
@@ -245,24 +104,10 @@ const BannerForm = ({
             alignItems="center"
           >
             <Grid item>
-              <CancelButton
-                size="small"
-                variant="contained"
-                onClick={handleClose}
-              >
-                Cancel
-              </CancelButton>
+              <CancelButton onClick={onCancel}>Cancel</CancelButton>
             </Grid>
             <Grid item>
-              <CreateButton
-                size="small"
-                variant="outlined"
-                loading={loading}
-                endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                type="submit"
-              >
-                {buttonText}
-              </CreateButton>
+              <SubmitButton isLoading={isProcessing} isAddMode={isAddMode} />
             </Grid>
           </ButtonWrapper>
         </Grid>
@@ -272,3 +117,9 @@ const BannerForm = ({
 };
 
 export default React.memo(reduxForm({ form: ["form"] })(BannerForm));
+
+BannerForm.propTypes = {
+  isAddMode: PropTypes.bool,
+  onCancel: PropTypes.func,
+  isProcessing: PropTypes.bool,
+};

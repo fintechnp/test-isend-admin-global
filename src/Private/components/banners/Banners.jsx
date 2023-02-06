@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import BannerForm from "./BannerForm";
@@ -65,11 +65,16 @@ const Banners = (props) => {
   const { response: data, loading: isLoading } = useSelector(
     (state) => state.get_banner_list
   );
+
   const { loading: d_loading, success: isDeleting } = useSelector(
     (state) => state.delete_banner
   );
+
   const { success: isAddSuccess } = useSelector((state) => state.add_banner);
-  const { success: isDeleteSuccess } = useSelector((state) => state.update_banner);
+
+  const { success: isDeleteSuccess } = useSelector(
+    (state) => state.update_banner
+  );
 
   useEffect(() => {
     dispatch(bannerActions.get_banners(filterSchema));
@@ -84,8 +89,8 @@ const Banners = (props) => {
         maxWidth: 80,
       },
       {
-        Header: "Option Name",
-        accessor: "delivery_name",
+        Header: "Banner Name",
+        accessor: "banner_name",
         Cell: (data) => (
           <Box
             sx={{
@@ -101,58 +106,13 @@ const Banners = (props) => {
         ),
       },
       {
-        Header: () => (
-          <Box>
-            <Typography>Payout Agent</Typography>
-          </Box>
-        ),
-        accessor: "payout_agent",
+        Header: "Banner Image",
+        accessor: "link",
         Cell: (data) => (
           <Box>
             <StyledText component="p">
               {data.value ? data.value : "n/a"}
             </StyledText>
-          </Box>
-        ),
-      },
-      {
-        Header: () => (
-          <Box>
-            <Typography>Payment Type</Typography>
-          </Box>
-        ),
-        accessor: "payment_type",
-        Cell: (data) => (
-          <Box>
-            <StyledText component="p">
-              {data.value ? ReferenceName(1, data.value) : "n/a"}
-            </StyledText>
-          </Box>
-        ),
-      },
-      {
-        Header: () => (
-          <Box>
-            <Typography>Country/Currency</Typography>
-          </Box>
-        ),
-        accessor: "country_code",
-        Cell: (data) => (
-          <Box>
-            <StyledText component="p">
-              {data.value ? CountryName(data.value) : "N/A"}
-            </StyledText>
-            <Typography
-              sx={{
-                opacity: 0.6,
-                fontSize: "12px",
-                lineHeight: 1,
-              }}
-            >
-              {data?.row?.original?.currency_code
-                ? CurrencyName(data?.row?.original?.currency_code)
-                : "N/A"}
-            </Typography>
           </Box>
         ),
       },
@@ -168,7 +128,7 @@ const Banners = (props) => {
           <SwitchWrapper textAlign="right" sx={{}}>
             <TableSwitch
               value={data?.value}
-              data={data.row.original}
+              dataId={data.row.original.banner_id}
               handleStatus={handleStatus}
             />
           </SwitchWrapper>
@@ -189,41 +149,30 @@ const Banners = (props) => {
               justifyContent: "center",
             }}
           >
-            <span {...row.getToggleRowExpandedProps({})}>
-              {row.isExpanded ? (
-                <Tooltip title="Hide Delivery Option Details" arrow>
-                  <IconButton>
-                    <VisibilityOffOutlinedIcon
-                      sx={{
-                        fontSize: "20px",
-                        "&:hover": {
-                          background: "transparent",
-                        },
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Show Delivery Option Details" arrow>
-                  <IconButton>
-                    <RemoveRedEyeOutlinedIcon
-                      sx={{
-                        fontSize: "20px",
-                        "&:hover": {
-                          background: "transparent",
-                        },
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </span>
-            <BannerForm update={true} update_data={row?.original} />
+            <Tooltip title="Edit Banner" arrow>
+              <IconButton
+                onClick={() =>
+                  dispatch({
+                    type: "OPEN_UPDATE_BANNER_MODAL",
+                    payload: row.original,
+                  })
+                }
+              >
+                <EditOutlinedIcon
+                  sx={{
+                    fontSize: "20px",
+                    "&:hover": {
+                      background: "transparent",
+                    },
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
             <Delete
-              id={row.original.tid}
+              id={row.original.banner_id}
               handleDelete={handleDelete}
               loading={d_loading}
-              tooltext="Delete Delivery Option"
+              tooltext="Delete Banner"
             />
           </Box>
         ),
@@ -231,22 +180,6 @@ const Banners = (props) => {
     ],
     []
   );
-
-  const sub_columns = [
-    { key: "banner_id", name: "Id", type: "default" },
-    { key: "delivery_name", name: "Name", type: "default" },
-    { key: "payout_agent", name: "Payout Agent", type: "default" },
-    { key: "country_code", name: "Country", type: "country" },
-    { key: "currency_code", name: "Currency", type: "currency" },
-    {
-      key: "payment_type",
-      name: "Payment Type",
-      type: "reference",
-      ref_value: 1,
-    },
-    { key: "is_active", name: "Status", type: "boolean" },
-    { key: "created_ts", name: "Created Date", type: "date" },
-  ];
 
   const handleSearch = useCallback(
     (e) => {
@@ -319,7 +252,6 @@ const Banners = (props) => {
         columns={columns}
         title="Delivery Option Details"
         data={data?.data || []}
-        sub_columns={sub_columns}
         loading={isLoading}
         rowsPerPage={8}
         totalPage={data?.pagination?.totalPage || 1}
