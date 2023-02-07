@@ -148,6 +148,9 @@ const MyAccount = lazy(() => import("../pages/MyAccount"));
 //Accounting
 const Accounting = lazy(() => import("../pages/Accounting"));
 
+// banners
+const ListBanner = lazy(() => import('../pages/Setup/Banner/ListBanner'))
+
 const privateRoutes = [
   { path: "/", component: <Dashboard title="Dashboard" /> },
   { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -267,6 +270,10 @@ const privateRoutes = [
   {
     path: "/setup/api-configuration",
     component: <ApiConfiguration title="Api Configuration" />,
+  },
+  {
+    path: "/setup/banners",
+    component: <ListBanner />,
   },
 
   //Customers
@@ -418,6 +425,9 @@ const privateRoutes = [
 
   //MyAccount
   { path: "/account", component: <MyAccount title="My Account" /> },
+
+  //Accounting
+  { path: "/accounting", component: <Accounting title="Accounting" /> },
 
   //Accounting
   { path: "/accounting", component: <Accounting title="Accounting" /> },
