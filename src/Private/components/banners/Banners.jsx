@@ -66,20 +66,20 @@ const Banners = (props) => {
     (state) => state.get_banner_list
   );
 
-  const { loading: d_loading, success: isDeleting } = useSelector(
+  const { loading: isDeleting, success: isDeleteSuccess } = useSelector(
     (state) => state.delete_banner
   );
 
   const { success: isAddSuccess } = useSelector((state) => state.add_banner);
 
-  const { success: isDeleteSuccess } = useSelector(
+  const { success: isUpdateSuccess } = useSelector(
     (state) => state.update_banner
   );
 
   useEffect(() => {
     dispatch(bannerActions.get_banners(filterSchema));
     dispatch({ type: "DELETE_BANNER_RESET" });
-  }, [dispatch, filterSchema, isDeleting, isAddSuccess, isDeleteSuccess]);
+  }, [dispatch, filterSchema, isDeleting, isAddSuccess, isDeleteSuccess, isUpdateSuccess]);
 
   const columns = useMemo(
     () => [
@@ -171,7 +171,7 @@ const Banners = (props) => {
             <Delete
               id={row.original.banner_id}
               handleDelete={handleDelete}
-              loading={d_loading}
+              loading={isDeleting}
               tooltext="Delete Banner"
             />
           </Box>
@@ -180,45 +180,6 @@ const Banners = (props) => {
     ],
     []
   );
-
-  const handleSearch = useCallback(
-    (e) => {
-      const searchValue = e.target.value;
-      const updatedFilterSchema = {
-        ...filterSchema,
-        search: searchValue,
-      };
-      setFilterSchema(updatedFilterSchema);
-    },
-    [filterSchema]
-  );
-
-  const handleCountry = (e) => {
-    const country = e.target.value;
-    const updatedFilterSchema = {
-      ...filterSchema,
-      payout_country: country,
-    };
-    setFilterSchema(updatedFilterSchema);
-  };
-
-  const handleOrder = (e) => {
-    const order = e.target.value;
-    const updatedFilterSchema = {
-      ...filterSchema,
-      order_by: order,
-    };
-    setFilterSchema(updatedFilterSchema);
-  };
-
-  const handlePayemntType = (e) => {
-    const payment = e.target.value;
-    const updatedFilterSchema = {
-      ...filterSchema,
-      payment_type: payment,
-    };
-    setFilterSchema(updatedFilterSchema);
-  };
 
   const handleChangePage = (e, newPage) => {
     const updatedFilter = {
@@ -250,7 +211,7 @@ const Banners = (props) => {
     <>
       <Table
         columns={columns}
-        title="Delivery Option Details"
+        title="Banners"
         data={data?.data || []}
         loading={isLoading}
         rowsPerPage={8}
