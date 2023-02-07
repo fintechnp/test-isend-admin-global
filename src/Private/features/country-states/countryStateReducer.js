@@ -1,27 +1,27 @@
-import bannerActions from "./bannerActions";
+import countryStateActions from "./countryStateActions";
 
-const getBannersState = {
+const getCountryStatesState = {
   success: false,
   loading: false,
   error: null,
   response: undefined,
 };
 
-const getBannersReducer = (state = getBannersState, action) => {
+const getCountryStatesReducer = (state = getCountryStatesState, action) => {
   switch (action.type) {
-    case bannerActions.GET_BANNERS:
+    case countryStateActions.GET_COUNTRY_STATES:
       return {
         ...state,
         loading: true,
       };
-    case bannerActions.GET_BANNERS_SUCCESS:
+    case countryStateActions.GET_COUNTRY_STATES_SUCCESS:
       return {
         ...state,
         success: true,
         loading: false,
         response: action.response,
       };
-    case bannerActions.GET_BANNERS_FAILED:
+    case countryStateActions.GET_COUNTRY_STATES_FAILED:
       return {
         ...state,
         success: false,
@@ -33,40 +33,7 @@ const getBannersReducer = (state = getBannersState, action) => {
   }
 };
 
-const getBannerInitialState = {
-  success: false,
-  loading: false,
-  error: null,
-  response: undefined,
-};
-
-const getBannerReducer = (state = getBannerInitialState, action) => {
-  switch (action.type) {
-    case bannerActions.GET_BANNER:
-      return {
-        ...state,
-        loading: true,
-      };
-    case bannerActions.GET_BANNER_SUCCESS:
-      return {
-        ...state,
-        success: true,
-        loading: false,
-        response: action.response,
-      };
-    case bannerActions.GET_BANNER_FAILED:
-      return {
-        ...state,
-        success: false,
-        loading: false,
-        error: action.error,
-      };
-    default:
-      return state;
-  }
-};
-
-const addBannerInitialState = {
+const addCountryStateInitialState = {
   is_modal_open: false,
   success: false,
   loading: false,
@@ -74,14 +41,14 @@ const addBannerInitialState = {
   response: undefined,
 };
 
-const addBannerReducer = (state = addBannerInitialState, action) => {
+const addCountryStateReducer = (state = addCountryStateInitialState, action) => {
   switch (action.type) {
-    case bannerActions.ADD_BANNER:
+    case countryStateActions.ADD_COUNTRY_STATE:
       return {
         ...state,
         loading: true,
       };
-    case bannerActions.ADD_BANNER_SUCCESS:
+    case countryStateActions.ADD_COUNTRY_STATE_SUCCESS:
       return {
         ...state,
         is_modal_open: false,
@@ -89,14 +56,14 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
         loading: false,
         response: action.response,
       };
-    case bannerActions.ADD_BANNER_FAILED:
+    case countryStateActions.ADD_COUNTRY_STATE_FAILED:
       return {
         ...state,
         success: false,
         loading: false,
         error: action.error,
       };
-    case bannerActions.ADD_BANNER_RESET:
+    case countryStateActions.ADD_COUNTRY_STATE_RESET:
       return {
         is_modal_open: false,
         success: false,
@@ -104,7 +71,7 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
         error: null,
         response: undefined,
       };
-    case bannerActions.OPEN_ADD_BANNER_MODAL:
+    case countryStateActions.OPEN_ADD_COUNTRY_STATE_MODAL:
       return {
         is_modal_open: true,
         success: false,
@@ -112,7 +79,7 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
         error: null,
         response: undefined,
       };
-    case bannerActions.CLOSE_ADD_BANNER_MODAL:
+    case countryStateActions.CLOSE_ADD_COUNTRY_STATE_MODAL:
       return {
         is_modal_open: false,
         success: false,
@@ -125,7 +92,7 @@ const addBannerReducer = (state = addBannerInitialState, action) => {
   }
 };
 
-const updateBannerInitialState = {
+const updateCountryStateInitialState = {
   is_modal_open: false,
   initial_form_state: undefined,
   success: false,
@@ -134,14 +101,14 @@ const updateBannerInitialState = {
   response: undefined,
 };
 
-const updateBannerReducer = (state = updateBannerInitialState, action) => {
+const updateCountryStateReducer = (state = updateCountryStateInitialState, action) => {
   switch (action.type) {
-    case bannerActions.UPDATE_BANNER:
+    case countryStateActions.UPDATE_COUNTRY_STATE:
       return {
         ...state,
         loading: true,
       };
-    case bannerActions.UPDATE_BANNER_SUCCESS:
+    case countryStateActions.UPDATE_COUNTRY_STATE_SUCCESS:
       return {
         ...state,
         is_modal_open: false,
@@ -150,14 +117,14 @@ const updateBannerReducer = (state = updateBannerInitialState, action) => {
         loading: false,
         response: action.response,
       };
-    case bannerActions.UPDATE_BANNER_FAILED:
+    case countryStateActions.UPDATE_COUNTRY_STATE_FAILED:
       return {
         ...state,
         success: false,
         loading: false,
         error: action.error,
       };
-    case bannerActions.UPDATE_BANNER_RESET:
+    case countryStateActions.UPDATE_COUNTRY_STATE_RESET:
       return {
         is_modal_open: false,
         initial_form_state: undefined,
@@ -166,8 +133,7 @@ const updateBannerReducer = (state = updateBannerInitialState, action) => {
         error: null,
         response: [],
       };
-    case bannerActions.OPEN_UPDATE_BANNER_MODAL:
-      console.log(action);
+    case countryStateActions.OPEN_UPDATE_COUNTRY_STATE_MODAL:
       return {
         is_modal_open: true,
         initial_form_state: action.payload,
@@ -176,7 +142,7 @@ const updateBannerReducer = (state = updateBannerInitialState, action) => {
         error: null,
         response: undefined,
       };
-    case bannerActions.CLOSE_UPDATE_BANNER_MODAL:
+    case countryStateActions.CLOSE_UPDATE_COUNTRY_STATE_MODAL:
       return {
         is_modal_open: false,
         initial_form_state: undefined,
@@ -190,78 +156,35 @@ const updateBannerReducer = (state = updateBannerInitialState, action) => {
   }
 };
 
-const updateBannerStatusInitialState = {
+const deleteCountryStateInitialState = {
   success: false,
   loading: false,
   error: null,
   response: undefined,
 };
 
-const updateBannerStatusReducer = (
-  state = updateBannerStatusInitialState,
-  action
-) => {
+const deleteCountryStateReducer = (state = deleteCountryStateInitialState, action) => {
   switch (action.type) {
-    case bannerActions.UPDATE_BANNER_STATUS:
+    case countryStateActions.DELETE_COUNTRY_STATE:
       return {
         ...state,
         loading: true,
       };
-    case bannerActions.UPDATE_BANNER_STATUS_SUCCESS:
+    case countryStateActions.DELETE_COUNTRY_STATE_SUCCESS:
       return {
         ...state,
         success: true,
         loading: false,
         response: action.response,
       };
-    case bannerActions.UPDATE_BANNER_STATUS_FAILED:
+    case countryStateActions.DELETE_COUNTRY_STATE_FAILED:
       return {
         ...state,
         success: false,
         loading: false,
         error: action.error,
       };
-    case bannerActions.UPDATE_BANNER_STATUS_RESET:
-      return {
-        success: false,
-        loading: false,
-        error: null,
-        response: [],
-      };
-    default:
-      return state;
-  }
-};
-
-const deleteBannerInitialState = {
-  success: false,
-  loading: false,
-  error: null,
-  response: undefined,
-};
-
-const deleteBannerReducer = (state = deleteBannerInitialState, action) => {
-  switch (action.type) {
-    case bannerActions.DELETE_BANNER:
-      return {
-        ...state,
-        loading: true,
-      };
-    case bannerActions.DELETE_BANNER_SUCCESS:
-      return {
-        ...state,
-        success: true,
-        loading: false,
-        response: action.response,
-      };
-    case bannerActions.DELETE_BANNER_FAILED:
-      return {
-        ...state,
-        success: false,
-        loading: false,
-        error: action.error,
-      };
-    case bannerActions.DELETE_BANNER_RESET:
+    case countryStateActions.DELETE_COUNTRY_STATE_RESET:
       return {
         success: false,
         loading: false,
@@ -274,10 +197,8 @@ const deleteBannerReducer = (state = deleteBannerInitialState, action) => {
 };
 
 export {
-  getBannerReducer,
-  addBannerReducer,
-  getBannersReducer,
-  updateBannerReducer,
-  deleteBannerReducer,
-  updateBannerStatusReducer,
+  addCountryStateReducer,
+  getCountryStatesReducer,
+  updateCountryStateReducer,
+  deleteCountryStateReducer,
 };

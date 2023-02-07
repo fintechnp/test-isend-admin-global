@@ -289,8 +289,17 @@ import {
   deleteBannerReducer,
   getBannersReducer,
   updateBannerReducer,
+  updateBannerStatusReducer,
 } from "./features/banners/bannerReducer";
-import bannerSaga, { updateBannerStatus } from "./features/banners/bannerSaga";
+import bannerSaga from "./features/banners/bannerSaga";
+
+import {
+  addCountryStateReducer,
+  deleteCountryStateReducer,
+  getCountryStatesReducer,
+  updateCountryStateReducer,
+} from "./features/country-states/countryStateReducer";
+import countryStateSaga from "./features/country-states/countryStateSaga";
 
 export const privateReducer = {
   get_all_user: GetAllUserReducer,
@@ -518,8 +527,14 @@ export const privateReducer = {
   get_banner_list: getBannersReducer,
   add_banner: addBannerReducer,
   update_banner: updateBannerReducer,
-  update_banner_status: updateBannerStatus,
+  update_banner_status: updateBannerStatusReducer,
   delete_banner: deleteBannerReducer,
+
+  // country states
+  get_country_state_list: getCountryStatesReducer,
+  add_country_state: addCountryStateReducer,
+  update_country_state: updateCountryStateReducer,
+  delete_country_state: deleteCountryStateReducer,
 };
 
 export const privateSaga = [
@@ -550,6 +565,7 @@ export const privateSaga = [
   ReportsSaga(),
   UtilitiesSaga(),
   bannerSaga(),
+  countryStateSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
