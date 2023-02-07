@@ -1,20 +1,21 @@
-import React, { useEffect } from "react";
+import Cookies from "js-cookie";
 import { Provider } from "react-redux";
+import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import { PersistGate } from "redux-persist/integration/react";
-import CssBaseline from "@mui/material/CssBaseline";
-import GlobalStyles from "@mui/material/GlobalStyles";
 import { HelmetProvider } from "react-helmet-async";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import GlobalStyles from "@mui/material/GlobalStyles";
+import { PersistGate } from "redux-persist/integration/react";
+
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import MainRoutes from "./routes";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { injectStore } from "./services/api";
-import store, { persistor } from "./store";
 import AuthProvider from "./auth";
+import store, { persistor } from "./store";
 import { ChangeTheme } from "./theme/theme";
-import Cookies from "js-cookie";
+import { injectStore } from "./services/api";
 
 injectStore(store);
 
@@ -46,18 +47,11 @@ const App = () => {
                                                 right: "12px",
                                             },
                                             "*::-webkit-scrollbar-track": {
-                                                WebkitBoxShadow:
-                                                    "inset 0 0 6px rgba(0,0,0,0.00)",
+                                                WebkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
                                             },
                                             "*::-webkit-scrollbar-thumb": {
-                                                backgroundColor: `${
-                                                    ChangeTheme(mode).palette
-                                                        .border.dark
-                                                }`,
-                                                outline: `1px solid ${
-                                                    ChangeTheme(mode).palette
-                                                        .border.dark
-                                                }`,
+                                                backgroundColor: `${ChangeTheme(mode).palette.border.dark}`,
+                                                outline: `1px solid ${ChangeTheme(mode).palette.border.dark}`,
                                                 borderRadius: "4px",
                                             },
                                         }}

@@ -55,7 +55,7 @@ export const ChangeTheme = (mode = true) => {
         },
         palette: mode ? LightPalette : DarkPalette,
         typography: {
-            fontFamily: ['"Helvetica"', "sans-serif"].join(","),
+            fontFamily: "'Poppins', sans-serif",
         },
     });
 
