@@ -17,6 +17,7 @@ import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 
 import { AuthConsumer } from "../../auth";
 import Loading from "./../../../App/components/Loading";
+import routePaths from "Private/config/routePaths";
 
 const PrivateLayout = () => {
     const getMainItems = () => {
@@ -130,6 +131,12 @@ const PrivateLayout = () => {
                 path: "/setup/banners",
                 key: "banners",
                 text: "Banners",
+                sub: false,
+              },
+              {
+                path: routePaths.countryStates.index,
+                key: "country-states",
+                text: "Country States",
                 sub: false,
               },
             ],

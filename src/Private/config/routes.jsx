@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import routePaths from "./routePaths";
 
 //Dashboard
 const Dashboard = lazy(() => import("../pages/Dashboard"));
@@ -148,8 +149,8 @@ const MyAccount = lazy(() => import("../pages/MyAccount"));
 //Accounting
 const Accounting = lazy(() => import("../pages/Accounting"));
 
-// banners
 const ListBanner = lazy(() => import('../pages/Setup/Banner/ListBanner'))
+const ListCountryState = lazy(() => import('../pages/Setup/CountryState/ListCountryState'))
 
 const privateRoutes = [
   { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -274,6 +275,10 @@ const privateRoutes = [
   {
     path: "/setup/banners",
     component: <ListBanner />,
+  },
+  {
+    path: routePaths.countryStates.index,
+    component: <ListCountryState />,
   },
 
   //Customers
