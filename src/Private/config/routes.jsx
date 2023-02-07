@@ -99,6 +99,7 @@ const Accounting = lazy(() => import("../pages/Accounting"));
 
 const ListBanner = lazy(() => import("../pages/Setup/Banner/ListBanner"));
 const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
+const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFundingSource"));
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -227,6 +228,10 @@ const privateRoutes = [
     {
         path: routePaths.countryStates.index,
         component: <ListCountryState />,
+    },
+    {
+        path: routePaths.fundingSources.index,
+        component: <ListFundingSource />,
     },
 
     //Customers
