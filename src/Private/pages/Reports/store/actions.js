@@ -96,7 +96,7 @@ const actions = {
         query,
     }),
 
-    get_icn_response_report: (query) => ({
+    get_ach_entries_report: (query) => ({
         type: actions.ACH_ENTRIES_REPORT,
         query,
     }),

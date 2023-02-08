@@ -42,11 +42,12 @@ function ACHEntriesReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_ach_entries_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_ach_entries_report(filterSchema));
+        // if (isMounted.current) {
+        //     dispatch(actions.get_ach_entries_report(filterSchema));
+        // } else {
+        //     isMounted.current = true;
+        // }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(

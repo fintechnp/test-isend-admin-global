@@ -506,7 +506,7 @@ export const privateReducer = {
     get_cancelled_report: GetCancelledTransactionsReportsReducer,
     get_user_ip_whitelist_report: getUserIpWhitelistReportReducer,
     get_icn_response_report: getIcnResponseReducer,
-    get_ach_response_report: getAchResponseReducer,
+    get_ach_entries_report: getAchResponseReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

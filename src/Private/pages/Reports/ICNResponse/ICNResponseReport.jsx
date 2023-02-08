@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { reset } from "redux-form";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
@@ -16,17 +16,6 @@ import PageContent from "App/components/Container/PageContent";
 
 import { FormatDateTime } from "App/helpers";
 import apiEndpoints from "Private/config/apiEndpoints";
-
-const StyledMail = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    width: "90%",
-    display: "block",
-    fontSize: "14px",
-    color: theme.palette.text.main,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-}));
 
 const initialState = {
     page_number: 1,
@@ -57,32 +46,78 @@ function ICNResponseReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_icn_response_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_icn_response_report(filterSchema));
+        // if (isMounted.current) {
+        //     dispatch(actions.get_icn_response_report(filterSchema));
+        // } else {
+        //     isMounted.current = true;
+        // }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "ID",
-                accessor: "whitelist_id",
+                Header: "ICN ID",
+                accessor: "icn_id",
                 Cell: (data) => data.value,
             },
             {
-                Header: "User",
-                accessor: "user_id",
-                Cell: (data) => data.value,
+                Header: "Org ID",
+                accessor: "orgid",
+                Cell: (data) => <>{data.value}</>,
             },
             {
-                Header: "IP Address",
-                accessor: "ip_address",
-                Cell: (data) => data.value,
+                Header: "Country",
+                accessor: "country",
+                Cell: (data) => <>{data.value}</>,
             },
             {
-                Header: "Timestamp",
+                Header: "Transaction Type",
+                accessor: "txntype",
+                Cell: (data) => <>{data.value}</>,
+            },
+            {
+                Header: "Txn Ref ID",
+                accessor: "txnrefid",
+                Cell: (data) => <>{data.value}</>,
+            },
+            {
+                Header: "Txn Date",
+                accessor: "txndate",
+                Cell: (data) => <>{data.value}</>,
+            },
+            {
+                Header: "Sender",
+                accessor: "senderpartyname",
+                Cell: (data) => (
+                    <Box display="flex" flexDirection="column">
+                        <Typography>{data.value}</Typography>
+                        <Typography variant="caption">{data.row.original.senderpartysenderbankid}</Typography>
+                    </Box>
+                ),
+            },
+
+            {
+                Header: "Amount",
+                accessor: "txnamt",
+                Cell: (data) => (
+                    <Box>
+                        {data.value} {data.row.original.txnccy}
+                    </Box>
+                ),
+            },
+            {
+                Header: "Receiving Party Name",
+                accessor: "receivingpartyname",
+                Cell: (data) => (
+                    <Box display="flex" flexDirection="column">
+                        <Typography>{data.value}</Typography>
+                        <Typography variant="caption">{data.row.original.receivingpartyaccountno}</Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Created At",
                 accessor: "created_ts",
                 maxWidth: 120,
                 Cell: (data) => FormatDateTime(data?.value),
@@ -183,11 +218,11 @@ function ICNResponseReport() {
 
     return (
         <PageContent
-            documentTitle="(ICN) Instant Credit Notification Reports"
+            documentTitle="ICN (Instant Credit Notification) Reports"
             title={
                 <>
                     <ContentPasteSearchIcon />
-                    <Typography>User IP Whitelist Reports</Typography>
+                    <Typography>ICN (Instant Credit Notification) Reports</Typography>
                 </>
             }
         >
@@ -223,7 +258,7 @@ function ICNResponseReport() {
                             sortData={sortData}
                             csvReport={csvReport}
                             orderData={orderData}
-                            title="User IP Whitelist"
+                            title=""
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}

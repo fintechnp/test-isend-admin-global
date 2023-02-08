@@ -1,11 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import moment from "moment";
 import { reset } from "redux-form";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
@@ -19,17 +14,6 @@ import PageContent from "App/components/Container/PageContent";
 
 import { FormatDateTime } from "App/helpers";
 import UserIPWhitelistFilterForm from "./UserIPWhitelistFilterForm";
-
-const StyledMail = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    width: "90%",
-    display: "block",
-    fontSize: "14px",
-    color: theme.palette.text.main,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-}));
 
 const initialState = {
     page_number: 1,
@@ -60,11 +44,12 @@ function UserIPWhitelistReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_user_ip_whitelist_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_user_ip_whitelist_report(filterSchema));
+        // if (isMounted.current) {
+        //     dispatch(actions.get_user_ip_whitelist_report(filterSchema));
+        // } else {
+        //     isMounted.current = true;
+        // }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
