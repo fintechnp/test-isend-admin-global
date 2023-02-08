@@ -8,6 +8,9 @@ const routePaths = {
     fundingSources: {
         index: "/setup/funding-sources",
     },
+    reports: {
+        userIpWhitelist: "/report/user-ip-whitelist",
+    },
 };
 
 export default routePaths;
