@@ -54,10 +54,7 @@ const StyledMenu = styled((props) => (
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        color:
-            theme.palette.mode === "light"
-                ? "rgb(55, 65, 81)"
-                : theme.palette.grey[300],
+        color: theme.palette.mode === "light" ? "rgb(55, 65, 81)" : theme.palette.grey[300],
         boxShadow:
             "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
         "& .MuiMenu-list": {
@@ -70,10 +67,7 @@ const StyledMenu = styled((props) => (
                 marginRight: theme.spacing(1.5),
             },
             "&:active": {
-                backgroundColor: alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.selectedOpacity
-                ),
+                backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
             },
         },
     },
@@ -137,8 +131,7 @@ function Filter({
     useEffect(() => {
         if (csvReport?.data !== undefined || csvReport?.data.length > 0) {
             if (success && down === "xlsx") {
-                const fileType =
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+                const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
                 const fileExtension = ".xlsx";
                 const ws = XLSX.utils.json_to_sheet(csvReport?.data);
                 const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
@@ -164,9 +157,7 @@ function Filter({
                 setDown(null);
             } else if (success && down === "pdf") {
                 const generatePdfDocument = async (csvReport, fileName) => {
-                    const blob = await pdf(
-                        <PdfDocument csvReport={csvReport} />
-                    ).toBlob();
+                    const blob = await pdf(<PdfDocument csvReport={csvReport} />).toBlob();
                     FileSaver.saveAs(blob, fileName);
                     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                     setDown(null);
@@ -186,7 +177,7 @@ function Filter({
     return (
         <FilterWrapper>
             <HeaderWrapper>
-                <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+                <Typography sx={{ fontSize: "1.2rem" }}>{title}</Typography>
             </HeaderWrapper>
 
             <DropWrapper>
@@ -221,21 +212,9 @@ function Filter({
                             open={open}
                             onClose={handleClose}
                         >
-                            <ExportToPdf
-                                setDown={setDown}
-                                handleClose={handleClose}
-                                downloadData={downloadData}
-                            />
-                            <ExportToCsv
-                                setDown={setDown}
-                                handleClose={handleClose}
-                                downloadData={downloadData}
-                            />
-                            <ExportToExcel
-                                setDown={setDown}
-                                handleClose={handleClose}
-                                downloadData={downloadData}
-                            />
+                            <ExportToPdf setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
+                            <ExportToCsv setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
+                            <ExportToExcel setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
                         </StyledMenu>
                     </Box>
                     {handleShow && (
@@ -247,25 +226,17 @@ function Filter({
                                 renderValue={(selected) => {
                                     if (selected.length === 0) {
                                         return (
-                                            <Typography
-                                                component="p"
-                                                sx={{ opacity: 0.6 }}
-                                            >
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
                                                 Filter
                                             </Typography>
                                         );
                                     }
-                                    const value = showData.filter(
-                                        (type) => type.value === selected
-                                    );
+                                    const value = showData.filter((type) => type.value === selected);
                                     return value[0]?.key;
                                 }}
                             >
                                 {showData.map((sort) => (
-                                    <MenuItem
-                                        value={sort.value}
-                                        key={sort.value}
-                                    >
+                                    <MenuItem value={sort.value} key={sort.value}>
                                         {sort.key}
                                     </MenuItem>
                                 ))}
@@ -280,17 +251,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected === "created_ts") {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = sortData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -309,17 +275,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

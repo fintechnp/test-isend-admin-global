@@ -286,6 +286,12 @@ const PrivateLayout = () => {
                         text: "Suspicious Transactions",
                         sub: false,
                     },
+                    {
+                        path: routePaths.reports.userIpWhitelist,
+                        key: "report-user-ip-whitelist",
+                        text: "User IP Whitelist",
+                        sub: false,
+                    },
                 ],
             },
 

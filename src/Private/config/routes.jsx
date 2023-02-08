@@ -66,6 +66,7 @@ const TransactionsSummary = lazy(() => import("../pages/Reports/TransactionsSumm
 const CancelledTransactions = lazy(() => import("../pages/Reports/CancelledTransactions"));
 const YearlyTransactions = lazy(() => import("../pages/Reports/YearlyTransactions"));
 const SuspiciousTransactions = lazy(() => import("../pages/Reports/SuspiciousTransactions"));
+const UserIPWhitelistReport = lazy(() => import("../pages/Reports/UserIPWhitelist/UserIPWhitelistReport"));
 
 //PaymentProcess
 const PendingPayment = lazy(() => import("../pages/PaymentProcess/PendingPayment"));
@@ -327,6 +328,10 @@ const privateRoutes = [
     {
         path: "/report/suspicious-transactions",
         component: <SuspiciousTransactions title="Suspicious Transactions" />,
+    },
+    {
+        path: routePaths.reports.userIpWhitelist,
+        component: <UserIPWhitelistReport />,
     },
 
     //PaymentProcess
