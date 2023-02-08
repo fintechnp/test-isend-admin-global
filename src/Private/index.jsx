@@ -306,6 +306,8 @@ import {
 } from "./features/funding-sources/fundingSourceReducer";
 import fundingSourceSaga from "./features/funding-sources/fundingSourceSaga";
 import getUserIpWhitelistReportReducer from "./pages/Reports/store/reducers/getUserIpWhitelistReportReducer";
+import getIcnResponseReducer from "./pages/Reports/store/reducers/getIcnResponseReducer";
+import getAchResponseReducer from "./pages/Reports/store/reducers/getAchResponseReducer";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -503,6 +505,8 @@ export const privateReducer = {
     get_suspicious_transactions_report: GetSuspiciousTransactionsReportsReducer,
     get_cancelled_report: GetCancelledTransactionsReportsReducer,
     get_user_ip_whitelist_report: getUserIpWhitelistReportReducer,
+    get_icn_response_report: getIcnResponseReducer,
+    get_ach_response_report: getAchResponseReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

@@ -292,6 +292,18 @@ const PrivateLayout = () => {
                         text: "User IP Whitelist",
                         sub: false,
                     },
+                    {
+                        path: routePaths.reports.icnResponse,
+                        key: "report-icn-response",
+                        text: "ICN Response",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.reports.achEntries,
+                        key: "report-ach-entries",
+                        text: "ACH Entries",
+                        sub: false,
+                    },
                 ],
             },
 

@@ -1,11 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import moment from "moment";
 import { reset } from "redux-form";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
@@ -14,22 +9,11 @@ import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
+import ACHEntriesFilterForm from "./ACHEntriesFilterForm";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 
 import { FormatDateTime } from "App/helpers";
-import UserIPWhitelistFilterForm from "./UserIPWhitelistFilterForm";
-
-const StyledMail = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    width: "90%",
-    display: "block",
-    fontSize: "14px",
-    color: theme.palette.text.main,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-}));
 
 const initialState = {
     page_number: 1,
@@ -38,14 +22,12 @@ const initialState = {
     order_by: "DESC",
 };
 
-function UserIPWhitelistReport() {
+function ACHEntriesReport() {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: UserIPWhitelistReport, loading: l_loading } = useSelector(
-        (state) => state.get_user_ip_whitelist_report,
-    );
+    const { response: ACHEntriesResponse, loading: l_loading } = useSelector((state) => state.get_ach_entries_report);
 
     const {
         response: ReportsDownload,
@@ -55,13 +37,13 @@ function UserIPWhitelistReport() {
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_user_ip_whitelist_reports"));
+        dispatch(reset("search_form_ach_entries_reports"));
         dispatch({ type: "BENEFICIARY_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
         if (isMounted.current) {
-            dispatch(actions.get_user_ip_whitelist_report(filterSchema));
+            dispatch(actions.get_ach_entries_report(filterSchema));
         } else {
             isMounted.current = true;
         }
@@ -122,8 +104,8 @@ function UserIPWhitelistReport() {
         isMounted.current = false;
         setFilterSchema(initialState);
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_user_ip_whitelist_reports"));
-        dispatch({ type: "USER_IP_WHITELIST_REPORT_RESET" });
+        dispatch(reset("search_form_ach_entries_reports"));
+        dispatch({ type: "ACH_ENTRIES_REPORT_RESET" });
     };
 
     const handleSort = (e) => {
@@ -181,22 +163,22 @@ function UserIPWhitelistReport() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, "report/user_ip_whitelist"));
+        dispatch(actions.download_report(updatedFilterSchema, "report/ach_entries"));
     };
 
     return (
         <PageContent
-            documentTitle="User IP Whitelist Reports"
+            documentTitle="ACH (Automated Clearing House) Entries Reports"
             title={
                 <>
                     <ContentPasteSearchIcon />
-                    <Typography>User IP Whitelist Reports</Typography>
+                    <Typography>ACH (Automated Clearing House) Entries Reports</Typography>
                 </>
             }
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 {/* <Grid item xs={12}>
-                    <UserIPWhitelistFilterForm
+                    <ACHEntriesFilterForm
                         enableReinitialize
                         onSubmit={handleSearch}
                         handleReset={handleReset}
@@ -212,21 +194,21 @@ function UserIPWhitelistReport() {
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading && UserIPWhitelistReport?.data && UserIPWhitelistReport?.data?.length === 0 && (
+                {!l_loading && ACHEntriesResponse?.data && ACHEntriesResponse?.data?.length === 0 && (
                     <Grid item xs={12}>
                         <NoResults text="No Record Found" />
                     </Grid>
                 )}
-                {!l_loading && UserIPWhitelistReport?.data?.length > 0 && (
+                {!l_loading && ACHEntriesResponse?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <Filter
-                            fileName="UserIPWhitelistReport"
+                            fileName="ACH Entries"
                             success={pd_success}
                             loading={pd_loading}
                             sortData={sortData}
                             csvReport={csvReport}
                             orderData={orderData}
-                            title="User IP Whitelist"
+                            title="ACH (Automated Clearing House) Entries"
                             state={filterSchema}
                             handleOrder={handleOrder}
                             handleSort={handleSort}
@@ -234,12 +216,12 @@ function UserIPWhitelistReport() {
                         />
                         <Table
                             columns={columns}
-                            data={UserIPWhitelistReport?.data || []}
+                            data={ACHEntriesResponse?.data || []}
                             loading={l_loading}
                             rowsPerPage={8}
                             renderPagination={() => (
                                 <TablePagination
-                                    paginationData={UserIPWhitelistReport?.pagination}
+                                    paginationData={ACHEntriesResponse?.pagination}
                                     handleChangePage={handleChangePage}
                                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                                 />
@@ -252,4 +234,4 @@ function UserIPWhitelistReport() {
     );
 }
 
-export default UserIPWhitelistReport;
+export default ACHEntriesReport;
