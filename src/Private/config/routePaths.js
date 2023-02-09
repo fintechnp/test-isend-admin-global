@@ -12,6 +12,7 @@ const routePaths = {
         userIpWhitelist: "/report/user-ip-whitelist",
         icnResponse: "/report/icn-response",
         achEntries: "/report/ach-entries",
+        incompleteRegistration: "/report/incomplete-registration",
     },
 };
 

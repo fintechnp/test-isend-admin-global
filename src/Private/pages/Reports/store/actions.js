@@ -49,6 +49,11 @@ const actions = {
     ACH_ENTRIES_REPORT_FAILED: "ACH_ENTRIES_REPORT_FAILED",
     ACH_ENTRIES_REPORT_RESET: "ACH_ENTRIES_REPORT_RESET",
 
+    INCOMPLETE_REGISTRATION_REPORT: "INCOMPLETE_REGISTRATION_REPORT",
+    INCOMPLETE_REGISTRATION_REPORT_SUCCESS: "INCOMPLETE_REGISTRATION_REPORT_SUCCESS",
+    INCOMPLETE_REGISTRATION_REPORT_FAILED: "INCOMPLETE_REGISTRATION_REPORT_FAILED",
+    INCOMPLETE_REGISTRATION_REPORT_RESET: "INCOMPLETE_REGISTRATION_REPORT_RESET",
+
     //FETCH
     get_customer_report: (query) => ({
         type: actions.CUSTOMER_REPORT,
@@ -98,6 +103,11 @@ const actions = {
 
     get_ach_entries_report: (query) => ({
         type: actions.ACH_ENTRIES_REPORT,
+        query,
+    }),
+
+    get_incomplete_report: (query) => ({
+        type: actions.INCOMPLETE_REGISTRATION_REPORT,
         query,
     }),
 };

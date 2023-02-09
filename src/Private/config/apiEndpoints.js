@@ -16,6 +16,7 @@ const apiEndpoints = {
         userIpWhitelist: "report/user_ip_whitelist",
         icnResponse: "report/icn_response",
         achEntries: "report/ach_entries",
+        incompleteRegistration: "/report/incomplete_registration",
     },
 };
 

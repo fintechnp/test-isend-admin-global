@@ -304,6 +304,12 @@ const PrivateLayout = () => {
                         text: "ACH Entries",
                         sub: false,
                     },
+                    {
+                        path: routePaths.reports.incompleteRegistration,
+                        key: "incomplete-registration",
+                        text: "Incomplete Registation",
+                        sub: false,
+                    },
                 ],
             },
 

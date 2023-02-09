@@ -304,10 +304,12 @@ import {
     updateFundingSourceReducer,
     updateFundingSourceStatusReducer,
 } from "./features/funding-sources/fundingSourceReducer";
+
 import fundingSourceSaga from "./features/funding-sources/fundingSourceSaga";
-import getUserIpWhitelistReportReducer from "./pages/Reports/store/reducers/getUserIpWhitelistReportReducer";
 import getIcnResponseReducer from "./pages/Reports/store/reducers/getIcnResponseReducer";
 import getAchResponseReducer from "./pages/Reports/store/reducers/getAchResponseReducer";
+import getUserIpWhitelistReportReducer from "./pages/Reports/store/reducers/getUserIpWhitelistReportReducer";
+import getIncompleteRegistrationReducer from "./pages/Reports/store/reducers/getIncompleteRegistrationReducer";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -507,6 +509,7 @@ export const privateReducer = {
     get_user_ip_whitelist_report: getUserIpWhitelistReportReducer,
     get_icn_response_report: getIcnResponseReducer,
     get_ach_entries_report: getAchResponseReducer,
+    get_incomplete_registration_report: getIncompleteRegistrationReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

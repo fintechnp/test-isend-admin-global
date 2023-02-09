@@ -166,6 +166,22 @@ export const getAchEntriesReport = takeEvery(actions.ACH_ENTRIES_REPORT, functio
     }
 });
 
+export const getIncompleteRegistrationReport = takeEvery(actions.INCOMPLETE_REGISTRATION_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.reports.achEntries, action.query);
+        yield put({
+            type: actions.INCOMPLETE_REGISTRATION_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.INCOMPLETE_REGISTRATION_REPORT_FAILED,
+            error: error.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerReport,
@@ -178,5 +194,6 @@ export default function* saga() {
         getUserIpWhitelistReport,
         getIcnResponseReport,
         getAchEntriesReport,
+        getIncompleteRegistrationReport,
     ]);
 }
