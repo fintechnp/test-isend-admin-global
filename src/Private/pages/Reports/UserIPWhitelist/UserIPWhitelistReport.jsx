@@ -56,17 +56,14 @@ function UserIPWhitelistReport() {
             {
                 Header: "ID",
                 accessor: "whitelist_id",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Email",
                 accessor: "email",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "IP Address",
                 accessor: "ip_address",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Timestamp",

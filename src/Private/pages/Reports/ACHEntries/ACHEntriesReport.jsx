@@ -54,33 +54,27 @@ function ACHEntriesReport() {
             {
                 Header: "ACH ID",
                 accessor: "ach_id",
-                Cell: (data) => <>{data.value}</>,
             },
 
             {
                 Header: "Txn No",
                 accessor: "txn_no",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Name",
                 accessor: "name",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Amount",
                 accessor: "amount",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Txn Type",
                 accessor: "txn_type",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Status",
                 accessor: "status",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Timestamp",

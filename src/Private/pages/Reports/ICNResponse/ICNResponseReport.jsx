@@ -42,7 +42,7 @@ function ICNResponseReport() {
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_icn_response_reports"));
-        dispatch({ type: "BENEFICIARY_REPORT_RESET" });
+        dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
@@ -58,32 +58,26 @@ function ICNResponseReport() {
             {
                 Header: "ICN ID",
                 accessor: "icn_id",
-                Cell: (data) => data.value,
             },
             {
                 Header: "Org ID",
                 accessor: "orgid",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Country",
                 accessor: "country",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Transaction Type",
                 accessor: "txntype",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Txn Ref ID",
                 accessor: "txnrefid",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Txn Date",
                 accessor: "txndate",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Sender",
