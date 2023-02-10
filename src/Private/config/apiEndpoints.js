@@ -12,6 +12,15 @@ const apiEndpoints = {
         updateStatus: "fundingsource/:fundingSourceId",
         delete: "fundingsource/:fundingSourceId",
     },
+    reports: {
+        userIpWhitelist: "report/user_ip_whitelist",
+        icnResponse: "report/icn_response",
+        achEntries: "report/ach_entries",
+        incompleteRegistration: "/report/incomplete_registration",
+    },
+    customers: {
+        updateAccount: "customer/account/:customerId",
+    },
 };
 
 export default apiEndpoints;

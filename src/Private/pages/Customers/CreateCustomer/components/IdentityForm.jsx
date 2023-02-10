@@ -59,13 +59,7 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const IdentityForm = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-    buttonText,
-}) => {
+const IdentityForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
 
@@ -82,17 +76,10 @@ const IdentityForm = ({
                                 small={12}
                                 component={TextField}
                                 inputProps={{
-                                    min: new Date("1920-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
-                                    max: `${moment()
-                                        .subtract(18, "years")
-                                        .format("YYYY-MM-DD")}`,
+                                    min: new Date("1920-01-01").toISOString().slice(0, 10),
+                                    max: `${moment().subtract(18, "years").format("YYYY-MM-DD")}`,
                                 }}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper xs={12} sm={6}>
@@ -102,21 +89,14 @@ const IdentityForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Birth Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -129,25 +109,16 @@ const IdentityForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength50,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength50]}
                             >
                                 <option value="" disabled>
                                     Select ID Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 2
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 2)[0]
                                         .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
+                                            <option value={data.value} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -160,11 +131,7 @@ const IdentityForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength50,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -175,9 +142,7 @@ const IdentityForm = ({
                                 small={12}
                                 component={TextField}
                                 inputProps={{
-                                    min: new Date("1920-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: new Date("1920-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                                 validate={Validator.emptyValidator}
@@ -192,9 +157,7 @@ const IdentityForm = ({
                                 component={TextField}
                                 inputProps={{
                                     min: new Date().toISOString().slice(0, 10),
-                                    max: new Date("2050-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    max: new Date("2050-01-01").toISOString().slice(0, 10),
                                 }}
                                 validate={Validator.emptyValidator}
                             />
@@ -206,21 +169,14 @@ const IdentityForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Issued Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -233,21 +189,14 @@ const IdentityForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Citizenship Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -259,12 +208,7 @@ const IdentityForm = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -278,11 +222,7 @@ const IdentityForm = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

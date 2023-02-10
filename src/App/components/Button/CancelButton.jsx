@@ -12,8 +12,18 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const CancelButton = React.forwardRef(({ children, ...rest }, ref) => (
-    <StyledButton ref={ref} size="small" variant="contained" disableElevation {...rest}>
+const CancelButton = React.forwardRef(({ children, sx, ...rest }, ref) => (
+    <StyledButton
+        ref={ref}
+        size="small"
+        variant="contained"
+        disableElevation
+        sx={{
+            textTransform: "capitalize",
+            ...sx,
+        }}
+        {...rest}
+    >
         {children ?? "Cancel"}
     </StyledButton>
 ));

@@ -92,21 +92,9 @@ const Basic = ({
             });
         }
         if (update) {
-            dispatch(
-                change(
-                    "update_customer_form",
-                    "phone_country_code",
-                    convertCode(e.target.value)
-                )
-            );
+            dispatch(change("update_customer_form", "phone_country_code", convertCode(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_customer_form",
-                    "phone_country_code",
-                    convertCode(e.target.value)
-                )
-            );
+            dispatch(change("add_customer_form", "phone_country_code", convertCode(e.target.value)));
         }
     };
     return (
@@ -121,11 +109,7 @@ const Basic = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength50,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -148,7 +132,7 @@ const Basic = ({
                                 validate={[Validator.maxLength50]}
                             />
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
+                        {/* <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="customer_type"
                                 label="Customer Type"
@@ -179,7 +163,7 @@ const Basic = ({
                                             </option>
                                         ))}
                             </Field>
-                        </FieldWrapper>
+                        </FieldWrapper> */}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="gender"
@@ -187,26 +171,16 @@ const Basic = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength1]}
                             >
                                 <option value="" disabled>
                                     Select Gender
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 42
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 42)[0]
                                         .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
+                                            <option value={data.value} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -219,26 +193,16 @@ const Basic = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
                             >
                                 <option value="" disabled>
                                     Select Occupation
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 17
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 17)[0]
                                         .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
+                                            <option value={data.value} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -251,32 +215,22 @@ const Basic = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
                             >
                                 <option value="" disabled>
                                     Select Source of Income
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 6
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 6)[0]
                                         .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
+                                            <option value={data.value} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
                             </Field>
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
+                        {/* <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="country"
                                 label="Country"
@@ -284,27 +238,20 @@ const Basic = ({
                                 small={12}
                                 onChange={handleCountry}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
                             </Field>
-                        </FieldWrapper>
-                        {hasPartner && (
+                        </FieldWrapper> */}
+                        {/* {hasPartner && (
                             <FieldWrapper item xs={12} sm={6}>
                                 <Field
                                     name="register_agent_id"
@@ -313,40 +260,27 @@ const Basic = ({
                                     small={12}
                                     disabled={loading}
                                     component={SelectField}
-                                    validate={[
-                                        Validator.emptyValidator,
-                                        Validator.minValue1,
-                                    ]}
+                                    validate={[Validator.emptyValidator, Validator.minValue1]}
                                 >
                                     <option value="" disabled>
-                                        {loading
-                                            ? "Fetching Partner ..."
-                                            : "Select Partner"}
+                                        {loading ? "Fetching Partner ..." : "Select Partner"}
                                     </option>
                                     {partner_sending &&
                                         partner_sending?.map((data, index) => (
-                                            <option
-                                                value={data.agent_id}
-                                                key={data?.tid}
-                                            >
+                                            <option value={data.agent_id} key={data?.tid}>
                                                 {data.name}
                                             </option>
                                         ))}
                                 </Field>
                             </FieldWrapper>
-                        )}
+                        )} */}
                     </FormWrapper>
                 </Grid>
                 <Grid item>
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -360,11 +294,7 @@ const Basic = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

@@ -1,6 +1,8 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
-import Api from "../../../../App/services/api";
+
 import actions from "./actions";
+import Api from "App/services/api";
+import apiEndpoints from "Private/config/apiEndpoints";
 
 const api = new Api();
 
@@ -118,7 +120,7 @@ export const getSuspiciousTransactionsReport = takeEvery(actions.SUSPICIOUS_TRAN
 
 export const getUserIpWhitelistReport = takeEvery(actions.USER_IP_WHITELIST_REPORT, function* (action) {
     try {
-        const res = yield call(api.get, `report/user_ip_whitelist`, action.query);
+        const res = yield call(api.get, apiEndpoints.reports.userIpWhitelist, action.query);
         yield put({
             type: actions.USER_IP_WHITELIST_REPORT_SUCCESS,
             response: res,
@@ -126,6 +128,54 @@ export const getUserIpWhitelistReport = takeEvery(actions.USER_IP_WHITELIST_REPO
     } catch (error) {
         yield put({
             type: actions.USER_IP_WHITELIST_REPORT_FAILED,
+            error: error.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const getIcnResponseReport = takeEvery(actions.ICN_RESPONSE_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.reports.icnResponse, action.query);
+        yield put({
+            type: actions.ICN_RESPONSE_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.ICN_RESPONSE_REPORT_FAILED,
+            error: error.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const getAchEntriesReport = takeEvery(actions.ACH_ENTRIES_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.reports.achEntries, action.query);
+        yield put({
+            type: actions.ACH_ENTRIES_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.ACH_ENTRIES_REPORT_FAILED,
+            error: error.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const getIncompleteRegistrationReport = takeEvery(actions.INCOMPLETE_REGISTRATION_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.reports.incompleteRegistration, action.query);
+        yield put({
+            type: actions.INCOMPLETE_REGISTRATION_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.INCOMPLETE_REGISTRATION_REPORT_FAILED,
             error: error.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
@@ -142,5 +192,8 @@ export default function* saga() {
         getCancelledTransactionsReport,
         getSuspiciousTransactionsReport,
         getUserIpWhitelistReport,
+        getIcnResponseReport,
+        getAchEntriesReport,
+        getIncompleteRegistrationReport,
     ]);
 }

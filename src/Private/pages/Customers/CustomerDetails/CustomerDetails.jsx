@@ -1,35 +1,25 @@
 import React, { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Badge from "@mui/material/Badge";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import Badge from "@mui/material/Badge";
+import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { useParams, useNavigate } from "react-router-dom";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import UpdateKyc from "./UpdateKyc";
+import Button from "App/components/Button/Button";
 import actions from "./../CreateCustomer/store/actions";
-import {
-    CountryName,
-    FormatDate,
-    ReferenceName,
-} from "./../../../../App/helpers";
 import NoResults from "./../Search/components/NoResults";
+import PageContent from "App/components/Container/PageContent";
+import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
-const DetailWrapper = styled(Grid)(({ theme }) => ({
-    padding: "8px 16px 16px 16px",
-    width: "100%",
-    minHeight: "200px",
-    borderRadius: "6px",
-    background: theme.palette.background.light,
-}));
+import { CountryName, FormatDate, ReferenceName } from "App/helpers";
 
 const Header = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
@@ -54,13 +44,6 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 const NameField = styled(Box)(({ theme }) => ({
     flexGrow: 1,
-}));
-
-const ButtonWrapper = styled(Box)(({ theme }) => ({
-    width: "100%",
-    display: "flex",
-    paddingTop: "16px",
-    justifyContent: "flex-start",
 }));
 
 const BottomButton = styled(Button)(({ theme }) => ({
@@ -157,9 +140,7 @@ function stringAvatar(first = "A", last) {
             width: "50px",
             textTransform: "uppercase",
         },
-        children: `${first.split(" ")[0][0]}${
-            last ? last.split(" ")[0][0] : ""
-        }`,
+        children: `${first.split(" ")[0][0]}${last ? last.split(" ")[0][0] : ""}`,
     };
 }
 
@@ -193,9 +174,7 @@ const RenderTopField = ({ label, value }) => {
             }}
         >
             <Box sx={{ minWidth: "15%" }}>
-                <Label sx={{ fontWeight: 600, opacity: 0.8, lineHeight: 1.4 }}>
-                    {label}:
-                </Label>
+                <Label sx={{ fontWeight: 600, opacity: 0.8, lineHeight: 1.4 }}>{label}:</Label>
             </Box>
             <Box sx={{ flexGrow: 1 }}>
                 <Value>{value ? value : "N/A"}</Value>
@@ -209,15 +188,9 @@ function CustomerDetails(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const {
-        response: customersData,
-        loading: l_loading,
-        success,
-    } = useSelector((state) => state.get_customer_byid);
+    const { response: customersData, loading: l_loading, success } = useSelector((state) => state.get_customer_byid);
 
-    const { success: update_success } = useSelector(
-        (state) => state.update_kyc
-    );
+    const { success: update_success } = useSelector((state) => state.update_kyc);
 
     useEffect(() => {
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
@@ -232,9 +205,11 @@ function CustomerDetails(props) {
 
     if (l_loading && !success) {
         return (
-            <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
-                <Fetching>Fetching...</Fetching>
-            </Box>
+            <PageContent title="Customer Details">
+                <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+                    <Fetching>Fetching...</Fetching>
+                </Box>
+            </PageContent>
         );
     } else if (
         customersData?.data === undefined ||
@@ -242,28 +217,19 @@ function CustomerDetails(props) {
         (customersData?.data != null && customersData?.data.length == 0)
     ) {
         return (
-            <Grid container rowGap={1}>
-                <Grid item xs={12}>
-                    <Header>Customer Details</Header>
-                    <Divider />
+            <PageContent title="Customer Details">
+                <Grid container rowGap={1}>
+                    <Grid item xs={12}>
+                        <NoResults text="Invalid Customer Id" />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <NoResults text="Invalid Customer Id" />
-                </Grid>
-            </Grid>
+            </PageContent>
         );
     }
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <DetailWrapper container>
-                <Grid item xs={12}>
-                    <Header>Customer Details</Header>
-                    <Divider />
-                </Grid>
+        <PageContent title="Customer Details">
+            <Grid container rowSpacing={1}>
                 <Grid item xs={12}>
                     <NameBox>
                         <Box sx={{ p: 1.5 }}>
@@ -277,41 +243,26 @@ function CustomerDetails(props) {
                                     <SmallAvatar
                                         alt="flag iso3"
                                         src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
-                                            customersData?.data?.country_iso2 ||
-                                            "US"
+                                            customersData?.data?.country_iso2 || "US"
                                         }.svg`}
                                     />
                                 }
                             >
                                 <Avatar
-                                    {...stringAvatar(
-                                        customersData?.data?.first_name,
-                                        customersData?.data?.last_name
-                                    )}
+                                    {...stringAvatar(customersData?.data?.first_name, customersData?.data?.last_name)}
                                 />
                             </Badge>
                         </Box>
                         <NameField>
                             <RenderTopField
                                 label="Name"
-                                value={`${
-                                    customersData?.data?.first_name
-                                }${" "}${
+                                value={`${customersData?.data?.first_name}${" "}${
                                     customersData?.data?.middle_name
-                                        ? " " +
-                                          customersData?.data?.middle_name +
-                                          " "
+                                        ? " " + customersData?.data?.middle_name + " "
                                         : " "
-                                }${
-                                    customersData?.data?.last_name
-                                        ? customersData?.data?.last_name
-                                        : ""
-                                }`}
+                                }${customersData?.data?.last_name ? customersData?.data?.last_name : ""}`}
                             />
-                            <RenderTopField
-                                label="Customer Id"
-                                value={customersData?.data?.customer_id}
-                            />
+                            <RenderTopField label="Customer Id" value={customersData?.data?.customer_id} />
                         </NameField>
                     </NameBox>
                 </Grid>
@@ -322,38 +273,22 @@ function CustomerDetails(props) {
                     </TitleWrapper>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Firstname"
-                        value={customersData?.data?.first_name}
-                    />
+                    <RenderField label="Firstname" value={customersData?.data?.first_name} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Mid-name"
-                        value={customersData?.data?.middle_name}
-                    />
+                    <RenderField label="Mid-name" value={customersData?.data?.middle_name} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Lastname"
-                        value={customersData?.data?.last_name}
-                    />
+                    <RenderField label="Lastname" value={customersData?.data?.last_name} />
                 </Grid>{" "}
                 <Grid item xs={12} sm={6}>
                     <RenderField
                         label="Gender"
-                        value={
-                            customersData?.data?.gender
-                                ? ReferenceName(42, customersData?.data?.gender)
-                                : ""
-                        }
+                        value={customersData?.data?.gender ? ReferenceName(42, customersData?.data?.gender) : ""}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Mobile Number"
-                        value={customersData?.data?.mobile_number}
-                    />
+                    <RenderField label="Mobile Number" value={customersData?.data?.mobile_number} />
                 </Grid>
                 <Grid item xs={12}>
                     <TitleWrapper>
@@ -362,51 +297,28 @@ function CustomerDetails(props) {
                     </TitleWrapper>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Id Type"
-                        value={customersData?.data?.id_type}
-                    />
+                    <RenderField label="Id Type" value={customersData?.data?.id_type} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Id Number"
-                        value={customersData?.data?.id_number}
-                    />
+                    <RenderField label="Id Number" value={customersData?.data?.id_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Id Issued State"
-                        value={customersData?.data?.id_issued_state}
-                    />
+                    <RenderField label="Id Issued State" value={customersData?.data?.id_issued_state} />
                 </Grid>{" "}
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Id Issued Country"
-                        value={customersData?.data?.id_issued_country_data}
-                    />
+                    <RenderField label="Id Issued Country" value={customersData?.data?.id_issued_country_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Id Issued Date"
-                        value={FormatDate(customersData?.data?.id_issue_date)}
-                    />
+                    <RenderField label="Id Issued Date" value={FormatDate(customersData?.data?.id_issue_date)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Id Expiry Date"
-                        value={FormatDate(customersData?.data?.id_expiry_date)}
-                    />
+                    <RenderField label="Id Expiry Date" value={FormatDate(customersData?.data?.id_expiry_date)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField
                         label="KYC Status"
                         value={
-                            customersData?.data?.kyc_status
-                                ? ReferenceName(
-                                      21,
-                                      customersData?.data?.kyc_status
-                                  )
-                                : ""
+                            customersData?.data?.kyc_status ? ReferenceName(21, customersData?.data?.kyc_status) : ""
                         }
                     />
                 </Grid>
@@ -421,61 +333,34 @@ function CustomerDetails(props) {
                         label="Customer Type"
                         value={
                             customersData?.data?.customer_type
-                                ? ReferenceName(
-                                      37,
-                                      customersData?.data?.customer_type
-                                  )
+                                ? ReferenceName(37, customersData?.data?.customer_type)
                                 : ""
                         }
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Email Address"
-                        value={customersData?.data?.email}
-                    />
+                    <RenderField label="Email Address" value={customersData?.data?.email} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Post Code"
-                        value={customersData?.data?.postcode}
-                    />
+                    <RenderField label="Post Code" value={customersData?.data?.postcode} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Country"
-                        value={customersData?.data?.country_data}
-                    />
+                    <RenderField label="Country" value={customersData?.data?.country_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Nationality"
-                        value={customersData?.data?.citizenship_country_data}
-                    />
+                    <RenderField label="Nationality" value={customersData?.data?.citizenship_country_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Date of Birth"
-                        value={FormatDate(customersData?.data?.date_of_birth)}
-                    />
+                    <RenderField label="Date of Birth" value={FormatDate(customersData?.data?.date_of_birth)} />
                 </Grid>{" "}
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Birth Country"
-                        value={CountryName(customersData?.data?.birth_country)}
-                    />
+                    <RenderField label="Birth Country" value={CountryName(customersData?.data?.birth_country)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Occupation"
-                        value={customersData?.data?.occupation}
-                    />
+                    <RenderField label="Occupation" value={customersData?.data?.occupation} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Source Of Income"
-                        value={customersData?.data?.source_of_income}
-                    />
+                    <RenderField label="Source Of Income" value={customersData?.data?.source_of_income} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <InfoWrapper>
@@ -483,71 +368,44 @@ function CustomerDetails(props) {
                         <ValueWrapper sx={{ wordBreak: "break-all" }}>
                             {customersData?.data?.is_active ? (
                                 <Tooltip title="Active Customer" arrow>
-                                    <CheckCircleOutlineIcon
-                                        fontSize="small"
-                                        sx={{ color: "success.main" }}
-                                    />
+                                    <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
                                 </Tooltip>
                             ) : (
                                 <Tooltip title="Inactive Customer." arrow>
-                                    <DoNotDisturbOnIcon
-                                        fontSize="small"
-                                        sx={{ color: "warning.main" }}
-                                    />
+                                    <DoNotDisturbOnIcon fontSize="small" sx={{ color: "warning.main" }} />
                                 </Tooltip>
                             )}
                         </ValueWrapper>
                     </InfoWrapper>
                 </Grid>
                 <Grid item xs={12}>
-                    <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
-                        <BottomButton
-                            size="small"
-                            variant="outlined"
-                            disableElevation
-                            disableRipple
-                            onClick={() =>
-                                navigate(`/customer/all-beneficiary/${id}`)
-                            }
-                        >
-                            Beneficiares
-                        </BottomButton>
-                        <BottomButton
-                            size="small"
-                            variant="outlined"
-                            disableElevation
-                            disableRipple
-                            onClick={() => navigate(`/customer/remarks/${id}`)}
-                        >
-                            Remarks
-                        </BottomButton>
-                        <BottomButton
-                            size="small"
-                            variant="outlined"
-                            disableElevation
-                            disableRipple
-                            onClick={() =>
-                                navigate(`/customer/all-transactions/${id}`)
-                            }
-                        >
-                            Transactions
-                        </BottomButton>
-                        <BottomButton
-                            size="small"
-                            variant="outlined"
-                            disableElevation
-                            disableRipple
-                            onClick={() =>
-                                navigate(`/customer/documents/${id}`)
-                            }
-                        >
-                            Documents
-                        </BottomButton>
+                    <Box display="flex" gap={2}>
+                        <Button onClick={() => navigate(`/customer/all-beneficiary/${id}`)}>Beneficiaries</Button>
+                        <Button onClick={() => navigate(`/customer/remarks/${id}`)}>Remarks</Button>
+                        <Button onClick={() => navigate(`/customer/all-transactions/${id}`)}>Transactions</Button>
+                        <Button onClick={() => navigate(`/customer/documents/${id}`)}>Documents</Button>
                         <UpdateKyc />
-                    </ButtonWrapper>
+                        <UpdateCustomerAccountModal />
+                        <Button
+                            onClick={() =>
+                                dispatch({
+                                    type: "OPEN_UPDATE_CUSTOMER_ACCOUNT_MODAL",
+                                    customer_id: id,
+                                    initial_form_state: {
+                                        country: customersData?.data?.country,
+                                        phone_country_code: customersData?.data?.phone_country_code,
+                                        mobile_number: customersData?.data?.mobile_number,
+                                        email: customersData?.data?.email,
+                                    },
+                                })
+                            }
+                        >
+                            Account
+                        </Button>
+                    </Box>
                 </Grid>
-            </DetailWrapper>
-        </>
+            </Grid>
+        </PageContent>
     );
 }
 

@@ -17,7 +17,7 @@ import KycUpdateForm from "./Form";
 import actions from "./../../Documents/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -98,9 +98,7 @@ function UpdateKyc() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.update_kyc
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.update_kyc);
 
     React.useEffect(() => {
         if (add_success) {
@@ -123,11 +121,7 @@ function UpdateKyc() {
 
     return (
         <div>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleClickOpen}
-            >
+            <AddButton size="small" variant="outlined" onClick={handleClickOpen}>
                 Update Kyc
             </AddButton>
             <BootstrapDialog
@@ -136,10 +130,7 @@ function UpdateKyc() {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Update Kyc
                 </BootstrapDialogTitle>
                 <DialogContent dividers>

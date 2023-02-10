@@ -62,11 +62,16 @@ const TransactionRemarks = lazy(() => import("../pages/Transactions/Remarks"));
 //Reports
 const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
 const BeneficiaryReport = lazy(() => import("../pages/Reports/Beneficiary"));
+const YearlyTransactions = lazy(() => import("../pages/Reports/YearlyTransactions"));
 const TransactionsSummary = lazy(() => import("../pages/Reports/TransactionsSummary"));
 const CancelledTransactions = lazy(() => import("../pages/Reports/CancelledTransactions"));
-const YearlyTransactions = lazy(() => import("../pages/Reports/YearlyTransactions"));
+const ACHEntriesReport = lazy(() => import("../pages/Reports/ACHEntries/ACHEntriesReport"));
 const SuspiciousTransactions = lazy(() => import("../pages/Reports/SuspiciousTransactions"));
+const ICNResponseReport = lazy(() => import("../pages/Reports/ICNResponse/ICNResponseReport"));
 const UserIPWhitelistReport = lazy(() => import("../pages/Reports/UserIPWhitelist/UserIPWhitelistReport"));
+const IncompleteRegistrationReport = lazy(() =>
+    import("../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport"),
+);
 
 //PaymentProcess
 const PendingPayment = lazy(() => import("../pages/PaymentProcess/PendingPayment"));
@@ -332,6 +337,18 @@ const privateRoutes = [
     {
         path: routePaths.reports.userIpWhitelist,
         component: <UserIPWhitelistReport />,
+    },
+    {
+        path: routePaths.reports.icnResponse,
+        component: <ICNResponseReport />,
+    },
+    {
+        path: routePaths.reports.achEntries,
+        component: <ACHEntriesReport />,
+    },
+    {
+        path: routePaths.reports.incompleteRegistration,
+        component: <IncompleteRegistrationReport />,
     },
 
     //PaymentProcess
