@@ -46,12 +46,11 @@ function ICNResponseReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(actions.get_icn_response_report(filterSchema));
-        // if (isMounted.current) {
-        //     dispatch(actions.get_icn_response_report(filterSchema));
-        // } else {
-        //     isMounted.current = true;
-        // }
+        if (isMounted.current) {
+            dispatch(actions.get_icn_response_report(filterSchema));
+        } else {
+            isMounted.current = true;
+        }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
@@ -136,16 +135,7 @@ function ICNResponseReport() {
     const handleSearch = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            customer_id: data?.customer_id,
-            beneficiary_id: data?.beneficiary_id,
-            name: data?.name,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-            country: data?.country,
-            created_from_date: data?.created_from_date,
-            created_to_date: data?.created_to_date,
+            ...data,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -227,18 +217,9 @@ function ICNResponseReport() {
             }
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                {/* <Grid item xs={12}>
-                    <ICNResponseFilterForm
-                        enableReinitialize
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        initialValues={
-                            {
-                                //
-                            }
-                        }
-                    />
-                </Grid> */}
+                <Grid item xs={12}>
+                    <ICNResponseFilterForm onSubmit={handleSearch} onReset={handleReset} />
+                </Grid>
                 {l_loading && (
                     <Grid item xs={12}>
                         <Loading loading={l_loading} />
