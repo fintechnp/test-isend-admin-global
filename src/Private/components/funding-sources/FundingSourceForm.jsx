@@ -10,7 +10,7 @@ import SelectField from "App/components/Fields/SelectField";
 import Validator from "App/utils/validators";
 import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
-import ButtonWrapper from "App/components/Fields/Forms/ButtonWrapper";
+import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import ModalGridFormContainer from "App/components/Container/ModalGridFormContainer";
 import CheckboxField from "App/components/Fields/CheckboxField";
 
