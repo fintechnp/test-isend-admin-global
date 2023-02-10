@@ -10,7 +10,11 @@ const api = new Api();
 
 export const updateCustomerAccount = takeEvery(customerActions.UPDATE_CUSTOMER_ACCOUNT, function* (action) {
     try {
-        const res = yield call(api.put, buildRoute(apiEndpoints.customers.updateAccount, action.id), action.data);
+        const res = yield call(
+            api.put,
+            buildRoute(apiEndpoints.customers.updateAccount, action.customer_id),
+            action.data,
+        );
         yield put({
             type: customerActions.UPDATE_CUSTOMER_ACCOUNT_SUCCESS,
             response: res,

@@ -5,12 +5,6 @@ const customerActions = {
     UPDATE_CUSTOMER_ACCOUNT_RESET: "UPDATE_CUSTOMER_ACCOUNT_RESET",
     OPEN_UPDATE_CUSTOMER_ACCOUNT_MODAL: "OPEN_UPDATE_CUSTOMER_ACCOUNT_MODAL",
     CLOSE_UPDATE_CUSTOMER_ACCOUNT_MODAL: "CLOSE_UPDATE_CUSTOMER_ACCOUNT_MODAL",
-
-    update_customer_account: (id, data) => ({
-        type: customerActions.UPDATE_CUSTOMER_ACCOUNT,
-        id,
-        data,
-    }),
 };
 
 export default customerActions;

@@ -1,25 +1,25 @@
 import React, { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Badge from "@mui/material/Badge";
 import Grid from "@mui/material/Grid";
+import Badge from "@mui/material/Badge";
+import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { useParams, useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { useParams, useNavigate } from "react-router-dom";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import Button from "App/components/Button/Button";
 import UpdateKyc from "./UpdateKyc";
+import Button from "App/components/Button/Button";
 import actions from "./../CreateCustomer/store/actions";
-import { CountryName, FormatDate, ReferenceName } from "./../../../../App/helpers";
 import NoResults from "./../Search/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
+
+import { CountryName, FormatDate, ReferenceName } from "App/helpers";
 
 const Header = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
@@ -390,7 +390,8 @@ function CustomerDetails(props) {
                             onClick={() =>
                                 dispatch({
                                     type: "OPEN_UPDATE_CUSTOMER_ACCOUNT_MODAL",
-                                    data: {
+                                    customer_id: id,
+                                    initial_form_state: {
                                         country: customersData?.data?.country,
                                         phone_country_code: customersData?.data?.phone_country_code,
                                         mobile_number: customersData?.data?.mobile_number,
