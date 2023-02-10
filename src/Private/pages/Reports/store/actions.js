@@ -106,7 +106,7 @@ const actions = {
         query,
     }),
 
-    get_incomplete_report: (query) => ({
+    get_incomplete_registration_report: (query) => ({
         type: actions.INCOMPLETE_REGISTRATION_REPORT,
         query,
     }),

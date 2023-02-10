@@ -168,7 +168,7 @@ export const getAchEntriesReport = takeEvery(actions.ACH_ENTRIES_REPORT, functio
 
 export const getIncompleteRegistrationReport = takeEvery(actions.INCOMPLETE_REGISTRATION_REPORT, function* (action) {
     try {
-        const res = yield call(api.get, apiEndpoints.reports.achEntries, action.query);
+        const res = yield call(api.get, apiEndpoints.reports.incompleteRegistration, action.query);
         yield put({
             type: actions.INCOMPLETE_REGISTRATION_REPORT_SUCCESS,
             response: res,
