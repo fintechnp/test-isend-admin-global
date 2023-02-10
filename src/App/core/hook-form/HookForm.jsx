@@ -11,7 +11,6 @@ export default function HookForm({ children, onSubmit, ...rest }) {
 }
 
 HookForm.propTypes = {
-    methods: PropTypes.object.isRequired,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
     onSubmit: PropTypes.func,
 };
