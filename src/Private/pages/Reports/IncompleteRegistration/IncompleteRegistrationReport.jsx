@@ -58,7 +58,6 @@ function IncompleteRegistrationReport() {
             {
                 Header: "Email",
                 accessor: "email",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Email Confirmed",
@@ -68,7 +67,6 @@ function IncompleteRegistrationReport() {
             {
                 Header: "Phone No.",
                 accessor: "phone_number",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Phone No. Confirmed",
@@ -84,7 +82,7 @@ function IncompleteRegistrationReport() {
                 Header: "Created At",
                 accessor: "created_ts",
                 maxWidth: 120,
-                Cell: (data) => FormatDateTime(data?.value),
+                Cell: (data) => <>{FormatDateTime(data?.value)}</>,
             },
         ],
         [],

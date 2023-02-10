@@ -42,36 +42,45 @@ function ACHEntriesReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(actions.get_ach_entries_report(filterSchema));
-        // if (isMounted.current) {
-        //     dispatch(actions.get_ach_entries_report(filterSchema));
-        // } else {
-        //     isMounted.current = true;
-        // }
+        if (isMounted.current) {
+            dispatch(actions.get_ach_entries_report(filterSchema));
+        } else {
+            isMounted.current = true;
+        }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "ID",
-                accessor: "whitelist_id",
-                Cell: (data) => data.value,
+                Header: "ACH ID",
+                accessor: "ach_id",
+            },
+
+            {
+                Header: "Txn No",
+                accessor: "txn_no",
             },
             {
-                Header: "User",
-                accessor: "user_id",
-                Cell: (data) => data.value,
+                Header: "Name",
+                accessor: "name",
             },
             {
-                Header: "IP Address",
-                accessor: "ip_address",
-                Cell: (data) => data.value,
+                Header: "Amount",
+                accessor: "amount",
+            },
+            {
+                Header: "Txn Type",
+                accessor: "txn_type",
+            },
+            {
+                Header: "Status",
+                accessor: "status",
             },
             {
                 Header: "Timestamp",
                 accessor: "created_ts",
                 maxWidth: 120,
-                Cell: (data) => FormatDateTime(data?.value),
+                Cell: (data) => <>{FormatDateTime(data?.value)}</>,
             },
         ],
         [],
@@ -87,16 +96,7 @@ function ACHEntriesReport() {
     const handleSearch = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            customer_id: data?.customer_id,
-            beneficiary_id: data?.beneficiary_id,
-            name: data?.name,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-            country: data?.country,
-            created_from_date: data?.created_from_date,
-            created_to_date: data?.created_to_date,
+            ...data,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -147,9 +147,11 @@ function ACHEntriesReport() {
 
     //Downloads
     const headers = [
-        { label: "Whitelist ID", key: "whitelist_id" },
-        { label: "User", key: "user_id" },
-        { label: "IP Address", key: "ip_address" },
+        { label: "ACH ID", key: "ach_id" },
+        { label: "Txn No", key: "txn_no" },
+        { label: "Amount", key: "amount" },
+        { label: "Txn Type", key: "txn_type" },
+        { label: "Status", key: "status" },
         { label: "Created", key: "created_ts" },
     ];
 
@@ -178,18 +180,9 @@ function ACHEntriesReport() {
             }
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                {/* <Grid item xs={12}>
-                    <ACHEntriesFilterForm
-                        enableReinitialize
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        initialValues={
-                            {
-                                //
-                            }
-                        }
-                    />
-                </Grid> */}
+                <Grid item xs={12}>
+                    <ACHEntriesFilterForm onSubmit={handleSearch} onReset={handleReset} />
+                </Grid>
                 {l_loading && (
                     <Grid item xs={12}>
                         <Loading loading={l_loading} />
