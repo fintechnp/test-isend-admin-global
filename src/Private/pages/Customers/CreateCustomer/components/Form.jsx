@@ -65,9 +65,7 @@ function CustomerForm({ update_data, loading }) {
         error: update_error,
     } = useSelector((state) => state.update_customers);
 
-    const { response: partner_sending, loading: p_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: partner_sending, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -124,9 +122,7 @@ function CustomerForm({ update_data, loading }) {
 
     const handleNext = () => {
         const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
+            isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
         setActiveStep(newActiveStep);
     };
 
@@ -165,12 +161,7 @@ function CustomerForm({ update_data, loading }) {
     if (loading) {
         return (
             <Box sx={{ width: "100%", pt: "16px" }}>
-                <Stepper
-                    nonLinear
-                    activeStep={activeStep}
-                    alternativeLabel
-                    sx={{ width: "100%", padding: "16px 0px" }}
-                >
+                <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                     {steps.map((label, index) => (
                         <Step key={label} completed={completed[index]}>
                             <StepLabel color="inherit">{label}</StepLabel>
@@ -186,12 +177,7 @@ function CustomerForm({ update_data, loading }) {
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
-            <Stepper
-                nonLinear
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{ width: "100%", padding: "16px 0px" }}
-            >
+            <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
                         <StepLabel color="inherit">{label}</StepLabel>
@@ -209,12 +195,9 @@ function CustomerForm({ update_data, loading }) {
                                 fontSize: "18px",
                             }}
                         >
-                            All steps completed - Please submit to create
-                            Partner.
+                            All steps completed - Please submit to create Partner.
                         </Typography>
-                        <CheckCircleOutlineIcon
-                            sx={{ fontSize: "64px", color: "success.main" }}
-                        />
+                        <CheckCircleOutlineIcon sx={{ fontSize: "64px", color: "success.main" }} />
                         <LoadingButton
                             size="small"
                             variant="outlined"
@@ -248,61 +231,38 @@ function CustomerForm({ update_data, loading }) {
                                     form={`update_customer_form`}
                                     initialValues={
                                         memoizedData && {
-                                            customer_type:
-                                                memoizedData?.customer_type,
+                                            customer_type: memoizedData?.customer_type,
                                             title: memoizedData?.title,
-                                            first_name:
-                                                memoizedData?.first_name,
-                                            middle_name:
-                                                memoizedData?.middle_name,
+                                            first_name: memoizedData?.first_name,
+                                            middle_name: memoizedData?.middle_name,
                                             last_name: memoizedData?.last_name,
                                             gender: memoizedData?.gender,
-                                            phone_country_code:
-                                                memoizedData?.phone_country_code,
+                                            phone_country_code: memoizedData?.phone_country_code,
                                             country: memoizedData?.country,
-                                            register_agent_id:
-                                                memoizedData?.register_agent_id,
+                                            register_agent_id: memoizedData?.register_agent_id,
                                             postcode: memoizedData?.postcode,
                                             unit: memoizedData?.unit,
                                             street: memoizedData?.street,
                                             city: memoizedData?.city,
                                             state: memoizedData?.state,
                                             address: memoizedData?.address,
-                                            mobile_number:
-                                                memoizedData?.mobile_number,
+                                            mobile_number: memoizedData?.mobile_number,
                                             id_type: memoizedData?.id_type,
                                             id_number: memoizedData?.id_number,
                                             id_issue_date:
                                                 memoizedData?.id_issue_date &&
-                                                new Date(
-                                                    memoizedData?.id_issue_date
-                                                )
-                                                    .toISOString()
-                                                    .slice(0, 10),
+                                                new Date(memoizedData?.id_issue_date).toISOString().slice(0, 10),
                                             id_expiry_date:
                                                 memoizedData?.id_expiry_date &&
-                                                new Date(
-                                                    memoizedData?.id_expiry_date
-                                                )
-                                                    .toISOString()
-                                                    .slice(0, 10),
-                                            id_issued_country:
-                                                memoizedData?.id_issued_country,
+                                                new Date(memoizedData?.id_expiry_date).toISOString().slice(0, 10),
+                                            id_issued_country: memoizedData?.id_issued_country,
                                             date_of_birth:
                                                 memoizedData?.date_of_birth &&
-                                                new Date(
-                                                    memoizedData?.date_of_birth
-                                                )
-                                                    .toISOString()
-                                                    .slice(0, 10),
-                                            birth_country:
-                                                memoizedData?.birth_country,
-                                            citizenship_country:
-                                                memoizedData?.citizenship_country,
-                                            occupation:
-                                                memoizedData?.occupation,
-                                            source_of_income:
-                                                memoizedData?.source_of_income,
+                                                new Date(memoizedData?.date_of_birth).toISOString().slice(0, 10),
+                                            birth_country: memoizedData?.birth_country,
+                                            citizenship_country: memoizedData?.citizenship_country,
+                                            occupation: memoizedData?.occupation,
+                                            source_of_income: memoizedData?.source_of_income,
                                             language: memoizedData?.language,
                                             is_active: memoizedData?.is_active,
                                         }

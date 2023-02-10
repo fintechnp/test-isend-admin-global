@@ -59,44 +59,36 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const AddressForm = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-    id,
-    code = 977,
-    buttonText,
-}) => {
+const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, id, code = 977, buttonText }) => {
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="mobile_number"
-                                label="Mobile"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={Validator.mobileValidator}
-                                InputProps={{
-                                    startAdornment: (
-                                        <Box
-                                            sx={{
-                                                minWidth: "52px",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                            }}
-                                        >
-                                            <CodeText>+{code}</CodeText>
-                                        </Box>
-                                    ),
-                                }}
-                            />
-                        </FieldWrapper>
+                        {/* <FieldWrapper item xs={12} sm={6}>
+                                <Field
+                                    name="mobile_number"
+                                    label="Mobile"
+                                    type="text"
+                                    small={12}
+                                    component={TextField}
+                                    validate={Validator.mobileValidator}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <Box
+                                                sx={{
+                                                    minWidth: "52px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                }}
+                                            >
+                                                <CodeText>+{code}</CodeText>
+                                            </Box>
+                                        ),
+                                    }}
+                                />
+                            </FieldWrapper> */}
                         {!id && (
                             <FieldWrapper item xs={12} sm={6}>
                                 <Field
@@ -105,10 +97,7 @@ const AddressForm = ({
                                     type="email"
                                     small={12}
                                     component={TextField}
-                                    validate={[
-                                        Validator.emailValidator,
-                                        Validator.minValue1,
-                                    ]}
+                                    validate={[Validator.emailValidator, Validator.minValue1]}
                                 />
                             </FieldWrapper>
                         )}
@@ -119,11 +108,7 @@ const AddressForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength10,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength10]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -143,11 +128,7 @@ const AddressForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength50,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -157,11 +138,7 @@ const AddressForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength50,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -190,12 +167,7 @@ const AddressForm = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -209,11 +181,7 @@ const AddressForm = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}
