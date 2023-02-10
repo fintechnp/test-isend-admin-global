@@ -29,7 +29,7 @@ const ModalHeader = styled(Box)(({ theme }) => ({
 }));
 
 const ModalBody = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3, 2),
+    padding: theme.spacing(1, 2),
 }));
 
 export default function Modal({ title, open, onClose, sx, children }) {
