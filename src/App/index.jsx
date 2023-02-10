@@ -16,6 +16,7 @@ import AuthProvider from "./auth";
 import store, { persistor } from "./store";
 import { ChangeTheme } from "./theme/theme";
 import { injectStore } from "./services/api";
+import { ConfirmProvider } from "./core/mui-confirm";
 
 injectStore(store);
 
@@ -31,39 +32,41 @@ const App = () => {
 
     return (
         <ThemeProvider theme={ChangeTheme(mode)}>
-            <AuthProvider>
-                <Provider store={store}>
-                    <PersistGate loading={null} persistor={persistor}>
-                        <HelmetProvider>
-                            <ErrorBoundary>
-                                <BrowserRouter>
-                                    <CssBaseline enableColorScheme />
-                                    <GlobalStyles
-                                        styles={{
-                                            h1: { color: "grey" },
-                                            "*::-webkit-scrollbar": {
-                                                width: "0.3em",
-                                                height: "0.3em",
-                                                right: "12px",
-                                            },
-                                            "*::-webkit-scrollbar-track": {
-                                                WebkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-                                            },
-                                            "*::-webkit-scrollbar-thumb": {
-                                                backgroundColor: `${ChangeTheme(mode).palette.border.dark}`,
-                                                outline: `1px solid ${ChangeTheme(mode).palette.border.dark}`,
-                                                borderRadius: "4px",
-                                            },
-                                        }}
-                                    />
-                                    <MainRoutes setMode={setMode} />
-                                    <Toaster />
-                                </BrowserRouter>
-                            </ErrorBoundary>
-                        </HelmetProvider>
-                    </PersistGate>
-                </Provider>
-            </AuthProvider>
+            <ConfirmProvider>
+                <AuthProvider>
+                    <Provider store={store}>
+                        <PersistGate loading={null} persistor={persistor}>
+                            <HelmetProvider>
+                                <ErrorBoundary>
+                                    <BrowserRouter>
+                                        <CssBaseline enableColorScheme />
+                                        <GlobalStyles
+                                            styles={{
+                                                h1: { color: "grey" },
+                                                "*::-webkit-scrollbar": {
+                                                    width: "0.3em",
+                                                    height: "0.3em",
+                                                    right: "12px",
+                                                },
+                                                "*::-webkit-scrollbar-track": {
+                                                    WebkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+                                                },
+                                                "*::-webkit-scrollbar-thumb": {
+                                                    backgroundColor: `${ChangeTheme(mode).palette.border.dark}`,
+                                                    outline: `1px solid ${ChangeTheme(mode).palette.border.dark}`,
+                                                    borderRadius: "4px",
+                                                },
+                                            }}
+                                        />
+                                        <MainRoutes setMode={setMode} />
+                                        <Toaster />
+                                    </BrowserRouter>
+                                </ErrorBoundary>
+                            </HelmetProvider>
+                        </PersistGate>
+                    </Provider>
+                </AuthProvider>
+            </ConfirmProvider>
         </ThemeProvider>
     );
 };
