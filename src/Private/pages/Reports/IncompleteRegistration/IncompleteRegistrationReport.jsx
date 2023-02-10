@@ -17,6 +17,7 @@ import PageContent from "App/components/Container/PageContent";
 import { CountryName, FormatDateTime } from "App/helpers";
 import apiEndpoints from "Private/config/apiEndpoints";
 import ucwords from "App/helpers/ucwords";
+import ReportExport from "../../../components/reports/ReportExport";
 
 const initialState = {
     page_number: 1,
@@ -176,6 +177,76 @@ function IncompleteRegistrationReport() {
         dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.incompleteRegistration));
     };
 
+    const exportColumns = [
+        {
+            label: "Country",
+            name: "country",
+            accessor: ({ value }) => CountryName(value),
+            pdf: true,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Email",
+            name: "email",
+            pdf: true,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Email Confirmed",
+            name: "email_confirmed",
+            pdf: false,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Email Confirm Count",
+            name: "email_confirm_count",
+            pdf: false,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Phone Country Code",
+            name: "phone_country_code",
+            pdf: true,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Phone Number",
+            name: "phone_number",
+            pdf: true,
+            csv: true,
+            xlsx: true,
+        },
+
+        {
+            label: "Phone Number Confirmed",
+            name: "phone_number_confirmed",
+            accessor: ({ value }) => value,
+            pdf: true,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Phone Confirm Count",
+            name: "phone_confirm_count",
+            pdf: false,
+            csv: true,
+            xlsx: true,
+        },
+        {
+            label: "Created At",
+            name: "created_ts",
+            accessor: ({ value }) => value,
+            pdf: true,
+            csv: true,
+            xlsx: true,
+        },
+    ];
+
     return (
         <PageContent
             documentTitle="Incomplete Registration Reports"
@@ -190,6 +261,9 @@ function IncompleteRegistrationReport() {
                 <Grid item xs={12}>
                     <IncompleteRegistrationFilterForm onSubmit={handleSearch} onReset={handleReset} />
                 </Grid>
+
+                <ReportExport columns={exportColumns} apiEndpoint="" filterQueryString={{}} />
+
                 {l_loading && (
                     <Grid item xs={12}>
                         <Loading loading={l_loading} />
