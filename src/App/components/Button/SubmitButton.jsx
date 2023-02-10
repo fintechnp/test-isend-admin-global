@@ -11,6 +11,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     "&:hover": {
         background: theme.palette.primary.dark,
     },
+    textTransform: "capitalize",
 }));
 
 const SubmitButton = React.forwardRef(({ isLoading, children, isAddMode, ...rest }, ref) => (
