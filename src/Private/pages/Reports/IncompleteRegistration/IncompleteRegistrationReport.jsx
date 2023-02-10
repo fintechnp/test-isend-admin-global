@@ -10,12 +10,13 @@ import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-import ICNResponseFilterForm from "./ICNResponseFilterForm";
+import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 
-import { FormatDateTime } from "App/helpers";
+import { CountryName, FormatDateTime } from "App/helpers";
 import apiEndpoints from "Private/config/apiEndpoints";
+import ucwords from "App/helpers/ucwords";
 
 const initialState = {
     page_number: 1,
@@ -24,13 +25,13 @@ const initialState = {
     order_by: "DESC",
 };
 
-function ICNResponseReport() {
+function IncompleteRegistrationReport() {
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: ICNResponseReportResponse, loading: l_loading } = useSelector(
-        (state) => state.get_icn_response_report,
+    const { response: incompleteRegistrationResponse, loading: l_loading } = useSelector(
+        (state) => state.get_incomplete_registration_report,
     );
 
     const {
@@ -41,80 +42,43 @@ function ICNResponseReport() {
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_icn_response_reports"));
-        dispatch({ type: "BENEFICIARY_REPORT_RESET" });
+        dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(actions.get_icn_response_report(filterSchema));
-        // if (isMounted.current) {
-        //     dispatch(actions.get_icn_response_report(filterSchema));
-        // } else {
-        //     isMounted.current = true;
-        // }
+        if (isMounted.current) {
+            dispatch(actions.get_incomplete_registration_report(filterSchema));
+        } else {
+            isMounted.current = true;
+        }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "ICN ID",
-                accessor: "icn_id",
-                Cell: (data) => data.value,
+                Header: "Email",
+                accessor: "email",
+                Cell: (data) => <>{data.value}</>,
             },
             {
-                Header: "Org ID",
-                accessor: "orgid",
+                Header: "Email Confirmed",
+                accessor: "email_confirmed",
+                Cell: (data) => <>{data.value ? "Yes" : "No"}</>,
+            },
+            {
+                Header: "Phone No.",
+                accessor: "phone_number",
                 Cell: (data) => <>{data.value}</>,
+            },
+            {
+                Header: "Phone No. Confirmed",
+                accessor: "phone_number_confirmed",
+                Cell: (data) => <>{data.value ? "Yes" : "No"}</>,
             },
             {
                 Header: "Country",
                 accessor: "country",
-                Cell: (data) => <>{data.value}</>,
-            },
-            {
-                Header: "Transaction Type",
-                accessor: "txntype",
-                Cell: (data) => <>{data.value}</>,
-            },
-            {
-                Header: "Txn Ref ID",
-                accessor: "txnrefid",
-                Cell: (data) => <>{data.value}</>,
-            },
-            {
-                Header: "Txn Date",
-                accessor: "txndate",
-                Cell: (data) => <>{data.value}</>,
-            },
-            {
-                Header: "Sender",
-                accessor: "senderpartyname",
-                Cell: (data) => (
-                    <Box display="flex" flexDirection="column">
-                        <Typography>{data.value}</Typography>
-                        <Typography variant="caption">{data.row.original.senderpartysenderbankid}</Typography>
-                    </Box>
-                ),
-            },
-
-            {
-                Header: "Amount",
-                accessor: "txnamt",
-                Cell: (data) => (
-                    <Box>
-                        {data.value} {data.row.original.txnccy}
-                    </Box>
-                ),
-            },
-            {
-                Header: "Receiving Party Name",
-                accessor: "receivingpartyname",
-                Cell: (data) => (
-                    <Box display="flex" flexDirection="column">
-                        <Typography>{data.value}</Typography>
-                        <Typography variant="caption">{data.row.original.receivingpartyaccountno}</Typography>
-                    </Box>
-                ),
+                Cell: (data) => <>{ucwords(CountryName(data.value))}</>,
             },
             {
                 Header: "Created At",
@@ -126,7 +90,11 @@ function ICNResponseReport() {
         [],
     );
 
-    const sortData = [{ key: "None", value: "created_ts" }];
+    const sortData = [
+        { key: "None", value: "created_ts" },
+        { key: "Email", value: "email" },
+        { key: "Phone Number", value: "phone_number" },
+    ];
 
     const orderData = [
         { key: "Ascending", value: "ASC" },
@@ -136,16 +104,7 @@ function ICNResponseReport() {
     const handleSearch = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            customer_id: data?.customer_id,
-            beneficiary_id: data?.beneficiary_id,
-            name: data?.name,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-            country: data?.country,
-            created_from_date: data?.created_from_date,
-            created_to_date: data?.created_to_date,
+            ...data,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -154,8 +113,7 @@ function ICNResponseReport() {
         isMounted.current = false;
         setFilterSchema(initialState);
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_icn_response_reports"));
-        dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
+        dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
     };
 
     const handleSort = (e) => {
@@ -196,14 +154,16 @@ function ICNResponseReport() {
 
     //Downloads
     const headers = [
-        { label: "Whitelist ID", key: "whitelist_id" },
-        { label: "User", key: "user_id" },
-        { label: "IP Address", key: "ip_address" },
+        { label: "Email", key: "email" },
+        { label: "Email Confirmed", key: "email_confirmed" },
+        { label: "Ph. No.", key: "phone_number" },
+        { label: "Ph. No. Confirmed", key: "phone_number_confirmed" },
+        { label: "Country", key: "country" },
         { label: "Created", key: "created_ts" },
     ];
 
     const csvReport = {
-        title: "Report on ICN Response",
+        title: "Report on Incomplete Registration",
         headers: headers,
         data: ReportsDownload?.data || [],
     };
@@ -213,46 +173,39 @@ function ICNResponseReport() {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.icnResponse));
+        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.incompleteRegistration));
     };
 
     return (
         <PageContent
-            documentTitle="ICN (Instant Credit Notification) Reports"
+            documentTitle="Incomplete Registration Reports"
             title={
                 <>
                     <ContentPasteSearchIcon />
-                    <Typography>ICN (Instant Credit Notification) Reports</Typography>
+                    <Typography>Incomplete Registration Reports</Typography>
                 </>
             }
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                {/* <Grid item xs={12}>
-                    <ICNResponseFilterForm
-                        enableReinitialize
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        initialValues={
-                            {
-                                //
-                            }
-                        }
-                    />
-                </Grid> */}
+                <Grid item xs={12}>
+                    <IncompleteRegistrationFilterForm onSubmit={handleSearch} onReset={handleReset} />
+                </Grid>
                 {l_loading && (
                     <Grid item xs={12}>
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading && ICNResponseReportResponse?.data && ICNResponseReportResponse?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Record Found" />
-                    </Grid>
-                )}
-                {!l_loading && ICNResponseReportResponse?.data?.length > 0 && (
+                {!l_loading &&
+                    incompleteRegistrationResponse?.data &&
+                    incompleteRegistrationResponse?.data?.length === 0 && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Record Found" />
+                        </Grid>
+                    )}
+                {!l_loading && incompleteRegistrationResponse?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <Filter
-                            fileName="ICNResponseReport"
+                            fileName="IncompleteRegistration"
                             success={pd_success}
                             loading={pd_loading}
                             sortData={sortData}
@@ -266,12 +219,12 @@ function ICNResponseReport() {
                         />
                         <Table
                             columns={columns}
-                            data={ICNResponseReportResponse?.data || []}
+                            data={incompleteRegistrationResponse?.data || []}
                             loading={l_loading}
                             rowsPerPage={8}
                             renderPagination={() => (
                                 <TablePagination
-                                    paginationData={ICNResponseReportResponse?.pagination}
+                                    paginationData={incompleteRegistrationResponse?.pagination}
                                     handleChangePage={handleChangePage}
                                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                                 />
@@ -284,4 +237,4 @@ function ICNResponseReport() {
     );
 }
 
-export default ICNResponseReport;
+export default IncompleteRegistrationReport;

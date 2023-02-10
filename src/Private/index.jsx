@@ -310,6 +310,8 @@ import getIcnResponseReducer from "./pages/Reports/store/reducers/getIcnResponse
 import getAchResponseReducer from "./pages/Reports/store/reducers/getAchResponseReducer";
 import getUserIpWhitelistReportReducer from "./pages/Reports/store/reducers/getUserIpWhitelistReportReducer";
 import getIncompleteRegistrationReducer from "./pages/Reports/store/reducers/getIncompleteRegistrationReducer";
+import customerSaga from "./features/customers/customerSaga";
+import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -556,6 +558,8 @@ export const privateReducer = {
     update_funding_source: updateFundingSourceReducer,
     update_funding_source_status: updateFundingSourceStatusReducer,
     delete_funding_source: deleteFundingSourceReducer,
+
+    update_customer_account: updateCustomerAccountReducer,
 };
 
 export const privateSaga = [
@@ -588,6 +592,7 @@ export const privateSaga = [
     bannerSaga(),
     countryStateSaga(),
     fundingSourceSaga(),
+    customerSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

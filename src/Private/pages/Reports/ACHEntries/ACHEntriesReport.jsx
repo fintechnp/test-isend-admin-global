@@ -38,7 +38,7 @@ function ACHEntriesReport() {
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_ach_entries_reports"));
-        dispatch({ type: "BENEFICIARY_REPORT_RESET" });
+        dispatch({ type: "ACH_ENTRIES_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {

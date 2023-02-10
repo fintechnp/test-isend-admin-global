@@ -5,7 +5,7 @@ import { Field, Form, reduxForm } from "redux-form";
 import TextField from "App/components/Fields/TextField";
 import SubmitButton from "App/components/Button/SubmitButton";
 import CancelButton from "App/components/Button/CancelButton";
-import ButtonWrapper from "App/components/Fields/Forms/ButtonWrapper";
+import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 
 function ACHEntriesFilterForm({ handleSubmit, handleReset }) {
     return (

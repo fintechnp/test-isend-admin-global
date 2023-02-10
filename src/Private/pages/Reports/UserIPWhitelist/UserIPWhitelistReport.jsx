@@ -40,7 +40,7 @@ function UserIPWhitelistReport() {
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_user_ip_whitelist_reports"));
-        dispatch({ type: "BENEFICIARY_REPORT_RESET" });
+        dispatch({ type: "USER_IP_WHITELIST_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
