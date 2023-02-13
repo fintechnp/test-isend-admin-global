@@ -12,11 +12,7 @@ function Login(props) {
     const dispatch = useDispatch();
     const authContext = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
-    const {
-        response: user,
-        success,
-        loading: user_loading,
-    } = useSelector((state) => state.get_user);
+    const { response: user, success, loading: user_loading } = useSelector((state) => state.get_user);
 
     useEffect(() => {
         dispatch(reset("login_form"));
@@ -32,6 +28,7 @@ function Login(props) {
     }, [success]);
 
     const handleLogin = async (data) => {
+        console.log(data);
         setLoading(true);
         try {
             const res = await authContext.loginUser(data);
@@ -44,7 +41,7 @@ function Login(props) {
                     actions.get_all_reference({
                         page_number: 1,
                         page_size: 100,
-                    })
+                    }),
                 );
                 setLoading(false);
             }
@@ -64,13 +61,7 @@ function Login(props) {
 
     return (
         <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <LoginForm
-                onSubmit={handleLogin}
-                loading={loading || user_loading}
-            />
+            <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
         </>
     );
 }
