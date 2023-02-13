@@ -41,8 +41,13 @@ export const addBulkEmailGroup = takeEvery(actions.ADD_BULK_EMAIL_GROUP, functio
 });
 
 export const updateBulkEmailGroup = takeEvery(actions.UPDATE_BULK_EMAIL_GROUP, function* (action) {
+    console.log(action, buildRoute(apiEndpoints.bulkEmailGroup.update, action.bulk_email_group_id));
     try {
-        const res = yield call(api.put, buildRoute(apiEndpoints.bulkEmailGroup.update, action.id), action.data);
+        const res = yield call(
+            api.put,
+            buildRoute(apiEndpoints.bulkEmailGroup.update, action.bulk_email_group_id),
+            action.data,
+        );
         yield put({
             type: actions.UPDATE_BULK_EMAIL_GROUP_SUCCESS,
             response: res,
@@ -59,7 +64,7 @@ export const updateBulkEmailGroup = takeEvery(actions.UPDATE_BULK_EMAIL_GROUP, f
 
 export const deleteBulkEmailGroup = takeEvery(actions.DELETE_BULK_EMAIL_GROUP, function* (action) {
     try {
-        const res = yield call(api.delete, buildRoute(apiEndpoints.bulkEmailGroup.delete, action.id));
+        const res = yield call(api.delete, buildRoute(apiEndpoints.bulkEmailGroup.delete, action.bulk_email_group_id));
         yield put({
             type: actions.DELETE_BULK_EMAIL_GROUP_SUCCESS,
             response: res,

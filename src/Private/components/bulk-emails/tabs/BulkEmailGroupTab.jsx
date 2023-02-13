@@ -1,12 +1,14 @@
 import React from "react";
 import BulkEmailGroups from "../groups/BulkEmailGroups";
-import BulkEmailGroupFilter from "../groups/BulkEmailGroupFilter";
+import AddBulkEmailGroupModal from "../groups/AddBulkEmailGroupModal";
+import EditBulkEmailGroupModal from "../groups/EditBulkEmailGroupModal";
 
 export default function BulkEmailGroupTab() {
     return (
         <div>
-            <BulkEmailGroupFilter />
             <BulkEmailGroups />
+            <AddBulkEmailGroupModal />
+            <EditBulkEmailGroupModal />
         </div>
     );
 }

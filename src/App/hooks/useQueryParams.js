@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import isEmpty from "app/helpers/isEmpty";
+import isEmpty from "App/helpers/isEmpty";
 import { useSearchParams, createSearchParams } from "react-router-dom";
 
 /**

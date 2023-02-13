@@ -29,7 +29,7 @@ const ModalHeader = styled(Box)(({ theme }) => ({
 }));
 
 const ModalBody = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(3, 2),
 }));
 
 export default function Modal({ title, open, onClose, sx, children }) {
@@ -57,7 +57,9 @@ export default function Modal({ title, open, onClose, sx, children }) {
                 {!!title && (
                     <ModalHeader>
                         {Object.prototype.toString.call(title) === "[object String]" ? (
-                            <Typography variant="h6">{title}</Typography>
+                            <Typography variant="h6" color="grey.600">
+                                {title}
+                            </Typography>
                         ) : (
                             title
                         )}

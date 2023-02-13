@@ -110,6 +110,9 @@ export default function ConfirmationDialog({ open, options, onCancel, onConfirm,
                     )
                 )}
                 <DialogActions sx={{ display: "flex", justifyContent: "space-between", px: 6, pb: 4 }}>
+                    <TextButton {...cancellationButtonProps} onClick={onCancel} color="error">
+                        {cancellationText}
+                    </TextButton>
                     <Button
                         color="primary"
                         variant="contained"
@@ -119,9 +122,6 @@ export default function ConfirmationDialog({ open, options, onCancel, onConfirm,
                     >
                         {confirmationText}
                     </Button>
-                    <TextButton {...cancellationButtonProps} onClick={onCancel} color="error">
-                        {cancellationText}
-                    </TextButton>
                 </DialogActions>
             </Box>
         </Dialog>

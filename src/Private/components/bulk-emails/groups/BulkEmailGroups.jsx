@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-import { Delete } from "App/components";
 import Center from "App/components/Center/Center";
-import Table, { TablePagination, TableSwitch } from "App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
 
-import bulkEmailGroupActions from "Private/features/bulk-emails/bulkEmailGroupActions";
-import DeleteIconButton from "App/components/Button/DeleteIconButton";
+import SearchBox from "App/components/Forms/SearchBox";
 import EditIconButton from "App/components/Button/EditIconButton";
+import DeleteIconButton from "App/components/Button/DeleteIconButton";
+import bulkEmailGroupActions from "Private/features/bulk-emails/bulkEmailGroupActions";
+import Button from "App/components/Button/Button";
+import debounce from "App/helpers/debounce";
+import { useConfirm } from "App/core/mui-confirm";
 
 const initialState = {
     page_number: 1,
@@ -29,9 +31,43 @@ const BulkEmailGroups = (props) => {
 
     const { success: isUpdateSuccess } = useSelector((state) => state.update_bulk_email_group);
 
-    useEffect(() => {
-        dispatch({ type: "GET_BULK_EMAIL_GROUPS", query: filterSchema });
-    }, [dispatch, filterSchema, isDeleting, isAddSuccess, isDeleteSuccess, isUpdateSuccess]);
+    const confirm = useConfirm();
+
+    const handleChangePage = (e, newPage) => {
+        const updatedFilter = {
+            ...filterSchema,
+            page_number: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
+    };
+
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_number: 1,
+            page_size: +pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
+    const handleOnDelete = (id) => {
+        confirm({
+            description: "Please Note: All contacts in this group will also be Deleted.",
+            confirmationText: "Yes, Delete it.",
+        }).then(() => {
+            // dispatch({});
+            console.error("need to be implemented");
+        });
+    };
+
+    const handleOnSearch = useCallback((e) => {
+        setFilterSchema({ ...filterSchema, search: e.target.value });
+    }, []);
+
+    const handleOnClearSearch = useCallback(() => {
+        setFilterSchema(initialState);
+    }, []);
 
     const columns = useMemo(
         () => [
@@ -52,8 +88,18 @@ const BulkEmailGroups = (props) => {
                 accessor: "show",
                 Cell: ({ row }) => (
                     <Center>
-                        <EditIconButton />
-                        <DeleteIconButton />
+                        <EditIconButton
+                            onClick={() => {
+                                dispatch({
+                                    type: "OPEN_UPDATE_BULK_EMAIL_GROUP_MODAL",
+                                    bulk_email_group_id: row.original.group_id,
+                                    initial_form_state: {
+                                        group_name: row.original.group_name,
+                                    },
+                                });
+                            }}
+                        />
+                        <DeleteIconButton onClick={() => handleOnDelete(row.original.group_id)} />
                     </Center>
                 ),
             },
@@ -61,48 +107,40 @@ const BulkEmailGroups = (props) => {
         [],
     );
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
+    useEffect(() => {
+        const timeout = debounce(() => {
+            dispatch({ type: "GET_BULK_EMAIL_GROUPS", query: filterSchema });
+        }, 500);
 
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleDelete = (id) => {
-        dispatch(bulkEmailGroupActions.delete_banner(id));
-    };
-
-    const handleStatus = useCallback((is_active, id) => {
-        dispatch(bulkEmailGroupActions.update_banner_status(id, { is_active: is_active }));
-    }, []);
+        return () => clearTimeout(timeout);
+    }, [dispatch, filterSchema, isDeleting, isAddSuccess, isDeleteSuccess, isUpdateSuccess]);
 
     return (
-        <Table
-            columns={columns}
-            title="EmailGroups"
-            data={data?.data || []}
-            loading={isLoading}
-            rowsPerPage={8}
-            totalPage={data?.pagination?.totalPage || 1}
-            renderPagination={() => (
-                <TablePagination
-                    paginationData={data?.pagination}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+        <Box>
+            <Box display="flex" justifyContent="space-between">
+                <SearchBox
+                    value={filterSchema?.search ?? ""}
+                    onChange={handleOnSearch}
+                    onClickClearSearch={handleOnClearSearch}
                 />
-            )}
-        />
+                <Button onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_GROUP_MODAL" })}>Add Group</Button>
+            </Box>
+            <Table
+                columns={columns}
+                title="EmailGroups"
+                data={data?.data || []}
+                loading={isLoading}
+                rowsPerPage={8}
+                totalPage={data?.pagination?.totalPage || 1}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </Box>
     );
 };
 

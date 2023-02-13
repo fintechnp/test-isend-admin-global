@@ -73,19 +73,13 @@ const addBulkEmailGroupReducer = (state = addBulkEmailGroupInitialState, action)
             };
         case bulkEmailGroupActions.OPEN_ADD_BULK_EMAIL_GROUP_MODAL:
             return {
+                ...state,
                 is_modal_open: true,
-                success: false,
-                loading: false,
-                error: null,
-                response: undefined,
             };
         case bulkEmailGroupActions.CLOSE_ADD_BULK_EMAIL_GROUP_MODAL:
             return {
+                ...state,
                 is_modal_open: false,
-                success: false,
-                loading: false,
-                error: null,
-                response: undefined,
             };
         default:
             return state;
@@ -94,6 +88,7 @@ const addBulkEmailGroupReducer = (state = addBulkEmailGroupInitialState, action)
 
 const updateBulkEmailGroupInitialState = {
     is_modal_open: false,
+    bulk_email_group_id: undefined,
     initial_form_state: undefined,
     success: false,
     loading: false,
@@ -108,6 +103,7 @@ const updateBulkEmailGroupReducer = (state = updateBulkEmailGroupInitialState, a
                 ...state,
                 loading: true,
             };
+
         case bulkEmailGroupActions.UPDATE_BULK_EMAIL_GROUP_SUCCESS:
             return {
                 ...state,
@@ -117,6 +113,7 @@ const updateBulkEmailGroupReducer = (state = updateBulkEmailGroupInitialState, a
                 loading: false,
                 response: action.response,
             };
+
         case bulkEmailGroupActions.UPDATE_BULK_EMAIL_GROUP_FAILED:
             return {
                 ...state,
@@ -124,33 +121,24 @@ const updateBulkEmailGroupReducer = (state = updateBulkEmailGroupInitialState, a
                 loading: false,
                 error: action.error,
             };
+
         case bulkEmailGroupActions.UPDATE_BULK_EMAIL_GROUP_RESET:
-            return {
-                is_modal_open: false,
-                initial_form_state: undefined,
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
-            };
+            return updateBulkEmailGroupInitialState;
+
         case bulkEmailGroupActions.OPEN_UPDATE_BULK_EMAIL_GROUP_MODAL:
             return {
                 is_modal_open: true,
-                initial_form_state: action.payload,
+                bulk_email_group_id: action.bulk_email_group_id,
+                initial_form_state: action.initial_form_state,
                 success: false,
                 loading: false,
                 error: null,
                 response: undefined,
             };
+
         case bulkEmailGroupActions.CLOSE_UPDATE_BULK_EMAIL_GROUP_MODAL:
-            return {
-                is_modal_open: false,
-                initial_form_state: undefined,
-                success: false,
-                loading: false,
-                error: null,
-                response: undefined,
-            };
+            return updateBulkEmailGroupInitialState;
+
         default:
             return state;
     }

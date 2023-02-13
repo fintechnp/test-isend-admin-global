@@ -74,7 +74,12 @@ function Tabs({ tabs }) {
                     {tabs.map((tab, i) => (
                         <Tab
                             key={i}
-                            label={<Typography sx={{ textTransform: "capitalize" }}>{tab.tabName}</Typography>}
+                            label={
+                                <Box display="flex" alignContent="center" justifyContent="center">
+                                    <Typography sx={{ textTransform: "capitalize" }}>{tab.tabName}</Typography>
+                                    {activeTab === i && tab.activeTabHeaderContent}
+                                </Box>
+                            }
                             {...a11yProps(i)}
                         />
                     ))}
@@ -97,6 +102,7 @@ Tabs.propTypes = {
         PropTypes.shape({
             key: PropTypes.string.isRequired,
             tabName: PropTypes.string.isRequired,
+            activeTabHeaderContent: PropTypes.node,
             tabContent: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]).isRequired,
         }).isRequired,
     ),
