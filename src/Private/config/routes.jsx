@@ -1,3 +1,4 @@
+import ListBulkEmail from "Private/pages/BulkEmail/ListBulkEmail";
 import { lazy } from "react";
 import routePaths from "./routePaths";
 
@@ -386,6 +387,7 @@ const privateRoutes = [
     { path: "/utilities/sms", component: <Sms title="SMS" /> },
     { path: "/utilities/email", component: <Email title="Email" /> },
     { path: "/utilities/fcm", component: <Fcm title="FCM" /> },
+    { path: routePaths.bulkEmails.index, component: <ListBulkEmail /> },
 
     //Compliance
     {

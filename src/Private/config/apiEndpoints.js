@@ -21,6 +21,28 @@ const apiEndpoints = {
     customers: {
         updateAccount: "customer/account/:customerId",
     },
+    bulkEmailGroup: {
+        create: "bulkemail/group",
+        list: "bulkemail/group",
+        get: "bulkemail/group/:bulkEmailGroupId",
+    },
+    bulkEmailAddresses: {
+        list: "bulkemail",
+        create: "bulkemail",
+        update: "bulkemail/:bulkEmailAddressId",
+        updateStatus: "bulkemail/:bulkEmailAddressId",
+        get: "bulkemail/:bulkEmailAddressId",
+        import: "bulkemail/import_file/:bulkEmailGroupId",
+        importConfirm: "bulkemail/import_confirm/:bulkEmailGroupId",
+    },
+    bulkEmailContent: {
+        list: "bulkemail/content",
+        create: "bulkemail/content",
+        update: "bulkemail/content/:bulkEmailContentId",
+        updateStatus: "bulkemail/content/:bulkEmailContentId",
+        get: "bulkemail/content/:bulkEmailContentId",
+        send: "bulkemail/content/:bulkEmailContentId",
+    },
 };
 
 export default apiEndpoints;

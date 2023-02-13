@@ -310,8 +310,17 @@ import getIcnResponseReducer from "./pages/Reports/store/reducers/getIcnResponse
 import getAchResponseReducer from "./pages/Reports/store/reducers/getAchResponseReducer";
 import getUserIpWhitelistReportReducer from "./pages/Reports/store/reducers/getUserIpWhitelistReportReducer";
 import getIncompleteRegistrationReducer from "./pages/Reports/store/reducers/getIncompleteRegistrationReducer";
+
 import customerSaga from "./features/customers/customerSaga";
 import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
+
+import {
+    addBulkEmailGroupReducer,
+    deleteBulkEmailGroupReducer,
+    getBulkEmailGroupsReducer,
+    updateBulkEmailGroupReducer,
+} from "./features/bulk-emails/bulkEmailGroupReducer";
+import bulkEmailGroupSaga from "./features/bulk-emails/bulkEmailGroupSaga";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -560,6 +569,12 @@ export const privateReducer = {
     delete_funding_source: deleteFundingSourceReducer,
 
     update_customer_account: updateCustomerAccountReducer,
+
+    // bulk-emails,
+    get_bulk_email_group_list: getBulkEmailGroupsReducer,
+    add_bulk_email_group: addBulkEmailGroupReducer,
+    update_bulk_email_group: updateBulkEmailGroupReducer,
+    delete_bulk_email_group: deleteBulkEmailGroupReducer,
 };
 
 export const privateSaga = [
@@ -593,6 +608,7 @@ export const privateSaga = [
     countryStateSaga(),
     fundingSourceSaga(),
     customerSaga(),
+    bulkEmailGroupSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
