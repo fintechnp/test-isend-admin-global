@@ -136,8 +136,6 @@ FormTextField.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
     required: PropTypes.bool,
-    error: PropTypes.bool,
-    helperText: PropTypes.string,
     disabled: PropTypes.bool,
     size: PropTypes.oneOf(["medium", "small", "large"]),
     fullWidth: PropTypes.bool.isRequired,
@@ -153,8 +151,6 @@ FormTextField.propTypes = {
 FormTextField.defaultProps = {
     type: "text",
     label: "",
-    error: false,
-    helperText: "",
     required: false,
     disabled: false,
     fullWidth: true,
