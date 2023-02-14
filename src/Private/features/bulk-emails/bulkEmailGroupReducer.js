@@ -1,4 +1,4 @@
-import bulkEmailGroupActions from "./bulkEmailGroupActions";
+import bulkEmailGroupActions from "./bulkEmailGroupAction";
 
 const getBulkEmailGroupsState = {
     success: false,
@@ -64,23 +64,14 @@ const addBulkEmailGroupReducer = (state = addBulkEmailGroupInitialState, action)
                 error: action.error,
             };
         case bulkEmailGroupActions.ADD_BULK_EMAIL_GROUP_RESET:
-            return {
-                is_modal_open: false,
-                success: false,
-                loading: false,
-                error: null,
-                response: undefined,
-            };
+            return addBulkEmailGroupInitialState;
         case bulkEmailGroupActions.OPEN_ADD_BULK_EMAIL_GROUP_MODAL:
             return {
                 ...state,
                 is_modal_open: true,
             };
         case bulkEmailGroupActions.CLOSE_ADD_BULK_EMAIL_GROUP_MODAL:
-            return {
-                ...state,
-                is_modal_open: false,
-            };
+            return addBulkEmailGroupInitialState;
         default:
             return state;
     }
@@ -127,13 +118,10 @@ const updateBulkEmailGroupReducer = (state = updateBulkEmailGroupInitialState, a
 
         case bulkEmailGroupActions.OPEN_UPDATE_BULK_EMAIL_GROUP_MODAL:
             return {
+                ...state,
                 is_modal_open: true,
                 bulk_email_group_id: action.bulk_email_group_id,
                 initial_form_state: action.initial_form_state,
-                success: false,
-                loading: false,
-                error: null,
-                response: undefined,
             };
 
         case bulkEmailGroupActions.CLOSE_UPDATE_BULK_EMAIL_GROUP_MODAL:

@@ -6,9 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import Center from "App/components/Center/Center";
 import Button from "App/components/Button/Button";
 import SearchBox from "App/components/Forms/SearchBox";
-import Table, { TablePagination } from "App/components/Table";
 import EditIconButton from "App/components/Button/EditIconButton";
 import DeleteIconButton from "App/components/Button/DeleteIconButton";
+import Table, { TablePagination, TableSwitch } from "App/components/Table";
 
 import debounce from "App/helpers/debounce";
 import { useConfirm } from "App/core/mui-confirm";
@@ -20,17 +20,19 @@ const initialState = {
     order_by: "DESC",
 };
 
-const BulkEmailGroups = (props) => {
+const BulkEmailAddresses = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: data, loading: isLoading } = useSelector((state) => state.get_bulk_email_group_list);
+    const { response: data, loading: isLoading } = useSelector((state) => state.get_bulk_email_address_list);
 
-    const { loading: isDeleting, success: isDeleteSuccess } = useSelector((state) => state.delete_bulk_email_group);
+    const { loading: isDeleting, success: isDeleteSuccess } = useSelector((state) => state.delete_bulk_email_address);
 
-    const { success: isAddSuccess } = useSelector((state) => state.add_bulk_email_group);
+    const { success: isAddSuccess } = useSelector((state) => state.add_bulk_email_address);
 
-    const { success: isUpdateSuccess } = useSelector((state) => state.update_bulk_email_group);
+    const { success: isUpdateSuccess } = useSelector((state) => state.update_bulk_email_address);
+
+    const { success: isImportSuccess } = useSelector((state) => state.import_confirm_bulk_email_address);
 
     const confirm = useConfirm();
 
@@ -54,10 +56,10 @@ const BulkEmailGroups = (props) => {
 
     const handleOnDelete = (id) => {
         confirm({
-            description: "Please Note: All contacts in this group will also be Deleted.",
+            description: "This action will remove record permanently",
             confirmationText: "Yes, Delete it.",
         }).then(() => {
-            dispatch({ type: "DELETE_BULK_EMAIL_GROUP", bulk_email_group_id: id });
+            dispatch({ type: "DELETE_BULK_EMAIL_ADDRESS", bulk_email_address_id: id });
         });
     };
 
@@ -69,15 +71,44 @@ const BulkEmailGroups = (props) => {
         setFilterSchema(initialState);
     }, []);
 
+    const handleStatus = useCallback((is_active, id) => {
+        dispatch({
+            type: "UPDATE_BULK_EMAIL_ADDRESS_STATUS",
+            bulk_email_address_id: id,
+            status: is_active,
+        });
+    }, []);
+
+    useEffect(() => {
+        dispatch({ type: "IMPORT_BULK_EMAIL_ADDRESS_RESET" });
+        dispatch({ type: "IMPORT_CONFIRM_BULK_EMAIL_ADDRESS_RESET" });
+    }, [isImportSuccess]);
+
     const columns = useMemo(
         () => [
             {
                 Header: "Id",
-                accessor: "group_id",
+                accessor: "email_id",
+            },
+            {
+                Header: "Name",
+                accessor: "name",
+            },
+            {
+                Header: "Email",
+                accessor: "email",
             },
             {
                 Header: "Name",
                 accessor: "group_name",
+            },
+            {
+                Header: "Status",
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <TableSwitch value={data?.value} dataId={data.row.original.email_id} handleStatus={handleStatus} />
+                ),
             },
             {
                 Header: () => (
@@ -91,15 +122,18 @@ const BulkEmailGroups = (props) => {
                         <EditIconButton
                             onClick={() => {
                                 dispatch({
-                                    type: "OPEN_UPDATE_BULK_EMAIL_GROUP_MODAL",
-                                    bulk_email_group_id: row.original.group_id,
+                                    type: "OPEN_UPDATE_BULK_EMAIL_ADDRESS_MODAL",
+                                    bulk_email_address_id: row.original.email_id,
                                     initial_form_state: {
-                                        group_name: row.original.group_name,
+                                        group_id: row.original.group_id,
+                                        email: row.original.email,
+                                        name: row.original.name,
+                                        is_active: row.original.is_active,
                                     },
                                 });
                             }}
                         />
-                        <DeleteIconButton onClick={() => handleOnDelete(row.original.group_id)} />
+                        <DeleteIconButton onClick={() => handleOnDelete(row.original.email_id)} />
                     </Center>
                 ),
             },
@@ -108,10 +142,10 @@ const BulkEmailGroups = (props) => {
     );
 
     useEffect(() => {
-        dispatch({ type: "UPDATE_BULK_EMAIL_GROUP_RESET" });
-        dispatch({ type: "ADD_BULK_EMAIL_GROUP_RESET" });
+        dispatch({ type: "UPDATE_BULK_EMAIL_ADDRESS_RESET" });
+        dispatch({ type: "ADD_BULK_EMAIL_ADDRESS_RESET" });
         const timeout = debounce(() => {
-            dispatch({ type: "GET_BULK_EMAIL_GROUPS", query: filterSchema });
+            dispatch({ type: "GET_BULK_EMAIL_ADDRESSES", query: filterSchema });
         }, 500);
 
         return () => clearTimeout(timeout);
@@ -125,7 +159,14 @@ const BulkEmailGroups = (props) => {
                     onChange={handleOnSearch}
                     onClickClearSearch={handleOnClearSearch}
                 />
-                <Button onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_GROUP_MODAL" })}>Add Group</Button>
+                <Box display="flex" gap={2}>
+                    <Button onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_ADDRESS_MODAL" })}>
+                        Add Email Address
+                    </Button>
+                    <Button onClick={() => dispatch({ type: "OPEN_IMPORT_BULK_EMAIL_ADDRESS_MODAL" })}>
+                        Import Email Address
+                    </Button>
+                </Box>
             </Box>
             <Table
                 columns={columns}
@@ -146,4 +187,4 @@ const BulkEmailGroups = (props) => {
     );
 };
 
-export default BulkEmailGroups;
+export default BulkEmailAddresses;

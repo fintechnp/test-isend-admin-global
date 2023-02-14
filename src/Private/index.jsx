@@ -321,6 +321,16 @@ import {
     updateBulkEmailGroupReducer,
 } from "./features/bulk-emails/bulkEmailGroupReducer";
 import bulkEmailGroupSaga from "./features/bulk-emails/bulkEmailGroupSaga";
+import {
+    addBulkEmailAddressReducer,
+    deleteBulkEmailAddressReducer,
+    getBulkEmailAddressesReducer,
+    importBulkEmailAddressReducer,
+    importConfirmBulkEmailAddressReducer,
+    updateBulkEmailAddressReducer,
+    updateBulkEmailAddressStatusReducer,
+} from "./features/bulk-emails/bulkEmailAddressReducer";
+import bulkEmailAddressSaga from "./features/bulk-emails/bulkEmailAddressSaga";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -575,6 +585,14 @@ export const privateReducer = {
     add_bulk_email_group: addBulkEmailGroupReducer,
     update_bulk_email_group: updateBulkEmailGroupReducer,
     delete_bulk_email_group: deleteBulkEmailGroupReducer,
+
+    get_bulk_email_address_list: getBulkEmailAddressesReducer,
+    add_bulk_email_address: addBulkEmailAddressReducer,
+    update_bulk_email_address: updateBulkEmailAddressReducer,
+    delete_bulk_email_address: deleteBulkEmailAddressReducer,
+    import_bulk_email_address: importBulkEmailAddressReducer,
+    update_bulk_email_address_status: updateBulkEmailAddressStatusReducer,
+    import_confirm_bulk_email_address: importConfirmBulkEmailAddressReducer,
 };
 
 export const privateSaga = [
@@ -609,6 +627,7 @@ export const privateSaga = [
     fundingSourceSaga(),
     customerSaga(),
     bulkEmailGroupSaga(),
+    bulkEmailAddressSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

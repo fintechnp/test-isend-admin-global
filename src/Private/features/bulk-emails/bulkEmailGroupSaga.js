@@ -1,7 +1,7 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
 
 import Api from "App/services/api";
-import actions from "./bulkEmailGroupActions";
+import actions from "./bulkEmailGroupAction";
 import buildRoute from "App/helpers/buildRoute";
 import apiEndpoints from "Private/config/apiEndpoints";
 
@@ -41,7 +41,6 @@ export const addBulkEmailGroup = takeEvery(actions.ADD_BULK_EMAIL_GROUP, functio
 });
 
 export const updateBulkEmailGroup = takeEvery(actions.UPDATE_BULK_EMAIL_GROUP, function* (action) {
-    console.log(action, buildRoute(apiEndpoints.bulkEmailGroup.update, action.bulk_email_group_id));
     try {
         const res = yield call(
             api.put,

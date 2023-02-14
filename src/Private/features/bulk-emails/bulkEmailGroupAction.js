@@ -1,4 +1,4 @@
-const countryStateActions = {
+const bulkEmailGroupAction = {
     GET_BULK_EMAIL_GROUPS: "GET_BULK_EMAIL_GROUPS",
     GET_BULK_EMAIL_GROUPS_SUCCESS: "GET_BULK_EMAIL_GROUPS_SUCCESS",
     GET_BULK_EMAIL_GROUPS_FAILED: "GET_BULK_EMAIL_GROUPS_FAILED",
@@ -23,4 +23,4 @@ const countryStateActions = {
     DELETE_BULK_EMAIL_GROUP_RESET: "DELETE_BULK_EMAIL_GROUP_RESET",
 };
 
-export default countryStateActions;
+export default bulkEmailGroupAction;

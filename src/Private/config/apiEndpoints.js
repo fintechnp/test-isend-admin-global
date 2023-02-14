@@ -23,6 +23,8 @@ const apiEndpoints = {
     },
     bulkEmailGroup: {
         create: "bulkemail/group",
+        update: "bulkemail/group/:bulkEmailGroupId",
+        delete: "bulkemail/group/:bulkEmailGroupId",
         list: "bulkemail/group",
         get: "bulkemail/group/:bulkEmailGroupId",
     },
@@ -32,10 +34,11 @@ const apiEndpoints = {
         update: "bulkemail/:bulkEmailAddressId",
         updateStatus: "bulkemail/:bulkEmailAddressId",
         get: "bulkemail/:bulkEmailAddressId",
+        delete: "bulkemail/:bulkEmailAddressId",
         import: "bulkemail/import_file/:bulkEmailGroupId",
         importConfirm: "bulkemail/import_confirm/:bulkEmailGroupId",
     },
-    bulkEmailContent: {
+    bulkEmailContents: {
         list: "bulkemail/content",
         create: "bulkemail/content",
         update: "bulkemail/content/:bulkEmailContentId",
