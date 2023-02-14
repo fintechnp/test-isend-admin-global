@@ -46,7 +46,7 @@ export default function Modal({ title, open, onClose, sx, children }) {
                     bgcolor: "background.paper",
                     boxShadow: 24,
                     // p: 2,
-                    ...(Object.prototype.toString.call(sx) === "[object Undefined]" ? sx : {}),
+                    ...sx,
                 }}
             >
                 {typeof onClose === "function" && (
