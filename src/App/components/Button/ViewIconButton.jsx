@@ -11,7 +11,6 @@ export default function ViewIconButton({ tooltipTitle, onClick, sx, ...rest }) {
             <IconButton onClick={onClick} size="small" {...rest}>
                 <VisibilityIcon
                     sx={{
-                        color: "warning.main",
                         "&:hover": {
                             background: "transparent",
                         },
