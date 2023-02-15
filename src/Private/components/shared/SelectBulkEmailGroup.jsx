@@ -89,12 +89,11 @@ export default function SelectBulkEmailGroup(props) {
             let endpoint = buildRoute(apiEndpoints.bulkEmailGroup.get, bulkEmailGroupId);
             let response = await http.get(endpoint);
             let bulkEmailGroup = response?.data;
-
             if (bulkEmailGroup) {
                 let index = options.findIndex((o) => o?.value === bulkEmailGroup.group_id);
                 if (index === -1)
                     setOptions([...options, { label: bulkEmailGroup.group_name, value: bulkEmailGroup.group_id }]);
-                setSelectedValue({ label: bulkEmailGroup.name, value: bulkEmailGroup.group_id });
+                setSelectedValue({ label: bulkEmailGroup.group_name, value: bulkEmailGroup.group_id });
             }
         } catch (err) {
             console.error(error);
@@ -115,7 +114,6 @@ export default function SelectBulkEmailGroup(props) {
 
     useEffect(() => {
         if (value) {
-            console.log({ value });
             fetchBulkEmailGroup(value);
         }
     }, []);
@@ -189,7 +187,7 @@ SelectBulkEmailGroup.propTypes = {
     color: PropTypes.oneOf(["primary", "secondary", "error", "info", "success", "warning"]),
     onSelected: PropTypes.func,
     onChange: PropTypes.func,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 SelectBulkEmailGroup.defaultProps = {

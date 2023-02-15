@@ -19,19 +19,19 @@ export default function ImportBulkEmailAddressModal() {
         dispatch({ type: "CLOSE_IMPORT_BULK_EMAIL_ADDRESS_MODAL" });
     }, []);
 
-    const handleSubmit = (data) => {
+    const handleSubmit = (formData) => {
         dispatch({
             type: "IMPORT_BULK_EMAIL_ADDRESS",
-            group_id: data.group_id,
-            data,
+            group_id: formData.get("group_id"),
+            data: formData,
         });
     };
 
-    const handleConfirm = (data) => {
+    const handleConfirm = (formData) => {
         dispatch({
             type: "IMPORT_CONFIRM_BULK_EMAIL_ADDRESS",
-            group_id: data.group_id,
-            data,
+            group_id: formData.get("group_id"),
+            data: formData,
         });
     };
 

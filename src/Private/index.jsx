@@ -331,6 +331,21 @@ import {
     updateBulkEmailAddressStatusReducer,
 } from "./features/bulk-emails/bulkEmailAddressReducer";
 import bulkEmailAddressSaga from "./features/bulk-emails/bulkEmailAddressSaga";
+import {
+    addBulkEmailContentReducer,
+    deleteBulkEmailContentReducer,
+    getBulkEmailContentsReducer,
+    sendBulkEmailContentReducer,
+    updateBulkEmailContentReducer,
+    updateBulkEmailContentStatusReducer,
+    viewBulkEmailContentReducer,
+} from "./features/bulk-emails/bulkEmailContentReducer";
+import bulkEmailContentSaga from "./features/bulk-emails/bulkEmailContentSaga";
+import bulkEmailCredentialSaga from "./features/bulk-emails/bulkEmailCredentialSaga";
+import {
+    getBulkEmailCredentialReducer,
+    updateBulkEmailCredentialReducer,
+} from "./features/bulk-emails/bulkEmailCredentialReducer";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -593,6 +608,17 @@ export const privateReducer = {
     import_bulk_email_address: importBulkEmailAddressReducer,
     update_bulk_email_address_status: updateBulkEmailAddressStatusReducer,
     import_confirm_bulk_email_address: importConfirmBulkEmailAddressReducer,
+
+    get_bulk_email_content_list: getBulkEmailContentsReducer,
+    add_bulk_email_content: addBulkEmailContentReducer,
+    update_bulk_email_content: updateBulkEmailContentReducer,
+    delete_bulk_email_content: deleteBulkEmailContentReducer,
+    update_bulk_email_content_status: updateBulkEmailContentStatusReducer,
+    view_bulk_email_content: viewBulkEmailContentReducer,
+    send_bulk_email_content: sendBulkEmailContentReducer,
+
+    get_bulk_email_credential: getBulkEmailCredentialReducer,
+    update_bulk_email_credential: updateBulkEmailCredentialReducer,
 };
 
 export const privateSaga = [
@@ -628,6 +654,8 @@ export const privateSaga = [
     customerSaga(),
     bulkEmailGroupSaga(),
     bulkEmailAddressSaga(),
+    bulkEmailContentSaga(),
+    bulkEmailCredentialSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

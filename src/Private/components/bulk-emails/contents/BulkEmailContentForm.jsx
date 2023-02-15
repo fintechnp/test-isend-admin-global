@@ -11,22 +11,30 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import SelectBulkEmailGroup from "Private/components/shared/SelectBulkEmailGroup";
+import FormCkEditor from "App/core/hook-form/FormCkEditor";
+import FormCheckbox from "App/core/hook-form/FormCheckbox";
 
 const schema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Enter a valid email address").required("Email is required"),
-    group_id: Yup.string().required("Group is required"),
+    send_from: Yup.string().email("Enter a valid email address").required("Send From Email is required"),
+    send_to: Yup.string().email("Enter a valid email address").required("Send To Email is required"),
+    group_id: Yup.string().required("Select a group"),
+    email_subject: Yup.string("Email Subject must be at most 50 characters").max(50).required("Enter a subject"),
+    email_body: Yup.string().required("Enter a email body"),
+    is_active: Yup.boolean(),
 });
 
-const BulkEmailAddressForm = ({ onSubmit, isAddMode, initialState, isProcessing, onCancel }) => {
+const BulkEmailContentForm = ({ onSubmit, isAddMode, initialState, isProcessing, onCancel }) => {
     const methods = useForm({
-        defaultValues: initialState,
+        defaultValues: isAddMode
+            ? {
+                  is_active: true,
+              }
+            : initialState,
         resolver: yupResolver(schema),
     });
 
     const {
         setValue,
-        clearErrors,
         formState: { errors },
     } = methods;
 
@@ -34,10 +42,10 @@ const BulkEmailAddressForm = ({ onSubmit, isAddMode, initialState, isProcessing,
         <HookForm onSubmit={onSubmit} {...methods}>
             <Grid container rowSpacing={2} columnSpacing={2}>
                 <Grid item xs={12} md={6}>
-                    <FormTextField name="name" label="Name" />
+                    <FormTextField name="send_from" label="Send From" />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FormTextField name="email" label="Email Address" />
+                    <FormTextField name="send_to" label="Send To" />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <SelectBulkEmailGroup
@@ -45,12 +53,20 @@ const BulkEmailAddressForm = ({ onSubmit, isAddMode, initialState, isProcessing,
                         label="Group"
                         error={!!errors?.group_id}
                         helperText={errors?.group_id?.message ?? ""}
-                        value={!isAddMode ? initialState?.group_id : undefined}
+                        value={isAddMode ? undefined : initialState?.group_id}
                         onSelected={(v) => {
                             setValue("group_id", v);
-                            clearErrors("group_id");
                         }}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <FormTextField name="email_subject" label="Subject" />
+                </Grid>
+                <Grid item xs={12}>
+                    <FormCkEditor name="email_body" label="Content" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormCheckbox name="is_active" label="Is Active ?" />
                 </Grid>
                 <Grid item xs={12}>
                     <ButtonWrapper>
@@ -65,9 +81,9 @@ const BulkEmailAddressForm = ({ onSubmit, isAddMode, initialState, isProcessing,
     );
 };
 
-export default React.memo(BulkEmailAddressForm);
+export default React.memo(BulkEmailContentForm);
 
-BulkEmailAddressForm.propTypes = {
+BulkEmailContentForm.propTypes = {
     isAddMode: PropTypes.bool,
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
