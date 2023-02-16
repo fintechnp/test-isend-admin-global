@@ -1,17 +1,17 @@
 import React from "react";
-import { styled } from "@mui/system";
+import * as Yup from "yup";
+import Box from "@mui/material/Box";
+import { useForm } from "react-hook-form";
 import MuiPaper from "@mui/material/Paper";
-import MuiButton from "@mui/material/Button";
-import { Grid, Typography } from "@mui/material";
-import { Field, Form, reduxForm } from "redux-form";
-import CardMedia from "@mui/material/CardMedia";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import TextField from "../../../App/components/Fields/TextField";
-import Validator from "../../../App/utils/validators";
-import Loading from "../../../App/components/Loading";
-import Logo from "../../../assets/long-logo.svg";
+import HookFom from "App/core/hook-form/HookForm";
+import SubmitButton from "App/components/Button/SubmitButton";
 
-const FORM_NAME = "login_form";
+import FormTextField from "App/core/hook-form/FormTextField";
+import { ReactComponent as Logo } from "assets/long-logo.svg";
 
 const Paper = styled(MuiPaper)(({ theme }) => ({
     minWidth: "100%",
@@ -19,11 +19,10 @@ const Paper = styled(MuiPaper)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background:
-        "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
+    background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
 }));
 
-const FormContainer = styled(Grid)(({ theme }) => ({
+const FormContainer = styled("div")(({ theme }) => ({
     padding: "16px 20px",
     paddingBottom: "30px",
     maxWidth: "300px",
@@ -38,99 +37,35 @@ const FormContainer = styled(Grid)(({ theme }) => ({
     },
 }));
 
-const LogoWrapper = styled(CardMedia)(({ theme }) => ({
-    minHeight: "108px",
-    maxHeight: "108px",
-    width: "100%",
-    objectFit: "contain",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-}));
+const schema = Yup.object().shape({
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    password: Yup.string().required("Password is required"),
+});
 
-const Button = styled(MuiButton)(({ theme }) => ({
-    marginTop: "10px",
-    minWidth: "100px",
-    color: "#fff",
-    fontSize: "13px",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: "linear-gradient(45deg, #1761AE 30%, #21CBF3 90%)",
-    "&:hover": {
-        background: "linear-gradient(45deg, #1761AE 30%, #091f99 90%)",
-    },
-}));
+const LoginForm = ({ onSubmit, loading }) => {
+    const methods = useForm({
+        resolver: yupResolver(schema),
+    });
 
-const LoginForm = ({ handleSubmit, loading }) => {
     return (
         <Paper square={true}>
-            <Form onSubmit={handleSubmit} data-testid="login_form">
-                <FormContainer container rowSpacing={1} direction="column">
-                    <Grid item>
-                        <LogoWrapper
-                            component="img"
-                            image={Logo}
-                            alt="isend logo"
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Typography
-                            sx={{
-                                fontWeight: 400,
-                                fontSize: "15px",
-                                opacity: 0.8,
-                            }}
-                        >
+            <FormContainer>
+                <HookFom onSubmit={onSubmit} {...methods}>
+                    <Box display="flex" flexDirection="column" gap={3}>
+                        <Logo style={{ height: "100px" }} />
+                        <Typography textAlign="center" variant="h6">
                             Sign In to your account
                         </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Field
-                            name="email"
-                            label="E-mail"
-                            type="email"
-                            small={12}
-                            component={TextField}
-                            inputProps={{ "data-testid": "email" }}
-                            validate={[
-                                Validator.emailValidator,
-                                Validator.minValue1,
-                            ]}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Field
-                            name="password"
-                            label="Password"
-                            type="password"
-                            small={12}
-                            component={TextField}
-                            inputProps={{ "data-testid": "password" }}
-                            validate={[
-                                Validator.passwordValidator,
-                                Validator.minValue1,
-                            ]}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center"
-                        >
-                            <Grid item>
-                                <Button variant="contained" type="submit">
-                                    Login
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Loading loading={loading} box={true} />
-                </FormContainer>
-            </Form>
+                        <FormTextField size="large" name="email" label="Email" />
+                        <FormTextField size="large" type="password" name="password" label="Password" />
+                        <SubmitButton size="large" isLoading={loading}>
+                            {loading ? "Logging In" : "Login"}
+                        </SubmitButton>
+                    </Box>
+                </HookFom>
+            </FormContainer>
         </Paper>
     );
 };
 
-export default reduxForm({ form: FORM_NAME })(LoginForm);
+export default LoginForm;

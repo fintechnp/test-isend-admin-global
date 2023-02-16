@@ -42,16 +42,15 @@ function ICNResponseReport() {
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch(reset("search_form_icn_response_reports"));
-        dispatch({ type: "BENEFICIARY_REPORT_RESET" });
+        dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(actions.get_icn_response_report(filterSchema));
-        // if (isMounted.current) {
-        //     dispatch(actions.get_icn_response_report(filterSchema));
-        // } else {
-        //     isMounted.current = true;
-        // }
+        if (isMounted.current) {
+            dispatch(actions.get_icn_response_report(filterSchema));
+        } else {
+            isMounted.current = true;
+        }
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
@@ -59,32 +58,26 @@ function ICNResponseReport() {
             {
                 Header: "ICN ID",
                 accessor: "icn_id",
-                Cell: (data) => data.value,
             },
             {
                 Header: "Org ID",
                 accessor: "orgid",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Country",
                 accessor: "country",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Transaction Type",
                 accessor: "txntype",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Txn Ref ID",
                 accessor: "txnrefid",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Txn Date",
                 accessor: "txndate",
-                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: "Sender",
@@ -136,16 +129,7 @@ function ICNResponseReport() {
     const handleSearch = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            customer_id: data?.customer_id,
-            beneficiary_id: data?.beneficiary_id,
-            name: data?.name,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-            country: data?.country,
-            created_from_date: data?.created_from_date,
-            created_to_date: data?.created_to_date,
+            ...data,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -227,18 +211,9 @@ function ICNResponseReport() {
             }
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                {/* <Grid item xs={12}>
-                    <ICNResponseFilterForm
-                        enableReinitialize
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        initialValues={
-                            {
-                                //
-                            }
-                        }
-                    />
-                </Grid> */}
+                <Grid item xs={12}>
+                    <ICNResponseFilterForm onSubmit={handleSearch} onReset={handleReset} />
+                </Grid>
                 {l_loading && (
                     <Grid item xs={12}>
                         <Loading loading={l_loading} />

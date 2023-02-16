@@ -49,7 +49,10 @@
     "scripts": {
         "start": "vite",
         "build": "vite build",
-        "serve": "vite preview"
+        "serve": "vite preview",
+        "build:testing": "vite build --mode testing",
+        "build:staging": "vite build --mode staging",
+        "build:production": "vite build --mode production"
     },
     "eslintConfig": {
         "extends": [
