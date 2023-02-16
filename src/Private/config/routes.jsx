@@ -1,3 +1,4 @@
+import { OnfidoReports } from "Private/pages/Reports/OnfidoReports/OnfidoReports";
 import { lazy } from "react";
 import routePaths from "./routePaths";
 
@@ -349,6 +350,10 @@ const privateRoutes = [
     {
         path: routePaths.reports.incompleteRegistration,
         component: <IncompleteRegistrationReport />,
+    },
+    {
+        path: routePaths.reports.onfidoReport,
+        component: <OnfidoReports />,
     },
 
     //PaymentProcess

@@ -17,6 +17,7 @@ const apiEndpoints = {
         icnResponse: "report/icn_response",
         achEntries: "report/ach_entries",
         incompleteRegistration: "/report/incomplete_registration",
+        omfidoReports: "/onfido/checkkyc",
     },
     customers: {
         updateAccount: "customer/account/:customerId",

@@ -27,5 +27,7 @@ module.exports = {
         // Add your own rules here to override ones from the extended configs.
         "no-unused-vars": [2, { vars: "all", args: "after-used", ignoreRestSiblings: false }],
         "react/prop-types": 0,
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
     },
 };
