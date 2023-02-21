@@ -11,9 +11,9 @@ import NoResults from "../Shared/NoResults";
 import PageContent from "App/components/Container/PageContent";
 import { OnfidoReportFilterForm } from "./OnfidoReportsFilter";
 
+const initialState = {};
 function OnfidoReport() {
-    const initial = {};
-    const [filterSchema, setFilterSchema] = useState(initial);
+    const [filterSchema, setFilterSchema] = useState(initialState);
     const isMounted = useRef(false);
     const dispatch = useDispatch();
 
