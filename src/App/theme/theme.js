@@ -7,34 +7,21 @@ export const ChangeTheme = (mode = true) => {
         components: {
             MuiCssBaseline: {
                 styleOverrides: `
-      "@global": {
-        "*": {
-            margin: 0,
-            padding: 0,
-            boxSizing: "border-box",
-        },
-        html: {
-            height: "100%",
-        },
-        body: {
-            height: "100%",
-            backgroundColor: "#fff",
-            lineHeight: 1.42857,
-        },
-        "::-webkit-scrollbar": {
-            width: 6,
-            height: 5,
-        },
-        "::-webkit-scrollbar-track": {
-            backgroundColor: "#e8e6e6",
-            // borderRight: '14px solid #696f78',
-        },
-        "::-webkit-scrollbar-thumb": {
-            backgroundClip: "padding-box",
-            backgroundColor: "#999999",
-            borderRadius: "99px",
-        },
-    },`,
+                    "@global": {
+                            "*": {
+                                margin: 0,
+                                padding: 0,
+                                boxSizing: "border-box",
+                            },
+                            html: {
+                                height: "100%",
+                            },
+                            body: {
+                                height: "100%",
+                                backgroundColor: "#fff",
+                                lineHeight: 1.42857,
+                            },
+                        },`,
             },
         },
         overrides: {

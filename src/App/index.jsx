@@ -43,18 +43,20 @@ const App = () => {
                                         <GlobalStyles
                                             styles={{
                                                 h1: { color: "grey" },
-                                                "*::-webkit-scrollbar": {
-                                                    width: "0.3em",
-                                                    height: "0.3em",
-                                                    right: "12px",
-                                                },
-                                                "*::-webkit-scrollbar-track": {
-                                                    WebkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-                                                },
-                                                "*::-webkit-scrollbar-thumb": {
-                                                    backgroundColor: `${ChangeTheme(mode).palette.border.dark}`,
-                                                    outline: `1px solid ${ChangeTheme(mode).palette.border.dark}`,
-                                                    borderRadius: "4px",
+                                                "& .isend__sidebar": {
+                                                    "*::-webkit-scrollbar": {
+                                                        width: "0.3em",
+                                                        height: "0.3em",
+                                                        right: "12px",
+                                                    },
+                                                    "*::-webkit-scrollbar-track": {
+                                                        WebkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+                                                    },
+                                                    "*::-webkit-scrollbar-thumb": {
+                                                        backgroundColor: `${ChangeTheme(mode).palette.border.dark}`,
+                                                        outline: `1px solid ${ChangeTheme(mode).palette.border.dark}`,
+                                                        borderRadius: "4px",
+                                                    },
                                                 },
                                             }}
                                         />
