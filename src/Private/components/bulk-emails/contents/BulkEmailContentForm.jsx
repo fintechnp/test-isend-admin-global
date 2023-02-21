@@ -17,7 +17,6 @@ import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import SelectBulkEmailGroup from "Private/components/shared/SelectBulkEmailGroup";
 
 const schema = Yup.object().shape({
-    send_from: Yup.string().email("Enter a valid email address").required("Send From Email is required"),
     send_to_whom: Yup.string().required("Select whom you want to send email"),
     send_to: Yup.string().when("send_to_whom", {
         is: (value) => value === "email",
@@ -76,6 +75,8 @@ const BulkEmailContentForm = ({ onSubmit, isAddMode, initialState, isProcessing,
         }
         onSubmit(data);
     };
+
+    console.log(errors);
 
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
