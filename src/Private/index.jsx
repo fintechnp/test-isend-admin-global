@@ -310,9 +310,43 @@ import getIcnResponseReducer from "./pages/Reports/store/reducers/getIcnResponse
 import getAchResponseReducer from "./pages/Reports/store/reducers/getAchResponseReducer";
 import getUserIpWhitelistReportReducer from "./pages/Reports/store/reducers/getUserIpWhitelistReportReducer";
 import getIncompleteRegistrationReducer from "./pages/Reports/store/reducers/getIncompleteRegistrationReducer";
+
 import customerSaga from "./features/customers/customerSaga";
 import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
 import getOnfidoReportReducer from "./pages/Reports/store/reducers/getOnfidoReportReducer";
+
+import {
+    addBulkEmailGroupReducer,
+    deleteBulkEmailGroupReducer,
+    getBulkEmailGroupsReducer,
+    updateBulkEmailGroupReducer,
+} from "./features/bulk-emails/bulkEmailGroupReducer";
+import bulkEmailGroupSaga from "./features/bulk-emails/bulkEmailGroupSaga";
+import {
+    addBulkEmailAddressReducer,
+    deleteBulkEmailAddressReducer,
+    getBulkEmailAddressesReducer,
+    importBulkEmailAddressReducer,
+    importConfirmBulkEmailAddressReducer,
+    updateBulkEmailAddressReducer,
+    updateBulkEmailAddressStatusReducer,
+} from "./features/bulk-emails/bulkEmailAddressReducer";
+import bulkEmailAddressSaga from "./features/bulk-emails/bulkEmailAddressSaga";
+import {
+    addBulkEmailContentReducer,
+    deleteBulkEmailContentReducer,
+    getBulkEmailContentsReducer,
+    sendBulkEmailContentReducer,
+    updateBulkEmailContentReducer,
+    updateBulkEmailContentStatusReducer,
+    viewBulkEmailContentReducer,
+} from "./features/bulk-emails/bulkEmailContentReducer";
+import bulkEmailContentSaga from "./features/bulk-emails/bulkEmailContentSaga";
+import bulkEmailCredentialSaga from "./features/bulk-emails/bulkEmailCredentialSaga";
+import {
+    getBulkEmailCredentialReducer,
+    updateBulkEmailCredentialReducer,
+} from "./features/bulk-emails/bulkEmailCredentialReducer";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -562,6 +596,31 @@ export const privateReducer = {
     delete_funding_source: deleteFundingSourceReducer,
 
     update_customer_account: updateCustomerAccountReducer,
+
+    // bulk-emails,
+    get_bulk_email_group_list: getBulkEmailGroupsReducer,
+    add_bulk_email_group: addBulkEmailGroupReducer,
+    update_bulk_email_group: updateBulkEmailGroupReducer,
+    delete_bulk_email_group: deleteBulkEmailGroupReducer,
+
+    get_bulk_email_address_list: getBulkEmailAddressesReducer,
+    add_bulk_email_address: addBulkEmailAddressReducer,
+    update_bulk_email_address: updateBulkEmailAddressReducer,
+    delete_bulk_email_address: deleteBulkEmailAddressReducer,
+    import_bulk_email_address: importBulkEmailAddressReducer,
+    update_bulk_email_address_status: updateBulkEmailAddressStatusReducer,
+    import_confirm_bulk_email_address: importConfirmBulkEmailAddressReducer,
+
+    get_bulk_email_content_list: getBulkEmailContentsReducer,
+    add_bulk_email_content: addBulkEmailContentReducer,
+    update_bulk_email_content: updateBulkEmailContentReducer,
+    delete_bulk_email_content: deleteBulkEmailContentReducer,
+    update_bulk_email_content_status: updateBulkEmailContentStatusReducer,
+    view_bulk_email_content: viewBulkEmailContentReducer,
+    send_bulk_email_content: sendBulkEmailContentReducer,
+
+    get_bulk_email_credential: getBulkEmailCredentialReducer,
+    update_bulk_email_credential: updateBulkEmailCredentialReducer,
 };
 
 export const privateSaga = [
@@ -595,6 +654,10 @@ export const privateSaga = [
     countryStateSaga(),
     fundingSourceSaga(),
     customerSaga(),
+    bulkEmailGroupSaga(),
+    bulkEmailAddressSaga(),
+    bulkEmailContentSaga(),
+    bulkEmailCredentialSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

@@ -4,15 +4,15 @@ import { AuthConsumer } from "../../auth";
 
 const PublicLayout = () => (
     <AuthConsumer>
-        {(authContext) =>
-            !(authContext && authContext.isUserLoggedIn) ? (
+        {(authContext) => {
+            return !(authContext && authContext.isUserLoggedIn) ? (
                 <>
                     <Outlet />
                 </>
             ) : (
                 <Navigate to="/" replace />
-            )
-        }
+            );
+        }}
     </AuthConsumer>
 );
 

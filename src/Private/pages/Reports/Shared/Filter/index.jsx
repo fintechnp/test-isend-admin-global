@@ -1,21 +1,22 @@
-import React, { useEffect, useState, useRef } from "react";
-import * as FileSaver from "file-saver";
+import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { useDispatch } from "react-redux";
-import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
-import { Box, Typography } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import MuiFormControl from "@mui/material/FormControl";
-import MuiSelect from "@mui/material/Select";
-import LoadingButton from "@mui/lab/LoadingButton";
+import * as FileSaver from "file-saver";
+import { useDispatch } from "react-redux";
 import { pdf } from "@react-pdf/renderer";
+import MuiSelect from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { Box, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { styled, alpha } from "@mui/material/styles";
+import MuiFormControl from "@mui/material/FormControl";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 
 import ExportToPdf from "./ExportToPdf";
 import ExportToCsv from "./ExportToCsv";
 import ExportToExcel from "./ExportToExcel";
 import { PdfDocument } from "./ExportToPdf";
+import ReportExport from "Private/components/reports/ReportExport";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "2px",
@@ -122,6 +123,7 @@ function Filter({
     csvReport,
     fileName,
     downloadData,
+    exportColumns,
 }) {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -243,54 +245,59 @@ function Filter({
                             </Select>
                         </FormControl>
                     )}
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleSort}
-                            displayEmpty
-                            defaultValue={state.sort_by}
-                            renderValue={(selected) => {
-                                if (selected === "created_ts") {
-                                    return (
-                                        <Typography component="p" sx={{ opacity: 0.6 }}>
-                                            Sort By
-                                        </Typography>
-                                    );
-                                }
-                                const value = sortData.filter((type) => type.value === selected);
-                                return value[0]?.key;
-                            }}
-                        >
-                            {sortData.map((sort) => (
-                                <MenuItem value={sort.value} key={sort.value}>
-                                    {sort.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleOrder}
-                            displayEmpty
-                            defaultValue={state.order_by}
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography component="p" sx={{ opacity: 0.6 }}>
-                                            Order By
-                                        </Typography>
-                                    );
-                                }
-                                const value = orderData.filter((type) => type.value === selected);
-                                return value[0]?.key;
-                            }}
-                        >
-                            {orderData.map((order) => (
-                                <MenuItem value={order.value} key={order.value}>
-                                    {order.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    {sortData && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleSort}
+                                displayEmpty
+                                defaultValue={state.sort_by}
+                                renderValue={(selected) => {
+                                    if (selected === "created_ts") {
+                                        return (
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
+                                                Sort By
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = sortData.filter((type) => type.value === selected);
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {sortData.map((sort) => (
+                                    <MenuItem value={sort.value} key={sort.value}>
+                                        {sort.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
+
+                    {orderData && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleOrder}
+                                displayEmpty
+                                defaultValue={state.order_by}
+                                renderValue={(selected) => {
+                                    if (selected.length === 0) {
+                                        return (
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
+                                                Order By
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = orderData.filter((type) => type.value === selected);
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {orderData.map((order) => (
+                                    <MenuItem value={order.value} key={order.value}>
+                                        {order.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                 </Box>
             </DropWrapper>
         </FilterWrapper>

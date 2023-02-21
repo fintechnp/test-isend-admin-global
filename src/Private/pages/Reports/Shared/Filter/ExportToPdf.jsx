@@ -1,14 +1,7 @@
 import React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import {
-    Page,
-    Document,
-    StyleSheet,
-    View,
-    Text,
-    Image,
-} from "@react-pdf/renderer";
+import { Page, Document, StyleSheet, View, Text, Image } from "@react-pdf/renderer";
 
 import logo from "../../../../../assets/isend_logo.png";
 import Table from "./PdfTable";
@@ -56,22 +49,17 @@ export const PdfDocument = ({ csvReport }) => {
             <Page size="A4" orientation="landscape" wrap style={styles.page}>
                 <Image style={styles.logo} src={logo} />
                 <View wrap={false} style={styles.title}>
-                    <Text>
-                        {csvReport?.title ? csvReport?.title : "Report"}
-                    </Text>
+                    <Text>{csvReport?.title ? csvReport?.title : "Report"}</Text>
                 </View>
                 <View wrap={false} style={styles.invoiceDateContainer}>
                     <Text>
-                        {csvReport?.start ? csvReport?.start : "From"} -{" "}
-                        {csvReport?.end ? csvReport?.end : "To"}{" "}
+                        {csvReport?.start ? csvReport?.start : "From"} - {csvReport?.end ? csvReport?.end : "To"}{" "}
                     </Text>
                 </View>
                 <Table csvReport={csvReport} />
                 <Text
                     style={styles.page_number}
-                    render={({ pageNumber, totalPages }) =>
-                        `${pageNumber} / ${totalPages}`
-                    }
+                    render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
                     fixed
                 />
             </Page>

@@ -1,15 +1,17 @@
-import PageContent from "App/components/Container/PageContent";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
-import { Grid, Typography } from "@mui/material";
-import { OnfidoReportFilterForm } from "./OnfidoReportsFilter";
 import { useEffect, useMemo, useRef, useState } from "react";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
+import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
+
 import actions from "../store/actions";
 import { Loading } from "App/components";
-import NoResults from "../Shared/NoResults";
 import Table from "App/components/Table";
+import NoResults from "../Shared/NoResults";
+import PageContent from "App/components/Container/PageContent";
+import { OnfidoReportFilterForm } from "./OnfidoReportsFilter";
 
-export const OnfidoReports = () => {
+function OnfidoReport() {
     const initial = {};
     const [filterSchema, setFilterSchema] = useState(initial);
     const isMounted = useRef(false);
@@ -109,4 +111,6 @@ export const OnfidoReports = () => {
             </Grid>
         </PageContent>
     );
-};
+}
+
+export default OnfidoReport;

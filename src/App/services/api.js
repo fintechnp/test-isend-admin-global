@@ -1,3 +1,4 @@
+import app from "App/config/app";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -9,7 +10,7 @@ export const injectStore = (_store) => {
 export default class Api {
     constructor(setToken = true) {
         this.axiosFunction = axios.create({
-            baseURL: (import.meta.env.REACT_APP_API_BASE_URL || "") + "/api/",
+            baseURL: app.apiBaseUrl,
         });
         if (setToken) {
             this.setToken();

@@ -1,12 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text } from "@react-pdf/renderer";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-    CountryName,
-    ReferenceName,
-} from "./../../../../../App/helpers";
+import { CurrencyName, FormatDate, FormatNumber, CountryName, ReferenceName } from "App/helpers";
 
 const styles = StyleSheet.create({
     tableContainer: {
@@ -200,43 +194,18 @@ const PdfTable = ({ csvReport }) => {
                                 <Text style={styles.cellSn}>{index + 1}</Text>
                                 {apiData?.headers &&
                                     apiData?.headers.map((header, index) => {
-                                        if (
-                                            header?.key === "date_of_birth" ||
-                                            header?.key === "created_ts"
-                                        ) {
+                                        if (header?.key === "date_of_birth" || header?.key === "created_ts") {
                                             return (
-                                                <Text
-                                                    style={styles.head}
-                                                    key={index}
-                                                >
-                                                    {customer[header?.key]
-                                                        ? FormatDate(
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
-                                                        : "n/a"}
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key] ? FormatDate(customer[header?.key]) : "n/a"}
                                                 </Text>
                                             );
-                                        } else if (
-                                            header?.key === "first_name"
-                                        ) {
+                                        } else if (header?.key === "first_name") {
                                             return (
-                                                <Text
-                                                    style={styles.name}
-                                                    key={index}
-                                                >
-                                                    {customer[header?.key]
-                                                        ? customer[header?.key]
-                                                        : ""}
-                                                    {customer.middle_name
-                                                        ? " " +
-                                                          customer.middle_name +
-                                                          " "
-                                                        : " "}
-                                                    {customer.last_name
-                                                        ? customer.last_name
-                                                        : ""}
+                                                <Text style={styles.name} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : ""}
+                                                    {customer.middle_name ? " " + customer.middle_name + " " : " "}
+                                                    {customer.last_name ? customer.last_name : ""}
                                                 </Text>
                                             );
                                         } else if (
@@ -246,77 +215,37 @@ const PdfTable = ({ csvReport }) => {
                                             header?.key === "bank_name"
                                         ) {
                                             return (
-                                                <Text
-                                                    style={styles.name}
-                                                    key={index}
-                                                >
-                                                    {customer[header?.key]
-                                                        ? customer[header?.key]
-                                                        : "n/a"}
+                                                <Text style={styles.name} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : "n/a"}
                                                 </Text>
                                             );
                                         } else if (header?.key === "email") {
                                             return (
-                                                <Text
-                                                    style={styles.headMail}
-                                                    key={index}
-                                                >
+                                                <Text style={styles.headMail} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "kyc_status") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
                                                     {customer[header?.key]
-                                                        ? customer[header?.key]
+                                                        ? ReferenceName(21, customer[header?.key])
                                                         : "n/a"}
                                                 </Text>
                                             );
-                                        } else if (
-                                            header?.key === "kyc_status"
-                                        ) {
+                                        } else if (header?.key === "payment_type") {
                                             return (
-                                                <Text
-                                                    style={styles.head}
-                                                    key={index}
-                                                >
+                                                <Text style={styles.head} key={index}>
                                                     {customer[header?.key]
-                                                        ? ReferenceName(
-                                                              21,
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
+                                                        ? ReferenceName(1, customer[header?.key])
                                                         : "n/a"}
                                                 </Text>
                                             );
-                                        } else if (
-                                            header?.key === "payment_type"
-                                        ) {
+                                        } else if (header?.key === "transaction_status") {
                                             return (
-                                                <Text
-                                                    style={styles.head}
-                                                    key={index}
-                                                >
+                                                <Text style={styles.head} key={index}>
                                                     {customer[header?.key]
-                                                        ? ReferenceName(
-                                                              1,
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
-                                                        : "n/a"}
-                                                </Text>
-                                            );
-                                        } else if (
-                                            header?.key === "transaction_status"
-                                        ) {
-                                            return (
-                                                <Text
-                                                    style={styles.head}
-                                                    key={index}
-                                                >
-                                                    {customer[header?.key]
-                                                        ? ReferenceName(
-                                                              66,
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
+                                                        ? ReferenceName(66, customer[header?.key])
                                                         : "n/a"}
                                                 </Text>
                                             );
@@ -326,54 +255,28 @@ const PdfTable = ({ csvReport }) => {
                                             header?.key === "payout_country"
                                         ) {
                                             return (
-                                                <Text
-                                                    style={styles.headMail}
-                                                    key={index}
-                                                >
-                                                    {customer[header?.key]
-                                                        ? CountryName(
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
-                                                        : "n/a"}
+                                                <Text style={styles.headMail} key={index}>
+                                                    {customer[header?.key] ? CountryName(customer[header?.key]) : "n/a"}
                                                 </Text>
                                             );
-                                        } else if (
-                                            header?.key === "collected_currency"
-                                        ) {
+                                        } else if (header?.key === "collected_currency") {
                                             return (
-                                                <Text
-                                                    style={styles.head}
-                                                    key={index}
-                                                >
+                                                <Text style={styles.head} key={index}>
                                                     {customer[header?.key]
-                                                        ? CurrencyName(
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
+                                                        ? CurrencyName(customer[header?.key])
                                                         : "n/a"}
                                                 </Text>
                                             );
                                         } else if (
-                                            header?.key ===
-                                                "average_customer_rate" ||
+                                            header?.key === "average_customer_rate" ||
                                             header?.key === "payout_amount" ||
                                             header?.key === "total_charge" ||
                                             header?.key === "txn_cnt"
                                         ) {
                                             return (
-                                                <Text
-                                                    style={styles.headRight}
-                                                    key={index}
-                                                >
+                                                <Text style={styles.headRight} key={index}>
                                                     {customer[header?.key]
-                                                        ? FormatNumber(
-                                                              customer[
-                                                                  header?.key
-                                                              ]
-                                                          )
+                                                        ? FormatNumber(customer[header?.key])
                                                         : "n/a"}
                                                 </Text>
                                             );
@@ -386,25 +289,15 @@ const PdfTable = ({ csvReport }) => {
                                         ) {
                                             return (
                                                 <View style={styles.monthrow}>
-                                                    {customer?.month.map(
-                                                        (each) =>
-                                                            handleYealyData(
-                                                                header?.key,
-                                                                each,
-                                                                index
-                                                            )
+                                                    {customer?.month.map((each) =>
+                                                        handleYealyData(header?.key, each, index),
                                                     )}
                                                 </View>
                                             );
                                         } else {
                                             return (
-                                                <Text
-                                                    style={styles.head}
-                                                    key={index}
-                                                >
-                                                    {customer[header?.key]
-                                                        ? customer[header?.key]
-                                                        : "n/a"}
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : "n/a"}
                                                 </Text>
                                             );
                                         }

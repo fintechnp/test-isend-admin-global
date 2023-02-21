@@ -15,6 +15,9 @@ const routePaths = {
         incompleteRegistration: "/report/incomplete-registration",
         onfidoReport: "/report/onfido-reports",
     },
+    bulkEmails: {
+        index: "/utilities/bulk-emails",
+    },
 };
 
 export default routePaths;

@@ -1,0 +1,313 @@
+import React from "react";
+import { View, StyleSheet, Text } from "@react-pdf/renderer";
+import { CurrencyName, FormatDate, FormatNumber, CountryName, ReferenceName } from "App/helpers";
+
+const styles = StyleSheet.create({
+    tableContainer: {
+        margin: "12px 0px",
+        borderRadius: "6px",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        padding: "8px",
+        borderWidth: 1,
+        borderColor: "#bff0fd",
+    },
+    headerContainer: {
+        width: "100%",
+        backgroundColor: "#bff0fd",
+        height: 24,
+        fontStyle: "bold",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    cellContainer: {
+        width: "100%",
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "column",
+    },
+    row: {
+        width: "100%",
+        minHeight: 24,
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    serial: {
+        width: "4%",
+        paddingLeft: "6px",
+        textAlign: "left",
+    },
+    cellSn: {
+        width: "4%",
+        paddingLeft: "6px",
+        textAlign: "left",
+    },
+    name: {
+        flexGrow: 1,
+        minidth: "15%",
+        padding: "0px 4px",
+        textAlign: "left",
+        textTransform: "capitalize",
+    },
+    head: {
+        minWidth: "10%",
+        padding: "0px 4px",
+        textAlign: "left",
+        textTransform: "capitalize",
+    },
+    headRight: {
+        minWidth: "10%",
+        padding: "0px 4px",
+        textAlign: "right",
+        textTransform: "capitalize",
+    },
+    headMail: {
+        minWidth: "12%",
+        padding: "0px 4px",
+        textAlign: "left",
+        textTransform: "capitalize",
+    },
+    monthrow: {
+        minHeight: 24,
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+    },
+});
+
+const PdfTable2 = ({ csvReport }) => {
+    const apiData = React.useMemo(() => csvReport, [csvReport?.data]);
+
+    const handleYealyData = (head, data, index) => {
+        switch (head) {
+            case "months":
+                return data?.txn_month ? (
+                    <Text style={styles.head} key={index}>
+                        {data?.txn_month}
+                    </Text>
+                ) : (
+                    "0"
+                );
+            case "avg_rate":
+                return data?.avg_rate ? (
+                    <Text style={styles.head} key={index}>
+                        {FormatNumber(data?.avg_rate.toFixed(2))}
+                    </Text>
+                ) : (
+                    "0"
+                );
+            case "charge":
+                return data?.charge ? (
+                    <Text style={styles.head} key={index}>
+                        {FormatNumber(data?.charge)}
+                    </Text>
+                ) : (
+                    "0"
+                );
+            case "txn_amount":
+                return data?.txn_amount ? (
+                    <Text style={styles.head} key={index}>
+                        {FormatNumber(data?.txn_amount)}
+                    </Text>
+                ) : (
+                    "0"
+                );
+            case "txn_count":
+                return data?.txn_count ? (
+                    <Text style={styles.head} key={index}>
+                        {data?.txn_count}
+                    </Text>
+                ) : (
+                    "0"
+                );
+            default:
+                return "0";
+        }
+    };
+
+    return (
+        <View style={styles.tableContainer}>
+            <View style={styles.headerContainer}>
+                <Text style={styles.serial}>SN</Text>
+                {apiData?.headers &&
+                    apiData?.headers.map((header, index) => {
+                        if (
+                            header?.key === "email" ||
+                            header?.key === "country" ||
+                            header?.key === "send_country" ||
+                            header?.key === "payout_country"
+                        ) {
+                            return (
+                                <View style={styles.headMail} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        } else if (
+                            header?.key === "first_name" ||
+                            header?.key === "agent_name" ||
+                            header?.key === "customer_name" ||
+                            header?.key === "bank_name" ||
+                            header?.key === "agent"
+                        ) {
+                            return (
+                                <View style={styles.name} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        } else if (
+                            header?.key === "average_customer_rate" ||
+                            header?.key === "payout_amount" ||
+                            header?.key === "total_charge" ||
+                            header?.key === "txn_cnt"
+                        ) {
+                            return (
+                                <View style={styles.headRight} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        } else if (header?.key === "months") {
+                            return (
+                                <View style={styles.head} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        } else {
+                            return (
+                                <View style={styles.head} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        }
+                    })}
+            </View>
+            <View style={styles.cellContainer}>
+                {csvReport?.data &&
+                    csvReport?.data.length >= 0 &&
+                    csvReport?.data.map((customer, index) => {
+                        return (
+                            <View style={styles.row} key={index}>
+                                <Text style={styles.cellSn}>{index + 1}</Text>
+                                {apiData?.headers &&
+                                    apiData?.headers.map((header, index) => {
+                                        if (header?.key === "date_of_birth" || header?.key === "created_ts") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key] ? FormatDate(customer[header?.key]) : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "first_name") {
+                                            return (
+                                                <Text style={styles.name} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : ""}
+                                                    {customer.middle_name ? " " + customer.middle_name + " " : " "}
+                                                    {customer.last_name ? customer.last_name : ""}
+                                                </Text>
+                                            );
+                                        } else if (
+                                            header?.key === "agent" ||
+                                            header?.key === "agent_name" ||
+                                            header?.key === "customer_name" ||
+                                            header?.key === "bank_name"
+                                        ) {
+                                            return (
+                                                <Text style={styles.name} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "email") {
+                                            return (
+                                                <Text style={styles.headMail} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "kyc_status") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key]
+                                                        ? ReferenceName(21, customer[header?.key])
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "payment_type") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key]
+                                                        ? ReferenceName(1, customer[header?.key])
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "transaction_status") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key]
+                                                        ? ReferenceName(66, customer[header?.key])
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (
+                                            header?.key === "country" ||
+                                            header?.key === "send_country" ||
+                                            header?.key === "payout_country"
+                                        ) {
+                                            return (
+                                                <Text style={styles.headMail} key={index}>
+                                                    {customer[header?.key] ? CountryName(customer[header?.key]) : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "collected_currency") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key]
+                                                        ? CurrencyName(customer[header?.key])
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (
+                                            header?.key === "average_customer_rate" ||
+                                            header?.key === "payout_amount" ||
+                                            header?.key === "total_charge" ||
+                                            header?.key === "txn_cnt"
+                                        ) {
+                                            return (
+                                                <Text style={styles.headRight} key={index}>
+                                                    {customer[header?.key]
+                                                        ? FormatNumber(customer[header?.key])
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (
+                                            header?.key === "months" ||
+                                            header?.key === "avg_rate" ||
+                                            header?.key === "charge" ||
+                                            header?.key === "txn_amount" ||
+                                            header?.key === "txn_count"
+                                        ) {
+                                            return (
+                                                <View style={styles.monthrow}>
+                                                    {customer?.month.map((each) =>
+                                                        handleYealyData(header?.key, each, index),
+                                                    )}
+                                                </View>
+                                            );
+                                        } else {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key] ? customer[header?.key] : "n/a"}
+                                                </Text>
+                                            );
+                                        }
+                                    })}
+                            </View>
+                        );
+                    })}
+            </View>
+        </View>
+    );
+};
+
+export default PdfTable2;

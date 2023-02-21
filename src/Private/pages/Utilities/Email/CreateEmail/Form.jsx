@@ -72,11 +72,7 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 inputProps={{
                                     autoComplete: "new-password",
                                 }}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -89,11 +85,7 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 inputProps={{
                                     autoComplete: "new-password",
                                 }}
-                                validate={[
-                                    Validator.emailValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
+                                validate={[Validator.emailValidator, Validator.minValue1, Validator.maxLength100]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -132,11 +124,7 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 inputProps={{
                                     autoComplete: "new-password",
                                 }}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12}>
@@ -148,10 +136,7 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                                 small={12}
                                 height="100px"
                                 component={CkEditorField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -168,11 +153,7 @@ const EmailForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

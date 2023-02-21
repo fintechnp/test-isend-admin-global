@@ -345,6 +345,12 @@ const PrivateLayout = () => {
                         text: "Fcm",
                         sub: false,
                     },
+                    {
+                        path: routePaths.bulkEmails.index,
+                        key: "bulk-email",
+                        text: "Bulk Email",
+                        sub: false,
+                    },
                 ],
             },
 
