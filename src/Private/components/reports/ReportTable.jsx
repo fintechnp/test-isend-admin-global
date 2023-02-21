@@ -233,7 +233,7 @@ const ReportTable = ({
                             })
                         ) : (
                             <TableRow>
-                                <TableCell style={{ display: "table-cell" }}>
+                                <TableCell colSpan={columns.length} style={{ display: "table-cell" }}>
                                     <Typography variant="body2" align="center">
                                         {noDataMessage ?? "No data Found!"}
                                     </Typography>
