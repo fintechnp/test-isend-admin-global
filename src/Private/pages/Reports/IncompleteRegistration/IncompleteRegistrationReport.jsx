@@ -1,23 +1,20 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import { reset } from "redux-form";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import Filter from "../Shared/Filter";
-import actions from "../store/actions";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
+import ReportTable from "Private/components/reports/ReportTable";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
 
-import { CountryName, FormatDateTime } from "App/helpers";
-import apiEndpoints from "Private/config/apiEndpoints";
+import actions from "../store/actions";
 import ucwords from "App/helpers/ucwords";
-import ReportExport from "../../../components/reports/ReportExport";
+import apiEndpoints from "Private/config/apiEndpoints";
+import { CountryName, FormatDateTime } from "App/helpers";
+import ReportTitle from "App/components/Title/ReportTitle";
 
 const initialState = {
     page_number: 1,
@@ -31,74 +28,96 @@ function IncompleteRegistrationReport() {
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: incompleteRegistrationResponse, loading: l_loading } = useSelector(
+    const { response: incompleteRegistrationResponse, loading: isReportLoading } = useSelector(
         (state) => state.get_incomplete_registration_report,
     );
-
-    const {
-        response: ReportsDownload,
-        loading: pd_loading,
-        success: pd_success,
-    } = useSelector((state) => state.download_report);
-
-    useEffect(() => {
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_incomplete_registration_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
-    }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
                 Header: "Email",
                 accessor: "email",
+                hidden: false,
+                pdfCellStyle: {
+                    minWidth: "25%",
+                },
             },
             {
                 Header: "Email Confirmed",
                 accessor: "email_confirmed",
                 Cell: (data) => <>{data.value ? "Yes" : "No"}</>,
+                exportCell: (data) => (data.email_confirmed ? "Yes" : "No"),
+                hidden: false,
+                pdfCellStyle: {
+                    minWidth: "15%",
+                },
+            },
+            {
+                Header: "Email Confirm Count",
+                accessor: "email_confirm_count",
+                Cell: (data) => <>{data.value}</>,
+                hidden: true,
+                pdfCellStyle: {
+                    minWidth: "10%",
+                },
             },
             {
                 Header: "Phone No.",
                 accessor: "phone_number",
+                hidden: false,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Phone No. Confirmed",
                 accessor: "phone_number_confirmed",
                 Cell: (data) => <>{data.value ? "Yes" : "No"}</>,
+                exportCell: (data) => (data.phone_number_confirmed ? "Yes" : "No"),
+                hidden: false,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
+            },
+            {
+                Header: "Phone Confirm Count",
+                accessor: "phone_confirm_count",
+                Cell: (data) => <>{data.value}</>,
+                hidden: true,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Country",
                 accessor: "country",
                 Cell: (data) => <>{ucwords(CountryName(data.value))}</>,
+                exportCell: (data) => ucwords(CountryName(data.country)),
+                hidden: false,
+                pdfCellStyle: {
+                    minWidth: "15%",
+                },
             },
             {
                 Header: "Created At",
                 accessor: "created_ts",
                 maxWidth: 120,
                 Cell: (data) => <>{FormatDateTime(data?.value)}</>,
+                exportCell: (data) => FormatDateTime(data?.created_ts),
+                hidden: true,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
         ],
         [],
     );
 
-    const sortData = [
-        { key: "None", value: "created_ts" },
-        { key: "Email", value: "email" },
-        { key: "Phone Number", value: "phone_number" },
-    ];
-
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
+    const defaultHiddenColumns = columns
+        .map((col) => {
+            return col.hidden ? col.accessor : undefined;
+        })
+        .filter((v) => v !== undefined);
 
     const handleSearch = (data) => {
         const updatedFilterSchema = {
@@ -115,185 +134,67 @@ function IncompleteRegistrationReport() {
         dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
     };
 
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
+        setFilterSchema({
             ...filterSchema,
             page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
+        });
     };
 
     const handleChangeRowsPerPage = (e) => {
         const pageSize = e.target.value;
-        const updatedFilterSchema = {
+        setFilterSchema({
             ...filterSchema,
             page_number: 1,
             page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
+        });
     };
 
-    //Downloads
-    const headers = [
-        { label: "Email", key: "email" },
-        { label: "Email Confirmed", key: "email_confirmed" },
-        { label: "Ph. No.", key: "phone_number" },
-        { label: "Ph. No. Confirmed", key: "phone_number_confirmed" },
-        { label: "Country", key: "country" },
-        { label: "Created", key: "created_ts" },
-    ];
+    useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+        dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
+    }, [dispatch]);
 
-    const csvReport = {
-        title: "Report on Incomplete Registration",
-        headers: headers,
-        data: ReportsDownload?.data || [],
-    };
-
-    const downloadData = () => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_size: 10000,
-        };
-        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.incompleteRegistration));
-    };
-
-    const exportColumns = [
-        {
-            label: "Country",
-            name: "country",
-            accessor: ({ value }) => CountryName(value),
-            pdf: true,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Email",
-            name: "email",
-            pdf: true,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Email Confirmed",
-            name: "email_confirmed",
-            pdf: false,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Email Confirm Count",
-            name: "email_confirm_count",
-            pdf: false,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Phone Country Code",
-            name: "phone_country_code",
-            pdf: true,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Phone Number",
-            name: "phone_number",
-            pdf: true,
-            csv: true,
-            xlsx: true,
-        },
-
-        {
-            label: "Phone Number Confirmed",
-            name: "phone_number_confirmed",
-            accessor: ({ value }) => value,
-            pdf: true,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Phone Confirm Count",
-            name: "phone_confirm_count",
-            pdf: false,
-            csv: true,
-            xlsx: true,
-        },
-        {
-            label: "Created At",
-            name: "created_ts",
-            accessor: ({ value }) => value,
-            pdf: true,
-            csv: true,
-            xlsx: true,
-        },
-    ];
+    useEffect(() => {
+        if (isMounted.current) dispatch(actions.get_incomplete_registration_report(filterSchema));
+        else isMounted.current = true;
+    }, [dispatch, filterSchema]);
 
     return (
         <PageContent
             documentTitle="Incomplete Registration Reports"
-            title={
-                <>
-                    <ContentPasteSearchIcon />
-                    <Typography>Incomplete Registration Reports</Typography>
-                </>
-            }
+            title={<ReportTitle>Incomplete Registration Reports</ReportTitle>}
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
                     <IncompleteRegistrationFilterForm onSubmit={handleSearch} onReset={handleReset} />
                 </Grid>
 
-                <ReportExport columns={exportColumns} apiEndpoint="" filterQueryString={{}} />
-
-                {l_loading && (
+                {isReportLoading && (
                     <Grid item xs={12}>
-                        <Loading loading={l_loading} />
+                        <Loading loading={isReportLoading} />
                     </Grid>
                 )}
-                {!l_loading &&
+
+                {!isReportLoading &&
                     incompleteRegistrationResponse?.data &&
                     incompleteRegistrationResponse?.data?.length === 0 && (
                         <Grid item xs={12}>
                             <NoResults text="No Record Found" />
                         </Grid>
                     )}
-                {!l_loading && incompleteRegistrationResponse?.data?.length > 0 && (
+
+                {!isReportLoading && incompleteRegistrationResponse?.data?.length > 0 && (
                     <Grid item xs={12}>
-                        <Filter
-                            fileName="IncompleteRegistration"
-                            success={pd_success}
-                            loading={pd_loading}
-                            sortData={sortData}
-                            csvReport={csvReport}
-                            orderData={orderData}
-                            title=""
-                            state={filterSchema}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                            downloadData={downloadData}
-                        />
-                        <Table
+                        <ReportTable
+                            defaultHiddenColumns={defaultHiddenColumns}
                             columns={columns}
                             data={incompleteRegistrationResponse?.data || []}
-                            loading={l_loading}
+                            loading={isReportLoading}
                             rowsPerPage={8}
+                            filename="Incomplete Registration Report"
+                            apiEndpoint={apiEndpoints.reports.incompleteRegistration}
+                            filterQuery={filterSchema}
                             renderPagination={() => (
                                 <TablePagination
                                     paginationData={incompleteRegistrationResponse?.pagination}
