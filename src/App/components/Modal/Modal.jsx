@@ -33,7 +33,7 @@ const ModalHeader = styled(Box)(({ theme }) => ({
 const ModalBody = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3, 2),
     maxHeight: "90vh",
-    overflowY: "scroll",
+    overflowY: "auto",
 }));
 
 export default function Modal({ title, open, onClose, sx, children }) {

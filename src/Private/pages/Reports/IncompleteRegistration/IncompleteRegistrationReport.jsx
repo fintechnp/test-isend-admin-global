@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-import ReportTable from "Private/components/reports/ReportTable";
-import Table, { TablePagination } from "App/components/Table";
+import { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import ReportTable from "Private/components/reports/ReportTable";
 import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
 
 import actions from "../store/actions";

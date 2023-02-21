@@ -57,6 +57,8 @@ function ACHEntriesFilterForm({ onSubmit, onReset }) {
         defaultValues: {
             created_from_date: minDate,
             created_to_date: maxDate,
+            sort_by: "created_ts",
+            order_by: "ASC",
         },
     });
 
@@ -65,6 +67,8 @@ function ACHEntriesFilterForm({ onSubmit, onReset }) {
     const handleReset = () => {
         setValue("created_from_date", minDate);
         setValue("created_to_date", maxDate);
+        setValue("sort_by", "created_ts");
+        setValue("order_by", "ASC");
         reset();
         onReset();
     };
@@ -93,6 +97,25 @@ function ACHEntriesFilterForm({ onSubmit, onReset }) {
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                     <FormDatePicker name="created_to_date" label="To Date" />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <FormSelect
+                        name="sort_by"
+                        label="Sort By"
+                        options={[{ label: "None", value: "created_ts" }]}
+                        showChooseOption={false}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <FormSelect
+                        name="order_by"
+                        label="Sort Order"
+                        options={[
+                            { label: "Ascending", value: "ASC" },
+                            { label: "Descending", value: "DESC" },
+                        ]}
+                        showChooseOption={false}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <FormButtonContainer>

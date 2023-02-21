@@ -11,13 +11,18 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import MuiTableHead from "@mui/material/TableHead";
-import TableContainer from "@mui/material/TableContainer";
+import MuiTableContainer from "@mui/material/TableContainer";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
 import ReportExport from "./ReportExport";
 import Spacer from "App/components/Spacer/Spacer";
 import Button from "App/components/Button/Button";
 import StyledMenu from "App/components/Menu/StyledMenu";
+
+const TableContainer = styled(MuiTableContainer)(() => ({
+    width: "calc(100vw - 370px)",
+    overflowX: "auto",
+}));
 
 const TableHead = styled(MuiTableHead)(({ theme, value }) => ({
     borderRadius: "6px",
@@ -154,7 +159,7 @@ const ReportTable = ({
                 </Box>
             </Box>
             <Spacer />
-            <TableContainer sx={{ overflowX: "scroll" }}>
+            <TableContainer>
                 <Table size="small" {...getTableProps()}>
                     {!hideTableHead && (
                         <TableHead>
@@ -212,7 +217,13 @@ const ReportTable = ({
                                     <TableRow {...row.getRowProps()}>
                                         {row.cells.map((cell, index) => {
                                             return (
-                                                <TableCell key={index} {...cell.getCellProps()}>
+                                                <TableCell
+                                                    key={index}
+                                                    {...cell.getCellProps()}
+                                                    sx={{
+                                                        whiteSpace: "nowrap",
+                                                    }}
+                                                >
                                                     {cell.render("Cell")}
                                                 </TableCell>
                                             );

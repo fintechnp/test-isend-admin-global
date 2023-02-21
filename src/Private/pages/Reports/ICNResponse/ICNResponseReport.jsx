@@ -1,21 +1,19 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { reset } from "redux-form";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
+import { TablePagination } from "App/components/Table";
+import ReportTitle from "App/components/Title/ReportTitle";
 import ICNResponseFilterForm from "./ICNResponseFilterForm";
-import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import ReportTable from "Private/components/reports/ReportTable";
 
-import { FormatDateTime } from "App/helpers";
 import apiEndpoints from "Private/config/apiEndpoints";
+import { CountryNameByIso2Code, FormatDateTime } from "App/helpers";
 
 const initialState = {
     page_number: 1,
@@ -33,15 +31,8 @@ function ICNResponseReport() {
         (state) => state.get_icn_response_report,
     );
 
-    const {
-        response: ReportsDownload,
-        loading: pd_loading,
-        success: pd_success,
-    } = useSelector((state) => state.download_report);
-
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_icn_response_reports"));
         dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
     }, [dispatch]);
 
@@ -58,73 +49,100 @@ function ICNResponseReport() {
             {
                 Header: "ICN ID",
                 accessor: "icn_id",
+                pdfCellStyle: {
+                    minWidth: "10%",
+                },
             },
             {
                 Header: "Org ID",
                 accessor: "orgid",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Country",
                 accessor: "country",
+                Cell: (data) => <>{CountryNameByIso2Code(data.value)}</>,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Transaction Type",
                 accessor: "txntype",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Txn Ref ID",
                 accessor: "txnrefid",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Txn Date",
                 accessor: "txndate",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
-                Header: "Sender",
+                Header: "Sender Party Name",
                 accessor: "senderpartyname",
-                Cell: (data) => (
-                    <Box display="flex" flexDirection="column">
-                        <Typography>{data.value}</Typography>
-                        <Typography variant="caption">{data.row.original.senderpartysenderbankid}</Typography>
-                    </Box>
-                ),
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
-
+            {
+                Header: "Sender Bank ID",
+                accessor: "senderpartysenderbankid",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
+            },
             {
                 Header: "Amount",
                 accessor: "txnamt",
-                Cell: (data) => (
-                    <Box>
-                        {data.value} {data.row.original.txnccy}
-                    </Box>
-                ),
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
+            },
+            {
+                Header: "Currency",
+                accessor: "txnccy",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Receiving Party Name",
                 accessor: "receivingpartyname",
-                Cell: (data) => (
-                    <Box display="flex" flexDirection="column">
-                        <Typography>{data.value}</Typography>
-                        <Typography variant="caption">{data.row.original.receivingpartyaccountno}</Typography>
-                    </Box>
-                ),
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
+            },
+            {
+                Header: "Receiving Party Account No.",
+                accessor: "receivingpartyaccountno",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Created At",
                 accessor: "created_ts",
                 maxWidth: 120,
                 Cell: (data) => FormatDateTime(data?.value),
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
         ],
         [],
     );
-
-    const sortData = [{ key: "None", value: "created_ts" }];
-
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
 
     const handleSearch = (data) => {
         const updatedFilterSchema = {
@@ -138,26 +156,7 @@ function ICNResponseReport() {
         isMounted.current = false;
         setFilterSchema(initialState);
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_icn_response_reports"));
         dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
     };
 
     const handleChangePage = (e, newPage) => {
@@ -178,37 +177,10 @@ function ICNResponseReport() {
         setFilterSchema(updatedFilterSchema);
     };
 
-    //Downloads
-    const headers = [
-        { label: "Whitelist ID", key: "whitelist_id" },
-        { label: "User", key: "user_id" },
-        { label: "IP Address", key: "ip_address" },
-        { label: "Created", key: "created_ts" },
-    ];
-
-    const csvReport = {
-        title: "Report on ICN Response",
-        headers: headers,
-        data: ReportsDownload?.data || [],
-    };
-
-    const downloadData = () => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_size: 10000,
-        };
-        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.icnResponse));
-    };
-
     return (
         <PageContent
             documentTitle="ICN (Instant Credit Notification) Reports"
-            title={
-                <>
-                    <ContentPasteSearchIcon />
-                    <Typography>ICN (Instant Credit Notification) Reports</Typography>
-                </>
-            }
+            title={<ReportTitle>ICN (Instant Credit Notification) Reports</ReportTitle>}
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
@@ -226,20 +198,7 @@ function ICNResponseReport() {
                 )}
                 {!l_loading && ICNResponseReportResponse?.data?.length > 0 && (
                     <Grid item xs={12}>
-                        <Filter
-                            fileName="ICNResponseReport"
-                            success={pd_success}
-                            loading={pd_loading}
-                            sortData={sortData}
-                            csvReport={csvReport}
-                            orderData={orderData}
-                            title=""
-                            state={filterSchema}
-                            handleOrder={handleOrder}
-                            handleSort={handleSort}
-                            downloadData={downloadData}
-                        />
-                        <Table
+                        <ReportTable
                             columns={columns}
                             data={ICNResponseReportResponse?.data || []}
                             loading={l_loading}
@@ -251,6 +210,9 @@ function ICNResponseReport() {
                                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                                 />
                             )}
+                            apiEndpoint={apiEndpoints.reports.icnResponse}
+                            filterQuery={filterSchema}
+                            filename="ICN Report"
                         />
                     </Grid>
                 )}
