@@ -56,7 +56,8 @@ export default function ViewBulkEmailContentModal() {
     }, []);
 
     useEffect(() => {
-        dispatch({ type: "VIEW_BULK_EMAIL_CONTENT", bulk_email_content_id: bulkEmailContentId });
+        if (bulkEmailContentId)
+            dispatch({ type: "VIEW_BULK_EMAIL_CONTENT", bulk_email_content_id: bulkEmailContentId });
     }, [bulkEmailContentId]);
 
     if (!isOpen) return <></>;
