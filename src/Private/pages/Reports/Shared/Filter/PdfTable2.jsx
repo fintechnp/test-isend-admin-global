@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const PdfTable = ({ csvReport }) => {
+const PdfTable2 = ({ csvReport }) => {
     const apiData = React.useMemo(() => csvReport, [csvReport?.data]);
 
     const handleYealyData = (head, data, index) => {
@@ -310,4 +310,4 @@ const PdfTable = ({ csvReport }) => {
     );
 };
 
-export default PdfTable;
+export default PdfTable2;
