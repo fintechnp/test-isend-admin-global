@@ -18,9 +18,10 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
+import DeliveryOptionForm from "./Form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -114,15 +115,11 @@ function AddDeliveryOption({ update_data, update }) {
         sort_by: "name",
         order_by: "DESC",
     });
-    const { response: partner_data } = useSelector(
-        (state) => state.get_payout_partner
-    );
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_delivery_option
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_delivery_option
-    );
+    const { response: partner_data } = useSelector((state) => state.get_payout_partner);
+    console.log("🚀 ~ file: index.jsx:119 ~ AddDeliveryOption ~ partner_data:", partner_data);
+
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_delivery_option);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_delivery_option);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -156,6 +153,8 @@ function AddDeliveryOption({ update_data, update }) {
     };
 
     const handleDeliveryOptionSubmit = (data) => {
+        console.log("🚀 ~ file: index.jsx:153 ~ handleDeliveryOptionSubmit ~ data:", data);
+
         dispatch(actions.add_delivery_option(data));
     };
 
@@ -171,7 +170,7 @@ function AddDeliveryOption({ update_data, update }) {
             };
             setFilterSchema(updatedFilter);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     return (
@@ -190,12 +189,7 @@ function AddDeliveryOption({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Delivery Option
                 </AddButton>
             )}
@@ -205,14 +199,43 @@ function AddDeliveryOption({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Delivery Option
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     {update ? (
+                        <DeliveryOptionForm
+                            partnerList={partner_data?.data || []}
+                            initialValues={{
+                                payout_agent_id: memoizedData?.payout_agent_id,
+                                delivery_name: memoizedData?.delivery_name,
+                                payment_type: memoizedData?.payment_type,
+                                country_code: memoizedData?.country_code,
+                                currency_code: memoizedData?.currency_code,
+                                is_active: memoizedData?.is_active,
+                            }}
+                            buttonText="Update"
+                            update={update}
+                            payout_country={memoizedData?.country_code}
+                            user_type={update_data?.user_type}
+                            loading={update_loading}
+                            handleAgent={handleAgent}
+                            handleClose={handleClose}
+                            onSubmit={handleDeliveryOptionUpdate}
+                        />
+                    ) : (
+                        <DeliveryOptionForm
+                            partnerList={partner_data?.data || []}
+                            update={update}
+                            payout_country={memoizedData?.country_code}
+                            loading={add_loading}
+                            buttonText="Create"
+                            handleClose={handleClose}
+                            handleAgent={handleAgent}
+                            onSubmit={handleDeliveryOptionSubmit}
+                        />
+                    )}
+                    {/* {update ? (
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
@@ -246,7 +269,7 @@ function AddDeliveryOption({ update_data, update }) {
                             handleClose={handleClose}
                             handleAgent={handleAgent}
                         />
-                    )}
+                    )} */}
                 </DialogContent>
             </BootstrapDialog>
         </div>

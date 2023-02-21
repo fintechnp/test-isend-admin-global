@@ -184,7 +184,7 @@ export const getIncompleteRegistrationReport = takeEvery(actions.INCOMPLETE_REGI
 
 export const getOnfidoReports = takeEvery(actions.ONFIDO_REPORT, function* (action) {
     try {
-        const res = yield call(api.get, apiEndpoints.reports.omfidoReports, action.query);
+        const res = yield call(api.get, apiEndpoints.reports.onfidoReports, action.query);
         yield put({
             type: actions.ONFIDO_REPORT_SUCCESS,
             response: res,
