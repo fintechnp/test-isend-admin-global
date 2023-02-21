@@ -18,7 +18,7 @@ const SubmitButton = React.forwardRef(({ isLoading, children, isAddMode, ...rest
     <StyledButton
         ref={ref}
         type="submit"
-        size="small"
+        size="medium"
         variant="contained"
         disabled={isLoading}
         disableElevation

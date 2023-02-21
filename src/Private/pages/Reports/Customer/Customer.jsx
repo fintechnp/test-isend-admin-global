@@ -14,11 +14,7 @@ import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "./../../../../App/components/Loading";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import {
-    CountryName,
-    ReferenceName,
-    FormatDate,
-} from "./../../../../App/helpers";
+import { CountryName, ReferenceName, FormatDate } from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -97,13 +93,9 @@ function CustomerReports(props) {
     const [filterSchema, setFilterSchema] = useState(initialState);
     const [filterPartner, setFilterPartner] = useState(stateSend);
 
-    const { response: CustomerReports, loading: l_loading } = useSelector(
-        (state) => state.get_customer_report
-    );
+    const { response: CustomerReports, loading: l_loading } = useSelector((state) => state.get_customer_report);
 
-    const { response: SendingPartner, loading: p_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: SendingPartner, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     const {
         response: ReportsDownload,
@@ -146,10 +138,7 @@ function CustomerReports(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link
-                                to={`/customer/details/${data.row.original.tid}`}
-                                style={{ textDecoration: "none" }}
-                            >
+                            <Link to={`/customer/details/${data.row.original.tid}`} style={{ textDecoration: "none" }}>
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>
@@ -168,8 +157,7 @@ function CustomerReports(props) {
                         }}
                     >
                         <StyledName component="p">
-                            {data.value} {data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name}
+                            {data.value} {data?.row?.original?.middle_name} {data?.row?.original?.last_name}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -178,9 +166,7 @@ function CustomerReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.customer_type_data
-                                ? data?.row?.original?.customer_type_data
-                                : "N/A"}
+                            {data?.row?.original?.customer_type_data ? data?.row?.original?.customer_type_data : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -207,9 +193,7 @@ function CustomerReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.id_number
-                                ? data?.row?.original?.id_number
-                                : "N/A"}
+                            {data?.row?.original?.id_number ? data?.row?.original?.id_number : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -233,18 +217,12 @@ function CustomerReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data?.row?.original?.postcode}{" "}
-                            {data?.row?.original?.unit}{" "}
-                            {data?.row?.original?.street}{" "}
+                            {data?.row?.original?.postcode} {data?.row?.original?.unit} {data?.row?.original?.street}{" "}
                             {data?.row?.original?.address}
                         </StyledName>
-                        <StyledName
-                            component="span"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
+                        <StyledName component="span" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data?.row?.original?.state}
-                            {data?.row?.original?.state && ","}{" "}
-                            {CountryName(data.value)}
+                            {data?.row?.original?.state && ","} {CountryName(data.value)}
                         </StyledName>
                     </Box>
                 ),
@@ -279,9 +257,7 @@ function CustomerReports(props) {
                                     opacity: 0.6,
                                 }}
                             >
-                                {data?.row?.original?.email
-                                    ? data?.row?.original?.email
-                                    : "N/A"}
+                                {data?.row?.original?.email ? data?.row?.original?.email : "N/A"}
                             </StyledMail>
                         </Tooltip>
                     </Box>
@@ -290,20 +266,14 @@ function CustomerReports(props) {
             {
                 Header: () => (
                     <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>
-                            KYC Status
-                        </Typography>
+                        <Typography sx={{ fontSize: "15px" }}>KYC Status</Typography>
                     </Box>
                 ),
                 accessor: "kyc_status",
                 maxWidth: 110,
                 Cell: (data) => (
                     <Box textAlign="left">
-                        <StyledStatus
-                            component="p"
-                            value={data.value}
-                            sx={{ opacity: 0.8 }}
-                        >
+                        <StyledStatus component="p" value={data.value} sx={{ opacity: 0.8 }}>
                             {data.value ? ReferenceName(21, data.value) : "N/A"}
                         </StyledStatus>
                         <StyledName
@@ -314,9 +284,7 @@ function CustomerReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.address
-                                ? data?.row?.original?.address
-                                : "N/A"}
+                            {data?.row?.original?.address ? data?.row?.original?.address : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -324,9 +292,7 @@ function CustomerReports(props) {
             {
                 Header: () => (
                     <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>
-                            Since/Status
-                        </Typography>
+                        <Typography sx={{ fontSize: "15px" }}>Since/Status</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
@@ -345,15 +311,11 @@ function CustomerReports(props) {
                         >
                             {data?.row?.original?.is_active ? (
                                 <Tooltip title="Active" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>
-                                        Active
-                                    </StyledName>
+                                    <StyledName sx={{ opacity: 0.8 }}>Active</StyledName>
                                 </Tooltip>
                             ) : (
                                 <Tooltip title="Blocked" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>
-                                        Inactive
-                                    </StyledName>
+                                    <StyledName sx={{ opacity: 0.8 }}>Inactive</StyledName>
                                 </Tooltip>
                             )}
                         </Box>
@@ -361,7 +323,7 @@ function CustomerReports(props) {
                 ),
             },
         ],
-        []
+        [],
     );
 
     //Filter
@@ -476,9 +438,7 @@ function CustomerReports(props) {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(
-            actions.download_report(updatedFilterSchema, "report/customer")
-        );
+        dispatch(actions.download_report(updatedFilterSchema, "report/customer"));
     };
 
     return (
@@ -505,13 +465,11 @@ function CustomerReports(props) {
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading &&
-                    CustomerReports?.data &&
-                    CustomerReports?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Customer Found" />
-                        </Grid>
-                    )}
+                {!l_loading && CustomerReports?.data && CustomerReports?.data?.length === 0 && (
+                    <Grid item xs={12}>
+                        <NoResults text="No Customer Found" />
+                    </Grid>
+                )}
                 {!l_loading && CustomerReports?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <CustomerWrapper>
@@ -535,13 +493,9 @@ function CustomerReports(props) {
                                 rowsPerPage={8}
                                 renderPagination={() => (
                                     <TablePagination
-                                        paginationData={
-                                            CustomerReports?.pagination
-                                        }
+                                        paginationData={CustomerReports?.pagination}
                                         handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={
-                                            handleChangeRowsPerPage
-                                        }
+                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                                     />
                                 )}
                             />
