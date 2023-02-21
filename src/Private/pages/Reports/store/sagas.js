@@ -182,6 +182,22 @@ export const getIncompleteRegistrationReport = takeEvery(actions.INCOMPLETE_REGI
     }
 });
 
+export const getOnfidoReports = takeEvery(actions.ONFIDO_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.reports.onfidoReports, action.query);
+        yield put({
+            type: actions.ONFIDO_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.ONFIDO_REPORT_FAILED,
+            error: error.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerReport,
@@ -195,5 +211,6 @@ export default function* saga() {
         getIcnResponseReport,
         getAchEntriesReport,
         getIncompleteRegistrationReport,
+        getOnfidoReports,
     ]);
 }

@@ -13,6 +13,7 @@ const routePaths = {
         icnResponse: "/report/icn-response",
         achEntries: "/report/ach-entries",
         incompleteRegistration: "/report/incomplete-registration",
+        onfidoReport: "/report/onfido-reports",
     },
     bulkEmails: {
         index: "/utilities/bulk-emails",

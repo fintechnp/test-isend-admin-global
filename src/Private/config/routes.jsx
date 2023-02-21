@@ -1,4 +1,3 @@
-import ListBulkEmail from "Private/pages/BulkEmail/ListBulkEmail";
 import { lazy } from "react";
 import routePaths from "./routePaths";
 
@@ -73,6 +72,7 @@ const UserIPWhitelistReport = lazy(() => import("../pages/Reports/UserIPWhitelis
 const IncompleteRegistrationReport = lazy(() =>
     import("../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport"),
 );
+const OnfidoReport = lazy(() => import("../pages/Reports/OnfidoReports/OnfidoReport"));
 
 //PaymentProcess
 const PendingPayment = lazy(() => import("../pages/PaymentProcess/PendingPayment"));
@@ -105,6 +105,7 @@ const MyAccount = lazy(() => import("../pages/MyAccount"));
 const Accounting = lazy(() => import("../pages/Accounting"));
 
 const ListBanner = lazy(() => import("../pages/Setup/Banner/ListBanner"));
+const ListBulkEmail = lazy(() => import("../pages/BulkEmail/ListBulkEmail"));
 const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
 const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFundingSource"));
 
@@ -350,6 +351,10 @@ const privateRoutes = [
     {
         path: routePaths.reports.incompleteRegistration,
         component: <IncompleteRegistrationReport />,
+    },
+    {
+        path: routePaths.reports.onfidoReport,
+        component: <OnfidoReport />,
     },
 
     //PaymentProcess

@@ -18,9 +18,10 @@ import { Box } from "@mui/material";
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
+import DeliveryRoute from "./Form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -123,18 +124,10 @@ function AddDeliveryRoute({ update_data, update }) {
         sort_by: "name",
         order_by: "DESC",
     });
-    const { response: partner_sending } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
-    );
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_delivery_route
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_delivery_route
-    );
+    const { response: partner_sending } = useSelector((state) => state.get_sending_partner);
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_delivery_route);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_delivery_route);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -187,7 +180,7 @@ function AddDeliveryRoute({ update_data, update }) {
             };
             setFilterSchemaPay(updatedFilterPay);
         },
-        [filterSchemaPay]
+        [filterSchemaPay],
     );
 
     return (
@@ -206,12 +199,7 @@ function AddDeliveryRoute({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Delivery Route
                 </AddButton>
             )}
@@ -221,14 +209,11 @@ function AddDeliveryRoute({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Delivery Route
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    {update ? (
+                    {/* {update ? (
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
@@ -258,6 +243,37 @@ function AddDeliveryRoute({ update_data, update }) {
                             onSubmit={handleRouteSubmit}
                             buttonText="Create"
                             form={`add_delivery_route_form`}
+                            loading={add_loading}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
+                            handleClose={handleClose}
+                        />
+                    )} */}
+                    {update ? (
+                        <DeliveryRoute
+                            initialValues={{
+                                tid: memoizedData?.tid,
+                                send_agent_id: memoizedData?.send_agent_id,
+                                payout_agent_id: memoizedData?.payout_agent_id,
+                                payout_country: memoizedData?.payout_country,
+                                payout_currency: memoizedData?.payout_currency,
+                                payment_type: memoizedData?.payment_type,
+                                is_active: memoizedData?.is_active,
+                            }}
+                            buttonText="Update"
+                            update={update}
+                            onSubmit={handleRouteUpdate}
+                            handleClose={handleClose}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
+                        />
+                    ) : (
+                        <DeliveryRoute
+                            update={update}
+                            buttonText="Create"
+                            onSubmit={handleRouteSubmit}
                             loading={add_loading}
                             handleAgent={handleAgent}
                             partner_sending={partner_sending?.data || []}

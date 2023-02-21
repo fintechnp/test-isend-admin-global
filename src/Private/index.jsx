@@ -313,6 +313,7 @@ import getIncompleteRegistrationReducer from "./pages/Reports/store/reducers/get
 
 import customerSaga from "./features/customers/customerSaga";
 import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
+import getOnfidoReportReducer from "./pages/Reports/store/reducers/getOnfidoReportReducer";
 
 import {
     addBulkEmailGroupReducer,
@@ -546,6 +547,7 @@ export const privateReducer = {
     get_icn_response_report: getIcnResponseReducer,
     get_ach_entries_report: getAchResponseReducer,
     get_incomplete_registration_report: getIncompleteRegistrationReducer,
+    get_onfido_report: getOnfidoReportReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

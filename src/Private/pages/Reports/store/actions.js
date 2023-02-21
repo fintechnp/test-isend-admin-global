@@ -54,6 +54,11 @@ const actions = {
     INCOMPLETE_REGISTRATION_REPORT_FAILED: "INCOMPLETE_REGISTRATION_REPORT_FAILED",
     INCOMPLETE_REGISTRATION_REPORT_RESET: "INCOMPLETE_REGISTRATION_REPORT_RESET",
 
+    ONFIDO_REPORT: "ONFIDO_REPORT",
+    ONFIDO_REPORT_SUCCESS: "ONFIDO_REPORT_SUCCESS",
+    ONFIDO_REPORT_FAILED: "ONFIDO_REPORT_FAILED",
+    ONFIDO_REPORT_RESET: "ONFIDO_REPORT_RESET",
+
     //FETCH
     get_customer_report: (query) => ({
         type: actions.CUSTOMER_REPORT,
@@ -108,6 +113,10 @@ const actions = {
 
     get_incomplete_registration_report: (query) => ({
         type: actions.INCOMPLETE_REGISTRATION_REPORT,
+        query,
+    }),
+    get_onfido_report: (query) => ({
+        type: actions.ONFIDO_REPORT,
         query,
     }),
 };

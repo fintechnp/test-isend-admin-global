@@ -310,6 +310,12 @@ const PrivateLayout = () => {
                         text: "Incomplete Registation",
                         sub: false,
                     },
+                    {
+                        path: routePaths.reports.onfidoReport,
+                        key: "onfidoReport",
+                        text: "Onfido Report",
+                        sub: false,
+                    },
                 ],
             },
 
