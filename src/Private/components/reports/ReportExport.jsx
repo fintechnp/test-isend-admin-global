@@ -156,7 +156,7 @@ export default function ReportExport({ columns, filename, apiEndpoint, filterQue
             }) ?? [];
 
         const blob = await pdf(
-            <PdfDocument title={"Report"} tableHeaders={visibleColumns} data={tableData} />,
+            <PdfDocument title={filename} tableHeaders={visibleColumns} data={tableData} />,
         ).toBlob();
         FileSaver.saveAs(blob, downloadFilename);
     };
@@ -272,7 +272,7 @@ export default function ReportExport({ columns, filename, apiEndpoint, filterQue
                 <Box display="flex" flexDirection="column">
                     <Typography>Select columns to export</Typography>
                     <Divider />
-                    <Box display="flex" flexDirection="column" sx={{ maxHeight: "80vh   ", overflowY: "scroll" }}>
+                    <Box display="flex" flexDirection="column" sx={{ maxHeight: "80vh   ", overflowY: "auto" }}>
                         {exportColumns?.map((col, i) => (
                             <FormControlLabel
                                 key={i}
@@ -358,38 +358,6 @@ const styles2 = StyleSheet.create({
         paddingLeft: "6px",
         textAlign: "left",
     },
-    // name: {
-    //     flexGrow: 1,
-    //     minidth: "15%",
-    //     padding: "0px 4px",
-    //     textAlign: "left",
-    //     textTransform: "capitalize",
-    // },
-    // head: {
-    //     minWidth: "10%",
-    //     padding: "0px 4px",
-    //     textAlign: "left",
-    //     textTransform: "capitalize",
-    // },
-    // headRight: {
-    //     minWidth: "10%",
-    //     padding: "0px 4px",
-    //     textAlign: "right",
-    //     textTransform: "capitalize",
-    // },
-    // headMail: {
-    //     minWidth: "12%",
-    //     padding: "0px 4px",
-    //     textAlign: "left",
-    //     textTransform: "capitalize",
-    // },
-    // monthrow: {
-    //     minHeight: 24,
-    //     backgroundColor: "#fff",
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     alignItems: "flex-start",
-    // },
 });
 
 const PdfDocument = ({ title, tableHeaders, data, startDate, endDate }) => {

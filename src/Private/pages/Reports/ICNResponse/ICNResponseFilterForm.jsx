@@ -7,7 +7,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
-import FormTextField from "App/core/hook-form/FormTextField";
 import SubmitButton from "App/components/Button/SubmitButton";
 import CancelButton from "App/components/Button/CancelButton";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
@@ -15,7 +14,6 @@ import FormButtonContainer from "App/components/Container/FormButtonContainer";
 
 import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
-import achConfig from "App/config/achConfig";
 
 const schema = Yup.object().shape({
     created_from_date: Yup.string()
@@ -57,6 +55,8 @@ function ICNResponseFilterForm({ onSubmit, onReset }) {
         defaultValues: {
             created_from_date: minDate,
             created_to_date: maxDate,
+            sort_by: "created_ts",
+            order_by: "ASC",
         },
     });
 
@@ -65,6 +65,8 @@ function ICNResponseFilterForm({ onSubmit, onReset }) {
     const handleReset = () => {
         setValue("created_from_date", minDate);
         setValue("created_to_date", maxDate);
+        setValue("sort_by", "created_ts");
+        setValue("order_by", "ASC");
         reset();
         onReset();
     };
@@ -77,6 +79,25 @@ function ICNResponseFilterForm({ onSubmit, onReset }) {
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                     <FormDatePicker name="created_to_date" label="To Date" />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <FormSelect
+                        name="sort_by"
+                        label="Sort By"
+                        options={[{ label: "None", value: "created_ts" }]}
+                        showChooseOption={false}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <FormSelect
+                        name="order_by"
+                        label="Sort Order"
+                        options={[
+                            { label: "Ascending", value: "ASC" },
+                            { label: "Descending", value: "DESC" },
+                        ]}
+                        showChooseOption={false}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <FormButtonContainer>

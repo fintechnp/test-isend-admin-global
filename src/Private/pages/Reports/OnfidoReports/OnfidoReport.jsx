@@ -6,12 +6,19 @@ import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
 import actions from "../store/actions";
 import { Loading } from "App/components";
-import Table from "App/components/Table";
 import NoResults from "../Shared/NoResults";
+import apiEndpoints from "Private/config/apiEndpoints";
+import OnfidoReportFilterForm from "./OnfidoReportFilterForm";
 import PageContent from "App/components/Container/PageContent";
-import { OnfidoReportFilterForm } from "./OnfidoReportsFilter";
+import ReportTable from "Private/components/reports/ReportTable";
 
-const initialState = {};
+const initialState = {
+    page_number: 1,
+    page_size: 15,
+    sort_by: "created_ts",
+    order_by: "ASC",
+};
+
 function OnfidoReport() {
     const [filterSchema, setFilterSchema] = useState(initialState);
     const isMounted = useRef(false);
@@ -40,7 +47,7 @@ function OnfidoReport() {
     const handleReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
-        // dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch({ type: "ONFIDO_REPORT_RESET" });
     };
 
@@ -49,29 +56,47 @@ function OnfidoReport() {
             {
                 Header: "Name",
                 accessor: "name",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Result",
                 accessor: "result",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Status",
                 accessor: "status",
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Sub Result",
                 accessor: "sub_result",
                 Cell: (data) => <>{data.value || "-"}</>,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Summaries",
                 accessor: "summaries",
                 Cell: (data) => <>{data.value || "-"}</>,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
             {
                 Header: "Summary",
                 accessor: "summary",
                 maxWidth: 120,
+                pdfCellStyle: {
+                    minWidth: "20%",
+                },
             },
         ],
         [],
@@ -105,7 +130,14 @@ function OnfidoReport() {
                 )}
                 {!l_loading && onfidoReport && (
                     <Grid item xs={12}>
-                        <Table columns={columns} data={onfidoReport?.data || []} loading={l_loading} />
+                        <ReportTable
+                            columns={columns}
+                            data={onfidoReport?.data || []}
+                            loading={l_loading}
+                            apiEndpoint={apiEndpoints.reports.onfidoReports}
+                            filterQuery={filterSchema}
+                            filename="Onfido Report"
+                        />
                     </Grid>
                 )}
             </Grid>

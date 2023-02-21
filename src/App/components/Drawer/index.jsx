@@ -180,21 +180,13 @@ function SideDrawer({ children, menus }) {
         <Box sx={{ display: "flex" }}>
             <AppBar position="fixed" open={open}>
                 <Box sx={{ flexGrow: 1 }}>
-                    <Toolbar
-                        handleDrawerToggle={handleDrawerToggle}
-                        open={open}
-                    />
+                    <Toolbar handleDrawerToggle={handleDrawerToggle} open={open} />
                 </Box>
             </AppBar>
-            <Drawer variant="permanent" open={open}>
+            <Drawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerHeader>
                     {open ? (
-                        <LongLogoWrapper
-                            component="img"
-                            image={Logo}
-                            alt="isend logo"
-                            onClick={handleDashboard}
-                        />
+                        <LongLogoWrapper component="img" image={Logo} alt="isend logo" onClick={handleDashboard} />
                     ) : (
                         <ShortLogoWrapper
                             component="img"
