@@ -24,7 +24,7 @@ function OnfidoReport() {
     const isMounted = useRef(false);
     const dispatch = useDispatch();
 
-    const { response: onfidoReport, loading: l_loading } = useSelector((state) => state.get_onfido_report);
+    const { response: onfidoReportResponse, loading: l_loading } = useSelector((state) => state.get_onfido_report);
 
     useEffect(() => {
         dispatch({ type: "ONFIDO_REPORT_RESET" });
@@ -123,16 +123,16 @@ function OnfidoReport() {
                     </Grid>
                 )}
 
-                {!l_loading && !onfidoReport && (
+                {!l_loading && !onfidoReportResponse && (
                     <Grid item xs={12}>
                         <NoResults text="No Record Found" />
                     </Grid>
                 )}
-                {!l_loading && onfidoReport && (
+                {!l_loading && onfidoReportResponse?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <ReportTable
                             columns={columns}
-                            data={onfidoReport?.data || []}
+                            data={onfidoReportResponse?.data || []}
                             loading={l_loading}
                             apiEndpoint={apiEndpoints.reports.onfidoReports}
                             filterQuery={filterSchema}
