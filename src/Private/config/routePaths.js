@@ -14,6 +14,9 @@ const routePaths = {
         achEntries: "/report/ach-entries",
         incompleteRegistration: "/report/incomplete-registration",
     },
+    bulkEmails: {
+        index: "/utilities/bulk-emails",
+    },
 };
 
 export default routePaths;

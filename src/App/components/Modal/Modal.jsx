@@ -26,10 +26,14 @@ const ModalHeader = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
     borderRadius: "8px 8px 0 0",
     padding: theme.spacing(1),
+    background: theme.palette.primary.main,
+    color: theme.palette.background.paper,
 }));
 
 const ModalBody = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(3, 2),
+    maxHeight: "90vh",
+    overflowY: "scroll",
 }));
 
 export default function Modal({ title, open, onClose, sx, children }) {
@@ -46,7 +50,7 @@ export default function Modal({ title, open, onClose, sx, children }) {
                     bgcolor: "background.paper",
                     boxShadow: 24,
                     // p: 2,
-                    ...(Object.prototype.toString.call(sx) === "[object Undefined]" ? sx : {}),
+                    ...sx,
                 }}
             >
                 {typeof onClose === "function" && (
@@ -57,7 +61,7 @@ export default function Modal({ title, open, onClose, sx, children }) {
                 {!!title && (
                     <ModalHeader>
                         {Object.prototype.toString.call(title) === "[object String]" ? (
-                            <Typography variant="h6">{title}</Typography>
+                            <Typography variant="subtitle">{title}</Typography>
                         ) : (
                             title
                         )}

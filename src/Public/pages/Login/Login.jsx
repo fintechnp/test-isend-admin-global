@@ -28,7 +28,6 @@ function Login(props) {
     }, [success]);
 
     const handleLogin = async (data) => {
-        console.log(data);
         setLoading(true);
         try {
             const res = await authContext.loginUser(data);
