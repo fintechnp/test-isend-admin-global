@@ -23,19 +23,11 @@ export default function ViewBulkEmailContentModal() {
 
     const viewData = [
         {
-            tableTitle: "Email Content Details",
             tableData: [
                 {
-                    label: "Send From",
-                    accessor: "send_from",
-                },
-                {
-                    label: "Send To",
+                    label: "Send To Group / Email",
                     accessor: "send_to",
-                },
-                {
-                    label: "Group",
-                    accessor: "group_name",
+                    accessorFn: (data) => data.send_to ?? data.group_name,
                 },
                 {
                     label: "Subject",
@@ -70,7 +62,7 @@ export default function ViewBulkEmailContentModal() {
     if (!isOpen) return <></>;
 
     return (
-        <Modal open={isOpen} onClose={handleClose} title="Email Content" sx={{ minWidth: "600px" }}>
+        <Modal open={isOpen} onClose={handleClose} title="Email Content Details" sx={{ minWidth: "600px" }}>
             <TableViewData isLoading={isLoading} views={viewData} data={response?.data} />
         </Modal>
     );

@@ -99,7 +99,7 @@ const BulkEmailContents = (props) => {
                 maxWidth: "40px",
             },
             {
-                Header: "Send to Group",
+                Header: "Send to Group / Email",
                 accessor: "group_name",
                 Cell: ({ value, row }) => (
                     <RadioGroup
@@ -108,7 +108,15 @@ const BulkEmailContents = (props) => {
                         value={selectedContentId}
                         onChange={(e) => setSelectedContentId(e.target.value)}
                     >
-                        <FormControlLabel value={row.original.content_id} control={<Radio />} label={value} />
+                        <FormControlLabel
+                            value={row.original.content_id}
+                            control={<Radio />}
+                            label={
+                                <EllipsisTypography>
+                                    {row.original.group_name ?? row.original.send_to}
+                                </EllipsisTypography>
+                            }
+                        />
                     </RadioGroup>
                 ),
             },
@@ -117,16 +125,6 @@ const BulkEmailContents = (props) => {
                 Header: "Subject",
                 accessor: "email_subject",
             },
-            {
-                Header: "Send From",
-                accessor: "send_from",
-            },
-            {
-                Header: "Send To",
-                accessor: "send_to",
-                Cell: ({ value }) => <EllipsisTypography>{value}</EllipsisTypography>,
-            },
-
             {
                 Header: "Status",
                 accessor: "is_active",
@@ -179,7 +177,7 @@ const BulkEmailContents = (props) => {
         [selectedContentId],
     );
 
-    const handleSendEmail = (bulkEmailContentId) => {
+    const handleSendEmail = () => {
         if (!selectedContentId) {
             toast.error("Select a email content to send", {
                 position: "top-right",
@@ -192,15 +190,23 @@ const BulkEmailContents = (props) => {
         });
     };
 
-    useEffect(() => {
+    const fetchBulkEmailContents = () => {
         dispatch({ type: "UPDATE_BULK_EMAIL_CONTENT_RESET" });
         dispatch({ type: "ADD_BULK_EMAIL_CONTENT_RESET" });
-        const timeout = debounce(() => {
+        debounce(() => {
             dispatch({ type: "GET_BULK_EMAIL_CONTENTS", query: filterSchema });
         }, 500);
+    };
 
-        return () => clearTimeout(timeout);
-    }, [dispatch, filterSchema, isDeleting, isAddSuccess, isDeleteSuccess, isUpdateSuccess, isSendEmailSuccess]);
+    useEffect(() => {
+        fetchBulkEmailContents();
+    }, [filterSchema, isDeleting, isAddSuccess, isDeleteSuccess, isUpdateSuccess, isSendEmailSuccess]);
+
+    useEffect(() => {
+        if (!isSendEmailSuccess) return;
+        fetchBulkEmailContents();
+        dispatch({ type: "SEND_BULK_EMAIL_CONTENT_RESET" });
+    }, [isSendEmailSuccess]);
 
     return (
         <Box>

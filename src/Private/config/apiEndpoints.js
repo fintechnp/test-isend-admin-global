@@ -43,6 +43,7 @@ const apiEndpoints = {
         create: "bulkemail/content",
         update: "bulkemail/content/:bulkEmailContentId",
         updateStatus: "bulkemail/content/:bulkEmailContentId",
+        delete: "bulkemail/content/:bulkEmailContentId",
         get: "bulkemail/content/:bulkEmailContentId",
         send: "bulkemail/sendemail/:bulkEmailContentId",
     },
