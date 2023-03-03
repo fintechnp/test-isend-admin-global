@@ -140,6 +140,18 @@ const PrivateLayout = () => {
                         text: "Funding Sources",
                         sub: false,
                     },
+                    {
+                        path: routePaths.setup.language,
+                        key: "language setup",
+                        text: "Language Setup",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.setup.languageCountry,
+                        key: "language country",
+                        text: "Language Country",
+                        sub: false,
+                    },
                 ],
             },
 

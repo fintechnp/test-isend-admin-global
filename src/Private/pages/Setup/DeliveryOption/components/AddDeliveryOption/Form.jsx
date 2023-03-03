@@ -9,11 +9,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import Divider from "@mui/material/Divider";
 import * as Yup from "yup";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../../App/utils/validators";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import FormTextField from "App/core/hook-form/FormTextField";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";

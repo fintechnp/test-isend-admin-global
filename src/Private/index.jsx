@@ -147,6 +147,24 @@ import {
     ReferenceSaga,
 } from "./pages/Setup/Reference/store";
 
+import {
+    AddLanguageOptions,
+    DeleteLanguageOption,
+    GetAllLanguageOptions,
+    GetAllLanguageOptionsDetails,
+    LanguageOptionSaga,
+    UpdateLanguageOption,
+} from "./pages/Setup/LanguageSetup/store";
+
+import {
+    AddLanguageCountry,
+    DeleteLanguageCountry,
+    GetAllLanguageCountry,
+    LanguageCountry,
+    LanguageCountrySaga,
+    UpdateLanguageCountry,
+} from "./pages/Setup/LanguageCountry/store";
+
 //Customer Process
 import {
     GetCustomersReducer,
@@ -382,6 +400,18 @@ export const privateReducer = {
     add_delivery_option: AddDeliveryOptionReducer,
     update_delivery_option: UpdateDeliveryOptionReducer,
     delete_delivery_option: DeleteDeliveryOptionReducer,
+
+    get_all_language_option: GetAllLanguageOptions,
+    get_all_language_option_details: GetAllLanguageOptionsDetails,
+    add_language_option: AddLanguageOptions,
+    update_language_option: UpdateLanguageOption,
+    delete_language_option: DeleteLanguageOption,
+
+    get_all_language_country: GetAllLanguageCountry,
+    // get_all_language_option_details: GetAllLanguageOptionsDetails,
+    add_language_country: AddLanguageCountry,
+    update_language_country: UpdateLanguageCountry,
+    delete_language_country: DeleteLanguageCountry,
 
     //delivery route
     get_delivery_route: GetDeliveryRouteReducer,
@@ -658,6 +688,8 @@ export const privateSaga = [
     bulkEmailAddressSaga(),
     bulkEmailContentSaga(),
     bulkEmailCredentialSaga(),
+    LanguageOptionSaga(),
+    LanguageCountrySaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

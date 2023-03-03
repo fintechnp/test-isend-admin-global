@@ -13,7 +13,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -99,15 +99,7 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function DeleteDialog({
-    fontSize,
-    loading,
-    parent_id,
-    id,
-    handleDelete,
-    tooltext,
-    button = false,
-}) {
+function DeleteDialog({ fontSize, loading, parent_id, id, handleDelete, tooltext, button = false }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -120,6 +112,7 @@ function DeleteDialog({
 
     const handleYes = () => {
         handleDelete(id, parent_id);
+        setOpen(false);
     };
 
     return (
@@ -162,14 +155,8 @@ function DeleteDialog({
                     </DeleteIcon>
                 )}
             </Tooltip>
-            <BootstrapDialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    {"Do you want to delete this?"}
-                </DialogTitle>
+            <BootstrapDialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+                <DialogTitle id="responsive-dialog-title">{"Do you want to delete this?"}</DialogTitle>
                 <DialogContent
                     sx={{
                         display: "flex",
@@ -185,24 +172,14 @@ function DeleteDialog({
                         }}
                     />
                     <DialogContentText>
-                        You won't be able to restore after deleting this. Make
-                        sure before deleting.
+                        You won't be able to restore after deleting this. Make sure before deleting.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <CancelButton
-                        size="small"
-                        variant="contained"
-                        onClick={handleClose}
-                    >
+                    <CancelButton size="small" variant="contained" onClick={handleClose}>
                         Cancel
                     </CancelButton>
-                    <YesButton
-                        size="small"
-                        variant="outlined"
-                        loading={loading}
-                        onClick={handleYes}
-                    >
+                    <YesButton size="small" variant="outlined" loading={loading} onClick={handleYes}>
                         Yes
                     </YesButton>
                 </DialogActions>
