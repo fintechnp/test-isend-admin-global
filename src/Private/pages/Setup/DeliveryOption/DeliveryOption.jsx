@@ -11,16 +11,9 @@ import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import { Delete } from "./../../../../App/components";
-import {
-    CountryName,
-    CurrencyName,
-    ReferenceName,
-} from "./../../../../App/helpers";
+import { CountryName, CurrencyName, ReferenceName } from "./../../../../App/helpers";
 import AddDeliveryOption from "./components/AddDeliveryOption";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
+import Table, { TablePagination, TableSwitch } from "./../../../../App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -75,18 +68,10 @@ const DeliveryOption = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: deliveryoption_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_delivery_option
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_delivery_option
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.add_delivery_option
-    );
-    const { success: u_success } = useSelector(
-        (state) => state.update_delivery_option
-    );
+    const { response: deliveryoption_data, loading: g_loading } = useSelector((state) => state.get_all_delivery_option);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_delivery_option);
+    const { success: a_success } = useSelector((state) => state.add_delivery_option);
+    const { success: u_success } = useSelector((state) => state.update_delivery_option);
 
     useEffect(() => {
         dispatch(actions.get_all_delivery_option(filterSchema));
@@ -111,10 +96,7 @@ const DeliveryOption = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
                             {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
@@ -129,9 +111,7 @@ const DeliveryOption = (props) => {
                 accessor: "payout_agent",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                     </Box>
                 ),
             },
@@ -144,9 +124,7 @@ const DeliveryOption = (props) => {
                 accessor: "payment_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? ReferenceName(1, data.value) : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? ReferenceName(1, data.value) : "n/a"}</StyledText>
                     </Box>
                 ),
             },
@@ -159,9 +137,7 @@ const DeliveryOption = (props) => {
                 accessor: "country_code",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CountryName(data.value) : "N/A"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CountryName(data.value) : "N/A"}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -170,9 +146,7 @@ const DeliveryOption = (props) => {
                             }}
                         >
                             {data?.row?.original?.currency_code
-                                ? CurrencyName(
-                                      data?.row?.original?.currency_code
-                                  )
+                                ? CurrencyName(data?.row?.original?.currency_code)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -188,11 +162,7 @@ const DeliveryOption = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -213,10 +183,7 @@ const DeliveryOption = (props) => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip
-                                    title="Hide Delivery Option Details"
-                                    arrow
-                                >
+                                <Tooltip title="Hide Delivery Option Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -229,10 +196,7 @@ const DeliveryOption = (props) => {
                                     </IconButton>
                                 </Tooltip>
                             ) : (
-                                <Tooltip
-                                    title="Show Delivery Option Details"
-                                    arrow
-                                >
+                                <Tooltip title="Show Delivery Option Details" arrow>
                                     <IconButton>
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
@@ -246,10 +210,7 @@ const DeliveryOption = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddDeliveryOption
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddDeliveryOption update={true} update_data={row?.original} />
                         <Delete
                             id={row.original.tid}
                             handleDelete={handleDelete}
@@ -260,7 +221,7 @@ const DeliveryOption = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -288,7 +249,7 @@ const DeliveryOption = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleCountry = (e) => {
@@ -341,9 +302,7 @@ const DeliveryOption = (props) => {
     };
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(
-            actions.update_delivery_option_status(id, { is_active: is_active })
-        );
+        dispatch(actions.update_delivery_option_status(id, { is_active: is_active }));
     }, []);
 
     return (

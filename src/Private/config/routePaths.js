@@ -18,6 +18,10 @@ const routePaths = {
     bulkEmails: {
         index: "/utilities/bulk-emails",
     },
+    setup: {
+        language: "/setup/language-setup",
+        languageCountry: "/setup/language-country",
+    },
 };
 
 export default routePaths;

@@ -14,11 +14,10 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import actions from "../../store/actions";
 
-import AccountForm from "./Form";
-import actions from "./../../store/actions";
-import PartnerActions from "./../../../Partner/store/actions";
-import DeliveryOptionForm from "./Form";
+import LanguageOptionForm from "./Form";
+import { useState } from "react";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -104,76 +103,56 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddDeliveryOption({ update_data, update }) {
+const AddLanguageOption = ({ update, loading, update_data }) => {
     const dispatch = useDispatch();
-    const [open, setOpen] = React.useState(false);
-    const [filterSchema, setFilterSchema] = React.useState({
-        page_number: 1,
-        page_size: 100,
-        agent_type: "PAY",
-        country: "",
-        sort_by: "name",
-        order_by: "DESC",
-    });
-    const { response: partner_data } = useSelector((state) => state.get_payout_partner);
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_language_option);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_language_option);
+    const [open, setOpen] = useState(false);
 
-    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_delivery_option);
-    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_delivery_option);
-
+    // const [filterSchema, setFilterSchema] = useState({
+    //     language_code: "",
+    //     language_name: "",
+    // });
     const memoizedData = React.useMemo(() => update_data, [update_data]);
-
-    React.useEffect(() => {
-        if (open && filterSchema?.country) {
-            dispatch(PartnerActions.get_payout_partner(filterSchema));
-        } else if (open && !filterSchema?.country) {
-            dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
-        }
-    }, [open, filterSchema]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
             setOpen(false);
-            dispatch({ type: "ADD_DELIVERY_OPTION_RESET" });
-            dispatch({ type: "UPDATE_DELIVERY_OPTION_RESET" });
+            dispatch({ type: actions.ADD_LANGUAGE_OPTION_RESET });
+            dispatch({ type: actions.UPDATE_LANGUAGE_OPTION_RESET });
+            dispatch(actions.get_all_language_option());
         }
     }, [add_success, update_success]);
+
+    const handleLanguageOptionSubmit = (data) => {
+        dispatch(actions.add_language_option(data));
+    };
+
+    const handleLanguageOptionUpdate = (data) => {
+        const status = {
+            is_active: data.is_active,
+        };
+
+        dispatch(actions.update_language_option(update_data.language_id, data));
+        dispatch(actions.update_language_option_status(update_data.language_id, status));
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        const updatedFilter = {
-            ...filterSchema,
-            country: "",
-        };
-        setFilterSchema(updatedFilter);
+        // const updatedFilter = {
+        //     ...filterSchema,
+        //     country: "",
+        // };
+        // setFilterSchema(updatedFilter);
         setOpen(false);
     };
-
-    const handleDeliveryOptionSubmit = (data) => {
-        dispatch(actions.add_delivery_option(data));
-    };
-
-    const handleDeliveryOptionUpdate = (data) => {
-        dispatch(actions.update_delivery_option(update_data?.tid, data));
-    };
-
-    const handleAgent = React.useCallback(
-        (country) => {
-            const updatedFilter = {
-                ...filterSchema,
-                country: country,
-            };
-            setFilterSchema(updatedFilter);
-        },
-        [filterSchema],
-    );
-
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Delivery Option" arrow>
+                <Tooltip title="Edit Language Option" arrow>
                     <UpdateButton onClick={handleClickOpen}>
                         <EditOutlinedIcon
                             sx={{
@@ -187,7 +166,7 @@ function AddDeliveryOption({ update_data, update }) {
                 </Tooltip>
             ) : (
                 <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                    Add Delivery Option
+                    Add Language Option
                 </AddButton>
             )}
             <BootstrapDialog
@@ -197,45 +176,34 @@ function AddDeliveryOption({ update_data, update }) {
                 open={open}
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {update ? "Update" : "Create New"} Delivery Option
+                    {update ? "Update" : "Create New"} Language Option
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     {update ? (
-                        <DeliveryOptionForm
-                            partnerList={partner_data?.data || []}
+                        <LanguageOptionForm
+                            onSubmit={handleLanguageOptionUpdate}
+                            buttonText="Update"
+                            handleClose={handleClose}
+                            loading={loading}
                             initialValues={{
-                                payout_agent_id: memoizedData?.payout_agent_id,
-                                delivery_name: memoizedData?.delivery_name,
-                                payment_type: memoizedData?.payment_type,
-                                country_code: memoizedData?.country_code,
-                                currency_code: memoizedData?.currency_code,
+                                language_name: memoizedData?.language_name,
+                                language_code: memoizedData?.language_code,
                                 is_active: memoizedData?.is_active,
                             }}
-                            buttonText="Update"
-                            update={update}
-                            payout_country={memoizedData?.country_code}
-                            user_type={update_data?.user_type}
-                            loading={update_loading}
-                            handleAgent={handleAgent}
-                            handleClose={handleClose}
-                            onSubmit={handleDeliveryOptionUpdate}
+                            update={true}
                         />
                     ) : (
-                        <DeliveryOptionForm
-                            partnerList={partner_data?.data || []}
-                            update={update}
-                            payout_country={memoizedData?.country_code}
-                            loading={add_loading}
+                        <LanguageOptionForm
+                            onSubmit={handleLanguageOptionSubmit}
                             buttonText="Create"
+                            loading={loading}
                             handleClose={handleClose}
-                            handleAgent={handleAgent}
-                            onSubmit={handleDeliveryOptionSubmit}
+                            update={false}
                         />
                     )}
                 </DialogContent>
             </BootstrapDialog>
         </div>
     );
-}
-
-export default React.memo(AddDeliveryOption);
+};
+export default AddLanguageOption;

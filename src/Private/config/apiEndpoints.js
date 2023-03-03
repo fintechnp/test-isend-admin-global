@@ -52,6 +52,20 @@ const apiEndpoints = {
         get: "bulkemail/credential",
         update: "bulkemail/credential/:bulkEmailCredentialId",
     },
+    language: {
+        get: "language",
+        getDetail: "language/:languageId",
+        post: "language",
+        update: "language/:languageId",
+        delete: "language/:languageId",
+    },
+    languageCountry: {
+        get: "languagecountry",
+        getDetail: "languagecountry/:languagecountryId",
+        post: "languagecountry",
+        update: "languagecountry/:languagecountryId",
+        delete: "languagecountry/:languagecountryId",
+    },
 };
 
 export default apiEndpoints;

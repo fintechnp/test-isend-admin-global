@@ -1,9 +1,7 @@
 {
-  "compilerOptions": {
-    "baseUrl": "src",
-    "jsx": "react"
-  },
-  "include": [
-    "src"
-  ],
+    "compilerOptions": {
+        "baseUrl": "src",
+        "jsx": "react"
+    },
+    "include": ["src", "src/Private/pages/Setup/LanguageSetup/Components/.jsx"]
 }
