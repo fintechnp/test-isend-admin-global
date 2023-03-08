@@ -44,6 +44,11 @@ export default defineConfig(({ mode }) => {
                 // },
             ]),
         ],
+        test: {
+            globals: true,
+            environment: "jsdom",
+            setupFiles: "./src/tests/setup.js",
+        },
         envPrefix: "REACT_APP",
         define: {
             ...(process.env.NODE_ENV === "production"
