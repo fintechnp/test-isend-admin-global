@@ -132,38 +132,38 @@ const Basic = ({
                                 validate={[Validator.maxLength50]}
                             />
                         </FieldWrapper>
-                        {/* <FieldWrapper item xs={12} sm={6}>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="mobile_number"
+                                label="Mobile Number"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                                validate={[Validator.maxLength50]}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="customer_type"
                                 label="Customer Type"
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength1]}
                             >
                                 <option value="" disabled>
                                     Select Customer Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 37
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 37)[0]
                                         .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
+                                            <option value={data.value} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
                             </Field>
-                        </FieldWrapper> */}
+                        </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="gender"
@@ -230,7 +230,7 @@ const Basic = ({
                                         ))}
                             </Field>
                         </FieldWrapper>
-                        {/* <FieldWrapper item xs={12} sm={6}>
+                        <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="country"
                                 label="Country"
@@ -250,8 +250,9 @@ const Basic = ({
                                         </option>
                                     ))}
                             </Field>
-                        </FieldWrapper> */}
-                        {/* {hasPartner && (
+                        </FieldWrapper>
+
+                        {hasPartner && (
                             <FieldWrapper item xs={12} sm={6}>
                                 <Field
                                     name="register_agent_id"
@@ -273,7 +274,7 @@ const Basic = ({
                                         ))}
                                 </Field>
                             </FieldWrapper>
-                        )} */}
+                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>
