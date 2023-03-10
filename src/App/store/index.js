@@ -18,10 +18,7 @@ let buffer = [];
 let failed = [];
 let wait = false;
 const lastActionMiddleware = (store) => (next) => (action) => {
-    if (
-        action.type.includes("FAILED") &&
-        action.type !== "REFRESH_TOKEN_FAILED"
-    ) {
+    if (action.type.includes("FAILED") && action.type !== "REFRESH_TOKEN_FAILED") {
         failed.push(action.type.replace("_FAILED", ""));
     } else if (
         !action.type.includes("SUCCESS") &&
@@ -34,16 +31,8 @@ const lastActionMiddleware = (store) => (next) => (action) => {
         !buffer.includes(action)
     ) {
         buffer.push(action);
-    } else if (
-        action.type.includes("SUCCESS") &&
-        action.type !== "REFRESH_TOKEN_SUCCESS"
-    ) {
-        var index = buffer.indexOf(
-            buffer.find(
-                (element) =>
-                    element.type === action.type.replace("_SUCCESS", "")
-            )
-        );
+    } else if (action.type.includes("SUCCESS") && action.type !== "REFRESH_TOKEN_SUCCESS") {
+        var index = buffer.indexOf(buffer.find((element) => element.type === action.type.replace("_SUCCESS", "")));
         if (index > -1) {
             buffer.splice(index, 1);
         }
@@ -105,18 +94,12 @@ const resetEnhancer = (rootReducer) => (state, action) => {
     return newState;
 };
 
-const persistedReducer = persistReducer(
-    persistConfig,
-    resetEnhancer(createRootReducer())
-);
+const persistedReducer = persistReducer(persistConfig, resetEnhancer(createRootReducer()));
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [lastActionMiddleware, sagaMiddleware];
 
-const store = createStore(
-    persistedReducer,
-    composeWithDevTools(applyMiddleware(...middlewares))
-);
+const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(...middlewares)));
 
 export const persistor = persistStore(store);
 
