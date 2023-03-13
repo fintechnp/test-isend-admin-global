@@ -11,6 +11,7 @@ import actions from "../../../Common/store/actions";
 function Login(props) {
     const dispatch = useDispatch();
     const authContext = useContext(AuthContext);
+    console.log("🚀 ~ file: Login.jsx:14 ~ Login ~ authContext:", authContext);
     const [loading, setLoading] = useState(false);
     const { response: user, success, loading: user_loading } = useSelector((state) => state.get_user);
 
