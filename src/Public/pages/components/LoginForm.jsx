@@ -58,7 +58,7 @@ const LoginForm = ({ onSubmit, loading }) => {
                         </Typography>
                         <FormTextField size="large" name="email" label="Email" />
                         <FormTextField size="large" type="password" name="password" label="Password" />
-                        <SubmitButton size="large" isLoading={loading}>
+                        <SubmitButton size="large" isLoading={loading} role="button" name="login">
                             {loading ? "Logging In" : "Login"}
                         </SubmitButton>
                     </Box>
