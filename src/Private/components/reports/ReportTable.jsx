@@ -57,6 +57,7 @@ const ReportTable = ({
     apiEndpoint,
     filterQuery,
     isDownloading,
+    showExport = true,
 }) => {
     const defaultColumn = useMemo(
         () => ({
@@ -112,51 +113,53 @@ const ReportTable = ({
     return (
         <>
             <Box display="flex" flexDirection="row" justifyContent="flex-end">
-                <Box display="flex" gap={2}>
-                    {/* Column Visibility */}
-                    <Button
-                        id="toggle-column-visibility-customized-button"
-                        aria-controls={open ? "toggle-column-visibility-customized-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        disableElevation
-                        onClick={(e) => setAnchorEl(e.currentTarget)}
-                        size="medium"
-                        isLoading={loading}
-                        variant="outlined"
-                    >
-                        Columns
-                    </Button>
-                    <StyledMenu
-                        id="toggle-column-visibility-customized-menu"
-                        MenuListProps={{
-                            "aria-labelledby": "toggle-column-visibility-customized-button",
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={() => setAnchorEl(null)}
-                    >
-                        <Box display="flex" flexDirection="column" sx={{ px: 2 }}>
-                            <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} />
-                            {allColumns.map((column) => (
-                                <Box key={column.id}>
-                                    <FormControlLabel
-                                        control={<Checkbox {...column.getToggleHiddenProps()} />}
-                                        label={column.Header}
-                                    />
-                                </Box>
-                            ))}
-                        </Box>
-                    </StyledMenu>
-                    {/* Export to CSV, PDF, XLSX */}
-                    <ReportExport
-                        filename={filename}
-                        columns={exportColumns}
-                        apiEndpoint={apiEndpoint}
-                        filterQuery={{ ...filterQuery, page_size: 10000 }}
-                        isExporting={isDownloading}
-                    />
-                </Box>
+                {showExport && (
+                    <Box display="flex" gap={2}>
+                        {/* Column Visibility */}
+                        <Button
+                            id="toggle-column-visibility-customized-button"
+                            aria-controls={open ? "toggle-column-visibility-customized-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            disableElevation
+                            onClick={(e) => setAnchorEl(e.currentTarget)}
+                            size="medium"
+                            isLoading={loading}
+                            variant="outlined"
+                        >
+                            Columns
+                        </Button>
+                        <StyledMenu
+                            id="toggle-column-visibility-customized-menu"
+                            MenuListProps={{
+                                "aria-labelledby": "toggle-column-visibility-customized-button",
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={() => setAnchorEl(null)}
+                        >
+                            <Box display="flex" flexDirection="column" sx={{ px: 2 }}>
+                                <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} />
+                                {allColumns.map((column) => (
+                                    <Box key={column.id}>
+                                        <FormControlLabel
+                                            control={<Checkbox {...column.getToggleHiddenProps()} />}
+                                            label={column.Header}
+                                        />
+                                    </Box>
+                                ))}
+                            </Box>
+                        </StyledMenu>
+                        {/* Export to CSV, PDF, XLSX */}
+                        <ReportExport
+                            filename={filename}
+                            columns={exportColumns}
+                            apiEndpoint={apiEndpoint}
+                            filterQuery={{ ...filterQuery, page_size: 10000 }}
+                            isExporting={isDownloading}
+                        />
+                    </Box>
+                )}
             </Box>
             <Spacer />
             <TableContainer>

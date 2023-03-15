@@ -66,6 +66,12 @@ const apiEndpoints = {
         update: "languagecountry/:languagecountryId",
         delete: "languagecountry/:languagecountryId",
     },
+    languageValue: {
+        get: "localization",
+        post: "localization",
+        update: "localization/:localizationId",
+        delete: "localization/:localizationId",
+    },
 };
 
 export default apiEndpoints;

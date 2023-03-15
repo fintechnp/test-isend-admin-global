@@ -98,9 +98,7 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <ContentPasteSearchIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
+                        <ContentPasteSearchIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                         <Title> Search Customer </Title>
                     </Box>
                 </TitleWrapper>
@@ -145,13 +143,7 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email"
-                                placeholder="Email"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="email" placeholder="Email" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -163,16 +155,11 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {loading
-                                        ? "Fetching Partner ..."
-                                        : "Select Partner"}
+                                    {loading ? "Fetching Partner ..." : "Select Partner"}
                                 </option>
                                 {SendPartner &&
                                     SendPartner?.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -190,12 +177,8 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date("1920-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
-                                    max: `${moment()
-                                        .subtract(18, "years")
-                                        .format("YYYY-MM-DD")}`,
+                                    min: new Date("1920-01-01").toISOString().slice(0, 10),
+                                    max: `${moment().subtract(18, "years").format("YYYY-MM-DD")}`,
                                 }}
                             />
                         </FieldWrapperLabel>
@@ -208,20 +191,12 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <ResetButton
-                                        size="small"
-                                        variant="outlined"
-                                        onClick={handleReset}
-                                    >
+                                    <ResetButton size="small" variant="outlined" onClick={handleReset}>
                                         Reset
                                     </ResetButton>
                                 </Grid>
                                 <Grid item>
-                                    <SearchButton
-                                        size="small"
-                                        variant="outlined"
-                                        type="submit"
-                                    >
+                                    <SearchButton size="small" variant="outlined" type="submit">
                                         Search
                                     </SearchButton>
                                 </Grid>

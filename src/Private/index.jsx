@@ -165,6 +165,15 @@ import {
     UpdateLanguageCountry,
 } from "./pages/Setup/LanguageCountry/store";
 
+import {
+    AddLanguageValue,
+    DeleteLanguageValue,
+    GetAllLanguageValue,
+    LanguageValue,
+    LanguageValueSaga,
+    UpdateLanguageValue,
+} from "./pages/Setup/AddLanguage/store";
+
 //Customer Process
 import {
     GetCustomersReducer,
@@ -412,6 +421,11 @@ export const privateReducer = {
     add_language_country: AddLanguageCountry,
     update_language_country: UpdateLanguageCountry,
     delete_language_country: DeleteLanguageCountry,
+
+    get_all_language_value: GetAllLanguageValue,
+    add_language_value: AddLanguageValue,
+    update_language_value: UpdateLanguageValue,
+    delete_language_value: DeleteLanguageValue,
 
     //delivery route
     get_delivery_route: GetDeliveryRouteReducer,
@@ -690,6 +704,7 @@ export const privateSaga = [
     bulkEmailCredentialSaga(),
     LanguageOptionSaga(),
     LanguageCountrySaga(),
+    LanguageValueSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
