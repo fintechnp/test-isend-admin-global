@@ -1,29 +1,13 @@
 import { useDispatch } from "react-redux";
 import { useMemo, useState } from "react";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
-import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-import actions from "../../pages/Setup/AddLanguage/store/actions";
 import Modal from "App/components/Modal/Modal";
 import AddLanguageValue from "./AddLanguageValue";
-
-const UpdateButton = styled(IconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const AddButton = styled(Button)(({ theme }) => ({
-    padding: "6px 12px",
-    textTransform: "capitalize",
-    color: theme.palette.secondary.contrastText,
-    borderColor: theme.palette.border.main,
-}));
+import { AddButton, UpdateButton } from "../AllButtons/Buttons";
+import actions from "../../pages/Setup/AddLanguage/store/actions";
 
 const LanguageValueModal = ({ update, update_data }) => {
     const dispatch = useDispatch();
@@ -36,10 +20,6 @@ const LanguageValueModal = ({ update, update_data }) => {
             localization_value: update_data?.localization_value,
         };
     }, [update_data]);
-
-    // const initialValue = {
-    //     localization_type: "API",
-    // };
 
     const handleClickOpen = () => {
         setOpen(true);

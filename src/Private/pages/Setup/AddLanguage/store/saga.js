@@ -1,6 +1,6 @@
 import actions from "./actions";
 import buildRoute from "App/helpers/buildRoute";
-import Api from "../../../../../App/services/api";
+import Api from "App/services/api";
 import apiEndpoints from "Private/config/apiEndpoints";
 import { put, takeEvery, call, all } from "redux-saga/effects";
 

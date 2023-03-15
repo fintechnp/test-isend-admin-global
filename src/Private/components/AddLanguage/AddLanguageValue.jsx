@@ -1,44 +1,10 @@
 import Grid from "@mui/material/Grid";
-import { LoadingButton } from "@mui/lab";
 import { useForm } from "react-hook-form";
-import { styled } from "@mui/material/styles";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
+import { AddButton, CancelButton } from "../AllButtons/Buttons";
 import FormTextField from "App/core/hook-form/FormTextField";
-
-const CancelButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    border: `1px solid ${theme.palette.warning.main}`,
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-        border: `1px solid ${theme.palette.warning.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
-const AddButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-        border: `1px solid ${theme.palette.primary.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
 
 const localizationTypeOptions = [{ label: "Api", value: "API" }];
 

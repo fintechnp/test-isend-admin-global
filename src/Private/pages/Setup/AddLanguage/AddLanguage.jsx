@@ -2,8 +2,7 @@ import { styled } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Grid, Pagination } from "@mui/material";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
+import { Box, Grid } from "@mui/material";
 
 import actions from "./store/actions";
 import { Delete } from "App/components";
@@ -52,12 +51,6 @@ const AddLanguage = () => {
             return { value: item, label: item };
         });
 
-    const noOfPage = allLanguageValue?.pagination?.totalPage || 1;
-
-    const handlePageChange = (value) => {
-        const updatedSchema = { ...filterSchema, page_number: value };
-        setFilterSchema(updatedSchema);
-    };
     const handleChangeRowsPerPage = (e) => {
         const pageSize = e.target.value;
         const updatedFilterSchema = {
@@ -171,7 +164,6 @@ const AddLanguage = () => {
             documentTitle="Add Language"
             title={
                 <>
-                    <ContentPasteSearchIcon />
                     <Typography>Add Language</Typography>
                 </>
             }
