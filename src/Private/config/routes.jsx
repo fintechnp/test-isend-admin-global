@@ -39,6 +39,7 @@ const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
 const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
 const LanguageSetup = lazy(() => import("../pages/Setup/LanguageSetup/LanguageSetup"));
 const LanguageCountry = lazy(() => import("../pages/Setup/LanguageCountry/LanguageCountry"));
+const AddLanguage = lazy(() => import("../pages/Setup/AddLanguage/AddLanguage"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -250,6 +251,10 @@ const privateRoutes = [
     {
         path: routePaths.setup.languageCountry,
         component: <LanguageCountry />,
+    },
+    {
+        path: routePaths.setup.addLanguage,
+        component: <AddLanguage />,
     },
 
     //Customers

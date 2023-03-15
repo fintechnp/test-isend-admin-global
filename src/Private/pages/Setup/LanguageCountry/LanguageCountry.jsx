@@ -59,7 +59,6 @@ function LanguageCountry() {
     const { response: languageData, loading: languageDataLoading } = useSelector(
         (state) => state.get_all_language_country,
     );
-    console.log("🚀 ~ file: LanguageCountry.jsx:54 ~ LanguageCountry ~ languageData:", languageData);
     const noOfPage = languageData?.pagination?.totalPage || 1;
 
     const handleDelete = (id) => {
@@ -209,6 +208,7 @@ function LanguageCountry() {
                             apiEndpoint={apiEndpoints.languageCountry.get}
                             filterQuery={filterSchema}
                             filename="Language Country Options"
+                            showExport={false}
                         />
                     </Grid>
                 )}

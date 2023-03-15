@@ -21,6 +21,7 @@ const routePaths = {
     setup: {
         language: "/setup/language-setup",
         languageCountry: "/setup/language-country",
+        addLanguage: "/setup/add-language",
     },
 };
 
