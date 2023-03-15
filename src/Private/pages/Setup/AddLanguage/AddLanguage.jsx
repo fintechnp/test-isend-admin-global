@@ -6,13 +6,11 @@ import { Box, Grid, Pagination } from "@mui/material";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
 import actions from "./store/actions";
-import { Delete, Loading } from "App/components";
-import apiEndpoints from "Private/config/apiEndpoints";
-import FilterLanguage from "./Components/FilterLanguage";
+import { Delete } from "App/components";
+import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
-import LanguageValueModal from "./Components/AddLanguageValueModal";
-import NoResults from "Private/pages/Transactions/components/NoResults";
+import FilterLanguage from "../../../components/AddLanguage/FilterLanguage";
+import LanguageValueModal from "../../../components/AddLanguage/AddLanguageValueModal";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
@@ -60,9 +58,25 @@ const AddLanguage = () => {
         const updatedSchema = { ...filterSchema, page_number: value };
         setFilterSchema(updatedSchema);
     };
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_number: 1,
+            page_size: +pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const handleDelete = (id) => {
         dispatch(actions.delete_language_value(id));
+    };
+    const handleChangePage = (e, newPage) => {
+        const updatedFilter = {
+            ...filterSchema,
+            page_number: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
     };
 
     const columns = useMemo(
@@ -167,48 +181,24 @@ const AddLanguage = () => {
                 <LanguageValueModal update={false} />
             </div>
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                {/* {lang_loading && ( */}
                 <Grid item xs={12}>
-                    <Loading loading={getLanguageValueLoading} />
+                    <Table
+                        columns={columns}
+                        title="Language Value"
+                        data={allLanguageValue?.data || []}
+                        loading={getLanguageValueLoading}
+                        rowsPerPage={8}
+                        totalPage={allLanguageValue?.pagination?.totalPage || 1}
+                        renderPagination={() => (
+                            <TablePagination
+                                paginationData={allLanguageValue?.pagination}
+                                handleChangePage={handleChangePage}
+                                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                            />
+                        )}
+                    />
                 </Grid>
-                {/* )} */}
-
-                {!getLanguageValueLoading && !allLanguageValue?.data > 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Record Found" />
-                    </Grid>
-                )}
-                {!getLanguageValueLoading && allLanguageValue?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <ReportTable
-                            columns={columns}
-                            data={allLanguageValue?.data || []}
-                            loading={getLanguageValueLoading}
-                            apiEndpoint={apiEndpoints.languageValue.get}
-                            filterQuery={filterSchema}
-                            showExport={false}
-                            filename="Language Value Options"
-                        />
-                    </Grid>
-                )}
             </Grid>
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    marginTop: "1rem",
-                    gap: "1rem",
-                }}
-            >
-                <PageLimitSelect onChange={(e) => setFilterSchema({ ...filterSchema, page_size: e.target.value })} />
-                <Pagination
-                    count={noOfPage}
-                    variant="outlined"
-                    shape="rounded"
-                    onChange={(e, value) => handlePageChange(value)}
-                />
-            </div>
         </PageContent>
     );
 };

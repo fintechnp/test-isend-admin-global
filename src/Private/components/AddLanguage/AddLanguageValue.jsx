@@ -55,14 +55,14 @@ const AddLanguageValue = ({ initial, update, onSubmit }) => {
     };
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
-            <Grid container item xs={12} direction="row">
-                <Grid item xs={12} sm={6} style={{ marginTop: "0.5rem", padding: "0px 12px" }}>
+            <Grid container item xs={12} direction="row" spacing={2}>
+                <Grid item xs={12} sm={6}>
                     <FormTextField name="localization_key" label="Localization Key" />
                 </Grid>
-                <Grid item xs={12} sm={6} style={{ marginTop: "0.5rem", padding: "0px 12px" }}>
+                <Grid item xs={12} sm={6}>
                     <FormTextField name="localization_value" label="Localization Value" />
                 </Grid>
-                <Grid item xs={12} sm={6} style={{ marginTop: "1rem", padding: "0px 12px" }}>
+                <Grid item xs={12} sm={6}>
                     <FormSelect
                         disabled
                         name="translation_type"

@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-import actions from "./../store/actions";
+import actions from "../../pages/Setup/AddLanguage/store/actions";
 import Modal from "App/components/Modal/Modal";
 import AddLanguageValue from "./AddLanguageValue";
 

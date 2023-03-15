@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import actions from "./../store/actions";
+import actions from "../../pages/Setup/AddLanguage/store/actions";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -79,16 +79,16 @@ const FilterLanguage = ({ sortByOptions }) => {
     return (
         <Grid item xs={12}>
             <HookForm onSubmit={handleSubmit} {...methods}>
-                <FormWrapper container direction="row">
-                    <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
+                <Grid container direction="row" spacing={2}>
+                    <Grid item xs={12} sm={6}>
                         <FormTextField name="localization_key" label="Localization Key" />
-                    </FieldWrapper>
-                    <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
                         <FormSelect name="order_by" options={orderByOptions} label="Order By" />
-                    </FieldWrapper>
-                    <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
                         <FormSelect name="sort_by" options={sortByOptions} label="Sort By" />
-                    </FieldWrapper>
+                    </Grid>
                     <Grid item xs={12}>
                         <ButtonWrapper
                             container
@@ -109,7 +109,7 @@ const FilterLanguage = ({ sortByOptions }) => {
                             </Grid>
                         </ButtonWrapper>
                     </Grid>
-                </FormWrapper>
+                </Grid>
             </HookForm>
         </Grid>
     );
