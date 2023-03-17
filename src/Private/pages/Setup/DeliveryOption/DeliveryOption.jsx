@@ -1,57 +1,22 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
+import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-import actions from "./store/actions";
-import Header from "./components/Header";
+import { Delete } from "App/components";
 import Filter from "./components/Filter";
-import { Delete } from "./../../../../App/components";
-import { CountryName, CurrencyName, ReferenceName } from "./../../../../App/helpers";
+import PageContent from "App/components/Container/PageContent";
 import AddDeliveryOption from "./components/AddDeliveryOption";
-import Table, { TablePagination, TableSwitch } from "./../../../../App/components/Table";
+import { TablePagination, TableSwitch } from "App/components/Table";
 
-const MenuContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import Spacer from "App/components/Spacer/Spacer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
-const SwitchWrapper = styled(Box)(({ theme }) => ({
-    "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
-        opacity: 0.8,
-        color: theme.palette.primary.main,
-    },
-}));
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
-    color: "border.main",
-}));
-
-const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "14px",
-    color: theme.palette.secondary.contrastText,
-    textTransform: "capitalize",
-}));
+import actions from "./store/actions";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
+import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 const initialState = {
     page_number: 1,
@@ -81,108 +46,50 @@ const DeliveryOption = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "delivery_option_id",
-                maxWidth: 80,
+                header: "ID",
+                accessorKey: "delivery_option_id",
             },
             {
-                Header: "Option Name",
-                accessor: "delivery_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
-                        </StyledName>
-                    </Box>
-                ),
+                header: "Option Name",
+                accessorKey: "delivery_name",
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Payout Agent</Typography>
-                    </Box>
-                ),
-                accessor: "payout_agent",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
-                    </Box>
-                ),
+                header: "Payout Agent",
+                accessorKey: "payout_agent",
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Payment Type</Typography>
-                    </Box>
-                ),
-                accessor: "payment_type",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? ReferenceName(1, data.value) : "n/a"}</StyledText>
-                    </Box>
+                header: "Payment Type",
+                accessorKey: "payment_type",
+                cell: ({ getValue }) => (getValue() ? ReferenceName(1, getValue()) : "N/A"),
+            },
+            {
+                header: "Country/Currency",
+                accessorKey: "country_code",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Box>
+                            <Typography component="p">{getValue() ? CountryName(getValue()) : "N/A"}</Typography>
+                            <Typography color="grey.600" variant="caption">
+                                {row?.original?.currency_code ? CurrencyName(row?.original?.currency_code) : "N/A"}
+                            </Typography>
+                        </Box>
+                    );
+                },
+            },
+            {
+                header: "Status",
+                accessorKey: "is_active",
+                cell: (data) => (
+                    <TableSwitch value={data?.value ?? false} data={data.row.original} handleStatus={handleStatus} />
                 ),
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Country/Currency</Typography>
-                    </Box>
-                ),
-                accessor: "country_code",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? CountryName(data.value) : "N/A"}</StyledText>
-                        <Typography
-                            sx={{
-                                opacity: 0.6,
-                                fontSize: "12px",
-                                lineHeight: 1,
-                            }}
-                        >
-                            {data?.row?.original?.currency_code
-                                ? CurrencyName(data?.row?.original?.currency_code)
-                                : "N/A"}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Status</Typography>
-                    </Box>
-                ),
-                accessor: "is_active",
-                width: 120,
-                Cell: (data) => (
-                    <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
-                    </SwitchWrapper>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
+                header: "Actions",
+                accessorKey: "show",
+                cell: ({ row }) => (
+                    <TableRowActionContainer>
+                        <span onClick={() => row.toggleExpanded()}>
+                            {row.getIsExpanded() ? (
                                 <Tooltip title="Hide Delivery Option Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
@@ -217,7 +124,7 @@ const DeliveryOption = (props) => {
                             loading={d_loading}
                             tooltext="Delete Delivery Option"
                         />
-                    </Box>
+                    </TableRowActionContainer>
                 ),
             },
         ],
@@ -306,37 +213,32 @@ const DeliveryOption = (props) => {
     }, []);
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header />
-                <Filter
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleCountry={handleCountry}
-                    handleOrder={handleOrder}
-                    handlePayemntType={handlePayemntType}
-                />
-                <Table
-                    columns={columns}
-                    title="Delivery Option Details"
-                    data={deliveryoption_data?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    totalPage={deliveryoption_data?.pagination?.totalPage || 1}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={deliveryoption_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent title="Delivery Options" topRightEndContent={<AddDeliveryOption update={false} />}>
+            <Filter
+                state={filterSchema}
+                handleSearch={handleSearch}
+                handleCountry={handleCountry}
+                handleOrder={handleOrder}
+                handlePayemntType={handlePayemntType}
+            />
+            <Spacer />
+            <TanstackReactTable
+                columns={columns}
+                title="Delivery Option Details"
+                data={deliveryoption_data?.data || []}
+                sub_columns={sub_columns}
+                loading={g_loading}
+                rowsPerPage={8}
+                totalPage={deliveryoption_data?.pagination?.totalPage || 1}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={deliveryoption_data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 
