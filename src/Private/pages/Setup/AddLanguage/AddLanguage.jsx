@@ -20,7 +20,7 @@ const AddLanguage = () => {
     const dispatch = useDispatch();
 
     const [filterSchema, setFilterSchema] = useState({
-        page_size: 10,
+        page_size: 15,
         page_number: 1,
     });
 
@@ -37,6 +37,7 @@ const AddLanguage = () => {
     const { success: deleteLanguageValueSuccess, loading: deleteLanguageValueLoading } = useSelector(
         (state) => state.delete_language_value,
     );
+    console.log("🚀 ~ file: AddLanguage.jsx:28 ~ AddLanguage ~ allLanguageValue:", allLanguageValue);
 
     useEffect(() => {
         dispatch(actions.get_all_language_value(filterSchema));
