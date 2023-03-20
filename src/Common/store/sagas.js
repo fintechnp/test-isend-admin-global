@@ -8,26 +8,18 @@ const headers = {
     source: "web",
 };
 
-export const refreshToken = takeEvery(
-    actions.REFRESH_TOKEN,
-    function* (action) {
-        const api = new Api(false);
-        try {
-            const res = yield call(
-                api.post,
-                `account/refreshtoken`,
-                action.data,
-                headers
-            );
-            yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
-            Cookies.set("token", res.token);
-            Cookies.set("refreshToken", res.refresh_token);
-        } catch (error) {
-            yield put({ type: actions.REFRESH_TOKEN_FAILED, error: error });
-            yield put({ type: "SET_TOAST_DATA", data: error?.data });
-        }
+export const refreshToken = takeEvery(actions.REFRESH_TOKEN, function* (action) {
+    const api = new Api(false);
+    try {
+        const res = yield call(api.post, `account/refreshtoken`, action.data, headers);
+        yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
+        Cookies.set("token", res.token);
+        Cookies.set("refreshToken", res.refresh_token);
+    } catch (error) {
+        yield put({ type: actions.REFRESH_TOKEN_FAILED, error: error });
+        yield put({ type: "SET_TOAST_DATA", data: error?.data });
     }
-);
+});
 
 export const getUser = takeEvery(actions.USER_DETAILS, function* () {
     const api = new Api();
@@ -53,59 +45,45 @@ export const get_all_country = takeEvery(actions.GET_ALL_COUNTRY, function* () {
     } catch (error) {
         yield put({
             type: actions.GET_ALL_COUNTRY_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
 
-export const get_all_reference = takeEvery(
-    actions.GET_ALL_REFERENCE,
-    function* (action) {
-        const api = new Api();
-        try {
-            const res = yield call(
-                api.get,
-                `common/referencedata`,
-                action.query
-            );
-            yield put({
-                type: actions.GET_ALL_REFERENCE_SUCCESS,
-                response: res,
-            });
-            localStorage.setItem("reference", JSON.stringify(res?.data));
-        } catch (error) {
-            yield put({
-                type: actions.GET_ALL_REFERENCE_FAILED,
-                error: error.data,
-            });
-        }
+export const get_all_reference = takeEvery(actions.GET_ALL_REFERENCE, function* (action) {
+    const api = new Api();
+    try {
+        const res = yield call(api.get, `common/referencedata`, action.query);
+        yield put({
+            type: actions.GET_ALL_REFERENCE_SUCCESS,
+            response: res,
+        });
+        localStorage.setItem("reference", JSON.stringify(res?.data));
+    } catch (error) {
+        yield put({
+            type: actions.GET_ALL_REFERENCE_FAILED,
+            error: error?.data,
+        });
     }
-);
+});
 
-export const resetPassword = takeEvery(
-    actions.PASSWORD_RESET,
-    function* (action) {
-        const api = new Api();
-        try {
-            const res = yield call(
-                api.post,
-                `account/resetpassword`,
-                action.data
-            );
-            yield put({
-                type: actions.PASSWORD_RESET_SUCCESS,
-                response: res,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: res });
-        } catch (error) {
-            yield put({
-                type: actions.PASSWORD_RESET_FAILED,
-                error: error.data,
-            });
-            yield put({ type: "SET_TOAST_DATA", response: error?.data });
-        }
+export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action) {
+    const api = new Api();
+    try {
+        const res = yield call(api.post, `account/resetpassword`, action.data);
+        yield put({
+            type: actions.PASSWORD_RESET_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.PASSWORD_RESET_FAILED,
+            error: error.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
-);
+});
 
 export const logout = takeEvery(actions.LOG_OUT, function* () {
     const api = new Api();
@@ -126,12 +104,5 @@ export const logout = takeEvery(actions.LOG_OUT, function* () {
 });
 
 export default function* saga() {
-    yield all([
-        refreshToken,
-        getUser,
-        get_all_country,
-        get_all_reference,
-        resetPassword,
-        logout,
-    ]);
+    yield all([refreshToken, getUser, get_all_country, get_all_reference, resetPassword, logout]);
 }

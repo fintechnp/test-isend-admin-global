@@ -33,7 +33,26 @@ export default class Api {
 
         this.axiosFunction.interceptors.response.use(
             (response) => {
-                return response;
+                const pagination = response?.data?.pagination;
+                const isPagination = !!pagination;
+                const isDataArray = Array.isArray(response?.data?.data);
+                if (!isPagination && isDataArray) {
+                    const data = response?.data?.data?.map((item, index) => {
+                        return { f_serial_no: index + 1, ...item };
+                    });
+                    const newResponseData = { ...response, data: { ...response?.data, data } };
+                    return newResponseData;
+                } else if (isPagination && isDataArray) {
+                    const mData = response.data.data.map((item, index) => ({
+                        f_serial_no: (pagination.currentPage - 1) * pagination.pageSize + index + 1,
+                        ...item,
+                    }));
+                    const newResponse = { ...response, data: { ...response.data, data: mData } };
+
+                    return newResponse;
+                } else {
+                    return response;
+                }
             },
             function (error) {
                 if (error?.response?.status === 401) {

@@ -23,6 +23,9 @@ const routePaths = {
         languageCountry: "/setup/language-country",
         addLanguage: "/setup/add-language",
     },
+    customer: {
+        banks: "/customer/banks/:customerId",
+    },
 };
 
 export default routePaths;
