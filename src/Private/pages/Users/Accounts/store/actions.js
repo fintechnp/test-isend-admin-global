@@ -3,6 +3,10 @@ const actions = {
     GET_ACCOUNT_USER_SUCCESS: "GET_ACCOUNT_USER_SUCCESS",
     GET_ACCOUNT_USER_FAILED: "GET_ACCOUNT_USER_FAILED",
 
+    GET_ACCOUNT_NUMBER: "GET_ACCOUNT_NUMBER",
+    GET_ACCOUNT_NUMBER_SUCCESS: "GET_ACCOUNT_NUMBER_SUCCESS",
+    GET_ACCOUNT_NUMBER_FAILED: "GET_ACCOUNT_NUMBER_FAILED",
+
     GET_ACCOUNT_USER_DETAILS: "GET_ACCOUNT_USER_DETAILS",
     GET_ACCOUNT_USER_DETAILS_SUCCESS: "GET_ACCOUNT_USER_DETAILS_SUCCESS",
     GET_ACCOUNT_USER_DETAILS_FAILED: "GET_ACCOUNT_USER_DETAILS_FAILED",
@@ -33,8 +37,18 @@ const actions = {
     DELETE_ACCOUNT_USER_FAILED: "DELETE_ACCOUNT_USER_FAILED",
     DELETE_ACCOUNT_USER_RESET: "DELETE_ACCOUNT_USER_RESET",
 
+    FORGOT_PASSWORD: "FORGOT_PASSWORD",
+    FORGOT_PASSWORD_SUCCESS: "FORGOT_PASSWORD_SUCCESS",
+    FORGOT_PASSWORD_FAILED: "FORGOT_PASSWORD_FAILED",
+    FORGOT_PASSWORD_RESET: "FORGOT_PASSWORD_RESET",
+
     get_all_user: (query) => ({
         type: actions.GET_ACCOUNT_USER,
+        query,
+    }),
+
+    get_user_number: (query) => ({
+        type: actions.GET_ACCOUNT_NUMBER,
         query,
     }),
 
@@ -67,6 +81,11 @@ const actions = {
     delete_user: (id) => ({
         type: actions.DELETE_ACCOUNT_USER,
         id,
+    }),
+
+    forgot_password: (data) => ({
+        type: actions.FORGOT_PASSWORD,
+        data,
     }),
 };
 

@@ -24,9 +24,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "70%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -51,10 +52,14 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
 }));
 
 const Select = styled(MuiSelect)(({ theme }) => ({
-    // minWidth: "max-content",
     "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
         padding: "8px 10px",
         paddingRight: "28px",
+    },
+    "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
+        padding: "8px 10px",
+        paddingRight: "28px",
+        maxWidth: "130px",
     },
     "& .MuiSvgIcon-root.MuiSelect-icon": {
         color: theme.palette.border.main,
@@ -79,18 +84,23 @@ const agentType = [
     { key: "Send & Pay", value: "BOTH" },
 ];
 
-const orderData = [
-    { key: "Ascending", value: "ASC" },
-    { key: "Descending", value: "DESC" },
-];
-
-function Filter({ handleSearch, handleCountry, handleOrder, handleAgentType }) {
+function Filter({
+    handleSearch,
+    handleCountry,
+    handleSort,
+    handleOrder,
+    handleAgentType,
+    sortData,
+    orderData,
+    state,
+}) {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -106,70 +116,100 @@ function Filter({ handleSearch, handleCountry, handleOrder, handleAgentType }) {
 
             <DropWrapper>
                 <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleCountry}
-                            displayEmpty
-                            defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
+                    {handleCountry && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                native
+                                onChange={handleCountry}
+                                displayEmpty
+                                defaultValue=""
+                            >
+                                <option value="">All Country</option>
+                                {country &&
+                                    country.map((sort) => (
+                                        <option
+                                            value={sort.iso3}
+                                            key={sort.iso3}
                                         >
-                                            Country
-                                        </Typography>
+                                            {sort.country}
+                                        </option>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    )}
+                    {handleAgentType && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleAgentType}
+                                displayEmpty
+                                defaultValue=""
+                                renderValue={(selected) => {
+                                    if (selected.length === 0) {
+                                        return (
+                                            <Typography
+                                                component="p"
+                                                sx={{ opacity: 0.6 }}
+                                            >
+                                                Agent Type
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = agentType.filter(
+                                        (type) => type.value === selected
                                     );
-                                }
-                                const value = country.filter(
-                                    (type) => type.iso3 === selected
-                                );
-                                return value[0]?.country;
-                            }}
-                        >
-                            <MenuItem value="">All Country</MenuItem>
-                            {country.map((sort) => (
-                                <MenuItem value={sort.iso3} key={sort.iso3}>
-                                    {sort.country}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleAgentType}
-                            displayEmpty
-                            defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Agent Type
-                                        </Typography>
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {agentType.map((order) => (
+                                    <MenuItem
+                                        value={order.value}
+                                        key={order.value}
+                                    >
+                                        {order.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
+                    {handleSort && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleSort}
+                                displayEmpty
+                                defaultValue={state.sort_by}
+                                renderValue={(selected) => {
+                                    if (selected.length === 0) {
+                                        return (
+                                            <Typography
+                                                component="p"
+                                                sx={{ opacity: 0.6 }}
+                                            >
+                                                Sort By
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = sortData.filter(
+                                        (type) => type.value === selected
                                     );
-                                }
-                                const value = agentType.filter(
-                                    (type) => type.value === selected
-                                );
-                                return value[0]?.key;
-                            }}
-                        >
-                            {agentType.map((order) => (
-                                <MenuItem value={order.value} key={order.value}>
-                                    {order.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {sortData.map((order) => (
+                                    <MenuItem
+                                        value={order.value}
+                                        key={order.value}
+                                    >
+                                        {order.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

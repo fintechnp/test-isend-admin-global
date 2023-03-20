@@ -24,9 +24,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -89,11 +90,12 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ type, handleSearch, handleOrder, handleSortBy }) {
+function Filter({ type, state, handleSearch, handleOrder, handleSortBy }) {
     return (
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -113,7 +115,7 @@ function Filter({ type, handleSearch, handleOrder, handleSortBy }) {
                         <Select
                             onChange={handleSortBy}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue={state.sort_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
@@ -142,7 +144,7 @@ function Filter({ type, handleSearch, handleOrder, handleSortBy }) {
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

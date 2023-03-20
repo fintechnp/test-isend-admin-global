@@ -1,3 +1,4 @@
+import app from "App/config/app";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -9,7 +10,7 @@ export const injectStore = (_store) => {
 export default class Api {
     constructor(setToken = true) {
         this.axiosFunction = axios.create({
-            baseURL: (process.env.REACT_APP_API_BASE_URL || "") + "/api/",
+            baseURL: app.apiBaseUrl,
         });
         if (setToken) {
             this.setToken();
@@ -19,8 +20,7 @@ export default class Api {
     setToken = () => {
         this.axiosFunction.interceptors.request.use(
             (config) => {
-                config.headers["Authorization"] =
-                    "Bearer " + Cookies.get("token");
+                config.headers["Authorization"] = "Bearer " + Cookies.get("token");
                 config.headers["source"] = "web";
                 config.headers["Accept"] = "application/json";
                 config.headers["Content-Type"] = "application/json";
@@ -28,7 +28,7 @@ export default class Api {
             },
             (error) => {
                 return Promise.reject(error);
-            }
+            },
         );
 
         this.axiosFunction.interceptors.response.use(
@@ -40,14 +40,9 @@ export default class Api {
                     store.dispatch({
                         type: "INVALID_TOKEN",
                     });
-                    Object.keys(Cookies.get()).forEach(function (cookie) {
-                        Cookies.remove(cookie);
-                    });
-                    localStorage.clear();
-                    window.location.reload();
                 }
                 return Promise.reject(error);
-            }
+            },
         );
     };
 
@@ -55,8 +50,7 @@ export default class Api {
         if (headers) {
             for (const header in headers) {
                 if (headers[header]) {
-                    this.axiosFunction.defaults.headers[header] =
-                        headers[header];
+                    this.axiosFunction.defaults.headers[header] = headers[header];
                 }
             }
         }
@@ -72,8 +66,7 @@ export default class Api {
         if (headers) {
             for (const header in headers) {
                 if (headers[header]) {
-                    this.axiosFunction.defaults.headers[header] =
-                        headers[header];
+                    this.axiosFunction.defaults.headers[header] = headers[header];
                 }
             }
         }

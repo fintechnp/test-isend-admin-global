@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
+import { reset } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Tooltip, Button, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import SubdirectoryArrowRightOutlinedIcon from "@mui/icons-material/SubdirectoryArrowRightOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import { Delete } from "./../../../../App/components";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../App/components/Table";
 import { CountryName } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -23,6 +30,7 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
+    background: theme.palette.background.dark,
 }));
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
@@ -35,19 +43,26 @@ const SwitchWrapper = styled(Box)(({ theme }) => ({
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
+    color: theme.palette.border.main,
+    "&: hover": { color: theme.palette.border.dark, opacity: 1 },
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.border.dark,
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
+    opacity: 0.9,
     fontSize: "15px",
-    color: "border.main",
+    color: theme.palette.border.dark,
+}));
+
+const AddButton = styled(Button)(({ theme }) => ({
+    padding: "6px 12px",
+    textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
 }));
 
 const initialState = {
@@ -57,11 +72,11 @@ const initialState = {
     currency: "",
     agent_type: "",
     search: "",
-    sort_by: "country",
-    order_by: "ASC",
+    sort_by: "created_ts",
+    order_by: "DESC",
 };
 
-const Partner = () => {
+const Partner = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -69,167 +84,209 @@ const Partner = () => {
     const { response: partner_data, loading: g_loading } = useSelector(
         (state) => state.get_all_partner
     );
-    const { loading: d_loading, success: d_success } = useSelector(
+    const { success: d_success, loading: d_loading } = useSelector(
         (state) => state.delete_partner
     );
-    const { success: a_success } = useSelector((state) => state.add_partner);
-    const { success: u_success } = useSelector((state) => state.update_partner);
 
     useEffect(() => {
         dispatch(actions.get_all_partner(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
-    }, [dispatch, filterSchema, d_success, a_success, u_success]);
+        dispatch({ type: "DELETE_PARTNER_RESET" });
+        dispatch({ type: "ADD_PARTNER_RESET" });
+        dispatch({ type: "UPDATE_PARTNER_RESET" });
+        dispatch(reset("update_partner_form"));
+    }, [dispatch, filterSchema, d_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "agent_id",
-            maxWidth: 70,
-        },
-        {
-            Header: "Partner Name",
-            accessor: "name",
-            width: 280,
-            maxWidth: 500,
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Type</Typography>
-                </Box>
-            ),
-            accessor: "agent_type",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Country</Typography>
-                </Box>
-            ),
-            accessor: "country",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="center" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            Cell: (data) => (
-                <SwitchWrapper textAlign="center" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <Tooltip title="Partner Details" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/details/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "tid",
+                maxWidth: 70,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            <Link
+                                to={`/setup/partner/details/${data?.row.original.agent_id}`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "border.dark",
                                 }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Partner" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/update/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Partner Name",
+                accessor: "name",
+                width: 280,
+                maxWidth: 500,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            <Link
+                                to={`/setup/partner/details/${data?.row.original.agent_id}`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "border.dark",
                                 }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="See Corridor" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/partner/corridor/${row.original.agent_id}`
-                                )
-                            }
-                        >
-                            <SubdirectoryArrowRightOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-            ),
-        },
-    ]);
+                            >
+                                {data.value ? data.value : "N/A"}
+                            </Link>
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Type</Typography>
+                    </Box>
+                ),
+                accessor: "agent_type",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data.value : "N/A"}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Country</Typography>
+                    </Box>
+                ),
+                accessor: "country",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? CountryName(data.value) : "N/A"}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="center" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Tooltip title="Branch" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/branch/${row.original.name}/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <AltRouteIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="See Corridor" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/corridor/${row.original.name}/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <ShuffleIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Partner" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/partner/update/${row.original.agent_id}`
+                                    )
+                                }
+                            >
+                                <EditOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Remove Partner"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
-    const sub_columns = [
-        { key: "delivery_option_id", name: "Id" },
-        { key: "delivery_name", name: "Name" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "country_code", name: "Country" },
-        { key: "currency_code", name: "Currency" },
-        { key: "agent_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
+    const orderData = [
+        { key: "Ascending", value: "ASC" },
+        { key: "Descending", value: "DESC" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+        dispatch(actions.update_partner_status(id, { is_active: is_active }));
     }, []);
 
     const handleSearch = useCallback(
@@ -289,38 +346,54 @@ const Partner = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    //Add Partner
+    const handleAdd = () => {
+        navigate("/setup/partner/create");
+    };
+
     const handleDelete = (id) => {
         dispatch(actions.delete_partner(id));
     };
 
     return (
-        <MenuContainer>
-            <Header
-                title="Our Partner List"
-                buttonText="Add Partner"
-                partner={true}
-            />
-            <Filter
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
-            />
-            <Table
-                columns={columns}
-                data={partner_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={partner_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="Our Partner List">
+                    <AddButton
+                        size="small"
+                        variant="outlined"
+                        onClick={handleAdd}
+                        endIcon={<AddIcon />}
+                    >
+                        Add Partner
+                    </AddButton>
+                </Header>
+                <Filter
+                    orderData={orderData}
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleCountry={handleCountry}
+                    handleOrder={handleOrder}
+                    handleAgentType={handleAgentType}
+                />
+                <Table
+                    columns={columns}
+                    data={partner_data?.data || []}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={partner_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
@@ -17,7 +17,10 @@ import {
     CurrencyName,
     ReferenceName,
 } from "./../../../../App/helpers";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -28,6 +31,7 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
+    background: theme.palette.background.dark,
 }));
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
@@ -45,7 +49,7 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
+    fontSize: "14px",
     color: "border.main",
 }));
 
@@ -63,12 +67,11 @@ const initialState = {
     payment_type: "",
     search: "",
     sort_by: "sending_agent",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
-const DeliveryRoute = () => {
+const DeliveryRoute = (props) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: deliveryroute_data, loading: g_loading } = useSelector(
@@ -86,166 +89,195 @@ const DeliveryRoute = () => {
 
     useEffect(() => {
         dispatch(actions.get_delivery_route(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "CREATE_DELIVERY_ROUTE_RESET" });
+        dispatch({ type: "UPDATE_DELIVERY_ROUTE_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "delivery_route_id",
-            maxWidth: 80,
-        },
-        {
-            Header: "Sending Agent",
-            accessor: "sending_agent",
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Payout Agent</Typography>
-                </Box>
-            ),
-            accessor: "payout_agent",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Payment Type</Typography>
-                </Box>
-            ),
-            accessor: "payment_type",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {ReferenceName(1, data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Country/Currency</Typography>
-                </Box>
-            ),
-            accessor: "payout_country",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "delivery_route_id",
+                maxWidth: 50,
+            },
+            {
+                Header: "Sending Agent",
+                accessor: "sending_agent",
+                minWidth: 220,
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
                     >
-                        {CurrencyName(data?.row?.original?.payout_currency)}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="right" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            width: 120,
-            Cell: (data) => (
-                <SwitchWrapper textAlign="right" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Route Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Route Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <AddDeliveryRoute
-                        update={true}
-                        update_data={row?.original}
-                    />
-                    <Delete
-                        data={row?.original}
-                        handleDelete={handleDelete}
-                        loading={d_loading}
-                        tooltext="Delete Delivery Route"
-                    />
-                </Box>
-            ),
-        },
-    ]);
+                        <StyledName
+                            component="p"
+                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
+                        >
+                            {data.value ? data.value : "n/a"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Payout Agent</Typography>
+                    </Box>
+                ),
+                accessor: "payout_agent",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Payment Type</Typography>
+                    </Box>
+                ),
+                accessor: "payment_type",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? ReferenceName(1, data.value) : ""}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Country/Currency</Typography>
+                    </Box>
+                ),
+                accessor: "payout_country",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {CountryName(data.value)}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {data.value
+                                ? CurrencyName(
+                                      data?.row?.original?.payout_currency
+                                  )
+                                : ""}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="right" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <span {...row.getToggleRowExpandedProps({})}>
+                            {row.isExpanded ? (
+                                <Tooltip title="Hide Route Details" arrow>
+                                    <IconButton>
+                                        <VisibilityOffOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Show Route Details" arrow>
+                                    <IconButton>
+                                        <RemoveRedEyeOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </span>
+                        <AddDeliveryRoute
+                            update={true}
+                            update_data={row?.original}
+                        />
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Delete Delivery Route"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const sub_columns = [
-        { key: "delivery_route_id", name: "Id" },
-        { key: "sending_agent", name: "Sending Agent" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "payout_country", name: "Country" },
-        { key: "payout_currency", name: "Currency" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
+        { key: "delivery_route_id", name: "Id", type: "default" },
+        { key: "sending_agent", name: "Sending Agent", type: "default" },
+        { key: "payout_agent", name: "Payout Agent", type: "default" },
+        { key: "payout_country", name: "Payout Country", type: "country" },
+        { key: "payout_currency", name: "Payout Currency", type: "currency" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+        dispatch(
+            actions.update_delivery_route_status(id, { is_active: is_active })
+        );
     }, []);
 
     const handleSearch = useCallback(
@@ -310,30 +342,36 @@ const DeliveryRoute = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handlePayemntType={handlePayemntType}
-            />
-            <Table
-                columns={columns}
-                title="Delivery Route Details"
-                data={deliveryroute_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={deliveryroute_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleCountry={handleCountry}
+                    handleOrder={handleOrder}
+                    handlePayemntType={handlePayemntType}
+                />
+                <Table
+                    columns={columns}
+                    title="Delivery Route Details"
+                    data={deliveryroute_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={deliveryroute_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

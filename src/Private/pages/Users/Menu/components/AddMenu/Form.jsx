@@ -23,7 +23,7 @@ const Container = styled(Grid)(({ theme }) => ({
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
     padding: "6px 0px 16px",
-    backgroundColor: theme.palette.background.light,
+    backgroundColor: theme.palette.background.main,
 }));
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
@@ -59,6 +59,9 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
+    },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
     },
 }));
 
@@ -114,28 +117,30 @@ const MenuForm = ({
                                 ]}
                             />
                         </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
+                        {update && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Grid
+                                    container
+                                    alignItems="flex-end"
+                                    justifyContent="flex-end"
+                                >
+                                    <Grid item xs={12}>
+                                        <StatusText component="p">
+                                            Status
+                                        </StatusText>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Field
+                                            name="is_active"
+                                            label="Active"
+                                            small={12}
+                                            reverse="row-reverse"
+                                            component={CheckboxField}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </FieldWrapper>
+                            </FieldWrapper>
+                        )}
                     </FormWrapper>
                 </Grid>
                 <Grid item>
@@ -152,6 +157,7 @@ const MenuForm = ({
                         <Grid item>
                             <CancelButton
                                 size="small"
+                                disableElevation
                                 variant="contained"
                                 onClick={handleClose}
                             >

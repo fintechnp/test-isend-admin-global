@@ -20,8 +20,12 @@ import { Box } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
+        backgroundColor: theme.palette.background.dark,
     },
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
@@ -31,13 +35,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UpdateButton = styled(IconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.border.dark,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
     [theme.breakpoints.down("md")]: {
         marginBottom: "4px",
     },
@@ -53,7 +59,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: theme.palette.border.main,
 }));
 
 const BootstrapDialogTitle = (props) => {
@@ -132,7 +138,13 @@ function AddSubMenu({ update_data, update }) {
     };
 
     const handleSubMenuUpdate = (data) => {
-        dispatch(actions.update_sub_menu(id, data.menu_id, data));
+        dispatch(
+            actions.update_sub_menu(
+                update_data?.tid,
+                update_data?.parent_id,
+                data
+            )
+        );
     };
 
     return (
@@ -143,6 +155,9 @@ function AddSubMenu({ update_data, update }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>
@@ -174,8 +189,8 @@ function AddSubMenu({ update_data, update }) {
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                menu_id: memoizedData?.menu_id,
-                                name: memoizedData?.name,
+                                menu_id: memoizedData?.tid,
+                                name: memoizedData?.sub_title,
                                 menu_order: memoizedData?.menu_order,
                                 is_active: memoizedData?.is_active,
                             }}
@@ -194,7 +209,6 @@ function AddSubMenu({ update_data, update }) {
                             onSubmit={handleSubMenuSubmit}
                             buttonText="Create"
                             form={`add_sub_menu_form`}
-                            initialValues={{ is_active: false }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

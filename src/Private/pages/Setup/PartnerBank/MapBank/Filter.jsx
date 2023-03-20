@@ -74,24 +74,16 @@ const DropWrapper = styled(Box)(({ theme }) => ({
 
 const sortData = [
     { key: "None", value: "" },
-    { key: "Country", value: "country" },
-    { key: "Partner", value: "agent_id" },
-    { key: "Bank Name", value: "bank_name" },
-    { key: "Payment Type", value: "payment_type" },
+    { key: "L. Name", value: "location_name" },
+    { key: "L. Code", value: "location_code" },
 ];
 
 const orderData = [
-    { key: "None", value: "" },
     { key: "Ascending", value: "ASC" },
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({
-    handleSearch,
-    handleOrder,
-    handleSortBy,
-}) {
-
+function Filter({ state, handleSearch, handleOrder, handleSort }) {
     return (
         <FilterWrapper>
             <SearchBox>
@@ -113,9 +105,9 @@ function Filter({
                 <Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
-                            onChange={handleSortBy}
+                            onChange={handleSort}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue={state.sort_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
@@ -144,7 +136,7 @@ function Filter({
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue=""
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
@@ -175,4 +167,4 @@ function Filter({
     );
 }
 
-export default Filter;
+export default React.memo(Filter);

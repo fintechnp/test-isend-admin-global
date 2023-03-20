@@ -13,18 +13,40 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
 }));
 
-function Header({ title, buttonText }) {
+function Header({ title, buttonText, name, sending_currency, id }) {
     const navigate = useNavigate();
 
     const handleAdd = () => {
-        navigate(`/setup/exchange-rate/create`);
+        if (id) {
+            navigate(`/setup/exchange-rate/create/${sending_currency}/${id}`);
+        } else {
+            navigate(`/setup/exchange-rate/create/all/0`);
+        }
     };
 
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>{title}</Typography>
+            <Box>
+                <Typography sx={{ fontSize: "22px", display: "inline-block" }}>
+                    {title}{" "}
+                </Typography>
+                {name && (
+                    <Typography
+                        sx={{
+                            paddingLeft: "8px",
+                            fontSize: "21px",
+                            fontWeight: "500",
+                            display: "inline-block",
+                        }}
+                    >
+                        {` of ${name}`}
+                    </Typography>
+                )}
+            </Box>
             {buttonText && (
                 <AddButton
                     size="small"

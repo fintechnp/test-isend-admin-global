@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -23,6 +24,7 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
+    background: theme.palette.background.dark,
 }));
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -48,11 +50,11 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
-const ReferenceData = () => {
-    const { id } = useParams();
+const ReferenceData = (props) => {
+    const { id, name } = useParams();
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -96,7 +98,7 @@ const ReferenceData = () => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
+                        {data.value ? data.value : "n/a"}
                     </StyledName>
                 </Box>
             ),
@@ -110,7 +112,9 @@ const ReferenceData = () => {
             accessor: "value",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? data.value : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
@@ -123,12 +127,18 @@ const ReferenceData = () => {
             accessor: "description",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? data.value : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -145,6 +155,9 @@ const ReferenceData = () => {
                                     <VisibilityOffOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -155,6 +168,9 @@ const ReferenceData = () => {
                                     <RemoveRedEyeOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -168,7 +184,7 @@ const ReferenceData = () => {
                     <Delete
                         handleDelete={handleDelete}
                         d_loading={d_loading}
-                        id={row.original.reference_id}
+                        id={row.original?.tid}
                         tooltext="Delete Reference Data"
                     />
                 </Box>
@@ -177,10 +193,11 @@ const ReferenceData = () => {
     ]);
 
     const sub_columns = [
-        { key: "reference_type_id", name: "Id" },
-        { key: "type_name", name: "Type Name" },
-        { key: "name", name: "Name" },
-        { key: "description", name: "Description" },
+        { key: "reference_type_id", name: "Id", type: "default" },
+        { key: "type_name", name: "Type Name", type: "default" },
+        { key: "name", name: "Name", type: "default" },
+        { key: "description", name: "Description", type: "defautl" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(
@@ -231,35 +248,46 @@ const ReferenceData = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleDelete = () => {
-        dispatch(actions.delete_reference_data(id));
+    const handleDelete = (d_id) => {
+        dispatch(actions.delete_reference_data(d_id));
     };
 
     return (
-        <MenuContainer>
-            <Header title="Reference Data" type={false} id={id} />
-            <Filter
-                type={false}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSortBy={handleSortBy}
-            />
-            <Table
-                columns={columns}
-                title="Reference Data Details"
-                data={referenceData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={referenceData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header
+                    title="Reference Data"
+                    type={false}
+                    id={id}
+                    name={name}
+                />
+                <Filter
+                    type={false}
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleOrder={handleOrder}
+                    handleSortBy={handleSortBy}
+                />
+                <Table
+                    columns={columns}
+                    title="Reference Data Details"
+                    data={referenceData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={referenceData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

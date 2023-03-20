@@ -24,6 +24,11 @@ const actions = {
     REFRESH_TOKEN_FAILED: "REFRESH_TOKEN_FAILED",
     REFRESH_TOKEN_RESET: "REFRESH_TOKEN_RESET",
 
+    PASSWORD_RESET: "PASSWORD_RESET",
+    PASSWORD_RESET_SUCCESS: "PASSWORD_RESET_SUCCESS",
+    PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
+    PASSWORD_RESET_RESET: "PASSWORD_RESET_RESET",
+
     LOG_OUT: "LOG_OUT",
     LOG_OUT_SUCCESS: "LOG_OUT_SUCCESS",
     LOG_OUT_FAILED: "LOG_OUT_FAILED",
@@ -46,8 +51,14 @@ const actions = {
         type: actions.GET_ALL_COUNTRY,
     }),
 
-    get_all_reference: () => ({
+    get_all_reference: (query) => ({
         type: actions.GET_ALL_REFERENCE,
+        query,
+    }),
+
+    reset_password: (data) => ({
+        type: actions.PASSWORD_RESET,
+        data,
     }),
 };
 

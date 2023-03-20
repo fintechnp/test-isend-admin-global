@@ -47,7 +47,7 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
 }));
 
 const ListButton = styled(ListItemButton)(({ theme, open }) => ({
-    padding: "6px 8px !important",
+    padding: "6px 6px !important",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -63,9 +63,9 @@ const ListText = styled(ListItemText)(({ theme, open }) => ({
     padding: theme.spacing(0, 1),
     textDecoration: "none",
     color: theme.palette.primary.contrastText,
-    ...(!open && {
-        display: "none",
-    }),
+    // ...(!open && {
+    //     display: "none",
+    // }),
 }));
 
 function SubHeader({

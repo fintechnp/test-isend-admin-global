@@ -24,9 +24,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -39,6 +40,9 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
     },
     "& .MuiSvgIcon-root": {
         fill: theme.palette.border.main,
+    },
+    [theme.breakpoints.down("md")]: {
+        width: "60%",
     },
 }));
 
@@ -76,6 +80,7 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}

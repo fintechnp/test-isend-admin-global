@@ -102,6 +102,30 @@ export const updatePartnerBank = takeEvery(
     }
 );
 
+export const unmapPartnerBank = takeEvery(
+    actions.MAP_PARTNER_BANK,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(
+                api.patch,
+                `partnerbank/${action.id}?${query}`
+            );
+            yield put({
+                type: actions.MAP_PARTNER_BANK_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.MAP_PARTNER_BANK_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
 export const deletePartnerBank = takeEvery(
     actions.DELETE_PARTNER_BANK,
     function* (action) {
@@ -130,5 +154,6 @@ export default function* saga() {
         createPartnerBank,
         updatePartnerBank,
         deletePartnerBank,
+        unmapPartnerBank,
     ]);
 }

@@ -1,20 +1,11 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { FieldArray } from "redux-form";
-import Grid from "@mui/material/Grid";
 import MuiCard from "@mui/material/Card";
 import MuiCardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import MuiDivider from "@mui/material/Divider";
 
-import Check from "./../Form";
-
-const Container = styled(Grid)(({ theme }) => ({
-    paddingTop: "10px",
-    "& .MuiGrid-root>.MuiGrid-item": {
-        paddingTop: "2px",
-    },
-}));
+import Form from "./../Form";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     // margin: 0,
@@ -22,10 +13,13 @@ const Card = styled(MuiCard)(({ theme }) => ({
     border: "none",
     boxShadow: "none",
     "& .MuiCardContent-root": {
-        padding: "0px 8px",
+        padding: "8px",
     },
     "& .MuiCardContent-root:last-child": {
         paddingBottom: "8px",
+    },
+    "& .MuiButtonBase-root.MuiCheckbox-root": {
+        padding: "8px",
     },
 }));
 
@@ -46,26 +40,16 @@ const Divider = styled(MuiDivider)(({ theme }) => ({
     margin: "4px 0px",
 }));
 
-const PermissionCard = ({ fields, meta }) => {
+const PermissionCard = ({ data }) => {
     return (
         <>
-            <Container container spacing={1}>
-                {fields.map((member, index) => (
-                    <Grid item key={index} xs={12} sm={4} md={3}>
-                        <Card key={index}>
-                            <CardContent>
-                                <Header>{fields.get(index)?.name}</Header>
-                                <Divider light />
-                                <FieldArray
-                                    name={`${member}.sub_menu`}
-                                    component={Check}
-                                    ind={index}
-                                />
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Container>
+            <Card>
+                <CardContent>
+                    <Header>{data?.name}</Header>
+                    <Divider light />
+                    <Form sub_data={data?.sub_menu} length={data?.sub_menu.length}/>
+                </CardContent>
+            </Card>
         </>
     );
 };

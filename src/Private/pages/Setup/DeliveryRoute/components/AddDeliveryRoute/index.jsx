@@ -13,14 +13,20 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { Box } from "@mui/material";
 
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
-import { Box } from "@mui/material";
+import PartnerActions from "./../../../Partner/store/actions";
+import DeliveryRoute from "./Form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
+        backgroundColor: theme.palette.background.dark,
     },
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
@@ -37,6 +43,8 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -49,7 +57,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: theme.palette.border.main,
 }));
 
 const BootstrapDialogTitle = (props) => {
@@ -96,17 +104,46 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const filter = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "SEND",
+    country: "",
+    sort_by: "name",
+    order_by: "DESC",
+};
+
 function AddDeliveryRoute({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_user
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_user
-    );
+    const [filterSchemaPay, setFilterSchemaPay] = React.useState({
+        page_number: 1,
+        page_size: 100,
+        agent_type: "PAY",
+        country: "",
+        sort_by: "name",
+        order_by: "DESC",
+    });
+    const { response: partner_sending } = useSelector((state) => state.get_sending_partner);
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_delivery_route);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_delivery_route);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
+
+    React.useEffect(() => {
+        if (open) {
+            dispatch(PartnerActions.get_sending_partner(filter));
+        }
+    }, [dispatch, open]);
+
+    React.useEffect(() => {
+        if (open && filterSchemaPay?.country) {
+            dispatch(PartnerActions.get_payout_partner(filterSchemaPay));
+        } else if (open && !filterSchemaPay?.country) {
+            dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
+        }
+    }, [open, filterSchemaPay]);
 
     React.useEffect(() => {
         if (add_success || update_success) {
@@ -119,16 +156,32 @@ function AddDeliveryRoute({ update_data, update }) {
     };
 
     const handleClose = () => {
+        const updatedFilterPay = {
+            ...filterSchemaPay,
+            country: "",
+        };
+        setFilterSchemaPay(updatedFilterPay);
         setOpen(false);
     };
 
-    const handleMenuSubmit = (data) => {
+    const handleRouteSubmit = (data) => {
         dispatch(actions.create_delivery_route(data));
     };
 
-    const handleMenuUpdate = (data) => {
-        dispatch(actions.update_delivery_route(data.menu_id, data));
+    const handleRouteUpdate = (data) => {
+        dispatch(actions.update_delivery_route(data.tid, data));
     };
+
+    const handleAgent = React.useCallback(
+        (country) => {
+            const updatedFilterPay = {
+                ...filterSchemaPay,
+                country: country,
+            };
+            setFilterSchemaPay(updatedFilterPay);
+        },
+        [filterSchemaPay],
+    );
 
     return (
         <div>
@@ -138,17 +191,15 @@ function AddDeliveryRoute({ update_data, update }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Delivery Route
                 </AddButton>
             )}
@@ -158,39 +209,75 @@ function AddDeliveryRoute({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Delivery Route
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    {update ? (
+                    {/* {update ? (
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                menu_id: memoizedData?.menu_id,
-                                name: memoizedData?.name,
-                                menu_order: memoizedData?.menu_order,
+                                tid: memoizedData?.tid,
+                                send_agent_id: memoizedData?.send_agent_id,
+                                payout_agent_id: memoizedData?.payout_agent_id,
+                                payout_country: memoizedData?.payout_country,
+                                payout_currency: memoizedData?.payout_currency,
+                                payment_type: memoizedData?.payment_type,
                                 is_active: memoizedData?.is_active,
                             }}
-                            onSubmit={handleMenuUpdate}
+                            onSubmit={handleRouteUpdate}
                             buttonText="Update"
                             update={update}
-                            user_type={update_data?.user_type}
+                            payout_country={memoizedData?.payout_country}
                             loading={update_loading}
                             form={`update_delivery_route_form`}
                             handleClose={handleClose}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
                         />
                     ) : (
                         <AccountForm
                             update={update}
                             enableReinitialize={true}
-                            onSubmit={handleMenuSubmit}
+                            onSubmit={handleRouteSubmit}
                             buttonText="Create"
                             form={`add_delivery_route_form`}
-                            initialValues={{ is_active: false }}
                             loading={add_loading}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
+                            handleClose={handleClose}
+                        />
+                    )} */}
+                    {update ? (
+                        <DeliveryRoute
+                            initialValues={{
+                                tid: memoizedData?.tid,
+                                send_agent_id: memoizedData?.send_agent_id,
+                                payout_agent_id: memoizedData?.payout_agent_id,
+                                payout_country: memoizedData?.payout_country,
+                                payout_currency: memoizedData?.payout_currency,
+                                payment_type: memoizedData?.payment_type,
+                                is_active: memoizedData?.is_active,
+                            }}
+                            buttonText="Update"
+                            update={update}
+                            onSubmit={handleRouteUpdate}
+                            handleClose={handleClose}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
+                        />
+                    ) : (
+                        <DeliveryRoute
+                            update={update}
+                            buttonText="Create"
+                            onSubmit={handleRouteSubmit}
+                            loading={add_loading}
+                            handleAgent={handleAgent}
+                            partner_sending={partner_sending?.data || []}
+                            partner_payout={partner_payout?.data || []}
                             handleClose={handleClose}
                         />
                     )}

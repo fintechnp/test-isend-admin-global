@@ -35,6 +35,27 @@ export const updateMenu = takeEvery(actions.UPDATE_MENU, function* (action) {
     }
 });
 
+export const updateMenuStatus = takeEvery(
+    actions.UPDATE_MENU_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(api.patch, `menu/${action.id}?${query}`);
+            yield put({
+                type: actions.UPDATE_MENU_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_MENU_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export const deleteMenu = takeEvery(actions.DELETE_MENU, function* (action) {
     try {
         const res = yield call(api.delete, `menu/${action.id}`);
@@ -47,5 +68,5 @@ export const deleteMenu = takeEvery(actions.DELETE_MENU, function* (action) {
 });
 
 export default function* MenuSaga() {
-    yield all([getAllMenu, addMenu, updateMenu, deleteMenu]);
+    yield all([getAllMenu, addMenu, updateMenu, updateMenuStatus, deleteMenu]);
 }

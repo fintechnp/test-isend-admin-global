@@ -1,85 +1,67 @@
-import React, { useEffect } from "react";
-import { makeStyles } from "@mui/styles";
-import { Field, change } from "redux-form";
-import { Grid } from "@mui/material";
-import { useDispatch } from "react-redux";
+import * as React from "react";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
-import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
+import Check from "./Check";
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        margin: "0px",
-    },
-    header: {
-        color: "#090269",
-        fontSize: "18px",
-        textTransform: "uppercase",
-    },
-    content: {
-        margin: "0px",
-        width: "100%",
-        padding: "18px",
-        backgroundColor: "#fff",
-    },
-    label: {
-        textAlign: "left",
-    },
-    card: {
-        margin: 0,
-        width: "100%",
-        border: "none",
-        boxShadow: "none",
-    },
-}));
+const CheckForm = ({ sub_data, length }) => {
+    const [checked, setChecked] = React.useState(false);
+    const [click, setClick] = React.useState(false);
+    const [count, setCount] = React.useState(0);
 
-const Check = ({ fields, ind, meta: { error } }) => {
-    const classes = useStyles();
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        fields.unshift({ is_active: false, sub_title: "All" });
+    React.useEffect(() => {
+        const all = sub_data.every((value) => value.is_active === true);
+        const Active = sub_data.filter((value) => value.is_active === true);
+        setCount(Active.length);
+        setChecked(all);
     }, []);
 
-    const handleAll = (e, index) => {
-        function toBool(string) {
-            if (string === "true") {
-                return true;
-            } else {
-                return false;
-            }
+    React.useEffect(() => {
+        if (count === length) {
+            setChecked(true);
+        } else {
+            setChecked(false);
         }
-        if (!index) {
-            fields.getAll().map((each, num) => {
-                dispatch(
-                    change(
-                        "create_permission_form",
-                        `menu[${ind}].sub_menu[${num}].is_active`,
-                        !toBool(e.target.value)
-                    )
-                );
-            });
+    }, [count]);
+
+    const handleChange = (event) => {
+        setClick(true);
+        setChecked(event.target.checked);
+        if (event.target.checked) {
+            setCount(length);
+        } else {
+            setCount(0);
+        }
+    };
+
+    const handleAll = (update) => {
+        if (update) {
+            setCount(count + 1);
+        } else {
+            setCount(count - 1);
         }
     };
 
     return (
-        <Grid container className={classes.container}>
-            {fields.map((sub_menu, index) => (
-                <Grid item xs={12}>
-                    <Field
+        <FormGroup>
+            <FormControlLabel
+                control={<Checkbox checked={checked} onChange={handleChange} />}
+                label="All"
+            />
+            {sub_data &&
+                sub_data.map((menu, index) => (
+                    <Check
                         key={index}
-                        name={`${sub_menu}.is_active`}
-                        type="text"
-                        half={true}
-                        reverse="row-reverse"
-                        onChange={(e) => handleAll(e, index)}
-                        checked={fields.get(index)?.is_active}
-                        component={CheckboxField}
-                        label={fields.get(index)?.sub_title}
+                        menu={menu}
+                        allValue={checked}
+                        click={click}
+                        setClick={setClick}
+                        handleAll={handleAll}
                     />
-                </Grid>
-            ))}
-        </Grid>
+                ))}
+        </FormGroup>
     );
 };
 
-export default Check;
+export default CheckForm;

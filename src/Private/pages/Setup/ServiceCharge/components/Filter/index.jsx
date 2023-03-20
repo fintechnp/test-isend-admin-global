@@ -24,9 +24,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "60%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -72,22 +73,19 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "center",
 }));
 
-const sortData = [
-    { key: "None", value: "" },
-    { key: "Id", value: "sending_agent_id" },
-    { key: "Agent Name", value: "agent_name" },
-];
-
-const orderData = [
-    { key: "Ascending", value: "ASC" },
-    { key: "Descending", value: "DESC" },
-];
-
-function Filter({ handleSearch, handleOrder, handleSort }) {
+function Filter({
+    state,
+    handleSearch,
+    handleOrder,
+    handleSort,
+    sortData,
+    orderData,
+}) {
     return (
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -103,40 +101,45 @@ function Filter({ handleSearch, handleOrder, handleSort }) {
 
             <DropWrapper>
                 <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleSort}
-                            displayEmpty
-                            defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Sort By
-                                        </Typography>
+                    {handleSort && (
+                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                            <Select
+                                onChange={handleSort}
+                                displayEmpty
+                                defaultValue={state.sort_by}
+                                renderValue={(selected) => {
+                                    if (selected.length === 0) {
+                                        return (
+                                            <Typography
+                                                component="p"
+                                                sx={{ opacity: 0.6 }}
+                                            >
+                                                Sort By
+                                            </Typography>
+                                        );
+                                    }
+                                    const value = sortData.filter(
+                                        (type) => type.value === selected
                                     );
-                                }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
-                                return value[0]?.key;
-                            }}
-                        >
-                            {sortData.map((order) => (
-                                <MenuItem value={order.value} key={order.value}>
-                                    {order.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                                    return value[0]?.key;
+                                }}
+                            >
+                                {sortData.map((order) => (
+                                    <MenuItem
+                                        value={order.value}
+                                        key={order.value}
+                                    >
+                                        {order.key}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleOrder}
                             displayEmpty
-                            defaultValue="ASC"
+                            defaultValue={state.order_by}
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (

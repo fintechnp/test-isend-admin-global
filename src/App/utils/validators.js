@@ -8,7 +8,33 @@ const validators = {
         }
         return undefined;
     },
-    emptyValidator: (value) => (value ? undefined : "This field is required"),
+    imageValidator: (value) => {
+        if (
+            value &&
+            value.type !== "image/jpeg" &&
+            value.type !== "image/png"
+        ) {
+            return "Upload Png or Jpeg format only";
+        }
+        if (value && value.size < 50000) {
+            return "Must be greater than 50Kb";
+        }
+        if (value && value.type > 5000000) {
+            return "Must be less than 5Mb";
+        }
+        return undefined;
+    },
+    urlValidator: (value) => {
+        if (
+            value &&
+            !/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(value)
+        ) {
+            return "Invalid image url";
+        }
+        return undefined;
+    },
+    emptyValidator: (value) =>
+        value || value === 0 ? undefined : "This field is required",
     passwordValidator: (value) => {
         if (!value) {
             return "This field is required";
@@ -87,6 +113,14 @@ const validators = {
     maxLength100: (value) =>
         value && value.length > 100
             ? `Must be 100 characters or less`
+            : undefined,
+    maxLength160: (value) =>
+        value && value.length > 160
+            ? `Must be 160 characters or less`
+            : undefined,
+    maxLength500: (value) =>
+        value && value.length > 500
+            ? `Must be 500 characters or less`
             : undefined,
     minValue1: (value) =>
         value && value.length < 1 ? `Must be at least 1` : undefined,

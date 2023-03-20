@@ -26,7 +26,11 @@ export const getServiceChargeByPartner = takeEvery(
     actions.GET_SERVICE_CHARGE_BY_PARTNER,
     function* (action) {
         try {
-            const res = yield call(api.get, `${action.id}/servicecharge`);
+            const res = yield call(
+                api.get,
+                `${action.id}/servicecharge`,
+                action.query
+            );
             yield put({
                 type: actions.GET_SERVICE_CHARGE_BY_PARTNER_SUCCESS,
                 response: res,
@@ -102,6 +106,30 @@ export const updateServiceCharge = takeEvery(
     }
 );
 
+export const updateServiceChargeStatus = takeEvery(
+    actions.UPDATE_SERVICE_CHARGE_STATUS,
+    function* (action) {
+        const query = api.getJSONToQueryStr(action.data);
+        try {
+            const res = yield call(
+                api.patch,
+                `servicecharge/${action.id}?${query}`
+            );
+            yield put({
+                type: actions.UPDATE_SERVICE_CHARGE_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.UPDATE_SERVICE_CHARGE_STATUS_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error.data });
+        }
+    }
+);
+
 export const deleteServiceCharge = takeEvery(
     actions.DELETE_SERVICE_CHARGE,
     function* (action) {
@@ -129,6 +157,7 @@ export default function* saga() {
         getServiceChargeDetails,
         addServiceCharge,
         updateServiceCharge,
+        updateServiceChargeStatus,
         deleteServiceCharge,
     ]);
 }

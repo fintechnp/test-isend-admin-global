@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Switch, Tooltip, Typography } from "@mui/material";
@@ -23,6 +24,7 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
+    background: theme.palette.background.dark,
 }));
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
@@ -55,10 +57,10 @@ const initialState = {
     page_size: 15,
     search: "",
     sort_by: "type_name",
-    order_by: "ASC",
+    order_by: "DESC",
 };
 
-const Reference = () => {
+const Reference = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -99,7 +101,7 @@ const Reference = () => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
+                        {data.value ? data.value : "n/a"}
                     </StyledName>
                 </Box>
             ),
@@ -113,12 +115,18 @@ const Reference = () => {
             accessor: "description",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">{data.value}</StyledText>
+                    <StyledText component="p">
+                        {data.value ? data.value : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
         {
-            Header: "",
+            Header: () => (
+                <Box textAlign="center">
+                    <Typography>Actions</Typography>
+                </Box>
+            ),
             accessor: "show",
             Cell: ({ row }) => (
                 <Box
@@ -135,6 +143,9 @@ const Reference = () => {
                                     <VisibilityOffOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -145,6 +156,9 @@ const Reference = () => {
                                     <RemoveRedEyeOutlinedIcon
                                         sx={{
                                             fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
                                         }}
                                     />
                                 </IconButton>
@@ -156,13 +170,16 @@ const Reference = () => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/reference/data/${row.original.reference_type_id}`
+                                    `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`
                                 )
                             }
                         >
                             <SubdirectoryArrowLeftIcon
                                 sx={{
                                     fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
                                 }}
                             />
                         </IconButton>
@@ -173,9 +190,10 @@ const Reference = () => {
     ]);
 
     const sub_columns = [
-        { key: "reference_type_id", name: "Id" },
-        { key: "type_name", name: "Type Name" },
-        { key: "description", name: "Description" },
+        { key: "reference_type_id", name: "Id", type: "default" },
+        { key: "type_name", name: "Type Name", type: "default" },
+        { key: "description", name: "Description", type: "defautl" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleSearch = useCallback(
@@ -227,30 +245,36 @@ const Reference = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header title="All Reference Type" type={true} />
-            <Filter
-                type={true}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSortBy={handleSortBy}
-            />
-            <Table
-                columns={columns}
-                title="Reference Type Details"
-                data={referenceTypeData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={referenceTypeData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header title="All Reference Type" type={true} />
+                <Filter
+                    type={true}
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleOrder={handleOrder}
+                    handleSortBy={handleSortBy}
+                />
+                <Table
+                    columns={columns}
+                    title="Reference Type Details"
+                    data={referenceTypeData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={referenceTypeData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

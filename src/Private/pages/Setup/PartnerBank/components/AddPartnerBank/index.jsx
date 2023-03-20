@@ -13,14 +13,19 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { Box } from "@mui/material";
 
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
-import { Box } from "@mui/material";
+import PartnerActions from "./../../../Partner/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+        "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
+        backgroundColor: theme.palette.background.dark,
     },
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
@@ -37,6 +42,8 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -49,7 +56,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: theme.palette.border.main,
 }));
 
 const BootstrapDialogTitle = (props) => {
@@ -96,20 +103,44 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddPartnerBank({ update_data, update }) {
+function AddPartnerBank({ update_data, update, handleCloseDialog }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    const [filterSchema, setFilterSchema] = React.useState({
+        page_number: 1,
+        page_size: 100,
+        agent_type: "PAY",
+        country: "",
+        sort_by: "name",
+        order_by: "DESC",
+    });
+    const { response: partner_payout } = useSelector(
+        (state) => state.get_payout_partner
+    );
     const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_user
+        (state) => state.create_partner_bank
     );
     const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_user
+        (state) => state.update_partner_bank
     );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
     React.useEffect(() => {
+        if (open && filterSchema?.country) {
+            dispatch(PartnerActions.get_payout_partner(filterSchema));
+        } else if (open && !filterSchema?.country) {
+            dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
+        }
+    }, [dispatch, open, filterSchema]);
+
+    React.useEffect(() => {
         if (add_success || update_success) {
+            const updatedFilter = {
+                ...filterSchema,
+                country: "",
+            };
+            setFilterSchema(updatedFilter);
             setOpen(false);
         }
     }, [add_success, update_success]);
@@ -119,16 +150,33 @@ function AddPartnerBank({ update_data, update }) {
     };
 
     const handleClose = () => {
+        const updatedFilter = {
+            ...filterSchema,
+            country: "",
+        };
+        setFilterSchema(updatedFilter);
         setOpen(false);
+        handleCloseDialog();
     };
 
-    const handleMenuSubmit = (data) => {
-        dispatch(actions.create_delivery_route(data));
+    const handlePartnerBankSubmit = (data) => {
+        dispatch(actions.create_partner_bank(data));
     };
 
-    const handleMenuUpdate = (data) => {
-        dispatch(actions.update_delivery_route(data.menu_id, data));
+    const handlePartnerBankUpdate = (data) => {
+        dispatch(actions.update_partner_bank(data.tid, data));
     };
+
+    const handleAgent = React.useCallback(
+        (country) => {
+            const updatedFilter = {
+                ...filterSchema,
+                country: country,
+            };
+            setFilterSchema(updatedFilter);
+        },
+        [filterSchema]
+    );
 
     return (
         <div>
@@ -138,6 +186,9 @@ function AddPartnerBank({ update_data, update }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>
@@ -169,29 +220,40 @@ function AddPartnerBank({ update_data, update }) {
                         <AccountForm
                             destroyOnUnmount
                             initialValues={{
-                                menu_id: memoizedData?.menu_id,
-                                name: memoizedData?.name,
-                                menu_order: memoizedData?.menu_order,
-                                is_active: memoizedData?.is_active,
+                                tid: memoizedData?.tid,
+                                bank_name: memoizedData?.bank_name,
+                                country: memoizedData?.country,
+                                currency: memoizedData?.currency,
+                                agent_id: memoizedData?.agent_id,
+                                payment_type: memoizedData?.payment_type,
+                                external_bank_code:
+                                    memoizedData?.external_bank_code,
+                                external_bank_code1:
+                                    memoizedData?.external_bank_code1,
+                                external_bank_code2:
+                                    memoizedData?.external_bank_code2,
                             }}
-                            onSubmit={handleMenuUpdate}
+                            onSubmit={handlePartnerBankUpdate}
                             buttonText="Update"
+                            payout_country={memoizedData?.country}
                             update={update}
-                            user_type={update_data?.user_type}
                             loading={update_loading}
-                            form={`update_delivery_route_form`}
+                            form={`update_partner_bank_form`}
+                            partner_payout={partner_payout?.data || []}
                             handleClose={handleClose}
+                            handleAgent={handleAgent}
                         />
                     ) : (
                         <AccountForm
                             update={update}
                             enableReinitialize={true}
-                            onSubmit={handleMenuSubmit}
+                            onSubmit={handlePartnerBankSubmit}
                             buttonText="Create"
-                            form={`add_delivery_route_form`}
-                            initialValues={{ is_active: false }}
+                            form={`add_partner_bank_form`}
                             loading={add_loading}
+                            partner_payout={partner_payout?.data || []}
                             handleClose={handleClose}
+                            handleAgent={handleAgent}
                         />
                     )}
                 </DialogContent>

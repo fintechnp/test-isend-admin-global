@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Button, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
-import CableIcon from "@mui/icons-material/Cable";
+import { Box, Typography } from "@mui/material";
 
 import actions from "../store/actions";
 import payoutActions from "../../PayoutLocation/store/actions";
@@ -16,6 +15,7 @@ import {
     CurrencyName,
     ReferenceName,
 } from "./../../../../../App/helpers";
+import Map from "../../../../../App/components/Dialog/Unmap";
 
 const MapContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -26,13 +26,7 @@ const MapContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
-}));
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
+    background: theme.palette.background.dark,
 }));
 
 const StyledName = styled(Typography)(({ theme }) => ({
@@ -46,35 +40,33 @@ const StyledText = styled(Typography)(({ theme }) => ({
     color: "border.main",
 }));
 
-const initialState = {
-    page_number: 1,
-    page_size: 15,
-    payout_country: "",
-    payout_currency: "",
-    payment_type: "",
-    search: "",
-    sort_by: "country",
-    order_by: "ASC",
-};
-
-const MapBank = () => {
-    const { payment, country, currency } = useParams();
+const MapBank = (props) => {
+    const { payment, country, currency, id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
         page_size: 15,
-        payout_country: country,
-        payout_currency: currency,
+        country: country,
+        currency: currency,
         payment_type: payment,
         search: "",
-        sort_by: "country",
-        order_by: "ASC",
+        sort_by: "location_name",
+        order_by: "DESC",
     });
 
     const { response: payoutloaction_data, loading: g_loading } = useSelector(
         (state) => state.get_all_payout_location
     );
+    const { loading: un_loading, success: un_success } = useSelector(
+        (state) => state.unmapp_partner_bank
+    );
+
+    useEffect(() => {
+        if (un_success) {
+            navigate(-1);
+        }
+    }, [un_success]);
 
     useEffect(() => {
         if (country && currency) {
@@ -104,6 +96,24 @@ const MapBank = () => {
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
                         {data.value}
                     </StyledName>
+                </Box>
+            ),
+        },
+        {
+            Header: () => (
+                <Box>
+                    <Typography>Location Code</Typography>
+                </Box>
+            ),
+            accessor: "location_code",
+            Cell: (data) => (
+                <Box>
+                    <StyledText component="p">{data.value}</StyledText>
+                    <Typography
+                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
+                    >
+                        {data?.row?.original?.receiving_currency}
+                    </Typography>
                 </Box>
             ),
         },
@@ -143,24 +153,6 @@ const MapBank = () => {
             ),
         },
         {
-            Header: () => (
-                <Box>
-                    <Typography>Location Code</Typography>
-                </Box>
-            ),
-            accessor: "location_code",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
-                    >
-                        {data?.row?.original?.receiving_currency}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
             Header: "",
             accessor: "show",
             Cell: ({ row }) => (
@@ -172,15 +164,16 @@ const MapBank = () => {
                         justifyContent: "center",
                     }}
                 >
-                    <Tooltip title="Map" arrow>
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            endIcon={<CableIcon sx={{ fontSize: "16px" }} />}
-                        >
-                            Map
-                        </Button>
-                    </Tooltip>
+                    <Map
+                        map={true}
+                        title="Do you want to map this partner bank?"
+                        information="You are going to map Partner Bank with Payout Location. Click Yes to confirm Mapping process."
+                        success={un_success}
+                        id={id}
+                        map_id={row.original.tid}
+                        handleMapUnmap={handleMap}
+                        loading={un_loading}
+                    />
                 </Box>
             ),
         },
@@ -207,11 +200,11 @@ const MapBank = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleAgentType = (e) => {
-        const payment = e.target.value;
+    const handleSort = (e) => {
+        const sort = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-            agent_type: payment,
+            sort_by: sort,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -234,33 +227,42 @@ const MapBank = () => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleMapUnmap = (id) => {
-        dispatch(actions.delete_corridor(id));
+    const handleMap = (id, map_id) => {
+        dispatch(actions.map_partner_bank(id, { payout_location_id: map_id }));
     };
 
     return (
-        <MapContainer>
-            <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
-            <Filter
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
-            />
-            <Table
-                columns={columns}
-                title="Exchange Rate Details"
-                data={payoutloaction_data?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={payoutloaction_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MapContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MapContainer>
+                <Header
+                    title="Exchange Rate List"
+                    buttonText="Add Exchange Rate"
+                />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleOrder={handleOrder}
+                    handleSort={handleSort}
+                />
+                <Table
+                    columns={columns}
+                    title="Exchange Rate Details"
+                    data={payoutloaction_data?.data || []}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={payoutloaction_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MapContainer>
+        </>
     );
 };
 

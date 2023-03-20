@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
@@ -12,7 +12,10 @@ import Header from "./components/Header";
 import Filter from "./components/Filter";
 import { Delete } from "./../../../../App/components";
 import AddPayoutLocation from "./components/AddPayoutLocation";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, {
+    TablePagination,
+    TableSwitch,
+} from "./../../../../App/components/Table";
 import {
     CountryName,
     CurrencyName,
@@ -28,6 +31,7 @@ const MenuContainer = styled("div")(({ theme }) => ({
     flexDirection: "column",
     padding: theme.spacing(2),
     border: `1px solid ${theme.palette.border.light}`,
+    background: theme.palette.background.dark,
 }));
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
@@ -58,17 +62,16 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    payout_country: "",
-    payout_currency: "",
+    country: "",
+    currency: "",
     payment_type: "",
     search: "",
-    sort_by: "country",
-    order_by: "ASC",
+    sort_by: "",
+    order_by: "DESC",
 };
 
-const PayoutLocation = () => {
+const PayoutLocation = (props) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: payoutloaction_data, loading: g_loading } = useSelector(
@@ -86,166 +89,196 @@ const PayoutLocation = () => {
 
     useEffect(() => {
         dispatch(actions.get_all_payout_location(filterSchema));
-        dispatch({ type: "ADD_MENU_RESET" });
-        dispatch({ type: "UPDATE_MENU_RESET" });
-        dispatch({ type: "DELETE_MENU_RESET" });
+        dispatch({ type: "ADD_PAYOUT_LOCATION_RESET" });
+        dispatch({ type: "UPDATE_PAYOUT_LOCATION_RESETT" });
+        dispatch({ type: "DELETE_PAYOUT_LOCATION_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
-    const columns = useMemo(() => [
-        {
-            Header: "Id",
-            accessor: "payout_location_id",
-            maxWidth: 80,
-        },
-        {
-            Header: "Location Name",
-            accessor: "location_name",
-            Cell: (data) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
-                >
-                    <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value}
-                    </StyledName>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Location Code</Typography>
-                </Box>
-            ),
-            accessor: "location_code",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">{data.value}</StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Payment Type</Typography>
-                </Box>
-            ),
-            accessor: "payment_type",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {ReferenceName(1, data.value)}
-                    </StyledText>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box>
-                    <Typography>Country/Currency</Typography>
-                </Box>
-            ),
-            accessor: "country",
-            Cell: (data) => (
-                <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "payout_location_id",
+                maxWidth: 80,
+            },
+            {
+                Header: "Location Name",
+                accessor: "location_name",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
                     >
-                        {CurrencyName(data?.row?.original?.currency)}
-                    </Typography>
-                </Box>
-            ),
-        },
-        {
-            Header: () => (
-                <Box textAlign="right" sx={{}}>
-                    <Typography>Status</Typography>
-                </Box>
-            ),
-            accessor: "is_active",
-            width: 120,
-            Cell: (data) => (
-                <SwitchWrapper textAlign="right" sx={{}}>
-                    <Switch
-                        defaultChecked={data?.value}
-                        size="small"
-                        onChange={(event) =>
-                            handleStatus(
-                                event.target.checked,
-                                data?.row?.original?.id
-                            )
-                        }
-                    />
-                </SwitchWrapper>
-            ),
-        },
-        {
-            Header: "",
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Payout Location Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Payout Location Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <AddPayoutLocation
-                        update={true}
-                        update_data={row?.original}
-                    />
-                    <Delete
-                        data={row?.original}
-                        handleDelete={handleDelete}
-                        loading={d_loading}
-                        tooltext="Delete"
-                    />
-                </Box>
-            ),
-        },
-    ]);
+                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                            {data.value ? data.value : "n/a"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Location Code</Typography>
+                    </Box>
+                ),
+                accessor: "location_code",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data.value : "n/a"}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Payment Type</Typography>
+                    </Box>
+                ),
+                accessor: "payment_type",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? ReferenceName(1, data.value) : "n/a"}
+                        </StyledText>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box>
+                        <Typography>Country/Currency</Typography>
+                    </Box>
+                ),
+                accessor: "country",
+                Cell: (data) => (
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? CountryName(data.value) : ""}
+                        </StyledText>
+                        <Typography
+                            sx={{
+                                opacity: 0.6,
+                                fontSize: "12px",
+                                lineHeight: 1,
+                            }}
+                        >
+                            {data?.row?.original?.currency
+                                ? CurrencyName(data?.row?.original?.currency)
+                                : "n/a"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="right" sx={{}}>
+                        <Typography>Status</Typography>
+                    </Box>
+                ),
+                accessor: "is_active",
+                width: 120,
+                Cell: (data) => (
+                    <SwitchWrapper textAlign="right" sx={{}}>
+                        <TableSwitch
+                            value={data?.value}
+                            data={data.row.original}
+                            handleStatus={handleStatus}
+                        />
+                    </SwitchWrapper>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>Actions</Typography>
+                    </Box>
+                ),
+                accessor: "show",
+                Cell: ({ row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <span {...row.getToggleRowExpandedProps({})}>
+                            {row.isExpanded ? (
+                                <Tooltip
+                                    title="Hide Payout Location Details"
+                                    arrow
+                                >
+                                    <IconButton>
+                                        <VisibilityOffOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip
+                                    title="Show Payout Location Details"
+                                    arrow
+                                >
+                                    <IconButton>
+                                        <RemoveRedEyeOutlinedIcon
+                                            sx={{
+                                                fontSize: "20px",
+                                                "&:hover": {
+                                                    background: "transparent",
+                                                },
+                                            }}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                        </span>
+                        <AddPayoutLocation
+                            update={true}
+                            update_data={row?.original}
+                        />
+                        <Delete
+                            id={row.original.tid}
+                            handleDelete={handleDelete}
+                            loading={d_loading}
+                            tooltext="Delete Payout Location"
+                        />
+                    </Box>
+                ),
+            },
+        ],
+        []
+    );
 
     const sub_columns = [
-        { key: "delivery_route_id", name: "Id" },
-        { key: "sending_agent", name: "Sending Agent" },
-        { key: "payout_agent", name: "Payout Agent" },
-        { key: "payout_country", name: "Country" },
-        { key: "payout_currency", name: "Currency" },
-        { key: "payment_type", name: "Payment Type" },
-        { key: "is_active", name: "Status" },
+        { key: "tid", name: "Id", type: "default" },
+        { key: "location_name", name: "Location Name", type: "default" },
+        { key: "location_code", name: "Location Code", type: "default" },
+        { key: "country", name: "Country", type: "country" },
+        { key: "currency", name: "Currency", type: "currency" },
+        {
+            key: "payment_type",
+            name: "Payment Type",
+            type: "reference",
+            ref_value: 1,
+        },
+        { key: "is_active", name: "Status", type: "boolean" },
+        { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        // dispatch(actions.update_user_status({ is_active: is_active }, id));
+        dispatch(
+            actions.update_payout_location_status(id, { is_active: is_active })
+        );
     }, []);
 
     const handleSearch = useCallback(
@@ -264,7 +297,7 @@ const PayoutLocation = () => {
         const country = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-            payout_country: country,
+            country: country,
         };
         setFilterSchema(updatedFilterSchema);
     };
@@ -310,30 +343,36 @@ const PayoutLocation = () => {
     };
 
     return (
-        <MenuContainer>
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handlePayemntType={handlePayemntType}
-            />
-            <Table
-                columns={columns}
-                title="Payout Location Details"
-                data={payoutloaction_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={payoutloaction_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </MenuContainer>
+        <>
+            <Helmet>
+                <title>Isend Global Admin | {props.title}</title>
+            </Helmet>
+            <MenuContainer>
+                <Header />
+                <Filter
+                    state={filterSchema}
+                    handleSearch={handleSearch}
+                    handleCountry={handleCountry}
+                    handleOrder={handleOrder}
+                    handlePayemntType={handlePayemntType}
+                />
+                <Table
+                    columns={columns}
+                    title="Payout Location Details"
+                    data={payoutloaction_data?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={payoutloaction_data?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </MenuContainer>
+        </>
     );
 };
 

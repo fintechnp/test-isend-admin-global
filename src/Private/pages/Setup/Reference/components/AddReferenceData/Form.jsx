@@ -51,6 +51,9 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     "&:hover": {
         background: theme.palette.primary.dark,
     },
+    "& .MuiCircularProgress-root": {
+        color: theme.palette.primary.contrastText,
+    },
 }));
 
 const ReferenceDataForm = ({

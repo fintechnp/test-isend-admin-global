@@ -19,8 +19,12 @@ import actions from "./../../store/actions";
 import { Box } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
+        backgroundColor: theme.palette.background.dark,
     },
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
@@ -30,13 +34,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UpdateButton = styled(IconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.border.main,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -49,7 +55,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: theme.palette.border.main,
 }));
 
 const BootstrapDialogTitle = (props) => {
@@ -142,6 +148,9 @@ function AddAccount({ update_data, update }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>
@@ -180,6 +189,7 @@ function AddAccount({ update_data, update }) {
                                 user_type: memoizedData?.user_type,
                                 phone_number: memoizedData?.phone_number,
                                 email: memoizedData?.email,
+                                agent_id: memoizedData?.agent_id,
                                 is_active: memoizedData?.is_active,
                             }}
                             onSubmit={handleUpdateUser}
@@ -197,7 +207,7 @@ function AddAccount({ update_data, update }) {
                             onSubmit={handleNewUser}
                             buttonText="Create"
                             form={`add_user_form`}
-                            initialValues={{ is_active: false }}
+                            initialValues={{ is_active: false, agent_id: 0 }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

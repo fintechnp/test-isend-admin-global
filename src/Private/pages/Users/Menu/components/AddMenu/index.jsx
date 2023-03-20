@@ -19,8 +19,12 @@ import actions from "./../../store/actions";
 import { Box } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialog-container": {
+        backdropFilter: "blur(3px)",
+    },
     "& .MuiDialog-paper": {
         maxWidth: "90%",
+        backgroundColor: theme.palette.background.dark,
     },
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
@@ -30,13 +34,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const UpdateButton = styled(IconButton)(({ theme }) => ({
     opacity: 0.7,
     padding: "3px",
-    color: "border.main",
+    color: theme.palette.border.dark,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
+    color: theme.palette.secondary.contrastText,
+    borderColor: theme.palette.border.main,
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -49,7 +55,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: theme.palette.border.main,
 }));
 
 const BootstrapDialogTitle = (props) => {
@@ -99,16 +105,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AddMenu({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const {
-        response: add_user,
-        success: add_success,
-        loading: add_loading,
-    } = useSelector((state) => state.add_user);
-    const {
-        response: update_user,
-        success: update_success,
-        loading: update_loading,
-    } = useSelector((state) => state.update_user);
+    const { success: add_success, loading: add_loading } = useSelector(
+        (state) => state.add_menu
+    );
+    const { success: update_success, loading: update_loading } = useSelector(
+        (state) => state.update_menu
+    );
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -142,6 +144,9 @@ function AddMenu({ update_data, update }) {
                         <EditOutlinedIcon
                             sx={{
                                 fontSize: "20px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
                             }}
                         />
                     </UpdateButton>
@@ -193,7 +198,6 @@ function AddMenu({ update_data, update }) {
                             onSubmit={handleMenuSubmit}
                             buttonText="Create"
                             form={`add_menu_form`}
-                            initialValues={{ is_active: false }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

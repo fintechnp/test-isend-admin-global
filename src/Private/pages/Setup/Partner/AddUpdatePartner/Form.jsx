@@ -1,260 +1,366 @@
-import React, { useState } from "react";
+import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import Box from "@mui/material/Box";
+import MuiStepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import { useNavigate, useParams } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
+import { useDispatch, useSelector } from "react-redux";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../App/utils/validators";
+import Basic from "./Basic";
+import Contact from "./Contact";
+import Business from "./Business";
+import actions from "./../store/actions";
 
-const Container = styled(Grid)(({ theme }) => ({
-    borderRadius: "5px",
-    [theme.breakpoints.up("sm")]: {
-        minWidth: "350px",
-    },
-}));
-
-const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
+const CompletedWrapper = styled(Box)(({ theme }) => ({
+    marginTop: "16px",
+    minHeight: "140px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "32px 0px",
     backgroundColor: theme.palette.background.light,
 }));
 
-const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
-}));
-
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
-}));
-
-const ButtonWrapper = styled(Grid)(({ theme }) => ({
-    paddingTop: "12px",
-}));
-
-const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
+const Stepper = styled(MuiStepper)(({ theme }) => ({
+    "& .MuiSvgIcon-root.MuiStepIcon-root.Mui-completed": {
+        color: theme.palette.success.main,
+    },
+    "& .MuiStepLabel-label": {
+        fontSize: "18px",
+    },
+    "& .MuiStepLabel-label.Mui-completed": {
+        color: theme.palette.success.main,
     },
 }));
 
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
+const Fetching = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.main,
+    fontSize: "16px",
+    fontWeight: 400,
 }));
 
-const PartnerForm = ({
-    handleSubmit,
-    user_type,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
+const steps = [
+    "Basic Information",
+    "Contact Person Details",
+    "Business Information",
+];
+
+function PartnerForm({ update_data, loading }) {
+    const { id } = useParams();
     const dispatch = useDispatch();
-    const [type, setType] = useState(false);
-    const reference = JSON.parse(localStorage.getItem("reference"));
-    const country = JSON.parse(localStorage.getItem("country"));
-    const partner_data = useSelector(
-        (state) => state.get_all_partner?.response
-    );
+    const navigate = useNavigate();
+    const [data, setData] = React.useState({});
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [completed, setCompleted] = React.useState({});
+    const {
+        success: add_success,
+        loading: add_loading,
+        error: add_error,
+    } = useSelector((state) => state.add_partner);
+    const {
+        success: update_success,
+        loading: update_loading,
+        error: update_error,
+    } = useSelector((state) => state.update_partner);
 
-    const handleType = (e) => {
-        setType(e.target.value);
-        if (e.target.value !== "PARTNER") {
-            dispatch(change("add_user_form", "agent_id", 0));
+    const memoizedData = React.useMemo(() => update_data, [update_data]);
+
+    React.useEffect(() => {
+        if (update_error || add_error) {
+            setActiveStep(0);
+            let keys = Object.keys(completed);
+            delete completed[keys[keys.length - 1]];
+        }
+    }, [update_error, add_error]);
+
+    React.useEffect(() => {
+        if (add_success || update_success) {
+            navigate(-1);
+            setCompleted({});
+        }
+    }, [add_success, update_success]);
+
+    const totalSteps = () => {
+        return steps.length;
+    };
+
+    const completedSteps = () => {
+        return Object.keys(completed).length;
+    };
+
+    const isLastStep = () => {
+        return activeStep === totalSteps() - 1;
+    };
+
+    const allStepsCompleted = () => {
+        return completedSteps() === totalSteps();
+    };
+
+    const handleNext = () => {
+        const newActiveStep =
+            isLastStep() && !allStepsCompleted()
+                ? steps.findIndex((step, i) => !(i in completed))
+                : activeStep + 1;
+        setActiveStep(newActiveStep);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleComplete = () => {
+        const newCompleted = completed;
+        newCompleted[activeStep] = true;
+        setCompleted(newCompleted);
+        handleNext();
+    };
+
+    const handleSubmitForm = (id) => {
+        if (id) {
+            dispatch(actions.update_partner(id, data));
+        } else {
+            dispatch(actions.add_partner(data));
         }
     };
 
-    return (
-        <Form onSubmit={handleSubmit}>
-            <Container container direction="column">
-                <Grid item xs={12}>
-                    <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="send_agent_id"
-                                label="Sending Agent"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_agent_id"
-                                label="Payout Agent"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payment_type"
-                                label="Payment Type"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payment Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_country"
-                                label="Country"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.id}>
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payout_currency"
-                                label="Currency"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.id}
-                                        >
-                                            {data.currency}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Status
-                                    </StatusText>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Field
-                                        name="is_active"
-                                        label="Active"
-                                        small={12}
-                                        reverse="row-reverse"
-                                        component={CheckboxField}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </FieldWrapper>
-                    </FormWrapper>
-                </Grid>
-                <Grid item>
-                    <Divider sx={{ pt: 1.2 }} />
-                </Grid>
-                <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
-                                size="small"
-                                variant="outlined"
-                                loading={loading}
-                                endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                type="submit"
-                            >
-                                {buttonText}
-                            </CreateButton>
-                        </Grid>
-                    </ButtonWrapper>
-                </Grid>
-            </Container>
-        </Form>
-    );
-};
+    const handleBasicForm = (data) => {
+        handleComplete();
+    };
 
-export default reduxForm({ form: ["form"] })(PartnerForm);
+    const handleContactForm = () => {
+        handleComplete();
+    };
+
+    const handleBusinessForm = (data) => {
+        setData(data);
+        handleComplete();
+    };
+
+    if (loading) {
+        return (
+            <Box sx={{ width: "100%", pt: "16px" }}>
+                <Stepper
+                    nonLinear
+                    activeStep={activeStep}
+                    alternativeLabel
+                    sx={{ width: "100%", padding: "16px 0px" }}
+                >
+                    {steps.map((label, index) => (
+                        <Step key={label} completed={completed[index]}>
+                            <StepLabel color="inherit">{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+                <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
+                    <Fetching>Fetching...</Fetching>
+                </Box>
+            </Box>
+        );
+    }
+
+    return (
+        <Box sx={{ width: "100%", pt: "16px" }}>
+            <Stepper
+                nonLinear
+                activeStep={activeStep}
+                alternativeLabel
+                sx={{ width: "100%", padding: "16px 0px" }}
+            >
+                {steps.map((label, index) => (
+                    <Step key={label} completed={completed[index]}>
+                        <StepLabel color="inherit">{label}</StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+            {allStepsCompleted() ? (
+                <React.Fragment>
+                    <CompletedWrapper sx={{}}>
+                        <Typography
+                            sx={{
+                                mt: 2,
+                                mb: 1,
+                                color: "border.dark",
+                                fontSize: "18px",
+                            }}
+                        >
+                            All steps completed - Please submit to create
+                            Partner.
+                        </Typography>
+                        <CheckCircleOutlineIcon
+                            sx={{ fontSize: "64px", color: "success.main" }}
+                        />
+                        <LoadingButton
+                            size="small"
+                            variant="outlined"
+                            loading={add_loading || update_loading}
+                            sx={{
+                                mt: 2,
+                                borderWidth: "2px",
+                                minWidth: "120px",
+                                "&:hover": {
+                                    borderWidth: "2px",
+                                },
+                                "& .MuiCircularProgress-root": {
+                                    color: 'primary.contrastText',
+                                },
+                            }}
+                            onClick={() => handleSubmitForm(id)}
+                        >
+                            Submit
+                        </LoadingButton>
+                    </CompletedWrapper>
+                </React.Fragment>
+            ) : (
+                <React.Fragment>
+                    {id ? (
+                        <Box>
+                            {activeStep === 0 && (
+                                <Basic
+                                    destroyOnUnmount={false}
+                                    enableReinitialize={true}
+                                    shouldError={() => true}
+                                    form={`update_partner_form`}
+                                    initialValues={
+                                        memoizedData && {
+                                            name: memoizedData?.name,
+                                            short_code:
+                                                memoizedData?.short_code,
+                                            agent_type:
+                                                memoizedData?.agent_type,
+                                            phone_number:
+                                                memoizedData?.phone_number,
+                                            email: memoizedData?.email,
+                                            country: memoizedData?.country,
+                                            postcode: memoizedData?.postcode,
+                                            unit: memoizedData?.unit,
+                                            street: memoizedData?.street,
+                                            city: memoizedData?.city,
+                                            state: memoizedData?.state,
+                                            address: memoizedData?.address,
+                                            website: memoizedData?.website,
+                                            contact_person_full_name:
+                                                memoizedData?.contact_person_full_name,
+                                            contact_person_post:
+                                                memoizedData?.contact_person_post,
+                                            contact_person_mobile:
+                                                memoizedData?.contact_person_mobile,
+                                            contact_person_email:
+                                                memoizedData?.contact_person_email,
+                                            date_of_incorporation: new Date(
+                                                memoizedData?.date_of_incorporation
+                                            )
+                                                .toISOString()
+                                                .slice(0, 10),
+                                            business_license_number:
+                                                memoizedData?.business_license_number,
+                                            business_license_expiry_date:
+                                                new Date(
+                                                    memoizedData?.business_license_expiry_date
+                                                )
+                                                    .toISOString()
+                                                    .slice(0, 10),
+                                            balance: memoizedData?.balance,
+                                            credit_limit:
+                                                memoizedData?.credit_limit,
+                                            transaction_currency:
+                                                memoizedData?.transaction_currency,
+                                            settlement_currency:
+                                                memoizedData?.settlement_currency,
+                                            tax_type: memoizedData?.tax_type,
+                                            date_format:
+                                                memoizedData?.date_format,
+                                            time_zone: memoizedData?.time_zone,
+                                            transaction_limit:
+                                                memoizedData?.transaction_limit,
+                                            commission_currency:
+                                                memoizedData?.commission_currency,
+                                            bank_charge_currency:
+                                                memoizedData?.bank_charge_currency,
+                                            is_prefunding:
+                                                memoizedData?.is_prefunding,
+                                        }
+                                    }
+                                    steps={steps}
+                                    buttonText="Update"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBasicForm}
+                                />
+                            )}
+                            {activeStep === 1 && (
+                                <Contact
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`update_partner_form`}
+                                    steps={steps}
+                                    buttonText="Update"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleContactForm}
+                                />
+                            )}
+                            {activeStep === 2 && (
+                                <Business
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`update_partner_form`}
+                                    steps={steps}
+                                    buttonText="Update All"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBusinessForm}
+                                />
+                            )}
+                        </Box>
+                    ) : (
+                        <Box>
+                            {activeStep === 0 && (
+                                <Basic
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`add_partner_form`}
+                                    steps={steps}
+                                    buttonText="Next"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBasicForm}
+                                />
+                            )}
+                            {activeStep === 1 && (
+                                <Contact
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`add_partner_form`}
+                                    steps={steps}
+                                    buttonText="Next"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleContactForm}
+                                />
+                            )}
+                            {activeStep === 2 && (
+                                <Business
+                                    destroyOnUnmount={false}
+                                    shouldError={() => true}
+                                    form={`add_partner_form`}
+                                    steps={steps}
+                                    buttonText="Finish"
+                                    activeStep={activeStep}
+                                    handleBack={handleBack}
+                                    onSubmit={handleBusinessForm}
+                                />
+                            )}
+                        </Box>
+                    )}
+                </React.Fragment>
+            )}
+        </Box>
+    );
+}
+
+export default PartnerForm;

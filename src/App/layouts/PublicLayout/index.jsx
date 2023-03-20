@@ -1,16 +1,18 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { AuthConsumer } from "../../auth";
 
-const PublicLayout = ({ children }) => (
+const PublicLayout = () => (
     <AuthConsumer>
-        {(authContext) =>
-            !(authContext && authContext.isUserLoggedIn) ? (
-                <>{children}</>
+        {(authContext) => {
+            return !(authContext && authContext.isUserLoggedIn) ? (
+                <>
+                    <Outlet />
+                </>
             ) : (
-                <Navigate to="/" />
-            )
-        }
+                <Navigate to="/" replace />
+            );
+        }}
     </AuthConsumer>
 );
 

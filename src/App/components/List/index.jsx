@@ -9,15 +9,11 @@ import { AuthContext } from "../../auth";
 
 const List = styled(MuiList)(({ theme, open }) => ({
     ...(open && {
-        margin: "0px 4px",
+        padding: "8px",
     }),
     ...(!open && {
         margin: "0px",
     }),
-    "& .MuiTooltip-popper": {
-        margin: "12px",
-        background: "red",
-    },
 }));
 
 function DrawerList(props) {

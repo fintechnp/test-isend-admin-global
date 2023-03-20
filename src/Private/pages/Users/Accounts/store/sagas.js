@@ -22,6 +22,24 @@ export const getAllUser = takeEvery(
     }
 );
 
+export const getUserNumber = takeEvery(
+    actions.GET_ACCOUNT_NUMBER,
+    function* (action) {
+        try {
+            const res = yield call(api.get, `account/usertype`, action.query);
+            yield put({
+                type: actions.GET_ACCOUNT_NUMBER_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_ACCOUNT_NUMBER_FAILED,
+                error: error.data,
+            });
+        }
+    }
+);
+
 export const getUserDetails = takeEvery(
     actions.GET_ACCOUNT_USER_DETAILS,
     function* () {
@@ -130,14 +148,40 @@ export const deleteUser = takeEvery(
     }
 );
 
+export const forgotPassword = takeEvery(
+    actions.FORGOT_PASSWORD,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.post,
+                `account/forgotpassword`,
+                action.data
+            );
+            yield put({
+                type: actions.FORGOT_PASSWORD_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.FORGOT_PASSWORD_FAILED,
+                error: error.data,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    }
+);
+
 export default function* saga() {
     yield all([
         getAllUser,
+        getUserNumber,
         getUserDetails,
         getUserDetailById,
         addUser,
         updateUser,
         updateUserStatus,
         deleteUser,
+        forgotPassword,
     ]);
 }

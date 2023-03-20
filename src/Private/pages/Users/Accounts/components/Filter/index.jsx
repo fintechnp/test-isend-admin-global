@@ -24,9 +24,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
     borderColor: theme.palette.border.light,
-    width: "50%",
+    width: "65%",
     "& .MuiOutlinedInput-input.MuiInputBase-input": {
         padding: "8px 0px",
+        paddingRight: "8px",
     },
     "& .MuiInputBase-root.MuiOutlinedInput-root": {
         paddingLeft: "10px",
@@ -59,13 +60,6 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "center",
 }));
 
-const userType = [
-    { key: "None", value: "" },
-    { key: "Admin", value: "admin" },
-    { key: "Partner", value: "partner" },
-    { key: "User", value: "user" },
-];
-
 const sortData = [
     { key: "None", value: "" },
     { key: "Name", value: "name" },
@@ -80,10 +74,13 @@ const orderData = [
 ];
 
 function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
+    const reference = JSON.parse(localStorage.getItem("reference"));
+
     return (
         <FilterWrapper>
             <SearchBox>
                 <TextField
+                    type="search"
                     variant="outlined"
                     placeholder="Search"
                     onChange={handleSearch}
@@ -111,21 +108,34 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                                             component="p"
                                             sx={{ opacity: 0.6 }}
                                         >
-                                            Account Type
+                                            User Type
                                         </Typography>
                                     );
                                 }
-                                const value = userType.filter(
-                                    (type) => type.value === selected
-                                );
-                                return value[0]?.key;
+                                const value = reference
+                                    .filter(
+                                        (ref_data) =>
+                                            ref_data.reference_type === 55
+                                    )[0]
+                                    .reference_data.filter(
+                                        (type) => type.value === selected
+                                    );
+                                return value[0]?.value;
                             }}
                         >
-                            {userType.map((type) => (
-                                <MenuItem value={type.value} key={type.value}>
-                                    {type.key}
-                                </MenuItem>
-                            ))}
+                            <MenuItem value="">All</MenuItem>
+                            {reference
+                                ?.filter(
+                                    (ref_data) => ref_data.reference_type === 55
+                                )[0]
+                                ?.reference_data.map((type) => (
+                                    <MenuItem
+                                        value={type.value}
+                                        key={type.value}
+                                    >
+                                        {type.value}
+                                    </MenuItem>
+                                ))}
                         </Select>
                     </FormControl>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>

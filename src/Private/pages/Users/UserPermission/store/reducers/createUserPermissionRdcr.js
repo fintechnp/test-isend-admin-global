@@ -9,19 +9,19 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch ((action).type) {
-        case actions.CREATE_USER_PERMISSION:
+        case actions.UPDATE_USER_PERMISSION:
             return {
                 ...state,
                 loading: true
             };
-        case actions.CREATE_USER_PERMISSION_SUCCESS:
+        case actions.UPDATE_USER_PERMISSION_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response
             };
-        case actions.CREATE_USER_PERMISSION_FAILED:
+        case actions.UPDATE_USER_PERMISSION_FAILED:
             return {
                 ...state,
                 success: false,

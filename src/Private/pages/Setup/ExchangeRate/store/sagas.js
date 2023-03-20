@@ -48,9 +48,9 @@ export const getExchangeRateDetails = takeEvery(
     actions.GET_EXCHANGE_RATE_DETAILS,
     function* (action) {
         try {
-            const res = yield call(api.get, `${action.id}/exchangerate`);
+            const res = yield call(api.get, `exchangerate/${action.id}`);
             yield put({
-                type: actions.GET_EXCHANGE_RATE_BY_PARTNER_SUCCESS,
+                type: actions.GET_EXCHANGE_RATE_DETAILS_SUCCESS,
                 response: res,
             });
         } catch (error) {

@@ -1,19 +1,19 @@
-import actions from './../actions';
+import actions from "./../actions";
 
 const initialState = {
-    dark: false,
+    mode: true,
 };
 
 const reducer = (state = initialState, action) => {
-    switch ((action).type) {
+    switch (action.type) {
         case actions.SET_THEME:
             return {
                 ...state,
-                dark: action.dark
+                mode: action.mode,
             };
         default:
             return state;
     }
-}
+};
 
 export default reducer;

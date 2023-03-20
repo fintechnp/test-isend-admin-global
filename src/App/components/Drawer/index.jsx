@@ -11,13 +11,12 @@ import { useNavigate } from "react-router-dom";
 
 import Toolbar from "./../Toolbar";
 import DrawerList from "../List";
-import Logo from "../../../assets/long-logo.svg";
+import Logo from "../../../assets/isend_long.png";
 import Logo_short from "../../../assets/short-logo.svg";
 
 const drawerWidth = 280;
 
 const openedMixin = (theme) => ({
-    padding: "8px",
     width: drawerWidth,
     background: theme.palette.primary.main,
     transition: theme.transitions.create("width", {
@@ -64,6 +63,7 @@ const closedMixin = (theme) => ({
     background: theme.palette.primary.main,
     [theme.breakpoints.up("sm")]: {
         padding: "8px",
+        paddingTop: "0px",
         width: theme.spacing(8),
     },
 });
@@ -75,11 +75,20 @@ const DrawerHeader = styled("div", {
     alignItems: "flex-start",
     justifyContent: "center",
     minHeight: "48px",
-    // necessary for content to be below app bar
 }));
 
-const LogoWrapper = styled(CardMedia)(({ theme }) => ({
-    maxHeight: "40px",
+const LongLogoWrapper = styled(CardMedia)(({ theme }) => ({
+    padding: "6px",
+    maxHeight: "56px",
+    width: "100%",
+    objectFit: "contain",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+}));
+
+const ShortLogoWrapper = styled(CardMedia)(({ theme }) => ({
+    maxHeight: "56px",
     width: "100%",
     objectFit: "contain",
     display: "flex",
@@ -93,7 +102,7 @@ const AppBar = styled(MuiAppBar, {
     zIndex: theme.zIndex.drawer,
     boxShadow: "none",
     borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-    background: theme.palette.primary.contrastText,
+    background: theme.palette.appbar.main,
     [theme.breakpoints.down("md")]: {
         marginLeft: `calc(${theme.spacing(8)} + 1px)`,
         width: `calc(100% - ${theme.spacing(8)})`,
@@ -171,33 +180,38 @@ function SideDrawer({ children, menus }) {
         <Box sx={{ display: "flex" }}>
             <AppBar position="fixed" open={open}>
                 <Box sx={{ flexGrow: 1 }}>
-                    <Toolbar
-                        handleDrawerToggle={handleDrawerToggle}
-                        open={open}
-                    />
+                    <Toolbar handleDrawerToggle={handleDrawerToggle} open={open} />
                 </Box>
             </AppBar>
-            <Drawer variant="permanent" open={open}>
+            <Drawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerHeader>
-                    <LogoWrapper
-                        component="img"
-                        image={open ? Logo : Logo_short}
-                        alt="isend logo"
-                        onClick={handleDashboard}
-                    />
+                    {open ? (
+                        <LongLogoWrapper component="img" image={Logo} alt="isend logo" onClick={handleDashboard} />
+                    ) : (
+                        <ShortLogoWrapper
+                            component="img"
+                            image={Logo_short}
+                            alt="isend logo"
+                            onClick={handleDashboard}
+                        />
+                    )}
                 </DrawerHeader>
                 <Divider
                     sx={{
                         borderColor: "#ffffff",
                         opacity: 0.25,
-                        margin: "0px -8px",
+                        margin: "0px",
                     }}
                 />
                 {drawerMenu}
             </Drawer>
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, position: "relative" }}
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    position: "relative",
+                }}
             >
                 <DrawerHeader />
                 {children}

@@ -10,10 +10,12 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
-function Header() {
+function Header({ name }) {
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>Sub Menu List</Typography>
+            <Typography sx={{ fontSize: "22px" }}>
+                Sub Menu List Of {name}
+            </Typography>
             <AddSubMenu update={false} />
         </HeaderWrapper>
     );

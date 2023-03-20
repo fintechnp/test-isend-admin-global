@@ -10,13 +10,16 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
 }));
 
-function Header() {
+function Header({ handleCloseDialog }) {
     return (
         <HeaderWrapper>
             <Typography sx={{ fontSize: "22px" }}>Partner Banks</Typography>
-            <AddPartnerBank update={false} />
+            <AddPartnerBank
+                update={false}
+                handleCloseDialog={handleCloseDialog}
+            />
         </HeaderWrapper>
     );
 }
 
-export default Header;
+export default React.memo(Header);
