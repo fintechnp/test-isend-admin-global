@@ -78,11 +78,7 @@ const AddLanguage = () => {
                 accessor: "f_serial_no",
                 maxWidth: 80,
             },
-            {
-                Header: "Localization Id",
-                accessor: "localization_id",
-                maxWidth: 80,
-            },
+
             {
                 Header: "Language Key",
                 accessor: "localization_key",
