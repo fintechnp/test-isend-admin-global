@@ -1,33 +1,24 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Typography, Box, Grid, Tooltip } from "@mui/material";
 import MuiButton from "@mui/material/Button";
-import CloseIcon from "@mui/icons-material/Close";
+import { styled } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
+import CloseIcon from "@mui/icons-material/Close";
+import CancelIcon from "@mui/icons-material/Cancel";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import { Typography, Box, Grid, Tooltip } from "@mui/material";
 
 import Delete from "./../Dialog/Delete";
-import {
-    FormatDate,
-    ReferenceName,
-    CountryName,
-    CurrencyName,
-    FormatNumber,
-} from "../../helpers";
+import { FormatDate, ReferenceName, CountryName, CurrencyName, FormatNumber } from "../../helpers";
 
 const ExtendedContainer = styled(Box)(({ theme }) => ({
-    padding: "12px",
-    marginBottom: "12px",
+    margin: "1rem",
     borderRadius: "8px",
     background: theme.palette.background.light,
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
-    padding: "8px 16px",
-    borderTop: `1px dashed ${theme.palette.primary.light}`,
-    borderBottom: `1px dashed ${theme.palette.primary.light}`,
+    padding: "1rem",
 }));
 
 const EachRenderValue = styled(Box)(({ theme }) => ({
@@ -80,11 +71,7 @@ function SubComponent({
             <ExtendedContainer>
                 <ContentContainer>
                     <Box>
-                        <Typography
-                            sx={{ color: "primary.dark", fontSize: "18px" }}
-                        >
-                            {title}
-                        </Typography>
+                        <Typography sx={{ color: "primary.dark", fontSize: "18px" }}>{title}</Typography>
                     </Box>
                     <Grid container spacing={1} sx={{ paddingBottom: "8px" }}>
                         {sub_columns &&
@@ -148,9 +135,7 @@ function SubComponent({
                             <CloseButton
                                 size="small"
                                 variant="outlined"
-                                onClick={() =>
-                                    handleForgotPassword(sub_data?.email)
-                                }
+                                onClick={() => handleForgotPassword(sub_data?.email)}
                                 endIcon={<LockResetIcon />}
                             >
                                 Reset Password
@@ -158,12 +143,7 @@ function SubComponent({
                         </Tooltip>
                     )}
                     {handleDelete && (
-                        <Delete
-                            id={sub_data?.tid}
-                            button={true}
-                            tooltext="Delete"
-                            handleDelete={handleDelete}
-                        />
+                        <Delete id={sub_data?.tid} button={true} tooltext="Delete" handleDelete={handleDelete} />
                     )}
                 </Box>
             </ExtendedContainer>
