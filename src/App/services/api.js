@@ -27,32 +27,21 @@ axiosInstance.interceptors.response.use(
         const isDataArray = Array.isArray(response?.data?.data);
         // console.log(response);
         if (!isPagination && isDataArray) {
-            console.log("not pagination but array data");
-            // const data = response?.data?.data?.map((item, index) => {
-            //     return { f_serial_no: index + 1, ...item };
-            // });
-            // const newResponseData = { ...response?.data, data };
-            return { ...response };
+            const data = response?.data?.data?.map((item, index) => {
+                return { f_serial_no: index + 1, ...item };
+            });
+            const newResponseData = { ...response, data: { ...response?.data, data } };
+            return newResponseData;
         } else if (isPagination && isDataArray) {
-            console.log("paginated data");
             const mData = response.data.data.map((item, index) => ({
-                f_sn: Math.random(),
+                f_serial_no: (pagination.currentPage - 1) * pagination.pageSize + index + 1,
                 ...item,
             }));
-            response.data.data = mData;
-            console.log({ mData });
-            return response;
-            // return {
-            //     ...response,
-            //     data: {
-            //         ...response.data,
-            //         data: mData,
-            //         data2: "data2",
-            //     },
-            // };
+            const newResponse = { ...response, data: { ...response.data, data: mData } };
+
+            return newResponse;
         } else {
-            console.log("without pagination");
-            return { ...response };
+            return response;
         }
     },
     function (error) {

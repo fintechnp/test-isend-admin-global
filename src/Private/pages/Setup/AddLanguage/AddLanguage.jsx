@@ -37,8 +37,6 @@ const AddLanguage = () => {
     const { success: deleteLanguageValueSuccess, loading: deleteLanguageValueLoading } = useSelector(
         (state) => state.delete_language_value,
     );
-    console.log("🚀 ~ file: AddLanguage.jsx:28 ~ AddLanguage ~ allLanguageValue:", allLanguageValue);
-
     useEffect(() => {
         dispatch(actions.get_all_language_value(filterSchema));
         dispatch({ type: "DELETE_LANGUAGE_VALUE_RESET" });
@@ -75,6 +73,11 @@ const AddLanguage = () => {
 
     const columns = useMemo(
         () => [
+            {
+                Header: "SN",
+                accessor: "f_serial_no",
+                maxWidth: 80,
+            },
             {
                 Header: "Localization Id",
                 accessor: "localization_id",
