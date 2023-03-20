@@ -49,6 +49,7 @@ const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
 const AddBeneficiary = lazy(() => import("../pages/Customers/Beneficiary/AddUpdateBeneficiary"));
 const BeneficiaryDetails = lazy(() => import("../pages/Customers/Beneficiary/Details"));
 const CustomerTransactions = lazy(() => import("../pages/Customers/Transactions"));
+const CustomerBanks = lazy(() => import("../pages/Customers/Banks/Banks"));
 
 //Documents
 const Documents = lazy(() => import("../pages/Customers/Documents"));
@@ -302,6 +303,10 @@ const privateRoutes = [
     {
         path: "/customer/remarks/:id",
         component: <CustomerRemarks title="Customer's Remarks" />,
+    },
+    {
+        path: routePaths.customer.banks,
+        component: <CustomerBanks />,
     },
 
     //Transactions

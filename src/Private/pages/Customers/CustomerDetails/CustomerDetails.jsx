@@ -402,6 +402,7 @@ function CustomerDetails(props) {
                         >
                             Account
                         </Button>
+                        <Button onClick={() => navigate(`/customer/banks/${id}`)}>Banks</Button>
                     </Box>
                 </Grid>
             </Grid>
