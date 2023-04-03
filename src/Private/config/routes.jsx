@@ -51,6 +51,7 @@ const AddBeneficiary = lazy(() => import("../pages/Customers/Beneficiary/AddUpda
 const BeneficiaryDetails = lazy(() => import("../pages/Customers/Beneficiary/Details"));
 const CustomerTransactions = lazy(() => import("../pages/Customers/Transactions"));
 const CustomerBanks = lazy(() => import("../pages/Customers/Banks/Banks"));
+const AllBanks = lazy(() => import("./../pages/Customers/AllBanks/BankList"));
 
 //Documents
 const Documents = lazy(() => import("../pages/Customers/Documents"));
@@ -312,6 +313,10 @@ const privateRoutes = [
     {
         path: routePaths.customer.banks,
         component: <CustomerBanks />,
+    },
+    {
+        path: routePaths.customer.allBank,
+        component: <AllBanks />,
     },
 
     //Transactions

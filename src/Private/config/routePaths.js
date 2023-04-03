@@ -26,6 +26,7 @@ const routePaths = {
     },
     customer: {
         banks: "/customer/banks/:customerId",
+        allBank: "/customer/banks",
     },
 };
 

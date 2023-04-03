@@ -197,6 +197,19 @@ import {
     CustomersCreateSaga,
 } from "./pages/Customers/CreateCustomer/store";
 
+//Banks
+
+import {
+    AddBankReducer,
+    BankListSaga,
+    DeleteBankReducer,
+    GetBankListDetailsReducer,
+    GetBankListReducer,
+    UpdateBankReducer,
+} from "./pages/Customers/Banks/store";
+
+import { AllBankListActions, AllBankListSaga, GetAllBankListReducer } from "./pages/Customers/AllBanks/store";
+
 //Documents
 import {
     GetDocumentsReducer,
@@ -546,6 +559,14 @@ export const privateReducer = {
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
 
+    //Customer Bank
+
+    get_all_bank: GetBankListReducer,
+    get_bank_details: GetBankListDetailsReducer,
+
+    //ALL BANKS
+    get_all_bank_list: GetAllBankListReducer,
+
     //Documents
     get_documents: GetDocumentsReducer,
     get_documents_byid: GetDocumentsByIdReducer,
@@ -720,6 +741,8 @@ export const privateSaga = [
     LanguageCountrySaga(),
     LanguageValueSaga(),
     LocalizationSaga(),
+    BankListSaga(),
+    AllBankListSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

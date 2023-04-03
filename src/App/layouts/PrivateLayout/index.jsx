@@ -181,6 +181,12 @@ const PrivateLayout = () => {
                         text: "Create New",
                         sub: false,
                     },
+                    {
+                        path: routePaths.customer.allBank,
+                        key: "all-bank",
+                        text: "Bank List",
+                        sub: false,
+                    },
                 ],
             },
 
