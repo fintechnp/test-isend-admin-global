@@ -1,17 +1,18 @@
-import PageContent from "App/components/Container/PageContent";
-import Spacer from "App/components/Spacer/Spacer";
-import { useParams } from "react-router-dom";
-import { useCallback, useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import actions from "./store/actions";
 import Grid from "@mui/material/Grid";
-import { Delete, Loading } from "App/components";
-import NoResults from "Private/pages/Transactions/components/NoResults";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useMemo } from "react";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
-import AddTranslationData from "Private/components/Localization/LocalizationTranslation/AddLocaltionTranslation";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
+
+import actions from "./store/actions";
+import { Delete, Loading } from "App/components";
+import Spacer from "App/components/Spacer/Spacer";
 import { TableSwitch } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
+import NoResults from "Private/pages/Transactions/components/NoResults";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import AddTranslationData from "Private/components/Localization/LocalizationTranslation/AddLocaltionTranslation";
 
 const LocalizationDetails = ({ title }) => {
     const dispatch = useDispatch();
