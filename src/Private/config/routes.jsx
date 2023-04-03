@@ -40,6 +40,7 @@ const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
 const LanguageSetup = lazy(() => import("../pages/Setup/LanguageSetup/LanguageSetup"));
 const LanguageCountry = lazy(() => import("../pages/Setup/LanguageCountry/LanguageCountry"));
 const AddLanguage = lazy(() => import("../pages/Setup/AddLanguage/AddLanguage"));
+const LocalizationDetails = lazy(() => import("../pages/Setup/LocalizationDetails/LocalizationDetails"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -256,6 +257,10 @@ const privateRoutes = [
     {
         path: routePaths.setup.addLanguage,
         component: <AddLanguage />,
+    },
+    {
+        path: routePaths.setup.localizationDetails,
+        component: <LocalizationDetails title={"Localization Details"} />,
     },
 
     //Customers

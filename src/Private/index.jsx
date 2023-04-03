@@ -174,6 +174,14 @@ import {
     UpdateLanguageValue,
 } from "./pages/Setup/AddLanguage/store";
 
+import {
+    GetLocalizationDetails,
+    LocalizationSaga,
+    AddTranslationValue,
+    GetTranslationValue,
+    UpdateTranslationValue,
+    DeleteTranslationValue,
+} from "./pages/Setup/LocalizationDetails/store";
 //Customer Process
 import {
     GetCustomersReducer,
@@ -426,6 +434,12 @@ export const privateReducer = {
     add_language_value: AddLanguageValue,
     update_language_value: UpdateLanguageValue,
     delete_language_value: DeleteLanguageValue,
+
+    get_localization_details: GetLocalizationDetails,
+    add_translation_value: AddTranslationValue,
+    get_translation_value: GetTranslationValue,
+    update_translation_value: UpdateTranslationValue,
+    delete_translation_value: DeleteTranslationValue,
 
     //delivery route
     get_delivery_route: GetDeliveryRouteReducer,
@@ -705,6 +719,7 @@ export const privateSaga = [
     LanguageOptionSaga(),
     LanguageCountrySaga(),
     LanguageValueSaga(),
+    LocalizationSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
