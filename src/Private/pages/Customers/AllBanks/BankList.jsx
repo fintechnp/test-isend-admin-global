@@ -28,7 +28,7 @@ const Banks = (props) => {
     const columns = useMemo(
         () => [
             {
-                header: "ID",
+                header: "SN",
                 accessorKey: "f_serial_no",
             },
 
