@@ -4,6 +4,7 @@ import authService from "./authHelper";
 import showToast from "../components/Toast";
 import Api from "./../services/api";
 import store from "./../store";
+import { preserveIntendedPath } from "App/routes";
 
 const initialState = {
     authStatusReported: false,
@@ -102,6 +103,7 @@ export default class AuthProvider extends Component {
                 localStorage.clear();
             }
         } catch (err) {
+            preserveIntendedPath();
             this.setState({
                 authStatusReported: true,
                 isUserLoggedIn: false,
@@ -123,9 +125,7 @@ export default class AuthProvider extends Component {
         const { authStatusReported } = this.state;
         return authStatusReported ? (
             <>
-                <AuthContext.Provider value={this.state}>
-                    {children}
-                </AuthContext.Provider>
+                <AuthContext.Provider value={this.state}>{children}</AuthContext.Provider>
             </>
         ) : (
             <></>
