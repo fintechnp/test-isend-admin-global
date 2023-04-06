@@ -52,7 +52,13 @@
         "build:testing": "vite build --mode testing",
         "build:staging": "vite build --mode staging",
         "build:production": "vite build --mode production",
-        "test": "vitest --watch"
+        "coverage": "vitest run --coverage",
+        "style:check": "npm run lint && npm run prettier:check",
+        "style:fix": "npm run lint:fix && npm run prettier:fix",
+        "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
+        "prettier:check": "prettier --check './src/**/*.{js,jsx,ts,tsx,css}' --config ./.prettierrc",
+        "lint:fix": "eslint --fix  './src/**/*.{js,jsx,ts,tsx}'",
+        "prettier:fix": "prettier --write './src/**/*.{js,jsx,ts,tsx,css}' --config ./.prettierrc"
     },
     "eslintConfig": {
         "extends": [
