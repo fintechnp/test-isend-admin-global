@@ -52,6 +52,7 @@
         "build:testing": "vite build --mode testing",
         "build:staging": "vite build --mode staging",
         "build:production": "vite build --mode production",
+        "test": "vitest --watch",
         "coverage": "vitest run --coverage",
         "style:check": "npm run lint && npm run prettier:check",
         "style:fix": "npm run lint:fix && npm run prettier:fix",
