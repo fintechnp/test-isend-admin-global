@@ -22,9 +22,11 @@ const routePaths = {
         language: "/setup/language-setup",
         languageCountry: "/setup/language-country",
         addLanguage: "/setup/add-language",
+        localizationDetails: "/localization/details/:id",
     },
     customer: {
         banks: "/customer/banks/:customerId",
+        allBank: "/customer/banks",
     },
 };
 

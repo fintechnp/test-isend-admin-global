@@ -32,9 +32,10 @@ const actions = {
         query,
     }),
 
-    get_bank_details: (id) => ({
+    get_bank_details: (id, query) => ({
         type: actions.GET_BANK_DETAILS,
         id,
+        query,
     }),
 
     add_bank: (data) => ({

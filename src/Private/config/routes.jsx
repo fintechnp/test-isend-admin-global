@@ -40,6 +40,7 @@ const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
 const LanguageSetup = lazy(() => import("../pages/Setup/LanguageSetup/LanguageSetup"));
 const LanguageCountry = lazy(() => import("../pages/Setup/LanguageCountry/LanguageCountry"));
 const AddLanguage = lazy(() => import("../pages/Setup/AddLanguage/AddLanguage"));
+const LocalizationDetails = lazy(() => import("../pages/Setup/LocalizationDetails/LocalizationDetails"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -50,6 +51,7 @@ const AddBeneficiary = lazy(() => import("../pages/Customers/Beneficiary/AddUpda
 const BeneficiaryDetails = lazy(() => import("../pages/Customers/Beneficiary/Details"));
 const CustomerTransactions = lazy(() => import("../pages/Customers/Transactions"));
 const CustomerBanks = lazy(() => import("../pages/Customers/Banks/Banks"));
+const AllBanks = lazy(() => import("./../pages/Customers/AllBanks/BankList"));
 
 //Documents
 const Documents = lazy(() => import("../pages/Customers/Documents"));
@@ -257,6 +259,10 @@ const privateRoutes = [
         path: routePaths.setup.addLanguage,
         component: <AddLanguage />,
     },
+    {
+        path: routePaths.setup.localizationDetails,
+        component: <LocalizationDetails title={"Localization Details"} />,
+    },
 
     //Customers
     {
@@ -307,6 +313,10 @@ const privateRoutes = [
     {
         path: routePaths.customer.banks,
         component: <CustomerBanks />,
+    },
+    {
+        path: routePaths.customer.allBank,
+        component: <AllBanks />,
     },
 
     //Transactions

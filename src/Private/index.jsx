@@ -174,6 +174,14 @@ import {
     UpdateLanguageValue,
 } from "./pages/Setup/AddLanguage/store";
 
+import {
+    GetLocalizationDetails,
+    LocalizationSaga,
+    AddTranslationValue,
+    GetTranslationValue,
+    UpdateTranslationValue,
+    DeleteTranslationValue,
+} from "./pages/Setup/LocalizationDetails/store";
 //Customer Process
 import {
     GetCustomersReducer,
@@ -188,6 +196,19 @@ import {
     UpdateCustomersReducer,
     CustomersCreateSaga,
 } from "./pages/Customers/CreateCustomer/store";
+
+//Banks
+
+import {
+    AddBankReducer,
+    BankListSaga,
+    DeleteBankReducer,
+    GetBankListDetailsReducer,
+    GetBankListReducer,
+    UpdateBankReducer,
+} from "./pages/Customers/Banks/store";
+
+import { AllBankListActions, AllBankListSaga, GetAllBankListReducer } from "./pages/Customers/AllBanks/store";
 
 //Documents
 import {
@@ -427,6 +448,12 @@ export const privateReducer = {
     update_language_value: UpdateLanguageValue,
     delete_language_value: DeleteLanguageValue,
 
+    get_localization_details: GetLocalizationDetails,
+    add_translation_value: AddTranslationValue,
+    get_translation_value: GetTranslationValue,
+    update_translation_value: UpdateTranslationValue,
+    delete_translation_value: DeleteTranslationValue,
+
     //delivery route
     get_delivery_route: GetDeliveryRouteReducer,
     get_delivery_route_by_id: GetDeliveryRouteByIdReducer,
@@ -531,6 +558,14 @@ export const privateReducer = {
     get_customer_byid: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
+
+    //Customer Bank
+
+    get_all_bank: GetBankListReducer,
+    get_bank_details: GetBankListDetailsReducer,
+
+    //ALL BANKS
+    get_all_bank_list: GetAllBankListReducer,
 
     //Documents
     get_documents: GetDocumentsReducer,
@@ -705,6 +740,9 @@ export const privateSaga = [
     LanguageOptionSaga(),
     LanguageCountrySaga(),
     LanguageValueSaga(),
+    LocalizationSaga(),
+    BankListSaga(),
+    AllBankListSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
