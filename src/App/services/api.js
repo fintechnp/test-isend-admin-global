@@ -1,6 +1,8 @@
-import app from "App/config/app";
 import axios from "axios";
 import Cookies from "js-cookie";
+
+import app from "App/config/app";
+import { preserveIntendedPath } from "App/routes";
 
 let store;
 export const injectStore = (_store) => {
@@ -56,6 +58,7 @@ export default class Api {
             },
             function (error) {
                 if (error?.response?.status === 401) {
+                    preserveIntendedPath();
                     store.dispatch({
                         type: "INVALID_TOKEN",
                     });
