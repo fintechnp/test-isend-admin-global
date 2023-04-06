@@ -41,6 +41,7 @@ const LanguageSetup = lazy(() => import("../pages/Setup/LanguageSetup/LanguageSe
 const LanguageCountry = lazy(() => import("../pages/Setup/LanguageCountry/LanguageCountry"));
 const AddLanguage = lazy(() => import("../pages/Setup/AddLanguage/AddLanguage"));
 const LocalizationDetails = lazy(() => import("../pages/Setup/LocalizationDetails/LocalizationDetails"));
+const StreetType = lazy(() => import("../pages/Setup/StreetType/StreetType"));
 
 //Customers
 const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
@@ -263,7 +264,10 @@ const privateRoutes = [
         path: routePaths.setup.localizationDetails,
         component: <LocalizationDetails title={"Localization Details"} />,
     },
-
+    {
+        path: routePaths.setup.streetType,
+        component: <StreetType title={"Street Type"} />,
+    },
     //Customers
     {
         path: "/customer/search",
