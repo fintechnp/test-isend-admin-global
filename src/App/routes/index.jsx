@@ -46,28 +46,31 @@ const MainRoutes = ({ setMode }) => {
         <Routes>
             <Route element={<PublicLayout />}>
                 {publicRoutes.map((route) => (
-                    <Route
-                        path={route.path}
-                        element={route.component}
-                        key={route.path}
-                    />
+                    <Route path={route.path} element={route.component} key={route.path} />
                 ))}
             </Route>
             <Route element={<PrivatePage />}>
                 {privateRoutes.map((route) => (
-                    <Route
-                        key={route.path}
-                        path={route.path}
-                        element={route.component}
-                    />
+                    <Route key={route.path} path={route.path} element={route.component} />
                 ))}
-                <Route
-                    path="*"
-                    element={<PageNotFound title="Page Not Found" />}
-                />
+                <Route path="*" element={<PageNotFound title="Page Not Found" />} />
             </Route>
         </Routes>
     );
 };
 
 export default MainRoutes;
+
+export const preserveIntendedPath = () => {
+    const { pathname, search } = window.location;
+    const intendedPath = pathname + search;
+    sessionStorage.setItem("intendedPath", intendedPath);
+};
+
+export const getIntendedPath = () => {
+    return sessionStorage.getItem("intendedPath");
+};
+
+export const removeIntendedPath = () => {
+    sessionStorage.removeItem("intendedPath");
+};

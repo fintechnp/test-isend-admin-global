@@ -1,25 +1,30 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import Drawer from "../../components/Drawer";
-import { Navigate, Outlet } from "react-router-dom";
-import {
-    Dashboard,
-    Settings,
-    AccountBox,
-    TrendingUp,
-    Report,
-    GroupWork,
-    Receipt,
-    GroupAdd,
-    Payment,
-} from "@mui/icons-material";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+
+import Dashboard from "@mui/icons-material/Dashboard";
+import Settings from "@mui/icons-material/Settings";
+import AccountBox from "@mui/icons-material/AccountBox";
+import TrendingUp from "@mui/icons-material/TrendingUp";
+import Report from "@mui/icons-material/Report";
+import GroupWork from "@mui/icons-material/GroupWork";
+import Receipt from "@mui/icons-material/Receipt";
+import GroupAdd from "@mui/icons-material/GroupAdd";
+import Payment from "@mui/icons-material/Payment";
+
 import roles from "../../global/roles";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 
-import { AuthConsumer } from "../../auth";
-import Loading from "./../../../App/components/Loading";
 import routePaths from "Private/config/routePaths";
+import { AuthConsumer, AuthContext } from "../../auth";
+import Loading from "./../../../App/components/Loading";
+import { localStorageSave } from "App/helpers/localStorage";
+import { INTENDED_PATH } from "App/global/constants";
+import { getIntendedPath, removeIntendedPath, preserveIntendedPath } from "App/routes";
 
 const PrivateLayout = () => {
+    const navigate = useNavigate();
+
     const getMainItems = () => {
         return [
             {
@@ -413,20 +418,27 @@ const PrivateLayout = () => {
         ];
     };
 
+    useEffect(() => {
+        const intendedPath = getIntendedPath();
+        if (auth && auth.isUserLoggedIn && intendedPath) {
+            removeIntendedPath();
+            navigate(intendedPath);
+        }
+    }, []);
+
+    const auth = useContext(AuthContext);
+
+    if (auth && !auth.isUserLoggedIn) {
+        preserveIntendedPath();
+        return <Navigate to="/login" replace />;
+    }
+
     return (
-        <AuthConsumer>
-            {(authContext) =>
-                authContext && authContext.isUserLoggedIn ? (
-                    <Drawer menus={getMainItems}>
-                        <Suspense fallback={<Loading loading={true} />}>
-                            <Outlet />
-                        </Suspense>
-                    </Drawer>
-                ) : (
-                    <Navigate to="/login" replace />
-                )
-            }
-        </AuthConsumer>
+        <Drawer menus={getMainItems}>
+            <Suspense fallback={<Loading loading={true} />}>
+                <Outlet />
+            </Suspense>
+        </Drawer>
     );
 };
 
