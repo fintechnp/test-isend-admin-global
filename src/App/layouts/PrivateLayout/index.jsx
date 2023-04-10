@@ -163,6 +163,12 @@ const PrivateLayout = () => {
                         text: "Add Language",
                         sub: false,
                     },
+                    {
+                        path: routePaths.setup.streetType,
+                        key: "Street Type",
+                        text: " Street Type",
+                        sub: false,
+                    },
                 ],
             },
 

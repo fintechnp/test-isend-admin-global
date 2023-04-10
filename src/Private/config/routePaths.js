@@ -23,6 +23,7 @@ const routePaths = {
         languageCountry: "/setup/language-country",
         addLanguage: "/setup/add-language",
         localizationDetails: "/localization/details/:id",
+        streetType: "/setup/street-type",
     },
     customer: {
         banks: "/customer/banks/:customerId",
