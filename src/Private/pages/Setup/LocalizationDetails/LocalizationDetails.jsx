@@ -33,7 +33,7 @@ const LocalizationDetails = ({ title }) => {
 
     useEffect(() => {
         dispatch(actions.get_localization_details(id));
-        dispatch(actions.get_translation_value(id));
+        // dispatch(actions.get_translation_value(id));
     }, [dispatch, id]);
 
     useEffect(() => {
