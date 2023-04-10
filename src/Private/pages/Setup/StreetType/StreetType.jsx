@@ -19,7 +19,6 @@ const StreetType = ({ title }) => {
     const [filterSchema, setFilterSchema] = useState({
         page_size: 15,
         page_number: 1,
-        country: "AUS",
     });
 
     const { loading: streetTypeLoading, response: allStreetType } = useSelector((state) => state.get_street_type);
@@ -34,7 +33,7 @@ const StreetType = ({ title }) => {
         (state) => state.delete_street_type,
     );
     useEffect(() => {
-        dispatch(actions.get_street_type(filterSchema));
+        dispatch(actions.get_street_type("AUS", filterSchema));
         dispatch({ type: "DELETE_STREET_TYPE_RESET" });
         dispatch({ type: "ADD_STREET_TYPE_RESET" });
         dispatch({ type: "UPDATE_STREET_TYPE_RESET" });

@@ -8,7 +8,7 @@ const api = new Api();
 
 export const getAllStreetType = takeEvery(actions.GET_STREET_TYPE, function* (action) {
     try {
-        const res = yield call(api.get, apiEndpoints.streetType.get, action.query);
+        const res = yield call(api.get, `common/street_type/${action.country}`, action.query);
         yield put({
             type: actions.GET_STREET_TYPE_SUCCESS,
             response: res,

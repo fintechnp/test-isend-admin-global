@@ -18,8 +18,9 @@ const actions = {
     DELETE_STREET_TYPE_FAILED: "DELETE_STREET_TYPE_FAILED",
     DELETE_STREET_TYPE_RESET: "DELETE_STREET_TYPE_RESET",
 
-    get_street_type: (query) => ({
+    get_street_type: (country, query) => ({
         type: actions.GET_STREET_TYPE,
+        country,
         query,
     }),
 

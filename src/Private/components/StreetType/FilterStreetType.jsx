@@ -13,7 +13,11 @@ const orderByOptions = [
 ];
 
 const FilterStreetType = ({ sortByOptions }) => {
-    const methods = useForm();
+    const methods = useForm({
+        defaultValues: {
+            country: "AUS",
+        },
+    });
     const dispatch = useDispatch();
 
     const country = JSON.parse(localStorage.getItem("country"));
@@ -24,12 +28,7 @@ const FilterStreetType = ({ sortByOptions }) => {
     const { reset, setValue, getValues } = methods;
 
     const handleSubmit = (data) => {
-        const countryValue = data.country ? data.country : "AUS";
-        const newParams = {
-            ...data,
-            country: countryValue,
-        };
-        dispatch(actions.get_street_type(newParams));
+        dispatch(actions.get_street_type(data.country, data));
         reset();
     };
 

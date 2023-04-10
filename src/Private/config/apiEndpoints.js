@@ -78,7 +78,7 @@ const apiEndpoints = {
         delete: "languagetranslated/:languageTranslatedId",
     },
     streetType: {
-        get: "common/street_type",
+        get: "common/street_type/:country",
         post: "common/street_type",
         update: "common/street_type/:streetTypeId",
         delete: "common/street_type/:streetTypeId",
