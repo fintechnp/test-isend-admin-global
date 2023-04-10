@@ -182,6 +182,15 @@ import {
     UpdateTranslationValue,
     DeleteTranslationValue,
 } from "./pages/Setup/LocalizationDetails/store";
+
+import {
+    AddStreetType,
+    DeleteStreetType,
+    GetStreetType,
+    StreetTypeSaga,
+    UpdateStreetType,
+} from "./pages/Setup/StreetType/store";
+
 //Customer Process
 import {
     GetCustomersReducer,
@@ -453,6 +462,11 @@ export const privateReducer = {
     get_translation_value: GetTranslationValue,
     update_translation_value: UpdateTranslationValue,
     delete_translation_value: DeleteTranslationValue,
+
+    get_street_type: GetStreetType,
+    add_street_type: AddStreetType,
+    update_street_type: UpdateStreetType,
+    delete_street_type: DeleteStreetType,
 
     //delivery route
     get_delivery_route: GetDeliveryRouteReducer,
@@ -743,6 +757,7 @@ export const privateSaga = [
     LocalizationSaga(),
     BankListSaga(),
     AllBankListSaga(),
+    StreetTypeSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
