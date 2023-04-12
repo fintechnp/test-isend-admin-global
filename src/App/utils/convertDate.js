@@ -1,5 +1,6 @@
-import { format } from "date-fns";
+import moment from "moment";
 
 export const convertDate = (date) => {
-    return format(new Date(date), "yyyy-MM-dd");
+    const originalDate = moment(date);
+    return originalDate.format("YYYY-MM-DD");
 };
