@@ -9,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { convertDate } from "App/utils/convertDate";
+import { format } from "date-fns";
 
 import Basic from "./Basic";
 import AddressForm from "./AddressForm";
@@ -68,7 +70,6 @@ function CustomerForm({ update_data, loading }) {
     const { response: partner_sending, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
-    console.log("🚀 ~ file: Form.jsx:71 ~ CustomerForm ~ memoizedData:", memoizedData);
 
     React.useEffect(() => {
         if (id) {
@@ -251,15 +252,13 @@ function CustomerForm({ update_data, loading }) {
                                             id_type: memoizedData?.id_type,
                                             id_number: memoizedData?.id_number,
                                             id_issue_date:
-                                                memoizedData?.id_issue_date &&
-                                                new Date(memoizedData?.id_issue_date).toISOString().slice(0, 10),
+                                                memoizedData?.id_issue_date && convertDate(memoizedData?.id_issue_date),
                                             id_expiry_date:
                                                 memoizedData?.id_expiry_date &&
-                                                new Date(memoizedData?.id_expiry_date).toISOString().slice(0, 10),
+                                                convertDate(memoizedData?.id_expiry_date),
                                             id_issued_country: memoizedData?.id_issued_country,
                                             date_of_birth:
-                                                memoizedData?.date_of_birth &&
-                                                new Date(memoizedData?.date_of_birth).toISOString().slice(0, 10),
+                                                memoizedData?.date_of_birth && convertDate(memoizedData?.date_of_birth),
                                             birth_country: memoizedData?.birth_country,
                                             citizenship_country: memoizedData?.citizenship_country,
                                             occupation: memoizedData?.occupation,

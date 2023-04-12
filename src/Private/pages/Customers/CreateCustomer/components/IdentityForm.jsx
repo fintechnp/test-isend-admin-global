@@ -63,7 +63,6 @@ const NextButton = styled(Button)(({ theme }) => ({
 const IdentityForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, form: formName }) => {
     const state = useSelector((state) => state.form[formName].values);
     const isCountryUS = state.country === "USA";
-    console.log("🚀 ~ file: IdentityForm.jsx:65 ~ IdentityForm ~ isCountryUS:", isCountryUS);
 
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
