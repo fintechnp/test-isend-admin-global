@@ -68,6 +68,7 @@ function CustomerForm({ update_data, loading }) {
     const { response: partner_sending, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
+    console.log("🚀 ~ file: Form.jsx:71 ~ CustomerForm ~ memoizedData:", memoizedData);
 
     React.useEffect(() => {
         if (id) {
@@ -265,6 +266,9 @@ function CustomerForm({ update_data, loading }) {
                                             source_of_income: memoizedData?.source_of_income,
                                             language: memoizedData?.language,
                                             is_active: memoizedData?.is_active,
+                                            street_type: memoizedData?.street_type,
+                                            street_no: memoizedData?.street_no,
+                                            ssn_number: memoizedData?.ssn_number,
                                         }
                                     }
                                     steps={steps}
