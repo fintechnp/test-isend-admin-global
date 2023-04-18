@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Tooltip, Typography } from "@mui/material";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
@@ -19,6 +19,7 @@ import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 import actions from "./store/actions";
 import { useParams } from "react-router-dom";
+import { AddButton } from "Private/components/AllButtons/Buttons";
 
 const initialState = {
     page_number: 1,
@@ -157,8 +158,19 @@ const Banks = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleRefreshBank = () => {
+        dispatch(actions.refresh_bank(customerId));
+    };
+
     return (
-        <PageContent title="Bank Details">
+        <PageContent
+            title="Bank Details"
+            topRightEndContent={
+                <AddButton size="small" variant="outlined" onClick={handleRefreshBank}>
+                    Refresh Bank
+                </AddButton>
+            }
+        >
             <Spacer />
             <TanstackReactTable
                 columns={columns}

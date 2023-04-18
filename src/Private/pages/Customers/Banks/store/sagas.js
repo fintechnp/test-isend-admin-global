@@ -19,6 +19,21 @@ export const getBankDetails = takeEvery(actions.GET_BANK_DETAILS, function* (act
     }
 });
 
+export const refreshBank = takeEvery(actions.REFRESH_BANK, function* (action) {
+    try {
+        const res = yield call(api.post, `/customer/refreshbank/${action.id}`, action.query);
+        yield put({
+            type: actions.REFRESH_BANK_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.REFRESH_BANK_FAILED,
+            error: error.data,
+        });
+    }
+});
+
 export default function* saga() {
-    yield all([getBankDetails]);
+    yield all([getBankDetails, refreshBank]);
 }
