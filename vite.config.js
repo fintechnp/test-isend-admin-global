@@ -1,49 +1,16 @@
-import path from "path";
 import react from "@vitejs/plugin-react";
 import svgrPlugin from "vite-plugin-svgr";
-import { fileURLToPath, URL } from "url";
 import { defineConfig, loadEnv } from "vite";
-import filterReplace from "vite-plugin-filter-replace";
-
 import jsconfigPaths from "vite-jsconfig-paths";
-
+import rollupNodePolyFill from "rollup-plugin-node-polyfills";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
-
-import rollupNodePolyFill from "rollup-plugin-node-polyfills";
-
-// const isHotReloading = () => false;
 
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
     return {
-        plugins: [
-            react(),
-            svgrPlugin(),
-            jsconfigPaths(),
-            filterReplace([
-                // {
-                //   filter: ["node_modules/redux-form/es/createReduxForm.js"],
-                //   replace(path, source) {
-                //     return "";
-                //   },
-                // },
-                // {
-                //   filter: ["node_modules/redux-form/es/util/isHotReloading.js"],
-                //   replace(path, source) {
-                //     return isHotReloading;
-                //   },
-                // },
-                // {
-                //   filter: ["node_modules/redux-form/es/util/isHotReloading.js"],
-                //   replace: {
-                //     from: /module/g,
-                //     to: undefined,
-                //   },
-                // },
-            ]),
-        ],
+        plugins: [react(), svgrPlugin(), jsconfigPaths()],
         test: {
             globals: true,
             environment: "jsdom",
@@ -63,16 +30,6 @@ export default defineConfig(({ mode }) => {
             host: true,
         },
         resolve: {
-            // alias: [
-            //     {
-            //         find: "./util/isHotReloading",
-            //         replacement: path.resolve(__dirname, "./src/isHotReloading.js"),
-            //     },
-            //     {
-            //         find: "./util/isHotReloading",
-            //         replacement: fileURLToPath(new URL("./src/isHotReloading.js", import.meta.url)),
-            //     },
-            // ],
             alias: {
                 "redux-form": "redux-form/dist/redux-form",
                 // This Rollup aliases are extracted from @esbuild-plugins/node-modules-polyfill,

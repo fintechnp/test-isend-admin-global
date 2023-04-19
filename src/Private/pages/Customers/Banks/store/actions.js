@@ -27,8 +27,18 @@ const actions = {
     DELETE_BANK_FAILED: "DELETE_BANK_FAILED",
     DELETE_BANK_RESET: "DELETE_BANK_RESET",
 
+    REFRESH_BANK: "REFRESH_BANK",
+    REFRESH_BANK_SUCCESS: "REFRESH_BANK_SUCCESS",
+    REFRESH_BANK_FAILED: "REFRESH_BANK_FAILED",
+
     get_all_bank: (query) => ({
         type: actions.GET_BANK,
+        query,
+    }),
+
+    refresh_bank: (id, query) => ({
+        type: actions.REFRESH_BANK,
+        id,
         query,
     }),
 
