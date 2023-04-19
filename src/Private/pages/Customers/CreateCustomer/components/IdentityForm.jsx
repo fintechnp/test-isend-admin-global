@@ -8,6 +8,7 @@ import moment from "moment";
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
 import Validator from "../../../../../App/utils/validators";
+import { useSelector } from "react-redux";
 
 const Container = styled(Grid)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -59,7 +60,10 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const IdentityForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
+const IdentityForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, form: formName }) => {
+    const state = useSelector((state) => state.form[formName].values);
+    const isCountryUS = state.country === "USA";
+
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
 
@@ -134,6 +138,18 @@ const IdentityForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText 
                                 validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             />
                         </FieldWrapper>
+                        {isCountryUS && (
+                            <FieldWrapper item xs={12} sm={6}>
+                                <Field
+                                    name="ssn_number"
+                                    label="SSN Number"
+                                    type="text"
+                                    small={12}
+                                    component={TextField}
+                                    validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
+                                />
+                            </FieldWrapper>
+                        )}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="id_issue_date"

@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 import { Grid, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import { formValueSelector } from "redux-form";
+import streetAction from "../../../Setup/StreetType/store/action";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import Validator from "../../../../../App/utils/validators";
+import SelectField from "App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -59,7 +63,20 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, id, code = 977, buttonText }) => {
+const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, id, code = 977, buttonText, form: formName }) => {
+    const state = useSelector((state) => state.form[formName].values);
+    const country = state.country;
+
+    const { loading: streetTypeLoading, response: allStreetType } = useSelector((state) => state.get_street_type);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (state.country !== "") {
+            dispatch(streetAction.get_street_type(state.country));
+        }
+    }, [country]);
+
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
@@ -131,6 +148,44 @@ const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, id, code = 9
                                 validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             />
                         </FieldWrapper>
+                        {country === "AUS" && (
+                            <>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="street_type"
+                                        label="Street Type"
+                                        type="text"
+                                        small={12}
+                                        component={SelectField}
+                                        validate={[Validator.emptyValidator]}
+                                    >
+                                        <option value="" disabled>
+                                            Select Street Type
+                                        </option>
+                                        {allStreetType &&
+                                            allStreetType?.data?.map((data, index) => (
+                                                <option value={data.street_code} key={index}>
+                                                    {data.street_name}
+                                                </option>
+                                            ))}
+                                    </Field>
+                                </FieldWrapper>
+                                <FieldWrapper item xs={12} sm={6}>
+                                    <Field
+                                        name="street_no"
+                                        label="Street No"
+                                        type="text"
+                                        small={12}
+                                        component={TextField}
+                                        validate={[
+                                            Validator.emptyValidator,
+                                            Validator.minValue1,
+                                            Validator.maxLength50,
+                                        ]}
+                                    />
+                                </FieldWrapper>
+                            </>
+                        )}
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="city"
