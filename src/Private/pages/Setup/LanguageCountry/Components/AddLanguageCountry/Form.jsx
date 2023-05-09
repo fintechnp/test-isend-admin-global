@@ -79,9 +79,15 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
+const validationSchema = Yup.object().shape({
+    country: Yup.string().required("Country is required"),
+    language_code: Yup.string().required("Language is required"),
+});
+
 const LanguageCountryForm = ({ update, onSubmit, buttonText, loading, initialValues, handleClose }) => {
     const methods = useForm({
         defaultValues: initialValues,
+        resolver: yupResolver(validationSchema),
     });
     const dispatch = useDispatch();
     const { reset, setValue, getValues } = methods;

@@ -1,5 +1,7 @@
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
@@ -8,9 +10,16 @@ import { AddButton, CancelButton } from "../AllButtons/Buttons";
 
 const localizationTypeOptions = [{ label: "Api", value: "API" }];
 
+const streetTypeSchema = yup.object().shape({
+    country: yup.string().required("Country is required"),
+    street_code: yup.string().required("Street Code is required"),
+    street_name: yup.string().required("Street Name is required"),
+});
+
 const AddStreetType = ({ initial, update, onSubmit }) => {
     const methods = useForm({
         defaultValues: initial,
+        resolver: yupResolver(streetTypeSchema),
     });
 
     const { reset, setValue, getValues } = methods;
