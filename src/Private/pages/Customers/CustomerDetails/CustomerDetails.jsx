@@ -303,6 +303,9 @@ function CustomerDetails(props) {
                     <RenderField label="Id Number" value={customersData?.data?.id_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <RenderField label="SSN Number" value={customersData?.data?.ssn_number} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <RenderField label="Id Issued State" value={customersData?.data?.id_issued_state} />
                 </Grid>{" "}
                 <Grid item xs={12} sm={6}>
@@ -346,6 +349,12 @@ function CustomerDetails(props) {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Country" value={customersData?.data?.country_data} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Street Type" value={customersData?.data?.street_type} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Street No" value={customersData?.data?.street_no} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Nationality" value={customersData?.data?.citizenship_country_data} />
@@ -402,6 +411,7 @@ function CustomerDetails(props) {
                         >
                             Account
                         </Button>
+                        <Button onClick={() => navigate(`/customer/banks/${id}`)}>Banks</Button>
                     </Box>
                 </Grid>
             </Grid>

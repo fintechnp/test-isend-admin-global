@@ -72,6 +72,17 @@ const apiEndpoints = {
         update: "localization/:localizationId",
         delete: "localization/:localizationId",
     },
+    localizationTranslation: {
+        add: "languagetranslated",
+        update: "languagetranslated/:languageTranslatedId",
+        delete: "languagetranslated/:languageTranslatedId",
+    },
+    streetType: {
+        get: "common/street_type/:country",
+        post: "common/street_type",
+        update: "common/street_type/:streetTypeId",
+        delete: "common/street_type/:streetTypeId",
+    },
 };
 
 export default apiEndpoints;

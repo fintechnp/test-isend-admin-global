@@ -1,5 +1,7 @@
+import * as yup from "yup";
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
@@ -8,9 +10,15 @@ import FormTextField from "App/core/hook-form/FormTextField";
 
 const localizationTypeOptions = [{ label: "Api", value: "API" }];
 
+const languageValueSchema = yup.object().shape({
+    localization_key: yup.string().required("Localization Key is required"),
+    localization_value: yup.string().required("Localization Value is required"),
+});
+
 const AddLanguageValue = ({ initial, update, onSubmit }) => {
     const methods = useForm({
         defaultValues: initial,
+        resolver: yupResolver(languageValueSchema),
     });
 
     const { reset, setValue, getValues } = methods;

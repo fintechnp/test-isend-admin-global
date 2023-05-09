@@ -8,6 +8,7 @@ import range from "App/helpers/range";
 
 function TableBodySkeleton({ rowCount, columnCount, skipColumns }) {
     let rows = range(1, rowCount);
+
     let columns = range(1, columnCount);
 
     return (

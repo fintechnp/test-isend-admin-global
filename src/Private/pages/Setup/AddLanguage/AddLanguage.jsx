@@ -1,8 +1,12 @@
 import { styled } from "@mui/system";
+import { Box, Grid } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
+import MuiIconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Grid } from "@mui/material";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import actions from "./store/actions";
 import { Delete } from "App/components";
@@ -15,12 +19,20 @@ const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
     color: "border.main",
 }));
+const IconButton = styled(MuiIconButton)(({ theme }) => ({
+    opacity: 0.7,
+    padding: "3px",
+    color: "border.main",
+    "&: hover": { color: "border.dark", opacity: 1 },
+}));
 
 const AddLanguage = () => {
     const dispatch = useDispatch();
 
+    const navigate = useNavigate();
+
     const [filterSchema, setFilterSchema] = useState({
-        page_size: 10,
+        page_size: 15,
         page_number: 1,
     });
 
@@ -37,7 +49,6 @@ const AddLanguage = () => {
     const { success: deleteLanguageValueSuccess, loading: deleteLanguageValueLoading } = useSelector(
         (state) => state.delete_language_value,
     );
-
     useEffect(() => {
         dispatch(actions.get_all_language_value(filterSchema));
         dispatch({ type: "DELETE_LANGUAGE_VALUE_RESET" });
@@ -75,10 +86,11 @@ const AddLanguage = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "Localization Id",
-                accessor: "localization_id",
+                Header: "SN",
+                accessor: "f_serial_no",
                 maxWidth: 80,
             },
+
             {
                 Header: "Language Key",
                 accessor: "localization_key",
@@ -146,6 +158,20 @@ const AddLanguage = () => {
                             justifyContent: "center",
                         }}
                     >
+                        <Tooltip title="Language Details" arrow>
+                            <IconButton
+                                onClick={() => navigate(`/localization/details/${row?.original?.localization_id}`)}
+                            >
+                                <RemoveRedEyeOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
                         <LanguageValueModal update={true} update_data={row?.original} />
                         <Delete
                             id={row?.original?.localization_id}
