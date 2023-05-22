@@ -89,6 +89,7 @@ const Search = lazy(() => import("../pages/PaymentProcess/Search"));
 const AmlSupicious = lazy(() => import("../pages/PaymentProcess/AmlSupicious"));
 const ExceptionTransactions = lazy(() => import("../pages/PaymentProcess/ExceptionTransactions"));
 const TransactionsDetails = lazy(() => import("../pages/PaymentProcess/Details"));
+const TransactionDocuments = lazy(() => import("../pages/PaymentProcess/Details/Documents"));
 
 //Utilities
 const Sms = lazy(() => import("../pages/Utilities/Sms"));
@@ -420,6 +421,10 @@ const privateRoutes = [
     {
         path: "/transactions/details/aml-suspicious/:tid",
         component: <TransactionsDetails title="Transaction Details" />,
+    },
+    {
+        path: "/transaction/documents/:id",
+        component: <TransactionDocuments />,
     },
 
     //Utilities
