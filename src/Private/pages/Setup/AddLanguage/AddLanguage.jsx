@@ -86,13 +86,13 @@ const AddLanguage = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "SN",
+                header: "SN",
                 accessor: "f_serial_no",
                 maxWidth: 80,
             },
 
             {
-                Header: "Language Key",
+                header: "Language Key",
                 accessor: "localization_key",
                 Cell: (data) => (
                     <Box
@@ -109,7 +109,7 @@ const AddLanguage = () => {
                 ),
             },
             {
-                Header: "Language Value",
+                header: "Language Value",
                 accessor: "localization_value",
                 Cell: (data) => (
                     <Box
@@ -126,7 +126,7 @@ const AddLanguage = () => {
                 ),
             },
             {
-                Header: "Translation Type",
+                header: "Translation Type",
                 accessor: "translation_type",
                 Cell: (data) => (
                     <Box
@@ -144,7 +144,7 @@ const AddLanguage = () => {
             },
 
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>

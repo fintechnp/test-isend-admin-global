@@ -281,6 +281,7 @@ import {
     UpdateBlockedTransactionsReducer,
     UpdateAmlSuspiciousReducer,
     UpdateExceptionTransactionsReducer,
+    GetTransactionDocumentReducer,
     PaymentProcessingSaga,
 } from "./pages/PaymentProcess/store";
 
@@ -627,6 +628,7 @@ export const privateReducer = {
     update_blocked_transactions: UpdateBlockedTransactionsReducer,
     update_aml_suspicious: UpdateAmlSuspiciousReducer,
     update_exception_transactions: UpdateExceptionTransactionsReducer,
+    get_transaction_documents: GetTransactionDocumentReducer,
 
     //Reports
     get_customer_report: GetCustomerReportsReducer,

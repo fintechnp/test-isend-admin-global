@@ -9,12 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useParams, useNavigate } from "react-router-dom";
 
-import {
-    CurrencyName,
-    CountryName,
-    FormatNumber,
-    ReferenceName,
-} from "./../../../../App/helpers";
+import { CurrencyName, CountryName, FormatNumber, ReferenceName } from "./../../../../App/helpers";
 import MessageBox from "./../Search/components/MessageBox";
 
 const Header = styled(Box)(({ theme }) => ({
@@ -73,10 +68,7 @@ function Details({ data }) {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        const timer = setTimeout(
-            () => (count === 2 ? setCount(0) : null),
-            5000
-        );
+        const timer = setTimeout(() => (count === 2 ? setCount(0) : null), 5000);
         return () => clearTimeout(timer);
     }, [count]);
 
@@ -112,12 +104,7 @@ function Details({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Sending Partner Id:</LabelWrapper>
@@ -130,9 +117,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Partner Id:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_agent_id
-                                    ? data?.payout_agent_id
-                                    : "N/A"}
+                                {data?.payout_agent_id ? data?.payout_agent_id : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -148,9 +133,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Partner:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_agent_name
-                                    ? data?.payout_agent_name
-                                    : "N/A"}
+                                {data?.payout_agent_name ? data?.payout_agent_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -158,9 +141,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Sending Branch:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.agent_branch_name
-                                    ? data?.agent_branch_name
-                                    : "N/A"}
+                                {data?.agent_branch_name ? data?.agent_branch_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -173,23 +154,13 @@ function Details({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Customer Id:</LabelWrapper>
                             <ValueWrapper sx={{ opacity: 0.8 }}>
-                                <Link
-                                    to={`/customer/details/${data?.customer_id}`}
-                                    style={{ textDecoration: "none" }}
-                                >
-                                    {data?.customer_id
-                                        ? data?.customer_id
-                                        : "N/A"}
+                                <Link to={`/customer/details/${data?.customer_id}`} style={{ textDecoration: "none" }}>
+                                    {data?.customer_id ? data?.customer_id : "N/A"}
                                 </Link>
                             </ValueWrapper>
                         </InfoWrapper>
@@ -203,9 +174,7 @@ function Details({ data }) {
                                     textTransform: "capitalize",
                                 }}
                             >
-                                {data?.customer_name
-                                    ? data?.customer_name
-                                    : "N/A"}
+                                {data?.customer_name ? data?.customer_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -213,9 +182,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.send_country
-                                    ? CountryName(data?.send_country)
-                                    : "N/A"}
+                                {data?.send_country ? CountryName(data?.send_country) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -223,9 +190,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Source of Income:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.customer_source_of_income
-                                    ? data?.customer_source_of_income
-                                    : "N/A"}
+                                {data?.customer_source_of_income ? data?.customer_source_of_income : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -233,9 +198,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Deposit Type:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.deposit_type
-                                    ? data?.deposit_type
-                                    : "N/A"}
+                                {data?.deposit_type ? data?.deposit_type : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -243,9 +206,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Relation:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.beneficiary_relation
-                                    ? data?.beneficiary_relation
-                                    : "N/A"}
+                                {data?.beneficiary_relation ? data?.beneficiary_relation : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -258,12 +219,7 @@ function Details({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Beneficiary Id:</LabelWrapper>
@@ -272,9 +228,7 @@ function Details({ data }) {
                                     to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
                                     style={{ textDecoration: "none" }}
                                 >
-                                    {data?.beneficiary_id
-                                        ? data?.beneficiary_id
-                                        : "N/A"}
+                                    {data?.beneficiary_id ? data?.beneficiary_id : "N/A"}
                                 </Link>
                             </ValueWrapper>
                         </InfoWrapper>
@@ -288,9 +242,7 @@ function Details({ data }) {
                                     textTransform: "capitalize",
                                 }}
                             >
-                                {data?.beneficiary_name
-                                    ? data?.beneficiary_name
-                                    : "N/A"}
+                                {data?.beneficiary_name ? data?.beneficiary_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -298,9 +250,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_country
-                                    ? CountryName(data?.payout_country)
-                                    : "N/A"}
+                                {data?.payout_country ? CountryName(data?.payout_country) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -308,9 +258,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_currency
-                                    ? CurrencyName(data?.payout_currency)
-                                    : "N/A"}
+                                {data?.payout_currency ? CurrencyName(data?.payout_currency) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -318,9 +266,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Reason:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.reason_for_remittance
-                                    ? data?.reason_for_remittance
-                                    : "N/A"}
+                                {data?.reason_for_remittance ? data?.reason_for_remittance : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -328,9 +274,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Payment Type:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payment_type
-                                    ? ReferenceName(1, data?.payment_type)
-                                    : "N/A"}
+                                {data?.payment_type ? ReferenceName(1, data?.payment_type) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -338,9 +282,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Location Name:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_location_name
-                                    ? data?.payout_location_name
-                                    : "N/A"}
+                                {data?.payout_location_name ? data?.payout_location_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -348,9 +290,7 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Location Branch:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_location_branch
-                                    ? data?.payout_location_branch
-                                    : "N/A"}
+                                {data?.payout_location_branch ? data?.payout_location_branch : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -363,41 +303,24 @@ function Details({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Transaction Id:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.transaction_id
-                                    ? data?.transaction_id
-                                    : "N/A"}
+                                {data?.transaction_id ? data?.transaction_id : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Pin Number:</LabelWrapper>
-                            <Tooltip
-                                title={
-                                    count === 0
-                                        ? "Double Click to Copy."
-                                        : "Copied to Clipboard."
-                                }
-                            >
+                            <Tooltip title={count === 0 ? "Double Click to Copy." : "Copied to Clipboard."}>
                                 <PinWrapper
                                     sx={{ wordBreak: "break-all" }}
-                                    onClick={(e) =>
-                                        handleCopy(e, data?.pin_number)
-                                    }
+                                    onClick={(e) => handleCopy(e, data?.pin_number)}
                                 >
-                                    {data?.pin_number
-                                        ? data?.pin_number
-                                        : "N/A"}
+                                    {data?.pin_number ? data?.pin_number : "N/A"}
                                 </PinWrapper>
                             </Tooltip>
                         </InfoWrapper>
@@ -407,9 +330,7 @@ function Details({ data }) {
                             <LabelWrapper>Customer Rate:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.payout_currency && data?.payout_currency}{" "}
-                                {data?.customer_rate
-                                    ? FormatNumber(data?.customer_rate)
-                                    : "N/A"}
+                                {data?.customer_rate ? FormatNumber(data?.customer_rate) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -417,11 +338,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Transfer Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency &&
-                                    data?.collected_currency}{" "}
-                                {data?.transfer_amount
-                                    ? FormatNumber(data?.transfer_amount)
-                                    : "N/A"}
+                                {data?.collected_currency && data?.collected_currency}{" "}
+                                {data?.transfer_amount ? FormatNumber(data?.transfer_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -429,11 +347,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Service Charge:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency &&
-                                    data?.collected_currency}{" "}
-                                {data?.service_charge
-                                    ? FormatNumber(data?.service_charge)
-                                    : "N/A"}
+                                {data?.collected_currency && data?.collected_currency}{" "}
+                                {data?.service_charge ? FormatNumber(data?.service_charge) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -441,11 +356,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Discount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency &&
-                                    data?.collected_currency}{" "}
-                                {data?.discount
-                                    ? FormatNumber(data?.discount)
-                                    : "0.00"}
+                                {data?.collected_currency && data?.collected_currency}{" "}
+                                {data?.discount ? FormatNumber(data?.discount) : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -453,11 +365,8 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Collected Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency &&
-                                    data?.collected_currency}{" "}
-                                {data?.collected_amount
-                                    ? FormatNumber(data?.collected_amount)
-                                    : "N/A"}
+                                {data?.collected_currency && data?.collected_currency}{" "}
+                                {data?.collected_amount ? FormatNumber(data?.collected_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -466,9 +375,7 @@ function Details({ data }) {
                             <LabelWrapper>Payout Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.payout_currency && data?.payout_currency}{" "}
-                                {data?.payout_amount
-                                    ? FormatNumber(data?.payout_amount)
-                                    : "N/A"}
+                                {data?.payout_amount ? FormatNumber(data?.payout_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -486,26 +393,31 @@ function Details({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Message:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.compliance_msg
-                                    ? data?.compliance_msg
-                                    : "N/A"}
+                                {data?.compliance_msg ? data?.compliance_msg : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
                 </>
             )}
-            <Grid item xs={12}>
-                <ButtonWrapper mt={2} mb={0.5} columnGap={1.5}>
-                    <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() => navigate(`/transaction/remarks/${id}`)}
-                    >
-                        Remarks
-                    </BottomButton>
-                </ButtonWrapper>
+            <Grid item xs={12} gap={"10px"} display={"flex"}>
+                <BottomButton
+                    size="small"
+                    variant="outlined"
+                    disableElevation
+                    disableRipple
+                    onClick={() => navigate(`/transaction/remarks/${id}`)}
+                >
+                    Remarks
+                </BottomButton>
+                <BottomButton
+                    size="small"
+                    variant="outlined"
+                    disableElevation
+                    disableRipple
+                    onClick={() => navigate(`/transaction/documents/${id}`)}
+                >
+                    Documents
+                </BottomButton>
             </Grid>
         </Grid>
     );
