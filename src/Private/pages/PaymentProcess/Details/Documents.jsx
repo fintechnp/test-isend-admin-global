@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import { Button } from "@mui/material";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -26,7 +27,7 @@ const TransactionDocuments = () => {
         (state) => state.get_transaction_documents,
     );
 
-    const newDocumentData = [documentData?.data];
+    const newDocumentData = documentData?.data ? [documentData?.data] : [];
 
     useEffect(() => {
         dispatch(
@@ -39,8 +40,7 @@ const TransactionDocuments = () => {
     const columns = [
         {
             header: "SN",
-            accessorKey: "",
-            maxWidth: 80,
+            accessorKey: "f_serial_no",
             cell: ({ row }) => <Box>{row.id + 1}</Box>,
         },
         {
@@ -48,41 +48,22 @@ const TransactionDocuments = () => {
             accessorKey: "transaction_id",
         },
         {
-            header: "Document Id",
-            accessorKey: "id",
-        },
-        {
-            header: "Created By",
-            accessorKey: "created_by",
-        },
-        {
             header: "Updated By",
             accessorKey: "updated_by",
         },
         {
             header: "Action",
-            accessorKey: "show",
             cell: ({ row }) => {
                 return (
                     <Box
                         sx={{
                             display: "flex",
                             flexDirection: "row",
-                            justifyContent: "center",
                         }}
                     >
                         <Tooltip title=" View Transaction Documents" arrow>
                             <a href={row?.original?.ref3} target="_blank">
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
-                                    />
-                                </IconButton>
+                                <Button variant="outlined">View Document</Button>
                             </a>
                         </Tooltip>
                     </Box>
@@ -92,7 +73,7 @@ const TransactionDocuments = () => {
     ];
     return (
         <PageContent title="Transaction Documents">
-            <TanstackReactTable data={newDocumentData ?? []} columns={columns} />
+            <TanstackReactTable data={newDocumentData} columns={columns} loading={documentLoading} />
         </PageContent>
     );
 };
