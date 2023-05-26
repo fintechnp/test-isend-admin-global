@@ -46,9 +46,22 @@ const Banners = (props) => {
                 accessor: "banner_name",
             },
             {
-                Header: "Banner Image",
+                Header: "Mobile Banner Image",
                 accessor: "link",
-                Cell: (data) => <TextButton onClick={() => setImage(data.value)}>{data.value}</TextButton>,
+                Cell: (data) => (
+                    <TextButton onClick={() => setImage(data.value)}>
+                        <img src={data.value} width={60} alt="images" />
+                    </TextButton>
+                ),
+            },
+            {
+                Header: "Web Banner Image",
+                accessor: "weblink",
+                Cell: (data) => (
+                    <TextButton onClick={() => setImage(data.value)}>
+                        <img src={data.value} width={100} alt="images" />
+                    </TextButton>
+                ),
             },
             {
                 Header: "Status",
