@@ -28,7 +28,10 @@ const Banners = (props) => {
 
     const { success: isUpdateSuccess } = useSelector((state) => state.update_banner);
 
-    const [image, setImage] = useState();
+    const [image, setImage] = useState({
+        type: "", // mobile, web
+        url: "",
+    });
 
     useEffect(() => {
         dispatch(bannerActions.get_banners(filterSchema));
@@ -49,18 +52,34 @@ const Banners = (props) => {
                 Header: "Mobile Banner Image",
                 accessor: "link",
                 Cell: (data) => (
-                    <TextButton onClick={() => setImage(data.value)}>
-                        <img src={data.value} height={50} alt="images" />
-                    </TextButton>
+                    <img
+                        src={data.value}
+                        style={{ height: "30px", width: "auto", cursor: "pointer" }}
+                        alt="banner_mobile"
+                        onClick={() =>
+                            setImage({
+                                type: "mobile",
+                                url: data.value,
+                            })
+                        }
+                    />
                 ),
             },
             {
                 Header: "Web Banner Image",
                 accessor: "weblink",
                 Cell: (data) => (
-                    <TextButton onClick={() => setImage(data.value)}>
-                        <img src={data.value} height={50} alt="images" />
-                    </TextButton>
+                    <img
+                        src={data.value}
+                        style={{ height: "30px", width: "auto", cursor: "pointer" }}
+                        alt="banner_web"
+                        onClick={() =>
+                            setImage({
+                                type: "web",
+                                url: data.value,
+                            })
+                        }
+                    />
                 ),
             },
             {
@@ -148,7 +167,13 @@ const Banners = (props) => {
         <>
             <Modal open={!!image} onClose={() => setImage(undefined)}>
                 <Box sx={{ padding: (theme) => theme.spacing(3, 2) }}>
-                    <img src={image} style={{ width: "600px", height: "200px" }} />
+                    {image?.type === "web" ? (
+                        <img src={image?.url} style={{ width: "600px", height: "200px" }} />
+                    ) : image?.type === "mobile" ? (
+                        <img src={image?.url} style={{ width: "350px", height: "175px" }} />
+                    ) : (
+                        ""
+                    )}
                 </Box>
             </Modal>
             <Table
