@@ -50,7 +50,7 @@ const Banners = (props) => {
                 accessor: "link",
                 Cell: (data) => (
                     <TextButton onClick={() => setImage(data.value)}>
-                        <img src={data.value} width={60} alt="images" />
+                        <img src={data.value} height={50} alt="images" />
                     </TextButton>
                 ),
             },
@@ -59,7 +59,7 @@ const Banners = (props) => {
                 accessor: "weblink",
                 Cell: (data) => (
                     <TextButton onClick={() => setImage(data.value)}>
-                        <img src={data.value} width={100} alt="images" />
+                        <img src={data.value} height={50} alt="images" />
                     </TextButton>
                 ),
             },

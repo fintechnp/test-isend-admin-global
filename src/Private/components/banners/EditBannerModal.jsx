@@ -30,7 +30,7 @@ export default function EditBannerModal() {
                 initialValues={{
                     banner_name: initialFormState?.banner_name,
                     link: initialFormState?.link,
-                    weblink: initialFormState?.link,
+                    weblink: initialFormState?.weblink,
                     is_active: initialFormState?.is_active,
                 }}
                 isAddMode={false}
