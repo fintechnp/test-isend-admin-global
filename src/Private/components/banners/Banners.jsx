@@ -54,7 +54,7 @@ const Banners = (props) => {
                 Cell: (data) => (
                     <img
                         src={data.value}
-                        style={{ height: "30px", width: "auto" }}
+                        style={{ height: "30px", width: "auto", cursor: "pointer" }}
                         alt="banner_mobile"
                         onClick={() =>
                             setImage({
@@ -71,7 +71,7 @@ const Banners = (props) => {
                 Cell: (data) => (
                     <img
                         src={data.value}
-                        style={{ height: "30px", width: "auto" }}
+                        style={{ height: "30px", width: "auto", cursor: "pointer" }}
                         alt="banner_web"
                         onClick={() =>
                             setImage({
