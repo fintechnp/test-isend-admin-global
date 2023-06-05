@@ -29,16 +29,9 @@ const editorConfiguration = {
         items: [
             "heading",
             "|",
-            "fontSize",
-            "fontFamily",
-            "|",
             "bold",
             "italic",
             "underline",
-            "strikethrough",
-            "highlight",
-            "|",
-            "alignment",
             "|",
             "numberedList",
             "bulletedList",
@@ -46,7 +39,6 @@ const editorConfiguration = {
             "indent",
             "outdent",
             "|",
-            "todoList",
             "link",
             "blockQuote",
             "imageUpload",
@@ -92,20 +84,12 @@ const TextField = ({
                     }}
                     onBlur={(event, editor) => {
                         editor.editing.view.change((writer) => {
-                            writer.setStyle(
-                                "height",
-                                `${height}`,
-                                editor.editing.view.document.getRoot()
-                            );
+                            writer.setStyle("height", `${height}`, editor.editing.view.document.getRoot());
                         });
                     }}
                     onFocus={(event, editor) => {
                         editor.editing.view.change((writer) => {
-                            writer.setStyle(
-                                "height",
-                                `${height}`,
-                                editor.editing.view.document.getRoot()
-                            );
+                            writer.setStyle("height", `${height}`, editor.editing.view.document.getRoot());
                         });
                     }}
                     onChange={(event, editor) => {
