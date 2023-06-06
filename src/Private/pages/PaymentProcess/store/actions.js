@@ -142,9 +142,9 @@ const actions = {
         id,
     }),
 
-    get_transaction_documents: (query) => ({
+    get_transaction_documents: (payload) => ({
         type: actions.GET_TRANSACTION_DOCUMENTS,
-        query,
+        payload,
     }),
 };
 
