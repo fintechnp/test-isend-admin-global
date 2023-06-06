@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
+import ReactQuill from "react-quill";
 import Grid from "@mui/material/Grid";
+import "react-quill/dist/quill.snow.css";
 import { useForm } from "react-hook-form";
+import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
+import FormHelperText from "@mui/material/FormHelperText";
 
-import isEmpty from "App/helpers/isEmpty";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
-import FormCkEditor from "App/core/hook-form/FormCkEditor";
 import FormCheckbox from "App/core/hook-form/FormCheckbox";
 import FormTextField from "App/core/hook-form/FormTextField";
 import CancelButton from "App/components/Button/CancelButton";
@@ -76,7 +78,7 @@ const BulkEmailContentForm = ({ onSubmit, isAddMode, initialState, isProcessing,
         onSubmit(data);
     };
 
-    console.log(errors);
+    const emailBody = watch("email_body");
 
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
@@ -120,7 +122,9 @@ const BulkEmailContentForm = ({ onSubmit, isAddMode, initialState, isProcessing,
                     <FormTextField name="email_subject" label="Subject" />
                 </Grid>
                 <Grid item xs={12}>
-                    <FormCkEditor name="email_body" label="Content" />
+                    <Typography>Body</Typography>
+                    <ReactQuill theme="snow" value={emailBody} onChange={(v) => setValue("email_body", v)} />
+                    <FormHelperText error={true}>{errors?.email_body?.message}</FormHelperText>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <FormCheckbox name="is_active" label="Is Active ?" />
