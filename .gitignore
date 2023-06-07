@@ -12,6 +12,8 @@
 /build
 /dist
 
+
+/src/App/components/SlateEditor/*
 # misc
 .env
 .DS_Store

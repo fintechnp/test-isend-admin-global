@@ -5,13 +5,13 @@
  * @return {boolean}
  */
 export default function isEmpty(value) {
-  return (
-    value === null ||
-      value === undefined ||
-      value === '' ||
-      value === [] ||
-      value === {} ||
-      (Array.isArray(value) && value.length === 0) ||
-    typeof value === 'object' && Object.entries(value).length === 0
-  );
+    return (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        value === [] ||
+        value === {} ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === "object" && Object.entries(value).length === 0)
+    );
 }

@@ -228,9 +228,8 @@ export const updateExceptionTransactions = takeEvery(actions.RELEASE_EXCEPTION_T
 });
 
 export const getTransactionDocuments = takeEvery(actions.GET_TRANSACTION_DOCUMENTS, function* (action) {
-    console.log(action);
     try {
-        const res = yield call(api.get, `/utilities/uploaded_document`, action.query);
+        const res = yield call(api.get, `/files/${action.payload.transaction_id}`);
         yield put({
             type: actions.GET_TRANSACTION_DOCUMENTS_SUCCESS,
             response: res,

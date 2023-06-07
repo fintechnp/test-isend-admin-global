@@ -55,7 +55,6 @@ export const addLanguageOption = takeEvery(actions.ADD_LANGUAGE_OPTION, function
 
 export const updateLanguageOption = takeEvery(actions.UPDATE_LANGUAGE_OPTION, function* (action) {
     try {
-        console.log(action);
         const res = yield call(api.put, buildRoute(apiEndpoints.language.update, action.id), action.data);
         yield put({
             type: actions.UPDATE_LANGUAGE_OPTION_SUCCESS,

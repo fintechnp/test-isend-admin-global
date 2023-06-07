@@ -38,7 +38,6 @@ export const getAllLanguageCountry = takeEvery(actions.GET_LANGUAGE_COUNTRY, fun
 
 export const addLanguageCountry = takeEvery(actions.ADD_LANGUAGE_COUNTRY, function* (action) {
     try {
-        console.log(action);
         const res = yield call(api.post, apiEndpoints.languageCountry.post, action.data);
         yield put({
             type: actions.ADD_LANGUAGE_COUNTRY_SUCCESS,
@@ -56,7 +55,6 @@ export const addLanguageCountry = takeEvery(actions.ADD_LANGUAGE_COUNTRY, functi
 
 export const updateLanguageCountry = takeEvery(actions.UPDATE_LANGUAGE_COUNTRY, function* (action) {
     try {
-        console.log(action);
         const res = yield call(api.put, buildRoute(apiEndpoints.languageCountry.update, action.id), action.data);
         yield put({
             type: actions.UPDATE_LANGUAGE_COUNTRY_SUCCESS,

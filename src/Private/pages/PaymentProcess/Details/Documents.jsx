@@ -1,23 +1,15 @@
+import { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
+import { useParams } from "react-router-dom";
 import MuiIconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import actions from "../store/actions";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { Button } from "@mui/material";
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
 
 const TransactionDocuments = () => {
     const dispatch = useDispatch();
@@ -26,8 +18,6 @@ const TransactionDocuments = () => {
     const { response: documentData, loading: documentLoading } = useSelector(
         (state) => state.get_transaction_documents,
     );
-
-    const newDocumentData = documentData?.data ? [documentData?.data] : [];
 
     useEffect(() => {
         dispatch(
@@ -73,7 +63,7 @@ const TransactionDocuments = () => {
     ];
     return (
         <PageContent title="Transaction Documents">
-            <TanstackReactTable data={newDocumentData} columns={columns} loading={documentLoading} />
+            <TanstackReactTable data={documentData ? [documentData] : []} columns={columns} loading={documentLoading} />
         </PageContent>
     );
 };

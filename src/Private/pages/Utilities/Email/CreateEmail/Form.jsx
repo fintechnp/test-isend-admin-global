@@ -1,178 +1,75 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import Divider from "@mui/material/Divider";
+import * as Yup from "yup";
+import ReactQuill from "react-quill";
+import Grid from "@mui/material/Grid";
+import "react-quill/dist/quill.snow.css";
+import Typography from "@mui/material/Typography";
+import { yupResolver } from "@hookform/resolvers/yup";
+import FormHelperText from "@mui/material/FormHelperText";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import CkEditorField from "../../../../../App/components/Fields/CkEditorField";
-import Validator from "../../../../../App/utils/validators";
+import { useForm } from "react-hook-form";
+import HookForm from "App/core/hook-form/HookForm";
+import FormTextField from "App/core/hook-form/FormTextField";
+import ButtonWrapper from "App/components/Forms/ButtonWrapper";
+import CancelButton from "App/components/Button/CancelButton";
+import SubmitButton from "App/components/Button/SubmitButton";
 
-const Container = styled(Grid)(({ theme }) => ({
-    width: "100%",
-    borderRadius: "5px",
-    [theme.breakpoints.up("sm")]: {
-        minWidth: "350px",
-    },
-}));
+const schema = Yup.object().shape({
+    email_by: Yup.string().email().required("Required").max(100),
+    email_to: Yup.string().email().required("Required").max(100),
+    email_cc: Yup.string().optional().max(100),
+    email_bcc: Yup.string().optional().max(100),
+    email_subject: Yup.string().email().required("Required").max(100),
+    email_body: Yup.string().required("Enter a email body"),
+});
 
-const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
-    backgroundColor: theme.palette.background.light,
-}));
+const EmailForm = ({ onSubmit, loading, handleClose }) => {
+    const methods = useForm({
+        resolver: yupResolver(schema),
+    });
 
-const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
-}));
+    const {
+        setValue,
+        formState: { errors },
+        watch,
+    } = methods;
 
-const ButtonWrapper = styled(Grid)(({ theme }) => ({
-    paddingTop: "12px",
-}));
+    const emailBody = watch("email_body");
 
-const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-    },
-}));
-
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
-const EmailForm = ({ handleSubmit, loading, handleClose }) => {
     return (
-        <Form onSubmit={handleSubmit}>
-            <Container container direction="column">
+        <HookForm onSubmit={onSubmit} {...methods}>
+            <Grid container rowSpacing={2} columnSpacing={2}>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="email_by" label="Email by" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="email_to" label="Email to" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="email_cc" label="CC" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="email_bcc" label="BCC" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="email_subject" label="Subject" />
+                </Grid>
                 <Grid item xs={12}>
-                    <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email_by"
-                                label="Email By"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email_to"
-                                label="Email To"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                validate={[Validator.emailValidator, Validator.minValue1, Validator.maxLength100]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email_cc"
-                                label="Cc"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                validate={Validator.maxLength100}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email_bcc"
-                                label="Bcc"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                validate={Validator.maxLength100}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12}>
-                            <Field
-                                name="email_subject"
-                                label="Subject"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                inputProps={{
-                                    autoComplete: "new-password",
-                                }}
-                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12}>
-                            <Field
-                                name="email_body"
-                                label="Body"
-                                placeholder="Write mail..."
-                                type="text"
-                                small={12}
-                                height="100px"
-                                component={CkEditorField}
-                                validate={[Validator.emptyValidator, Validator.minValue1]}
-                            />
-                        </FieldWrapper>
-                    </FormWrapper>
+                    <Typography>Body</Typography>
+                    <ReactQuill theme="snow" value={emailBody} onChange={(v) => setValue("email_body", v)} />
+                    <FormHelperText error={true}>{errors?.email_body?.message}</FormHelperText>
                 </Grid>
-                <Grid item>
-                    <Divider sx={{ pt: 1.2 }} />
-                </Grid>
-                <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <CancelButton size="small" variant="contained" onClick={handleClose}>
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
-                                size="small"
-                                variant="outlined"
-                                loading={loading}
-                                endIcon={<AddIcon />}
-                                type="submit"
-                            >
-                                Create
-                            </CreateButton>
-                        </Grid>
+                <Grid item xs={12}>
+                    <ButtonWrapper>
+                        <CancelButton onClick={handleClose} disabled={loading}>
+                            Cancel
+                        </CancelButton>
+                        <SubmitButton isLoading={loading} isAddMode={true} />
                     </ButtonWrapper>
                 </Grid>
-            </Container>
-        </Form>
+            </Grid>
+        </HookForm>
     );
 };
 
-export default reduxForm({ form: "email_form" })(EmailForm);
+export default EmailForm;

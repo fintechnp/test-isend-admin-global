@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { Box } from "@mui/material";
 
-import SmsForm from "./Form";
+import MailForm from "./Form";
 import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -99,9 +99,7 @@ function CreateEmail() {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_email
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_email);
 
     React.useEffect(() => {
         if (add_success) {
@@ -123,12 +121,7 @@ function CreateEmail() {
 
     return (
         <div>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleClickOpen}
-                endIcon={<AddIcon />}
-            >
+            <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                 Create Email
             </AddButton>
             <BootstrapDialog
@@ -137,23 +130,15 @@ function CreateEmail() {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Create Email
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    <SmsForm
-                        destroyOnUnmount={true}
-                        onSubmit={handleEmail}
-                        loading={add_loading}
-                        handleClose={handleClose}
-                    />
+                    <MailForm onSubmit={handleEmail} loading={add_loading} handleClose={handleClose} />
                 </DialogContent>
             </BootstrapDialog>
         </div>
     );
 }
 
-export default React.memo(CreateEmail);
+export default CreateEmail;
