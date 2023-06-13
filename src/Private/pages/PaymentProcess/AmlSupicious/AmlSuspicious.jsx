@@ -8,15 +8,12 @@ import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import actions from "./../store/actions";
+import ucfirst from "App/helpers/ucfirst";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import { Release } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-} from "./../../../../App/helpers";
+import { CurrencyName, FormatDate, FormatNumber } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -65,12 +62,8 @@ const AmlSuspicious = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: amlSuspicious, loading: l_loading } = useSelector(
-        (state) => state.get_aml_suspicious
-    );
-    const { success: u_success, loading: u_loading } = useSelector(
-        (state) => state.update_aml_suspicious
-    );
+    const { response: amlSuspicious, loading: l_loading } = useSelector((state) => state.get_aml_suspicious);
+    const { success: u_success, loading: u_loading } = useSelector((state) => state.update_aml_suspicious);
 
     useEffect(() => {
         dispatch(actions.get_aml_suspicious(filterSchema));
@@ -113,15 +106,13 @@ const AmlSuspicious = (props) => {
                                 textTransform: "capitalize",
                             }}
                         >
-                            {data?.row?.original?.beneficiary_name
-                                ? data?.row?.original?.beneficiary_name
-                                : ""}
+                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : ""}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
+                Header: "Partner/Payout Country",
                 accessor: "agent_name",
                 Cell: (data) => (
                     <Box
@@ -141,48 +132,15 @@ const AmlSuspicious = (props) => {
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
-                        >
-                            {data?.row?.original?.payout_agent_name
-                                ? data?.row?.original?.payout_agent_name
-                                : ""}
+                        <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
+                            {data?.row?.original?.payout_country_data
+                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
+                                : data?.row?.original?.payout_country ?? "N/A"}{" "}
                         </StyledName>
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CurrencyName(data.value) : ""}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.7 }}
-                        >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
-                                : ""}
-                        </Typography>
-                    </Box>
-                ),
-            },
+
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -216,17 +174,40 @@ const AmlSuspicious = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                            {data?.row?.original?.collected_amount
+                                ? FormatNumber(data?.row?.original?.collected_amount)
                                 : "N/A"}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(data?.row?.original?.payout_amount)
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Currency</Typography>
+                    </Box>
+                ),
+                accessor: "collected_currency",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? CurrencyName(data.value) : ""}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
+                            {data?.row?.original?.payout_currency
+                                ? CurrencyName(data?.row?.original?.payout_currency)
+                                : ""}
                         </Typography>
                     </Box>
                 ),
@@ -240,10 +221,7 @@ const AmlSuspicious = (props) => {
                 accessor: "created_ts",
                 Cell: (data) => (
                     <Box textAlign="center" sx={{}}>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "2px", textAlign: "center" }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "2px", textAlign: "center" }}>
                             {data.value ? FormatDate(data.value) : ""}
                         </StyledName>
                     </Box>
@@ -266,11 +244,7 @@ const AmlSuspicious = (props) => {
                     >
                         <Tooltip title="Transactions Details" arrow>
                             <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transactions/details/aml-suspicious/${row.original.tid}`
-                                    )
-                                }
+                                onClick={() => navigate(`/transactions/details/aml-suspicious/${row.original.tid}`)}
                             >
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
@@ -296,7 +270,7 @@ const AmlSuspicious = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleSearch = useCallback(
@@ -308,7 +282,7 @@ const AmlSuspicious = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -364,9 +338,7 @@ const AmlSuspicious = (props) => {
     };
 
     const handleRelease = (data) => {
-        dispatch(
-            actions.update_aml_suspicious(data?.id, { remarks: data.remarks })
-        );
+        dispatch(actions.update_aml_suspicious(data?.id, { remarks: data.remarks }));
     };
 
     return (

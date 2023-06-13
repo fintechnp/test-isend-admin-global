@@ -7,16 +7,13 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
+import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import { Release } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-} from "./../../../../App/helpers";
+import { CurrencyName, FormatDate, FormatNumber } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -66,11 +63,9 @@ const ExceptionTransactions = (props) => {
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: exceptionTransactions, loading: l_loading } = useSelector(
-        (state) => state.get_exception_transactions
+        (state) => state.get_exception_transactions,
     );
-    const { success: u_success, loading: u_loading } = useSelector(
-        (state) => state.update_exception_transactions
-    );
+    const { success: u_success, loading: u_loading } = useSelector((state) => state.update_exception_transactions);
 
     useEffect(() => {
         dispatch(actions.get_exception_transactions(filterSchema));
@@ -114,15 +109,13 @@ const ExceptionTransactions = (props) => {
                                 textTransform: "capitalize",
                             }}
                         >
-                            {data?.row?.original?.beneficiary_name
-                                ? data?.row?.original?.beneficiary_name
-                                : "N/A"}
+                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
+                Header: "Partner/Payout Country",
                 accessor: "agent_name",
                 Cell: (data) => (
                     <Box
@@ -142,48 +135,15 @@ const ExceptionTransactions = (props) => {
                         >
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
-                        >
-                            {data?.row?.original?.payout_agent_name
-                                ? data?.row?.original?.payout_agent_name
-                                : "N/A"}
+                        <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
+                            {data?.row?.original?.payout_country_data
+                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
+                                : data?.row?.original?.payout_country ?? "N/A"}{" "}
                         </StyledName>
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CurrencyName(data.value) : "N/A"}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.7 }}
-                        >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
-                                : "N/A"}
-                        </Typography>
-                    </Box>
-                ),
-            },
+
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -232,16 +192,39 @@ const ExceptionTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {data?.row?.original?.collected_amount
+                                ? FormatNumber(data?.row?.original?.collected_amount)
+                                : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.7 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
                             {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                                ? FormatNumber(data?.row?.original?.payout_amount)
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Currency</Typography>
+                    </Box>
+                ),
+                accessor: "collected_currency",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {data.value ? CurrencyName(data.value) : "N/A"}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
+                            {data?.row?.original?.payout_currency
+                                ? CurrencyName(data?.row?.original?.payout_currency)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -263,13 +246,7 @@ const ExceptionTransactions = (props) => {
                         }}
                     >
                         <Tooltip title="Transactions Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transactions/details/${row.original.tid}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/transactions/details/${row.original.tid}`)}>
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -294,7 +271,7 @@ const ExceptionTransactions = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleSearch = useCallback(
@@ -306,7 +283,7 @@ const ExceptionTransactions = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -365,7 +342,7 @@ const ExceptionTransactions = (props) => {
         dispatch(
             actions.update_exception_transactions(data?.id, {
                 remarks: data.remarks,
-            })
+            }),
         );
     };
 
