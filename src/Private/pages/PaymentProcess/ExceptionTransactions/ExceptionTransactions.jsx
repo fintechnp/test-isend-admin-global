@@ -1,31 +1,24 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
+import { Release } from "App/components";
+import Filter from "./../components/Filter";
+import Spacer from "App/components/Spacer/Spacer";
+import PageContent from "App/components/Container/PageContent";
+import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
+
+import app from "App/config/app";
 import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
-import Header from "./../components/Header";
-import Filter from "./../components/Filter";
-import { Release } from "./../../../../App/components";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CurrencyName, FormatDate, FormatNumber } from "./../../../../App/helpers";
-
-const MenuContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import Table, { TablePagination } from "App/components/Table";
+import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -41,6 +34,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
+    sending_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     search: "",
@@ -346,34 +340,37 @@ const ExceptionTransactions = (props) => {
         );
     };
 
+    const handleChangeTab = useCallback((countryIso3) => {
+        setFilterSchema({
+            ...filterSchema,
+            sending_country: countryIso3,
+        });
+    }, []);
+
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header title="Exception Transations" />
-                <Filter
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                    handleFilter={handleFilter}
-                />
-                <Table
-                    columns={columns}
-                    data={exceptionTransactions?.data || []}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={exceptionTransactions?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent title="Exception Transactions">
+            <SendingCountryTabs value={filterSchema.sending_country} onChange={handleChangeTab} />
+            <Spacer />
+            <Filter
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                handleFilter={handleFilter}
+            />
+            <Table
+                columns={columns}
+                data={exceptionTransactions?.data || []}
+                loading={l_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={exceptionTransactions?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

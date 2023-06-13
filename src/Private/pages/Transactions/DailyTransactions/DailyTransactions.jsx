@@ -1,28 +1,20 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useSelector, useDispatch } from "react-redux";
-import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useSelector, useDispatch } from "react-redux";
+
+import Filter from "./../components/Filter";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
-import Header from "./../components/Header";
-import Filter from "./../components/Filter";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "./../../../../App/helpers";
-
-const MenuContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
+import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
+import app from "App/config/app";
+import Spacer from "App/components/Spacer/Spacer";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -30,6 +22,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
+    sending_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     from_date: new Date().toISOString().slice(0, 10),
@@ -341,34 +334,37 @@ const DailyTransactions = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleChangeTab = useCallback((countryIso3) => {
+        setFilterSchema({
+            ...filterSchema,
+            sending_country: countryIso3,
+        });
+    }, []);
+
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header title="Daily Transacations" />
-                <Filter
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                    handleFilter={handleFilter}
-                />
-                <Table
-                    columns={columns}
-                    data={dailyTransactions?.data || []}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={dailyTransactions?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent title="Daily Transactions">
+            <SendingCountryTabs value={filterSchema.sending_country} onChange={handleChangeTab} />
+            <Spacer />
+            <Filter
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                handleFilter={handleFilter}
+            />
+            <Table
+                columns={columns}
+                data={dailyTransactions?.data || []}
+                loading={l_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={dailyTransactions?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 
