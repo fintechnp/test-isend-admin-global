@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const changePasswordSchema = yup.object().shape({
     current_password: yup.string().required("Old Password is required"),
@@ -21,8 +22,9 @@ const changePasswordSchema = yup.object().shape({
 
 export const ChangePasswordForm = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { success, loading } = useSelector((state) => state.change_password);
-    console.log(success, loading);
+    const { loading: logoutLoading, success: logoutSuccess } = useSelector((state) => state.logout);
     const methods = useForm({
         defaultValues: {
             current_password: "",
@@ -35,10 +37,13 @@ export const ChangePasswordForm = () => {
     useEffect(() => {
         if (success) {
             dispatch(CommonAction.log_out());
-            Cookies.remove("token");
-            Cookies.remove("refresh_token");
+            if (logoutSuccess) {
+                navigate("/login");
+                Cookies.remove("token");
+                Cookies.remove("refresh_token");
+            }
         }
-    }, [success, loading]);
+    }, [success, loading, logoutSuccess, logoutLoading]);
 
     const handleSubmit = (data) => {
         dispatch(actions.change_password(data));
@@ -73,8 +78,13 @@ export const ChangePasswordForm = () => {
                                 </CancelButton>
                             </Grid>
                             <Grid item>
-                                <AddButton size="small" variant="outlined" type="submit">
-                                    Change Password
+                                <AddButton
+                                    size="small"
+                                    variant="outlined"
+                                    type="submit"
+                                    disabled={logoutLoading || loading || logoutSuccess || success}
+                                >
+                                    {logoutLoading || loading ? "Changing Password" : " Change Password"}
                                 </AddButton>
                             </Grid>
                         </Grid>
