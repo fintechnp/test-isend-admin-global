@@ -373,6 +373,8 @@ import customerSaga from "./features/customers/customerSaga";
 import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
 import getOnfidoReportReducer from "./pages/Reports/store/reducers/getOnfidoReportReducer";
 
+import { UpdateChangePasswordReducer, UpdateChangePasswordSaga } from "./pages/Settings/store";
+
 import {
     addBulkEmailGroupReducer,
     deleteBulkEmailGroupReducer,
@@ -416,6 +418,10 @@ export const privateReducer = {
     update_user_status: UpdateUserStatusReducer,
     get_user_number: GetUserNumberReducer,
     forgot_password: ForgotPasswordReducer,
+
+    //Change Password
+
+    change_password: UpdateChangePasswordReducer,
 
     //permission
     get_all_permission: GetAllPermissionReducer,
@@ -760,6 +766,7 @@ export const privateSaga = [
     BankListSaga(),
     AllBankListSaga(),
     StreetTypeSaga(),
+    UpdateChangePasswordSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

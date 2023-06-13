@@ -83,6 +83,9 @@ const apiEndpoints = {
         update: "common/street_type/:streetTypeId",
         delete: "common/street_type/:streetTypeId",
     },
+    settings: {
+        changePassword: "/account/changePassword",
+    },
 };
 
 export default apiEndpoints;

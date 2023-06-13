@@ -60,6 +60,9 @@ const actions = {
         type: actions.PASSWORD_RESET,
         data,
     }),
+    log_out: () => ({
+        type: actions.LOG_OUT,
+    }),
 };
 
 export default actions;
