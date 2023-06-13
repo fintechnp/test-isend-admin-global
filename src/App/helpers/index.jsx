@@ -47,7 +47,7 @@ export const ReferenceName = (id, value) => {
         return "N/A";
     }
     if (id) {
-        const ref = reference.find((ct) => ct.reference_type === id);
+        const ref = reference?.find((ct) => ct.reference_type === id);
         if (ref) {
             const referenceValue = ref?.reference_data.find((data) => {
                 if (value) {
