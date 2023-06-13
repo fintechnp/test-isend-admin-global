@@ -1,26 +1,23 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { reset } from "redux-form";
-import { Box, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { styled } from "@mui/material/styles";
+import { Box, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
-import Filter from "../../Reports/Shared/Filter";
-import downloadActions from "../../Reports/store/actions";
-import actions from "../store/actions";
 import SearchForm from "../components/SearchForm";
+
+import ucfirst from "App/helpers/ucfirst";
+import actions from "../store/actions";
+import Filter from "../../Reports/Shared/Filter";
 import NoResults from "../components/NoResults";
+import downloadActions from "../../Reports/store/actions";
 import Loading from "./../../../../App/components/Loading";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-    ReferenceName,
-} from "./../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../App/components/Table";
+import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "./../../../../App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -62,9 +59,7 @@ function Search(props) {
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: transactionsData, loading: l_loading } = useSelector(
-        (state) => state.get_transactions
-    );
+    const { response: transactionsData, loading: l_loading } = useSelector((state) => state.get_transactions);
 
     const {
         response: ReportsDownload,
@@ -101,10 +96,7 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link
-                                to={`/transactions/details/${data?.value}`}
-                                style={{ textDecoration: "none" }}
-                            >
+                            <Link to={`/transactions/details/${data?.value}`} style={{ textDecoration: "none" }}>
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>
@@ -126,13 +118,8 @@ function Search(props) {
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value ? data.value : "n/a"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.beneficiary_name
-                                ? data?.row?.original?.beneficiary_name
-                                : "n/a"}
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
                         </Typography>
                     </Box>
                 ),
@@ -150,31 +137,23 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            <Link
-                                to={`/customer/details/${data.value}`}
-                                style={{ textDecoration: "none" }}
-                            >
+                            <Link to={`/customer/details/${data.value}`} style={{ textDecoration: "none" }}>
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             <Link
                                 to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data?.row?.original?.beneficiary_id
-                                    ? data?.row?.original?.beneficiary_id
-                                    : "n/a"}
+                                {data?.row?.original?.beneficiary_id ? data?.row?.original?.beneficiary_id : "n/a"}
                             </Link>
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
+                Header: "Partner/Payout Country",
                 accessor: "agent_name",
                 Cell: (data) => (
                     <Box
@@ -201,38 +180,14 @@ function Search(props) {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_agent_name}
+                            {data?.row?.original?.payout_country_data
+                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
+                                : data?.row?.original?.payout_country ?? "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {CurrencyName(data?.row?.original?.payout_currency)}
-                        </Typography>
-                    </Box>
-                ),
-            },
+
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -281,17 +236,38 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                            {data?.row?.original?.collected_amount
+                                ? FormatNumber(data?.row?.original?.collected_amount)
                                 : "N/A"}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(data?.row?.original?.payout_amount)
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Currency</Typography>
+                    </Box>
+                ),
+                accessor: "collected_currency",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {CurrencyName(data.value)}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {CurrencyName(data?.row?.original?.payout_currency)}
                         </Typography>
                     </Box>
                 ),
@@ -323,22 +299,16 @@ function Search(props) {
                         >
                             {data.value ? ReferenceName(66, data.value) : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             {data?.row?.original?.transaction_status
-                                ? ReferenceName(
-                                      66,
-                                      data?.row?.original?.transaction_status
-                                  )
+                                ? ReferenceName(66, data?.row?.original?.transaction_status)
                                 : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     //Filter
@@ -443,9 +413,7 @@ function Search(props) {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(
-            downloadActions.download_report(updatedFilterSchema, "transaction")
-        );
+        dispatch(downloadActions.download_report(updatedFilterSchema, "transaction"));
     };
 
     return (
@@ -470,13 +438,11 @@ function Search(props) {
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading &&
-                    transactionsData?.data &&
-                    transactionsData?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Transaction Found" />
-                        </Grid>
-                    )}
+                {!l_loading && transactionsData?.data && transactionsData?.data?.length === 0 && (
+                    <Grid item xs={12}>
+                        <NoResults text="No Transaction Found" />
+                    </Grid>
+                )}
                 {!l_loading && transactionsData?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <CustomerWrapper>
@@ -500,13 +466,9 @@ function Search(props) {
                                 rowsPerPage={8}
                                 renderPagination={() => (
                                     <TablePagination
-                                        paginationData={
-                                            transactionsData?.pagination
-                                        }
+                                        paginationData={transactionsData?.pagination}
                                         handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={
-                                            handleChangeRowsPerPage
-                                        }
+                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                                     />
                                 )}
                             />

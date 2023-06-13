@@ -7,16 +7,13 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
+import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import { Release } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-} from "./../../../../App/helpers";
+import { CurrencyName, FormatDate, FormatNumber } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -65,12 +62,8 @@ const PendingPayment = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: paymentPending, loading: l_loading } = useSelector(
-        (state) => state.get_payment_pending
-    );
-    const { success: u_success, loading: u_loading } = useSelector(
-        (state) => state.update_payment_pending
-    );
+    const { response: paymentPending, loading: l_loading } = useSelector((state) => state.get_payment_pending);
+    const { success: u_success, loading: u_loading } = useSelector((state) => state.update_payment_pending);
 
     useEffect(() => {
         dispatch(actions.get_payment_pending(filterSchema));
@@ -99,19 +92,14 @@ const PendingPayment = (props) => {
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.beneficiary_name
-                                ? data?.row?.original?.beneficiary_name
-                                : "N/A"}
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
+                Header: "Partner/Payout Country",
                 accessor: "agent_name",
                 Cell: (data) => (
                     <Box
@@ -139,44 +127,14 @@ const PendingPayment = (props) => {
                                 opacity: 0.7,
                             }}
                         >
-                            {data?.row?.original?.payout_agent_name
-                                ? data?.row?.original?.payout_agent_name
-                                : "N/A"}
+                            {data?.row?.original?.payout_country_data
+                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
+                                : data?.row?.original?.payout_country ?? "N/A"}{" "}
                         </StyledName>
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
-                            {data.value ? CurrencyName(data.value) : "N/A"}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.7}}
-                        >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
-                                : "N/A"}
-                        </Typography>
-                    </Box>
-                ),
-            },
+
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -186,7 +144,7 @@ const PendingPayment = (props) => {
                 accessor: "created_ts",
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -202,7 +160,7 @@ const PendingPayment = (props) => {
                 maxWidth: 80,
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -224,17 +182,40 @@ const PendingPayment = (props) => {
                             alignItems: "flex-end",
                         }}
                     >
-                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8, }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
+                            {data?.row?.original?.collected_amount
+                                ? FormatNumber(data?.row?.original?.collected_amount)
+                                : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.7 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
                             {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                                ? FormatNumber(data?.row?.original?.payout_amount)
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Currency</Typography>
+                    </Box>
+                ),
+                accessor: "collected_currency",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
+                            {data.value ? CurrencyName(data.value) : "N/A"}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
+                            {data?.row?.original?.payout_currency
+                                ? CurrencyName(data?.row?.original?.payout_currency)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -256,13 +237,7 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <Tooltip title="Transactions Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transactions/details/${row.original.tid}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/transactions/details/${row.original.tid}`)}>
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -287,7 +262,7 @@ const PendingPayment = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleSearch = useCallback(
@@ -299,7 +274,7 @@ const PendingPayment = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -355,9 +330,7 @@ const PendingPayment = (props) => {
     };
 
     const handleRelease = (data) => {
-        dispatch(
-            actions.update_payment_pending(data?.id, { remarks: data?.remarks })
-        );
+        dispatch(actions.update_payment_pending(data?.id, { remarks: data?.remarks }));
     };
 
     return (

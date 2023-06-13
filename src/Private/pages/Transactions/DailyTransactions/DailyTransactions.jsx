@@ -6,15 +6,11 @@ import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import actions from "./../store/actions";
+import ucfirst from "App/helpers/ucfirst";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-    ReferenceName,
-} from "./../../../../App/helpers";
+import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "./../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -46,9 +42,7 @@ const DailyTransactions = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: dailyTransactions, loading: l_loading } = useSelector(
-        (state) => state.get_transactions
-    );
+    const { response: dailyTransactions, loading: l_loading } = useSelector((state) => state.get_transactions);
 
     useEffect(() => {
         dispatch(actions.get_transactions(filterSchema));
@@ -69,10 +63,7 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link
-                                to={`/transactions/details/${data?.value}`}
-                                style={{ textDecoration: "none" }}
-                            >
+                            <Link to={`/transactions/details/${data?.value}`} style={{ textDecoration: "none" }}>
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>
@@ -94,13 +85,8 @@ const DailyTransactions = (props) => {
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value ? data.value : "n/a"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.beneficiary_name
-                                ? data?.row?.original?.beneficiary_name
-                                : "n/a"}
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
                         </Typography>
                     </Box>
                 ),
@@ -118,31 +104,23 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            <Link
-                                to={`/customer/details/${data.value}`}
-                                style={{ textDecoration: "none" }}
-                            >
+                            <Link to={`/customer/details/${data.value}`} style={{ textDecoration: "none" }}>
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             <Link
                                 to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data?.row?.original?.beneficiary_id
-                                    ? data?.row?.original?.beneficiary_id
-                                    : "n/a"}
+                                {data?.row?.original?.beneficiary_id ? data?.row?.original?.beneficiary_id : "n/a"}
                             </Link>
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
+                Header: "Partner/Payout Country",
                 accessor: "agent_name",
                 Cell: (data) => (
                     <Box
@@ -169,38 +147,14 @@ const DailyTransactions = (props) => {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_agent_name}
+                            {data?.row?.original?.payout_country_data
+                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
+                                : data?.row?.original?.payout_country ?? "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {CurrencyName(data?.row?.original?.payout_currency)}
-                        </Typography>
-                    </Box>
-                ),
-            },
+
             {
                 Header: () => (
                     <Box textAlign="left" sx={{}}>
@@ -249,17 +203,38 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                            {data?.row?.original?.collected_amount
+                                ? FormatNumber(data?.row?.original?.collected_amount)
                                 : "N/A"}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.payout_amount
+                                ? FormatNumber(data?.row?.original?.payout_amount)
+                                : "N/A"}
+                        </Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="left" sx={{}}>
+                        <Typography>Currency</Typography>
+                    </Box>
+                ),
+                accessor: "collected_currency",
+                Cell: (data) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {CurrencyName(data.value)}
+                        </StyledName>
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {CurrencyName(data?.row?.original?.payout_currency)}
                         </Typography>
                     </Box>
                 ),
@@ -290,22 +265,16 @@ const DailyTransactions = (props) => {
                         >
                             {data.value ? ReferenceName(66, data.value) : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             {data?.row?.original?.transaction_status
-                                ? ReferenceName(
-                                      66,
-                                      data?.row?.original?.transaction_status
-                                  )
+                                ? ReferenceName(66, data?.row?.original?.transaction_status)
                                 : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleSearch = useCallback(
@@ -317,7 +286,7 @@ const DailyTransactions = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
