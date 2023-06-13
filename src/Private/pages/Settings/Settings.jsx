@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 
+import ChangePassword from "./components/ChangePassword";
 import SwitchBoxSettings from "./components/SwitchBoxSettings";
 
 const SettingWrapper = styled(Grid)(({ theme }) => ({
@@ -72,6 +73,15 @@ function Settings(props) {
                         description="Recieve messages from customer."
                         handleChange={handleMessage}
                     />
+                </Grid>
+            </SettingWrapper>
+            <SettingWrapper rowGap={1} container mt={2}>
+                <Grid item xs={12}>
+                    <Header>Change Password</Header>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <ChangePassword />
                 </Grid>
             </SettingWrapper>
         </>
