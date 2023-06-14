@@ -381,9 +381,6 @@ function CustomerDetails(props) {
                     <RenderField label="Street No" value={customersData?.data?.street_no} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Street Type " value={customersData?.data?.street_type_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
                     <RenderField label="State" value={customersData?.data?.state} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -396,7 +393,7 @@ function CustomerDetails(props) {
                     <RenderField label="Nationality" value={customersData?.data?.citizenship_country_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Date of Birth" value={FormatDate(customersData?.data?.date_of_birth)} />
+                    <RenderField label="Date of Birth" value={customersData?.data?.date_of_birth?.substring(0, 10)} />
                 </Grid>{" "}
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Birth Country" value={CountryName(customersData?.data?.birth_country)} />

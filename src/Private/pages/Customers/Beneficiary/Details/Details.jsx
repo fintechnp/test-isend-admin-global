@@ -476,10 +476,7 @@ function BeneficiaryDetails(props) {
                     <RenderField label="Birth Country" value={beneficiaryData?.data?.birth_country} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Relation" value={beneficiaryData?.data?.relation} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Relation Data" value={beneficiaryData?.data?.relation_data} />
+                    <RenderField label="Relation" value={beneficiaryData?.data?.relation_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Reason For Remittance" value={beneficiaryData?.data?.reason_for_remittance} />
