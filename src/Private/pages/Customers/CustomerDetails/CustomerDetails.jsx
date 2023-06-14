@@ -290,6 +290,9 @@ function CustomerDetails(props) {
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Mobile Number" value={customersData?.data?.mobile_number} />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Phone Number" value={customersData?.data?.phone_number} />
+                </Grid>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Title>Identity Information</Title>
@@ -303,7 +306,13 @@ function CustomerDetails(props) {
                     <RenderField label="Id Number" value={customersData?.data?.id_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <RenderField label="Phone Country Code" value={customersData?.data?.phone_country_code} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <RenderField label="SSN Number" value={customersData?.data?.ssn_number} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Finicity Customer ID" value={customersData?.data?.finicity_customer_id} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Id Issued State" value={customersData?.data?.id_issued_state} />
@@ -345,10 +354,25 @@ function CustomerDetails(props) {
                     <RenderField label="Email Address" value={customersData?.data?.email} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <RenderField label="Title" value={customersData?.data?.title} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <RenderField label="Post Code" value={customersData?.data?.postcode} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <RenderField label="Address" value={customersData?.data?.address} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <RenderField label="Country" value={customersData?.data?.country_data} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="City" value={customersData?.data?.city} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Unit" value={customersData?.data?.unit} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Street" value={customersData?.data?.street} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Street Type" value={customersData?.data?.street_type} />
@@ -357,19 +381,34 @@ function CustomerDetails(props) {
                     <RenderField label="Street No" value={customersData?.data?.street_no} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <RenderField label="State" value={customersData?.data?.state} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="State Data" value={customersData?.data?.state_data} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Citizenship Country" value={customersData?.data?.citizenship_country} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <RenderField label="Nationality" value={customersData?.data?.citizenship_country_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Date of Birth" value={FormatDate(customersData?.data?.date_of_birth)} />
+                    <RenderField label="Date of Birth" value={customersData?.data?.date_of_birth?.substring(0, 10)} />
                 </Grid>{" "}
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Birth Country" value={CountryName(customersData?.data?.birth_country)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Occupation" value={customersData?.data?.occupation} />
+                    <RenderField label="Occupation" value={customersData?.data?.occupation_data} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Source Of Income" value={customersData?.data?.source_of_income} />
+                    <RenderField label="Source Of Income " value={customersData?.data?.source_of_income_data} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Register Agent ID" value={customersData?.data?.register_agent_id} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Register Agent" value={customersData?.data?.register_agent_name} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <InfoWrapper>

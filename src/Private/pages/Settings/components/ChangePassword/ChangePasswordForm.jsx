@@ -56,7 +56,6 @@ export const ChangePasswordForm = () => {
                     marginY: "1rem",
                 }}
             >
-                <AlertTitle>Warning</AlertTitle>
                 You will be logged out after changing password.
             </Alert>
             <HookForm onSubmit={handleSubmit} {...methods}>
@@ -71,12 +70,7 @@ export const ChangePasswordForm = () => {
                         <FormTextField size="0.8rem" type="password" name="confirm_password" label="Confirm Password" />
                     </Grid>
                     <Grid item xs={12}>
-                        <Grid container direction="row" justifyContent="flex-end" alignItems="center" columnSpacing={2}>
-                            <Grid item>
-                                <CancelButton size="small" variant="outlined">
-                                    Cancel
-                                </CancelButton>
-                            </Grid>
+                        <Grid container direction="row" justifyContent="flex-end" columnSpacing={2}>
                             <Grid item>
                                 <AddButton
                                     size="small"
