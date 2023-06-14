@@ -20,17 +20,11 @@ function Search(props) {
         transaction_id: 0,
         pin_number: "",
     });
-    const { response, loading, error } = useSelector(
-        (state) => state.get_transaction_refund_block
-    );
+    const { response, loading, error } = useSelector((state) => state.get_transaction_refund_block);
 
-    const { success: b_sucess, loading: b_loading } = useSelector(
-        (state) => state.block_transactions
-    );
+    const { success: b_sucess, loading: b_loading } = useSelector((state) => state.block_transactions);
 
-    const { success: r_sucess, loading: r_loading } = useSelector(
-        (state) => state.refund_transactions
-    );
+    const { success: r_sucess, loading: r_loading } = useSelector((state) => state.refund_transactions);
 
     useEffect(() => {
         if (b_sucess || r_sucess) {
@@ -81,9 +75,7 @@ function Search(props) {
     };
 
     const handleBlock = (data) => {
-        dispatch(
-            actions.block_transactions(data?.id, { remarks: data?.remarks })
-        );
+        dispatch(actions.block_transactions(data?.id, { remarks: data?.remarks }));
     };
 
     const handleRefund = (data) => {
@@ -91,7 +83,7 @@ function Search(props) {
             actions.refund_transactions(data?.id, {
                 remarks: data?.remarks,
                 refund_charge: data?.refund_charge,
-            })
+            }),
         );
     };
 
@@ -102,10 +94,7 @@ function Search(props) {
             </Helmet>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <SearchForm
-                        onSubmit={handleSearch}
-                        initialValues={{ transaction_id: "", pin_number: "" }}
-                    />
+                    <SearchForm onSubmit={handleSearch} initialValues={{ transaction_id: "", pin_number: "" }} />
                 </Grid>
                 {loading && (
                     <Grid item xs={12}>
@@ -120,10 +109,7 @@ function Search(props) {
                 {response?.data && !loading && (
                     <>
                         <Grid item xs={12}>
-                            <Details
-                                data={response?.data}
-                                handleBlockOrCancel={setButton}
-                            />
+                            <Details data={response?.data} handleBlockOrCancel={setButton} />
                         </Grid>
                         <Grid item xs={12}>
                             {button === "block" && (
