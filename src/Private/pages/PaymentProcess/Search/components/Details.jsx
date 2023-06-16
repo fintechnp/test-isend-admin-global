@@ -4,12 +4,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
-import {
-    CurrencyName,
-    CountryName,
-    FormatDate,
-    FormatNumber,
-} from "./../../../../../App/helpers";
+import { CurrencyName, CountryName, FormatDate, FormatNumber } from "./../../../../../App/helpers";
 import { Button } from "@mui/material";
 
 const Container = styled(Grid)(({ theme }) => ({
@@ -86,18 +81,11 @@ function Details({ data, handleBlockOrCancel }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Transaction Id:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.tid ? data?.tid : "N/A"}
-                            </ValueWrapper>
+                            <ValueWrapper sx={{ wordBreak: "break-all" }}>{data?.tid ? data?.tid : "N/A"}</ValueWrapper>
                         </InfoWrapper>
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -120,9 +108,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Partner:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_agent_name
-                                    ? data?.payout_agent_name
-                                    : "N/A"}
+                                {data?.payout_agent_name ? data?.payout_agent_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -130,9 +116,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Sender Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.sending_country
-                                    ? CountryName(data?.sending_country)
-                                    : "N/A"}
+                                {data?.send_country ? CountryName(data?.send_country) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -140,9 +124,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_country
-                                    ? CountryName(data?.payout_country)
-                                    : "N/A"}
+                                {data?.payout_country ? CountryName(data?.payout_country) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -150,9 +132,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_currency
-                                    ? CurrencyName(data?.payout_currency)
-                                    : "N/A"}
+                                {data?.payout_currency ? CurrencyName(data?.payout_currency) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -160,9 +140,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Customer Name:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.customer_name
-                                    ? data?.customer_name
-                                    : "N/A"}
+                                {data?.customer_name ? data?.customer_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -170,9 +148,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Beneficiary Name:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.beneficiary_name
-                                    ? data?.beneficiary_name
-                                    : "N/A"}
+                                {data?.beneficiary_name ? data?.beneficiary_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -180,9 +156,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Rate:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.customer_rate
-                                    ? FormatNumber(data?.customer_rate)
-                                    : "N/A"}
+                                {data?.customer_rate ? FormatNumber(data?.customer_rate) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -190,9 +164,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Sending Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.transfer_amount
-                                    ? FormatNumber(data?.transfer_amount)
-                                    : "N/A"}
+                                {data?.transfer_amount ? FormatNumber(data?.transfer_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -200,9 +172,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_amount
-                                    ? FormatNumber(data?.payout_amount)
-                                    : "N/A"}
+                                {data?.payout_amount ? FormatNumber(data?.payout_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -210,9 +180,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Payout Location:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_location_name
-                                    ? data?.payout_location_name
-                                    : "N/A"}
+                                {data?.payout_location_name ? data?.payout_location_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -220,9 +188,7 @@ function Details({ data, handleBlockOrCancel }) {
                         <InfoWrapper>
                             <LabelWrapper>Created Date:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.created_ts
-                                    ? FormatDate(data?.created_ts)
-                                    : "N/A"}
+                                {data?.created_ts ? FormatDate(data?.created_ts) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -230,16 +196,10 @@ function Details({ data, handleBlockOrCancel }) {
             </Grid>
             <Grid item xs={12}>
                 <Box sx={{ pb: 1, pt: 0.5, ml: 0 }}>
-                    <RefundButton
-                        variant="outlined"
-                        onClick={() => handleBlockOrCancel("cancel")}
-                    >
+                    <RefundButton variant="outlined" onClick={() => handleBlockOrCancel("cancel")}>
                         Refund this transaction
                     </RefundButton>
-                    <BlockButton
-                        variant="outlined"
-                        onClick={() => handleBlockOrCancel("block")}
-                    >
+                    <BlockButton variant="outlined" onClick={() => handleBlockOrCancel("block")}>
                         Block this transaction
                     </BlockButton>
                 </Box>

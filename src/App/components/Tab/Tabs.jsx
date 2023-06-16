@@ -70,20 +70,22 @@ function Tabs({ tabs }) {
     return (
         <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <MuiStyledTabs value={activeTab} onChange={handleChange} aria-label="tabs">
-                    {tabs.map((tab, i) => (
-                        <Tab
-                            key={i}
-                            label={
-                                <Box display="flex" alignContent="center" justifyContent="center">
-                                    <Typography sx={{ textTransform: "capitalize" }}>{tab.tabName}</Typography>
-                                    {activeTab === i && tab.activeTabHeaderContent}
-                                </Box>
-                            }
-                            {...a11yProps(i)}
-                        />
-                    ))}
-                </MuiStyledTabs>
+                {activeTab !== undefined && (
+                    <MuiStyledTabs value={activeTab} onChange={handleChange} aria-label="tabs">
+                        {tabs.map((tab, i) => (
+                            <Tab
+                                key={i}
+                                label={
+                                    <Box display="flex" alignContent="center" justifyContent="center">
+                                        <Typography sx={{ textTransform: "capitalize" }}>{tab.tabName}</Typography>
+                                        {activeTab === i && tab.activeTabHeaderContent}
+                                    </Box>
+                                }
+                                {...a11yProps(i)}
+                            />
+                        ))}
+                    </MuiStyledTabs>
+                )}
             </Box>
             <Spacer />
             {tabs.map((tab, i) => (

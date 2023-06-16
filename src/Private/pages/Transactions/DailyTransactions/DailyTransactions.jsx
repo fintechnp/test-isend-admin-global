@@ -22,7 +22,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
-    sending_country: app.defaultSendingCountry,
+    send_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     from_date: new Date().toISOString().slice(0, 10),
@@ -337,13 +337,13 @@ const DailyTransactions = (props) => {
     const handleChangeTab = useCallback((countryIso3) => {
         setFilterSchema({
             ...filterSchema,
-            sending_country: countryIso3,
+            send_country: countryIso3,
         });
     }, []);
 
     return (
         <PageContent title="Daily Transactions">
-            <SendingCountryTabs value={filterSchema.sending_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}
