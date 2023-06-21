@@ -40,7 +40,7 @@ const LanguageValueModal = ({ update, update_data }) => {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Language Value" arrow>
+                <Tooltip title="Edit Localization Value" arrow>
                     <UpdateButton onClick={handleClickOpen}>
                         <EditOutlinedIcon
                             sx={{
@@ -54,16 +54,16 @@ const LanguageValueModal = ({ update, update_data }) => {
                 </Tooltip>
             ) : (
                 <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                    Add Language Value
+                    Add Localization Value
                 </AddButton>
             )}
 
             {update ? (
-                <Modal title="Update Language Value" open={open} onClose={handleClose}>
+                <Modal title="Update Localization Value" open={open} onClose={handleClose}>
                     <AddLanguageValue update={true} initial={initialValue} onSubmit={handleUpdate} />
                 </Modal>
             ) : (
-                <Modal title="Add Language Value" open={open} onClose={handleClose}>
+                <Modal title="Add Localization Value" open={open} onClose={handleClose}>
                     <AddLanguageValue update={false} initial={initialValue} onSubmit={handleAdd} />
                 </Modal>
             )}

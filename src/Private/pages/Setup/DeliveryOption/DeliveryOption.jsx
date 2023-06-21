@@ -60,7 +60,7 @@ const DeliveryOption = (props) => {
             {
                 header: "Payment Type",
                 accessorKey: "payment_type",
-                cell: ({ getValue }) => (getValue() ? ReferenceName(1, getValue()) : "N/A"),
+                cell: ({ getValue }) => <>{getValue() ? ReferenceName(1, getValue()) : "N/A"}</>,
             },
             {
                 header: "Country/Currency",

@@ -159,8 +159,8 @@ const PrivateLayout = () => {
                     },
                     {
                         path: routePaths.setup.addLanguage,
-                        key: "add language",
-                        text: "Add Language",
+                        key: "Localization",
+                        text: "Localization",
                         sub: false,
                     },
                     {
