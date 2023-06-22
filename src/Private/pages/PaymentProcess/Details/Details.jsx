@@ -443,17 +443,19 @@ function Details({ data, isAML = false }) {
                     >
                         Documents
                     </BottomButton>
-                    <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() => {
-                            setOpenSuspiciosModal(true);
-                        }}
-                    >
-                        Sanctions
-                    </BottomButton>
+                    {isAML && (
+                        <BottomButton
+                            size="small"
+                            variant="outlined"
+                            disableElevation
+                            disableRipple
+                            onClick={() => {
+                                setOpenSuspiciosModal(true);
+                            }}
+                        >
+                            View Sanction
+                        </BottomButton>
+                    )}
                 </Grid>
             </Grid>
             <SuspiciosModal open={openSuspiciosModal} data={sanctionMessage} handleClose={handleCloseSuspiciosModal} />
