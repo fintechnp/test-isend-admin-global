@@ -69,6 +69,12 @@ const actions = {
     GET_TRANSACTION_DOCUMENTS_SUCCESS: "GET_TRANSACTION_DOCUMENTS_SUCCESS",
     GET_TRANSACTION_DOCUMENTS_FAILED: "GET_TRANSACTION_DOCUMENTS_FAILED",
 
+    /////////////////////////  SANCTION DETAILS  /////////////////////////
+
+    GET_SANCTION_DETAILS: "GET_SANCTION_DETAILS",
+    GET_SANCTION_DETAILS_SUCCESS: "GET_SANCTION_DETAILS_SUCCESS",
+    GET_SANCTION_DETAILS_FAILED: "GET_SANCTION_DETAILS_FAILED",
+
     //FETCH
     get_transaction_details: (id) => ({
         type: actions.GET_TRANSACTION_DETAILS,
@@ -144,6 +150,11 @@ const actions = {
 
     get_transaction_documents: (payload) => ({
         type: actions.GET_TRANSACTION_DOCUMENTS,
+        payload,
+    }),
+
+    get_sanction_details: (payload) => ({
+        type: actions.GET_SANCTION_DETAILS,
         payload,
     }),
 };

@@ -15,4 +15,5 @@ export { default as UpdateBlockedTransactionsReducer } from "./reducers/updateBl
 export { default as UpdateAmlSuspiciousReducer } from "./reducers/updateAmlSuspicious";
 export { default as UpdateExceptionTransactionsReducer } from "./reducers/updateExceptionTransactions";
 export { default as GetTransactionDocumentReducer } from "./reducers/getTransactionDocument";
+export { default as GetSanctionDetailsReducer } from "./reducers/getAMLSanctionDetails";
 export { default as PaymentProcessingAction } from "./actions";

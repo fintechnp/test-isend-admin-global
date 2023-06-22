@@ -11,6 +11,9 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { CurrencyName, CountryName, FormatNumber, ReferenceName } from "./../../../../App/helpers";
 import MessageBox from "./../Search/components/MessageBox";
+import SuspiciosModal from "./SuspiciosModal";
+import { useDispatch, useSelector } from "react-redux";
+import actions from "../store/actions";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -62,10 +65,24 @@ const PinWrapper = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
-function Details({ data }) {
-    const { id } = useParams();
+function Details({ data, isAML = false }) {
+    const { tid } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
     const [count, setCount] = useState(0);
+
+    const sanctionDetails = useSelector((state) => state.get_sanction_details);
+
+    const sanctionMessage = sanctionDetails?.response?.data
+        ? JSON.parse(sanctionDetails?.response?.data?.sanction_message)
+        : {
+              msg: "No Sanction Found",
+          };
+
+    useEffect(() => {
+        dispatch(actions.get_sanction_details(tid));
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => (count === 2 ? setCount(0) : null), 5000);
@@ -83,343 +100,364 @@ function Details({ data }) {
         }
     };
 
+    const handleCloseSuspiciosModal = () => {
+        setOpenSuspiciosModal(false);
+    };
+
     if (data === undefined || data.length == 0) {
         return <MessageBox text="Invalid Transaction Id" />;
     }
 
     return (
-        <Grid
-            container
-            rowSpacing={1}
-            sx={{
-                padding: "6px 16px",
-                margin: 0,
-                backgroundColor: "background.main",
-            }}
-        >
-            <Grid item xs={12}>
-                <Box>
-                    <Header>Partner Information</Header>
-                    <Divider />
-                </Box>
-            </Grid>
-            <Grid item xs={12}>
-                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Sending Partner Id:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.agent_id ? data?.agent_id : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Payout Partner Id:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_agent_id ? data?.payout_agent_id : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Sending Partner:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.agent_name ? data?.agent_name : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Payout Partner:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_agent_name ? data?.payout_agent_name : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Sending Branch:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.agent_branch_name ? data?.agent_branch_name : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
+        <>
+            <Grid
+                container
+                rowSpacing={1}
+                sx={{
+                    padding: "6px 16px",
+                    margin: 0,
+                    backgroundColor: "background.main",
+                }}
+            >
+                <Grid item xs={12}>
+                    <Box>
+                        <Header>Partner Information</Header>
+                        <Divider />
+                    </Box>
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Sending Partner Id:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.agent_id ? data?.agent_id : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Payout Partner Id:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_agent_id ? data?.payout_agent_id : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Sending Partner:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.agent_name ? data?.agent_name : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Payout Partner:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_agent_name ? data?.payout_agent_name : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Sending Branch:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.agent_branch_name ? data?.agent_branch_name : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <Box>
-                    <Header>Customer Information</Header>
-                    <Divider />
-                </Box>
-            </Grid>
-            <Grid item xs={12}>
-                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Customer Id:</LabelWrapper>
-                            <ValueWrapper sx={{ opacity: 0.8 }}>
-                                <Link to={`/customer/details/${data?.customer_id}`} style={{ textDecoration: "none" }}>
-                                    {data?.customer_id ? data?.customer_id : "N/A"}
-                                </Link>
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Customer Name:</LabelWrapper>
-                            <ValueWrapper
-                                sx={{
-                                    wordBreak: "break-all",
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                {data?.customer_name ? data?.customer_name : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Country:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.send_country ? CountryName(data?.send_country) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Source of Income:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.customer_source_of_income ? data?.customer_source_of_income : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Deposit Type:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.deposit_type ? data?.deposit_type : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Relation:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.beneficiary_relation ? data?.beneficiary_relation : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
+                <Grid item xs={12}>
+                    <Box>
+                        <Header>Customer Information</Header>
+                        <Divider />
+                    </Box>
                 </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <Box>
-                    <Header>Beneficiary Information</Header>
-                    <Divider />
-                </Box>
-            </Grid>
-            <Grid item xs={12}>
-                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Beneficiary Id:</LabelWrapper>
-                            <ValueWrapper sx={{ opacity: 0.8 }}>
-                                <Link
-                                    to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
-                                    style={{ textDecoration: "none" }}
+                <Grid item xs={12}>
+                    <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Customer Id:</LabelWrapper>
+                                <ValueWrapper sx={{ opacity: 0.8 }}>
+                                    <Link
+                                        to={`/customer/details/${data?.customer_id}`}
+                                        style={{ textDecoration: "none" }}
+                                    >
+                                        {data?.customer_id ? data?.customer_id : "N/A"}
+                                    </Link>
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Customer Name:</LabelWrapper>
+                                <ValueWrapper
+                                    sx={{
+                                        wordBreak: "break-all",
+                                        textTransform: "capitalize",
+                                    }}
                                 >
-                                    {data?.beneficiary_id ? data?.beneficiary_id : "N/A"}
-                                </Link>
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Beneficiary Name:</LabelWrapper>
-                            <ValueWrapper
-                                sx={{
-                                    wordBreak: "break-all",
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                {data?.beneficiary_name ? data?.beneficiary_name : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Country:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_country ? CountryName(data?.payout_country) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Currency:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_currency ? CurrencyName(data?.payout_currency) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Reason:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.reason_for_remittance ? data?.reason_for_remittance : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Payment Type:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payment_type ? ReferenceName(1, data?.payment_type) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Location Name:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_location_name ? data?.payout_location_name : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Location Branch:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_location_branch ? data?.payout_location_branch : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
+                                    {data?.customer_name ? data?.customer_name : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Country:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.send_country ? CountryName(data?.send_country) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Source of Income:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.customer_source_of_income ? data?.customer_source_of_income : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Deposit Type:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.deposit_type ? data?.deposit_type : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Relation:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.beneficiary_relation ? data?.beneficiary_relation : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <Box>
-                    <Header>Transaction Information</Header>
-                    <Divider />
-                </Box>
-            </Grid>
-            <Grid item xs={12}>
-                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Transaction Id:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.transaction_id ? data?.transaction_id : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Pin Number:</LabelWrapper>
-                            <Tooltip title={count === 0 ? "Double Click to Copy." : "Copied to Clipboard."}>
-                                <PinWrapper
-                                    sx={{ wordBreak: "break-all" }}
-                                    onClick={(e) => handleCopy(e, data?.pin_number)}
+                <Grid item xs={12}>
+                    <Box>
+                        <Header>Beneficiary Information</Header>
+                        <Divider />
+                    </Box>
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Beneficiary Id:</LabelWrapper>
+                                <ValueWrapper sx={{ opacity: 0.8 }}>
+                                    <Link
+                                        to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
+                                        style={{ textDecoration: "none" }}
+                                    >
+                                        {data?.beneficiary_id ? data?.beneficiary_id : "N/A"}
+                                    </Link>
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Beneficiary Name:</LabelWrapper>
+                                <ValueWrapper
+                                    sx={{
+                                        wordBreak: "break-all",
+                                        textTransform: "capitalize",
+                                    }}
                                 >
-                                    {data?.pin_number ? data?.pin_number : "N/A"}
-                                </PinWrapper>
-                            </Tooltip>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Customer Rate:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_currency && data?.payout_currency}{" "}
-                                {data?.customer_rate ? FormatNumber(data?.customer_rate) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Transfer Amount:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency && data?.collected_currency}{" "}
-                                {data?.transfer_amount ? FormatNumber(data?.transfer_amount) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Service Charge:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency && data?.collected_currency}{" "}
-                                {data?.service_charge ? FormatNumber(data?.service_charge) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Discount:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency && data?.collected_currency}{" "}
-                                {data?.discount ? FormatNumber(data?.discount) : "0.00"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Collected Amount:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.collected_currency && data?.collected_currency}{" "}
-                                {data?.collected_amount ? FormatNumber(data?.collected_amount) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <InfoWrapper>
-                            <LabelWrapper>Payout Amount:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payout_currency && data?.payout_currency}{" "}
-                                {data?.payout_amount ? FormatNumber(data?.payout_amount) : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
+                                    {data?.beneficiary_name ? data?.beneficiary_name : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Country:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_country ? CountryName(data?.payout_country) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Currency:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_currency ? CurrencyName(data?.payout_currency) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Reason:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.reason_for_remittance ? data?.reason_for_remittance : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Payment Type:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payment_type ? ReferenceName(1, data?.payment_type) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Location Name:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_location_name ? data?.payout_location_name : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Location Branch:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_location_branch ? data?.payout_location_branch : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            {data?.compliance_msg && (
-                <>
-                    <Grid item xs={12}>
-                        <Box>
-                            <Header>Compliance Message</Header>
-                            <Divider />
-                        </Box>
+                <Grid item xs={12}>
+                    <Box>
+                        <Header>Transaction Information</Header>
+                        <Divider />
+                    </Box>
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Transaction Id:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.transaction_id ? data?.transaction_id : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Pin Number:</LabelWrapper>
+                                <Tooltip title={count === 0 ? "Double Click to Copy." : "Copied to Clipboard."}>
+                                    <PinWrapper
+                                        sx={{ wordBreak: "break-all" }}
+                                        onClick={(e) => handleCopy(e, data?.pin_number)}
+                                    >
+                                        {data?.pin_number ? data?.pin_number : "N/A"}
+                                    </PinWrapper>
+                                </Tooltip>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Customer Rate:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_currency && data?.payout_currency}{" "}
+                                    {data?.customer_rate ? FormatNumber(data?.customer_rate) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Transfer Amount:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.collected_currency && data?.collected_currency}{" "}
+                                    {data?.transfer_amount ? FormatNumber(data?.transfer_amount) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Service Charge:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.collected_currency && data?.collected_currency}{" "}
+                                    {data?.service_charge ? FormatNumber(data?.service_charge) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Discount:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.collected_currency && data?.collected_currency}{" "}
+                                    {data?.discount ? FormatNumber(data?.discount) : "0.00"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Collected Amount:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.collected_currency && data?.collected_currency}{" "}
+                                    {data?.collected_amount ? FormatNumber(data?.collected_amount) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InfoWrapper>
+                                <LabelWrapper>Payout Amount:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.payout_currency && data?.payout_currency}{" "}
+                                    {data?.payout_amount ? FormatNumber(data?.payout_amount) : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <InfoWrapper>
-                            <LabelWrapper>Message:</LabelWrapper>
-                            <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.compliance_msg ? data?.compliance_msg : "N/A"}
-                            </ValueWrapper>
-                        </InfoWrapper>
-                    </Grid>
-                </>
-            )}
-            <Grid item xs={12} gap={"10px"} display={"flex"}>
-                <BottomButton
-                    size="small"
-                    variant="outlined"
-                    disableElevation
-                    disableRipple
-                    onClick={() => navigate(`/transaction/remarks/${id}`)}
-                >
-                    Remarks
-                </BottomButton>
-                <BottomButton
-                    size="small"
-                    variant="outlined"
-                    disableElevation
-                    disableRipple
-                    onClick={() => navigate(`/transaction/documents/${id}`)}
-                >
-                    Documents
-                </BottomButton>
+                </Grid>
+                {data?.compliance_msg && (
+                    <>
+                        <Grid item xs={12}>
+                            <Box>
+                                <Header>Compliance Message</Header>
+                                <Divider />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InfoWrapper>
+                                <LabelWrapper>Message:</LabelWrapper>
+                                <ValueWrapper sx={{ wordBreak: "break-all" }}>
+                                    {data?.compliance_msg ? data?.compliance_msg : "N/A"}
+                                </ValueWrapper>
+                            </InfoWrapper>
+                        </Grid>
+                    </>
+                )}
+                <Grid item xs={12} gap={"10px"} display={"flex"}>
+                    <BottomButton
+                        size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => navigate(`/transaction/remarks/${id}`)}
+                    >
+                        Remarks
+                    </BottomButton>
+                    <BottomButton
+                        size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => navigate(`/transaction/documents/${id}`)}
+                    >
+                        Documents
+                    </BottomButton>
+                    <BottomButton
+                        size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => {
+                            setOpenSuspiciosModal(true);
+                        }}
+                    >
+                        Sanctions
+                    </BottomButton>
+                </Grid>
             </Grid>
-        </Grid>
+            <SuspiciosModal open={openSuspiciosModal} data={sanctionMessage} handleClose={handleCloseSuspiciosModal} />
+        </>
     );
 }
 
