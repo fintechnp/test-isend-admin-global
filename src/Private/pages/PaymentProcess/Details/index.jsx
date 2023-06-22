@@ -46,13 +46,9 @@ function TransactionDetails(props) {
     const { id, tid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, loading } = useSelector(
-        (state) => state.get_transaction_details
-    );
+    const { response, loading } = useSelector((state) => state.get_transaction_details);
 
-    const { response: aml_response, loading: aml_loading } = useSelector(
-        (state) => state.get_aml_suspicious_details
-    );
+    const { response: aml_response, loading: aml_loading } = useSelector((state) => state.get_aml_suspicious_details);
 
     useEffect(() => {
         if (id) {
@@ -79,16 +75,10 @@ function TransactionDetails(props) {
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <ReceiptLongIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <ReceiptLongIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title> Transaction Details </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleBack}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleBack}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -101,7 +91,7 @@ function TransactionDetails(props) {
                 ) : id ? (
                     <Details data={response?.data || []} />
                 ) : (
-                    <Details data={aml_response?.data || []} />
+                    <Details isAML={true} data={aml_response?.data || []} />
                 )}
             </Grid>
         </>

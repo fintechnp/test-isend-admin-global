@@ -242,6 +242,21 @@ export const getTransactionDocuments = takeEvery(actions.GET_TRANSACTION_DOCUMEN
     }
 });
 
+export const getSanctionDetails = takeEvery(actions.GET_SANCTION_DETAILS, function* (action) {
+    try {
+        const res = yield call(api.get, `/utilities/${action.payload}/sanction/details`);
+        yield put({
+            type: actions.GET_SANCTION_DETAILS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_SANCTION_DETAILS_FAILED,
+            error: error.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getTransactionDetails,
@@ -259,5 +274,6 @@ export default function* saga() {
         updateAmlSuspicious,
         updateExceptionTransactions,
         getTransactionDocuments,
+        getSanctionDetails,
     ]);
 }
