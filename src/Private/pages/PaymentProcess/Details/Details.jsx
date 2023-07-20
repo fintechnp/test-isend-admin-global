@@ -66,7 +66,10 @@ const PinWrapper = styled(Typography)(({ theme }) => ({
 }));
 
 function Details({ data, isAML = false }) {
-    const { tid } = useParams();
+    const { id, tid } = useParams();
+
+    const transactionId = tid ?? id;
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
@@ -81,7 +84,7 @@ function Details({ data, isAML = false }) {
           };
 
     useEffect(() => {
-        dispatch(actions.get_sanction_details(tid));
+        dispatch(actions.get_sanction_details(transactionId));
     }, []);
 
     useEffect(() => {
@@ -430,7 +433,7 @@ function Details({ data, isAML = false }) {
                         variant="outlined"
                         disableElevation
                         disableRipple
-                        onClick={() => navigate(`/transaction/remarks/${id}`)}
+                        onClick={() => navigate(`/transaction/remarks/${transactionId}`)}
                     >
                         Remarks
                     </BottomButton>
@@ -439,7 +442,7 @@ function Details({ data, isAML = false }) {
                         variant="outlined"
                         disableElevation
                         disableRipple
-                        onClick={() => navigate(`/transaction/documents/${id}`)}
+                        onClick={() => navigate(`/transaction/documents/${transactionId}`)}
                     >
                         Documents
                     </BottomButton>
