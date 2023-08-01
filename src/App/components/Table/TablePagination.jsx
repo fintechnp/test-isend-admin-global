@@ -3,11 +3,7 @@ import MuiTablePagination from "@mui/material/TablePagination";
 
 const ROWS_PER_PAGE_OPTIONS = [5, 15, 25, 50, 100];
 
-const TablePagination = ({
-    paginationData,
-    handleChangePage,
-    handleChangeRowsPerPage,
-}) => {
+const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPerPage }) => {
     return (
         <MuiTablePagination
             component="div"

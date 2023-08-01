@@ -1,0 +1,42 @@
+const actions = {
+    GET_CREDIT_LIMIT: "GET_CREDIT_LIMIT",
+    GET_CREDIT_LIMIT_SUCCESS: "GET_CREDIT_LIMIT_SUCCESS",
+    GET_CREDIT_LIMIT_FAILED: "GET_CREDIT_LIMIT_FAILED",
+
+    GET_CREDIT_LIMIT_DETAILS: "GET_CREDIT_LIMIT_DETAILS",
+    GET_CREDIT_LIMIT_DETAILS_SUCCESS: "GET_CREDIT_LIMIT_DETAILS_SUCCESS",
+    GET_CREDIT_LIMIT_DETAILS_FAILED: "GET_CREDIT_LIMIT_DETAILS_FAILED",
+
+    ADD_CREDIT_LIMIT: "ADD_CREDIT_LIMIT",
+    ADD_CREDIT_LIMIT_SUCCESS: "ADD_CREDIT_LIMIT_SUCCESS",
+    ADD_CREDIT_LIMIT_FAILED: "ADD_CREDIT_LIMIT_FAILED",
+    ADD_CREDIT_LIMIT_RESET: "ADD_CREDIT_LIMIT_RESET",
+
+    UPDATE_CREDIT_LIMIT_STATUS: "UPDATE_CREDIT_LIMIT",
+    UPDATE_CREDIT_LIMIT_STATUS_SUCCESS: "UPDATE_CREDIT_LIMIT_SUCCESS",
+    UPDATE_CREDIT_LIMIT_STATUS_FAILED: "UPDATE_CREDIT_LIMIT_FAILED",
+    UPDATE_CREDIT_LIMIT_STATUS_RESET: "UPDATE_CREDIT_LIMIT_RESET",
+
+    get_all_credit_limit: (query) => ({
+        type: actions.GET_CREDIT_LIMIT,
+        query,
+    }),
+
+    get_credit_limit_details: (id) => ({
+        type: actions.GET_CREDIT_LIMIT_DETAILS,
+        id,
+    }),
+
+    add_credit_limit: (data) => ({
+        type: actions.ADD_CREDIT_LIMIT,
+        data,
+    }),
+
+    update_credit_limit: (id, data) => ({
+        type: actions.UPDATE_CREDIT_LIMIT_STATUS,
+        data,
+        id,
+    }),
+};
+
+export default actions;

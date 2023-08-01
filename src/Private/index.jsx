@@ -409,6 +409,26 @@ import {
     updateBulkEmailCredentialReducer,
 } from "./features/bulk-emails/bulkEmailCredentialReducer";
 
+//MARKET MAKER
+
+import {
+    AddMarketMakerValueReducer,
+    GetAllMarketMakerValueReducer,
+    UpdateMarketMakerValueReducer,
+    MarketMakerSaga,
+    GetMarkerMakerByIdValueReducer,
+} from "../Private/pages/MarketMaker/store";
+
+//CREDIT LIMIT
+
+import {
+    AddCreditLimitReducer,
+    GetAllCreditLimitReducer,
+    GetCreditLimitByIdReducer,
+    UpdateCreditLimitStatusReducer,
+    creditLimitSaga,
+} from "../Private/pages/CreditLimit/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -724,6 +744,22 @@ export const privateReducer = {
 
     get_bulk_email_credential: getBulkEmailCredentialReducer,
     update_bulk_email_credential: updateBulkEmailCredentialReducer,
+
+    //MARKET_MAKER
+
+    get_all_market_maker: GetAllMarketMakerValueReducer,
+    get_market_maker_details: GetMarkerMakerByIdValueReducer,
+    add_market_maker: AddMarketMakerValueReducer,
+    update_market_maker: UpdateMarketMakerValueReducer,
+
+    //CREDIT LIMIT
+    get_all_credit_limit: GetAllCreditLimitReducer,
+
+    get_credit_limit_details: GetCreditLimitByIdReducer,
+
+    add_credit_limit: AddCreditLimitReducer,
+
+    update_credit_limit: UpdateCreditLimitStatusReducer,
 };
 
 export const privateSaga = [
@@ -769,6 +805,8 @@ export const privateSaga = [
     AllBankListSaga(),
     StreetTypeSaga(),
     UpdateChangePasswordSaga(),
+    MarketMakerSaga(),
+    creditLimitSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

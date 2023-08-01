@@ -86,6 +86,18 @@ const apiEndpoints = {
     settings: {
         changePassword: "/account/changePassword",
     },
+    marketMaker: {
+        getAll: "/marketmaker",
+        getById: "/marketmaker/:marketMakerId",
+        add: "/marketmaker",
+        update: "/marketmaker/:marketMakerId",
+    },
+    creditLimit: {
+        getAll: "/creditlimits",
+        getById: "/creditlimits/:creditLimitId",
+        add: "/creditlimits",
+        update: "/creditlimits/:creditLimitId/statusupdate",
+    },
 };
 
 export default apiEndpoints;

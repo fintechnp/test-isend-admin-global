@@ -52,7 +52,7 @@ const BottomButton = styled(Button)(({ theme }) => ({
     textTransform: "capitalize",
 }));
 
-const TitleWrapper = styled(Box)(({ theme }) => ({
+export const TitleWrapper = styled(Box)(({ theme }) => ({
     width: "100%",
     paddingBottom: "2px",
     paddingTop: "8px",
@@ -61,7 +61,7 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
     alignItems: "center",
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
+export const Title = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     paddingRight: 2,
     lineHeight: 1.4,
@@ -144,7 +144,7 @@ function stringAvatar(first = "A", last) {
     };
 }
 
-const RenderField = ({ label, value }) => {
+export const RenderField = ({ label, value }) => {
     return (
         <Box
             sx={{
@@ -163,7 +163,7 @@ const RenderField = ({ label, value }) => {
     );
 };
 
-const RenderTopField = ({ label, value }) => {
+export const RenderTopField = ({ label, value }) => {
     return (
         <Box
             sx={{

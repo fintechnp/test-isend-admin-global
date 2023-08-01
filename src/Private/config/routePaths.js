@@ -29,6 +29,15 @@ const routePaths = {
         banks: "/customer/banks/:customerId",
         allBank: "/customer/banks",
     },
+    agent: {
+        marketMaker: "/agent/market-maker",
+        addMarketMaker: "/agent/market-maker/add",
+        viewMarketMaker: "/agent/market-maker/:marketMakerId/view",
+
+        creditLimit: "/agent/credit-limit",
+        addCreditLimit: "/agent/credit-limit/add",
+        viewCreditLimit: "/agent/credit-limit/:creditLimitId/view",
+    },
 };
 
 export default routePaths;

@@ -117,6 +117,18 @@ const ListBulkEmail = lazy(() => import("../pages/BulkEmail/ListBulkEmail"));
 const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
 const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFundingSource"));
 
+//Market Maker
+
+const MarketMaker = lazy(() => import("../pages/MarketMaker/MarketMaker"));
+const AddMarketMaker = lazy(() => import("../pages/MarketMaker/AddMarketMaker"));
+const ViewMarketMaker = lazy(() => import("../pages/MarketMaker/ViewMarketMaker"));
+
+///Credit Limit
+
+const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
+const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
+const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -457,6 +469,17 @@ const privateRoutes = [
 
     //Accounting
     { path: "/accounting", component: <Accounting title="Accounting" /> },
+
+    //Agent
+
+    { path: routePaths.agent.marketMaker, component: <MarketMaker title="Market Maker" /> },
+    { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker title=" Add Market Maker" /> },
+    { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker title="Market Maker Details" /> },
+
+    ///Credit Limit
+    { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
+    { path: routePaths.agent.addCreditLimit, component: <AddCreditLimit title="Add Credit Limit" /> },
+    { path: routePaths.agent.viewCreditLimit, component: <ViewCreditLimit title="Credit Limit Detail" /> },
 ];
 
 export default privateRoutes;
