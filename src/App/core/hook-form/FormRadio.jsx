@@ -8,12 +8,25 @@ export default function FormRadio(props) {
         formState: { errors },
     } = useFormContext();
 
-    const { name, label, rules, variant, fullWidth, required, options, disabled, size, row = true, ...rest } = props;
+    const {
+        name,
+        label,
+        rules,
+        variant,
+        fullWidth,
+        required,
+        options,
+        disabled,
+        size,
+        defaultValue,
+        row = true,
+        ...rest
+    } = props;
     return (
         <Controller
             name={name}
             control={control}
-            defaultValue=""
+            defaultValue={defaultValue || ""}
             rules={rules}
             render={({ field }) => (
                 <FormControl

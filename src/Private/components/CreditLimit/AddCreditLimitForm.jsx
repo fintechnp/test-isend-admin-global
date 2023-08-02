@@ -38,7 +38,7 @@ export default function AddCreditLimitForm() {
 
     useEffect(() => {
         if (success) {
-            navigate(-1);
+            navigate(routePaths.agent.creditLimit);
         }
     }, [success]);
 
@@ -55,7 +55,12 @@ export default function AddCreditLimitForm() {
     return (
         <Grid xs={12} container spacing={2}>
             <Grid item xs={12}>
-                <FormRadio name="relatedTo" label="Related To" options={relatedToOptions ?? []} />
+                <FormRadio
+                    name="relatedTo"
+                    label="Related To"
+                    options={relatedToOptions ?? []}
+                    defaultValue="business"
+                />
             </Grid>
 
             <Grid item xs={12} md={6}>

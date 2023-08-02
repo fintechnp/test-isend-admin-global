@@ -64,6 +64,9 @@ export const updateCreditLimitStatus = takeEvery(actions.UPDATE_CREDIT_LIMIT_STA
             response: res,
         });
         yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({
+            type: actions.UPDATE_CREDIT_LIMIT_STATUS_RESET,
+        });
     } catch (error) {
         yield put({
             type: actions.UPDATE_CREDIT_LIMIT_STATUS_FAILED,
