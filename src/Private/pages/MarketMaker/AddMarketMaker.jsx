@@ -1,21 +1,21 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
 
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
 
 import { MarketMakerActions as actions } from "./store";
+import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
 
-export default function AddMarketMaker({ title }) {
+export default function AddMarketMaker({ title, isAddMode }) {
     const dispatch = useDispatch();
 
     const { response, loading } = useSelector((state) => state.add_market_maker);
-    console.log("🚀 ~ file: AddMarketMaker.jsx:16 ~ AddMarketMaker ~ response:", response);
     const methods = useForm({
-        // resolver: yupResolver(),
+        resolver: yupResolver(marketMakerValidationSchema),
     });
 
     const { handleSubmit } = methods;
@@ -57,8 +57,6 @@ export default function AddMarketMaker({ title }) {
                 extension: contactPersonExtension,
             },
         };
-        console.log("🚀 ~ file: AddMarketMaker.jsx:52 ~ onSubmitData ~ formattedDataToSend:", formattedDataToSend);
-        // console.log(data);
         dispatch(actions.add_market_maker(formattedDataToSend));
     };
 

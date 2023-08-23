@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import Typography from "@mui/material/Typography";
 
 import ucwords from "App/helpers/ucwords";
+import routePaths from "Private/config/routePaths";
 import FormSelect from "App/core/hook-form/FormSelect";
 import { localStorageGet } from "App/helpers/localStorage";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -13,13 +16,24 @@ import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 import FormMultiSelect from "App/core/hook-form/FormMultiSelect";
 
-export default function MarketMakerForm() {
+export default function MarketMakerForm({ isAddMode = true }) {
+    const navigate = useNavigate();
     const countries = localStorageGet("country");
     const reference = localStorageGet("reference");
 
     const { setValue, watch } = useFormContext();
 
     const registeredCountry = watch("registeredCountryId");
+
+    const { loading, success } = useSelector((state) => state.add_market_maker);
+
+    const { loading: updating } = useSelector((state) => state.update_market_maker);
+
+    useEffect(() => {
+        if (success) {
+            navigate(routePaths.agent.marketMaker);
+        }
+    }, [success]);
 
     const defaultCurrencyData = countries?.find((item) => item?.country_id === registeredCountry)?.currency;
 
@@ -88,16 +102,14 @@ export default function MarketMakerForm() {
                             disableFuture
                         />
                     </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="registeredEntity" label="Registered Entity" />
-                    </Grid>
+
                     <Grid item xs={12} md={3}>
                         <FormTextField name="brandName" label="Brand Name" />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormSelect
                             name="registeredCountryId"
-                            label="Registered Country"
+                            label="Country of Registration"
                             options={registeredCountyOptions ?? []}
                         />
                     </Grid>
@@ -110,12 +122,7 @@ export default function MarketMakerForm() {
                     <Grid item xs={12} md={3}>
                         <FormTextField name="contactNo" label="Contact Number" />
                     </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="businessType" label="Business Type" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="postalCode" label="Postal Code" />
-                    </Grid>
+
                     <Grid item xs={12} md={3}>
                         <FormTextField name="website" label="Website" />
                     </Grid>
@@ -222,8 +229,14 @@ export default function MarketMakerForm() {
                     </CancelButton>
                 </Grid>
                 <Grid item>
-                    <AddButton size="small" variant="outlined" type="submit">
-                        Add
+                    <AddButton
+                        size="small"
+                        variant="outlined"
+                        type="submit"
+                        loading={updating | loading}
+                        disabled={updating | loading}
+                    >
+                        {isAddMode ? "Add" : "Update"}
                     </AddButton>
                 </Grid>
             </Grid>

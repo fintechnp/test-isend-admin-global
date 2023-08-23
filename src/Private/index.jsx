@@ -417,6 +417,7 @@ import {
     UpdateMarketMakerValueReducer,
     MarketMakerSaga,
     GetMarkerMakerByIdValueReducer,
+    UpdateMarketMakerStatusReducer,
 } from "../Private/pages/MarketMaker/store";
 
 //CREDIT LIMIT
@@ -751,6 +752,7 @@ export const privateReducer = {
     get_market_maker_details: GetMarkerMakerByIdValueReducer,
     add_market_maker: AddMarketMakerValueReducer,
     update_market_maker: UpdateMarketMakerValueReducer,
+    update_market_maker_status: UpdateMarketMakerStatusReducer,
 
     //CREDIT LIMIT
     get_all_credit_limit: GetAllCreditLimitReducer,

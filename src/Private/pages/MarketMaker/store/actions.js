@@ -42,6 +42,10 @@ const actions = {
         data,
         id,
     }),
+    update_market_maker_status: (id, data) => ({
+        type: actions.UPDATE_MARKET_MAKER_STATUS,
+        id,
+    }),
 };
 
 export default actions;

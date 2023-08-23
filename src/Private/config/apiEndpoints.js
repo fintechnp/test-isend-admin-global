@@ -91,6 +91,7 @@ const apiEndpoints = {
         getById: "/marketmaker/:marketMakerId",
         add: "/marketmaker",
         update: "/marketmaker/:marketMakerId",
+        updateStatus: "/marketmaker/:marketMakerId/toggleactivestatus",
     },
     creditLimit: {
         getAll: "/creditlimits",

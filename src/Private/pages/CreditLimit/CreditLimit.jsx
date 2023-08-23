@@ -93,7 +93,7 @@ export default function CreditLimit({ title }) {
             },
             {
                 header: "Status",
-                accessorKey: "status",
+                accessorKey: "statusName",
             },
 
             {
@@ -123,9 +123,11 @@ export default function CreditLimit({ title }) {
     );
 
     const handleChangePage = (e, newPage) => {
+        console.clear();
+        console.log({ e: e.target.value, newPage });
         const updatedFilter = {
             ...filterSchema,
-            Page: newPage,
+            Page: ++newPage,
         };
         setFilterSchema(updatedFilter);
     };

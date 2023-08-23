@@ -1,14 +1,18 @@
 import Grid from "@mui/material/Grid";
+import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router";
-import { useEffect, useMemo } from "react";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
+import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import Spacer from "App/components/Spacer/Spacer";
+import { TablePagination } from "App/components/Table";
 import { CountryName, CurrencyName } from "App/helpers";
 import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
@@ -16,21 +20,28 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import routePaths from "Private/config/routePaths";
-
 import { MarketMakerActions as marketMakerAcions } from "./store/index";
-import buildRoute from "App/helpers/buildRoute";
+
+const initialState = {
+    Page: 1,
+    PageSize: 10,
+};
 
 export default function MarketMaker({ title }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { response: marketMakerDetails, loading: m_maker_loading } = useSelector(
-        (state) => state.get_all_market_maker,
-    );
+    const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const {
+        response: marketMakerDetails,
+        loading: m_maker_loading,
+        success,
+    } = useSelector((state) => state.get_all_market_maker);
 
     useEffect(() => {
-        dispatch(marketMakerAcions?.get_all_market_maker());
-    }, []);
+        dispatch(marketMakerAcions?.get_all_market_maker(filterSchema));
+    }, [filterSchema]);
 
     const columns = useMemo(
         () => [
@@ -78,6 +89,21 @@ export default function MarketMaker({ title }) {
                 header: "Contact Person",
                 accessorKey: "contactPerson.name",
             },
+            {
+                header: "Status",
+                accessorKey: "is_active",
+                cell: ({ getValue, row }) => {
+                    console.log(getValue(), "sdsdasd");
+                    return (
+                        <Switch
+                            defaultChecked={getValue()}
+                            onChange={(e) => {
+                                dispatch(marketMakerAcions.update_market_maker_status(row?.original?.marketMakerId));
+                            }}
+                        />
+                    );
+                },
+            },
 
             {
                 header: "Actions",
@@ -86,10 +112,24 @@ export default function MarketMaker({ title }) {
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewMarketMaker, row?.original?.MarketMaker));
+                                navigate(buildRoute(routePaths.agent.viewMarketMaker, row?.original?.marketMakerId));
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                navigate(buildRoute(routePaths.agent.updateMarketMaker, row?.original?.marketMakerId));
+                            }}
+                        >
+                            <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
                                     "&:hover": {
@@ -104,6 +144,25 @@ export default function MarketMaker({ title }) {
         ],
         [],
     );
+
+    const handleChangePage = (e, newPage) => {
+        console.clear();
+        console.log({ e: e.target.value, newPage });
+        const updatedFilter = {
+            ...filterSchema,
+            Page: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
+    };
+
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            PageSize: pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
     return (
         <PageContent
             title={title}
@@ -135,6 +194,13 @@ export default function MarketMaker({ title }) {
                 title="Market Maker"
                 data={marketMakerDetails?.data ?? []}
                 loading={m_maker_loading}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={marketMakerDetails?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
             />
         </PageContent>
     );

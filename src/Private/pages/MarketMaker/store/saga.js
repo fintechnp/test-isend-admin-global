@@ -44,6 +44,7 @@ export const addMarketMaker = takeEvery(actions.ADD_MARKET_MAKER, function* (act
             response: res,
         });
         yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.ADD_MARKET_MAKER_RESET });
     } catch (error) {
         yield put({
             type: actions.ADD_MARKET_MAKER_FAILED,
@@ -64,12 +65,34 @@ export const updateMarketMaker = takeEvery(actions.UPDATE_MARKET_MAKER, function
     } catch (error) {
         yield put({
             type: actions.UPDATE_MARKET_MAKER_FAILED,
-            error: error?.data,
+            error: error?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+    }
+});
+export const updateMarketMakerStatus = takeEvery(actions.UPDATE_MARKET_MAKER_STATUS, function* (action) {
+    try {
+        const res = yield call(api.patch, buildRoute(apiEndpoints.marketMaker.updateStatus, action.id));
+        yield put({
+            type: actions.UPDATE_MARKET_MAKER_STATUS_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_MARKET_MAKER_STATUS_FAILED,
+            error: error?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.message });
     }
 });
 
 export default function* saga() {
-    yield all([getAllMarketMaker, getMarketMakerByIdDetails, addMarketMaker, updateMarketMaker]);
+    yield all([
+        getAllMarketMaker,
+        getMarketMakerByIdDetails,
+        addMarketMaker,
+        updateMarketMaker,
+        updateMarketMakerStatus,
+    ]);
 }

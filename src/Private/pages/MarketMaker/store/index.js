@@ -3,5 +3,6 @@ export { default as GetAllMarketMakerValueReducer } from "./reducers/getAllMarke
 export { default as AddMarketMakerValueReducer } from "./reducers/addMarketMakerReducer";
 export { default as UpdateMarketMakerValueReducer } from "./reducers/updateMarketMakerReducer";
 export { default as GetMarkerMakerByIdValueReducer } from "./reducers/getMarketMakerByIdReducer";
+export { default as UpdateMarketMakerStatusReducer } from "./reducers/updateMarketMakerStatusReducer";
 
 export { default as MarketMakerActions } from "./actions";

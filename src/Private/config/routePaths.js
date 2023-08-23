@@ -33,6 +33,7 @@ const routePaths = {
         marketMaker: "/agent/market-maker",
         addMarketMaker: "/agent/market-maker/add",
         viewMarketMaker: "/agent/market-maker/:marketMakerId/view",
+        updateMarketMaker: "/agent/market-maker/:marketMakerId/update",
 
         creditLimit: "/agent/credit-limit",
         addCreditLimit: "/agent/credit-limit/add",
