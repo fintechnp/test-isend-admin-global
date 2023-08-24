@@ -412,6 +412,29 @@ const PrivateLayout = () => {
                 ],
             },
 
+            //Market Maker
+            {
+                key: "agent",
+                text: "Agent",
+                sub: true,
+                icon: <AccountBox />,
+                permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER, roles.USER],
+                children: [
+                    {
+                        path: routePaths.agent.marketMaker,
+                        key: "market-maker",
+                        text: "Market Maker",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.creditLimit,
+                        key: "credit-limit",
+                        text: "Credit Limit",
+                        sub: false,
+                    },
+                ],
+            },
+
             //Account
             {
                 path: "/accounting",

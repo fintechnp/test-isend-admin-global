@@ -52,8 +52,8 @@ function FormDatePicker({
                             if (date) {
                                 let newDate = dateFormat
                                     .replace(/yyyy/g, date.getFullYear())
-                                    .replace(/MM/g, date.getMonth() + 1)
-                                    .replace(/dd/g, date.getDate());
+                                    .replace(/MM/g, String(date.getMonth() + 1).padStart(2, "0"))
+                                    .replace(/dd/g, String(date.getDate()).padStart(2, "0"));
 
                                 setValue(name, newDate);
                             } else {

@@ -35,6 +35,7 @@ const LanguageValueModal = ({ update, update_data }) => {
 
     const handleAdd = (data) => {
         dispatch(actions.add_language_value(data));
+        dispatch(actions.ADD_LANGUAGE_VALUE_RESET);
         setOpen(false);
     };
     return (
