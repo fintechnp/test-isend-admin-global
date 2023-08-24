@@ -1,5 +1,10 @@
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup } from "@mui/material";
+import Radio from "@mui/material/Radio";
+import FormLabel from "@mui/material/FormLabel";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import { Controller, useFormContext } from "react-hook-form";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function FormRadio(props) {
     const {
