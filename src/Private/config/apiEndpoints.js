@@ -99,6 +99,12 @@ const apiEndpoints = {
         add: "/creditlimits",
         update: "/creditlimits/:creditLimitId/statusupdate",
     },
+    business: {
+        getAll: "/business",
+        getById: "/business/:businessId",
+        addBusinessApproval: "/business/:businessId/approve",
+        updateBusinessStatus: "/business/:businessId/toggleactivestatus",
+    },
 };
 
 export default apiEndpoints;
