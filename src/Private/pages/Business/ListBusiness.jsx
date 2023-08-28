@@ -11,9 +11,11 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import BusinessFilterForm from "Private/components/Business/BusinessFilterForm";
+import { TablePagination } from "App/components/Table";
 
 const initialState = {
-    Page: 1,
+    PageNumber: 1,
     PageSize: 10,
 };
 
@@ -22,7 +24,6 @@ export default function ListBusiness({ title }) {
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response, loading } = useSelector((state) => state.get_all_business);
-    console.log("🚀 ~ file: ListBusiness.jsx:17 ~ ListBusiness ~ response:", response);
 
     const columns = useMemo(
         () => [
@@ -79,6 +80,23 @@ export default function ListBusiness({ title }) {
     useEffect(() => {
         dispatch(businessActions.get_all_business(filterSchema));
     }, [filterSchema]);
+
+    const handleChangePage = (e, newPage) => {
+        const updatedFilter = {
+            ...filterSchema,
+            Page: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
+    };
+
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            PageSize: pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
     return (
         <PageContent title={title}>
             {loading && (
@@ -86,6 +104,8 @@ export default function ListBusiness({ title }) {
                     <Loading loading={loading} />
                 </Grid>
             )}
+            <BusinessFilterForm setFilterSchema={setFilterSchema} />
+
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
                     <NoResults text="No Businesses Found" />
@@ -98,6 +118,13 @@ export default function ListBusiness({ title }) {
                         title="Business"
                         data={response?.data ?? []}
                         loading={loading}
+                        renderPagination={() => (
+                            <TablePagination
+                                paginationData={response?.pagination}
+                                handleChangePage={handleChangePage}
+                                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                            />
+                        )}
                     />
                 </>
             )}

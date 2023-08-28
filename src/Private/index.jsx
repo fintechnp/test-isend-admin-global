@@ -430,6 +430,15 @@ import {
     creditLimitSaga,
 } from "../Private/pages/CreditLimit/store";
 
+// BALANCE REQUEST
+
+import {
+    BalanceRequestSaga,
+    GetAllBalanceRequestValueReducer,
+    GetBalanceRequestIdValueReducer,
+    UpdateBalanceRequestStatusReducer,
+} from "../Private/pages/BalanceRequest/store";
+
 // Business
 
 import {
@@ -770,6 +779,12 @@ export const privateReducer = {
     add_credit_limit: AddCreditLimitReducer,
     update_credit_limit: UpdateCreditLimitStatusReducer,
 
+    // BALANCE REQUEST
+
+    get_all_balance_request: GetAllBalanceRequestValueReducer,
+    get_balance_request_details: GetBalanceRequestIdValueReducer,
+    update_balance_request_status: UpdateBalanceRequestStatusReducer,
+
     //Business
 
     get_all_business: GetAllBusinessReducer,
@@ -823,6 +838,7 @@ export const privateSaga = [
     UpdateChangePasswordSaga(),
     MarketMakerSaga(),
     creditLimitSaga(),
+    BalanceRequestSaga(),
     businessSaga(),
 ];
 

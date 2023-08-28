@@ -99,6 +99,11 @@ const apiEndpoints = {
         add: "/creditlimits",
         update: "/creditlimits/:creditLimitId/statusupdate",
     },
+    balanceRequest: {
+        getAll: "/balancerequests",
+        getById: "/balancerequest/:balanceRequestId",
+        updateStatus: "/balancerequest/:balanceRequestId/statusupdate",
+    },
     business: {
         getAll: "/business",
         getById: "/business/:businessId",

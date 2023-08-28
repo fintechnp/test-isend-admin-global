@@ -39,6 +39,9 @@ const routePaths = {
         addCreditLimit: "/agent/credit-limit/add",
         viewCreditLimit: "/agent/credit-limit/:creditLimitId/view",
 
+        listBalanceRequest: "/agent/balance-request",
+        viewBalanceRequest: "/agent/balance-request/:balanceRequestId/view",
+
         listBusiness: "/agent/business",
     },
 };

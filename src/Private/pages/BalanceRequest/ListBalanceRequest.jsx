@@ -2,51 +2,48 @@ import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import Button from "App/components/Button/Button";
-import routePaths from "Private/config/routePaths";
-import PageContent from "App/components/Container/PageContent";
+import React, { useEffect, useMemo, useState } from "react";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
+import routePaths from "Private/config/routePaths";
+import { convertDate } from "App/utils/convertDate";
 import { TablePagination } from "App/components/Table";
 import NoResults from "../Transactions/components/NoResults";
-import FilterForm from "Private/components/CreditLimit/FilterForm";
+import PageContent from "App/components/Container/PageContent";
+import FilterForm from "Private/components/BalanceRequest/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { creditLimitActions } from "./store";
+import { BalanceRequestActions as actions } from "../BalanceRequest/store";
 
 const initialState = {
-    Page: 1,
+    PageNumber: 1,
     PageSize: 10,
 };
 
-export default function CreditLimit({ title }) {
+export default function ListBalanceRequest({ title }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: creditLimitData, loading: creditLimitLoading } = useSelector(
-        (state) => state.get_all_credit_limit,
-    );
+    const { response: balanceRequestData, loading } = useSelector((state) => state.get_all_balance_request);
 
     const sortByOptions =
-        creditLimitData?.data?.length > 0 &&
-        Object.keys(creditLimitData?.data[0])
+        balanceRequestData?.data?.length > 0 &&
+        Object.keys(balanceRequestData?.data[0])
             ?.map((item) => {
                 return { value: item, label: item };
             })
             .filter((item) => item.label !== "f_serial_no");
 
     useEffect(() => {
-        dispatch(creditLimitActions.get_all_credit_limit(filterSchema));
+        dispatch(actions.get_all_balance_request(filterSchema));
     }, [filterSchema]);
 
     const columns = useMemo(
@@ -61,39 +58,43 @@ export default function CreditLimit({ title }) {
                 accessorKey: "name",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },
+
             {
-                header: "Limit",
-                accessorKey: "creditLimit",
+                header: "Deposited Amount",
+                accessorKey: "depositedAmount",
             },
             {
-                header: "Currency",
-                accessorKey: "currency",
+                header: "Depositor Name",
+                accessorKey: "depositorName",
+            },
+            {
+                header: "Depositor Method Name",
+                accessorKey: "depositoryMethodName",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
+            },
+
+            {
+                header: "Related To",
+                accessorKey: "relatedTo",
+            },
+            {
+                header: "Deposit Date",
+                accessorKey: "depositDate",
+                cell: ({ getValue }) => <Typography>{getValue() ? convertDate(getValue()) : "N/A"}</Typography>,
             },
 
             {
                 header: "Remarks",
                 accessorKey: "remarks",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-            {
-                header: "Checker Remarks",
-                accessorKey: "checkerRemarks",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-            {
-                header: "Created By",
-                accessorKey: "createdBy",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-            {
-                header: "Checked By",
-                accessorKey: "checkedBy",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-            {
-                header: "Status",
-                accessorKey: "statusName",
+                cell: ({ getValue }) => (
+                    <Typography
+                        sx={{
+                            maxWidth: 250,
+                        }}
+                    >
+                        {getValue() ? getValue() : "N/A"}
+                    </Typography>
+                ),
             },
 
             {
@@ -103,7 +104,7 @@ export default function CreditLimit({ title }) {
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewCreditLimit, row?.original?.id));
+                                navigate(buildRoute(routePaths.agent.viewBalanceRequest, row?.original?.id));
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
@@ -138,28 +139,15 @@ export default function CreditLimit({ title }) {
         };
         setFilterSchema(updatedFilterSchema);
     };
-
     return (
-        <PageContent
-            title={title}
-            documentTitle="Credit Limit"
-            topRightEndContent={
-                <Button
-                    onClick={() => {
-                        navigate(routePaths.agent.addCreditLimit);
-                    }}
-                >
-                    Add Credit Limit
-                </Button>
-            }
-        >
-            <FilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} />
-            {creditLimitLoading && (
+        <PageContent title={title || "List Balance Request"} documentTitle="List Balance Request">
+            <FilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} loading={loading} />
+            {loading && (
                 <Grid item xs={12}>
-                    <Loading loading={creditLimitLoading} />
+                    <Loading loading={loading} />
                 </Grid>
             )}
-            {!creditLimitLoading && creditLimitData?.data && creditLimitData?.data?.length === 0 ? (
+            {!loading && balanceRequestData?.data && balanceRequestData?.data?.length === 0 ? (
                 <Grid item xs={12}>
                     <NoResults text="No Credit Limit Found" />
                 </Grid>
@@ -168,12 +156,12 @@ export default function CreditLimit({ title }) {
                     <Spacer />
                     <TanstackReactTable
                         columns={columns}
-                        title="Credit Limit"
-                        data={creditLimitData?.data ?? []}
-                        loading={creditLimitLoading}
+                        title="Balance Request"
+                        data={balanceRequestData?.data ?? []}
+                        loading={loading}
                         renderPagination={() => (
                             <TablePagination
-                                paginationData={creditLimitData?.pagination}
+                                paginationData={balanceRequestData?.pagination}
                                 handleChangePage={handleChangePage}
                                 handleChangeRowsPerPage={handleChangeRowsPerPage}
                             />
