@@ -432,6 +432,12 @@ const PrivateLayout = () => {
                         text: "Credit Limit",
                         sub: false,
                     },
+                    {
+                        path: routePaths.agent.listBalanceRequest,
+                        key: "balance-Request",
+                        text: "Balance Request",
+                        sub: false,
+                    },
                 ],
             },
 
