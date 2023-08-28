@@ -432,6 +432,12 @@ const PrivateLayout = () => {
                         text: "Credit Limit",
                         sub: false,
                     },
+                    {
+                        path: routePaths.agent.listBusiness,
+                        key: "business",
+                        text: "Business",
+                        sub: false,
+                    },
                 ],
             },
 

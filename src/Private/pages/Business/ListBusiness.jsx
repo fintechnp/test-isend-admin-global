@@ -1,5 +1,106 @@
-import React from "react";
+import PageContent from "App/components/Container/PageContent";
+import React, { useEffect, useMemo, useState } from "react";
 
-export default function ListBusiness() {
-    return <div>ListBusiness</div>;
+import { businessActions } from "./store";
+import { useDispatch, useSelector } from "react-redux";
+import { Loading } from "App/components";
+import { Grid, IconButton } from "@mui/material";
+import NoResults from "../Transactions/components/NoResults";
+import Spacer from "App/components/Spacer/Spacer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+
+const initialState = {
+    Page: 1,
+    PageSize: 10,
+};
+
+export default function ListBusiness({ title }) {
+    const dispatch = useDispatch();
+    const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const { response, loading } = useSelector((state) => state.get_all_business);
+    console.log("🚀 ~ file: ListBusiness.jsx:17 ~ ListBusiness ~ response:", response);
+
+    const columns = useMemo(
+        () => [
+            {
+                header: "SN",
+                accessorKey: "f_serial_no",
+            },
+            {
+                header: "Name",
+                accessorKey: "name",
+            },
+            {
+                header: "Type",
+                accessorKey: "businessType",
+            },
+            {
+                header: "Country of Registration",
+                accessorKey: "registeredCountryName",
+            },
+            {
+                header: "Email",
+                accessorKey: "email",
+            },
+            {
+                header: "Status",
+                accessorKey: "status",
+            },
+
+            {
+                header: "Actions",
+                cell: ({ row }) => (
+                    <TableRowActionContainer>
+                        <IconButton
+                        // onClick={() => {
+                        //     navigate(buildRoute(routePaths.agent.viewCreditLimit, row?.original?.id));
+                        // }}
+                        >
+                            <RemoveRedEyeOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                    </TableRowActionContainer>
+                ),
+            },
+        ],
+        [],
+    );
+
+    useEffect(() => {
+        dispatch(businessActions.get_all_business(filterSchema));
+    }, [filterSchema]);
+    return (
+        <PageContent title={title}>
+            {loading && (
+                <Grid item xs={12}>
+                    <Loading loading={loading} />
+                </Grid>
+            )}
+            {!loading && response?.data && response?.data?.length === 0 ? (
+                <Grid item xs={12}>
+                    <NoResults text="No Businesses Found" />
+                </Grid>
+            ) : (
+                <>
+                    <Spacer />
+                    <TanstackReactTable
+                        columns={columns}
+                        title="Business"
+                        data={response?.data ?? []}
+                        loading={loading}
+                    />
+                </>
+            )}
+        </PageContent>
+    );
 }

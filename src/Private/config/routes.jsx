@@ -130,6 +130,9 @@ const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
 const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
 const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
 
+//Business
+const ListBusiness = lazy(() => import("../pages/Business/ListBusiness"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -482,6 +485,9 @@ const privateRoutes = [
     { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
     { path: routePaths.agent.addCreditLimit, component: <AddCreditLimit title="Add Credit Limit" /> },
     { path: routePaths.agent.viewCreditLimit, component: <ViewCreditLimit title="Credit Limit Detail" /> },
+
+    //Business
+    { path: routePaths.agent.listBusiness, component: <ListBusiness title="Businesses" /> },
 ];
 
 export default privateRoutes;
