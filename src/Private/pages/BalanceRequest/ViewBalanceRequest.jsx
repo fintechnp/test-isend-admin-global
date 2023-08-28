@@ -5,15 +5,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Loading } from "App/components";
-import PageContent from "App/components/Container/PageContent";
-
 import Modal from "App/components/Modal/Modal";
 import Button from "App/components/Button/Button";
+import { convertDate } from "App/utils/convertDate";
+import PageContent from "App/components/Container/PageContent";
 import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/CustomerDetails";
+import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/UpdateStatusForm";
 
 import { BalanceRequestActions } from "./store";
-import { convertDate } from "App/utils/convertDate";
-import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/UpdateStatusForm";
 
 export default function ViewBalanceRequest({ title }) {
     const dispatch = useDispatch();
