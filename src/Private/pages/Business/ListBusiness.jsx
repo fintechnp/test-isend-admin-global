@@ -13,6 +13,9 @@ import TableRowActionContainer from "App/components/Table/TableRowActionContaine
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import BusinessFilterForm from "Private/components/Business/BusinessFilterForm";
 import { TablePagination } from "App/components/Table";
+import { useNavigate } from "react-router-dom";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 
 const initialState = {
     PageNumber: 1,
@@ -21,6 +24,7 @@ const initialState = {
 
 export default function ListBusiness({ title }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response, loading } = useSelector((state) => state.get_all_business);
@@ -57,9 +61,9 @@ export default function ListBusiness({ title }) {
                 cell: ({ row }) => (
                     <TableRowActionContainer>
                         <IconButton
-                        // onClick={() => {
-                        //     navigate(buildRoute(routePaths.agent.viewCreditLimit, row?.original?.id));
-                        // }}
+                            onClick={() => {
+                                navigate(buildRoute(routePaths.agent.viewBusiness, row?.original?.businessId));
+                            }}
                         >
                             <RemoveRedEyeOutlinedIcon
                                 sx={{

@@ -9,8 +9,9 @@ import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
+import apiEndpoints from "Private/config/apiEndpoints";
 
-import { MarketMakerActions } from "Private/pages/MarketMaker/store";
+import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
 const statusOptions = [
     {
@@ -35,21 +36,6 @@ export default function BusinessFilterForm({ setFilterSchema, loading }) {
     const methods = useForm();
     const dispatch = useDispatch();
 
-    const { response: marketMakerData, loading: marketMakerLoading } = useSelector(
-        (state) => state.get_all_market_maker,
-    );
-
-    const marketMakerOptions = marketMakerData?.data?.map((item) => {
-        return {
-            label: item?.name,
-            value: item?.marketMakerId,
-        };
-    });
-
-    useEffect(() => {
-        dispatch(MarketMakerActions.get_all_market_maker());
-    }, []);
-
     const { reset, setValue, getValues } = methods;
 
     const handleSubmit = (data) => {
@@ -68,6 +54,16 @@ export default function BusinessFilterForm({ setFilterSchema, loading }) {
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
                     <Grid item xs={12} sm={6}>
+                        <FormSearchAutoComplete
+                            name="MarketMakerId"
+                            label="Market Maker"
+                            apiEndpoint={apiEndpoints.marketMaker.getAll}
+                            paramkey="Name"
+                            valueKey="marketMakerId"
+                            labelKey="name"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
                         <FormTextField name="BusinessName" label="Business Name" />
                     </Grid>
 
@@ -78,14 +74,6 @@ export default function BusinessFilterForm({ setFilterSchema, loading }) {
                         <FormDatePicker name="ToDate" label="To Date" />
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
-                        <FormSelect
-                            name="MarketMakerId"
-                            options={marketMakerOptions}
-                            label="Market Maker"
-                            disabled={marketMakerLoading}
-                        />
-                    </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormSelect name="Status" options={statusOptions} label="Status" />
                     </Grid>

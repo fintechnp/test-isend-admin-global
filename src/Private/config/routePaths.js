@@ -43,6 +43,7 @@ const routePaths = {
         viewBalanceRequest: "/agent/balance-request/:balanceRequestId/view",
 
         listBusiness: "/agent/business",
+        viewBusiness: "/agent/business/:businessId/view",
     },
 };
 
