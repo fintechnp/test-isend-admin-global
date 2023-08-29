@@ -104,6 +104,12 @@ const apiEndpoints = {
         getById: "/balancerequest/:balanceRequestId",
         updateStatus: "/balancerequest/:balanceRequestId/statusupdate",
     },
+    business: {
+        getAll: "/business",
+        getById: "/business/:businessId",
+        addBusinessApproval: "/business/:businessId/approve",
+        updateBusinessStatus: "/business/:businessId/toggleactivestatus",
+    },
 };
 
 export default apiEndpoints;

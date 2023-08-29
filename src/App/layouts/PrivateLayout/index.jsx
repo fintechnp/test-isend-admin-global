@@ -438,6 +438,12 @@ const PrivateLayout = () => {
                         text: "Balance Request",
                         sub: false,
                     },
+                    {
+                        path: routePaths.agent.listBusiness,
+                        key: "business",
+                        text: "Business",
+                        sub: false,
+                    },
                 ],
             },
 

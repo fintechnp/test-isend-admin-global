@@ -439,6 +439,16 @@ import {
     UpdateBalanceRequestStatusReducer,
 } from "../Private/pages/BalanceRequest/store";
 
+// Business
+
+import {
+    AddBusinessApprovalReducer,
+    GetAllBusinessReducer,
+    GetBusinessByIdReducer,
+    UpdateBusinessStatusReducer,
+    businessSaga,
+} from "../Private/pages/Business/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -765,11 +775,8 @@ export const privateReducer = {
 
     //CREDIT LIMIT
     get_all_credit_limit: GetAllCreditLimitReducer,
-
     get_credit_limit_details: GetCreditLimitByIdReducer,
-
     add_credit_limit: AddCreditLimitReducer,
-
     update_credit_limit: UpdateCreditLimitStatusReducer,
 
     // BALANCE REQUEST
@@ -777,6 +784,13 @@ export const privateReducer = {
     get_all_balance_request: GetAllBalanceRequestValueReducer,
     get_balance_request_details: GetBalanceRequestIdValueReducer,
     update_balance_request_status: UpdateBalanceRequestStatusReducer,
+
+    //Business
+
+    get_all_business: GetAllBusinessReducer,
+    get_business_details: GetBusinessByIdReducer,
+    add_business_approval: AddBusinessApprovalReducer,
+    update_business_status: UpdateBusinessStatusReducer,
 };
 
 export const privateSaga = [
@@ -825,6 +839,7 @@ export const privateSaga = [
     MarketMakerSaga(),
     creditLimitSaga(),
     BalanceRequestSaga(),
+    businessSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

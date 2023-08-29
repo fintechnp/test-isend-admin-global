@@ -135,6 +135,10 @@ const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"
 const ListBalanceRequest = lazy(() => import("../pages/BalanceRequest/ListBalanceRequest"));
 const ViewBalanceRequest = lazy(() => import("../pages/BalanceRequest/ViewBalanceRequest"));
 
+//Business
+const ListBusiness = lazy(() => import("../pages/Business/ListBusiness"));
+const ViewBusiness = lazy(() => import("../pages/Business/ViewBusiness"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -491,6 +495,10 @@ const privateRoutes = [
     //BALANCE REQUEST
     { path: routePaths.agent.listBalanceRequest, component: <ListBalanceRequest title="List Balance Request" /> },
     { path: routePaths.agent.viewBalanceRequest, component: <ViewBalanceRequest title="Balance Request Detail" /> },
+
+    //Business
+    { path: routePaths.agent.listBusiness, component: <ListBusiness title="Businesses" /> },
+    { path: routePaths.agent.viewBusiness, component: <ViewBusiness title="View Business" /> },
 ];
 
 export default privateRoutes;
