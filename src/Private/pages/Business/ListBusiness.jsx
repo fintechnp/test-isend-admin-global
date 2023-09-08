@@ -88,7 +88,7 @@ export default function ListBusiness({ title }) {
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
-            Page: ++newPage,
+            PageNumber: ++newPage,
         };
         setFilterSchema(updatedFilter);
     };

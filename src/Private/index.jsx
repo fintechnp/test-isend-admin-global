@@ -446,6 +446,12 @@ import {
     GetAllBusinessReducer,
     GetBusinessByIdReducer,
     UpdateBusinessStatusReducer,
+    GetBusinessKybListingReducer,
+    GetBusinessKycListingReducer,
+    GetBusinessKycDetailsReducer,
+    UpdateBusinessKycStatusReducer,
+    GetBusinessKybDetailsReducer,
+    UpdateBusinessKybStatusReducer,
     businessSaga,
 } from "../Private/pages/Business/store";
 
@@ -789,8 +795,14 @@ export const privateReducer = {
 
     get_all_business: GetAllBusinessReducer,
     get_business_details: GetBusinessByIdReducer,
+    get_business_kyc: GetBusinessKycListingReducer,
+    get_business_kyb: GetBusinessKybListingReducer,
     add_business_approval: AddBusinessApprovalReducer,
     update_business_status: UpdateBusinessStatusReducer,
+    get_business_kyc_details: GetBusinessKycDetailsReducer,
+    update_business_kyc_status: UpdateBusinessKycStatusReducer,
+    get_business_kyb_details: GetBusinessKybDetailsReducer,
+    update_business_kyb_status: UpdateBusinessKybStatusReducer,
 };
 
 export const privateSaga = [

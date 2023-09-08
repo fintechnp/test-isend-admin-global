@@ -17,6 +17,32 @@ const actions = {
     UPDATE_BUSINESS_STATUS_FAILED: "UPDATE_BUSINESS_FAILED",
     UPDATE_BUSINESS_STATUS_RESET: "UPDATE_BUSINESS_RESET",
 
+    GET_BUSINESS_KYB: "GET_BUSINESS_KYB",
+    GET_BUSINESS_KYB_SUCCESS: "GET_BUSINESS_KYB_SUCCESS",
+    GET_BUSINESS_KYB_FAILED: "GET_BUSINESS_KYB_FAILED",
+
+    GET_BUSINESS_KYC: "GET_BUSINESS_KYC",
+    GET_BUSINESS_KYC_SUCCESS: "GET_BUSINESS_KYC_SUCCESS",
+    GET_BUSINESS_KYC_FAILED: "GET_BUSINESS_KYC_FAILED",
+
+    GET_BUSINESS_KYC_DETAILS: "GET_BUSINESS_KYC_DETAILS",
+    GET_BUSINESS_KYC_DETAILS_SUCCESS: "GET_BUSINESS_KYC_DETAILS_SUCCESS",
+    GET_BUSINESS_KYC_DETAILS_FAILED: "GET_BUSINESS_KYC_FAILED",
+
+    UPDATE_BUSINESS_KYC_STATUS: "UPDATE_BUSINESS_KYC_STATUS",
+    UPDATE_BUSINESS_KYC_STATUS_SUCCESS: "UPDATE_BUSINESS_KYC_STATUS_SUCCESS",
+    UPDATE_BUSINESS_KYC_STATUS_FAILED: "UPDATE_BUSINESS_KYC_STATUS_FAILED",
+    UPDATE_BUSINESS_KYC_STATUS_RESET: "UPDATE_BUSINESS_KYC_STATUS_RESET",
+
+    GET_BUSINESS_KYB_DETAILS: "GET_BUSINESS_KYB_DETAILS",
+    GET_BUSINESS_KYB_DETAILS_SUCCESS: "GET_BUSINESS_KYB_DETAILS_SUCCESS",
+    GET_BUSINESS_KYB_DETAILS_FAILED: "GET_BUSINESS_KYB_FAILED",
+
+    UPDATE_BUSINESS_KYB_STATUS: "UPDATE_BUSINESS_KYB_STATUS",
+    UPDATE_BUSINESS_KYB_STATUS_SUCCESS: "UPDATE_BUSINESS_KYB_STATUS_SUCCESS",
+    UPDATE_BUSINESS_KYB_STATUS_FAILED: "UPDATE_BUSINESS_KYB_STATUS_FAILED",
+    UPDATE_BUSINESS_KYB_STATUS_RESET: "UPDATE_BUSINESS_KYB_STATUS_RESET",
+
     get_all_business: (query) => ({
         type: actions.GET_BUSINESS,
         query,
@@ -36,6 +62,35 @@ const actions = {
         type: actions.UPDATE_BUSINESS_STATUS,
         data,
         id,
+    }),
+
+    get_business_kyb: (query) => ({
+        type: actions.GET_BUSINESS_KYB,
+        query,
+    }),
+
+    get_business_kyc: (query) => ({
+        type: actions.GET_BUSINESS_KYC,
+        query,
+    }),
+
+    get_business_kyc_details: (id) => ({
+        type: actions.GET_BUSINESS_KYC_DETAILS,
+        id,
+    }),
+    get_business_kyb_details: (id) => ({
+        type: actions.GET_BUSINESS_KYB_DETAILS,
+        id,
+    }),
+    update_business_kyc_status: (id, data) => ({
+        type: actions.UPDATE_BUSINESS_KYC_STATUS,
+        id,
+        data,
+    }),
+    update_business_kyb_status: (id, data) => ({
+        type: actions.UPDATE_BUSINESS_KYB_STATUS,
+        id,
+        data,
     }),
 };
 

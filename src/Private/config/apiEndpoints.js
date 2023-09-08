@@ -109,6 +109,16 @@ const apiEndpoints = {
         getById: "/business/:businessId",
         addBusinessApproval: "/business/:businessId/approve",
         updateBusinessStatus: "/business/:businessId/toggleactivestatus",
+
+        //KYB
+        getAllKyb: "/kyb",
+        getKybDetails: "/kyb/:kybId",
+        approveKyb: "kyb/:kybId/approve",
+
+        //KYC
+        getAllKyc: "/kyc",
+        getKycDetails: "/kyc/:kycId",
+        approveKyc: "kyc/:kycId/approve",
     },
 };
 

@@ -93,7 +93,6 @@ export default function MarketMaker({ title }) {
                 header: "Status",
                 accessorKey: "is_active",
                 cell: ({ getValue, row }) => {
-                    console.log(getValue(), "sdsdasd");
                     return (
                         <Switch
                             defaultChecked={getValue()}
