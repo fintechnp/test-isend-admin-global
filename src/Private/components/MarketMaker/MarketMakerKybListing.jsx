@@ -13,10 +13,11 @@ import Spacer from "App/components/Spacer/Spacer";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import Modal from "App/components/Modal/Modal";
 import BusinessKybDetail from "../Business/BusinessKybDetail";
-import PageContent from "App/components/Container/PageContent";
 import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
+
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 export default function MarketMakerKybListing() {
     const dispatch = useDispatch();
@@ -86,6 +87,20 @@ export default function MarketMakerKybListing() {
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                navigate(`/agent/market-maker/${marketMakerId}/update-kyb/${row?.original?.kybId}`);
+                            }}
+                        >
+                            <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
                                     "&:hover": {

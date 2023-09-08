@@ -87,6 +87,79 @@ export const updateMarketMakerStatus = takeEvery(actions.UPDATE_MARKET_MAKER_STA
     }
 });
 
+/// DOCUMENTS
+
+export const getDocumentSettings = takeEvery(actions.GET_DOCUMENT_SETINGS, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.document.documentSetting, action.query);
+        yield put({
+            type: actions.GET_DOCUMENT_SETINGS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_DOCUMENT_SETINGS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const addDocument = takeEvery(actions.ADD_DOCUMENT, function* (action) {
+    try {
+        const res = yield call(api.post, apiEndpoints.document.addDocument, action.data);
+        yield put({
+            type: actions.ADD_DOCUMENT_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.ADD_DOCUMENT_RESET });
+    } catch (error) {
+        yield put({
+            type: actions.ADD_DOCUMENT_FAILED,
+            error: error?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+    }
+});
+
+// KYB
+
+export const addMarketMakerKyb = takeEvery(actions.ADD_MARKET_MAKER_KYB, function* (action) {
+    try {
+        const res = yield call(api.post, apiEndpoints.marketMaker.addKyb, action.data);
+        yield put({
+            type: actions.ADD_MARKET_MAKER_KYB_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.ADD_MARKET_MAKER_KYB_RESET });
+    } catch (error) {
+        yield put({
+            type: actions.ADD_MARKET_MAKER_KYB_FAILED,
+            error: error?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+    }
+});
+
+export const updateMarketMakerKyb = takeEvery(actions.UPDATE_MARKET_MAKER_KYB, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.marketMaker.updateKyb, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_MARKET_MAKER_KYB_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.UPDATE_MARKET_MAKER_KYB_RESET });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_MARKET_MAKER_KYB_FAILED,
+            error: error?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+    }
+});
+
 export default function* saga() {
     yield all([
         getAllMarketMaker,
@@ -94,5 +167,9 @@ export default function* saga() {
         addMarketMaker,
         updateMarketMaker,
         updateMarketMakerStatus,
+        getDocumentSettings,
+        addDocument,
+        addMarketMakerKyb,
+        updateMarketMakerKyb,
     ]);
 }

@@ -92,6 +92,10 @@ const apiEndpoints = {
         add: "/marketmaker",
         update: "/marketmaker/:marketMakerId",
         updateStatus: "/marketmaker/:marketMakerId/toggleactivestatus",
+
+        //KYB
+        addKyb: "/kyb",
+        updateKyb: "/kyb/:kybId",
     },
     creditLimit: {
         getAll: "/creditlimits",
@@ -119,6 +123,11 @@ const apiEndpoints = {
         getAllKyc: "/kyc",
         getKycDetails: "/kyc/:kycId",
         approveKyc: "kyc/:kycId/approve",
+    },
+
+    document: {
+        documentSetting: "/documentsetting",
+        addDocument: "/document/b2b",
     },
 };
 

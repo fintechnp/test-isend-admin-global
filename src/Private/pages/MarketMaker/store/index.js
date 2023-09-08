@@ -5,4 +5,14 @@ export { default as UpdateMarketMakerValueReducer } from "./reducers/updateMarke
 export { default as GetMarkerMakerByIdValueReducer } from "./reducers/getMarketMakerByIdReducer";
 export { default as UpdateMarketMakerStatusReducer } from "./reducers/updateMarketMakerStatusReducer";
 
+/// DOCUMENTS
+
+export { default as GetDocumentSettingsReducer } from "./DocumentReducer/getDocumentSettingsReducer";
+export { default as AddDocumentReducer } from "./DocumentReducer/addDocumentReducer";
+
+// KYB
+
+export { default as AddMarketMakerKYBReducer } from "./reducers/addMarketMakerKybReducer";
+export { default as UpdateMarketMakerKYBReducer } from "./reducers/updateMarketMakerKybReducer";
+
 export { default as MarketMakerActions } from "./actions";

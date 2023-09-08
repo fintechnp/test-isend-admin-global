@@ -22,6 +22,29 @@ const actions = {
     UPDATE_MARKET_MAKER_STATUS_FAILED: "UPDATE_MARKET_MAKER_STATUS_FAILED",
     UPDATE_MARKET_MAKER_STATUS_RESET: "UPDATE_MARKET_MAKER_STATUS_RESET",
 
+    ///DOCUMENTS
+
+    GET_DOCUMENT_SETINGS: "GET_DOCUMENT_SETINGS",
+    GET_DOCUMENT_SETINGS_SUCCESS: "GET_DOCUMENT_SETINGS_SUCCESS",
+    GET_DOCUMENT_SETINGS_FAILED: "GET_DOCUMENT_SETINGS_FAILED",
+
+    ADD_DOCUMENT: "ADD_DOCUMENT",
+    ADD_DOCUMENT_SUCCESS: "ADD_DOCUMENT_SUCCESS",
+    ADD_DOCUMENT_FAILED: "ADD_DOCUMENT_FAILED",
+    ADD_DOCUMENT_RESET: "ADD_DOCUMENT_RESET",
+
+    // KYB
+
+    ADD_MARKET_MAKER_KYB: "ADD_MARKET_MAKER_KYB",
+    ADD_MARKET_MAKER_KYB_SUCCESS: "ADD_MARKET_MAKER_KYB_SUCCESS",
+    ADD_MARKET_MAKER_KYB_FAILED: "ADD_MARKET_MAKER_KYB_FAILED",
+    ADD_MARKET_MAKER_KYB_RESET: "ADD_MARKET_MAKER_KYB_RESET",
+
+    UPDATE_MARKET_MAKER_KYB: "UPDATE_MARKET_MAKER_KYB",
+    UPDATE_MARKET_MAKER_KYB_SUCCESS: "UPDATE_MARKET_MAKER_KYB_SUCCESS",
+    UPDATE_MARKET_MAKER_KYB_FAILED: "UPDATE_MARKET_MAKER_KYB_FAILED",
+    UPDATE_MARKET_MAKER_KYB_RESET: "UPDATE_MARKET_MAKER_KYB_RESET",
+
     get_all_market_maker: (query) => ({
         type: actions.GET_MARKET_MAKER,
         query,
@@ -44,6 +67,31 @@ const actions = {
     }),
     update_market_maker_status: (id, data) => ({
         type: actions.UPDATE_MARKET_MAKER_STATUS,
+        id,
+    }),
+
+    /// DOCUMENTS
+
+    get_document_settings: (query) => ({
+        type: actions.GET_DOCUMENT_SETINGS,
+        query,
+    }),
+
+    add_document: (data) => ({
+        type: actions.ADD_DOCUMENT,
+        data,
+    }),
+
+    // KYB
+
+    add_market_maker_kyb: (data) => ({
+        type: actions.ADD_MARKET_MAKER_KYB,
+        data,
+    }),
+
+    update_market_maker_kyb: (id, data) => ({
+        type: actions.UPDATE_MARKET_MAKER_KYB,
+        data,
         id,
     }),
 };
