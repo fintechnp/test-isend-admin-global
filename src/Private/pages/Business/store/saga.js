@@ -74,6 +74,115 @@ export const updateBusinessStatus = takeEvery(actions.UPDATE_BUSINESS_STATUS, fu
     }
 });
 
+export const getBusinesKyb = takeEvery(actions.GET_BUSINESS_KYB, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.business.getAllKyb, action.query);
+        yield put({
+            type: actions.GET_BUSINESS_KYB_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_BUSINESS_KYB_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getBusinesKyc = takeEvery(actions.GET_BUSINESS_KYC, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.business.getAllKyc, action.query);
+        yield put({
+            type: actions.GET_BUSINESS_KYC_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_BUSINESS_KYC_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getBusinesKycDetails = takeEvery(actions.GET_BUSINESS_KYC_DETAILS, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.business.getKycDetails, action.id));
+        yield put({
+            type: actions.GET_BUSINESS_KYC_DETAILS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_BUSINESS_KYC_DETAILS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+export const getBusinesKybDetails = takeEvery(actions.GET_BUSINESS_KYB_DETAILS, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.business.getKybDetails, action.id));
+        yield put({
+            type: actions.GET_BUSINESS_KYB_DETAILS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_BUSINESS_KYB_DETAILS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const updateBusinessKycStatus = takeEvery(actions.UPDATE_BUSINESS_KYC_STATUS, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.business.approveKyc, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_BUSINESS_KYC_STATUS_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({
+            type: actions.UPDATE_BUSINESS_KYC_STATUS_RESET,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_BUSINESS_KYC_STATUS_FAILED,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+export const updateBusinessKybStatus = takeEvery(actions.UPDATE_BUSINESS_KYB_STATUS, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.business.approveKyb, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_BUSINESS_KYB_STATUS_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({
+            type: actions.UPDATE_BUSINESS_KYB_STATUS_RESET,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_BUSINESS_KYB_STATUS_FAILED,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
-    yield all([getAllBusiness, getBusinessById, addBusinessApproval, updateBusinessStatus]);
+    yield all([
+        getAllBusiness,
+        getBusinessById,
+        addBusinessApproval,
+        updateBusinessStatus,
+        getBusinesKyb,
+        getBusinesKyc,
+        getBusinesKycDetails,
+        getBusinesKybDetails,
+        updateBusinessKybStatus,
+        updateBusinessKycStatus,
+    ]);
 }

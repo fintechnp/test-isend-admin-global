@@ -123,6 +123,8 @@ const MarketMaker = lazy(() => import("../pages/MarketMaker/MarketMaker"));
 const AddMarketMaker = lazy(() => import("../pages/MarketMaker/AddMarketMaker"));
 const ViewMarketMaker = lazy(() => import("../pages/MarketMaker/ViewMarketMaker"));
 const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMaker"));
+const AddMarketMakerKyb = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
+const AddMarketMakerKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
 
 ///Credit Limit
 
@@ -486,6 +488,14 @@ const privateRoutes = [
     { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker title=" Add Market Maker" /> },
     { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker title="Market Maker Details" /> },
     { path: routePaths.agent.updateMarketMaker, component: <UpdateMarketMaker title="Update Market Maker" /> },
+    {
+        path: routePaths.agent.addMarketMakerKyb,
+        component: <AddMarketMakerKyb title="Add Market Maker KYB" />,
+    },
+    {
+        path: routePaths.agent.addMarketMakerKyc,
+        component: <AddMarketMakerKyb title="Add Market Maker KYC" />,
+    },
 
     ///Credit Limit
     { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
