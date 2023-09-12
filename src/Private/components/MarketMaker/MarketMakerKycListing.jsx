@@ -1,24 +1,29 @@
-import React, { useEffect, useMemo, useState } from "react";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 
-import { businessActions as actions } from "Private/pages/Business/store";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+
 import { Loading } from "App/components";
-import { Grid, IconButton } from "@mui/material";
-import NoResults from "Private/pages/Transactions/components/NoResults";
+import Modal from "App/components/Modal/Modal";
+import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
+import Button from "App/components/Button/Button";
+import routePaths from "Private/config/routePaths";
+import BusinessKycDetail from "../Business/BusinessKycDetail";
+import PageContent from "App/components/Container/PageContent";
+import NoResults from "Private/pages/Transactions/components/NoResults";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import Modal from "App/components/Modal/Modal";
-import PageContent from "App/components/Container/PageContent";
-import Button from "App/components/Button/Button";
-import BusinessKycDetail from "../Business/BusinessKycDetail";
+import { businessActions as actions } from "Private/pages/Business/store";
 
 export default function MarketMakerKycListing() {
-    const { marketMakerId } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { marketMakerId } = useParams();
 
     const [open, setOpen] = useState(false);
 
@@ -110,7 +115,17 @@ export default function MarketMakerKycListing() {
         );
     }, []);
     return (
-        <PageContent topRightEndContent={<Button>Add KYC</Button>}>
+        <PageContent
+            topRightEndContent={
+                <Button
+                    onClick={() => {
+                        navigate(buildRoute(routePaths.agent.addMarketMakerKyc, marketMakerId));
+                    }}
+                >
+                    Add KYC
+                </Button>
+            }
+        >
             {loading && (
                 <Grid item xs={12}>
                     <Loading loading={loading} />

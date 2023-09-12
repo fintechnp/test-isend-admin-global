@@ -418,6 +418,17 @@ import {
     MarketMakerSaga,
     GetMarkerMakerByIdValueReducer,
     UpdateMarketMakerStatusReducer,
+
+    //DOCUMENTS
+    GetDocumentSettingsReducer,
+    AddDocumentReducer,
+
+    //KYB
+    AddMarketMakerKYBReducer,
+    UpdateMarketMakerKYBReducer,
+
+    //KYC
+    AddMarketMakerKYCReducer,
 } from "../Private/pages/MarketMaker/store";
 
 //CREDIT LIMIT
@@ -778,6 +789,20 @@ export const privateReducer = {
     add_market_maker: AddMarketMakerValueReducer,
     update_market_maker: UpdateMarketMakerValueReducer,
     update_market_maker_status: UpdateMarketMakerStatusReducer,
+
+    //DOCUMENTS
+
+    get_document_settings: GetDocumentSettingsReducer,
+    add_document: AddDocumentReducer,
+
+    // KYB
+
+    add_market_maker_kyb: AddMarketMakerKYBReducer,
+    update_market_maker_kyb: UpdateMarketMakerKYBReducer,
+
+    // KYC
+
+    add_market_maker_kyc: AddMarketMakerKYCReducer,
 
     //CREDIT LIMIT
     get_all_credit_limit: GetAllCreditLimitReducer,

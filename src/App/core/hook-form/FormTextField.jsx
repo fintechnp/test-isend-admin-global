@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import PropTypes from "prop-types";
+import PropTypes, { object } from "prop-types";
 import Input from "@mui/material/Input";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -93,6 +93,7 @@ function FormTextField(props) {
                                 color,
                                 label,
                             })}
+
                             {errors[name]?.message && (
                                 <FormHelperText error={true}> {errors[name]?.message ?? ""}</FormHelperText>
                             )}

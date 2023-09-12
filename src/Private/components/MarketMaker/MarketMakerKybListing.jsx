@@ -1,22 +1,25 @@
-import React, { useEffect, useMemo, useState } from "react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 
-import { businessActions as actions } from "Private/pages/Business/store";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
-import { Box, Grid, IconButton } from "@mui/material";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+
 import { Loading } from "App/components";
-import NoResults from "Private/pages/Transactions/components/NoResults";
-import Spacer from "App/components/Spacer/Spacer";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import Modal from "App/components/Modal/Modal";
-import BusinessKybDetail from "../Business/BusinessKybDetail";
-import PageContent from "App/components/Container/PageContent";
+import buildRoute from "App/helpers/buildRoute";
+import Spacer from "App/components/Spacer/Spacer";
 import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
-import buildRoute from "App/helpers/buildRoute";
+import BusinessKybDetail from "../Business/BusinessKybDetail";
+import NoResults from "Private/pages/Transactions/components/NoResults";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+
+import { businessActions as actions } from "Private/pages/Business/store";
 
 export default function MarketMakerKybListing() {
     const dispatch = useDispatch();
@@ -86,6 +89,20 @@ export default function MarketMakerKybListing() {
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                navigate(`/agent/market-maker/${marketMakerId}/update-kyb/${row?.original?.kybId}`);
+                            }}
+                        >
+                            <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
                                     "&:hover": {

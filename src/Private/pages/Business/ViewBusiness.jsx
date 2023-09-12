@@ -1,16 +1,17 @@
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
+import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Loading } from "App/components";
+import PageContent from "App/components/Container/PageContent";
+import BusinessTab from "Private/components/Business/BusinessTabs";
+import BusinessKycListing from "Private/components/Business/BusinessKycListing";
+import BusinessKybListing from "Private/components/Business/BusinessKybListing";
+import { TitleWrapper, Title, RenderField } from "../Customers/CustomerDetails/CustomerDetails";
 
 import { businessActions } from "./store";
-import { useDispatch, useSelector } from "react-redux";
-import PageContent from "App/components/Container/PageContent";
-import Grid from "@mui/material/Grid";
-import { Loading } from "App/components";
-import { TitleWrapper, Title, RenderField } from "../Customers/CustomerDetails/CustomerDetails";
-import { Divider } from "@mui/material";
-import BusinessTab from "Private/components/Business/BusinessTabs";
-import BusinessKybListing from "Private/components/Business/BusinessKybListing";
-import BusinessKycListing from "Private/components/Business/BusinessKycListing";
 
 export default function ViewBusiness({ title }) {
     const dispatch = useDispatch();
