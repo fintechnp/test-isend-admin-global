@@ -1,18 +1,23 @@
-import { Box, CircularProgress, Divider, Grid, Typography } from "@mui/material";
-import FormDatePicker from "App/core/hook-form/FormDatePicker";
-import FormSelect from "App/core/hook-form/FormSelect";
-import FormTextField from "App/core/hook-form/FormTextField";
-import UploadFile from "App/core/upload/uploadFile";
-import { localStorageGet } from "App/helpers/localStorage";
-import ucwords from "App/helpers/ucwords";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useFieldArray, useFormContext } from "react-hook-form";
+
+import ucwords from "App/helpers/ucwords";
+import Center from "App/components/Center/Center";
+import UploadFile from "App/core/upload/uploadFile";
+import FormSelect from "App/core/hook-form/FormSelect";
+import { localStorageGet } from "App/helpers/localStorage";
+import FormTextField from "App/core/hook-form/FormTextField";
+import FormDatePicker from "App/core/hook-form/FormDatePicker";
+import { AddButton, CancelButton } from "../AllButtons/Buttons";
+import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
-import Center from "App/components/Center/Center";
-import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
-import { AddButton, CancelButton } from "../AllButtons/Buttons";
 
 export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
     const dispatch = useDispatch();
@@ -48,8 +53,13 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
         setValue("documents", []);
     }, [dispatch, registeredCountryId]);
 
+    const documents = watch("documents") ?? [];
+
     useEffect(() => {
+        if (documents.length > 0) return;
+
         const documentSettings = response?.data;
+
         documentSettings?.forEach((documentSetting) => {
             append({
                 documentId: "",
@@ -59,18 +69,10 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
         });
     }, [response]);
 
-    const documents = watch("documents") ?? [];
-
     const registeredCountyOptions = countries?.map((c) => {
         return {
             label: ucwords(c.country),
             value: c.country_id,
-        };
-    });
-    const addressCountyOptions = countries?.map((c) => {
-        return {
-            label: ucwords(c.country),
-            value: c.iso3,
         };
     });
 
@@ -175,7 +177,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                 />
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormSelect name="country" label="Address Country" options={addressCountyOptions ?? []} />
+                        <FormSelect name="countryId" label="Address Country" options={registeredCountyOptions ?? []} />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="postCode" label="PostCode" />

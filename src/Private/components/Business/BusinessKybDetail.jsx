@@ -1,17 +1,21 @@
-import { Box, Divider, Grid } from "@mui/material";
-import FormSelect from "App/core/hook-form/FormSelect";
-import FormTextField from "App/core/hook-form/FormTextField";
-import HookForm from "App/core/hook-form/HookForm";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import { ApproveSchema, statusOptions } from "./BusinessKycDetail";
-import { AddButton, CancelButton } from "../AllButtons/Buttons";
-import { Loading } from "App/components";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { businessActions } from "Private/pages/Business/store";
+import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Loading } from "App/components";
+import { AddButton } from "../AllButtons/Buttons";
+import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
+import FormTextField from "App/core/hook-form/FormTextField";
+import { ApproveSchema, statusOptions } from "./BusinessKycDetail";
+import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+
+import { businessActions } from "Private/pages/Business/store";
 
 export default function BusinessKybDetail({ data, loading, relatedTo }) {
     const methods = useForm({

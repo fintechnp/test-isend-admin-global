@@ -1,18 +1,20 @@
-import { Box, Divider, Grid } from "@mui/material";
-import { Loading } from "App/components";
-import FormTextField from "App/core/hook-form/FormTextField";
-import HookForm from "App/core/hook-form/HookForm";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
-import React, { useEffect, useMemo } from "react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { AddButton, CancelButton } from "../AllButtons/Buttons";
-import FormSelect from "App/core/hook-form/FormSelect";
+import Divider from "@mui/material/Divider";
+import { useParams } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 
-import { yupResolver } from "@hookform/resolvers/yup";
+import { Loading } from "App/components";
+import { AddButton } from "../AllButtons/Buttons";
+import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
+import FormTextField from "App/core/hook-form/FormTextField";
+import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
 
 import { businessActions } from "Private/pages/Business/store";
-import { useParams } from "react-router-dom";
 
 import * as yup from "yup";
 
@@ -44,7 +46,7 @@ export const statusOptions = [
     },
 ];
 
-export default function BusinessKycDetail({ data, loading, relatedTo }) {
+export default function BusinessKycDetail({ data, loading, relatedTo = "business" }) {
     const { businessId } = useParams();
 
     const dispatch = useDispatch();
@@ -78,38 +80,36 @@ export default function BusinessKycDetail({ data, loading, relatedTo }) {
 
     return (
         <>
-            {data?.status === 1 &&
-                relatedTo ===
-                    "business"(
-                        <Box mt={2}>
-                            <HookForm onSubmit={handleSubmit} {...methods}>
-                                <Grid container item xs={12} spacing={2}>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormSelect name="status" label="Status" options={statusOptions || []} />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormTextField name="remarks" label="Remarks" />
-                                    </Grid>
+            {data?.status === 1 && relatedTo === "business" && (
+                <Box mt={2}>
+                    <HookForm onSubmit={handleSubmit} {...methods}>
+                        <Grid container item xs={12} spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <FormSelect name="status" label="Status" options={statusOptions || []} />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormTextField name="remarks" label="Remarks" />
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-end"
+                                alignItems="center"
+                                columnSpacing={2}
+                                style={{ padding: "4px 0px", paddingRight: "4px" }}
+                            >
+                                <Grid item>
+                                    <AddButton size="small" variant="outlined" type="submit" loading={updating}>
+                                        Submit
+                                    </AddButton>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Grid
-                                        container
-                                        direction="row"
-                                        justifyContent="flex-end"
-                                        alignItems="center"
-                                        columnSpacing={2}
-                                        style={{ padding: "4px 0px", paddingRight: "4px" }}
-                                    >
-                                        <Grid item>
-                                            <AddButton size="small" variant="outlined" type="submit" loading={updating}>
-                                                Submit
-                                            </AddButton>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </HookForm>
-                        </Box>,
-                    )}
+                            </Grid>
+                        </Grid>
+                    </HookForm>
+                </Box>
+            )}
 
             {loading ? (
                 <Grid item xs={12}>

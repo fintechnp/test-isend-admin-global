@@ -136,10 +136,7 @@ export default function UploadFile(props) {
                         />
                     </Box>
                 ) : (
-                    <IconButton size="large">
-                        {/* <DocumentUpload /> */}
-                        Upload
-                    </IconButton>
+                    <IconButton size="large">Upload</IconButton>
                 )}
                 <Typography mt="1rem" fontSize="1.2rem" fontWeight={600}>
                     {title}

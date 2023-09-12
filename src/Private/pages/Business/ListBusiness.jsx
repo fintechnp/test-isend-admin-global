@@ -1,21 +1,23 @@
-import PageContent from "App/components/Container/PageContent";
+import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { businessActions } from "./store";
-import { useDispatch, useSelector } from "react-redux";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+
 import { Loading } from "App/components";
-import { Grid, IconButton } from "@mui/material";
-import NoResults from "../Transactions/components/NoResults";
+import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
+import routePaths from "Private/config/routePaths";
+import { TablePagination } from "App/components/Table";
+import NoResults from "../Transactions/components/NoResults";
+import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import BusinessFilterForm from "Private/components/Business/BusinessFilterForm";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import BusinessFilterForm from "Private/components/Business/BusinessFilterForm";
-import { TablePagination } from "App/components/Table";
-import { useNavigate } from "react-router-dom";
-import buildRoute from "App/helpers/buildRoute";
-import routePaths from "Private/config/routePaths";
+import { businessActions } from "./store";
 
 const initialState = {
     PageNumber: 1,

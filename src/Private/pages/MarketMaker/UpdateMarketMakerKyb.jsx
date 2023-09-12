@@ -1,21 +1,20 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
-import HookForm from "App/core/hook-form/HookForm";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+
+import buildRoute from "App/helpers/buildRoute";
+import Center from "App/components/Center/Center";
+import HookForm from "App/core/hook-form/HookForm";
+import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerKybForm from "Private/components/MarketMaker/MarketMakerKybForm";
 
-import { marketMakerKybValidationSchema } from "./validation/MarketMakerKybValidation";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
-import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 import { businessActions } from "Private/pages/Business/store";
-import buildRoute from "App/helpers/buildRoute";
-import routePaths from "Private/config/routePaths";
-import Center from "App/components/Center/Center";
-import { CircularProgress } from "@mui/material";
+import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import { marketMakerKybValidationSchema } from "./validation/MarketMakerKybValidation";
 
 export default function UpdateMarketMakerKyb({ title }) {
     const { marketMakerId, kybId } = useParams();
@@ -48,8 +47,6 @@ export default function UpdateMarketMakerKyb({ title }) {
         formState: { errors },
     } = methods;
 
-    console.log(errors);
-
     useEffect(() => {
         //Personal details
         setValue("name", kybDetailData?.name);
@@ -62,13 +59,17 @@ export default function UpdateMarketMakerKyb({ title }) {
 
         //Address
 
-        setValue("country", kybDetailData?.address?.country);
+        setValue("countryId", kybDetailData?.address?.countryId);
         setValue("postCode", kybDetailData?.address?.postCode);
         setValue("unit", kybDetailData?.address?.unit);
         setValue("street", kybDetailData?.address?.street);
         setValue("city", kybDetailData?.address?.city);
         setValue("state", kybDetailData?.address?.state);
         setValue("address", kybDetailData?.address?.address);
+
+        //Document
+
+        setValue("documents", kybDetailData?.documents || []);
     }, [kybDetail]);
 
     const onSubmitData = (data) => {

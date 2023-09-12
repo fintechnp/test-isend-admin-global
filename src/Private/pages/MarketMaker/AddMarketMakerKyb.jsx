@@ -1,18 +1,17 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
-import HookForm from "App/core/hook-form/HookForm";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
+import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerKybForm from "Private/components/MarketMaker/MarketMakerKybForm";
 
-import { marketMakerKybValidationSchema } from "./validation/MarketMakerKybValidation";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
-import buildRoute from "App/helpers/buildRoute";
-import routePaths from "Private/config/routePaths";
+import { marketMakerKybValidationSchema } from "./validation/MarketMakerKybValidation";
 
 export default function AddMarketMakerKyb({ title }) {
     const { marketMakerId } = useParams();
@@ -33,11 +32,12 @@ export default function AddMarketMakerKyb({ title }) {
     const { handleSubmit } = methods;
 
     const onSubmitData = (data) => {
-        const { country, postCode, unit, street, state, city, address, ...rest } = data;
+        const { countryId, postCode, unit, street, state, city, address, ...rest } = data;
+
         const dataToSend = {
             marketMakerId: marketMakerId,
             address: {
-                country,
+                countryId,
                 postCode,
                 unit,
                 street,

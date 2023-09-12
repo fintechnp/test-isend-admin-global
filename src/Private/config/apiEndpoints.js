@@ -96,6 +96,10 @@ const apiEndpoints = {
         //KYB
         addKyb: "/kyb",
         updateKyb: "/kyb/:kybId",
+
+        //KYC
+
+        addKyc: "/kyc",
     },
     creditLimit: {
         getAll: "/creditlimits",
