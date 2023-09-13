@@ -465,6 +465,16 @@ import {
     UpdateBusinessKybStatusReducer,
     businessSaga,
 } from "../Private/pages/Business/store";
+import {
+    getSingleTransactionReducer,
+    getSingleTransactionsReducer,
+} from "./features/b2b-transactions/singleTransactionReducer";
+import {
+    getBatchTransactionReducer,
+    getBatchTransactionsReducer,
+} from "./features/b2b-transactions/batchTransactionReducer";
+import singleTransactionSaga from "./features/b2b-transactions/singleTransactionSaga";
+import batchTransactionSaga from "./features/b2b-transactions/batchTransactionSaga";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -828,6 +838,12 @@ export const privateReducer = {
     update_business_kyc_status: UpdateBusinessKycStatusReducer,
     get_business_kyb_details: GetBusinessKybDetailsReducer,
     update_business_kyb_status: UpdateBusinessKybStatusReducer,
+
+    get_single_transaction_list: getSingleTransactionsReducer,
+    get_single_transaction_by_id: getSingleTransactionReducer,
+
+    get_batch_transaction_list: getBatchTransactionsReducer,
+    get_batch_transaction_by_id: getBatchTransactionReducer,
 };
 
 export const privateSaga = [
@@ -877,6 +893,8 @@ export const privateSaga = [
     creditLimitSaga(),
     BalanceRequestSaga(),
     businessSaga(),
+    singleTransactionSaga(),
+    batchTransactionSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

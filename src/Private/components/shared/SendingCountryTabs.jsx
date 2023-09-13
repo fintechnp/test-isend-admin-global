@@ -32,6 +32,7 @@ export default function SendingCountryTabs({ onChange, value }) {
             <Tabs value={activeIndex} onChange={handleChange} aria-label="sending countries tabs">
                 {sendingCountries.map((sc, i) => (
                     <Tab
+                        key={i}
                         label={sc.label}
                         {...a11yProps(i)}
                         sx={{

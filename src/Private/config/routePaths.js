@@ -48,6 +48,11 @@ const routePaths = {
 
         listBusiness: "/agent/business",
         viewBusiness: "/agent/business/:businessId/view",
+
+        listSingleTransactions: "/agent/single-transactions",
+        viewSingleTransaction: "/agent/single-transactions/:singleTransactionId",
+        listBatchTransactions: "/agent/batch-transactions",
+        viewBatchTransaction: "/agent/batch-transactions/:batchTransactionId",
     },
 };
 

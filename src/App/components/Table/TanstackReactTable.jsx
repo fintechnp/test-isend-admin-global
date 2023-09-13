@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useLayoutEffect } from "react";
+import React, { useMemo, memo, useLayoutEffect, Fragment } from "react";
 import PropTypes from "prop-types";
 import MuiTable from "@mui/material/Table";
 import { styled } from "@mui/material/styles";
@@ -25,7 +25,7 @@ const GlobalTable = styled(MuiTable)(({ theme }) => ({
             whiteSpace: "nowrap",
         },
         // add border radius to first and last child
-        "& .MuiTableCell-root:first-child": {
+        "& .MuiTableCell-root:first-of-type": {
             borderRadius: "8px 0 0 8px",
         },
         "& .MuiTableCell-root:last-child": {
@@ -115,7 +115,7 @@ const TanstackReactTable = ({
 
         return table.getRowModel().rows.map((row, index) => {
             return (
-                <>
+                <Fragment key={index}>
                     <TableRow key={row.id}>
                         {row.getVisibleCells().map((cell) => {
                             if (cell?.column?.id === "TABLE_ACTION_COLUMN_ID") {
@@ -167,7 +167,7 @@ const TanstackReactTable = ({
                             />
                         </TableCell>
                     </TableRow>
-                </>
+                </Fragment>
             );
         });
     };

@@ -113,7 +113,6 @@ const LanguageCountryForm = ({ update, onSubmit, buttonText, loading, initialVal
     });
     const handleSubmit = (data) => {
         onSubmit(data);
-        console.log(data);
     };
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>

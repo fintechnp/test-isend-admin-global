@@ -444,6 +444,18 @@ const PrivateLayout = () => {
                         text: "Business",
                         sub: false,
                     },
+                    {
+                        path: routePaths.agent.listSingleTransactions,
+                        key: "single-transactions",
+                        text: "Single Transactions",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listBatchTransactions,
+                        key: "batch-transactions",
+                        text: "Batch Transactions",
+                        sub: false,
+                    },
                 ],
             },
 

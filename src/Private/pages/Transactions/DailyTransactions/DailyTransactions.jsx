@@ -46,7 +46,7 @@ const DailyTransactions = (props) => {
             {
                 Header: "Id",
                 accessor: "tid",
-                maxWidth: 50,
+                maxWidth: 100,
                 Cell: (data) => (
                     <Box
                         sx={{

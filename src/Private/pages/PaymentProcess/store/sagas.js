@@ -1,3 +1,4 @@
+import * as qs from "qs";
 import { put, takeEvery, call, all } from "redux-saga/effects";
 import Api from "../../../../App/services/api";
 import actions from "./actions";
@@ -5,8 +6,9 @@ import actions from "./actions";
 const api = new Api();
 
 export const getTransactionDetails = takeEvery(actions.GET_TRANSACTION_DETAILS, function* (action) {
+
     try {
-        const res = yield call(api.get, `transaction/${action.id}`);
+        const res = yield call(api.get, `transaction/${action.id}?${qs.stringify(action?.query ?? {})}`);
         yield put({
             type: actions.GET_TRANSACTION_DETAILS_SUCCESS,
             response: res,
@@ -97,7 +99,10 @@ export const getAmlSuspicious = takeEvery(actions.GET_AML_SUSPICIOUS, function* 
 
 export const getDetailsAmlSuspicious = takeEvery(actions.GET_AML_SUSPICIOUS_DETAILS, function* (action) {
     try {
-        const res = yield call(api.get, `utilities/${action.transaction_id}/aml_suspicious_transaction`);
+        const res = yield call(
+            api.get,
+            `utilities/${action.transaction_id}/aml_suspicious_transaction?${qs.stringify(action?.query)}`,
+        );
         yield put({
             type: actions.GET_AML_SUSPICIOUS_DETAILS_SUCCESS,
             response: res,
