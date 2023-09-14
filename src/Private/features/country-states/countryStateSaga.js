@@ -23,7 +23,6 @@ export const getCountryStates = takeEvery(
         response: res,
       });
     } catch (error) {
-      console.log(error);
       yield put({
         type: actions.GET_COUNTRY_STATES_FAILED,
         error: error.data,

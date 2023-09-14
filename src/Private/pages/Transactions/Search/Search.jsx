@@ -18,6 +18,7 @@ import downloadActions from "../../Reports/store/actions";
 import Loading from "./../../../../App/components/Loading";
 import Table, { TablePagination } from "./../../../../App/components/Table";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "./../../../../App/helpers";
+import transaction from "App/config/transaction";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -86,8 +87,8 @@ function Search(props) {
             {
                 Header: "Id",
                 accessor: "tid",
-                maxWidth: 50,
-                Cell: (data) => (
+                maxWidth: 100,
+                Cell: ({ value, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -96,8 +97,8 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/transactions/details/${data?.value}`} style={{ textDecoration: "none" }}>
-                                {data.value ? data.value : "N/A"}
+                            <Link to={`/transactions/details/${value}`} style={{ textDecoration: "none" }}>
+                                {value ? value : "N/A"}
                             </Link>
                         </StyledName>
                     </Box>

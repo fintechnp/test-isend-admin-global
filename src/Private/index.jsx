@@ -465,6 +465,16 @@ import {
     UpdateBusinessKybStatusReducer,
     businessSaga,
 } from "../Private/pages/Business/store";
+import {
+    getSingleTransactionReducer,
+    getSingleTransactionsReducer,
+} from "./features/b2b-transactions/singleTransactionReducer";
+import {
+    getBatchTransactionReducer,
+    getBatchTransactionsReducer,
+} from "./features/b2b-transactions/batchTransactionReducer";
+import singleTransactionSaga from "./features/b2b-transactions/singleTransactionSaga";
+import batchTransactionSaga from "./features/b2b-transactions/batchTransactionSaga";
 
 //B2B Beneficiary List
 
@@ -837,6 +847,12 @@ export const privateReducer = {
     get_business_kyb_details: GetBusinessKybDetailsReducer,
     update_business_kyb_status: UpdateBusinessKybStatusReducer,
 
+    get_single_transaction_list: getSingleTransactionsReducer,
+    get_single_transaction_by_id: getSingleTransactionReducer,
+
+    get_batch_transaction_list: getBatchTransactionsReducer,
+    get_batch_transaction_by_id: getBatchTransactionReducer,
+
     //B2B Beneficiary List
     get_all_beneficiary: GetAllB2BBeneficiaryReducer,
     get_beneficiary_details: GetB2BBeneficiaryByIdReducer,
@@ -889,6 +905,8 @@ export const privateSaga = [
     creditLimitSaga(),
     BalanceRequestSaga(),
     businessSaga(),
+    singleTransactionSaga(),
+    batchTransactionSaga(),
     beneficiarySaga(),
 ];
 

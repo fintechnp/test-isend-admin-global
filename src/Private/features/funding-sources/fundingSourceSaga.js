@@ -15,7 +15,6 @@ export const getFundingSources = takeEvery(actions.GET_FUNDING_SOURCES, function
             response: res,
         });
     } catch (error) {
-        console.log(error);
         yield put({
             type: actions.GET_FUNDING_SOURCES_FAILED,
             error: error.data,

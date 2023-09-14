@@ -15,7 +15,6 @@ export const getBulkEmailGroups = takeEvery(actions.GET_BULK_EMAIL_GROUPS, funct
             response: res,
         });
     } catch (error) {
-        console.log(error);
         yield put({
             type: actions.GET_BULK_EMAIL_GROUPS_FAILED,
             error: error.data,

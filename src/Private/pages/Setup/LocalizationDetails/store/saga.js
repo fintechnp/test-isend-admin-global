@@ -55,7 +55,6 @@ export const addTranslationValue = takeEvery(actions.ADD_TRANSLATION_VALUE, func
 
 export const updateTranslationValue = takeEvery(actions.UPDATE_TRANSLATION_VALUE, function* (action) {
     try {
-        console.log("action.data", action);
         const res = yield call(api.put, `/languagetranslated/${action.id}`, action.data);
         yield put({
             type: actions.UPDATE_TRANSLATION_VALUE_SUCCESS,

@@ -13,7 +13,6 @@ export const getBanners = takeEvery(actions.GET_BANNERS, function* (action) {
       response: res,
     });
   } catch (error) {
-    console.log(error);
     yield put({
       type: actions.GET_BANNERS_FAILED,
       error: error.data,

@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import Autocomplete from "@mui/material/Autocomplete";
-import { Controller, useFormContext } from "react-hook-form";
+import { useEffect, useState, memo } from "react";
+import PropTypes from "prop-types";
+import * as qs from "qs";
 import TextField from "@mui/material/TextField";
-
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Autocomplete from "@mui/material/Autocomplete";
+import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
-import CircularProgress from "@mui/material/CircularProgress";
-import { FormControl, FormHelperText, InputLabel } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
+
 import Api from "App/services/api";
 
 import debounce from "App/helpers/debounce";
@@ -24,7 +27,7 @@ function FormSearchAutoComplete(props) {
     const {
         name,
         label,
-        size = "medium",
+        size = "small",
         fullWidth,
         labelKey,
         valueKey,
@@ -32,6 +35,7 @@ function FormSearchAutoComplete(props) {
         apiEndpoint,
         variant,
         required,
+        defaultQueryParams,
     } = props;
 
     useEffect(() => {
@@ -40,7 +44,12 @@ function FormSearchAutoComplete(props) {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const { data } = await api.get(`${apiEndpoint}?${paramkey}=${searchedText}`);
+                const { data } = await api.get(
+                    `${apiEndpoint}?${qs.stringify({
+                        ...defaultQueryParams,
+                        [paramkey]: searchedText,
+                    })}`,
+                );
                 setApiData(data);
                 setIsLoading(false);
             } catch (error) {
@@ -124,4 +133,18 @@ function FormSearchAutoComplete(props) {
     );
 }
 
-export default FormSearchAutoComplete;
+export default memo(FormSearchAutoComplete);
+
+FormSearchAutoComplete.propTypes = {
+    name: PropTypes.string,
+    label: PropTypes.string,
+    size: PropTypes.oneOf(["small", "medium", "large"]),
+    fullWidth: PropTypes.bool,
+    labelKey: PropTypes.string.isRequired,
+    valueKey: PropTypes.string.isRequired,
+    paramkey: PropTypes.string.isRequired,
+    apiEndpoint: PropTypes.string.isRequired,
+    variant: PropTypes.string,
+    required: PropTypes.bool,
+    defaultQueryParams: PropTypes.object,
+};

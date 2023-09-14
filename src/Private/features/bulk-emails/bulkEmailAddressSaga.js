@@ -104,7 +104,6 @@ export const deleteBulkEmailAddress = takeEvery(actions.DELETE_BULK_EMAIL_ADDRES
 });
 
 export const importBulkEmailAddress = takeEvery(actions.IMPORT_BULK_EMAIL_ADDRESS, function* (action) {
-    console.log("importing");
     try {
         const res = yield call(
             api.post,

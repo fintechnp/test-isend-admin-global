@@ -145,8 +145,6 @@ export default function MarketMaker({ title }) {
     );
 
     const handleChangePage = (e, newPage) => {
-        console.clear();
-        console.log({ e: e.target.value, newPage });
         const updatedFilter = {
             ...filterSchema,
             Page: ++newPage,

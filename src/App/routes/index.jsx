@@ -45,13 +45,13 @@ const MainRoutes = ({ setMode }) => {
     return (
         <Routes>
             <Route element={<PublicLayout />}>
-                {publicRoutes.map((route) => (
-                    <Route path={route.path} element={route.component} key={route.path} />
+                {publicRoutes.map((route, i) => (
+                    <Route key={i} path={route.path} element={route.component} />
                 ))}
             </Route>
             <Route element={<PrivatePage />}>
-                {privateRoutes.map((route) => (
-                    <Route key={route.path} path={route.path} element={route.component} />
+                {privateRoutes.map((route, i) => (
+                    <Route key={i} path={route.path} element={route.component} />
                 ))}
                 <Route path="*" element={<PageNotFound title="Page Not Found" />} />
             </Route>

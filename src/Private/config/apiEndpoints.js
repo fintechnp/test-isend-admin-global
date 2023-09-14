@@ -128,6 +128,12 @@ const apiEndpoints = {
         getKycDetails: "/kyc/:kycId",
         approveKyc: "kyc/:kycId/approve",
     },
+    b2bTransaction: {
+        getSingleTransactions: "/b2b/transaction",
+        getSingleTransactionById: "/b2b/transaction/:transactionId",
+        getBatchTransactions: "/b2b/batchtransaction",
+        getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
+    },
 
     document: {
         documentSetting: "/documentsetting",

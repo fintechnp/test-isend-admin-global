@@ -39,7 +39,6 @@ export default function UpdateStatusForm({ setOpen }) {
     const { loading, success } = useSelector((state) => state.update_credit_limit);
 
     const handleSubmit = (data) => {
-        console.log(data);
         try {
             dispatch(creditLimitActions.update_credit_limit(creditLimitId, data));
         } catch (error) {
