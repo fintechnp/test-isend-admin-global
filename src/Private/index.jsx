@@ -466,6 +466,14 @@ import {
     businessSaga,
 } from "../Private/pages/Business/store";
 
+//B2B Beneficiary List
+
+import {
+    GetAllB2BBeneficiaryReducer,
+    GetB2BBeneficiaryByIdReducer,
+    beneficiarySaga,
+} from "../Private/pages/Beneficiary/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -828,6 +836,10 @@ export const privateReducer = {
     update_business_kyc_status: UpdateBusinessKycStatusReducer,
     get_business_kyb_details: GetBusinessKybDetailsReducer,
     update_business_kyb_status: UpdateBusinessKybStatusReducer,
+
+    //B2B Beneficiary List
+    get_all_beneficiary: GetAllB2BBeneficiaryReducer,
+    get_beneficiary_details: GetB2BBeneficiaryByIdReducer,
 };
 
 export const privateSaga = [
@@ -877,6 +889,7 @@ export const privateSaga = [
     creditLimitSaga(),
     BalanceRequestSaga(),
     businessSaga(),
+    beneficiarySaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

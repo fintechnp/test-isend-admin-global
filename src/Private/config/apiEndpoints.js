@@ -133,6 +133,11 @@ const apiEndpoints = {
         documentSetting: "/documentsetting",
         addDocument: "/document/b2b",
     },
+
+    b2bBeneficiary: {
+        getAll: "/beneficiary/b2b",
+        getById: "/beneficiary/b2b/:beneficiaryId",
+    },
 };
 
 export default apiEndpoints;

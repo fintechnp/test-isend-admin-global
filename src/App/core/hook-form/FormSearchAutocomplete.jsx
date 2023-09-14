@@ -7,7 +7,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 import Api from "App/services/api";
-import { set } from "date-fns";
+
+import debounce from "App/helpers/debounce";
 // import http from "services/httpService";
 // import { useQuery } from "@tanstack/react-query";
 // import FormInputWrapper from "components/input/FormInputWrapper";
@@ -68,8 +69,7 @@ function FormSearchAutoComplete(props) {
     useEffect(() => {
         const selected = options?.find((o) => o.value === value);
         setSelected(selected ?? null);
-        
-    }, [options, value]);
+    }, [value]);
 
     return (
         <Controller
@@ -86,7 +86,7 @@ function FormSearchAutoComplete(props) {
                         value={selected}
                         options={options ?? []}
                         onChange={(_e, option) => {
-                            if (option === null) setValue(name, undefined);
+                            if (option === null) setValue(name, null);
                             else setValue(name, option.value);
                             clearErrors(name);
                         }}
@@ -106,7 +106,7 @@ function FormSearchAutoComplete(props) {
                                 size={size}
                                 error={!!errors[name]?.message}
                                 onChange={(e) => {
-                                    setSearchedText(e.target.value);
+                                    debounce(setSearchedText(e.target.value), 500);
                                 }}
                             />
                         )}

@@ -48,6 +48,9 @@ const routePaths = {
 
         listBusiness: "/agent/business",
         viewBusiness: "/agent/business/:businessId/view",
+
+        getAllB2bBeneficiary: "/b2b/beneficiary",
+        getByIdB2bBeneficiary: "/b2b/beneficiary/:beneficiaryId",
     },
 };
 
