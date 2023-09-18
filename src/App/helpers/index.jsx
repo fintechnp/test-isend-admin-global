@@ -15,6 +15,19 @@ export const CountryName = (iso3) => {
         return "N/A";
     }
 };
+export const CountryNameById = (id) => {
+    const country = JSON.parse(localStorage.getItem("country"));
+    if (id && country) {
+        const countryData = country?.filter((ct) => ct.country_id === id);
+        if (countryData.length >= 0) {
+            return countryData[0]?.country;
+        } else {
+            return "N/A";
+        }
+    } else {
+        return "N/A";
+    }
+};
 
 export const CountryNameByIso2Code = (iso2) => {
     const country = JSON.parse(localStorage.getItem("country"));

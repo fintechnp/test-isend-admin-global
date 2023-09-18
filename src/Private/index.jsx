@@ -476,6 +476,14 @@ import {
 import singleTransactionSaga from "./features/b2b-transactions/singleTransactionSaga";
 import batchTransactionSaga from "./features/b2b-transactions/batchTransactionSaga";
 
+//B2B Beneficiary List
+
+import {
+    GetAllB2BBeneficiaryReducer,
+    GetB2BBeneficiaryByIdReducer,
+    beneficiarySaga,
+} from "../Private/pages/Beneficiary/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -844,6 +852,10 @@ export const privateReducer = {
 
     get_batch_transaction_list: getBatchTransactionsReducer,
     get_batch_transaction_by_id: getBatchTransactionReducer,
+
+    //B2B Beneficiary List
+    get_all_beneficiary: GetAllB2BBeneficiaryReducer,
+    get_beneficiary_details: GetB2BBeneficiaryByIdReducer,
 };
 
 export const privateSaga = [
@@ -895,6 +907,7 @@ export const privateSaga = [
     businessSaga(),
     singleTransactionSaga(),
     batchTransactionSaga(),
+    beneficiarySaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

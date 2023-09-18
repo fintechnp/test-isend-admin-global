@@ -8,43 +8,40 @@ import React, { useEffect, useMemo, useState } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
+import { ReferenceName } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
 import routePaths from "Private/config/routePaths";
-import { convertDate } from "App/utils/convertDate";
 import { TablePagination } from "App/components/Table";
 import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
-import FilterForm from "Private/components/BalanceRequest/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { BalanceRequestActions as actions } from "../BalanceRequest/store";
+import { beneficiaryActions as actions } from "./store";
+import BeneficiaryFilterForm from "Private/components/Beneficiary/BeneficiaryFilterForm";
+import { localStorageGet } from "App/helpers/localStorage";
 
 const initialState = {
-    PageNumber: 1,
-    PageSize: 10,
+    page_number: 1,
+    page_size: 10,
 };
-
-export default function ListBalanceRequest({ title }) {
+export default function ListBeneficiary() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const reference = localStorageGet("reference");
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: balanceRequestData, loading } = useSelector((state) => state.get_all_balance_request);
+    const { response, loading } = useSelector((state) => state.get_all_beneficiary);
 
     const sortByOptions =
-        balanceRequestData?.data?.length > 0 &&
-        Object.keys(balanceRequestData?.data[0])
+        response?.data?.length > 0 &&
+        Object.keys(response?.data[0])
             ?.map((item) => {
                 return { value: item, label: item };
             })
             .filter((item) => item.label !== "f_serial_no");
-
-    useEffect(() => {
-        dispatch(actions.get_all_balance_request(filterSchema));
-    }, [filterSchema]);
 
     const columns = useMemo(
         () => [
@@ -52,63 +49,59 @@ export default function ListBalanceRequest({ title }) {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
-
             {
                 header: "Name",
                 accessorKey: "name",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-
-            {
-                header: "Deposited Amount",
-                accessorKey: "depositedAmount",
-            },
-            {
-                header: "Depositor Name",
-                accessorKey: "depositorName",
-            },
-            {
-                header: "Depositor Method Name",
-                accessorKey: "depositoryMethodName",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-
-            {
-                header: "Related To",
-                accessorKey: "relatedTo",
-            },
-            {
-                header: "Deposit Date",
-                accessorKey: "depositDate",
-                cell: ({ getValue }) => <Typography>{getValue() ? convertDate(getValue()) : "N/A"}</Typography>,
-            },
-
-            {
-                header: "Remarks",
-                accessorKey: "remarks",
-                cell: ({ getValue }) => (
-                    <Typography
-                        sx={{
-                            maxWidth: 250,
-                        }}
-                    >
-                        {getValue() ? getValue() : "N/A"}
+                cell: ({ getValue, row }) => (
+                    <Typography>
+                        {row?.original?.beneficiary_type_id === 1
+                            ? `${row?.original?.first_name} ${row?.original?.last_name}`
+                            : getValue()}
                     </Typography>
                 ),
             },
             {
-                header: "Status",
-                accessorKey: "statusName",
+                header: "Type",
+                accessorKey: "beneficiary_type",
+            },
+            {
+                header: "Related To",
+                accessorKey: "related_to",
+            },
+            {
+                header: "Country of Registration",
+                accessorKey: "registered_country",
+                cell: ({ getValue, row }) => (
+                    <Typography>
+                        {row?.original?.beneficiary_type_id === 1 ? row?.original?.identity_issue_country : getValue()}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Currency",
+                accessorKey: "currency",
+            },
+            {
+                header: "Email",
+                accessorKey: "email",
+            },
+
+            {
+                header: "Payment Type",
+                accessorKey: "payment_type_id",
+                cell: ({ getValue }) => <Typography>{ReferenceName(1, getValue())}</Typography>,
             },
 
             {
                 header: "Actions",
-                accessorKey: "show",
                 cell: ({ row }) => (
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewBalanceRequest, row?.original?.id));
+                                navigate(
+                                    buildRoute(routePaths.agent.viewB2bBeneficiary, row?.original?.beneficiary_id),
+                                );
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
@@ -126,11 +119,10 @@ export default function ListBalanceRequest({ title }) {
         ],
         [],
     );
-
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
             ...filterSchema,
-            Page: ++newPage,
+            page_number: ++newPage,
         };
         setFilterSchema(updatedFilter);
     };
@@ -139,33 +131,39 @@ export default function ListBalanceRequest({ title }) {
         const pageSize = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-            PageSize: pageSize,
+            page_size: pageSize,
         };
         setFilterSchema(updatedFilterSchema);
     };
+
+    useEffect(() => {
+        dispatch(actions.get_all_beneficiary(filterSchema));
+    }, [filterSchema]);
+
     return (
-        <PageContent title={title || "List Balance Request"} documentTitle="List Balance Request">
-            <FilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} loading={loading} />
+        <PageContent title="B2B Beneficiary List">
             {loading && (
                 <Grid item xs={12}>
                     <Loading loading={loading} />
                 </Grid>
             )}
-            {!loading && balanceRequestData?.data && balanceRequestData?.data?.length === 0 ? (
+
+            <BeneficiaryFilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} />
+            {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
-                    <NoResults text="No Balance Request Found" />
+                    <NoResults text="No Beneficiary Found" />
                 </Grid>
             ) : (
                 <>
                     <Spacer />
                     <TanstackReactTable
                         columns={columns}
-                        title="Balance Request"
-                        data={balanceRequestData?.data ?? []}
+                        title="Beneficiary"
+                        data={response?.data ?? []}
                         loading={loading}
                         renderPagination={() => (
                             <TablePagination
-                                paginationData={balanceRequestData?.pagination}
+                                paginationData={response?.pagination}
                                 handleChangePage={handleChangePage}
                                 handleChangeRowsPerPage={handleChangeRowsPerPage}
                             />

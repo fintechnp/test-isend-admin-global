@@ -19,7 +19,11 @@ export const marketMakerValidationSchema = yup.object().shape({
         .min(1, "Allowed countries must contain at least one number")
         .of(yup.number().typeError("Must be a number"))
         .required("Array of numbers is required"),
-    country: yup.string().required(),
+    countryId: yup
+        .number()
+        .transform((value) => (Number.isNaN(value) ? null : value))
+        .nullable()
+        .required("Required"),
     postCode: yup.string().required().max(15, "Post code must be less than 15 characters"),
     unit: yup.string().required(),
     state: yup.string().required(),

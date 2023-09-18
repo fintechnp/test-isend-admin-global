@@ -43,7 +43,10 @@ export const addCreditLimit = takeEvery(actions.ADD_CREDIT_LIMIT, function* (act
             type: actions.ADD_CREDIT_LIMIT_SUCCESS,
             response: res,
         });
-        yield put({ type: "SET_TOAST_DATA", response: "Added Credit Limit" });
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
         yield put({
             type: actions.ADD_CREDIT_LIMIT_RESET,
         });

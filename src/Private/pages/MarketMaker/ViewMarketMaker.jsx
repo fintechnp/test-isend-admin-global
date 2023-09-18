@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { CountryName } from "App/helpers";
+import { CountryNameById } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
@@ -79,6 +79,12 @@ export default function ViewMarketMaker() {
                                 <RenderField label="Registration No" value={marketMakerDetail?.registrationNo} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
+                                <RenderField
+                                    label="Registration Country"
+                                    value={CountryNameById(marketMakerDetail?.registeredCountryId)}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <RenderField label="Contact No" value={marketMakerDetail?.contactNo} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -108,7 +114,10 @@ export default function ViewMarketMaker() {
                         </Grid>
                         <Grid container spacing={1} mt={2}>
                             <Grid item xs={12} sm={6}>
-                                <RenderField label="Country" value={CountryName(marketMakerDetail?.address?.country)} />
+                                <RenderField
+                                    label="Country"
+                                    value={CountryNameById(marketMakerDetail?.address?.countryId)}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <RenderField label="Post Code" value={marketMakerDetail?.address?.postCode} />

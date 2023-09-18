@@ -27,13 +27,13 @@ export default function MarketMakerForm({ isAddMode = true }) {
 
     const { loading, success } = useSelector((state) => state.add_market_maker);
 
-    const { loading: updating } = useSelector((state) => state.update_market_maker);
+    const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_market_maker);
 
     useEffect(() => {
-        if (success) {
+        if (success || updateSuccess) {
             navigate(routePaths.agent.marketMaker);
         }
-    }, [success]);
+    }, [success, updateSuccess]);
 
     const defaultCurrencyData = countries?.find((item) => item?.country_id === registeredCountry)?.currency;
 
@@ -56,12 +56,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
             value: c.country_id,
         };
     });
-    const addressCountyOptions = countries?.map((c) => {
-        return {
-            label: ucwords(c.country),
-            value: c.iso3,
-        };
-    });
+
     const currencyOptions = countries?.map((c) => {
         return {
             label: ucwords(c.currency_name),
@@ -156,7 +151,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 />
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormSelect name="country" label="Address Country" options={addressCountyOptions ?? []} />
+                        <FormSelect name="countryId" label="Address Country" options={registeredCountyOptions ?? []} />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="postCode" label="PostCode" />

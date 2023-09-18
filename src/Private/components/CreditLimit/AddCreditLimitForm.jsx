@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import routePaths from "Private/config/routePaths";
 import FormRadio from "App/core/hook-form/FormRadio";
-import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
+import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
 import { MarketMakerActions } from "Private/pages/MarketMaker/store";
+import apiEndpoints from "Private/config/apiEndpoints";
 
 const relatedToOptions = [
     {
@@ -26,15 +27,11 @@ const relatedToOptions = [
 export default function AddCreditLimitForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { watch, reset } = useFormContext();
+    const { watch, reset, setValue } = useFormContext();
 
     const relatedTo = watch("relatedTo");
 
     const { loading, success } = useSelector((state) => state.add_credit_limit);
-
-    const { response: marketMakerData, loading: marketMakerLoading } = useSelector(
-        (state) => state.get_all_market_maker,
-    );
 
     useEffect(() => {
         if (success) {
@@ -43,24 +40,17 @@ export default function AddCreditLimitForm() {
     }, [success]);
 
     useEffect(() => {
+        setValue("relatedTo", "business");
+    }, []);
+
+    useEffect(() => {
         dispatch(MarketMakerActions.get_all_market_maker());
     }, []);
 
-    const marketMakerOptions = marketMakerData?.data?.map((item) => {
-        return {
-            label: item?.name,
-            value: item?.marketMakerId,
-        };
-    });
     return (
         <Grid xs={12} container spacing={2}>
             <Grid item xs={12}>
-                <FormRadio
-                    name="relatedTo"
-                    label="Related To"
-                    options={relatedToOptions ?? []}
-                    defaultValue="business"
-                />
+                <FormRadio name="relatedTo" label="Related To" options={relatedToOptions ?? []} />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -70,11 +60,35 @@ export default function AddCreditLimitForm() {
                 <FormTextField name="remarks" label="Remarks" />
             </Grid>
             <Grid item xs={12} md={6}>
-                {relatedTo === "business" ? (
-                    <FormSelect name="relatedId" label="Business" options={[]} />
-                ) : relatedTo === "marketMaker" ? (
-                    <FormSelect name="relatedId" label="Market Maker" options={marketMakerOptions ?? []} />
-                ) : null}
+                {(() => {
+                    if (relatedTo === "business") {
+                        return (
+                            <Grid item xs={12} sm={6}>
+                                <FormSearchAutoComplete
+                                    name="relatedId"
+                                    label="Business Id"
+                                    apiEndpoint={apiEndpoints.business.getAll}
+                                    paramkey="BusinessName"
+                                    valueKey="businessId"
+                                    labelKey="name"
+                                />
+                            </Grid>
+                        );
+                    } else if (relatedTo === "marketMaker") {
+                        return (
+                            <Grid item xs={12} sm={6}>
+                                <FormSearchAutoComplete
+                                    name="relatedId"
+                                    label="Market Maker Id"
+                                    apiEndpoint={apiEndpoints.marketMaker.getAll}
+                                    paramkey="Name"
+                                    valueKey="marketMakerId"
+                                    labelKey="name"
+                                />
+                            </Grid>
+                        );
+                    }
+                })()}
             </Grid>
             <Grid
                 container

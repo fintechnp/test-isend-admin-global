@@ -44,6 +44,7 @@ export const updateBalanceRequestStatus = takeEvery(actions.UPDATE_BALANCE_REQUE
             response: res,
         });
         yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.UPDATE_BALANCE_REQUEST_STATUS_RESET });
     } catch (error) {
         yield put({
             type: actions.UPDATE_BALANCE_REQUEST_STATUS_FAILED,

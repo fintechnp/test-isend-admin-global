@@ -28,9 +28,16 @@ export default function BusinessKybListing() {
         (state) => state.get_business_kyb_details,
     );
 
+    const { success } = useSelector((state) => state.update_business_kyb_status);
+
     const handleClose = () => {
         setOpen(false);
     };
+    useEffect(() => {
+        if (success) {
+            setOpen(false);
+        }
+    }, [success]);
 
     const columns = useMemo(
         () => [

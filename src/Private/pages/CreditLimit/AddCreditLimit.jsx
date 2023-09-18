@@ -26,7 +26,14 @@ export default function AddCreditLimit({ title }) {
     const { handleSubmit } = methods;
 
     const onSubmitData = (data) => {
-        dispatch(creditLimitActions.add_credit_limit(data));
+        const { creditLimit, relatedId, ...rest } = data;
+
+        const formattedData = {
+            creditLimit: Number(creditLimit),
+            relatedId: Number(relatedId),
+            ...rest,
+        };
+        dispatch(creditLimitActions.add_credit_limit(formattedData));
     };
     return (
         <PageContent title={title} documentTitle="Add Credit Limit">

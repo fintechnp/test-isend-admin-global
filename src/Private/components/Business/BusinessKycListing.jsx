@@ -28,6 +28,14 @@ export default function BusinessKycListing() {
         (state) => state.get_business_kyc_details,
     );
 
+    const { success } = useSelector((state) => state.update_business_kyc_status);
+
+    useEffect(() => {
+        if (success) {
+            setOpen(false);
+        }
+    }, [success]);
+
     const columns = useMemo(
         () => [
             {

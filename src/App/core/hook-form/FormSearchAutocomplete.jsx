@@ -11,6 +11,11 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import Api from "App/services/api";
 
+import debounce from "App/helpers/debounce";
+// import http from "services/httpService";
+// import { useQuery } from "@tanstack/react-query";
+// import FormInputWrapper from "components/input/FormInputWrapper";
+
 const api = new Api();
 
 function FormSearchAutoComplete(props) {
@@ -53,7 +58,7 @@ function FormSearchAutoComplete(props) {
         };
 
         fetchData();
-    }, [searchedText]);
+    }, [searchedText, apiEndpoint]);
 
     const options = apiData?.map((v) => ({
         label: v[labelKey],
@@ -73,13 +78,12 @@ function FormSearchAutoComplete(props) {
     useEffect(() => {
         const selected = options?.find((o) => o.value === value);
         setSelected(selected ?? null);
-    }, [options, value]);
+    }, [value]);
 
     return (
         <Controller
             name={name}
             control={control}
-            defaultValue=""
             render={() => (
                 <FormControl fullWidth variant={variant} error={!!errors[name]} required={required}>
                     <InputLabel>{searchedText === "" && !selected ? label : ""}</InputLabel>
@@ -90,7 +94,7 @@ function FormSearchAutoComplete(props) {
                         value={selected}
                         options={options ?? []}
                         onChange={(_e, option) => {
-                            if (option === null) setValue(name, undefined);
+                            if (option === null) setValue(name, null);
                             else setValue(name, option.value);
                             clearErrors(name);
                         }}
@@ -110,12 +114,12 @@ function FormSearchAutoComplete(props) {
                                 size={size}
                                 error={!!errors[name]?.message}
                                 onChange={(e) => {
-                                    setSearchedText(e.target.value);
+                                    debounce(() => setSearchedText(e.target.value), 500);
                                 }}
                             />
                         )}
-                        // popupIcon={<ChevronDownIcon />}
                         loading={isLoading}
+                        disabled={isLoading}
                         isOptionEqualToValue={(option, value) => {
                             if (value === undefined) return false;
                             return option.value === value.value;

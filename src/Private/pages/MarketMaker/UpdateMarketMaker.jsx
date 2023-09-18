@@ -46,7 +46,7 @@ export default function UpdateMarketMaker({ title }) {
         setValue("allowedCountryIds", allowedCountries);
 
         //address
-        setValue("country", marketMakerDetail?.address?.country);
+        setValue("countryId", marketMakerDetail?.address?.countryId);
         setValue("postCode", marketMakerDetail?.address?.postCode);
         setValue("unit", marketMakerDetail?.address?.unit);
         setValue("street", marketMakerDetail?.address?.street);
@@ -64,7 +64,7 @@ export default function UpdateMarketMaker({ title }) {
 
     const onSubmitData = (data) => {
         const {
-            country,
+            countryId,
             postCode,
             unit,
             street,
@@ -81,7 +81,7 @@ export default function UpdateMarketMaker({ title }) {
         const formattedDataToSend = {
             ...rest,
             address: {
-                country,
+                countryId,
                 postCode,
                 unit,
                 street,

@@ -456,6 +456,12 @@ const PrivateLayout = () => {
                         text: "Batch Transactions",
                         sub: false,
                     },
+                    {
+                        path: routePaths.agent.getAllB2bBeneficiary,
+                        key: "beneficiary",
+                        text: "Beneficiary",
+                        sub: false,
+                    },
                 ],
             },
 
