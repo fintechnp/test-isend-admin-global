@@ -13,6 +13,7 @@ import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/C
 import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/UpdateStatusForm";
 
 import { BalanceRequestActions } from "./store";
+import { Box, Typography } from "@mui/material";
 
 export default function ViewBalanceRequest({ title }) {
     const dispatch = useDispatch();
@@ -114,6 +115,49 @@ export default function ViewBalanceRequest({ title }) {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Created At" value={convertDate(response?.data?.createdAt)} />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TitleWrapper>
+                                <Title>Documents</Title>
+                                <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                            </TitleWrapper>
+                        </Grid>
+
+                        <Grid xs={12} md={6} mt={2}>
+                            <a
+                                href={response?.data?.documents?.documentLink}
+                                target="_blank"
+                                style={{
+                                    cursor: "pointer",
+                                }}
+                            >
+                                {response?.data?.documents?.fileType?.includes("image") ? (
+                                    <>
+                                        <img
+                                            src={response?.data?.documents?.documentLink}
+                                            alt="voucher"
+                                            style={{
+                                                width: "100%",
+                                                height: "200px",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    </>
+                                ) : (
+                                    <Box
+                                        sx={{
+                                            bgcolor: "white",
+                                            border: "1px solid #ccc",
+                                            borderRadius: "5px",
+                                            padding: "15px",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        <Typography>Balance Request Voucher</Typography>
+                                    </Box>
+                                )}
+                            </a>
                         </Grid>
                     </Grid>
                 )}

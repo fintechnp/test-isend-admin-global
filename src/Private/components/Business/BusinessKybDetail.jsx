@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -156,6 +157,53 @@ export default function BusinessKybDetail({ data, loading, relatedTo }) {
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Unit" value={data?.address?.unit} />
                         </Grid>
+                        <Grid item xs={12}>
+                            <TitleWrapper>
+                                <Title>Documents</Title>
+                                <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                            </TitleWrapper>
+                        </Grid>
+
+                        {data?.documents?.map((item) => {
+                            return (
+                                <Grid xs={12} md={6} mt={2}>
+                                    <a
+                                        href={item?.documentLink}
+                                        target="_blank"
+                                        style={{
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        {item?.fileType?.includes("image") ? (
+                                            <>
+                                                <Typography my={2}>{item?.documentName}</Typography>
+                                                <img
+                                                    src={item?.documentLink}
+                                                    alt={item?.documentName}
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "200px",
+                                                        objectFit: "cover",
+                                                    }}
+                                                />
+                                            </>
+                                        ) : (
+                                            <Box
+                                                sx={{
+                                                    bgcolor: "white",
+                                                    border: "1px solid #ccc",
+                                                    borderRadius: "5px",
+                                                    padding: "15px",
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                <Typography>{item?.documentName}</Typography>
+                                            </Box>
+                                        )}
+                                    </a>
+                                </Grid>
+                            );
+                        })}
                     </Grid>
                 </>
             )}

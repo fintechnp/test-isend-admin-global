@@ -16,6 +16,21 @@ import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 import FormMultiSelect from "App/core/hook-form/FormMultiSelect";
 
+const registeredCountyOptions = [
+    {
+        value: 155,
+        label: "AUSTRALIA",
+    },
+    {
+        label: "Singapore",
+        value: 104,
+    },
+    {
+        label: "United States of America",
+        value: 55,
+    },
+];
+
 export default function MarketMakerForm({ isAddMode = true }) {
     const navigate = useNavigate();
     const countries = localStorageGet("country");
@@ -50,7 +65,13 @@ export default function MarketMakerForm({ isAddMode = true }) {
             };
         });
 
-    const registeredCountyOptions = countries?.map((c) => {
+    // const registeredCountyOptions = countries?.map((c) => {
+    //     return {
+    //         label: ucwords(c.country),
+    //         value: c.country_id,
+    //     };
+    // });
+    const allowedCountries = countries?.map((c) => {
         return {
             label: ucwords(c.country),
             value: c.country_id,
@@ -127,7 +148,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                             name="allowedCountryIds"
                             label="Allowed Countries"
                             multiple
-                            options={registeredCountyOptions ?? []}
+                            options={allowedCountries ?? []}
                         />
                     </Grid>
                 </Grid>
@@ -151,7 +172,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 />
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormSelect name="countryId" label="Address Country" options={registeredCountyOptions ?? []} />
+                        <FormSelect name="countryId" label="Address Country" options={allowedCountries ?? []} />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="postCode" label="PostCode" />
