@@ -49,14 +49,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const FilterForm = ({
-    handleSubmit,
-    partner_sending,
-    partner_payout,
-    loading,
-    handleClose,
-    handlePayoutPartner,
-}) => {
+const FilterForm = ({ handleSubmit, partner_sending, partner_payout, loading, handleClose, handlePayoutPartner }) => {
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
     const [id, setId] = React.useState("transaction_id");
@@ -89,10 +82,7 @@ const FilterForm = ({
                                 onChange={handleId}
                                 component={SelectField}
                             >
-                                <option
-                                    value="transaction_id"
-                                    name="Transaction Id"
-                                >
+                                <option value="transaction_id" name="Transaction Id">
                                     Transaction Id
                                 </option>
                                 <option value="pin_number" name="Pin Number">
@@ -104,13 +94,7 @@ const FilterForm = ({
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name={id}
-                                label={name}
-                                type="number"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name={id} label={name} type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -126,10 +110,7 @@ const FilterForm = ({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -148,10 +129,7 @@ const FilterForm = ({
                                 </option>
                                 {partner_sending &&
                                     partner_sending.map((data, index) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -164,20 +142,14 @@ const FilterForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                disabled={
-                                    partner_payout &&
-                                    (partner_payout.length > 0 ? false : true)
-                                }
+                                disabled={partner_payout && (partner_payout.length > 0 ? false : true)}
                             >
                                 <option value="" disabled>
                                     Select Payout Agent
                                 </option>
                                 {partner_payout &&
                                     partner_payout.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -195,15 +167,9 @@ const FilterForm = ({
                                 <option value="">All</option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 1)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -219,9 +185,7 @@ const FilterForm = ({
                                 onChange={(e) => setMinDate(e.target.value)}
                                 inputProps={{
                                     max: maxDate
-                                        ? new Date(maxDate)
-                                              .toISOString()
-                                              .slice(0, 10)
+                                        ? new Date(maxDate).toISOString().slice(0, 10)
                                         : new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -235,9 +199,7 @@ const FilterForm = ({
                                 component={TextField}
                                 onChange={(e) => setMaxDate(e.target.value)}
                                 inputProps={{
-                                    min: new Date(minDate)
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: new Date(minDate).toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -251,21 +213,12 @@ const FilterForm = ({
                                 alignItems="center"
                             >
                                 <Grid item>
-                                    <CancelButton
-                                        size="small"
-                                        variant="contained"
-                                        onClick={handleClose}
-                                    >
+                                    <CancelButton size="small" variant="contained" onClick={handleClose}>
                                         Cancel
                                     </CancelButton>
                                 </Grid>
                                 <Grid item>
-                                    <CreateButton
-                                        size="small"
-                                        variant="outlined"
-                                        loading={loading}
-                                        type="submit"
-                                    >
+                                    <CreateButton size="small" variant="outlined" loading={loading} type="submit">
                                         Filter
                                     </CreateButton>
                                 </Grid>

@@ -17,6 +17,7 @@ import { CountryNameById, CurrencyName } from "App/helpers";
 import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm from "Private/components/MarketMaker/MarketMakerFilterForm";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import routePaths from "Private/config/routePaths";
@@ -174,6 +175,8 @@ export default function MarketMaker({ title }) {
                 </Button>
             }
         >
+            <FilterForm loading={m_maker_loading} setFilterSchema={setFilterSchema} />
+
             {m_maker_loading && (
                 <Grid item xs={12}>
                     <Loading loading={m_maker_loading} />

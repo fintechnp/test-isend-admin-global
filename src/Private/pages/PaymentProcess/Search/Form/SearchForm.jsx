@@ -88,9 +88,7 @@ function SearchForm({ handleSubmit }) {
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <ContentPasteSearchIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
+                        <ContentPasteSearchIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                         <Title> Search Transaction </Title>
                     </Box>
                 </TitleWrapper>
@@ -102,9 +100,7 @@ function SearchForm({ handleSubmit }) {
                             <Field
                                 name={id}
                                 placeholder={name}
-                                type={
-                                    id === "transaction_id" ? "number" : "text"
-                                }
+                                type="text"
                                 small={12}
                                 component={TextField}
                                 validate={Validator.emptyValidator}
@@ -119,10 +115,7 @@ function SearchForm({ handleSubmit }) {
                                 onChange={handleId}
                                 component={SelectField}
                             >
-                                <option
-                                    value="transaction_id"
-                                    name="Transaction Id"
-                                >
+                                <option value="transaction_id" name="Transaction Id">
                                     Transaction Id
                                 </option>
                                 <option value="pin_number" name="Pin Number">
@@ -131,18 +124,9 @@ function SearchForm({ handleSubmit }) {
                             </Field>
                         </FieldWrapper>
                         <Grid item xs={12}>
-                            <ButtonWrapper
-                                container
-                                direction="row"
-                                justifyContent="flex-end"
-                                alignItems="center"
-                            >
+                            <ButtonWrapper container direction="row" justifyContent="flex-end" alignItems="center">
                                 <Grid item>
-                                    <SearchButton
-                                        size="small"
-                                        variant="outlined"
-                                        type="submit"
-                                    >
+                                    <SearchButton size="small" variant="outlined" type="submit">
                                         Search
                                     </SearchButton>
                                 </Grid>
