@@ -55,7 +55,7 @@ const routePaths = {
         viewBatchTransaction: "/agent/batch-transactions/:batchTransactionId",
 
         getAllB2bBeneficiary: "/b2b/beneficiary",
-        getByIdB2bBeneficiary: "/b2b/beneficiary/:beneficiaryId",
+        viewB2bBeneficiary: "/b2b/beneficiary/:beneficiaryId/view",
     },
 };
 

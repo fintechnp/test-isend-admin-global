@@ -42,7 +42,7 @@ export default function ViewBalanceRequest({ title }) {
             <PageContent
                 title={title || "View Balance Request"}
                 topRightEndContent={
-                    response?.data?.status !== 4 && (
+                    response?.data?.status !== 2 && (
                         <Button
                             onClick={() => {
                                 setOpen(true);

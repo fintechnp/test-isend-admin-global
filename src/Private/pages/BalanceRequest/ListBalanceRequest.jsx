@@ -96,6 +96,10 @@ export default function ListBalanceRequest({ title }) {
                     </Typography>
                 ),
             },
+            {
+                header: "Status",
+                accessorKey: "statusName",
+            },
 
             {
                 header: "Actions",
@@ -149,7 +153,7 @@ export default function ListBalanceRequest({ title }) {
             )}
             {!loading && balanceRequestData?.data && balanceRequestData?.data?.length === 0 ? (
                 <Grid item xs={12}>
-                    <NoResults text="No Credit Limit Found" />
+                    <NoResults text="No Balance Request Found" />
                 </Grid>
             ) : (
                 <>

@@ -62,6 +62,7 @@ export const updateMarketMaker = takeEvery(actions.UPDATE_MARKET_MAKER, function
             response: res,
         });
         yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.UPDATE_MARKET_MAKER_RESET });
     } catch (error) {
         yield put({
             type: actions.UPDATE_MARKET_MAKER_FAILED,

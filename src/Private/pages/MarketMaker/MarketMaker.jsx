@@ -13,7 +13,7 @@ import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import Spacer from "App/components/Spacer/Spacer";
 import { TablePagination } from "App/components/Table";
-import { CountryName, CurrencyName } from "App/helpers";
+import { CountryNameById, CurrencyName } from "App/helpers";
 import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
@@ -63,10 +63,10 @@ export default function MarketMaker({ title }) {
                 accessorKey: "registrationNo",
             },
             {
-                header: "country",
-                accessorKey: "address.country",
-                cell: ({ row }) => {
-                    return <Typography>{CountryName(row?.original?.address?.country)}</Typography>;
+                header: "Registered country",
+                accessorKey: "registeredCountryId",
+                cell: ({ getValue }) => {
+                    return <Typography>{CountryNameById(getValue())}</Typography>;
                 },
             },
 

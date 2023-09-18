@@ -58,7 +58,7 @@ function FormSearchAutoComplete(props) {
         };
 
         fetchData();
-    }, [searchedText]);
+    }, [searchedText, apiEndpoint]);
 
     const options = apiData?.map((v) => ({
         label: v[labelKey],
@@ -84,7 +84,6 @@ function FormSearchAutoComplete(props) {
         <Controller
             name={name}
             control={control}
-            defaultValue=""
             render={() => (
                 <FormControl fullWidth variant={variant} error={!!errors[name]} required={required}>
                     <InputLabel>{searchedText === "" && !selected ? label : ""}</InputLabel>
@@ -115,12 +114,12 @@ function FormSearchAutoComplete(props) {
                                 size={size}
                                 error={!!errors[name]?.message}
                                 onChange={(e) => {
-                                    debounce(setSearchedText(e.target.value), 500);
+                                    debounce(() => setSearchedText(e.target.value), 500);
                                 }}
                             />
                         )}
-                        // popupIcon={<ChevronDownIcon />}
                         loading={isLoading}
+                        disabled={isLoading}
                         isOptionEqualToValue={(option, value) => {
                             if (value === undefined) return false;
                             return option.value === value.value;

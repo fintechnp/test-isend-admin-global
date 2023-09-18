@@ -42,7 +42,7 @@ export default function ViewCreditLimit({ title }) {
             <PageContent
                 title={title || "Credit Limit Details"}
                 topRightEndContent={
-                    response?.data?.status !== 4 && (
+                    response?.data?.statusName !== "Approved" && (
                         <Button
                             onClick={() => {
                                 setOpen(true);

@@ -22,7 +22,7 @@ export default function AddMarketMaker({ title, isAddMode }) {
 
     const onSubmitData = (data) => {
         const {
-            country,
+            countryId,
             postCode,
             unit,
             street,
@@ -39,7 +39,7 @@ export default function AddMarketMaker({ title, isAddMode }) {
         const formattedDataToSend = {
             ...rest,
             address: {
-                country,
+                countryId,
                 postCode,
                 unit,
                 street,

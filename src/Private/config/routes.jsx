@@ -149,6 +149,7 @@ const ViewBatchTransaction = lazy(() => import("../pages/B2BTransactions/ViewBat
 // B2b Beneficiary
 
 const ListB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ListBeneficiary"));
+const ViewB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ViewBeneficiary"));
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -532,6 +533,7 @@ const privateRoutes = [
     //B2b Beneficiary
 
     { path: routePaths.agent.getAllB2bBeneficiary, component: <ListB2bBeneficiary /> },
+    { path: routePaths.agent.viewB2bBeneficiary, component: <ViewB2bBeneficiary /> },
 ];
 
 export default privateRoutes;

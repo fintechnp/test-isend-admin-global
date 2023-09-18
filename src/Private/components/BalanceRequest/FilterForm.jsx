@@ -10,40 +10,26 @@ import PageContent from "App/components/Container/PageContent";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 import { BalanceRequestActions } from "Private/pages/BalanceRequest/store";
+import { localStorageGet } from "App/helpers/localStorage";
 
 const orderByOptions = [
     { label: "Ascending", value: "ASC" },
     { label: "Descending", value: "DESC" },
 ];
 
-const statusOptions = [
-    {
-        label: "Initial",
-        value: 1,
-    },
-    {
-        label: "Success",
-        value: 2,
-    },
-    {
-        label: "Pending",
-        value: 3,
-    },
-    {
-        label: "Approved",
-        value: 4,
-    },
-    {
-        label: "Rejected",
-        value: 5,
-    },
-];
-
 export default function FilterForm({ sortByOptions = [], setFilterSchema, loading }) {
     const methods = useForm();
-    const dispatch = useDispatch();
 
-    const { reset, setValue, getValues } = methods;
+    const { reset } = methods;
+
+    const statusOptions = localStorageGet("reference")
+        ?.find((item) => item?.reference_type === 67)
+        ?.reference_data?.map((referenceItem) => {
+            return {
+                label: referenceItem.name,
+                value: +referenceItem.value,
+            };
+        });
 
     const handleSubmit = (data) => {
         setFilterSchema((prev) => {

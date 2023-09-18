@@ -27,7 +27,7 @@ const relatedToOptions = [
     },
     {
         label: "MarketMaker",
-        value: "market_maker",
+        value: "marketmaker",
     },
 ];
 
@@ -47,7 +47,6 @@ export default function BeneficiaryFilterForm({ filterSchema, setFilterSchema, s
     const { reset, watch } = methods;
 
     const relatedTo = watch("related_to");
-    console.log("🚀 ~ file: BeneficiaryFilterForm.jsx:50 ~ BeneficiaryFilterForm ~ relatedTo:", relatedTo);
 
     const handleSubmit = (data) => {
         setFilterSchema((prev) => {
@@ -82,7 +81,7 @@ export default function BeneficiaryFilterForm({ filterSchema, setFilterSchema, s
                                     />
                                 </Grid>
                             );
-                        } else if (relatedTo === "market_maker") {
+                        } else if (relatedTo === "marketmaker") {
                             return (
                                 <Grid item xs={12} sm={6}>
                                     <FormSearchAutoComplete

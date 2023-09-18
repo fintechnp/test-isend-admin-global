@@ -246,7 +246,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                                                 onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
                                                 error={!!errors?.documents?.[i]?.documentId?.message}
                                                 onChange={(file) => handleChange(document, file)}
-                                                file={document?.file ?? document?.fileUrl}
+                                                file={document?.file ?? document?.documentLink}
                                                 fileType={document?.fileType}
                                             />
                                         </FormInputWrapper>

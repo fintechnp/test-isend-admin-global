@@ -73,11 +73,11 @@ export default function UpdateMarketMakerKyb({ title }) {
     }, [kybDetail]);
 
     const onSubmitData = (data) => {
-        const { country, postCode, unit, street, state, city, address, ...rest } = data;
+        const { countryId, postCode, unit, street, state, city, address, ...rest } = data;
         const dataToSend = {
             marketMakerId: marketMakerId,
             address: {
-                country,
+                countryId,
                 postCode,
                 unit,
                 street,

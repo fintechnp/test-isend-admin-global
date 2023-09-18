@@ -1,12 +1,14 @@
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
+import { ReferenceName } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
 import routePaths from "Private/config/routePaths";
@@ -18,18 +20,28 @@ import TableRowActionContainer from "App/components/Table/TableRowActionContaine
 
 import { beneficiaryActions as actions } from "./store";
 import BeneficiaryFilterForm from "Private/components/Beneficiary/BeneficiaryFilterForm";
+import { localStorageGet } from "App/helpers/localStorage";
 
 const initialState = {
     page_number: 1,
     page_size: 10,
 };
-export default function GetAllBeneficiary() {
+export default function ListBeneficiary() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const reference = localStorageGet("reference");
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response, loading } = useSelector((state) => state.get_all_beneficiary);
-    console.log("🚀 ~ file: GetAllBeneficiary.jsx:31 ~ GetAllBeneficiary ~ response:", response);
+
+    const sortByOptions =
+        response?.data?.length > 0 &&
+        Object.keys(response?.data[0])
+            ?.map((item) => {
+                return { value: item, label: item };
+            })
+            .filter((item) => item.label !== "f_serial_no");
 
     const columns = useMemo(
         () => [
@@ -40,14 +52,30 @@ export default function GetAllBeneficiary() {
             {
                 header: "Name",
                 accessorKey: "name",
+                cell: ({ getValue, row }) => (
+                    <Typography>
+                        {row?.original?.beneficiary_type_id === 1
+                            ? `${row?.original?.first_name} ${row?.original?.last_name}`
+                            : getValue()}
+                    </Typography>
+                ),
             },
             {
                 header: "Type",
                 accessorKey: "beneficiary_type",
             },
             {
+                header: "Related To",
+                accessorKey: "related_to",
+            },
+            {
                 header: "Country of Registration",
                 accessorKey: "registered_country",
+                cell: ({ getValue, row }) => (
+                    <Typography>
+                        {row?.original?.beneficiary_type_id === 1 ? row?.original?.identity_issue_country : getValue()}
+                    </Typography>
+                ),
             },
 
             {
@@ -58,9 +86,11 @@ export default function GetAllBeneficiary() {
                 header: "Email",
                 accessorKey: "email",
             },
+
             {
                 header: "Payment Type",
                 accessorKey: "payment_type_id",
+                cell: ({ getValue }) => <Typography>{ReferenceName(1, getValue())}</Typography>,
             },
 
             {
@@ -69,7 +99,9 @@ export default function GetAllBeneficiary() {
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(buildRoute(routePaths.agent.getByIdB2bBeneficiary, row?.original?.businessId));
+                                navigate(
+                                    buildRoute(routePaths.agent.viewB2bBeneficiary, row?.original?.beneficiary_id),
+                                );
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
@@ -116,7 +148,7 @@ export default function GetAllBeneficiary() {
                 </Grid>
             )}
 
-            <BeneficiaryFilterForm setFilterSchema={setFilterSchema} />
+            <BeneficiaryFilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} />
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
                     <NoResults text="No Beneficiary Found" />
