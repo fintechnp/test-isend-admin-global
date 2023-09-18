@@ -1,6 +1,8 @@
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import { useParams } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,7 +15,6 @@ import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/C
 import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/UpdateStatusForm";
 
 import { BalanceRequestActions } from "./store";
-import { Box, Typography } from "@mui/material";
 
 export default function ViewBalanceRequest({ title }) {
     const dispatch = useDispatch();
