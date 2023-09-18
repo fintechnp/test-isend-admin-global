@@ -37,6 +37,7 @@ export default function UploadFile(props) {
         error,
         file,
         fileType,
+        documentName,
     } = props;
 
     const [selectedFile, setSelectedFile] = useState(file);
@@ -131,6 +132,7 @@ export default function UploadFile(props) {
                                       type: "url",
                                       fileUrl: selectedFile,
                                       fileType: fileType,
+                                      documentName: documentName,
                                   })}
                             onRemove={handleRemove}
                         />
