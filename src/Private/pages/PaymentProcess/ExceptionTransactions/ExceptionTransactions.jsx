@@ -38,7 +38,7 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    transaction_id: 0,
+    transaction_id: null,
     pin_number: "",
     customer_id: 0,
     sending_agent_id: 0,
