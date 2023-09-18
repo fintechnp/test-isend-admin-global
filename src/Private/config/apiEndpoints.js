@@ -144,6 +144,13 @@ const apiEndpoints = {
         getAll: "/beneficiary/b2b",
         getById: "/beneficiary/b2b/:beneficiaryId",
     },
+
+    businessCharge: {
+        getAll: "/v1/business-servicecharges",
+        getById: "/v1/business-servicecharges/:businessServiceChargeId",
+        add: "/v1/business-servicecharges",
+        updateStatus: "/v1/business-servicecharges/:businessServiceChargeId/toggleactivestatus",
+    },
 };
 
 export default apiEndpoints;
