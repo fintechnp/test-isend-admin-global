@@ -24,10 +24,11 @@ export default function PreviewFile(props) {
                 });
             };
         } else if (type === "url") {
-            const { fileUrl, fileType } = props;
+            const { fileUrl, fileType, documentName } = props;
             setSelected({
                 fileUrl,
                 fileType,
+                documentName,
             });
         }
     }, [type, props]);
@@ -96,7 +97,7 @@ export default function PreviewFile(props) {
                 >
                     <Stack>
                         <Typography fontSize="1.2rem" fontWeight={600} lineHeight="2rem">
-                            {selected?.name}
+                            {selected?.documentName}
                         </Typography>
                         <Typography fontSize="1rem" lineHeight="1rem">
                             Uploaded

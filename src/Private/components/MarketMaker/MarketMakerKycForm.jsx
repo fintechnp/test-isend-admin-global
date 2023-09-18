@@ -413,8 +413,9 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true }) {
                                                 onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
                                                 error={!!errors?.documents?.[i]?.documentId?.message}
                                                 onChange={(file) => handleChange(document, file)}
-                                                file={document?.file ?? document?.fileUrl}
+                                                file={document?.file ?? document?.documentLink}
                                                 fileType={document?.fileType}
+                                                documentName={document?.documentName}
                                             />
                                         </FormInputWrapper>
                                     </Grid>

@@ -248,6 +248,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                                                 onChange={(file) => handleChange(document, file)}
                                                 file={document?.file ?? document?.documentLink}
                                                 fileType={document?.fileType}
+                                                documentName={document?.documentName}
                                             />
                                         </FormInputWrapper>
                                     </Grid>
