@@ -119,7 +119,7 @@ const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFu
 
 //Market Maker
 
-const MarketMaker = lazy(() => import("../pages/MarketMaker/MarketMaker"));
+const ListMarketMaker = lazy(() => import("../pages/MarketMaker/ListMarketMaker"));
 const AddMarketMaker = lazy(() => import("../pages/MarketMaker/AddMarketMaker"));
 const ViewMarketMaker = lazy(() => import("../pages/MarketMaker/ViewMarketMaker"));
 const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMaker"));
@@ -494,10 +494,10 @@ const privateRoutes = [
 
     //Agent
 
-    { path: routePaths.agent.marketMaker, component: <MarketMaker title="Market Maker" /> },
-    { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker title=" Add Market Maker" /> },
-    { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker title="Market Maker Details" /> },
-    { path: routePaths.agent.updateMarketMaker, component: <UpdateMarketMaker title="Update Market Maker" /> },
+    { path: routePaths.agent.listMarketMaker, component: <ListMarketMaker /> },
+    { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker /> },
+    { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker /> },
+    { path: routePaths.agent.updateMarketMaker, component: <UpdateMarketMaker /> },
     {
         path: routePaths.agent.addMarketMakerKyb,
         component: <AddMarketMakerKyb title="Add Market Maker KYB" />,

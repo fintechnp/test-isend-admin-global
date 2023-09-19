@@ -1,25 +1,22 @@
-import React, { Suspense, useContext, useEffect } from "react";
-import Drawer from "../../components/Drawer";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
-
-import Dashboard from "@mui/icons-material/Dashboard";
+import Report from "@mui/icons-material/Report";
+import Receipt from "@mui/icons-material/Receipt";
+import Payment from "@mui/icons-material/Payment";
 import Settings from "@mui/icons-material/Settings";
+import GroupAdd from "@mui/icons-material/GroupAdd";
+import Dashboard from "@mui/icons-material/Dashboard";
+import GroupWork from "@mui/icons-material/GroupWork";
 import AccountBox from "@mui/icons-material/AccountBox";
 import TrendingUp from "@mui/icons-material/TrendingUp";
-import Report from "@mui/icons-material/Report";
-import GroupWork from "@mui/icons-material/GroupWork";
-import Receipt from "@mui/icons-material/Receipt";
-import GroupAdd from "@mui/icons-material/GroupAdd";
-import Payment from "@mui/icons-material/Payment";
-
-import roles from "../../global/roles";
+import React, { Suspense, useContext, useEffect } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 
-import routePaths from "Private/config/routePaths";
-import { AuthConsumer, AuthContext } from "../../auth";
+import Drawer from "../../components/Drawer";
 import Loading from "./../../../App/components/Loading";
-import { localStorageSave } from "App/helpers/localStorage";
-import { INTENDED_PATH } from "App/global/constants";
+
+import roles from "../../global/roles";
+import { AuthContext } from "../../auth";
+import routePaths from "Private/config/routePaths";
 import { getIntendedPath, removeIntendedPath, preserveIntendedPath } from "App/routes";
 
 const PrivateLayout = () => {
@@ -356,7 +353,7 @@ const PrivateLayout = () => {
 
             //Utilities pannel
             {
-                key: "utilites",
+                key: "utilities",
                 text: "Utilities",
                 sub: true,
                 icon: <ForwardToInboxIcon />,
@@ -421,21 +418,21 @@ const PrivateLayout = () => {
                 permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER, roles.USER],
                 children: [
                     {
-                        path: routePaths.agent.marketMaker,
+                        path: routePaths.agent.listMarketMaker,
                         key: "market-maker",
-                        text: "Market Maker",
+                        text: "Agents",
                         sub: false,
                     },
                     {
                         path: routePaths.agent.creditLimit,
                         key: "credit-limit",
-                        text: "Credit Limit",
+                        text: "Credit Limits",
                         sub: false,
                     },
                     {
                         path: routePaths.agent.listBalanceRequest,
                         key: "balance-Request",
-                        text: "Balance Request",
+                        text: "Balance Requests",
                         sub: false,
                     },
                     {
@@ -459,7 +456,7 @@ const PrivateLayout = () => {
                     {
                         path: routePaths.agent.getAllB2bBeneficiary,
                         key: "beneficiary",
-                        text: "Beneficiary",
+                        text: "Beneficiaries",
                         sub: false,
                     },
                 ],

@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,14 +7,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import { Loading } from "App/components";
 import Modal from "App/components/Modal/Modal";
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
 import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
 import BusinessKybDetail from "../Business/BusinessKybDetail";
-import NoResults from "Private/pages/Transactions/components/NoResults";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
@@ -143,35 +140,18 @@ export default function MarketMakerKybListing() {
                     Add KYB
                 </Button>
             </Box>
-            {loading && (
-                <Grid item xs={12}>
-                    <Loading loading={loading} />
-                </Grid>
-            )}
-            {!loading && response?.data && response?.data?.length === 0 ? (
-                <Grid item xs={12}>
-                    <NoResults text="No KYB Found" />
-                </Grid>
-            ) : (
-                <>
-                    <Spacer />
-                    <TanstackReactTable columns={columns} title="KYB" data={response?.data ?? []} loading={loading} />
-                    <Modal
-                        title="Kyb Detail"
-                        open={open}
-                        onClose={handleClose}
-                        sx={{
-                            width: "60%",
-                        }}
-                    >
-                        <BusinessKybDetail
-                            relatedTo="market-maker"
-                            data={kybDetailData?.data}
-                            loading={kybDetailLoading}
-                        />
-                    </Modal>
-                </>
-            )}
+            <Spacer />
+            <TanstackReactTable columns={columns} title="KYB" data={response?.data ?? []} loading={loading} />
+            <Modal
+                title="Kyb Detail"
+                open={open}
+                onClose={handleClose}
+                sx={{
+                    width: "60%",
+                }}
+            >
+                <BusinessKybDetail relatedTo="market-maker" data={kybDetailData?.data} loading={kybDetailLoading} />
+            </Modal>
         </>
     );
 }

@@ -78,6 +78,7 @@ function FormDatePicker({
                                 onFocus={() => clearErrors(name)}
                                 autoComplete="off"
                                 value={field.value ?? ""}
+                                aria-readonly
                             />
                         )}
                         mask={dateMask}

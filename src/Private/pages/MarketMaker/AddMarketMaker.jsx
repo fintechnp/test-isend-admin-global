@@ -10,7 +10,7 @@ import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
 import { MarketMakerActions as actions } from "./store";
 import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
 
-export default function AddMarketMaker({ title, isAddMode }) {
+export default function AddMarketMaker() {
     const dispatch = useDispatch();
 
     const { response, loading } = useSelector((state) => state.add_market_maker);
@@ -60,9 +60,8 @@ export default function AddMarketMaker({ title, isAddMode }) {
         dispatch(actions.add_market_maker(formattedDataToSend));
     };
 
-    const {} = methods;
     return (
-        <PageContent title={title} documentTitle="Add Market Maker">
+        <PageContent title="Add New Agent">
             <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
                 <MarketMakerForm />
             </HookForm>

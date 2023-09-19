@@ -4,7 +4,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
-
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
@@ -19,6 +18,7 @@ import FilterForm from "Private/components/BalanceRequest/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
+import { FormatNumber } from "App/helpers";
 import { BalanceRequestActions as actions } from "../BalanceRequest/store";
 
 const initialState = {
@@ -52,37 +52,29 @@ export default function ListBalanceRequest({ title }) {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
-
             {
-                header: "Name",
-                accessorKey: "name",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-
-            {
-                header: "Deposited Amount",
-                accessorKey: "depositedAmount",
+                header: "Agent/Business",
+                accessorKey: "relatedTo",
             },
             {
                 header: "Depositor Name",
                 accessorKey: "depositorName",
             },
             {
+                header: "Deposited Amount",
+                accessorKey: "depositedAmount",
+                cell: ({ getValue }) => <>{FormatNumber(getValue())}</>,
+            },
+            {
                 header: "Depositor Method Name",
                 accessorKey: "depositoryMethodName",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-
-            {
-                header: "Related To",
-                accessorKey: "relatedTo",
             },
             {
                 header: "Deposit Date",
                 accessorKey: "depositDate",
                 cell: ({ getValue }) => <Typography>{getValue() ? convertDate(getValue()) : "N/A"}</Typography>,
             },
-
             {
                 header: "Remarks",
                 accessorKey: "remarks",
@@ -100,7 +92,6 @@ export default function ListBalanceRequest({ title }) {
                 header: "Status",
                 accessorKey: "statusName",
             },
-
             {
                 header: "Actions",
                 accessorKey: "show",

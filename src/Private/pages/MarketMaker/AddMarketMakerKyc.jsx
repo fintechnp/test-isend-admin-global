@@ -79,7 +79,7 @@ export default function AddMarketMakerKyc({ title }) {
     };
 
     return (
-        <PageContent title={title || "Add Market Maker KYC"} documentTitle="Add Market Maker Kyc">
+        <PageContent title="Add Agent KYC">
             <HookForm onSubmit={onSubmitData} {...methods}>
                 <MarketMakerKycForm formLoading={loading} />
             </HookForm>

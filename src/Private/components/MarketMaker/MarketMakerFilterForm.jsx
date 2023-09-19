@@ -1,6 +1,6 @@
-import { Grid } from "@mui/material";
+import PropTypes from "prop-types";
+import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -8,27 +8,19 @@ import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import PageContent from "App/components/Container/PageContent";
 import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 
-export default function FilterForm({ setFilterSchema, loading }) {
+export default function MarketMakerFilterForm({ isProcessing, onSubmit, onReset }) {
     const methods = useForm();
-    const dispatch = useDispatch();
 
     const { reset } = methods;
 
-    const handleSubmit = (data) => {
-        setFilterSchema((prev) => {
-            return {
-                ...prev,
-                ...data,
-            };
-        });
-    };
-
     const handleReset = () => {
+        onReset();
         reset();
     };
+
     return (
         <PageContent>
-            <HookForm onSubmit={handleSubmit} {...methods}>
+            <HookForm onSubmit={onSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
                     <Grid item xs={12} sm={6}>
                         <FormTextField name="Name" label="Name" />
@@ -42,12 +34,17 @@ export default function FilterForm({ setFilterSchema, loading }) {
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <ResetButton size="small" variant="outlined" onClick={handleReset}>
+                                <ResetButton
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={handleReset}
+                                    disabled={isProcessing}
+                                >
                                     Reset
                                 </ResetButton>
                             </Grid>
                             <Grid item>
-                                <SearchButton size="small" variant="outlined" type="submit">
+                                <SearchButton size="small" variant="outlined" type="submit" disabled={isProcessing}>
                                     Search
                                 </SearchButton>
                             </Grid>
@@ -58,3 +55,9 @@ export default function FilterForm({ setFilterSchema, loading }) {
         </PageContent>
     );
 }
+
+MarketMakerFilterForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    onReset: PropTypes.func.isRequired,
+    isProcessing: PropTypes.bool.isRequired,
+};

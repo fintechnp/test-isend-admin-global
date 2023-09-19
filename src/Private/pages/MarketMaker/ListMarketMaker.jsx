@@ -8,27 +8,26 @@ import { useDispatch, useSelector } from "react-redux";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import { Loading } from "App/components";
 import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import Spacer from "App/components/Spacer/Spacer";
 import { TablePagination } from "App/components/Table";
 import { CountryNameById, CurrencyName } from "App/helpers";
-import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
+import LoadingBackdrop from "App/components/Loading/LoadingBackdrop";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import FilterForm from "Private/components/MarketMaker/MarketMakerFilterForm";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import MarketMakerFilterForm from "Private/components/MarketMaker/MarketMakerFilterForm";
 
 import routePaths from "Private/config/routePaths";
-import { MarketMakerActions as marketMakerAcions } from "./store/index";
+import { MarketMakerActions as marketMakerActions } from "./store/index";
 
 const initialState = {
     Page: 1,
     PageSize: 10,
 };
 
-export default function MarketMaker({ title }) {
+export default function ListMarketMaker({ title }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -40,8 +39,10 @@ export default function MarketMaker({ title }) {
         success,
     } = useSelector((state) => state.get_all_market_maker);
 
+    const { loading: isTogglingStatus } = useSelector((state) => state.update_market_maker_status);
+
     useEffect(() => {
-        dispatch(marketMakerAcions?.get_all_market_maker(filterSchema));
+        dispatch(marketMakerActions?.get_all_market_maker(filterSchema));
     }, [filterSchema]);
 
     const columns = useMemo(
@@ -54,10 +55,6 @@ export default function MarketMaker({ title }) {
             {
                 header: "Name",
                 accessorKey: "name",
-            },
-            {
-                header: "Brand Name",
-                accessorKey: "brandName",
             },
             {
                 header: "Registration Number",
@@ -98,7 +95,7 @@ export default function MarketMaker({ title }) {
                         <Switch
                             defaultChecked={getValue()}
                             onChange={(e) => {
-                                dispatch(marketMakerAcions.update_market_maker_status(row?.original?.marketMakerId));
+                                dispatch(marketMakerActions.update_market_maker_status(row?.original?.marketMakerId));
                             }}
                         />
                     );
@@ -161,37 +158,37 @@ export default function MarketMaker({ title }) {
         };
         setFilterSchema(updatedFilterSchema);
     };
+
+    const handleFilterSubmit = (data) => {
+        setFilterSchema({ ...filterSchema, ...data });
+    };
+
+    const handleFilterReset = () => {
+        setFilterSchema(initialState);
+    };
+
     return (
         <PageContent
-            title={title}
-            documentTitle="Market Maker"
+            title="Agents"
             topRightEndContent={
                 <Button
                     onClick={() => {
                         navigate(routePaths.agent.addMarketMaker);
                     }}
                 >
-                    Add Market Maker
+                    Add Agent
                 </Button>
             }
         >
-            <FilterForm loading={m_maker_loading} setFilterSchema={setFilterSchema} />
-
-            {m_maker_loading && (
-                <Grid item xs={12}>
-                    <Loading loading={m_maker_loading} />
-                </Grid>
-            )}
-            {!m_maker_loading && marketMakerDetails?.data && marketMakerDetails?.data?.length === 0 && (
-                <Grid item xs={12}>
-                    <NoResults text="No Market Maker Found" />
-                </Grid>
-            )}
-
+            <MarketMakerFilterForm
+                isProcessing={m_maker_loading}
+                onSubmit={handleFilterSubmit}
+                onReset={handleFilterReset}
+            />
             <Spacer />
             <TanstackReactTable
                 columns={columns}
-                title="Market Maker"
+                title="Agent"
                 data={marketMakerDetails?.data ?? []}
                 loading={m_maker_loading}
                 renderPagination={() => (
@@ -202,6 +199,7 @@ export default function MarketMaker({ title }) {
                     />
                 )}
             />
+            <LoadingBackdrop open={isTogglingStatus} />
         </PageContent>
     );
 }

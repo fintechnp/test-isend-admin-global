@@ -51,9 +51,6 @@ export default function FilterForm({ sortByOptions = [], setFilterSchema, loadin
                         <FormTextField name="Name" label="Name" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <FormTextField name="DepositedAmount" label="Deposited Amount" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
                         <FormDatePicker name="DateOfDeposit" label="Date Of Deposit" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
