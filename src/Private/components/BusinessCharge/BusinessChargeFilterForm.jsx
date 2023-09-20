@@ -3,18 +3,32 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 import HookForm from "App/core/hook-form/HookForm";
-import FormTextField from "App/core/hook-form/FormTextField";
+import { relatedToEnum } from "./BusinessChargeForm";
+import apiEndpoints from "Private/config/apiEndpoints";
+import FormSelect from "App/core/hook-form/FormSelect";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import PageContent from "App/components/Container/PageContent";
 import { ResetButton, SearchButton } from "../AllButtons/Buttons";
-import FormSearchAutocomplete from "App/core/hook-form/FormSearchAutocomplete";
-import apiEndpoints from "Private/config/apiEndpoints";
+import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
+
+const relatedToOptions = [
+    {
+        label: "Business",
+        value: "business",
+    },
+    {
+        label: "MarketMaker",
+        value: "marketmaker",
+    },
+];
 
 export default function FilterForm({ setFilterSchema }) {
     const methods = useForm();
     const dispatch = useDispatch();
 
-    const { reset } = methods;
+    const { reset, watch } = methods;
+
+    const relatedTo = watch("RelatedTo");
 
     const handleSubmit = (data) => {
         setFilterSchema((prev) => {
@@ -33,15 +47,39 @@ export default function FilterForm({ setFilterSchema }) {
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
                     <Grid item xs={12} sm={6}>
-                        <FormSearchAutocomplete
-                            name="BusinessId"
-                            label="Business Id"
-                            apiEndpoint={apiEndpoints.business.getAll}
-                            paramkey="BusinessName"
-                            valueKey="businessId"
-                            labelKey="name"
-                        />
+                        <FormSelect name="RelatedTo" options={relatedToOptions ?? []} />
                     </Grid>
+
+                    {(() => {
+                        if (relatedTo === relatedToEnum.business) {
+                            return (
+                                <Grid item xs={12} sm={6}>
+                                    <FormSearchAutoComplete
+                                        name="RelatedId"
+                                        label="Business Id"
+                                        apiEndpoint={apiEndpoints.business.getAll}
+                                        paramkey="BusinessName"
+                                        valueKey="businessId"
+                                        labelKey="name"
+                                    />
+                                </Grid>
+                            );
+                        } else if (relatedTo === relatedToEnum.marketmaker || relatedTo === "marketmaker") {
+                            return (
+                                <Grid item xs={12} sm={6}>
+                                    <FormSearchAutoComplete
+                                        name="RelatedId"
+                                        label="Market Maker Id"
+                                        apiEndpoint={apiEndpoints.marketMaker.getAll}
+                                        paramkey="Name"
+                                        valueKey="marketMakerId"
+                                        labelKey="name"
+                                    />
+                                </Grid>
+                            );
+                        }
+                    })()}
+
                     <Grid item xs={12}>
                         <ButtonWrapper
                             container

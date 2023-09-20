@@ -149,7 +149,8 @@ const apiEndpoints = {
         getAll: "/v1/business-servicecharges",
         getById: "/v1/business-servicecharges/:businessServiceChargeId",
         add: "/v1/business-servicecharges",
-        updateStatus: "/v1/business-servicecharges/:businessServiceChargeId/toggleactivestatus",
+        update: "/v1/business-servicecharges/:businessServiceChargeId",
+        updateStatus: "/v1/business-servicecharges/:businessServiceChargeId",
     },
 };
 

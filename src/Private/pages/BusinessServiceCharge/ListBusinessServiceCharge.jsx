@@ -1,25 +1,29 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import PageContent from "App/components/Container/PageContent";
+import { useNavigate } from "react-router";
+import Grid from "@mui/material/Grid";
+import Switch from "@mui/material/Switch";
+import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-
 import { businessChargeActions as actions } from "./store";
-import { Grid, IconButton, Switch } from "@mui/material";
-import { Loading } from "App/components";
-import FilterForm from "Private/components/BusinessCharge/BusinessChargeFilterForm";
-import NoResults from "../Transactions/components/NoResults";
-import Spacer from "App/components/Spacer/Spacer";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import React, { useEffect, useMemo, useState } from "react";
 
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { TablePagination } from "App/components/Table";
-import Button from "App/components/Button/Button";
-import { useNavigate } from "react-router";
-import routePaths from "Private/config/routePaths";
+
+import { Loading } from "App/components";
 import Modal from "App/components/Modal/Modal";
+import buildRoute from "App/helpers/buildRoute";
+import Spacer from "App/components/Spacer/Spacer";
+import Button from "App/components/Button/Button";
+import routePaths from "Private/config/routePaths";
+import { TablePagination } from "App/components/Table";
+import NoResults from "../Transactions/components/NoResults";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import FilterForm from "Private/components/BusinessCharge/BusinessChargeFilterForm";
 import BusinessChargeModal from "Private/components/BusinessCharge/BusinessChargeModal";
+import { Typography } from "@mui/material";
+import { relatedToEnum } from "Private/components/BusinessCharge/BusinessChargeForm";
 
 const initialState = {
     Page: 1,
@@ -33,7 +37,13 @@ export default function ListBusinessServiceCharge() {
     const [selectedCharge, setSelectedCharge] = useState(null);
 
     const { response, loading } = useSelector((state) => state.get_all_business_charge);
-    console.log("🚀 ~ file: ListBusinessServiceCharge.jsx:17 ~ ListBusinessServiceCharge ~ response:", response);
+
+    const { success: updateStatusSuccess } = useSelector((state) => state.update_business_charge_status);
+
+    console.log(
+        "🚀 ~ file: ListBusinessServiceCharge.jsx:42 ~ ListBusinessServiceCharge ~ updateStatusSuccess:",
+        updateStatusSuccess,
+    );
 
     const columns = useMemo(
         () => [
@@ -41,15 +51,19 @@ export default function ListBusinessServiceCharge() {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
-
+            {
+                header: "Type",
+                accessorKey: "relatedTo",
+            },
+            {
+                header: "Name",
+                accessorKey: "name",
+            },
             {
                 header: "Sending Country",
                 accessorKey: "sendingCountry",
             },
-            {
-                header: "Business",
-                accessorKey: "business",
-            },
+
             {
                 header: "Receiving Country",
                 accessorKey: "receivingCountry",
@@ -62,9 +76,9 @@ export default function ListBusinessServiceCharge() {
                     return (
                         <Switch
                             defaultChecked={getValue() === 1 ? true : false}
-                            // onChange={(e) => {
-                            //     dispatch(marketMakerAcions.update_market_maker_status(row?.original?.marketMakerId));
-                            // }}
+                            onChange={(e) => {
+                                dispatch(actions.update_business_charge_status(row?.original?.serviceChargeId));
+                            }}
                         />
                     );
                 },
@@ -90,7 +104,16 @@ export default function ListBusinessServiceCharge() {
                                 }}
                             />
                         </IconButton>
-                        <IconButton>
+                        <IconButton
+                            onClick={() => {
+                                navigate(
+                                    buildRoute(
+                                        routePaths.agent.updateBusinessServiceCharge,
+                                        row?.original?.serviceChargeId,
+                                    ),
+                                );
+                            }}
+                        >
                             <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
@@ -110,6 +133,12 @@ export default function ListBusinessServiceCharge() {
     useEffect(() => {
         dispatch(actions.get_all_business_charge(filterSchema));
     }, [filterSchema]);
+
+    useEffect(() => {
+        if (updateStatusSuccess) {
+            dispatch(actions.get_all_business_charge(filterSchema));
+        }
+    }, [updateStatusSuccess]);
 
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
@@ -142,12 +171,6 @@ export default function ListBusinessServiceCharge() {
                     </Button>
                 }
             >
-                {loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={loading} />
-                    </Grid>
-                )}
-
                 <FilterForm setFilterSchema={setFilterSchema} loading={loading} />
 
                 {!loading && response?.data && response?.data?.length === 0 ? (

@@ -9,24 +9,31 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_BENEFICIARY_DETAILS:
+        case actions.UPDATE_BUSINESS_SERVICE_CHARGE:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_BENEFICIARY_DETAILS_SUCCESS:
+        case actions.UPDATE_BUSINESS_SERVICE_CHARGE_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_BENEFICIARY_DETAILS_FAILED:
+        case actions.UPDATE_BUSINESS_SERVICE_CHARGE_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
+            };
+        case actions.UPDATE_BUSINESS_SERVICE_CHARGE_RESET:
+            return {
+                success: false,
+                loading: false,
+                error: null,
+                response: [],
             };
         default:
             return state;

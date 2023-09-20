@@ -491,6 +491,7 @@ import {
     GetAllBusinessChargeReducer,
     AddBusinessChargeReducer,
     UpdateBusinessChargeStatusReducer,
+    UpdateBusinessChargeReducer,
     businessChargeSaga,
 } from "Private/pages/BusinessServiceCharge/store";
 
@@ -872,6 +873,7 @@ export const privateReducer = {
     get_business_charge_details: GetAllBusinessChargeByIdReducer,
     add_business_charge: AddBusinessChargeReducer,
     update_business_charge_status: UpdateBusinessChargeStatusReducer,
+    update_business_charge: UpdateBusinessChargeReducer,
 };
 
 export const privateSaga = [

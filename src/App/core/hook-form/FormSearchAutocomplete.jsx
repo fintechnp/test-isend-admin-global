@@ -37,6 +37,7 @@ function FormSearchAutoComplete(props) {
         variant,
         required,
         defaultQueryParams,
+        disabled,
     } = props;
 
     useEffect(() => {
@@ -117,7 +118,7 @@ function FormSearchAutoComplete(props) {
                                 }}
                             />
                         )}
-                        disabled={isLoading}
+                        disabled={isLoading || disabled}
                         isOptionEqualToValue={(option, value) => {
                             if (value === undefined) return false;
                             return option.value === value.value;

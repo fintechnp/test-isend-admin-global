@@ -50,9 +50,27 @@ export const addBusinessCharge = takeEvery(actions.ADD_BUSINESS_SERVICE_CHARGE, 
     } catch (error) {
         yield put({
             type: actions.ADD_BUSINESS_SERVICE_CHARGE_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const updateBusinessCharge = takeEvery(actions.UPDATE_BUSINESS_SERVICE_CHARGE, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.businessCharge.update, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_BUSINESS_SERVICE_CHARGE_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.UPDATE_BUSINESS_SERVICE_CHARGE_RESET });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_BUSINESS_SERVICE_CHARGE_FAILED,
+            error: error?.data?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -63,16 +81,23 @@ export const updateBusinessChargeStatus = takeEvery(actions.UPDATE_BUSINESS_SERV
             type: actions.UPDATE_BUSINESS_SERVICE_CHARGE_STATUS_SUCCESS,
             response: res,
         });
+        yield put({ type: actions.UPDATE_BUSINESS_SERVICE_CHARGE_STATUS_RESET });
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({
             type: actions.UPDATE_BUSINESS_SERVICE_CHARGE_STATUS_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
 export default function* saga() {
-    yield all([getAllBusinessCharge, getBusinessChargeById, addBusinessCharge, updateBusinessChargeStatus]);
+    yield all([
+        getAllBusinessCharge,
+        getBusinessChargeById,
+        addBusinessCharge,
+        updateBusinessCharge,
+        updateBusinessChargeStatus,
+    ]);
 }

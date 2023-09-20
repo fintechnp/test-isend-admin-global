@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,17 +8,28 @@ import PageContent from "App/components/Container/PageContent";
 
 import BusinessChargeForm from "Private/components/BusinessCharge/BusinessChargeForm";
 import { businessChargeActions as actions } from "./store";
+import { businessChargeValidationSchema } from "./validations/AddBusinessServiceChargeValidation";
 
 export default function AddBusinessServiceCharge() {
     const dispatch = useDispatch();
 
-    const methods = useForm({});
+    const methods = useForm({
+        resolver: yupResolver(businessChargeValidationSchema),
+    });
 
-    const { handleSubmit } = methods;
+    const {
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = methods;
+
+    console.log("🚀 ~ file: AddBusinessServiceCharge.jsx:24 ~ AddBusinessServiceCharge ~ errors:", errors);
+
+    useEffect(() => {
+        setValue("relatedTo", "business");
+    }, []);
 
     const onSubmitData = (data) => {
-        console.log(data, "data");
-
         const { chargeDetailRules, ...rest } = data;
 
         const newChargeDetailRules = chargeDetailRules.map((item) => {
