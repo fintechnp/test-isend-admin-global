@@ -39,6 +39,7 @@ function FormTextField(props) {
         variant,
         focused,
         color,
+        error,
         ...rest
     } = props;
 
@@ -85,7 +86,7 @@ function FormTextField(props) {
                                         </IconButton>
                                     </InputAdornment>
                                 ),
-                                error: !!errors[name],
+                                error: !!error || !!errors[name],
                                 required,
                                 size,
                                 onFocus: () => clearErrors(name),
@@ -94,9 +95,7 @@ function FormTextField(props) {
                                 label,
                             })}
 
-                            {errors[name]?.message && (
-                                <FormHelperText error={true}> {errors[name]?.message ?? ""}</FormHelperText>
-                            )}
+                            <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
                         </FormControl>
                     );
                 }
@@ -107,8 +106,8 @@ function FormTextField(props) {
                             {...field}
                             {...rest}
                             type={type}
-                            error={!!errors[name]}
-                            helperText={errors[name]?.message ?? ""}
+                            error={!!error || !!errors[name]}
+                            helperText={error ?? errors[name]?.message ?? ""}
                             label={label}
                             variant={variant}
                             fullWidth={fullWidth}
@@ -147,6 +146,7 @@ FormTextField.propTypes = {
     color: PropTypes.oneOf(["primary", "secondary", "error", "info", "success", "warning"]),
     value: PropTypes.string,
     type: PropTypes.string,
+    error: PropTypes.string,
 };
 
 FormTextField.defaultProps = {

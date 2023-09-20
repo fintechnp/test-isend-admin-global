@@ -12,6 +12,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import Api from "App/services/api";
 
 import debounce from "App/helpers/debounce";
+import { CircularProgress } from "@mui/material";
 // import http from "services/httpService";
 // import { useQuery } from "@tanstack/react-query";
 // import FormInputWrapper from "components/input/FormInputWrapper";
@@ -36,11 +37,10 @@ function FormSearchAutoComplete(props) {
         variant,
         required,
         defaultQueryParams,
+        disabled,
     } = props;
 
     useEffect(() => {
-        if (searchedText === "") setSelected(null);
-
         const fetchData = async () => {
             try {
                 setIsLoading(true);
@@ -77,7 +77,7 @@ function FormSearchAutoComplete(props) {
 
     useEffect(() => {
         const selected = options?.find((o) => o.value === value);
-        setSelected(selected ?? null);
+        setSelected(selected ?? "");
     }, [value]);
 
     return (
@@ -106,7 +106,7 @@ function FormSearchAutoComplete(props) {
                                     ...params.InputProps,
                                     endAdornment: (
                                         <InputAdornment position="end">
-                                            {/* {isLoading ? <CircularProgress color="inherit" size={20} /> : null} */}
+                                            {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                                             {params.InputProps.endAdornment}
                                         </InputAdornment>
                                     ),
@@ -118,8 +118,7 @@ function FormSearchAutoComplete(props) {
                                 }}
                             />
                         )}
-                        loading={isLoading}
-                        disabled={isLoading}
+                        disabled={isLoading || disabled}
                         isOptionEqualToValue={(option, value) => {
                             if (value === undefined) return false;
                             return option.value === value.value;

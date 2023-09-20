@@ -484,6 +484,17 @@ import {
     beneficiarySaga,
 } from "../Private/pages/Beneficiary/store";
 
+//Business Charge
+
+import {
+    GetAllBusinessChargeByIdReducer,
+    GetAllBusinessChargeReducer,
+    AddBusinessChargeReducer,
+    UpdateBusinessChargeStatusReducer,
+    UpdateBusinessChargeReducer,
+    businessChargeSaga,
+} from "Private/pages/BusinessServiceCharge/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -856,6 +867,13 @@ export const privateReducer = {
     //B2B Beneficiary List
     get_all_beneficiary: GetAllB2BBeneficiaryReducer,
     get_beneficiary_details: GetB2BBeneficiaryByIdReducer,
+
+    //Business Charge
+    get_all_business_charge: GetAllBusinessChargeReducer,
+    get_business_charge_details: GetAllBusinessChargeByIdReducer,
+    add_business_charge: AddBusinessChargeReducer,
+    update_business_charge_status: UpdateBusinessChargeStatusReducer,
+    update_business_charge: UpdateBusinessChargeReducer,
 };
 
 export const privateSaga = [
@@ -908,6 +926,7 @@ export const privateSaga = [
     singleTransactionSaga(),
     batchTransactionSaga(),
     beneficiarySaga(),
+    businessChargeSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

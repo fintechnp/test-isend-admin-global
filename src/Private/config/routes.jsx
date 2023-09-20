@@ -151,6 +151,12 @@ const ViewBatchTransaction = lazy(() => import("../pages/B2BTransactions/ViewBat
 const ListB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ListBeneficiary"));
 const ViewB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ViewBeneficiary"));
 
+// BUSINESS SERVICE CHARGE
+
+const ListBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/ListBusinessServiceCharge"));
+const AddBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/AddBusinessServiceCharge"));
+const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/UpdateBusinessServiceCharge"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -534,6 +540,21 @@ const privateRoutes = [
 
     { path: routePaths.agent.getAllB2bBeneficiary, component: <ListB2bBeneficiary /> },
     { path: routePaths.agent.viewB2bBeneficiary, component: <ViewB2bBeneficiary /> },
+
+    // BUSINESS SERVICE CHARGE
+
+    {
+        path: routePaths.agent.listBusinessServiceCharge,
+        component: <ListBusinessServiceCharge />,
+    },
+    {
+        path: routePaths.agent.addBusinessServiceCharge,
+        component: <AddBusinessServiceCharge />,
+    },
+    {
+        path: routePaths.agent.updateBusinessServiceCharge,
+        component: <UpdateBusinessServiceCharge />,
+    },
 ];
 
 export default privateRoutes;

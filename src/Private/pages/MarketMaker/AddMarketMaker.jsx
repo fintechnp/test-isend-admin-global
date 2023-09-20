@@ -13,7 +13,6 @@ import { marketMakerValidationSchema } from "./validation/MarketMakerValidation"
 export default function AddMarketMaker({ title, isAddMode }) {
     const dispatch = useDispatch();
 
-    const { response, loading } = useSelector((state) => state.add_market_maker);
     const methods = useForm({
         resolver: yupResolver(marketMakerValidationSchema),
     });
