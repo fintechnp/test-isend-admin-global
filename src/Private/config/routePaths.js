@@ -56,6 +56,10 @@ const routePaths = {
 
         getAllB2bBeneficiary: "/b2b/beneficiary",
         viewB2bBeneficiary: "/b2b/beneficiary/:beneficiaryId/view",
+
+        listBusinessServiceCharge: "/agent/business-service-charge",
+        addBusinessServiceCharge: "/agent/business-service-charge/add",
+        updateBusinessServiceCharge: "/agent/business-service-charge/:businessServiceChargeId/update",
     },
 };
 
