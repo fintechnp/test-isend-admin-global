@@ -51,7 +51,7 @@ export default function AddMarketMakerKyb({ title }) {
         dispatch(actions.add_market_maker_kyb(dataToSend));
     };
     return (
-        <PageContent title={title || "Add Market Maker KYB"} documentTitle="Add Market Maker Kyb">
+        <PageContent title="Add Agent KYB">
             <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
                 <MarketMakerKybForm formLoading={loading} />
             </HookForm>

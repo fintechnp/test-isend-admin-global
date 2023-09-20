@@ -19,7 +19,7 @@ const relatedToOptions = [
         value: "business",
     },
     {
-        label: "Market Maker",
+        label: "Agent",
         value: "marketMaker",
     },
 ];
@@ -50,7 +50,7 @@ export default function AddCreditLimitForm() {
     return (
         <Grid xs={12} container spacing={2}>
             <Grid item xs={12}>
-                <FormRadio name="relatedTo" label="Related To" options={relatedToOptions ?? []} />
+                <FormRadio name="relatedTo" label="Choose" options={relatedToOptions ?? []} />
             </Grid>
 
             <Grid item xs={12} md={6}>

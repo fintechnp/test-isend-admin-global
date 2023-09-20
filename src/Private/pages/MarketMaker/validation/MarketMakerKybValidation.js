@@ -1,28 +1,27 @@
 import * as yup from "yup";
 
 export const marketMakerKybValidationSchema = yup.object().shape({
-    name: yup.string().required("Name is required"),
-    registrationNo: yup.string().required("Registration No is required"),
-    registereddate: yup.string().required(),
-    brandName: yup.string().required(),
+    name: yup.string().required("Required"),
+    registrationNo: yup.string().required("Required"),
+    registereddate: yup.string().required("Required"),
+    brandName: yup.string().required("Required"),
     registeredCountryId: yup
         .number()
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
-    registeredEntity: yup.string().required(),
-    businessType: yup.string().required(),
+    businessType: yup.string().required("Required"),
     countryId: yup
         .number()
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
     postCode: yup.string().required().max(15, "Post code must be less than 15 characters"),
-    unit: yup.string().required(),
-    state: yup.string().required(),
-    street: yup.string().required(),
-    city: yup.string().required(),
-    address: yup.string().required(),
+    unit: yup.string().required("Required"),
+    state: yup.string().required("Required"),
+    street: yup.string().required("Required"),
+    city: yup.string().required("Required"),
+    address: yup.string().required("Required"),
     documents: yup
         .array()
         .of(
@@ -32,5 +31,5 @@ export const marketMakerKybValidationSchema = yup.object().shape({
                 documentName: yup.string().required(),
             }),
         )
-        .required("Document is required"),
+        .required("Documents is required"),
 });

@@ -111,7 +111,7 @@ export default function UpdateMarketMaker({ title }) {
     }
 
     return (
-        <PageContent title={title} documentTitle="Update Market Maker">
+        <PageContent title={title} documentTitle="Edit Agent">
             <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
                 <MarketMakerForm isAddMode={false} />
             </HookForm>

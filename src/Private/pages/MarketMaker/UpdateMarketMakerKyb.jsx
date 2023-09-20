@@ -91,7 +91,7 @@ export default function UpdateMarketMakerKyb({ title }) {
         dispatch(actions.update_market_maker_kyb(kybId, dataToSend));
     };
     return (
-        <PageContent title={title || "Update Market Maker KYB"} documentTitle="Update Market Maker Kyb">
+        <PageContent title="Edit Agent KYB">
             <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
                 {kybDetailLoading ? (
                     <Center>

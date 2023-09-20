@@ -54,26 +54,59 @@ export const CurrencyName = (currency) => {
     }
 };
 
-export const ReferenceName = (id, value) => {
+/**
+ * Get reference name
+ *
+ * @param {int} referenceTypeId
+ * @param {string} referenceDataValue
+ * @return {string} - Reference Data Name
+ */
+export const ReferenceName = (referenceTypeId, referenceDataValue) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
-    if (!value) {
+
+    if (!reference || !referenceDataValue) {
         return "N/A";
     }
-    if (id) {
-        const ref = reference?.find((ct) => ct.reference_type === id);
+
+    if (referenceTypeId) {
+        const ref = reference?.find((ct) => ct.reference_type === referenceTypeId);
+
         if (ref) {
             const referenceValue = ref?.reference_data.find((data) => {
-                if (value) {
-                    return data.value === value || data.value === value.toUpperCase();
+                if (referenceDataValue) {
+                    return data.value === referenceDataValue || data.value === String(referenceDataValue).toUpperCase();
                 }
             });
+
             return referenceValue?.name;
-        } else {
-            return "N/A";
         }
-    } else {
+    }
+
+    return "N/A";
+};
+
+export const ReferenceNameByDataId = (referenceTypeId, referenceDataId) => {
+    const reference = JSON.parse(localStorage.getItem("reference"));
+
+    if (!reference || !referenceDataId) {
         return "N/A";
     }
+
+    if (referenceTypeId) {
+        const ref = reference?.find((ct) => ct.reference_type === referenceTypeId);
+
+        if (ref) {
+            const referenceValue = ref?.reference_data.find((data) => {
+                if (referenceDataId) {
+                    return data.reference_id === referenceDataId || data.reference_id === referenceDataId;
+                }
+            });
+
+            return referenceValue?.name;
+        }
+    }
+
+    return "N/A";
 };
 
 export const FormatDate = (date) => {

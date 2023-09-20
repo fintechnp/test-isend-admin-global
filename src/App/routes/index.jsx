@@ -1,23 +1,14 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import Cookies from "js-cookie";
 import { Route, Routes } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Cookies from "js-cookie";
+import React, { useEffect, Suspense } from "react";
 
-import { PublicLayout } from "../layouts";
 import showToast from "../components/Toast";
-import PageNotFound from "../components/PageNotFound";
 import { publicRoutes } from "../../Public";
 import { privateRoutes } from "../../Private";
 import Loading from "./../../App/components/Loading";
-const PrivateLayout = lazy(() => import("./../layouts/PrivateLayout"));
-
-function PrivatePage() {
-    return (
-        <Suspense fallback={<Loading login_loading={true} />}>
-            <PrivateLayout />
-        </Suspense>
-    );
-}
+import PageNotFound from "../components/PageNotFound";
+import { PublicLayout, PrivateLayout } from "../layouts";
 
 const MainRoutes = ({ setMode }) => {
     const dispatch = useDispatch();
@@ -49,7 +40,7 @@ const MainRoutes = ({ setMode }) => {
                     <Route key={i} path={route.path} element={route.component} />
                 ))}
             </Route>
-            <Route element={<PrivatePage />}>
+            <Route element={<PrivateLayout />}>
                 {privateRoutes.map((route, i) => (
                     <Route key={i} path={route.path} element={route.component} />
                 ))}

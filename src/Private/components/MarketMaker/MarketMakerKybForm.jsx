@@ -116,7 +116,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                 }}
             >
                 <Typography fontSize={17} fontWeight={600}>
-                    Personal Details
+                    Organization Details
                 </Typography>
                 <Divider
                     sx={{
@@ -149,9 +149,6 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                             label="Country of Registration"
                             options={registeredCountyOptions ?? []}
                         />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="registeredEntity" label="Registered Entity" />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="businessType" label="Business Type" />

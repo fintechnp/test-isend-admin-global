@@ -30,7 +30,7 @@ const routePaths = {
         allBank: "/customer/banks",
     },
     agent: {
-        marketMaker: "/agent/market-maker",
+        listMarketMaker: "/agent/market-maker",
         addMarketMaker: "/agent/market-maker/add",
         viewMarketMaker: "/agent/market-maker/:marketMakerId/view",
         updateMarketMaker: "/agent/market-maker/:marketMakerId/update",
