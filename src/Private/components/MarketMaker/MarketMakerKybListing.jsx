@@ -63,19 +63,6 @@ export default function MarketMakerKybListing() {
                 accessorKey: "registeredDate",
             },
             {
-                header: "Related To",
-                accessorKey: "relatedTo",
-            },
-            {
-                header: "Remarks",
-                accessorKey: "remarks",
-            },
-            {
-                header: "Status",
-                accessorKey: "status",
-            },
-
-            {
                 header: "Actions",
                 cell: ({ row }) => (
                     <TableRowActionContainer>

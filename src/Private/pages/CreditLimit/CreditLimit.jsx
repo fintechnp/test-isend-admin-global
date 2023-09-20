@@ -82,11 +82,6 @@ export default function CreditLimit({ title }) {
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },
             {
-                header: "Created By",
-                accessorKey: "createdBy",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-            {
                 header: "Checked By",
                 accessorKey: "checkedBy",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,

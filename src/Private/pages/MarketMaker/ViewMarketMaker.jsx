@@ -102,7 +102,7 @@ export default function ViewMarketMaker() {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <RenderField
-                                label="Alowed Countries"
+                                label="Allowed Countries"
                                 value={marketMakerDetail?.allowedCountries
                                     ?.map((item) => item?.countryName)
                                     ?.join(", ")}

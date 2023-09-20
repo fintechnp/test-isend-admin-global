@@ -51,9 +51,7 @@ export default function AddMarketMaker() {
                 name: contactPersonName,
                 designationId: designationId,
                 mobileNo: contactMobileNo,
-
                 phoneNo: contactPhoneNo,
-
                 extension: contactPersonExtension,
             },
         };

@@ -64,16 +64,10 @@ export default function MarketMakerKycListing() {
                 header: "Related KYB",
                 accessorKey: "relatedKybName",
             },
-
             {
                 header: "Remarks",
                 accessorKey: "remarks",
             },
-            {
-                header: "Status",
-                accessorKey: "statusName",
-            },
-
             {
                 header: "Actions",
                 cell: ({ row }) => (
@@ -125,7 +119,7 @@ export default function MarketMakerKycListing() {
                         navigate(buildRoute(routePaths.agent.addMarketMakerKyc, marketMakerId));
                     }}
                 >
-                    Add KYB
+                    Add KYC
                 </Button>
             </Box>
             <Spacer />

@@ -37,9 +37,11 @@ export default function AddCreditLimit({ title }) {
     };
     return (
         <PageContent title={title} documentTitle="Add Credit Limit">
-            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
-                <AddCreditLimitForm />
-            </HookForm>
+            <Box>
+                <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
+                    <AddCreditLimitForm />
+                </HookForm>
+            </Box>
         </PageContent>
     );
 }
