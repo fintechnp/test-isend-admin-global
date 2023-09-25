@@ -55,10 +55,6 @@ export default function MarketMakerKybListing() {
                 accessorKey: "registeredCountry.country",
             },
             {
-                header: "Business Type",
-                accessorKey: "businessType",
-            },
-            {
                 header: "Registered Date",
                 accessorKey: "registeredDate",
             },

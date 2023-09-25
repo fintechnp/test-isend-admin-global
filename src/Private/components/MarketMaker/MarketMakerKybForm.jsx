@@ -150,9 +150,6 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                             options={registeredCountyOptions ?? []}
                         />
                     </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="businessType" label="Business Type" />
-                    </Grid>
                 </Grid>
             </Box>
             <Box

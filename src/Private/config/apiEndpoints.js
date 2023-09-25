@@ -100,12 +100,15 @@ const apiEndpoints = {
         //KYC
 
         addKyc: "/kyc",
+        updateKyc: "/kyc/:kycId",
     },
     creditLimit: {
         getAll: "/creditlimits",
         getById: "/creditlimits/:creditLimitId",
         add: "/creditlimits",
         update: "/creditlimits/:creditLimitId/statusupdate",
+        updateData: "/creditlimits/:creditLimitId/UpdateCreditLimit",
+        delete: "/creditlimits/:creditLimitId",
     },
     balanceRequest: {
         getAll: "/balancerequests",

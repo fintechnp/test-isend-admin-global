@@ -181,6 +181,24 @@ export const addMarketMakerKyc = takeEvery(actions.ADD_MARKET_MAKER_KYC, functio
     }
 });
 
+export const updateMarketMakerKyc = takeEvery(actions.UPDATE_MARKET_MAKER_KYC, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.marketMaker.updateKyc, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_MARKET_MAKER_KYC_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.UPDATE_MARKET_MAKER_KYC_RESET });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_MARKET_MAKER_KYC_FAILED,
+            error: error?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+    }
+});
+
 export default function* saga() {
     yield all([
         getAllMarketMaker,
@@ -193,5 +211,6 @@ export default function* saga() {
         addMarketMakerKyb,
         updateMarketMakerKyb,
         addMarketMakerKyc,
+        updateMarketMakerKyc,
     ]);
 }

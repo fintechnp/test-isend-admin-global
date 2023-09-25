@@ -40,11 +40,6 @@ export default function ListBusinessServiceCharge() {
 
     const { success: updateStatusSuccess } = useSelector((state) => state.update_business_charge_status);
 
-    console.log(
-        "🚀 ~ file: ListBusinessServiceCharge.jsx:42 ~ ListBusinessServiceCharge ~ updateStatusSuccess:",
-        updateStatusSuccess,
-    );
-
     const columns = useMemo(
         () => [
             {

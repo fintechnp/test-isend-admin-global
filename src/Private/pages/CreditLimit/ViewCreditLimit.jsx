@@ -1,14 +1,18 @@
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
-import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Loading } from "App/components";
-import PageContent from "App/components/Container/PageContent";
-
 import Modal from "App/components/Modal/Modal";
+import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
+import routePaths from "Private/config/routePaths";
+import { convertDate } from "App/utils/convertDate";
+import PageContent from "App/components/Container/PageContent";
+import { creditLimitStatusEnum } from "./constants/creditLimitStatus";
 import UpdateStatusForm from "Private/components/CreditLimit/UpdateStatusForm";
 import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/CustomerDetails";
 
@@ -17,10 +21,18 @@ import { creditLimitActions } from "./store";
 export default function ViewCreditLimit({ title }) {
     const dispatch = useDispatch();
     const { creditLimitId } = useParams();
+    const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
 
     const { response, loading } = useSelector((state) => state.get_credit_limit_details);
+    const { success, loading: deleting } = useSelector((state) => state.delete_credit_limit);
+
+    useEffect(() => {
+        if (success) {
+            navigate(buildRoute(routePaths.agent.creditLimit));
+        }
+    }, [success]);
 
     useEffect(() => {
         dispatch(creditLimitActions.get_credit_limit_details(creditLimitId));
@@ -42,14 +54,42 @@ export default function ViewCreditLimit({ title }) {
             <PageContent
                 title={title || "Credit Limit Details"}
                 topRightEndContent={
-                    response?.data?.statusName !== "Approved" && (
-                        <Button
-                            onClick={() => {
-                                setOpen(true);
+                    response?.data?.status !== creditLimitStatusEnum.APPROVED && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                alignItems: "center",
                             }}
                         >
-                            Update Status
-                        </Button>
+                            <Button
+                                onClick={() => {
+                                    navigate(buildRoute(routePaths.agent.editCreditLimit, creditLimitId));
+                                }}
+                            >
+                                Update
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setOpen(true);
+                                }}
+                            >
+                                Update Status
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    dispatch(creditLimitActions.delete_credit_limit(creditLimitId));
+                                }}
+                                sx={{
+                                    border: "1px solid #F44336",
+                                    color: "#F44336",
+                                }}
+                                disabled={deleting}
+                                loading={deleting}
+                            >
+                                {deleting ? "Deleting" : "Delete"}
+                            </Button>
+                        </Box>
                     )
                 }
             >
@@ -69,6 +109,9 @@ export default function ViewCreditLimit({ title }) {
                             <RenderField label="Id" value={response?.data?.id} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
+                            <RenderField label="Type" value={response?.data?.relatedTo} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <RenderField label="Name" value={response?.data?.name} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -81,7 +124,7 @@ export default function ViewCreditLimit({ title }) {
                             <RenderField label="Currency" value={response?.data?.currency} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Status" value={response?.data?.status} />
+                            <RenderField label="Status" value={response?.data?.statusName} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Created By" value={response?.data?.createdBy} />
@@ -90,13 +133,19 @@ export default function ViewCreditLimit({ title }) {
                             <RenderField label="Checked By" value={response?.data?.checkedBy} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
+                            <RenderField label="Updated By" value={response?.data?.updatedBy} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <RenderField label="Checker Remarks" value={response?.data?.checkerRemarks} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Created At" value={response?.data?.createdAt} />
+                            <RenderField label="Created At" value={convertDate(response?.data?.createdAt)} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Checked At" value={response?.data?.checkedAt} />
+                            <RenderField label="Checked At" value={convertDate(response?.data?.checkedAt)} />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <RenderField label="Updated At" value={convertDate(response?.data?.updatedAt)} />
                         </Grid>
                     </Grid>
                 )}

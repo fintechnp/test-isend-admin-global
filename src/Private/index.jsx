@@ -429,6 +429,7 @@ import {
 
     //KYC
     AddMarketMakerKYCReducer,
+    EditMarketMakerKYCReducer,
 } from "../Private/pages/MarketMaker/store";
 
 //CREDIT LIMIT
@@ -438,6 +439,8 @@ import {
     GetAllCreditLimitReducer,
     GetCreditLimitByIdReducer,
     UpdateCreditLimitStatusReducer,
+    EditCreditLimitByIdReducer,
+    DeleteCreditLimitByIdReducer,
     creditLimitSaga,
 } from "../Private/pages/CreditLimit/store";
 
@@ -832,12 +835,16 @@ export const privateReducer = {
     // KYC
 
     add_market_maker_kyc: AddMarketMakerKYCReducer,
+    update_market_maker_kyc: EditMarketMakerKYCReducer,
 
     //CREDIT LIMIT
     get_all_credit_limit: GetAllCreditLimitReducer,
     get_credit_limit_details: GetCreditLimitByIdReducer,
     add_credit_limit: AddCreditLimitReducer,
     update_credit_limit: UpdateCreditLimitStatusReducer,
+    update_credit_limit_data: EditCreditLimitByIdReducer,
+
+    delete_credit_limit: DeleteCreditLimitByIdReducer,
 
     // BALANCE REQUEST
 

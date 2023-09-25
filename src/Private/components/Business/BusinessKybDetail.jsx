@@ -113,9 +113,7 @@ export default function BusinessKybDetail({ data, loading, relatedTo }) {
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Registered Entity" value={data?.registeredEntity} />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Business Type" value={data?.businessType} />
-                        </Grid>
+
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Parent" value={data?.parentId} />
                         </Grid>

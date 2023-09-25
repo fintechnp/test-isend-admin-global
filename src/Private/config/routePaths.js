@@ -42,6 +42,7 @@ const routePaths = {
         creditLimit: "/agent/credit-limit",
         addCreditLimit: "/agent/credit-limit/add",
         viewCreditLimit: "/agent/credit-limit/:creditLimitId/view",
+        editCreditLimit: "/agent/credit-limit/:creditLimitId/edit",
 
         listBalanceRequest: "/agent/balance-request",
         viewBalanceRequest: "/agent/balance-request/:balanceRequestId/view",

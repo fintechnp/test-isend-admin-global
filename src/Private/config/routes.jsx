@@ -126,12 +126,14 @@ const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMa
 const AddMarketMakerKyb = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
 const AddMarketMakerKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyc"));
 const UpdateMarketMakerKyb = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyb"));
+const UpdateMarketMakerKyc = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyc"));
 
 ///Credit Limit
 
 const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
 const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
 const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
+const EditCreditLimit = lazy(() => import("../pages/CreditLimit/EditCreditLimit"));
 
 // BALANCE REQUEST
 
@@ -517,11 +519,19 @@ const privateRoutes = [
         path: "/agent/market-maker/:marketMakerId/update-kyb/:kybId",
         component: <UpdateMarketMakerKyb title="Update Market Maker KYB" />,
     },
+    {
+        path: "/agent/market-maker/:marketMakerId/update-kyc/:kycId",
+        component: <UpdateMarketMakerKyc />,
+    },
 
     ///Credit Limit
     { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
     { path: routePaths.agent.addCreditLimit, component: <AddCreditLimit title="Add Credit Limit" /> },
     { path: routePaths.agent.viewCreditLimit, component: <ViewCreditLimit title="Credit Limit Detail" /> },
+    {
+        path: routePaths.agent.editCreditLimit,
+        component: <EditCreditLimit />,
+    },
 
     //BALANCE REQUEST
     { path: routePaths.agent.listBalanceRequest, component: <ListBalanceRequest title="List Balance Request" /> },

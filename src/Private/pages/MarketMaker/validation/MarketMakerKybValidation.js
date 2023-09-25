@@ -10,7 +10,6 @@ export const marketMakerKybValidationSchema = yup.object().shape({
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
-    businessType: yup.string().required("Required"),
     countryId: yup
         .number()
         .transform((value) => (Number.isNaN(value) ? null : value))

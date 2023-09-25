@@ -36,6 +36,12 @@ export default function UpdateStatusForm({ setOpen }) {
     const dispatch = useDispatch();
     const { creditLimitId } = useParams();
 
+    const { watch } = methods;
+
+    const buttonName = watch("action");
+
+    const remarks = watch("remarks");
+
     const { loading, success } = useSelector((state) => state.update_credit_limit);
 
     const handleSubmit = (data) => {
@@ -82,8 +88,14 @@ export default function UpdateStatusForm({ setOpen }) {
                             </CancelButton>
                         </Grid>
                         <Grid item>
-                            <AddButton size="small" variant="outlined" type="submit" loading={loading}>
-                                Update
+                            <AddButton
+                                size="small"
+                                variant="outlined"
+                                type="submit"
+                                loading={loading}
+                                disabled={!remarks || remarks === ""}
+                            >
+                                {buttonName || "Submit"}
                             </AddButton>
                         </Grid>
                     </Grid>
