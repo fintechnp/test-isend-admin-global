@@ -155,6 +155,12 @@ const apiEndpoints = {
         update: "/v1/business-servicecharges/:businessServiceChargeId",
         updateStatus: "/v1/business-servicecharges/:businessServiceChargeId",
     },
+
+    kycUser: {
+        getAll: "/kyc/user",
+        getById: "/kyc/user/:kycUserId",
+        updateStatus: "/kyc/user/:kycUserId/approve",
+    },
 };
 
 export default apiEndpoints;

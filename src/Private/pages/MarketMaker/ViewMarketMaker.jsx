@@ -18,6 +18,7 @@ import referenceTypeId from "Private/config/referenceTypeId";
 import { CountryNameById, ReferenceNameByDataId } from "App/helpers";
 import Spacer from "App/components/Spacer/Spacer";
 import { Loading } from "App/components";
+import { Box, Typography } from "@mui/material";
 
 export default function ViewMarketMaker() {
     const dispatch = useDispatch();
@@ -169,6 +170,33 @@ export default function ViewMarketMaker() {
                                 <RenderField label="Phone No" value={marketMakerDetail?.contactPerson?.phoneNo} />
                             </Grid>
                         </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TitleWrapper>
+                            <Title>Documents</Title>
+                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                        </TitleWrapper>
+                    </Grid>
+                    <Spacer />
+                    <Grid container spacing={2}>
+                        {marketMakerDetail?.documents?.map((item, i) => {
+                            return (
+                                <Grid item xs={4} key={i}>
+                                    <Typography>{item?.documentName}</Typography>
+                                    <a href={item?.documentLink} target="_blank">
+                                        <img
+                                            src={item?.documentLink}
+                                            alt={item?.documentName}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    </a>
+                                </Grid>
+                            );
+                        })}
                     </Grid>
                 </>
             )}

@@ -48,9 +48,9 @@ export const addMarketMaker = takeEvery(actions.ADD_MARKET_MAKER, function* (act
     } catch (error) {
         yield put({
             type: actions.ADD_MARKET_MAKER_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -66,9 +66,9 @@ export const updateMarketMaker = takeEvery(actions.UPDATE_MARKET_MAKER, function
     } catch (error) {
         yield put({
             type: actions.UPDATE_MARKET_MAKER_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 export const updateMarketMakerStatus = takeEvery(actions.UPDATE_MARKET_MAKER_STATUS, function* (action) {
@@ -82,9 +82,9 @@ export const updateMarketMakerStatus = takeEvery(actions.UPDATE_MARKET_MAKER_STA
     } catch (error) {
         yield put({
             type: actions.UPDATE_MARKET_MAKER_STATUS_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -117,9 +117,9 @@ export const addDocument = takeEvery(actions.ADD_DOCUMENT, function* (action) {
     } catch (error) {
         yield put({
             type: actions.ADD_DOCUMENT_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -137,9 +137,9 @@ export const addMarketMakerKyb = takeEvery(actions.ADD_MARKET_MAKER_KYB, functio
     } catch (error) {
         yield put({
             type: actions.ADD_MARKET_MAKER_KYB_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -155,9 +155,9 @@ export const updateMarketMakerKyb = takeEvery(actions.UPDATE_MARKET_MAKER_KYB, f
     } catch (error) {
         yield put({
             type: actions.UPDATE_MARKET_MAKER_KYB_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -175,9 +175,9 @@ export const addMarketMakerKyc = takeEvery(actions.ADD_MARKET_MAKER_KYC, functio
     } catch (error) {
         yield put({
             type: actions.ADD_MARKET_MAKER_KYC_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -193,9 +193,9 @@ export const updateMarketMakerKyc = takeEvery(actions.UPDATE_MARKET_MAKER_KYC, f
     } catch (error) {
         yield put({
             type: actions.UPDATE_MARKET_MAKER_KYC_FAILED,
-            error: error?.message,
+            error: error?.data?.message,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.message });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

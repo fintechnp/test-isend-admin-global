@@ -61,6 +61,9 @@ const routePaths = {
         listBusinessServiceCharge: "/agent/business-service-charge",
         addBusinessServiceCharge: "/agent/business-service-charge/add",
         updateBusinessServiceCharge: "/agent/business-service-charge/:businessServiceChargeId/update",
+
+        listKycUser: "/agent/kyc-user",
+        viewKycUser: "/agent/kyc-user/:kycUserId/view",
     },
 };
 

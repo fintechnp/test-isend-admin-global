@@ -460,6 +460,12 @@ const PrivateLayout = () => {
                         sub: false,
                     },
                     {
+                        path: routePaths.agent.listKycUser,
+                        key: "kyc-user",
+                        text: "KYC Users",
+                        sub: false,
+                    },
+                    {
                         path: routePaths.agent.listBusinessServiceCharge,
                         key: "business-service-charge",
                         text: "Business Service Charge",

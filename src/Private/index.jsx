@@ -498,6 +498,13 @@ import {
     businessChargeSaga,
 } from "Private/pages/BusinessServiceCharge/store";
 
+import {
+    GetAllKycUserValueReducer,
+    GetKycUserIdValueReducer,
+    KycUserSaga,
+    UpdateKycUserStatusReducer,
+} from "Private/pages/KycUser/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -881,6 +888,11 @@ export const privateReducer = {
     add_business_charge: AddBusinessChargeReducer,
     update_business_charge_status: UpdateBusinessChargeStatusReducer,
     update_business_charge: UpdateBusinessChargeReducer,
+
+    //KYC USER
+    get_all_kyc_user: GetAllKycUserValueReducer,
+    get_kyc_user_details: GetKycUserIdValueReducer,
+    update_kyc_user_status: UpdateKycUserStatusReducer,
 };
 
 export const privateSaga = [
@@ -934,6 +946,7 @@ export const privateSaga = [
     batchTransactionSaga(),
     beneficiarySaga(),
     businessChargeSaga(),
+    KycUserSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

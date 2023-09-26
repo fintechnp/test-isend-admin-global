@@ -159,6 +159,11 @@ const ListBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCha
 const AddBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/AddBusinessServiceCharge"));
 const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/UpdateBusinessServiceCharge"));
 
+//LIST KYC USER
+
+const ListKycUser = lazy(() => import("../pages/KycUser/ListKycUser"));
+const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -565,6 +570,11 @@ const privateRoutes = [
         path: routePaths.agent.updateBusinessServiceCharge,
         component: <UpdateBusinessServiceCharge />,
     },
+
+    // LIST KYC USER
+
+    { path: routePaths.agent.listKycUser, component: <ListKycUser /> },
+    { path: routePaths.agent.viewKycUser, component: <ViewKycUser /> },
 ];
 
 export default privateRoutes;
