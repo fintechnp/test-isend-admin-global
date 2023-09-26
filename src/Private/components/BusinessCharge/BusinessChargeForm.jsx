@@ -29,7 +29,7 @@ import routePaths from "Private/config/routePaths";
 
 export const relatedToEnum = {
     business: "business",
-    marketmaker: "marketMaker",
+    marketmaker: "marketmaker",
 };
 const relatedToOptions = [
     {

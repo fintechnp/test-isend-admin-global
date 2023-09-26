@@ -23,8 +23,6 @@ export default function AddBusinessServiceCharge() {
         formState: { errors },
     } = methods;
 
-    console.log("🚀 ~ file: AddBusinessServiceCharge.jsx:24 ~ AddBusinessServiceCharge ~ errors:", errors);
-
     useEffect(() => {
         setValue("relatedTo", "business");
     }, []);
