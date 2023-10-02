@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import buildRoute from "App/helpers/buildRoute";
+import { Loading } from "App/components";
 import Center from "App/components/Center/Center";
 import HookForm from "App/core/hook-form/HookForm";
 import routePaths from "Private/config/routePaths";
@@ -14,7 +14,6 @@ import { businessActions } from "Private/pages/Business/store";
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
 import { marketMakerUserKycValidationSchema } from "./validation/MarketMakerKycValidation";
-import { Loading } from "App/components";
 
 export default function UpdateMarketMakerKyc() {
     const { userId, kycId } = useParams();
@@ -30,7 +29,6 @@ export default function UpdateMarketMakerKyc() {
     const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_market_maker_kyc);
 
     const kycData = response?.data;
-    console.log("🚀 ~ file: EditMarketMakerUserKyc.jsx:33 ~ UpdateMarketMakerKyc ~ kycData:", kycData);
 
     useEffect(() => {
         dispatch(businessActions.get_business_kyc_details(kycId));

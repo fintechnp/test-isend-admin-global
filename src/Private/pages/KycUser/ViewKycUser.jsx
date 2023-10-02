@@ -9,15 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "App/components";
 import Modal from "App/components/Modal/Modal";
 import Button from "App/components/Button/Button";
+import { ReferenceNameByDataId } from "App/helpers";
 import { convertDate } from "App/utils/convertDate";
+import referenceTypeId from "Private/config/referenceTypeId";
 import PageContent from "App/components/Container/PageContent";
+import UpdateKycUserStatusForm from "Private/components/KycUser/UpdateKycUserStatusForm";
 import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/CustomerDetails";
-import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/UpdateStatusForm";
 
 import { KycUserActions } from "./store";
-import UpdateKycUserStatusForm from "Private/components/KycUser/UpdateKycUserStatusForm";
-import referenceTypeId from "Private/config/referenceTypeId";
-import { ReferenceNameByDataId } from "App/helpers";
 
 export default function ViewKycUser() {
     const dispatch = useDispatch();

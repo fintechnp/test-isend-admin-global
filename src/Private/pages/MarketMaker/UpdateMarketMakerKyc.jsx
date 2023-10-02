@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { Loading } from "App/components";
 import buildRoute from "App/helpers/buildRoute";
 import Center from "App/components/Center/Center";
 import HookForm from "App/core/hook-form/HookForm";
@@ -14,7 +15,6 @@ import { businessActions } from "Private/pages/Business/store";
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
 import { marketMakerKycValidationSchema } from "./validation/MarketMakerKycValidation";
-import { Loading } from "App/components";
 
 export default function UpdateMarketMakerKyc() {
     const { marketMakerId, kycId } = useParams();

@@ -1,28 +1,28 @@
+import { format } from "date-fns";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Divider from "@mui/material/Divider";
 import { useNavigate } from "react-router-dom";
-import { useFieldArray, useFormContext } from "react-hook-form";
 import Typography from "@mui/material/Typography";
-import { format } from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 import ucwords from "App/helpers/ucwords";
+import Center from "App/components/Center/Center";
 import routePaths from "Private/config/routePaths";
+import UploadFile from "App/core/upload/uploadFile";
 import FormSelect from "App/core/hook-form/FormSelect";
 import { localStorageGet } from "App/helpers/localStorage";
 import FormTextField from "App/core/hook-form/FormTextField";
+import referenceTypeId from "Private/config/referenceTypeId";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 import FormMultiSelect from "App/core/hook-form/FormMultiSelect";
-import referenceTypeId from "Private/config/referenceTypeId";
+import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
+import CircularProgress from "App/components/Loading/CircularProgress";
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
-import UploadFile from "App/core/upload/uploadFile";
-import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
-import Center from "App/components/Center/Center";
-import CircularProgress from "App/components/Loading/CircularProgress";
 
 const registeredCountyOptions = [
     {
@@ -161,7 +161,6 @@ export default function MarketMakerForm({ isAddMode = true }) {
 
     const handleChange = (document, file) => {
         const index = documents.findIndex((d) => d.documentTypeId === document.documentTypeId);
-        console.log("🚀 ~ file: MarketMakerForm.jsx:166 ~ handleChange ~ index:", index);
 
         update(index, {
             ...documents[index],
