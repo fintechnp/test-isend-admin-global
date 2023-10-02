@@ -42,6 +42,7 @@ const routePaths = {
         creditLimit: "/agent/credit-limit",
         addCreditLimit: "/agent/credit-limit/add",
         viewCreditLimit: "/agent/credit-limit/:creditLimitId/view",
+        editCreditLimit: "/agent/credit-limit/:creditLimitId/edit",
 
         listBalanceRequest: "/agent/balance-request",
         viewBalanceRequest: "/agent/balance-request/:balanceRequestId/view",
@@ -60,6 +61,11 @@ const routePaths = {
         listBusinessServiceCharge: "/agent/business-service-charge",
         addBusinessServiceCharge: "/agent/business-service-charge/add",
         updateBusinessServiceCharge: "/agent/business-service-charge/:businessServiceChargeId/update",
+
+        listKycUser: "/agent/kyc-user",
+        viewKycUser: "/agent/kyc-user/:kycUserId/view",
+        addUserKyc: "/agent/kyc-user/:userId/add",
+        editUserKyc: "/agent/kyc-user/:kycId/edit",
     },
 };
 

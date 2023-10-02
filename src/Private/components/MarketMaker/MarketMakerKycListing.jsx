@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
 
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import Modal from "App/components/Modal/Modal";
@@ -79,6 +80,20 @@ export default function MarketMakerKycListing() {
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                navigate(`/agent/market-maker/${marketMakerId}/update-kyc/${row?.original?.kycId}`);
+                            }}
+                        >
+                            <EditOutlinedIcon
                                 sx={{
                                     fontSize: "20px",
                                     "&:hover": {

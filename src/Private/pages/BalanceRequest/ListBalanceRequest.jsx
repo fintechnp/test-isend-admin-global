@@ -26,6 +26,29 @@ const initialState = {
     PageSize: 10,
 };
 
+const sortByOptions = [
+    {
+        label: "Name",
+        value: "name",
+    },
+    {
+        label: "Deposited Amount",
+        value: "deposited_amount",
+    },
+    {
+        label: "Currency",
+        value: "currency",
+    },
+    {
+        label: "Date of deposit",
+        value: "deposit_date",
+    },
+    {
+        label: "Status",
+        value: "status",
+    },
+];
+
 export default function ListBalanceRequest({ title }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -34,13 +57,13 @@ export default function ListBalanceRequest({ title }) {
 
     const { response: balanceRequestData, loading } = useSelector((state) => state.get_all_balance_request);
 
-    const sortByOptions =
-        balanceRequestData?.data?.length > 0 &&
-        Object.keys(balanceRequestData?.data[0])
-            ?.map((item) => {
-                return { value: item, label: item };
-            })
-            .filter((item) => item.label !== "f_serial_no");
+    // const sortByOptions =
+    //     balanceRequestData?.data?.length > 0 &&
+    //     Object.keys(balanceRequestData?.data[0])
+    //         ?.map((item) => {
+    //             return { value: item, label: item };
+    //         })
+    //         .filter((item) => item.label !== "f_serial_no");
 
     useEffect(() => {
         dispatch(actions.get_all_balance_request(filterSchema));
@@ -57,8 +80,8 @@ export default function ListBalanceRequest({ title }) {
                 accessorKey: "relatedTo",
             },
             {
-                header: "Depositor Name",
-                accessorKey: "depositorName",
+                header: "Name",
+                accessorKey: "name",
             },
             {
                 header: "Deposited Amount",
@@ -66,28 +89,20 @@ export default function ListBalanceRequest({ title }) {
                 cell: ({ getValue }) => <>{FormatNumber(getValue())}</>,
             },
             {
-                header: "Depositor Method Name",
+                header: "Currency",
+                accessorKey: "currency",
+            },
+            {
+                header: "Depositor Method",
                 accessorKey: "depositoryMethodName",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },
             {
-                header: "Deposit Date",
+                header: "Date of Deposit",
                 accessorKey: "depositDate",
                 cell: ({ getValue }) => <Typography>{getValue() ? convertDate(getValue()) : "N/A"}</Typography>,
             },
-            {
-                header: "Remarks",
-                accessorKey: "remarks",
-                cell: ({ getValue }) => (
-                    <Typography
-                        sx={{
-                            maxWidth: 250,
-                        }}
-                    >
-                        {getValue() ? getValue() : "N/A"}
-                    </Typography>
-                ),
-            },
+
             {
                 header: "Status",
                 accessorKey: "statusName",

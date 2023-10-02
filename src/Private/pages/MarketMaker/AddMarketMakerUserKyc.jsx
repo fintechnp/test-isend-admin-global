@@ -4,34 +4,33 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
-import { marketMakerKycValidationSchema } from "./validation/MarketMakerKycValidation";
+import { marketMakerUserKycValidationSchema } from "./validation/MarketMakerKycValidation";
 
-export default function AddMarketMakerKyc({ title }) {
+export default function AddMarketMakerUserKyc() {
     const methods = useForm({
-        resolver: yupResolver(marketMakerKycValidationSchema),
+        resolver: yupResolver(marketMakerUserKycValidationSchema),
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { marketMakerId } = useParams();
+    const { userId } = useParams();
 
     const { loading, success } = useSelector((state) => state.add_market_maker_kyc);
+
+    useEffect(() => {
+        if (success) {
+            navigate(routePaths.agent.listMarketMaker);
+        }
+    }, [success]);
 
     const {
         formState: { errors },
     } = methods;
-
-    useEffect(() => {
-        if (success) {
-            navigate(buildRoute(routePaths.agent.viewMarketMaker, marketMakerId));
-        }
-    }, [success]);
 
     const onSubmitData = (data) => {
         const {
@@ -72,15 +71,17 @@ export default function AddMarketMakerKyc({ title }) {
                 state: permanentAddressState,
                 address: permanentAddressAddress,
             },
+            userId,
+            isBusinessUser: true,
             ...rest,
         };
         dispatch(actions.add_market_maker_kyc(dataToSend));
     };
 
     return (
-        <PageContent title="Add Agent KYC">
+        <PageContent title="Add Agent User KYC">
             <HookForm onSubmit={onSubmitData} {...methods}>
-                <MarketMakerKycForm formLoading={loading} />
+                <MarketMakerKycForm formLoading={loading} isDefaultUserKyc={true} />
             </HookForm>
         </PageContent>
     );

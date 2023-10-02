@@ -9,24 +9,30 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_MARKET_MAKER_DETAILS:
+        case actions.DELETE_CREDIT_LIMIT:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_MARKET_MAKER_DETAILS_SUCCESS:
+        case actions.DELETE_CREDIT_LIMIT_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.GET_MARKET_MAKER_DETAILS_FAILED:
+        case actions.DELETE_CREDIT_LIMIT_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
+            };
+        case actions.DELETE_CREDIT_LIMIT_RESET:
+            return {
+                success: false,
+                loading: false,
+                error: null,
                 response: [],
             };
         default:

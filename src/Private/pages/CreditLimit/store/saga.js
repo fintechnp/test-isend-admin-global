@@ -59,6 +59,24 @@ export const addCreditLimit = takeEvery(actions.ADD_CREDIT_LIMIT, function* (act
     }
 });
 
+export const updateCreditLimit = takeEvery(actions.UPDATE_CREDIT_LIMIT, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.creditLimit.updateData, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_CREDIT_LIMIT_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.UPDATE_CREDIT_LIMIT_RESET });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_CREDIT_LIMIT_FAILED,
+            error: error?.data?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export const updateCreditLimitStatus = takeEvery(actions.UPDATE_CREDIT_LIMIT_STATUS, function* (action) {
     try {
         const res = yield call(api.put, buildRoute(apiEndpoints.creditLimit.update, action.id), action.data);
@@ -79,6 +97,33 @@ export const updateCreditLimitStatus = takeEvery(actions.UPDATE_CREDIT_LIMIT_STA
     }
 });
 
+export const deleteCreditLimit = takeEvery(actions.DELETE_CREDIT_LIMIT, function* (action) {
+    try {
+        const res = yield call(api.delete, buildRoute(apiEndpoints.creditLimit.delete, action.id));
+        yield put({
+            type: actions.DELETE_CREDIT_LIMIT_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({
+            type: actions.DELETE_CREDIT_LIMIT_RESET,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.DELETE_CREDIT_LIMIT_FAILED,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
-    yield all([getAllCreditLimit, getCreditLimitByIdDetails, addCreditLimit, updateCreditLimitStatus]);
+    yield all([
+        getAllCreditLimit,
+        getCreditLimitByIdDetails,
+        addCreditLimit,
+        updateCreditLimit,
+        updateCreditLimitStatus,
+        deleteCreditLimit,
+    ]);
 }

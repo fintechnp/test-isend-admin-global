@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
 
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 
 import BusinessChargeForm from "Private/components/BusinessCharge/BusinessChargeForm";
-import { businessChargeActions as actions } from "./store";
 import { businessChargeValidationSchema } from "./validations/AddBusinessServiceChargeValidation";
+
+import { businessChargeActions as actions } from "./store";
 
 export default function AddBusinessServiceCharge() {
     const dispatch = useDispatch();
@@ -22,8 +23,6 @@ export default function AddBusinessServiceCharge() {
         setValue,
         formState: { errors },
     } = methods;
-
-    console.log("🚀 ~ file: AddBusinessServiceCharge.jsx:24 ~ AddBusinessServiceCharge ~ errors:", errors);
 
     useEffect(() => {
         setValue("relatedTo", "business");

@@ -55,7 +55,12 @@ export default function UploadFile(props) {
         if (response) {
             if (success) {
                 setIsFileUploaded(true);
-                if (typeof onUploadSuccess === "function") onUploadSuccess(response?.data);
+                if (typeof onUploadSuccess === "function") {
+                    onUploadSuccess(response?.data);
+                    dispatch({
+                        type: "ADD_DOCUMENT_RESET",
+                    });
+                }
             }
         }
     }, [response]);

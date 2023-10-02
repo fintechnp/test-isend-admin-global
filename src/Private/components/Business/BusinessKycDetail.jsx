@@ -186,7 +186,7 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
                         <RenderField label="Country" value={data?.temporaryAddress?.country} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Country Details" value={data?.temporaryAddress?.countryDetails} />
+                        <RenderField label="Country Details" value={data?.temporaryAddress?.countryDetails?.country} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Post Code" value={data?.temporaryAddress?.postCode} />
@@ -216,7 +216,7 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
                         <RenderField label="Country" value={data?.permanentAddress?.country} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Country Details" value={data?.permanentAddress?.countryDetails} />
+                        <RenderField label="Country Details" value={data?.permanentAddress?.countryDetails?.country} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Post Code" value={data?.permanentAddress?.postCode} />

@@ -60,6 +60,8 @@ export default function UpdateMarketMaker({ title }) {
         setValue("contactMobileNo", marketMakerDetail?.contactPerson?.mobileNo);
         setValue("contactPhoneNo", marketMakerDetail?.contactPerson?.phoneNo);
         setValue("contactPersonExtension", marketMakerDetail?.contactPerson?.extension);
+
+        setValue("documents", marketMakerDetail?.documents || []);
     }, [marketMakerDetail]);
 
     const onSubmitData = (data) => {

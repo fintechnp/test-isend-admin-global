@@ -18,6 +18,8 @@ import referenceTypeId from "Private/config/referenceTypeId";
 import { CountryNameById, ReferenceNameByDataId } from "App/helpers";
 import Spacer from "App/components/Spacer/Spacer";
 import { Loading } from "App/components";
+import { Box, Typography } from "@mui/material";
+import MarketMakerUserKycListing from "Private/components/MarketMaker/MarketMakerUserKycListing";
 
 export default function ViewMarketMaker() {
     const dispatch = useDispatch();
@@ -31,6 +33,11 @@ export default function ViewMarketMaker() {
     }, []);
 
     const tabs = [
+        {
+            key: "user",
+            tabName: "User",
+            tabContent: <MarketMakerUserKycListing userData={response?.data?.user ?? {}} loading={loading} />,
+        },
         {
             key: "kyB",
             tabName: "KYB",
@@ -170,10 +177,39 @@ export default function ViewMarketMaker() {
                             </Grid>
                         </Grid>
                     </Grid>
+                    <Grid item xs={12}>
+                        <TitleWrapper>
+                            <Title>Documents</Title>
+                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                        </TitleWrapper>
+                    </Grid>
+                    <Spacer />
+                    <Grid container spacing={2}>
+                        {marketMakerDetail?.documents?.map((item, i) => {
+                            return (
+                                <Grid item xs={4} key={i}>
+                                    <Typography>{item?.documentName}</Typography>
+                                    <a href={item?.documentLink} target="_blank">
+                                        <img
+                                            src={item?.documentLink}
+                                            alt={item?.documentName}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    </a>
+                                </Grid>
+                            );
+                        })}
+                    </Grid>
                 </>
             )}
             <Spacer />
-            <Tabs tabs={tabs} />
+            <Box mt={2}>
+                <Tabs tabs={tabs} />
+            </Box>
         </PageContent>
     );
 }

@@ -12,6 +12,7 @@ import { creditLimitActions } from "Private/pages/CreditLimit/store";
 import FormTextField from "App/core/hook-form/FormTextField";
 import ucwords from "App/helpers/ucwords";
 import { localStorageGet } from "App/helpers/localStorage";
+import { creditLimitStatusEnum } from "Private/pages/CreditLimit/constants/creditLimitStatus";
 
 const orderByOptions = [
     { label: "Ascending", value: "ASC" },
@@ -21,23 +22,23 @@ const orderByOptions = [
 const statusOptions = [
     {
         label: "Initial",
-        value: 1,
+        value: creditLimitStatusEnum.INITIAL,
     },
     {
         label: "Success",
-        value: 2,
+        value: creditLimitStatusEnum.SUCCESS,
     },
     {
         label: "Pending",
-        value: 3,
+        value: creditLimitStatusEnum.PENDING,
     },
     {
         label: "Approved",
-        value: 4,
+        value: creditLimitStatusEnum.APPROVED,
     },
     {
         label: "Rejected",
-        value: 5,
+        value: creditLimitStatusEnum.REJECTED,
     },
 ];
 
@@ -74,24 +75,21 @@ export default function FilterForm({ sortByOptions, setFilterSchema }) {
                     <Grid item xs={12} sm={6}>
                         <FormTextField name="BusinessNameFilter" label="Business Name" />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <FormDatePicker name="FromDate" label="From Date" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <FormDatePicker name="ToDate" label="To Date" />
-                    </Grid>
+
                     <Grid item xs={12} sm={6}>
                         <FormSelect name="StatusFilter" options={statusOptions} label="Status" />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <FormSelect name="OrderBy" options={orderByOptions} label="Order By" />
-                    </Grid>
+
                     <Grid item xs={12} sm={6}>
                         <FormSelect name="CurrencyFilter" options={currencyOptions} label="Currency" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormSelect name="SortBy" options={sortByOptions} label="Sort By" />
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormSelect name="OrderBy" options={orderByOptions} label="Order By" />
+                    </Grid>
+
                     <Grid item xs={12}>
                         <ButtonWrapper
                             container

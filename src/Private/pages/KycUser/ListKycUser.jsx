@@ -1,47 +1,59 @@
 import Grid from "@mui/material/Grid";
+import React, { useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useMemo, useState } from "react";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
-import { ReferenceName } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
 import routePaths from "Private/config/routePaths";
 import { TablePagination } from "App/components/Table";
 import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
+import FilterForm from "Private/components/KycUser/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { beneficiaryActions as actions } from "./store";
-import BeneficiaryFilterForm from "Private/components/Beneficiary/BeneficiaryFilterForm";
-import { localStorageGet } from "App/helpers/localStorage";
+import { KycUserActions as actions } from "Private/pages/KycUser/store";
 
 const initialState = {
-    page_number: 1,
-    page_size: 10,
+    Page: 1,
+    PageSize: 10,
 };
-export default function ListBeneficiary() {
+
+export default function ListKycUser() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
-    const reference = localStorageGet("reference");
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response, loading } = useSelector((state) => state.get_all_beneficiary);
+    const { response, loading } = useSelector((state) => state.get_all_kyc_user);
 
-    const sortByOptions =
-        response?.data?.length > 0 &&
-        Object.keys(response?.data[0])
-            ?.map((item) => {
-                return { value: item, label: item };
-            })
-            .filter((item) => item.label !== "f_serial_no");
+    useEffect(() => {
+        dispatch(actions.get_all_kyc_user(filterSchema));
+    }, []);
+
+    const handleChangePage = (e, newPage) => {
+        const updatedFilter = {
+            ...filterSchema,
+            Page: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
+    };
+
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            PageSize: pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const columns = useMemo(
         () => [
@@ -50,58 +62,45 @@ export default function ListBeneficiary() {
                 accessorKey: "f_serial_no",
             },
             {
-                header: "Beneficiary  Name",
-                accessorKey: "name",
-                cell: ({ getValue, row }) => (
-                    <Typography>
-                        {row?.original?.beneficiary_type_id === 1
-                            ? `${row?.original?.first_name} ${row?.original?.last_name}`
-                            : getValue()}
-                    </Typography>
-                ),
+                header: "Name",
+                accessorKey: "fullName",
             },
             {
-                header: "Beneficiary Type",
-                accessorKey: "beneficiary_type",
+                header: "Date of Birth",
+                accessorKey: "dateOfBirth",
             },
             {
-                header: "Agent/Business",
-                accessorKey: "related_to",
+                header: "Gender",
+                accessorKey: "genderName",
             },
             {
-                header: "Country",
-                accessorKey: "registered_country",
-                cell: ({ getValue, row }) => (
-                    <Typography>
-                        {row?.original?.beneficiary_type_id === 1 ? row?.original?.identity_issue_country : getValue()}
-                    </Typography>
-                ),
+                header: "Identity No",
+                accessorKey: "identityNo",
+            },
+            {
+                header: "Identity Issued Country",
+                accessorKey: "identityIssuedCountry.country",
+            },
+            {
+                header: "Mobile Number",
+                accessorKey: "mobileNumber",
             },
 
             {
-                header: "Currency",
-                accessorKey: "currency",
-            },
-
-            {
-                header: "Delivery Method",
-                accessorKey: "payment_type_id",
-                cell: ({ getValue }) => <Typography>{ReferenceName(1, getValue())}</Typography>,
+                header: "Remarks",
+                accessorKey: "remarks",
             },
             {
                 header: "Status",
-                accessorKey: "status",
+                accessorKey: "statusName",
             },
-
             {
                 header: "Actions",
                 cell: ({ row }) => (
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(
-                                    buildRoute(routePaths.agent.viewB2bBeneficiary, row?.original?.beneficiary_id),
-                                );
+                                navigate(buildRoute(routePaths.agent.viewKycUser, row?.original?.kycId));
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
@@ -119,46 +118,25 @@ export default function ListBeneficiary() {
         ],
         [],
     );
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_size: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    useEffect(() => {
-        dispatch(actions.get_all_beneficiary(filterSchema));
-    }, [filterSchema]);
 
     return (
-        <PageContent title="B2B Beneficiary List">
+        <PageContent title="Kyc Users">
             {loading && (
                 <Grid item xs={12}>
                     <Loading loading={loading} />
                 </Grid>
             )}
-
-            <BeneficiaryFilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} />
+            <FilterForm setFilterSchema={setFilterSchema} loading={loading} />
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
-                    <NoResults text="No Beneficiary Found" />
+                    <NoResults text="No KYC Users Found" />
                 </Grid>
             ) : (
                 <>
                     <Spacer />
                     <TanstackReactTable
                         columns={columns}
-                        title="Beneficiary"
+                        title="KYC USERS"
                         data={response?.data ?? []}
                         loading={loading}
                         renderPagination={() => (

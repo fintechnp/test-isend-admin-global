@@ -429,6 +429,7 @@ import {
 
     //KYC
     AddMarketMakerKYCReducer,
+    EditMarketMakerKYCReducer,
 } from "../Private/pages/MarketMaker/store";
 
 //CREDIT LIMIT
@@ -438,6 +439,8 @@ import {
     GetAllCreditLimitReducer,
     GetCreditLimitByIdReducer,
     UpdateCreditLimitStatusReducer,
+    EditCreditLimitByIdReducer,
+    DeleteCreditLimitByIdReducer,
     creditLimitSaga,
 } from "../Private/pages/CreditLimit/store";
 
@@ -494,6 +497,13 @@ import {
     UpdateBusinessChargeReducer,
     businessChargeSaga,
 } from "Private/pages/BusinessServiceCharge/store";
+
+import {
+    GetAllKycUserValueReducer,
+    GetKycUserIdValueReducer,
+    KycUserSaga,
+    UpdateKycUserStatusReducer,
+} from "Private/pages/KycUser/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -832,12 +842,16 @@ export const privateReducer = {
     // KYC
 
     add_market_maker_kyc: AddMarketMakerKYCReducer,
+    update_market_maker_kyc: EditMarketMakerKYCReducer,
 
     //CREDIT LIMIT
     get_all_credit_limit: GetAllCreditLimitReducer,
     get_credit_limit_details: GetCreditLimitByIdReducer,
     add_credit_limit: AddCreditLimitReducer,
     update_credit_limit: UpdateCreditLimitStatusReducer,
+    update_credit_limit_data: EditCreditLimitByIdReducer,
+
+    delete_credit_limit: DeleteCreditLimitByIdReducer,
 
     // BALANCE REQUEST
 
@@ -874,6 +888,11 @@ export const privateReducer = {
     add_business_charge: AddBusinessChargeReducer,
     update_business_charge_status: UpdateBusinessChargeStatusReducer,
     update_business_charge: UpdateBusinessChargeReducer,
+
+    //KYC USER
+    get_all_kyc_user: GetAllKycUserValueReducer,
+    get_kyc_user_details: GetKycUserIdValueReducer,
+    update_kyc_user_status: UpdateKycUserStatusReducer,
 };
 
 export const privateSaga = [
@@ -927,6 +946,7 @@ export const privateSaga = [
     batchTransactionSaga(),
     beneficiarySaga(),
     businessChargeSaga(),
+    KycUserSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
