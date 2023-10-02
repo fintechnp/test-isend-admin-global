@@ -164,6 +164,9 @@ const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceC
 const ListKycUser = lazy(() => import("../pages/KycUser/ListKycUser"));
 const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
 
+const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
+const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -575,6 +578,8 @@ const privateRoutes = [
 
     { path: routePaths.agent.listKycUser, component: <ListKycUser /> },
     { path: routePaths.agent.viewKycUser, component: <ViewKycUser /> },
+    { path: routePaths.agent.addUserKyc, component: <AddMarketMakerUserKyc /> },
+    { path: routePaths.agent.editUserKyc, component: <EditMarketMakerUserKyc /> },
 ];
 
 export default privateRoutes;

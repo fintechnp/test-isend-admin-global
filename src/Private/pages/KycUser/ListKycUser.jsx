@@ -28,12 +28,11 @@ const initialState = {
 export default function ListKycUser() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response, loading } = useSelector((state) => state.get_all_kyc_user);
-
-    console.log("🚀 ~ file: ListKycUser.jsx:19 ~ ListKycUser ~ response:", response);
 
     useEffect(() => {
         dispatch(actions.get_all_kyc_user(filterSchema));
@@ -62,19 +61,46 @@ export default function ListKycUser() {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
+            {
+                header: "Name",
+                accessorKey: "fullName",
+            },
+            {
+                header: "Date of Birth",
+                accessorKey: "dateOfBirth",
+            },
+            {
+                header: "Gender",
+                accessorKey: "genderName",
+            },
+            {
+                header: "Identity No",
+                accessorKey: "identityNo",
+            },
+            {
+                header: "Identity Issued Country",
+                accessorKey: "identityIssuedCountry.country",
+            },
+            {
+                header: "Mobile Number",
+                accessorKey: "mobileNumber",
+            },
 
+            {
+                header: "Remarks",
+                accessorKey: "remarks",
+            },
             {
                 header: "Status",
                 accessorKey: "statusName",
             },
             {
                 header: "Actions",
-                accessorKey: "show",
                 cell: ({ row }) => (
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewKycUser, row?.original?.id));
+                                navigate(buildRoute(routePaths.agent.viewKycUser, row?.original?.kycId));
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon

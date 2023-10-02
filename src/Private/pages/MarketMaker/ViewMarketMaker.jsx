@@ -19,6 +19,7 @@ import { CountryNameById, ReferenceNameByDataId } from "App/helpers";
 import Spacer from "App/components/Spacer/Spacer";
 import { Loading } from "App/components";
 import { Box, Typography } from "@mui/material";
+import MarketMakerUserKycListing from "Private/components/MarketMaker/MarketMakerUserKycListing";
 
 export default function ViewMarketMaker() {
     const dispatch = useDispatch();
@@ -32,6 +33,11 @@ export default function ViewMarketMaker() {
     }, []);
 
     const tabs = [
+        {
+            key: "user",
+            tabName: "User",
+            tabContent: <MarketMakerUserKycListing userData={response?.data?.user ?? {}} loading={loading} />,
+        },
         {
             key: "kyB",
             tabName: "KYB",
@@ -201,7 +207,9 @@ export default function ViewMarketMaker() {
                 </>
             )}
             <Spacer />
-            <Tabs tabs={tabs} />
+            <Box mt={2}>
+                <Tabs tabs={tabs} />
+            </Box>
         </PageContent>
     );
 }

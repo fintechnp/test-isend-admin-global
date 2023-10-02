@@ -12,18 +12,7 @@ import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 
 import { KycUserActions } from "Private/pages/KycUser/store";
-
-const StatusOptions = [
-    {
-        label: "status1",
-        value: 1,
-    },
-
-    {
-        label: "status2",
-        value: 2,
-    },
-];
+import { statusOptions } from "../Business/BusinessKycDetail";
 
 const UpdateStatusFormValidation = yup.object().shape({
     status: yup.string().required("Status is required"),
@@ -56,7 +45,7 @@ export default function UpdateKycUserStatusForm({ setOpen }) {
         <HookForm onSubmit={handleSubmit} {...methods}>
             <Grid container item xs={12} direction="row" spacing={2}>
                 <Grid item xs={12} sm={12}>
-                    <FormSelect name="status" label="Status" options={StatusOptions ?? []} showChooseOption={false} />
+                    <FormSelect name="status" label="Status" options={statusOptions ?? []} showChooseOption={false} />
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <FormTextField name="remarks" label="Remarks" />

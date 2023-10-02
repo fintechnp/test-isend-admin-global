@@ -142,8 +142,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
     }, [success, updateSuccess]);
 
     const handleFileUploadSuccess = (document, documentId) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
-
+        const index = documents.findIndex((d) => d.documentTypeId === document.documentTypeId);
         update(index, {
             ...documents[index],
             ...{ documentId },
@@ -151,7 +150,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
     };
 
     const handleRemove = (document) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const index = documents.findIndex((d) => d.documentTypeId === document.documentTypeId);
 
         update(index, {
             ...documents[index],
@@ -161,7 +160,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
     };
 
     const handleChange = (document, file) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const index = documents.findIndex((d) => d.documentTypeId === document.documentTypeId);
+        console.log("🚀 ~ file: MarketMakerForm.jsx:166 ~ handleChange ~ index:", index);
 
         update(index, {
             ...documents[index],
@@ -369,7 +369,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                         <>
                             {registeredCountryId &&
                                 documents.map((document, i) => (
-                                    <Grid key={document.documentTypeId} item xs={12} md={6}>
+                                    <Grid key={i} item xs={12} md={6}>
                                         <FormInputWrapper
                                             label={document.documentName}
                                             errorMessage={errors?.documents?.[i]?.documentId?.message}
@@ -384,7 +384,9 @@ export default function MarketMakerForm({ isAddMode = true }) {
                                                     "image/jpg",
                                                 ]}
                                                 onFileRemove={() => handleRemove(document)}
-                                                onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
+                                                onUploadSuccess={(id) => {
+                                                    handleFileUploadSuccess(document, id);
+                                                }}
                                                 error={!!errors?.documents?.[i]?.documentId?.message}
                                                 onChange={(file) => handleChange(document, file)}
                                                 file={document?.file ?? document?.documentLink}

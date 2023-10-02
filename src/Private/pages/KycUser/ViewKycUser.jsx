@@ -16,6 +16,8 @@ import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/Up
 
 import { KycUserActions } from "./store";
 import UpdateKycUserStatusForm from "Private/components/KycUser/UpdateKycUserStatusForm";
+import referenceTypeId from "Private/config/referenceTypeId";
+import { ReferenceNameByDataId } from "App/helpers";
 
 export default function ViewKycUser() {
     const dispatch = useDispatch();
@@ -67,48 +69,170 @@ export default function ViewKycUser() {
                             <Divider sx={{ flexGrow: 1, ml: 1 }} />
                         </TitleWrapper>
                     </Grid>
-                    {/* <Grid item xs={12} sm={6}>
-                        <RenderField label="Name" value={response?.data?.name} />
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Name" value={response?.data?.fullName} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Name" value={response?.data?.name} />
+                        <RenderField label="Gender" value={response?.data?.genderName} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Deposited Amount" value={response?.data?.depositedAmount} />
+                        <RenderField label="Mobile Number" value={response?.data?.mobileNumber} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Depositor Name" value={response?.data?.depositorName} />
+                        <RenderField label="Date of Birth" value={convertDate(response?.data?.dateOfBirth)} />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Birth Country" value={response?.data?.birthCountry?.country} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="depositDate" value={convertDate(response?.data?.depositDate)} />
+                        <RenderField
+                            label="Identity Type"
+                            value={ReferenceNameByDataId(referenceTypeId.identityTypes, response?.data?.identityTypeId)}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Depository Method Name" value={response?.data?.depositoryMethodName} />
+                        <RenderField label="Identity No" value={response?.data?.identityNo} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField
+                            label="Identity Issued Country"
+                            value={response?.data?.identityIssuedCountry?.country}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField
+                            label="Identity Issued Date"
+                            value={convertDate(response?.data?.identityIssuedDate)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField
+                            label="Identity Expiry Date"
+                            value={convertDate(response?.data?.identityExpiryDate)}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Remarks" value={response?.data?.remarks} />
                     </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Designation" value={response?.data?.designationName} />
+                    </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Status" value={response?.data?.statusName} />
-                    </Grid> */}
+                    </Grid>
 
                     <Grid item xs={12}>
                         <TitleWrapper>
-                            <Title>Address Details</Title>
+                            <Title> Temporary Address Details</Title>
                             <Divider sx={{ flexGrow: 1, ml: 1 }} />
                         </TitleWrapper>
-                    </Grid>
-                    {/* <Grid item xs={12} sm={6}>
-                        <RenderField label="Checked By" value={response?.data?.checkedByName} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Remarks" value={response?.data?.checkerRemarks} />
-                    </Grid> */}
+                        <RenderField label="Country" value={response?.data?.temporaryAddress?.country} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="PostCode" value={response?.data?.temporaryAddress?.postCode} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Unit" value={response?.data?.temporaryAddress?.unit} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Street" value={response?.data?.temporaryAddress?.street} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="City" value={response?.data?.temporaryAddress?.city} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="State" value={response?.data?.temporaryAddress?.state} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Address" value={response?.data?.temporaryAddress?.address} />
+                    </Grid>
                     <Grid item xs={12}>
                         <TitleWrapper>
-                            <Title>Other</Title>
+                            <Title> Permanent Address Details</Title>
                             <Divider sx={{ flexGrow: 1, ml: 1 }} />
                         </TitleWrapper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Country" value={response?.data?.permanentAddress?.country} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="PostCode" value={response?.data?.permanentAddress?.postCode} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Unit" value={response?.data?.permanentAddress?.unit} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Street" value={response?.data?.permanentAddress?.street} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="City" value={response?.data?.permanentAddress?.city} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="State" value={response?.data?.permanentAddress?.state} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Address" value={response?.data?.permanentAddress?.address} />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <TitleWrapper>
+                            <Title>Documents</Title>
+                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                        </TitleWrapper>
+                    </Grid>
+
+                    {response?.data?.documents?.map((item) => {
+                        return (
+                            <Grid xs={12} md={6} mt={2}>
+                                <a
+                                    href={item?.documentLink}
+                                    target="_blank"
+                                    style={{
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {item?.fileType?.includes("image") ? (
+                                        <>
+                                            <Typography my={2}>{item?.documentName}</Typography>
+                                            <img
+                                                src={item?.documentLink}
+                                                alt={item?.documentName}
+                                                style={{
+                                                    width: "100%",
+                                                    height: "200px",
+                                                    objectFit: "cover",
+                                                }}
+                                            />
+                                        </>
+                                    ) : (
+                                        <Box
+                                            sx={{
+                                                bgcolor: "white",
+                                                border: "1px solid #ccc",
+                                                borderRadius: "5px",
+                                                padding: "15px",
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            <Typography>{item?.documentName}</Typography>
+                                        </Box>
+                                    )}
+                                </a>
+                            </Grid>
+                        );
+                    })}
+                    <Grid item xs={12}>
+                        <TitleWrapper>
+                            <Title>Users</Title>
+                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                        </TitleWrapper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="User" value={response?.data?.userName} />
                     </Grid>
                 </Grid>
             )}
