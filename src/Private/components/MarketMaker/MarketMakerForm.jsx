@@ -24,21 +24,6 @@ import CircularProgress from "App/components/Loading/CircularProgress";
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 
-const registeredCountyOptions = [
-    {
-        value: 155,
-        label: "Australia",
-    },
-    {
-        label: "Singapore",
-        value: 104,
-    },
-    {
-        label: "United States of America",
-        value: 55,
-    },
-];
-
 export default function MarketMakerForm({ isAddMode = true }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -65,6 +50,14 @@ export default function MarketMakerForm({ isAddMode = true }) {
     const { response: documentResponse, loading: documentLoading } = useSelector(
         (state) => state.get_document_settings,
     );
+
+    const registeredCountyOptions =
+        localStorageGet("sendCountry")?.map((item) => {
+            return {
+                label: ucwords(item.country),
+                value: item.country_id,
+            };
+        }) ?? [];
 
     const designationOptions = reference
         ?.find((item) => item.reference_type === referenceTypeId.designations)
@@ -124,7 +117,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 documentTypeId: documentSetting.requiredDocumentId,
             });
         });
-    }, [documentResponse]);
+    }, [documentResponse, documents]);
 
     useEffect(() => {
         if (isAddMode && registeredCountryId) {
@@ -143,6 +136,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
 
     const handleFileUploadSuccess = (document, documentId) => {
         const index = documents.findIndex((d) => d.documentTypeId === document.documentTypeId);
+
         update(index, {
             ...documents[index],
             ...{ documentId },

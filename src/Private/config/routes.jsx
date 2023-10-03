@@ -167,6 +167,12 @@ const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
 const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
 const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
 
+//Ledger
+
+const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
+const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
+const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -580,6 +586,22 @@ const privateRoutes = [
     { path: routePaths.agent.viewKycUser, component: <ViewKycUser /> },
     { path: routePaths.agent.addUserKyc, component: <AddMarketMakerUserKyc /> },
     { path: routePaths.agent.editUserKyc, component: <EditMarketMakerUserKyc /> },
+
+    //Ledger
+
+    {
+        path: routePaths.agent.listLedger,
+        component: <ListLedger />,
+    },
+
+    {
+        path: routePaths.agent.viewLedger,
+        component: <ViewLedger />,
+    },
+    {
+        path: routePaths.agent.addLedger,
+        component: <AddLedger />,
+    },
 ];
 
 export default privateRoutes;

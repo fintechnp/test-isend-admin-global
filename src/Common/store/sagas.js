@@ -50,6 +50,23 @@ export const get_all_country = takeEvery(actions.GET_ALL_COUNTRY, function* () {
     }
 });
 
+export const get_send_country = takeEvery(actions.GET_SEND_COUNTRY, function* () {
+    const api = new Api();
+    try {
+        const res = yield call(api.get, `common/send_country`);
+        yield put({
+            type: actions.GET_SEND_COUNTRY_SUCCESS,
+            response: res,
+        });
+        localStorage.setItem("sendCountry", JSON.stringify(res?.data));
+    } catch (error) {
+        yield put({
+            type: actions.GET_SEND_COUNTRY_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export const get_all_reference = takeEvery(actions.GET_ALL_REFERENCE, function* (action) {
     const api = new Api();
     try {
@@ -104,5 +121,5 @@ export const logout = takeEvery(actions.LOG_OUT, function* () {
 });
 
 export default function* saga() {
-    yield all([refreshToken, getUser, get_all_country, get_all_reference, resetPassword, logout]);
+    yield all([refreshToken, getUser, get_all_country, get_all_reference, resetPassword, logout, get_send_country]);
 }

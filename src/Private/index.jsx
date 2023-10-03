@@ -505,6 +505,10 @@ import {
     UpdateKycUserStatusReducer,
 } from "Private/pages/KycUser/store";
 
+//Ledger
+
+import { GetAllLedgerReducer, GetLedgerDetailsReducer, AddLedgerReducer, ledgerSaga } from "Private/pages/Ledger/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -893,6 +897,11 @@ export const privateReducer = {
     get_all_kyc_user: GetAllKycUserValueReducer,
     get_kyc_user_details: GetKycUserIdValueReducer,
     update_kyc_user_status: UpdateKycUserStatusReducer,
+
+    //LEDGER
+    get_all_ledger: GetAllLedgerReducer,
+    get_ledger_details: GetLedgerDetailsReducer,
+    add_ledger: AddLedgerReducer,
 };
 
 export const privateSaga = [
@@ -947,6 +956,7 @@ export const privateSaga = [
     beneficiarySaga(),
     businessChargeSaga(),
     KycUserSaga(),
+    ledgerSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

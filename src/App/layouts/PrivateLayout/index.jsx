@@ -471,6 +471,12 @@ const PrivateLayout = () => {
                         text: "Business Service Charge",
                         sub: false,
                     },
+                    {
+                        path: routePaths.agent.listLedger,
+                        key: "ledger",
+                        text: "Ledger",
+                        sub: false,
+                    },
                 ],
             },
 
