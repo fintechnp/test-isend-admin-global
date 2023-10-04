@@ -171,6 +171,21 @@ const apiEndpoints = {
     account: {
         getAll: "/b2b/account",
     },
+
+    ledger: {
+        getAll: "/ledger",
+        getById: "/ledger/:ledgerId",
+        add: "/ledger",
+    },
+
+    account: {
+        getAll: "/b2b/account",
+    },
+
+    user: {
+        addKyc: "/kyc",
+        editKyc: "/kyc/:kycId",
+    },
 };
 
 export default apiEndpoints;

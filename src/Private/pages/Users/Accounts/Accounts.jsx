@@ -16,7 +16,7 @@ function Accounts(props) {
                 include_count: true,
                 page_number: 1,
                 page_size: 20,
-            })
+            }),
         );
     }, []);
 

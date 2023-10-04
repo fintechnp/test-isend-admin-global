@@ -6,6 +6,8 @@ const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 //users
 const Accounts = lazy(() => import("../pages/Users/Accounts"));
+const AddUserKyc = lazy(() => import("../pages/Users/Accounts/AddUserKyc"));
+const EditUserKyc = lazy(() => import("../pages/Users/Accounts/EditUserKyc"));
 const Menu = lazy(() => import("../pages/Users/Menu"));
 const SubMenu = lazy(() => import("../pages/Users/SubMenu"));
 
@@ -176,6 +178,14 @@ const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
+    {
+        path: routePaths.userKyc.addSystemUserKyc,
+        component: <AddUserKyc />,
+    },
+    {
+        path: routePaths.userKyc.editSystemUserKyc,
+        component: <EditUserKyc />,
+    },
     {
         path: "/user/permission/:id",
         component: <UserPermission title="User Permissions" />,

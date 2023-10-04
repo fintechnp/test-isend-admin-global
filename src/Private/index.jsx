@@ -9,6 +9,8 @@ import {
     UpdateUserStatusReducer,
     GetUserNumberReducer,
     ForgotPasswordReducer,
+    AddUserKycReducer,
+    EditSystemUserKycReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 
@@ -519,6 +521,8 @@ export const privateReducer = {
     update_user_status: UpdateUserStatusReducer,
     get_user_number: GetUserNumberReducer,
     forgot_password: ForgotPasswordReducer,
+    add_system_user_kyc: AddUserKycReducer,
+    update_system_user_kyc: EditSystemUserKycReducer,
 
     //Change Password
 

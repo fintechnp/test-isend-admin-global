@@ -46,7 +46,7 @@ const genderOptions = [
     },
 ];
 
-export default function MarketMakerKycForm({ formLoading, isAddMode = true, isDefaultUserKyc = false }) {
+export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUserKyc = false }) {
     const dispatch = useDispatch();
     const { marketMakerId } = useParams();
 
@@ -56,7 +56,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isDe
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
-        if (isDefaultUserKyc) return;
+        if (isUserKyc) return;
         dispatch(businessActions.get_business_kyb({ marketMakerId }));
     }, []);
 
@@ -213,7 +213,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isDe
                     }}
                 />
                 <Grid container spacing={3}>
-                    {!isDefaultUserKyc && (
+                    {!isUserKyc && (
                         <Grid item xs={12} md={3}>
                             <FormSelect
                                 name="relatedKybId"
@@ -286,7 +286,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isDe
                             name="identityExpiryDate"
                             label="Identity Expiry Date"
                             dateFormat="yyyy-MM-dd"
-                            disableFuture
+                            disablePast
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>

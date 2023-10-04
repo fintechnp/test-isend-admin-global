@@ -54,10 +54,10 @@ export default function FilterForm({ sortByOptions = [], setFilterSchema, loadin
                         <FormDatePicker name="DateOfDeposit" label="Date Of Deposit" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <FormDatePicker name="FromDate" label="From Date" />
+                        <FormDatePicker name="FromDate" label="Requested From" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <FormDatePicker name="ToDate" label="To Date" />
+                        <FormDatePicker name="ToDate" label="Requested To" />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormSelect name="Status" options={statusOptions} label="Status" />

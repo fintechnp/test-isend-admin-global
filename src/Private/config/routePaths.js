@@ -71,6 +71,11 @@ const routePaths = {
         viewLedger: "/agent/ledger/:ledgerId/view",
         addLedger: "/agent/ledger/add",
     },
+
+    userKyc: {
+        addSystemUserKyc: "/user/accounts/:id/addKyc",
+        editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
+    },
 };
 
 export default routePaths;

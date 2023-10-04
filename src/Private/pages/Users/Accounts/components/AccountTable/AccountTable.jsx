@@ -11,14 +11,18 @@ import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
 
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../../../App/components/Table";
+import Table, { TablePagination, TableSwitch } from "./../../../../../../App/components/Table";
 import actions from "./../../store/actions";
 import AddAccount from "./../AddAccount";
 import Header from "./../Header";
 import Filter from "./../Filter";
+import Button from "App/components/Button/Button";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
+import BusinessKycDetail from "Private/components/Business/BusinessKycDetail";
+import Modal from "App/components/Modal/Modal";
+
+import { businessActions } from "Private/pages/Business/store";
 
 const TransactionsContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -70,16 +74,23 @@ function AccountTable() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
-    const { response: user_list, loading: loading } = useSelector(
-        (state) => state.get_all_user
-    );
+    const [open, setOpen] = useState(false);
+    const { response: user_list, loading: loading } = useSelector((state) => state.get_all_user);
     const { success: a_success } = useSelector((state) => state.add_user);
     const { success: u_success } = useSelector((state) => state.update_user);
     const { success: d_success } = useSelector((state) => state.delete_user);
 
+    const { response: kycDetailData, loading: kycDetailLoading } = useSelector(
+        (state) => state.get_business_kyc_details,
+    );
+
     useEffect(() => {
         dispatch(actions.get_all_user(filterSchema));
     }, [filterSchema]);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         if (u_success || d_success || a_success) {
@@ -89,7 +100,7 @@ function AccountTable() {
                     include_count: true,
                     page_number: 1,
                     page_size: 20,
-                })
+                }),
             );
         }
         dispatch({ type: "ADD_ACCOUNT_USER_RESET" });
@@ -135,9 +146,7 @@ function AccountTable() {
                 accessor: "user_type",
                 Cell: (data) => (
                     <Box textAlign="center">
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                     </Box>
                 ),
             },
@@ -146,9 +155,7 @@ function AccountTable() {
                 accessor: "phone_number",
                 Cell: (data) => (
                     <>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                     </>
                 ),
             },
@@ -158,9 +165,7 @@ function AccountTable() {
                 maxWidth: 250,
                 Cell: (data) => (
                     <>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                     </>
                 ),
             },
@@ -174,13 +179,83 @@ function AccountTable() {
                 width: 120,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
+            },
+            {
+                Header: () => (
+                    <Box textAlign="center">
+                        <Typography>KYC</Typography>
+                    </Box>
+                ),
+                accessor: "kyc",
+                Cell: ({ row }) => {
+                    return (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                            }}
+                        >
+                            {row?.original?.has_kyc ? (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "center",
+                                        gap: 2,
+                                    }}
+                                >
+                                    <Tooltip title="Show KYC" arrow>
+                                        <Button
+                                            size="small"
+                                            onClick={() => {
+                                                setOpen(true);
+                                                dispatch(
+                                                    businessActions.get_business_kyc_details(row?.original?.kyc_id),
+                                                );
+                                            }}
+                                        >
+                                            Show Kyc
+                                        </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Edit KYC" arrow>
+                                        <Button
+                                            size="small"
+                                            onClick={() => {
+                                                navigate(
+                                                    buildRoute(routePaths.userKyc.editSystemUserKyc, {
+                                                        id: row?.original?.id,
+                                                        kycId: row?.original?.kyc_id,
+                                                    }),
+                                                );
+                                            }}
+                                        >
+                                            Edit Kyc
+                                        </Button>
+                                    </Tooltip>
+                                </Box>
+                            ) : (
+                                <Tooltip title="Add KYC" arrow>
+                                    <Button
+                                        size="small"
+                                        onClick={() => {
+                                            navigate(
+                                                buildRoute(routePaths.userKyc.addSystemUserKyc, {
+                                                    id: row?.original?.id,
+                                                }),
+                                            );
+                                        }}
+                                    >
+                                        Add Kyc
+                                    </Button>
+                                </Tooltip>
+                            )}
+                        </Box>
+                    );
+                },
             },
             {
                 Header: () => (
@@ -225,13 +300,7 @@ function AccountTable() {
                         </span>
                         <AddAccount update={true} update_data={row?.original} />
                         <Tooltip title="Map Privilege" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/user/permission/${row?.original?.id}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/user/permission/${row?.original?.id}`)}>
                                 <SyncAltOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -246,7 +315,7 @@ function AccountTable() {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -270,7 +339,7 @@ function AccountTable() {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const filterUserType = (e) => {
@@ -331,32 +400,44 @@ function AccountTable() {
     };
 
     return (
-        <TransactionsContainer>
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                filterUserType={filterUserType}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Account Details"
-                data={user_list?.data || []}
-                sub_columns={sub_columns}
-                handleDelete={handleDelete}
-                handleForgotPassword={handleForgotPassword}
-                loading={loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={user_list?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </TransactionsContainer>
+        <>
+            <TransactionsContainer>
+                <Header />
+                <Filter
+                    handleSearch={handleSearch}
+                    filterUserType={filterUserType}
+                    handleSort={handleSort}
+                    handleOrder={handleOrder}
+                />
+                <Table
+                    columns={columns}
+                    title="Account Details"
+                    data={user_list?.data || []}
+                    sub_columns={sub_columns}
+                    handleDelete={handleDelete}
+                    handleForgotPassword={handleForgotPassword}
+                    loading={loading}
+                    rowsPerPage={8}
+                    renderPagination={() => (
+                        <TablePagination
+                            paginationData={user_list?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    )}
+                />
+            </TransactionsContainer>
+            <Modal
+                title="Kyc Detail"
+                open={open}
+                onClose={handleClose}
+                sx={{
+                    width: "60%",
+                }}
+            >
+                <BusinessKycDetail data={kycDetailData?.data} loading={kycDetailLoading} relatedTo="market-maker" />
+            </Modal>
+        </>
     );
 }
 
