@@ -126,12 +126,14 @@ const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMa
 const AddMarketMakerKyb = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
 const AddMarketMakerKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyc"));
 const UpdateMarketMakerKyb = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyb"));
+const UpdateMarketMakerKyc = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyc"));
 
 ///Credit Limit
 
 const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
 const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
 const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
+const EditCreditLimit = lazy(() => import("../pages/CreditLimit/EditCreditLimit"));
 
 // BALANCE REQUEST
 
@@ -156,6 +158,20 @@ const ViewB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ViewBeneficia
 const ListBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/ListBusinessServiceCharge"));
 const AddBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/AddBusinessServiceCharge"));
 const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/UpdateBusinessServiceCharge"));
+
+//LIST KYC USER
+
+const ListKycUser = lazy(() => import("../pages/KycUser/ListKycUser"));
+const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
+
+const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
+const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
+
+//Ledger
+
+const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
+const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
+const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -517,11 +533,19 @@ const privateRoutes = [
         path: "/agent/market-maker/:marketMakerId/update-kyb/:kybId",
         component: <UpdateMarketMakerKyb title="Update Market Maker KYB" />,
     },
+    {
+        path: "/agent/market-maker/:marketMakerId/update-kyc/:kycId",
+        component: <UpdateMarketMakerKyc />,
+    },
 
     ///Credit Limit
     { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
     { path: routePaths.agent.addCreditLimit, component: <AddCreditLimit title="Add Credit Limit" /> },
     { path: routePaths.agent.viewCreditLimit, component: <ViewCreditLimit title="Credit Limit Detail" /> },
+    {
+        path: routePaths.agent.editCreditLimit,
+        component: <EditCreditLimit />,
+    },
 
     //BALANCE REQUEST
     { path: routePaths.agent.listBalanceRequest, component: <ListBalanceRequest title="List Balance Request" /> },
@@ -554,6 +578,29 @@ const privateRoutes = [
     {
         path: routePaths.agent.updateBusinessServiceCharge,
         component: <UpdateBusinessServiceCharge />,
+    },
+
+    // LIST KYC USER
+
+    { path: routePaths.agent.listKycUser, component: <ListKycUser /> },
+    { path: routePaths.agent.viewKycUser, component: <ViewKycUser /> },
+    { path: routePaths.agent.addUserKyc, component: <AddMarketMakerUserKyc /> },
+    { path: routePaths.agent.editUserKyc, component: <EditMarketMakerUserKyc /> },
+
+    //Ledger
+
+    {
+        path: routePaths.agent.listLedger,
+        component: <ListLedger />,
+    },
+
+    {
+        path: routePaths.agent.viewLedger,
+        component: <ViewLedger />,
+    },
+    {
+        path: routePaths.agent.addLedger,
+        component: <AddLedger />,
     },
 ];
 

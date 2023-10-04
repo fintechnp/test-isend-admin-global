@@ -100,12 +100,15 @@ const apiEndpoints = {
         //KYC
 
         addKyc: "/kyc",
+        updateKyc: "/kyc/:kycId",
     },
     creditLimit: {
         getAll: "/creditlimits",
         getById: "/creditlimits/:creditLimitId",
         add: "/creditlimits",
         update: "/creditlimits/:creditLimitId/statusupdate",
+        updateData: "/creditlimits/:creditLimitId/UpdateCreditLimit",
+        delete: "/creditlimits/:creditLimitId",
     },
     balanceRequest: {
         getAll: "/balancerequests",
@@ -151,6 +154,22 @@ const apiEndpoints = {
         add: "/v1/business-servicecharges",
         update: "/v1/business-servicecharges/:businessServiceChargeId",
         updateStatus: "/v1/business-servicecharges/:businessServiceChargeId",
+    },
+
+    kycUser: {
+        getAll: "/kyc/user",
+        getById: "/kyc/user/:kycUserId",
+        updateStatus: "/kyc/user/:kycUserId/approve",
+    },
+
+    ledger: {
+        getAll: "/ledger",
+        getById: "/ledger/:ledgerId",
+        add: "/ledger",
+    },
+
+    account: {
+        getAll: "/b2b/account",
     },
 };
 

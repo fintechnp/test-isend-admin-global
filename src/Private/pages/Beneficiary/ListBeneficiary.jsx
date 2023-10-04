@@ -50,7 +50,7 @@ export default function ListBeneficiary() {
                 accessorKey: "f_serial_no",
             },
             {
-                header: "Name",
+                header: "Beneficiary  Name",
                 accessorKey: "name",
                 cell: ({ getValue, row }) => (
                     <Typography>
@@ -61,15 +61,15 @@ export default function ListBeneficiary() {
                 ),
             },
             {
-                header: "Type",
+                header: "Beneficiary Type",
                 accessorKey: "beneficiary_type",
             },
             {
-                header: "Related To",
+                header: "Agent/Business",
                 accessorKey: "related_to",
             },
             {
-                header: "Country of Registration",
+                header: "Country",
                 accessorKey: "registered_country",
                 cell: ({ getValue, row }) => (
                     <Typography>
@@ -82,15 +82,15 @@ export default function ListBeneficiary() {
                 header: "Currency",
                 accessorKey: "currency",
             },
-            {
-                header: "Email",
-                accessorKey: "email",
-            },
 
             {
-                header: "Payment Type",
+                header: "Delivery Method",
                 accessorKey: "payment_type_id",
                 cell: ({ getValue }) => <Typography>{ReferenceName(1, getValue())}</Typography>,
+            },
+            {
+                header: "Status",
+                accessorKey: "status",
             },
 
             {

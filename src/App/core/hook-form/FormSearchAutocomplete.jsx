@@ -38,6 +38,8 @@ function FormSearchAutoComplete(props) {
         required,
         defaultQueryParams,
         disabled,
+        refetchKey,
+        error,
     } = props;
 
     useEffect(() => {
@@ -58,7 +60,7 @@ function FormSearchAutoComplete(props) {
         };
 
         fetchData();
-    }, [searchedText, apiEndpoint]);
+    }, [searchedText, apiEndpoint, refetchKey]);
 
     const options = apiData?.map((v) => ({
         label: v[labelKey],
@@ -124,7 +126,7 @@ function FormSearchAutoComplete(props) {
                             return option.value === value.value;
                         }}
                     />
-                    <FormHelperText>{errors[name]?.message ?? ""}</FormHelperText>
+                    <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
                 </FormControl>
             )}
         />
@@ -145,4 +147,5 @@ FormSearchAutoComplete.propTypes = {
     variant: PropTypes.string,
     required: PropTypes.bool,
     defaultQueryParams: PropTypes.object,
+    error: PropTypes.string,
 };

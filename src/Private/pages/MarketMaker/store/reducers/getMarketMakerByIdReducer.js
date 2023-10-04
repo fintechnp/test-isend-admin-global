@@ -27,6 +27,7 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
+                response: [],
             };
         default:
             return state;

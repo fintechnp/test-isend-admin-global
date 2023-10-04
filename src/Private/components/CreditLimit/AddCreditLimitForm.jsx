@@ -24,7 +24,7 @@ const relatedToOptions = [
     },
 ];
 
-export default function AddCreditLimitForm() {
+export default function AddCreditLimitForm({ isAddMode = true }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { watch, reset, setValue } = useFormContext();
@@ -32,16 +32,13 @@ export default function AddCreditLimitForm() {
     const relatedTo = watch("relatedTo");
 
     const { loading, success } = useSelector((state) => state.add_credit_limit);
+    const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_credit_limit_data);
 
     useEffect(() => {
-        if (success) {
+        if (success || updateSuccess) {
             navigate(routePaths.agent.creditLimit);
         }
-    }, [success]);
-
-    useEffect(() => {
-        setValue("relatedTo", "business");
-    }, []);
+    }, [success, updateSuccess]);
 
     useEffect(() => {
         dispatch(MarketMakerActions.get_all_market_maker());
@@ -50,7 +47,7 @@ export default function AddCreditLimitForm() {
     return (
         <Grid xs={12} container spacing={2}>
             <Grid item xs={12}>
-                <FormRadio name="relatedTo" label="Choose" options={relatedToOptions ?? []} />
+                <FormRadio name="relatedTo" label="Choose" options={relatedToOptions ?? []} disabled={!isAddMode} />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -71,6 +68,7 @@ export default function AddCreditLimitForm() {
                                     paramkey="BusinessName"
                                     valueKey="businessId"
                                     labelKey="name"
+                                    disabled={!isAddMode}
                                 />
                             </Grid>
                         );
@@ -84,6 +82,7 @@ export default function AddCreditLimitForm() {
                                     paramkey="Name"
                                     valueKey="marketMakerId"
                                     labelKey="name"
+                                    disabled={!isAddMode}
                                 />
                             </Grid>
                         );
@@ -103,15 +102,15 @@ export default function AddCreditLimitForm() {
                         size="small"
                         variant="outlined"
                         onClick={() => {
-                            reset();
+                            navigate(-1);
                         }}
                     >
                         Cancel
                     </CancelButton>
                 </Grid>
                 <Grid item>
-                    <AddButton size="small" variant="outlined" type="submit" loading={loading}>
-                        Add
+                    <AddButton size="small" variant="outlined" type="submit" loading={loading || updating}>
+                        {isAddMode ? "Add" : "Update"}
                     </AddButton>
                 </Grid>
             </Grid>

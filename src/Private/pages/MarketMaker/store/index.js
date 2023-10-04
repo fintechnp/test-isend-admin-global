@@ -18,5 +18,6 @@ export { default as UpdateMarketMakerKYBReducer } from "./reducers/updateMarketM
 // KYC
 
 export { default as AddMarketMakerKYCReducer } from "./reducers/addMarketMakerKycReducer";
+export { default as EditMarketMakerKYCReducer } from "./reducers/editMarketMakerKycReducer";
 
 export { default as MarketMakerActions } from "./actions";

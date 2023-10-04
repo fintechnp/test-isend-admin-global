@@ -10,13 +10,12 @@ export const marketMakerKybValidationSchema = yup.object().shape({
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
-    businessType: yup.string().required("Required"),
     countryId: yup
         .number()
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
-    postCode: yup.string().required().max(15, "Post code must be less than 15 characters"),
+    postCode: yup.string().required().max(10, "Post code must be less than 15 characters"),
     unit: yup.string().required("Required"),
     state: yup.string().required("Required"),
     street: yup.string().required("Required"),

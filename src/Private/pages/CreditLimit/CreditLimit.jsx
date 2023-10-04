@@ -9,6 +9,7 @@ import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
@@ -21,11 +22,27 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import { creditLimitActions } from "./store";
+import { creditLimitStatusEnum } from "./constants/creditLimitStatus";
 
 const initialState = {
     Page: 1,
     PageSize: 10,
 };
+
+const sortByOptions = [
+    {
+        label: "Business Name",
+        value: "business_name",
+    },
+    {
+        label: "Currency",
+        value: "currency",
+    },
+    {
+        label: "Status",
+        value: "status",
+    },
+];
 
 export default function CreditLimit({ title }) {
     const dispatch = useDispatch();
@@ -37,13 +54,13 @@ export default function CreditLimit({ title }) {
         (state) => state.get_all_credit_limit,
     );
 
-    const sortByOptions =
-        creditLimitData?.data?.length > 0 &&
-        Object.keys(creditLimitData?.data[0])
-            ?.map((item) => {
-                return { value: item, label: item };
-            })
-            .filter((item) => item.label !== "f_serial_no");
+    // const sortByOptions =
+    //     creditLimitData?.data?.length > 0 &&
+    //     Object.keys(creditLimitData?.data[0])
+    //         ?.map((item) => {
+    //             return { value: item, label: item };
+    //         })
+    //         .filter((item) => item.label !== "f_serial_no");
 
     useEffect(() => {
         dispatch(creditLimitActions.get_all_credit_limit(filterSchema));
@@ -62,7 +79,7 @@ export default function CreditLimit({ title }) {
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },
             {
-                header: "Limit",
+                header: "Credit Amount",
                 accessorKey: "creditLimit",
             },
             {
@@ -76,16 +93,7 @@ export default function CreditLimit({ title }) {
                 accessorKey: "remarks",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },
-            {
-                header: "Checker Remarks",
-                accessorKey: "checkerRemarks",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
-            {
-                header: "Checked By",
-                accessorKey: "checkedBy",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
-            },
+
             {
                 header: "Status",
                 accessorKey: "statusName",
@@ -110,6 +118,22 @@ export default function CreditLimit({ title }) {
                                 }}
                             />
                         </IconButton>
+                        {row?.original?.status !== creditLimitStatusEnum.APPROVED && (
+                            <IconButton
+                                onClick={() => {
+                                    navigate(buildRoute(routePaths.agent.editCreditLimit, row?.original?.id));
+                                }}
+                            >
+                                <EditOutlinedIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        )}
                     </TableRowActionContainer>
                 ),
             },

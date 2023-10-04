@@ -9,7 +9,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import { Loading } from "App/components";
 import Modal from "App/components/Modal/Modal";
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
@@ -22,8 +21,6 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 import FilterForm from "Private/components/BusinessCharge/BusinessChargeFilterForm";
 import BusinessChargeModal from "Private/components/BusinessCharge/BusinessChargeModal";
-import { Typography } from "@mui/material";
-import { relatedToEnum } from "Private/components/BusinessCharge/BusinessChargeForm";
 
 const initialState = {
     Page: 1,
@@ -39,11 +36,6 @@ export default function ListBusinessServiceCharge() {
     const { response, loading } = useSelector((state) => state.get_all_business_charge);
 
     const { success: updateStatusSuccess } = useSelector((state) => state.update_business_charge_status);
-
-    console.log(
-        "🚀 ~ file: ListBusinessServiceCharge.jsx:42 ~ ListBusinessServiceCharge ~ updateStatusSuccess:",
-        updateStatusSuccess,
-    );
 
     const columns = useMemo(
         () => [

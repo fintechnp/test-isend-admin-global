@@ -64,7 +64,7 @@ export default function BeneficiaryFilterForm({ filterSchema, setFilterSchema, s
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
                     <Grid item xs={12} sm={6}>
-                        <FormSelect name="related_to" label="Related To" options={relatedToOptions ?? []} />
+                        <FormSelect name="related_to" label="choose" options={relatedToOptions ?? []} />
                     </Grid>
 
                     {(() => {

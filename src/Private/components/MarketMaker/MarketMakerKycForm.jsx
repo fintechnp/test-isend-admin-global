@@ -23,20 +23,40 @@ import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 
 import { businessActions } from "Private/pages/Business/store";
 
-export default function MarketMakerKycForm({ formLoading, isAddMode = true }) {
+const genderOptions = [
+    {
+        label: "None",
+        value: 0,
+    },
+    {
+        label: "Male",
+        value: 1,
+    },
+    {
+        label: "Female",
+        value: 2,
+    },
+    {
+        label: "Third",
+        value: 3,
+    },
+    {
+        label: "Other",
+        value: 4,
+    },
+];
+
+export default function MarketMakerKycForm({ formLoading, isAddMode = true, isDefaultUserKyc = false }) {
     const dispatch = useDispatch();
     const { marketMakerId } = useParams();
 
     const { response, loading } = useSelector((state) => state.get_document_settings);
     const { response: kybData, loading: kybLoading } = useSelector((state) => state.get_business_kyb);
 
-    useEffect(() => {
-        dispatch(businessActions.get_business_kyb({ marketMakerId }));
-    }, []);
-
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
+        if (isDefaultUserKyc) return;
         dispatch(businessActions.get_business_kyb({ marketMakerId }));
     }, []);
 
@@ -72,14 +92,14 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true }) {
                 value: item.reference_id,
             };
         });
-    const genderOptions = reference
-        ?.find((item) => item.reference_type === 42)
-        ?.reference_data?.map((item) => {
-            return {
-                label: item.name,
-                value: item.reference_id,
-            };
-        });
+    // const genderOptions = reference
+    //     ?.find((item) => item.reference_type === 42)
+    //     ?.reference_data?.map((item) => {
+    //         return {
+    //             label: item.name,
+    //             value: item.reference_id,
+    //         };
+    //     });
     const identityTypeOptions = reference
         ?.find((item) => item.reference_type === 2)
         ?.reference_data?.map((item) => {
@@ -193,9 +213,16 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true }) {
                     }}
                 />
                 <Grid container spacing={3}>
-                    <Grid item xs={12} md={3}>
-                        <FormSelect name="relatedKybId" label="KYB" options={relatedKybOptions ?? []} />
-                    </Grid>
+                    {!isDefaultUserKyc && (
+                        <Grid item xs={12} md={3}>
+                            <FormSelect
+                                name="relatedKybId"
+                                label="KYB"
+                                options={relatedKybOptions ?? []}
+                                disabled={!isAddMode}
+                            />
+                        </Grid>
+                    )}
                     <Grid item xs={12} md={3}>
                         <FormTextField name="firstName" label="First Name" />
                     </Grid>

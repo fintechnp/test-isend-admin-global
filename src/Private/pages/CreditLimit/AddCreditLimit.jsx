@@ -8,6 +8,7 @@ import PageContent from "App/components/Container/PageContent";
 import AddCreditLimitForm from "Private/components/CreditLimit/AddCreditLimitForm";
 
 import { creditLimitActions } from "Private/pages/CreditLimit/store";
+import { useEffect } from "react";
 
 const AddCreditLimitFormValidation = yup.object().shape({
     relatedTo: yup.string().required("Related To is required"),
@@ -23,7 +24,11 @@ export default function AddCreditLimit({ title }) {
         resolver: yupResolver(AddCreditLimitFormValidation),
     });
 
-    const { handleSubmit } = methods;
+    const { handleSubmit, setValue } = methods;
+
+    useEffect(() => {
+        setValue("relatedTo", "business");
+    }, []);
 
     const onSubmitData = (data) => {
         const { creditLimit, relatedId, ...rest } = data;
@@ -37,11 +42,9 @@ export default function AddCreditLimit({ title }) {
     };
     return (
         <PageContent title={title} documentTitle="Add Credit Limit">
-            <Box>
-                <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
-                    <AddCreditLimitForm />
-                </HookForm>
-            </Box>
+            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
+                <AddCreditLimitForm />
+            </HookForm>
         </PageContent>
     );
 }

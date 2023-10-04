@@ -14,6 +14,8 @@ import MessageBox from "./../Search/components/MessageBox";
 import SuspiciosModal from "./SuspiciosModal";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "../store/actions";
+import routePaths from "Private/config/routePaths";
+import buildRoute from "App/helpers/buildRoute";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -253,7 +255,11 @@ function Details({ data, isAML = false }) {
                                 <LabelWrapper>Beneficiary Id:</LabelWrapper>
                                 <ValueWrapper sx={{ opacity: 0.8 }}>
                                     <Link
-                                        to={`/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`}
+                                        to={
+                                            data?.is_b2b
+                                                ? buildRoute(routePaths.agent.viewB2bBeneficiary, data?.beneficiary_id)
+                                                : `/customer/beneficiary/details/${data?.customer_id}/${data?.beneficiary_id}`
+                                        }
                                         style={{ textDecoration: "none" }}
                                     >
                                         {data?.beneficiary_id ? data?.beneficiary_id : "N/A"}

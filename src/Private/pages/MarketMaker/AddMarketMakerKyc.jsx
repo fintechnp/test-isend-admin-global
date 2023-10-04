@@ -54,7 +54,6 @@ export default function AddMarketMakerKyc({ title }) {
             ...rest
         } = data;
         const dataToSend = {
-            marketMakerId: marketMakerId,
             temporaryAddress: {
                 countryId: temporaryAddressCountryId,
                 postCode: temporaryAddressPostCode,

@@ -85,6 +85,9 @@ export default class AuthProvider extends Component {
                     type: "GET_ALL_COUNTRY",
                 });
                 store.dispatch({
+                    type: "GET_SEND_COUNTRY",
+                });
+                store.dispatch({
                     type: "GET_ALL_REFERENCE",
                     query: {
                         page_number: 1,

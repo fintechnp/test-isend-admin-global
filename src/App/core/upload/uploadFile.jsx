@@ -5,6 +5,8 @@ import SubmitButton from "./SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import Api from "App/services/api";
+import apiEndpoints from "Private/config/apiEndpoints";
 
 const Container = styled("div", {
     shouldForwardProp: (prop) => prop !== "error",
@@ -24,6 +26,7 @@ const Container = styled("div", {
 export default function UploadFile(props) {
     const inputRef = useRef(null);
     const dispatch = useDispatch();
+    const api = new Api();
 
     const {
         maxSize = 2048000,
@@ -43,19 +46,28 @@ export default function UploadFile(props) {
     const [selectedFile, setSelectedFile] = useState(file);
     const [isFileUploaded, setIsFileUploaded] = useState(!!file);
 
-    const { loading: isUploading, response, success } = useSelector((state) => state.add_document);
+    const [response, setResponse] = useState(null);
 
-    useEffect(() => {
-        dispatch({
-            type: "ADD_DOCUMENT_RESET",
-        });
-    }, []);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const postDocument = async (formData) => {
+        setIsUploading(true);
+        try {
+            const response = await api.post(apiEndpoints.document.addDocument, formData);
+            setResponse(response);
+        } catch (error) {
+            dispatch({
+                type: "SET_TOAST_DATA",
+                error: error?.data,
+            });
+        }
+    };
 
     useEffect(() => {
         if (response) {
-            if (success) {
-                setIsFileUploaded(true);
-                if (typeof onUploadSuccess === "function") onUploadSuccess(response?.data);
+            setIsFileUploaded(true);
+            if (typeof onUploadSuccess === "function") {
+                onUploadSuccess(response?.data);
             }
         }
     }, [response]);
@@ -92,7 +104,7 @@ export default function UploadFile(props) {
         } else {
             const formData = new FormData();
             formData.append("document", selectedFile);
-            dispatch(actions.add_document(formData));
+            postDocument(formData);
         }
     };
 
