@@ -8,6 +8,7 @@ import {
     AllReferenceReducer,
     ResetPasswordReducer,
     LogOutReducer,
+    SendCountryReducer,
 } from "./store";
 
 export const commonReducer = {
@@ -19,6 +20,7 @@ export const commonReducer = {
     toast: ToastReducer,
     reset_password: ResetPasswordReducer,
     logout: LogOutReducer,
+    get_send_country: SendCountryReducer,
 };
 
 export const commonSaga = [RefreshTokenSaga()];

@@ -161,6 +161,16 @@ const apiEndpoints = {
         getById: "/kyc/user/:kycUserId",
         updateStatus: "/kyc/user/:kycUserId/approve",
     },
+
+    ledger: {
+        getAll: "/ledger",
+        getById: "/ledger/:ledgerId",
+        add: "/ledger",
+    },
+
+    account: {
+        getAll: "/b2b/account",
+    },
 };
 
 export default apiEndpoints;
