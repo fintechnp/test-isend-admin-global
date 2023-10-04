@@ -36,6 +36,7 @@ function Login(props) {
                 Cookies.set("refreshToken", res.refresh_token);
                 dispatch(actions.get_user());
                 dispatch(actions.get_all_country());
+                dispatch(actions.get_send_country());
                 dispatch(
                     actions.get_all_reference({
                         page_number: 1,

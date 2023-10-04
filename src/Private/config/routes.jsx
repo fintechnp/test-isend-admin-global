@@ -6,6 +6,8 @@ const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 //users
 const Accounts = lazy(() => import("../pages/Users/Accounts"));
+const AddUserKyc = lazy(() => import("../pages/Users/Accounts/AddUserKyc"));
+const EditUserKyc = lazy(() => import("../pages/Users/Accounts/EditUserKyc"));
 const Menu = lazy(() => import("../pages/Users/Menu"));
 const SubMenu = lazy(() => import("../pages/Users/SubMenu"));
 
@@ -167,9 +169,23 @@ const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
 const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
 const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
 
+//Ledger
+
+const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
+const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
+const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
+    {
+        path: routePaths.userKyc.addSystemUserKyc,
+        component: <AddUserKyc />,
+    },
+    {
+        path: routePaths.userKyc.editSystemUserKyc,
+        component: <EditUserKyc />,
+    },
     {
         path: "/user/permission/:id",
         component: <UserPermission title="User Permissions" />,
@@ -580,6 +596,22 @@ const privateRoutes = [
     { path: routePaths.agent.viewKycUser, component: <ViewKycUser /> },
     { path: routePaths.agent.addUserKyc, component: <AddMarketMakerUserKyc /> },
     { path: routePaths.agent.editUserKyc, component: <EditMarketMakerUserKyc /> },
+
+    //Ledger
+
+    {
+        path: routePaths.agent.listLedger,
+        component: <ListLedger />,
+    },
+
+    {
+        path: routePaths.agent.viewLedger,
+        component: <ViewLedger />,
+    },
+    {
+        path: routePaths.agent.addLedger,
+        component: <AddLedger />,
+    },
 ];
 
 export default privateRoutes;

@@ -66,6 +66,15 @@ const routePaths = {
         viewKycUser: "/agent/kyc-user/:kycUserId/view",
         addUserKyc: "/agent/kyc-user/:userId/add",
         editUserKyc: "/agent/kyc-user/:kycId/edit",
+
+        listLedger: "/agent/ledger",
+        viewLedger: "/agent/ledger/:ledgerId/view",
+        addLedger: "/agent/ledger/add",
+    },
+
+    userKyc: {
+        addSystemUserKyc: "/user/accounts/:id/addKyc",
+        editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
 };
 

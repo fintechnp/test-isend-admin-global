@@ -98,9 +98,14 @@ export default function ListBalanceRequest({ title }) {
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },
             {
+                header: "Created At",
+                accessorKey: "createdAt",
+                cell: ({ getValue }) => <Typography>{getValue() ? getValue()?.split("T")[0] : "N/A"}</Typography>,
+            },
+            {
                 header: "Date of Deposit",
                 accessorKey: "depositDate",
-                cell: ({ getValue }) => <Typography>{getValue() ? convertDate(getValue()) : "N/A"}</Typography>,
+                cell: ({ getValue }) => <Typography>{getValue() ? getValue()?.split("T")[0] : "N/A"}</Typography>,
             },
 
             {

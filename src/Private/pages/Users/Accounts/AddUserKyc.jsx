@@ -4,33 +4,41 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import routePaths from "Private/config/routePaths";
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
+import { addUserKycValidationSchema } from "./validations/addUserKycValidation";
 import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
 
-import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
-import { marketMakerUserKycValidationSchema } from "./validation/MarketMakerKycValidation";
+import { AccountAction as actions } from "./store";
+import { Loading } from "App/components";
 
-export default function AddMarketMakerUserKyc() {
-    const methods = useForm({
-        resolver: yupResolver(marketMakerUserKycValidationSchema),
-    });
+export default function AddUserKyc() {
+    const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { userId } = useParams();
+    const methods = useForm({
+        resolver: yupResolver(addUserKycValidationSchema),
+    });
 
-    const { loading, success } = useSelector((state) => state.add_market_maker_kyc);
+    const { loading, success } = useSelector((state) => state.add_system_user_kyc);
+    const { response: userDetail, loading: detailLoading } = useSelector((state) => state.get_user_details_id);
+
+    const { setValue } = methods;
 
     useEffect(() => {
         if (success) {
-            navigate(routePaths.agent.listMarketMaker);
+            navigate("/user/accounts");
         }
     }, [success]);
 
-    const {
-        formState: { errors },
-    } = methods;
+    useEffect(() => {
+        dispatch(actions.get_user_details_by_id(id));
+    }, [id]);
+
+    useEffect(() => {
+        setValue("firstName", userDetail?.data?.first_name);
+        setValue("lastName", userDetail?.data?.last_name);
+    }, [userDetail]);
 
     const onSubmitData = (data) => {
         const {
@@ -71,15 +79,19 @@ export default function AddMarketMakerUserKyc() {
                 state: permanentAddressState,
                 address: permanentAddressAddress,
             },
-            userId,
-            isBusinessUser: true,
+            userId: id,
+            isBusinessUser: false,
             ...rest,
         };
-        dispatch(actions.add_market_maker_kyc(dataToSend));
+
+        dispatch(actions.add_system_user_kyc(dataToSend));
     };
 
+    if (detailLoading) {
+        return <Loading loading={detailLoading} />;
+    }
     return (
-        <PageContent title="Add Agent User KYC">
+        <PageContent title="Add User KYC">
             <HookForm onSubmit={onSubmitData} {...methods}>
                 <MarketMakerKycForm formLoading={loading} isUserKyc={true} />
             </HookForm>
