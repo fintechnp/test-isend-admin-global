@@ -26,6 +26,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 success: false,
                 loading: false,
+                response: [],
                 error: action.error,
             };
         case actions.ADD_DOCUMENT_RESET:

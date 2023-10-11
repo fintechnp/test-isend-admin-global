@@ -89,7 +89,7 @@ export default function MarketMakerUserKycListing({ userData, loading }) {
                 ),
             },
         ],
-        [],
+        [userData],
     );
 
     const handleClose = () => {
