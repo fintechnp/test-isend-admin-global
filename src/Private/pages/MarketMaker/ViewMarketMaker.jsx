@@ -35,17 +35,17 @@ export default function ViewMarketMaker() {
     const tabs = [
         {
             key: "user",
-            tabName: "User",
+            tabName: "User KYC",
             tabContent: <MarketMakerUserKycListing userData={response?.data?.user ?? {}} loading={loading} />,
         },
         {
             key: "kyB",
-            tabName: "KYB",
+            tabName: "Business Stakeholder",
             tabContent: <MarketMakerKybListing />,
         },
         {
             key: "kyc",
-            tabName: "KYC",
+            tabName: "Individual Stakeholder",
             tabContent: <MarketMakerKycListing />,
         },
     ];
