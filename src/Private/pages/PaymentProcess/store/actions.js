@@ -110,7 +110,6 @@ const actions = {
     get_aml_suspicious_details: (transaction_id) => ({
         type: actions.GET_AML_SUSPICIOUS_DETAILS,
         transaction_id,
-        query,
     }),
 
     get_exception_transactions: (query) => ({
