@@ -284,7 +284,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                     <Grid item xs={12} md={3}>
                         <FormDatePicker
                             name="identityExpiryDate"
-                            label="Identity Expiry Date"
+                            label="Identity Expiry Date (Optional)"
                             dateFormat="yyyy-MM-dd"
                             disablePast
                         />

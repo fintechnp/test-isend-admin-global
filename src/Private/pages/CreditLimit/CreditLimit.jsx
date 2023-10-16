@@ -74,7 +74,7 @@ export default function CreditLimit({ title }) {
             },
 
             {
-                header: "Name",
+                header: "Business/Agent Name",
                 accessorKey: "name",
                 cell: ({ getValue }) => <Typography>{getValue() ? getValue() : "N/A"}</Typography>,
             },

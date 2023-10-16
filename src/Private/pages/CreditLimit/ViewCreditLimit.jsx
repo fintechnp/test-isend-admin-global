@@ -10,13 +10,16 @@ import Modal from "App/components/Modal/Modal";
 import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
-import { convertDate } from "App/utils/convertDate";
 import PageContent from "App/components/Container/PageContent";
 import { creditLimitStatusEnum } from "./constants/creditLimitStatus";
 import UpdateStatusForm from "Private/components/CreditLimit/UpdateStatusForm";
 import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/CustomerDetails";
 
 import { creditLimitActions } from "./store";
+
+const slicedDate = (date) => {
+    return date ? date.split("T")[0] : "N/A";
+};
 
 export default function ViewCreditLimit({ title }) {
     const dispatch = useDispatch();
@@ -105,9 +108,7 @@ export default function ViewCreditLimit({ title }) {
                                 <Divider sx={{ flexGrow: 1, ml: 1 }} />
                             </TitleWrapper>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Id" value={response?.data?.id} />
-                        </Grid>
+
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Type" value={response?.data?.relatedTo} />
                         </Grid>
@@ -139,13 +140,13 @@ export default function ViewCreditLimit({ title }) {
                             <RenderField label="Checker Remarks" value={response?.data?.checkerRemarks} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Created At" value={convertDate(response?.data?.createdAt)} />
+                            <RenderField label="Created At" value={slicedDate(response?.data?.createdAt)} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Checked At" value={convertDate(response?.data?.checkedAt)} />
+                            <RenderField label="Checked At" value={slicedDate(response?.data?.checkedAt)} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Updated At" value={convertDate(response?.data?.updatedAt)} />
+                            <RenderField label="Updated At" value={slicedDate(response?.data?.updatedAt)} />
                         </Grid>
                     </Grid>
                 )}

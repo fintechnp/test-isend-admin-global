@@ -73,7 +73,7 @@ export default function FilterForm({ sortByOptions, setFilterSchema }) {
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
                     <Grid item xs={12} sm={6}>
-                        <FormTextField name="BusinessNameFilter" label="Business Name" />
+                        <FormTextField name="BusinessNameFilter" label="Business/Agent Name" />
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
