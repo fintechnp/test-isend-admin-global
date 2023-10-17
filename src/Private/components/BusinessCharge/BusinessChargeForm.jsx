@@ -92,8 +92,6 @@ export default function BusinessChargeForm({ isAddMode = true }) {
         remove(index);
     };
 
-    console.log(errors?.chargeDetailRules, errors?.chargeDetailRules?.[0]?.max_no_of_txn?.message);
-
     return (
         <>
             <Grid container spacing={3}>
