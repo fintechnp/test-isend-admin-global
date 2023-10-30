@@ -36,7 +36,10 @@ export default function MarketMakerForm({ isAddMode = true }) {
         getValues,
         control,
         formState: { errors },
+        clearErrors,
     } = useFormContext();
+
+    console.log("🚀 ~ file: MarketMakerForm.jsx:39 ~ MarketMakerForm ~ errors:", errors);
 
     const { append, update } = useFieldArray({
         name: "documents",
@@ -106,7 +109,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
     const documents = watch("documents") ?? [];
 
     useEffect(() => {
-        if (documents.length > 0) return;
+        if (documents.length < 0) return;
 
         const documentSettings = documentResponse?.data;
 
@@ -115,9 +118,10 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 documentId: "",
                 documentName: documentSetting.documentName,
                 documentTypeId: documentSetting.requiredDocumentId,
+                isRequired: documentSetting.isRequired,
             });
         });
-    }, [documentResponse, documents]);
+    }, [documentResponse]);
 
     useEffect(() => {
         if (isAddMode && registeredCountryId) {
@@ -141,6 +145,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
             ...documents[index],
             ...{ documentId },
         });
+
+        clearErrors(`documents.${index}.documentId`);
     };
 
     const handleRemove = (document) => {
@@ -366,6 +372,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                                         <FormInputWrapper
                                             label={document.documentName}
                                             errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                            isOptional={!document.isRequired}
                                         >
                                             <UploadFile
                                                 title={`Upload your ${document.documentName}`}
