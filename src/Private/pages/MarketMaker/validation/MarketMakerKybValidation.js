@@ -21,14 +21,12 @@ export const marketMakerKybValidationSchema = yup.object().shape({
     street: yup.string().required("Required"),
     city: yup.string().required("Required"),
     address: yup.string().required("Required"),
-    documents: yup
-        .array()
-        .of(
-            yup.object().shape({
-                documentTypeId: yup.number().required(),
-                documentId: yup.string().required("Document name is required"),
-                documentName: yup.string().required(),
-            }),
-        )
-        .required("Documents is required"),
+    documents: yup.array().of(
+        yup.object().shape({
+            documentTypeId: yup.number().optional().nullable(),
+            documentId: yup.string().optional().nullable(),
+            documentName: yup.string().optional().nullable(),
+            isRequired: yup.boolean().optional().nullable(),
+        }),
+    ),
 });

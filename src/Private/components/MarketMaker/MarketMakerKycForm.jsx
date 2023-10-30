@@ -66,6 +66,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
         control,
         watch,
         formState: { errors },
+        clearErrors,
     } = useFormContext();
 
     const { append, update } = useFieldArray({
@@ -92,14 +93,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                 value: item.reference_id,
             };
         });
-    // const genderOptions = reference
-    //     ?.find((item) => item.reference_type === 42)
-    //     ?.reference_data?.map((item) => {
-    //         return {
-    //             label: item.name,
-    //             value: item.reference_id,
-    //         };
-    //     });
+
     const identityTypeOptions = reference
         ?.find((item) => item.reference_type === 2)
         ?.reference_data?.map((item) => {
@@ -132,7 +126,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
     const documents = watch("documents") ?? [];
 
     useEffect(() => {
-        if (documents.length > 0) return;
+        if (documents.length < 0) return;
 
         const documentSettings = response?.data;
 
@@ -141,6 +135,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                 documentId: "",
                 documentName: documentSetting.documentName,
                 documentTypeId: documentSetting.requiredDocumentId,
+                isRequired: documentSetting.isRequired,
             });
         });
     }, [response]);
@@ -172,6 +167,8 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
             ...documents[index],
             ...{ documentId },
         });
+
+        clearErrors(`documents.${index}.documentId`);
     };
 
     const handleRemove = (document) => {
@@ -426,6 +423,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                                         <FormInputWrapper
                                             label={document.documentName}
                                             errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                            isOptional={!document.isRequired}
                                         >
                                             <UploadFile
                                                 title={`Upload your ${document.documentName}`}

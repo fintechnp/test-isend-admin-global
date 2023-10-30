@@ -76,7 +76,7 @@ export default function AddMarketMaker() {
             },
         };
         const requestData = { ...formattedDataToSend, documents: requiredDocuments };
-        // dispatch(actions.add_market_maker(requestData));
+        dispatch(actions.add_market_maker(requestData));
     };
 
     return (

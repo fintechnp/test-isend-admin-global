@@ -39,8 +39,6 @@ export default function MarketMakerForm({ isAddMode = true }) {
         clearErrors,
     } = useFormContext();
 
-    console.log("🚀 ~ file: MarketMakerForm.jsx:39 ~ MarketMakerForm ~ errors:", errors);
-
     const { append, update } = useFieldArray({
         name: "documents",
         control,

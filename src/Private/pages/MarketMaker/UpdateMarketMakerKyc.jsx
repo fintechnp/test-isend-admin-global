@@ -15,6 +15,7 @@ import { businessActions } from "Private/pages/Business/store";
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
 import { marketMakerKycValidationSchema } from "./validation/MarketMakerKycValidation";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function UpdateMarketMakerKyc() {
     const { marketMakerId, kycId } = useParams();
@@ -86,10 +87,29 @@ export default function UpdateMarketMakerKyc() {
         handleSubmit,
         setValue,
         formState: { errors },
+        setError,
     } = methods;
 
     const onSubmitData = (data) => {
-        console.log("data", data);
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+            }));
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const {
             temporaryAddressCountryId,
             temporaryAddressPostCode,
@@ -132,7 +152,9 @@ export default function UpdateMarketMakerKyc() {
             },
             ...rest,
         };
-        dispatch(actions.update_market_maker_kyc(kycId, dataToSend));
+        const requestData = { ...dataToSend, documents: requiredDocuments };
+
+        dispatch(actions.update_market_maker_kyc(kycId, requestData));
     };
     return (
         <PageContent title="Edit Agent KYC">

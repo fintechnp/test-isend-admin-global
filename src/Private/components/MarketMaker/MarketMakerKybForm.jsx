@@ -31,6 +31,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
         formState: { errors },
         setError,
         setValue,
+        clearErrors,
     } = useFormContext();
 
     const countries = localStorageGet("country");
@@ -56,7 +57,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
     const documents = watch("documents") ?? [];
 
     useEffect(() => {
-        if (documents.length > 0) return;
+        if (documents.length < 0) return;
 
         const documentSettings = response?.data;
 
@@ -65,6 +66,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                 documentId: "",
                 documentName: documentSetting.documentName,
                 documentTypeId: documentSetting.requiredDocumentId,
+                isRequired: documentSetting.isRequired,
             });
         });
     }, [response]);
@@ -83,6 +85,8 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
             ...documents[index],
             ...{ documentId },
         });
+
+        clearErrors(`documents.${index}.documentId`);
     };
 
     const handleRemove = (document) => {
@@ -225,6 +229,7 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                                     <Grid key={document.documentTypeId} item xs={12} md={6}>
                                         <FormInputWrapper
                                             label={document.documentName}
+                                            isOptional={!document.isRequired}
                                             errorMessage={errors?.documents?.[i]?.documentId?.message}
                                         >
                                             <UploadFile
