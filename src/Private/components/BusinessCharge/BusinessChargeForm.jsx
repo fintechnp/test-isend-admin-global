@@ -50,6 +50,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
         watch,
         setValue,
         formState: { errors },
+        setError,
     } = useFormContext();
     const countries = localStorageGet("country");
 
@@ -69,6 +70,8 @@ export default function BusinessChargeForm({ isAddMode = true }) {
 
     const relatedTo = watch("relatedTo");
 
+    const rules = watch("chargeDetailRules") ?? [];
+
     useEffect(() => {
         setValue("relatedId", null);
     }, [relatedTo]);
@@ -81,10 +84,30 @@ export default function BusinessChargeForm({ isAddMode = true }) {
     });
 
     const handleAdd = () => {
+        const previousIndex = rules.length - 1;
+
+        const previousMinAmount = rules[rules.length - 1].min_no_of_txn;
+
+        const previousMaxAmount = rules[rules.length - 1].max_no_of_txn;
+
+        if (!previousMaxAmount) {
+            setError(`chargeDetailRules.${previousIndex}.max_no_of_txn`, {
+                message: "Required",
+            });
+            return;
+        }
+
+        if ((previousMaxAmount ?? 0) <= (previousMinAmount ?? 0)) {
+            setError(`chargeDetailRules.${previousIndex}.max_no_of_txn`, {
+                message: "Max amount must be greater than min amount",
+            });
+            return;
+        }
+
         append({
-            min_no_of_txn: "",
-            max_no_of_txn: "",
-            flat_amount: "",
+            min_no_of_txn: previousMaxAmount ? +previousMaxAmount + 1 : null,
+            max_no_of_txn: null,
+            flat_amount: null,
         });
     };
 
@@ -164,6 +187,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                                                     name={`chargeDetailRules.${index}.min_no_of_txn`}
                                                     label="Min no of txn"
                                                     type="number"
+                                                    disabled
                                                     error={errors?.chargeDetailRules?.[index]?.min_no_of_txn?.message}
 
                                                     // {...(index > 0
@@ -179,6 +203,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                                                     label="Max no of txn"
                                                     type="number"
                                                     error={errors?.chargeDetailRules?.[index]?.max_no_of_txn?.message}
+                                                    disabled={index < rules.length - 1}
                                                 />
                                             </TableCell>
                                             <TableCell>

@@ -16,6 +16,15 @@ export default function AddBusinessServiceCharge() {
 
     const methods = useForm({
         resolver: yupResolver(businessChargeValidationSchema),
+        defaultValues: {
+            chargeDetailRules: [
+                {
+                    min_no_of_txn: "0",
+                    max_no_of_txn: undefined,
+                    flat_amount: undefined,
+                },
+            ],
+        },
     });
 
     const {

@@ -23,29 +23,6 @@ import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 
 import { businessActions } from "Private/pages/Business/store";
 
-const genderOptions = [
-    {
-        label: "None",
-        value: 0,
-    },
-    {
-        label: "Male",
-        value: 1,
-    },
-    {
-        label: "Female",
-        value: 2,
-    },
-    {
-        label: "Third",
-        value: 3,
-    },
-    {
-        label: "Other",
-        value: 4,
-    },
-];
-
 export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUserKyc = false }) {
     const dispatch = useDispatch();
     const { marketMakerId } = useParams();
@@ -85,6 +62,14 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
         };
     });
 
+    const genderOptions = reference
+        ?.find((item) => item.reference_type === 42)
+        ?.reference_data?.map((item) => {
+            return {
+                label: item.name,
+                value: item.reference_id,
+            };
+        });
     const designationOptions = reference
         ?.find((item) => item.reference_type === 101)
         ?.reference_data?.map((item) => {
