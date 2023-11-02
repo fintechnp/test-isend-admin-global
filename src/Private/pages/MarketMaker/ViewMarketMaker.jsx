@@ -36,7 +36,7 @@ export default function ViewMarketMaker() {
         {
             key: "user",
             tabName: "Users",
-            tabContent: <MarketMakerUserKycListing userData={response?.data?.user ?? {}} loading={loading} />,
+            tabContent: <MarketMakerUserKycListing  />,
         },
         {
             key: "kyB",

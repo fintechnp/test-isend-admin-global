@@ -98,7 +98,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
     const identityIssuedCountryId = watch("identityIssuedCountryId");
 
     useEffect(() => {
-        if (!identityIssuedCountryId) return;
+        if (!identityIssuedCountryId || !isAddMode) return;
         dispatch(
             actions.get_document_settings({
                 countryId: identityIssuedCountryId,

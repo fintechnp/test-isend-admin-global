@@ -94,7 +94,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
     const registeredCountryId = watch("registeredCountryId");
 
     useEffect(() => {
-        if (!registeredCountryId) return;
+        if (!registeredCountryId || !isAddMode) return;
+
         dispatch(
             actions.get_document_settings({
                 countryId: registeredCountryId,
@@ -416,8 +417,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
                         size="small"
                         variant="outlined"
                         type="submit"
-                        loading={updating | loading}
-                        disabled={updating | loading}
+                        loading={updating || loading}
+                        disabled={updating || loading}
                     >
                         {isAddMode ? "Add" : "Update"}
                     </AddButton>

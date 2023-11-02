@@ -1,31 +1,30 @@
-import React, { useEffect } from "react";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-
-import { localStorageGet } from "App/helpers/localStorage";
-import ucwords from "App/helpers/ucwords";
-import FormSelect from "App/core/hook-form/FormSelect";
-import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
-import apiEndpoints from "Private/config/apiEndpoints";
+import Table from "@mui/material/Table";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import TableRow from "@mui/material/TableRow";
+import { useNavigate } from "react-router-dom";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import IconButton from "@mui/material/IconButton";
+import TableFooter from "@mui/material/TableFooter";
+import TableContainer from "@mui/material/TableContainer";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import {
-    IconButton,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableFooter,
-    TableHead,
-    TableRow,
-} from "@mui/material";
-import FormTextField from "App/core/hook-form/FormTextField";
 
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+
+import ucwords from "App/helpers/ucwords";
 import Button from "App/components/Button/Button";
-import { AddButton, CancelButton } from "../AllButtons/Buttons";
-import { useSelector } from "react-redux";
-import FormRadio from "App/core/hook-form/FormRadio";
-import { useNavigate } from "react-router-dom";
 import routePaths from "Private/config/routePaths";
+import FormRadio from "App/core/hook-form/FormRadio";
+import FormSelect from "App/core/hook-form/FormSelect";
+import apiEndpoints from "Private/config/apiEndpoints";
+import { localStorageGet } from "App/helpers/localStorage";
+import FormTextField from "App/core/hook-form/FormTextField";
+import { AddButton, CancelButton } from "../AllButtons/Buttons";
+import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
 export const relatedToEnum = {
     business: "business",
@@ -132,39 +131,38 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                         options={registeredCountyOptions ?? []}
                     />
                 </Grid>
-
                 <Grid item xs={12} md={6}>
-                    {(() => {
-                        if (relatedTo === relatedToEnum.business) {
-                            return (
-                                <Grid item xs={12} sm={6}>
-                                    <FormSearchAutoComplete
-                                        name="relatedId"
-                                        label="Business Id"
-                                        apiEndpoint={apiEndpoints.business.getAll}
-                                        paramkey="BusinessName"
-                                        valueKey="businessId"
-                                        labelKey="name"
-                                        disabled={!isAddMode}
-                                    />
-                                </Grid>
-                            );
-                        } else if (relatedTo === relatedToEnum.marketmaker) {
-                            return (
-                                <Grid item xs={12} sm={6}>
-                                    <FormSearchAutoComplete
-                                        name="relatedId"
-                                        label="Market Maker Id"
-                                        apiEndpoint={apiEndpoints.marketMaker.getAll}
-                                        paramkey="Name"
-                                        valueKey="marketMakerId"
-                                        labelKey="name"
-                                        disabled={!isAddMode}
-                                    />
-                                </Grid>
-                            );
-                        }
-                    })()}
+                    <Box
+                        sx={{
+                            display: relatedTo === relatedToEnum.business ? "block" : "none",
+                        }}
+                    >
+                        <FormSearchAutoComplete
+                            name="relatedId"
+                            label="Business Id"
+                            apiEndpoint={apiEndpoints.business.getAll}
+                            paramkey="BusinessName"
+                            valueKey="businessId"
+                            labelKey="name"
+                            disabled={!isAddMode}
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: relatedTo === relatedToEnum.marketmaker ? "block" : "none",
+                        }}
+                    >
+                        <FormSearchAutoComplete
+                            name="relatedId"
+                            label="Agent"
+                            apiEndpoint={apiEndpoints.marketMaker.getAll}
+                            paramkey="Name"
+                            valueKey="marketMakerId"
+                            labelKey="name"
+                            disabled={!isAddMode}
+                            pageNumberQueryKey="Page"
+                        />
+                    </Box>
                 </Grid>
 
                 <Grid item xs={12}>

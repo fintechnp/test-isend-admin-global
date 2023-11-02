@@ -199,6 +199,23 @@ export const updateMarketMakerKyc = takeEvery(actions.UPDATE_MARKET_MAKER_KYC, f
     }
 });
 
+//GET USER
+
+export const getMarketMakerUsers = takeEvery(actions.GET_MARKET_MAKER_USER, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.marketMaker.getUsers, action.id));
+        yield put({
+            type: actions.GET_MARKET_MAKER_USER_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_MARKET_MAKER_USER_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getAllMarketMaker,
@@ -212,5 +229,6 @@ export default function* saga() {
         updateMarketMakerKyb,
         addMarketMakerKyc,
         updateMarketMakerKyc,
+        getMarketMakerUsers,
     ]);
 }

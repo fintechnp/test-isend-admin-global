@@ -72,6 +72,7 @@ export default function UpdateMarketMaker({ title }) {
                 documentTypeId: document.documentTypeId,
                 documentId: document.documentId,
             }));
+        console.log("🚀 ~ file: UpdateMarketMaker.jsx:75 ~ onSubmitData ~ requiredDocuments:", { requiredDocuments });
 
         const requiredEmptyDocuments = data.documents.filter((document, index) => {
             if (document.isRequired && isEmpty(document.documentId)) {
@@ -123,7 +124,7 @@ export default function UpdateMarketMaker({ title }) {
         };
         const requestData = { ...formattedDataToSend, documents: requiredDocuments };
 
-        dispatch(actions.update_market_maker(marketMakerId, formattedDataToSend));
+        dispatch(actions.update_market_maker(marketMakerId, requestData));
     };
 
     if (loading) {

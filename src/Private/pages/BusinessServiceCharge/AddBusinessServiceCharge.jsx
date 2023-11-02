@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import isEmpty from "App/helpers/isEmpty";
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
-
 import BusinessChargeForm from "Private/components/BusinessCharge/BusinessChargeForm";
 import { businessChargeValidationSchema } from "./validations/AddBusinessServiceChargeValidation";
 
@@ -31,6 +31,7 @@ export default function AddBusinessServiceCharge() {
         handleSubmit,
         setValue,
         formState: { errors },
+        setError,
     } = methods;
 
     useEffect(() => {
@@ -48,12 +49,37 @@ export default function AddBusinessServiceCharge() {
             };
         });
 
+        let hasError = false;
+
+        chargeDetailRules.forEach((rule, index) => {
+            if (isEmpty(rule.min_no_of_txn)) {
+                hasError = true;
+                setError(`chargeDetailRules.${index}.min_no_of_txn`, { message: "Required" });
+            }
+
+            if (isEmpty(rule.max_no_of_txn)) {
+                hasError = true;
+                setError(`chargeDetailRules.${index}.max_no_of_txn`, { message: "Required" });
+            }
+
+            if ((rule.max_no_of_txn ?? 0) <= (rule.min_no_of_txn ?? 0)) {
+                hasError = true;
+                setError(`chargeDetailRules.${index}.max_no_of_txn`, {
+                    message: "Max amount must be greater than min amount",
+                });
+            }
+            if (isEmpty(rule.flat_amount)) {
+                hasError = true;
+                setError(`chargeDetailRules.${index}.flat_amount`, { message: "Required" });
+            }
+        });
+
         const formattedDataToSend = {
             ...rest,
             chargeDetailRules: newChargeDetailRules,
         };
 
-        dispatch(actions.add_business_charge(formattedDataToSend));
+        if (!hasError) dispatch(actions.add_business_charge(formattedDataToSend));
     };
 
     return (

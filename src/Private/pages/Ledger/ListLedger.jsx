@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
@@ -14,6 +14,9 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import { ledgerActions as actions } from "./store";
+import LedgerFilterForm from "Private/components/Ledger/LedgerFilterForm";
+import EntryType from "./enum/EntryType";
+import { Typography } from "@mui/material";
 
 const initialState = {
     Page: 1,
@@ -38,8 +41,31 @@ export default function ListLedger() {
             },
 
             {
-                header: "Entity Type",
+                header: "Entry Type",
                 accessorKey: "entryTypeName",
+                cell: ({ row, getValue }) => {
+                    if (row?.original?.entryTypeName === EntryType.Single) {
+                        return (
+                            <Link to={buildRoute(routePaths.agent.viewSingleTransaction, row?.original?.entryId)}>
+                                {getValue()}
+                            </Link>
+                        );
+                    } else if (row?.original?.entryTypeName === EntryType.Batch) {
+                        return (
+                            <Link to={buildRoute(routePaths.agent.viewBatchTransaction, row?.original?.entryId)}>
+                                {getValue()}
+                            </Link>
+                        );
+                    } else if (row?.original?.entryTypeName === EntryType.BalanceRequest) {
+                        return (
+                            <Link to={buildRoute(routePaths.agent.viewBalanceRequest, row?.original?.entryId)}>
+                                {getValue()}
+                            </Link>
+                        );
+                    } else {
+                        return <Typography>{getValue()}</Typography>;
+                    }
+                },
             },
             {
                 header: "Currency",
@@ -118,6 +144,7 @@ export default function ListLedger() {
                 </Button>
             }
         >
+            <LedgerFilterForm setFilterSchema={setFilterSchema} />
             <TanstackReactTable
                 columns={columns}
                 title="Ledger"

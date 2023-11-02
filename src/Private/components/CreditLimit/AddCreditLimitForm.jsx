@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
@@ -8,10 +9,11 @@ import routePaths from "Private/config/routePaths";
 import FormRadio from "App/core/hook-form/FormRadio";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
+import { relatedToEnum } from "../BusinessCharge/BusinessChargeForm";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
-import { MarketMakerActions } from "Private/pages/MarketMaker/store";
 import apiEndpoints from "Private/config/apiEndpoints";
+import { MarketMakerActions } from "Private/pages/MarketMaker/store";
 
 const relatedToOptions = [
     {
@@ -44,6 +46,10 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
         dispatch(MarketMakerActions.get_all_market_maker());
     }, []);
 
+    useEffect(() => {
+        setValue("relatedId", null);
+    }, [relatedTo]);
+
     return (
         <Grid xs={12} container spacing={2}>
             <Grid item xs={12}>
@@ -57,37 +63,40 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
                 <FormTextField name="remarks" label="Remarks" />
             </Grid>
             <Grid item xs={12} md={6}>
-                {(() => {
-                    if (relatedTo === "business") {
-                        return (
-                            <Grid item xs={12} sm={6}>
-                                <FormSearchAutoComplete
-                                    name="relatedId"
-                                    label="Business Id"
-                                    apiEndpoint={apiEndpoints.business.getAll}
-                                    paramkey="BusinessName"
-                                    valueKey="businessId"
-                                    labelKey="name"
-                                    disabled={!isAddMode}
-                                />
-                            </Grid>
-                        );
-                    } else if (relatedTo === "marketMaker") {
-                        return (
-                            <Grid item xs={12} sm={6}>
-                                <FormSearchAutoComplete
-                                    name="relatedId"
-                                    label="Market Maker Id"
-                                    apiEndpoint={apiEndpoints.marketMaker.getAll}
-                                    paramkey="Name"
-                                    valueKey="marketMakerId"
-                                    labelKey="name"
-                                    disabled={!isAddMode}
-                                />
-                            </Grid>
-                        );
-                    }
-                })()}
+                <Box
+                    sx={{
+                        display: relatedTo === relatedToEnum.business ? "block" : "none",
+                    }}
+                >
+                    <FormSearchAutoComplete
+                        name="relatedId"
+                        label="Business"
+                        apiEndpoint={apiEndpoints.business.getAll}
+                        paramkey="BusinessName"
+                        valueKey="businessId"
+                        labelKey="name"
+                        disabled={!isAddMode}
+                        defaultQueryParams={{
+                            isSelfRegistered: true,
+                        }}
+                    />
+                </Box>
+                <Box
+                    sx={{
+                        display: relatedTo === relatedToEnum.marketmaker ? "block" : "none",
+                    }}
+                >
+                    <FormSearchAutoComplete
+                        name="relatedId"
+                        label="Agent"
+                        apiEndpoint={apiEndpoints.marketMaker.getAll}
+                        paramkey="Name"
+                        valueKey="marketMakerId"
+                        labelKey="name"
+                        disabled={!isAddMode}
+                        pageNumberQueryKey="Page"
+                    />
+                </Box>
             </Grid>
             <Grid
                 container

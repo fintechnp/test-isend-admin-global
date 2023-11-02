@@ -20,4 +20,8 @@ export { default as UpdateMarketMakerKYBReducer } from "./reducers/updateMarketM
 export { default as AddMarketMakerKYCReducer } from "./reducers/addMarketMakerKycReducer";
 export { default as EditMarketMakerKYCReducer } from "./reducers/editMarketMakerKycReducer";
 
+//uSERS
+
+export { default as GetMarketMakerUsersReducer } from "./reducers/getMarketMakerUsersReducer";
+
 export { default as MarketMakerActions } from "./actions";

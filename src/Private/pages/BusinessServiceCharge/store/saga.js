@@ -4,6 +4,7 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 import actions from "./actions";
 import apiEndpoints from "Private/config/apiEndpoints";
 import buildRoute from "App/helpers/buildRoute";
+import { Navigate } from "react-router-dom";
 
 const api = new Api();
 
@@ -35,6 +36,8 @@ export const getBusinessChargeById = takeEvery(actions.GET_BUSINESS_SERVICE_CHAR
             type: actions.GET_BUSINESS_SERVICE_CHARGE_DETAILS_FAILED,
             error: error?.data,
         });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        yield put(Navigate("/business-service-charge"));
     }
 });
 

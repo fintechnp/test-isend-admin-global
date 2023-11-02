@@ -121,7 +121,7 @@ export default function ViewBatchTransaction({ title }) {
                         <RenderField label="Business Name" value={response?.data?.business_name} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Transaction Date" value={FormatDate(response?.data?.created_at)} />
+                        <RenderField label="Transaction Date" value={FormatDate(response?.data?.created_ts)} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="No of beneficiary" value={response?.data?.count} />
@@ -130,7 +130,10 @@ export default function ViewBatchTransaction({ title }) {
                         <RenderField label="No of approval" value={response?.data?.no_of_approval} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Status" value={response?.data?.status_name} />
+                        <RenderField label="Status" value={response?.data?.status} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Service Charge" value={response?.data?.service_charge} />
                     </Grid>
                 </Grid>
             )}

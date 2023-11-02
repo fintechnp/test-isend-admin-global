@@ -93,6 +93,7 @@ export default function UpdateMarketMakerKyc() {
             .map((document) => ({
                 documentTypeId: document.documentTypeId,
                 documentId: document.documentId,
+                documentName: document.documentName,
             }));
 
         const requiredEmptyDocuments = data.documents.filter((document, index) => {
