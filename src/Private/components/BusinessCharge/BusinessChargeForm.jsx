@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Table from "@mui/material/Table";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TableRow from "@mui/material/TableRow";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +43,11 @@ const relatedToOptions = [
 
 export default function BusinessChargeForm({ isAddMode = true }) {
     const navigate = useNavigate();
+
+    const [params, setParams] = useState({
+        CountryId: null,
+    });
+
     const {
         control,
         reset,
@@ -51,7 +56,16 @@ export default function BusinessChargeForm({ isAddMode = true }) {
         formState: { errors },
         setError,
     } = useFormContext();
-    const countries = localStorageGet("country");
+
+    const countries = localStorageGet("sendCountry");
+    const sendingCountry = watch("sendingCountry");
+
+    useEffect(() => {
+        setParams({
+            ...params,
+            CountryId: sendingCountry,
+        });
+    }, [sendingCountry]);
 
     const { loading: adding, success } = useSelector((state) => state.add_business_charge);
     const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_business_charge);
@@ -161,6 +175,8 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                             labelKey="name"
                             disabled={!isAddMode}
                             pageNumberQueryKey="Page"
+                            defaultQueryParams={params}
+                            shouldRenderPrevData={!!params.sendingCountry}
                         />
                     </Box>
                 </Grid>

@@ -29,9 +29,10 @@ const relatedToOptions = [
 export default function AddCreditLimitForm({ isAddMode = true }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { watch, reset, setValue } = useFormContext();
+    const { watch, setValue } = useFormContext();
 
     const relatedTo = watch("relatedTo");
+    const relatedIdName = watch("relatedName");
 
     const { loading, success } = useSelector((state) => state.add_credit_limit);
     const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_credit_limit_data);
@@ -47,6 +48,7 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
     }, []);
 
     useEffect(() => {
+        if (!isAddMode) return;
         setValue("relatedId", null);
     }, [relatedTo]);
 
@@ -79,11 +81,13 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
                         defaultQueryParams={{
                             isSelfRegistered: true,
                         }}
+                        defaultValue={relatedTo === relatedToEnum.business ? relatedIdName : null}
+                        isAddMode={isAddMode}
                     />
                 </Box>
                 <Box
                     sx={{
-                        display: relatedTo === relatedToEnum.marketmaker ? "block" : "none",
+                        display: relatedTo === "marketMaker" ? "block" : "none",
                     }}
                 >
                     <FormSearchAutoComplete
@@ -95,6 +99,8 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
                         labelKey="name"
                         disabled={!isAddMode}
                         pageNumberQueryKey="Page"
+                        isAddMode={isAddMode}
+                        defaultValue={relatedTo === "marketMaker" ? relatedIdName : null}
                     />
                 </Box>
             </Grid>

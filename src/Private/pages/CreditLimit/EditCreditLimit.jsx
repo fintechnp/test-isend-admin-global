@@ -39,6 +39,7 @@ export default function EditCreditLimit() {
         setValue("creditLimit", creditLimitDetail?.data?.creditLimit);
         setValue("remarks", creditLimitDetail?.data?.remarks);
         setValue("relatedId", creditLimitDetail?.data?.relatedId);
+        setValue("relatedName", creditLimitDetail?.data?.name);
     }, []);
 
     const onSubmitData = (data) => {

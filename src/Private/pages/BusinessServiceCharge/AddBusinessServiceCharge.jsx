@@ -20,7 +20,7 @@ export default function AddBusinessServiceCharge() {
             chargeDetailRules: [
                 {
                     min_no_of_txn: "0",
-                    max_no_of_txn: undefined,
+                    max_no_of_txn: "1",
                     flat_amount: undefined,
                 },
             ],
