@@ -432,6 +432,9 @@ import {
     //KYC
     AddMarketMakerKYCReducer,
     EditMarketMakerKYCReducer,
+
+    //USERS
+    GetMarketMakerUsersReducer,
 } from "../Private/pages/MarketMaker/store";
 
 //CREDIT LIMIT
@@ -851,6 +854,10 @@ export const privateReducer = {
 
     add_market_maker_kyc: AddMarketMakerKYCReducer,
     update_market_maker_kyc: EditMarketMakerKYCReducer,
+
+    //MARKET MAKER USERS
+
+    get_market_maker_users: GetMarketMakerUsersReducer,
 
     //CREDIT LIMIT
     get_all_credit_limit: GetAllCreditLimitReducer,

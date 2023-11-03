@@ -1,17 +1,28 @@
 /* eslint-disable max-len */
-import { FormLabel } from "@mui/material";
 import Box from "@mui/material/Box";
+import FormLabel from "@mui/material/FormLabel";
+import Typography from "@mui/material/Typography";
 
 import FormHelperText from "@mui/material/FormHelperText";
 
-export default function FormInputWrapper({ label, children, errorMessage }) {
+export default function FormInputWrapper({ label, children, errorMessage, isOptional }) {
     return (
         <Box display="flex" flexDirection="column">
-            {label && (
-                <Box sx={{ mb: "4px" }}>
-                    <FormLabel>{label}</FormLabel>
-                </Box>
-            )}
+            {label &&
+                (typeof label === "string" ? (
+                    <Box sx={{ mb: "4px" }}>
+                        <FormLabel
+                            sx={{
+                                display: "flex",
+                                gap: 1,
+                            }}
+                        >
+                            {label} <Typography color="grey.700">{isOptional && "( Optional )"}</Typography>
+                        </FormLabel>
+                    </Box>
+                ) : (
+                    <Box sx={{ mb: "4px" }}>{label}</Box>
+                ))}
             <Box>{children}</Box>
             {errorMessage && (
                 <Box

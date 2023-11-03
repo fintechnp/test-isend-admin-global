@@ -101,6 +101,10 @@ const apiEndpoints = {
 
         addKyc: "/kyc",
         updateKyc: "/kyc/:kycId",
+
+        //USERS
+
+        getUsers: "/marketmaker/:marketMakerId/users",
     },
     creditLimit: {
         getAll: "/creditlimits",

@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useRef } from "react";
 import PropTypes from "prop-types";
 import * as qs from "qs";
 import TextField from "@mui/material/TextField";
@@ -13,18 +13,10 @@ import Api from "App/services/api";
 
 import debounce from "App/helpers/debounce";
 import { CircularProgress } from "@mui/material";
-// import http from "services/httpService";
-// import { useQuery } from "@tanstack/react-query";
-// import FormInputWrapper from "components/input/FormInputWrapper";
 
 const api = new Api();
 
 function FormSearchAutoComplete(props) {
-    const [selected, setSelected] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [apiData, setApiData] = useState([]);
-    const [searchedText, setSearchedText] = useState("");
-
     const {
         name,
         label,
@@ -40,19 +32,40 @@ function FormSearchAutoComplete(props) {
         disabled,
         refetchKey,
         error,
+        pageNumberQueryKey = "PageNumber",
     } = props;
+
+    const [selected, setSelected] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [apiData, setApiData] = useState([]);
+    const [searchedText, setSearchedText] = useState("");
+
+    const [position, setPosition] = useState(0);
+
+    const [totalRecordCount, setTotalRecordCount] = useState();
+
+    const [params, setParams] = useState({
+        [pageNumberQueryKey]: 1,
+        PageSize: 20,
+    });
+
+    const listBox = useRef(null);
+
+    const controller = new AbortController();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const { data } = await api.get(
+                const response = await api.get(
                     `${apiEndpoint}?${qs.stringify({
                         ...defaultQueryParams,
+                        ...params,
                         [paramkey]: searchedText,
                     })}`,
                 );
-                setApiData(data);
+                setApiData((prev) => [...prev, ...response?.data]);
+                setTotalRecordCount(response?.pagination?.totalCount);
                 setIsLoading(false);
             } catch (error) {
                 setIsLoading(false);
@@ -60,7 +73,32 @@ function FormSearchAutoComplete(props) {
         };
 
         fetchData();
-    }, [searchedText, apiEndpoint, refetchKey]);
+    }, [searchedText, apiEndpoint, refetchKey, params]);
+
+    useEffect(() => {
+        if (isLoading) controller.abort();
+    }, [apiEndpoint]);
+
+    useEffect(() => {
+        if (listBox.current !== null) {
+            listBox.current.scrollTop = position;
+        }
+    }, [position]);
+
+    const loadMoreResults = () => {
+        if (!totalRecordCount || apiData.length < totalRecordCount) {
+            setParams({ ...params, [pageNumberQueryKey]: (params[pageNumberQueryKey] += 1) });
+        }
+    };
+
+    const handleScroll = (event) => {
+        listBox.current = event.currentTarget;
+        const x = event.currentTarget.scrollTop + event.currentTarget.clientHeight;
+        if (event.currentTarget.scrollHeight - x <= 1) {
+            setPosition(x);
+            loadMoreResults();
+        }
+    };
 
     const options = apiData?.map((v) => ({
         label: v[labelKey],
@@ -92,13 +130,20 @@ function FormSearchAutoComplete(props) {
                     <Autocomplete
                         placeholder={label}
                         fullWidth={fullWidth}
-                        disablePortal
                         value={selected}
                         options={options ?? []}
-                        onChange={(_e, option) => {
+                        onChange={(_e, option, reason) => {
                             if (option === null) setValue(name, null);
                             else setValue(name, option.value);
                             clearErrors(name);
+                            if (reason === "clear") {
+                                setApiData([]);
+                                setParams({
+                                    ...params,
+                                    [pageNumberQueryKey]: 1,
+                                    PageSize: 20,
+                                });
+                            }
                         }}
                         getOptionLabel={(option) => option.label ?? ""}
                         renderInput={(params) => (
@@ -120,10 +165,16 @@ function FormSearchAutoComplete(props) {
                                 }}
                             />
                         )}
-                        disabled={isLoading || disabled}
+                        getOptionDisabled={(option) => {
+                            return isLoading;
+                        }}
+                        disabled={disabled}
                         isOptionEqualToValue={(option, value) => {
                             if (value === undefined) return false;
                             return option.value === value.value;
+                        }}
+                        ListboxProps={{
+                            onScroll: handleScroll,
                         }}
                     />
                     <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
@@ -148,4 +199,5 @@ FormSearchAutoComplete.propTypes = {
     required: PropTypes.bool,
     defaultQueryParams: PropTypes.object,
     error: PropTypes.string,
+    pageNumberQueryKey: PropTypes.string,
 };

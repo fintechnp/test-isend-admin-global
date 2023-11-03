@@ -36,6 +36,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
         getValues,
         control,
         formState: { errors },
+        clearErrors,
     } = useFormContext();
 
     const { append, update } = useFieldArray({
@@ -93,7 +94,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
     const registeredCountryId = watch("registeredCountryId");
 
     useEffect(() => {
-        if (!registeredCountryId) return;
+        if (!registeredCountryId || !isAddMode) return;
+
         dispatch(
             actions.get_document_settings({
                 countryId: registeredCountryId,
@@ -106,7 +108,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
     const documents = watch("documents") ?? [];
 
     useEffect(() => {
-        if (documents.length > 0) return;
+        if (documents.length < 0) return;
 
         const documentSettings = documentResponse?.data;
 
@@ -115,9 +117,10 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 documentId: "",
                 documentName: documentSetting.documentName,
                 documentTypeId: documentSetting.requiredDocumentId,
+                isRequired: documentSetting.isRequired,
             });
         });
-    }, [documentResponse, documents]);
+    }, [documentResponse]);
 
     useEffect(() => {
         if (isAddMode && registeredCountryId) {
@@ -141,6 +144,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
             ...documents[index],
             ...{ documentId },
         });
+
+        clearErrors(`documents.${index}.documentId`);
     };
 
     const handleRemove = (document) => {
@@ -366,6 +371,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                                         <FormInputWrapper
                                             label={document.documentName}
                                             errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                            isOptional={!document.isRequired}
                                         >
                                             <UploadFile
                                                 title={`Upload your ${document.documentName}`}
@@ -411,8 +417,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
                         size="small"
                         variant="outlined"
                         type="submit"
-                        loading={updating | loading}
-                        disabled={updating | loading}
+                        loading={updating || loading}
+                        disabled={updating || loading}
                     >
                         {isAddMode ? "Add" : "Update"}
                     </AddButton>

@@ -9,6 +9,7 @@ import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
 
 import { MarketMakerActions as actions } from "./store";
 import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function AddMarketMaker() {
     const dispatch = useDispatch();
@@ -17,9 +18,28 @@ export default function AddMarketMaker() {
         resolver: yupResolver(marketMakerValidationSchema),
     });
 
-    const { handleSubmit } = methods;
+    const { handleSubmit, setError } = methods;
 
     const onSubmitData = (data) => {
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+            }));
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const {
             countryId,
             postCode,
@@ -35,6 +55,7 @@ export default function AddMarketMaker() {
             contactPersonExtension,
             ...rest
         } = data;
+
         const formattedDataToSend = {
             ...rest,
             address: {
@@ -54,7 +75,8 @@ export default function AddMarketMaker() {
                 extension: contactPersonExtension,
             },
         };
-        dispatch(actions.add_market_maker(formattedDataToSend));
+        const requestData = { ...formattedDataToSend, documents: requiredDocuments };
+        dispatch(actions.add_market_maker(requestData));
     };
 
     return (

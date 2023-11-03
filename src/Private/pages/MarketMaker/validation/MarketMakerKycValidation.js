@@ -83,16 +83,14 @@ export const marketMakerKycValidationSchema = yup.object().shape({
         .max(15, "Post code must be less than 15 characters"),
     permanentAddressAddress: yup.string().required("Address is required"),
 
-    documents: yup
-        .array()
-        .of(
-            yup.object().shape({
-                documentTypeId: yup.number().required(),
-                documentId: yup.string().required("Document name is required"),
-                documentName: yup.string().required(),
-            }),
-        )
-        .required("Document is required"),
+    documents: yup.array().of(
+        yup.object().shape({
+            documentTypeId: yup.number().optional().nullable(),
+            documentId: yup.string().optional().nullable(),
+            documentName: yup.string().optional().nullable(),
+            isRequired: yup.boolean().optional().nullable(),
+        }),
+    ),
 });
 export const marketMakerUserKycValidationSchema = yup.object().shape({
     firstName: yup.string().required("First name is required"),
@@ -169,14 +167,12 @@ export const marketMakerUserKycValidationSchema = yup.object().shape({
         .max(10, "Post code must be less than 15 characters"),
     permanentAddressAddress: yup.string().required("Address is required"),
 
-    documents: yup
-        .array()
-        .of(
-            yup.object().shape({
-                documentTypeId: yup.number().required(),
-                documentId: yup.string().required("Document name is required"),
-                documentName: yup.string().required(),
-            }),
-        )
-        .required("Document is required"),
+    documents: yup.array().of(
+        yup.object().shape({
+            documentTypeId: yup.number().optional().nullable(),
+            documentId: yup.string().optional().nullable(),
+            documentName: yup.string().optional().nullable(),
+            isRequired: yup.boolean().optional().nullable(),
+        }),
+    ),
 });

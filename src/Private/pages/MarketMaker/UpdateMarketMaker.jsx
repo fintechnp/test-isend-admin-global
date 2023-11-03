@@ -12,6 +12,7 @@ import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
 
 import { MarketMakerActions as actions } from "./store";
 import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function UpdateMarketMaker({ title }) {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ export default function UpdateMarketMaker({ title }) {
     const methods = useForm({
         resolver: yupResolver(marketMakerValidationSchema),
     });
-    const { handleSubmit, setValue } = methods;
+    const { handleSubmit, setValue, setError } = methods;
 
     const marketMakerDetail = response?.data;
 
@@ -65,6 +66,26 @@ export default function UpdateMarketMaker({ title }) {
     }, [marketMakerDetail]);
 
     const onSubmitData = (data) => {
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+            }));
+        console.log("🚀 ~ file: UpdateMarketMaker.jsx:75 ~ onSubmitData ~ requiredDocuments:", { requiredDocuments });
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const {
             countryId,
             postCode,
@@ -101,7 +122,9 @@ export default function UpdateMarketMaker({ title }) {
                 extension: contactPersonExtension,
             },
         };
-        dispatch(actions.update_market_maker(marketMakerId, formattedDataToSend));
+        const requestData = { ...formattedDataToSend, documents: requiredDocuments };
+
+        dispatch(actions.update_market_maker(marketMakerId, requestData));
     };
 
     if (loading) {

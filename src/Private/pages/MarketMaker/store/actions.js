@@ -56,6 +56,12 @@ const actions = {
     ADD_MARKET_MAKER_KYC_FAILED: "ADD_MARKET_MAKER_KYC_FAILED",
     ADD_MARKET_MAKER_KYC_RESET: "ADD_MARKET_MAKER_KYC_RESET",
 
+    //USERS
+
+    GET_MARKET_MAKER_USER: "GET_MARKET_MAKER_USER",
+    GET_MARKET_MAKER_USER_SUCCESS: "GET_MARKET_MAKER_USER_SUCCESS",
+    GET_MARKET_MAKER_USER_FAILED: "GET_MARKET_MAKER_USER_FAILED",
+
     get_all_market_maker: (query) => ({
         type: actions.GET_MARKET_MAKER,
         query,
@@ -116,6 +122,13 @@ const actions = {
     update_market_maker_kyc: (id, data) => ({
         type: actions.UPDATE_MARKET_MAKER_KYC,
         data,
+        id,
+    }),
+
+    //uSERS
+
+    get_market_maker_users: (id) => ({
+        type: actions.GET_MARKET_MAKER_USER,
         id,
     }),
 };

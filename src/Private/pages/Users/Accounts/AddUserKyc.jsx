@@ -23,7 +23,7 @@ export default function AddUserKyc() {
     const { loading, success } = useSelector((state) => state.add_system_user_kyc);
     const { response: userDetail, loading: detailLoading } = useSelector((state) => state.get_user_details_id);
 
-    const { setValue } = methods;
+    const { setValue, setError } = methods;
 
     useEffect(() => {
         if (success) {
@@ -41,6 +41,26 @@ export default function AddUserKyc() {
     }, [userDetail]);
 
     const onSubmitData = (data) => {
+        console.log("🚀 ~ file: AddUserKyc.jsx:44 ~ onSubmitData ~ data:", data);
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+            }));
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const {
             temporaryAddressCountryId,
             temporaryAddressPostCode,
@@ -84,7 +104,9 @@ export default function AddUserKyc() {
             ...rest,
         };
 
-        dispatch(actions.add_system_user_kyc(dataToSend));
+        const requestData = { ...dataToSend, documents: requiredDocuments };
+
+        // dispatch(actions.add_system_user_kyc(requestData));
     };
 
     if (detailLoading) {

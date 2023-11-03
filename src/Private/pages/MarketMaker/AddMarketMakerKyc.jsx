@@ -12,6 +12,7 @@ import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycFor
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 import { marketMakerKycValidationSchema } from "./validation/MarketMakerKycValidation";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function AddMarketMakerKyc({ title }) {
     const methods = useForm({
@@ -25,6 +26,7 @@ export default function AddMarketMakerKyc({ title }) {
 
     const {
         formState: { errors },
+        setError,
     } = methods;
 
     useEffect(() => {
@@ -34,6 +36,26 @@ export default function AddMarketMakerKyc({ title }) {
     }, [success]);
 
     const onSubmitData = (data) => {
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+                documentName: document.documentName,
+            }));
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const {
             temporaryAddressCountryId,
             temporaryAddressPostCode,
@@ -74,7 +96,10 @@ export default function AddMarketMakerKyc({ title }) {
             },
             ...rest,
         };
-        dispatch(actions.add_market_maker_kyc(dataToSend));
+
+        const requestData = { ...dataToSend, documents: requiredDocuments };
+
+        dispatch(actions.add_market_maker_kyc(requestData));
     };
 
     return (

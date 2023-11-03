@@ -23,29 +23,6 @@ import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 
 import { businessActions } from "Private/pages/Business/store";
 
-const genderOptions = [
-    {
-        label: "None",
-        value: 0,
-    },
-    {
-        label: "Male",
-        value: 1,
-    },
-    {
-        label: "Female",
-        value: 2,
-    },
-    {
-        label: "Third",
-        value: 3,
-    },
-    {
-        label: "Other",
-        value: 4,
-    },
-];
-
 export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUserKyc = false }) {
     const dispatch = useDispatch();
     const { marketMakerId } = useParams();
@@ -66,6 +43,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
         control,
         watch,
         formState: { errors },
+        clearErrors,
     } = useFormContext();
 
     const { append, update } = useFieldArray({
@@ -84,6 +62,14 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
         };
     });
 
+    const genderOptions = reference
+        ?.find((item) => item.reference_type === 42)
+        ?.reference_data?.map((item) => {
+            return {
+                label: item.name,
+                value: item.reference_id,
+            };
+        });
     const designationOptions = reference
         ?.find((item) => item.reference_type === 101)
         ?.reference_data?.map((item) => {
@@ -92,14 +78,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                 value: item.reference_id,
             };
         });
-    // const genderOptions = reference
-    //     ?.find((item) => item.reference_type === 42)
-    //     ?.reference_data?.map((item) => {
-    //         return {
-    //             label: item.name,
-    //             value: item.reference_id,
-    //         };
-    //     });
+
     const identityTypeOptions = reference
         ?.find((item) => item.reference_type === 2)
         ?.reference_data?.map((item) => {
@@ -119,7 +98,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
     const identityIssuedCountryId = watch("identityIssuedCountryId");
 
     useEffect(() => {
-        if (!identityIssuedCountryId) return;
+        if (!identityIssuedCountryId || !isAddMode) return;
         dispatch(
             actions.get_document_settings({
                 countryId: identityIssuedCountryId,
@@ -132,7 +111,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
     const documents = watch("documents") ?? [];
 
     useEffect(() => {
-        if (documents.length > 0) return;
+        if (documents.length < 0) return;
 
         const documentSettings = response?.data;
 
@@ -141,6 +120,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                 documentId: "",
                 documentName: documentSetting.documentName,
                 documentTypeId: documentSetting.requiredDocumentId,
+                isRequired: documentSetting.isRequired,
             });
         });
     }, [response]);
@@ -172,6 +152,8 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
             ...documents[index],
             ...{ documentId },
         });
+
+        clearErrors(`documents.${index}.documentId`);
     };
 
     const handleRemove = (document) => {
@@ -426,6 +408,7 @@ export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUs
                                         <FormInputWrapper
                                             label={document.documentName}
                                             errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                            isOptional={!document.isRequired}
                                         >
                                             <UploadFile
                                                 title={`Upload your ${document.documentName}`}

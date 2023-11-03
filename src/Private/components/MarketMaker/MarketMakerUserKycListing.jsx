@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,7 +18,9 @@ import TableRowActionContainer from "App/components/Table/TableRowActionContaine
 
 import { businessActions as actions } from "Private/pages/Business/store";
 
-export default function MarketMakerUserKycListing({ userData, loading }) {
+import { MarketMakerActions as mActions } from "Private/pages/MarketMaker/store";
+
+export default function MarketMakerUserKycListing() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { marketMakerId } = useParams();
@@ -28,9 +30,20 @@ export default function MarketMakerUserKycListing({ userData, loading }) {
     const { response: kycDetailData, loading: kycDetailLoading } = useSelector(
         (state) => state.get_business_kyc_details,
     );
+    const { response: users, loading: userLoading } = useSelector((state) => state.get_market_maker_users);
+
+    console.log("🚀 ~ file: MarketMakerUserKycListing.jsx:34 ~ MarketMakerUserKycListing ~ users:", users);
+
+    useEffect(() => {
+        dispatch(mActions.get_market_maker_users(marketMakerId));
+    }, [marketMakerId]);
 
     const columns = useMemo(
         () => [
+            {
+                header: "SN",
+                accessorKey: "f_serial_no",
+            },
             {
                 header: "Name",
                 accessorKey: "user_name",
@@ -39,57 +52,92 @@ export default function MarketMakerUserKycListing({ userData, loading }) {
                 header: "Email",
                 accessorKey: "user_email",
             },
+            {
+                header: "User Type",
+                cell: ({ row }) => <Typography>{row?.original?.isDefaultUser ? "Default" : "Business"}</Typography>,
+            },
 
             {
                 header: "Actions",
                 cell: ({ row }) => (
                     <>
-                        {!row?.original?.hasDefaultUserKyc ? (
-                            <Button
-                                onClick={() => {
-                                    navigate(buildRoute(routePaths.agent.addUserKyc, row?.original?.user_id));
-                                }}
-                            >
-                                Add KYC
-                            </Button>
-                        ) : (
-                            <TableRowActionContainer>
-                                <IconButton
-                                    onClick={() => {
-                                        setOpen(true);
-                                        dispatch(actions.get_business_kyc_details(userData?.kycId));
-                                    }}
-                                >
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
+                        {(() => {
+                            if (row?.original?.isDefaultUser && !row?.original?.hasKyc) {
+                                return (
+                                    <Button
+                                        onClick={() => {
+                                            navigate(buildRoute(routePaths.agent.addUserKyc, row?.original?.user_id));
                                         }}
-                                    />
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => {
-                                        navigate(buildRoute(routePaths.agent.editUserKyc, row?.original?.kycId));
-                                    }}
-                                >
-                                    <EditOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
-                                    />
-                                </IconButton>
-                            </TableRowActionContainer>
-                        )}
+                                    >
+                                        Add KYC
+                                    </Button>
+                                );
+                            } else if (row?.original?.isDefaultUser && row?.original?.hasKyc) {
+                                return (
+                                    <TableRowActionContainer>
+                                        <IconButton
+                                            onClick={() => {
+                                                setOpen(true);
+                                                dispatch(actions.get_business_kyc_details(row?.original?.kycId));
+                                            }}
+                                        >
+                                            <RemoveRedEyeOutlinedIcon
+                                                sx={{
+                                                    fontSize: "20px",
+                                                    "&:hover": {
+                                                        background: "transparent",
+                                                    },
+                                                }}
+                                            />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() => {
+                                                navigate(
+                                                    buildRoute(routePaths.agent.editUserKyc, row?.original?.kycId),
+                                                );
+                                            }}
+                                        >
+                                            <EditOutlinedIcon
+                                                sx={{
+                                                    fontSize: "20px",
+                                                    "&:hover": {
+                                                        background: "transparent",
+                                                    },
+                                                }}
+                                            />
+                                        </IconButton>
+                                    </TableRowActionContainer>
+                                );
+                            } else if (!row?.original?.isDefaultUser && row?.original?.hasKyc) {
+                                return (
+                                    <TableRowActionContainer>
+                                        <IconButton
+                                            onClick={() => {
+                                                navigate(
+                                                    buildRoute(routePaths.agent.viewKycUser, row?.original?.kycId),
+                                                );
+                                            }}
+                                        >
+                                            <RemoveRedEyeOutlinedIcon
+                                                sx={{
+                                                    fontSize: "20px",
+                                                    "&:hover": {
+                                                        background: "transparent",
+                                                    },
+                                                }}
+                                            />
+                                        </IconButton>
+                                    </TableRowActionContainer>
+                                );
+                            } else {
+                                return <></>;
+                            }
+                        })()}
                     </>
                 ),
             },
         ],
-        [userData],
+        [],
     );
 
     const handleClose = () => {
@@ -105,7 +153,7 @@ export default function MarketMakerUserKycListing({ userData, loading }) {
     }, []);
     return (
         <>
-            <TanstackReactTable columns={columns} title="User KYC" data={[userData]} loading={loading} />
+            <TanstackReactTable columns={columns} title="Users" data={users?.data ?? []} loading={userLoading} />
             <Modal
                 title="Kyc Detail"
                 open={open}

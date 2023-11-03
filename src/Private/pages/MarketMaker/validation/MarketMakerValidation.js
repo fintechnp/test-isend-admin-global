@@ -13,7 +13,13 @@ export const marketMakerValidationSchema = yup.object().shape({
     currencyId: yup.string().required(),
     email: yup.string().required(),
     contactNo: yup.string().required(),
-    website: yup.string().required(),
+    website: yup
+        .string()
+        .matches(
+            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+            "Enter correct url!",
+        )
+        .required("Please enter website"),
     allowedCountryIds: yup
         .array()
         .min(1, "Allowed countries must contain at least one number")
@@ -39,14 +45,12 @@ export const marketMakerValidationSchema = yup.object().shape({
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
-    documents: yup
-        .array()
-        .of(
-            yup.object().shape({
-                documentTypeId: yup.number().required(),
-                documentId: yup.string().required("Document name is required"),
-                documentName: yup.string().required(),
-            }),
-        )
-        .required("Documents is required"),
+    documents: yup.array().of(
+        yup.object().shape({
+            documentTypeId: yup.number().optional().nullable(),
+            documentId: yup.string().optional().nullable(),
+            documentName: yup.string().optional().nullable(),
+            isRequired: yup.boolean().optional().nullable(),
+        }),
+    ),
 });

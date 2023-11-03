@@ -15,6 +15,7 @@ import MarketMakerKybForm from "Private/components/MarketMaker/MarketMakerKybFor
 import { businessActions } from "Private/pages/Business/store";
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
 import { marketMakerKybValidationSchema } from "./validation/MarketMakerKybValidation";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function UpdateMarketMakerKyb({ title }) {
     const { marketMakerId, kybId } = useParams();
@@ -45,6 +46,7 @@ export default function UpdateMarketMakerKyb({ title }) {
         handleSubmit,
         setValue,
         formState: { errors },
+        setError,
     } = methods;
 
     useEffect(() => {
@@ -73,6 +75,25 @@ export default function UpdateMarketMakerKyb({ title }) {
     }, [kybDetail]);
 
     const onSubmitData = (data) => {
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+            }));
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const { countryId, postCode, unit, street, state, city, address, ...rest } = data;
         const dataToSend = {
             marketMakerId: marketMakerId,
@@ -88,7 +109,9 @@ export default function UpdateMarketMakerKyb({ title }) {
             ...rest,
         };
 
-        dispatch(actions.update_market_maker_kyb(kybId, dataToSend));
+        const requestData = { ...dataToSend, documents: requiredDocuments };
+
+        dispatch(actions.update_market_maker_kyb(kybId, requestData));
     };
     return (
         <PageContent title="Edit Agent KYB">
