@@ -32,6 +32,9 @@ function FormSearchAutoComplete(props) {
         disabled,
         refetchKey,
         error,
+        isAddMode = true,
+        defaultValue,
+        shouldRenderPrevData,
         pageNumberQueryKey = "PageNumber",
     } = props;
 
@@ -49,11 +52,20 @@ function FormSearchAutoComplete(props) {
         PageSize: 20,
     });
 
+    const {
+        control,
+        setValue,
+        watch,
+        formState: { errors },
+        clearErrors,
+    } = useFormContext();
+
     const listBox = useRef(null);
 
-    const controller = new AbortController();
+    const value = watch(name);
 
     useEffect(() => {
+        if (!isAddMode) return;
         const fetchData = async () => {
             try {
                 setIsLoading(true);
@@ -64,7 +76,10 @@ function FormSearchAutoComplete(props) {
                         [paramkey]: searchedText,
                     })}`,
                 );
-                setApiData((prev) => [...prev, ...response?.data]);
+                if (shouldRenderPrevData) {
+                    setApiData((prev) => [...prev, ...response?.data]);
+                }
+                setApiData(response?.data);
                 setTotalRecordCount(response?.pagination?.totalCount);
                 setIsLoading(false);
             } catch (error) {
@@ -73,11 +88,26 @@ function FormSearchAutoComplete(props) {
         };
 
         fetchData();
-    }, [searchedText, apiEndpoint, refetchKey, params]);
+    }, [searchedText, apiEndpoint, refetchKey, params, defaultQueryParams]);
 
     useEffect(() => {
-        if (isLoading) controller.abort();
-    }, [apiEndpoint]);
+        if (isAddMode) return;
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const response = await api.get(
+                    `${apiEndpoint}?${qs.stringify({
+                        [paramkey]: defaultValue,
+                    })}`,
+                );
+                setApiData(response?.data);
+                setIsLoading(false);
+            } catch (error) {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [defaultValue]);
 
     useEffect(() => {
         if (listBox.current !== null) {
@@ -105,20 +135,11 @@ function FormSearchAutoComplete(props) {
         value: v[valueKey],
     }));
 
-    const {
-        control,
-        setValue,
-        watch,
-        formState: { errors },
-        clearErrors,
-    } = useFormContext();
-
-    const value = watch(name);
-
     useEffect(() => {
         const selected = options?.find((o) => o.value === value);
+
         setSelected(selected ?? "");
-    }, [value]);
+    }, [value, apiData]);
 
     return (
         <Controller
@@ -200,4 +221,7 @@ FormSearchAutoComplete.propTypes = {
     defaultQueryParams: PropTypes.object,
     error: PropTypes.string,
     pageNumberQueryKey: PropTypes.string,
+    defaultValue: PropTypes.string,
+    relatedIdQueryKey: PropTypes.string,
+    shouldRenderPrevData: PropTypes.bool,
 };
