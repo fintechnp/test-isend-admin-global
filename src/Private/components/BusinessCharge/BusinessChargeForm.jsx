@@ -58,6 +58,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
     } = useFormContext();
 
     const countries = localStorageGet("sendCountry");
+    const allCountries = localStorageGet("country");
     const sendingCountry = watch("sendingCountry");
 
     useEffect(() => {
@@ -90,6 +91,12 @@ export default function BusinessChargeForm({ isAddMode = true }) {
     }, [relatedTo]);
 
     const registeredCountyOptions = countries?.map((c) => {
+        return {
+            label: ucwords(c.country),
+            value: c.country_id,
+        };
+    });
+    const allRegisteredCountyOptions = allCountries?.map((c) => {
         return {
             label: ucwords(c.country),
             value: c.country_id,
@@ -142,7 +149,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                     <FormSelect
                         name="receivingCountry"
                         label="Recieving Country"
-                        options={registeredCountyOptions ?? []}
+                        options={allRegisteredCountyOptions ?? []}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
