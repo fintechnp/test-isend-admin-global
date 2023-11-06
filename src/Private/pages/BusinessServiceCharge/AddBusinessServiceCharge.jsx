@@ -43,15 +43,15 @@ export default function AddBusinessServiceCharge() {
 
         const newChargeDetailRules = chargeDetailRules.map((item) => {
             return {
-                min_no_of_txn: +item.min_no_of_txn,
-                max_no_of_txn: +item.max_no_of_txn,
-                flat_amount: +item.flat_amount,
+                min_no_of_txn: Number(item.min_no_of_txn),
+                max_no_of_txn: Number(item.max_no_of_txn),
+                flat_amount: Number(item.flat_amount),
             };
         });
 
         let hasError = false;
 
-        chargeDetailRules.forEach((rule, index) => {
+        newChargeDetailRules.forEach((rule, index) => {
             if (isEmpty(rule.min_no_of_txn)) {
                 hasError = true;
                 setError(`chargeDetailRules.${index}.min_no_of_txn`, { message: "Required" });
