@@ -11,6 +11,7 @@ import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 import { relatedToEnum } from "../BusinessCharge/BusinessChargeForm";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import { useEffect } from "react";
+import EntryType from "Private/pages/Ledger/enum/EntryType";
 
 const relatedToOptions = [
     {
@@ -24,20 +25,52 @@ const relatedToOptions = [
 ];
 const entityTypeOptions = [
     {
-        label: "Single",
+        label: EntryType.Single,
         value: 0,
     },
     {
-        label: "Batch",
+        label: EntryType.Batch,
         value: 1,
     },
     {
-        label: "BalanceRequest",
+        label: EntryType.BalanceRequest,
         value: 2,
     },
     {
-        label: "Manual",
+        label: EntryType.Manual,
         value: 3,
+    },
+    {
+        label: EntryType.SingleServiceCharge,
+        value: 4,
+    },
+    {
+        label: EntryType.BatchServiceCharge,
+        value: 5,
+    },
+    {
+        label: EntryType.SingleReverseEntry,
+        value: 6,
+    },
+    {
+        label: EntryType.BatchReverseEntry,
+        value: 7,
+    },
+    {
+        label: EntryType.SingleServiceChargeReverseEntry,
+        value: 8,
+    },
+    {
+        label: EntryType.BatchServiceChargeReverseEntry,
+        value: 9,
+    },
+    {
+        label: EntryType.SingleBatchTransaction,
+        value: 10,
+    },
+    {
+        label: EntryType.SingleBatchServiceCharge,
+        value: 11,
     },
 ];
 

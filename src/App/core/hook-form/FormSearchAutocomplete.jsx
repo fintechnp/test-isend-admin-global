@@ -159,6 +159,7 @@ function FormSearchAutoComplete(props) {
                             clearErrors(name);
                             if (reason === "clear") {
                                 setApiData([]);
+                                setSearchedText("");
                                 setParams({
                                     ...params,
                                     [pageNumberQueryKey]: 1,

@@ -44,13 +44,21 @@ export default function ListLedger() {
                 header: "Entry Type",
                 accessorKey: "entryTypeName",
                 cell: ({ row, getValue }) => {
-                    if (row?.original?.entryTypeName === EntryType.Single) {
-                        return (
-                            <Link to={buildRoute(routePaths.agent.viewSingleTransaction, row?.original?.entryId)}>
-                                {getValue()}
-                            </Link>
-                        );
-                    } else if (row?.original?.entryTypeName === EntryType.Batch) {
+                    if (
+                        row?.original?.entryTypeName === EntryType.Single ||
+                        row?.original?.entryTypeName === EntryType.SingleServiceCharge ||
+                        row?.original?.entryTypeName === EntryType.SingleReverseEntry ||
+                        row?.original?.entryTypeName === EntryType.BatchReverseEntry ||
+                        row?.original?.entryTypeName === EntryType.SingleServiceChargeReverseEntry ||
+                        row?.original?.entryTypeName === EntryType.BatchServiceChargeReverseEntry ||
+                        row?.original?.entryTypeName === EntryType.SingleBatchTransaction ||
+                        row?.original?.entryTypeName === EntryType.SingleBatchServiceCharge
+                    ) {
+                        return <Link to={`/transactions/details/${row?.original?.entryId}`}>{getValue()}</Link>;
+                    } else if (
+                        row?.original?.entryTypeName === EntryType.Batch ||
+                        row?.original?.entryTypeName === EntryType.BatchServiceCharge
+                    ) {
                         return (
                             <Link to={buildRoute(routePaths.agent.viewBatchTransaction, row?.original?.entryId)}>
                                 {getValue()}
@@ -66,6 +74,10 @@ export default function ListLedger() {
                         return <Typography>{getValue()}</Typography>;
                     }
                 },
+            },
+            {
+                header: "Account Name",
+                accessorKey: "accountName",
             },
             {
                 header: "Currency",
