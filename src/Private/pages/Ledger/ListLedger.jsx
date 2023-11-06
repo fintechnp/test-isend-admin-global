@@ -39,10 +39,6 @@ export default function ListLedger() {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
-            {
-                header: "Account Name",
-                accessorKey: "accountName",
-            },
 
             {
                 header: "Entry Type",
@@ -78,6 +74,10 @@ export default function ListLedger() {
                         return <Typography>{getValue()}</Typography>;
                     }
                 },
+            },
+            {
+                header: "Account Name",
+                accessorKey: "accountName",
             },
             {
                 header: "Currency",
