@@ -34,6 +34,8 @@ export default function ViewBatchTransaction({ title }) {
 
     const { response, loading } = useSelector((state) => state.get_batch_transaction_by_id);
 
+    console.log(response);
+
     useEffect(() => {
         dispatch(batchTransactionActions.get_batch_transaction(batchTransactionId, filterSchema));
     }, [filterSchema]);
@@ -53,6 +55,11 @@ export default function ViewBatchTransaction({ title }) {
                 header: "Sender(Business)",
                 accessorKey: "business_name",
             },
+            {
+                header: "Pin Number",
+                accessorKey: "pin_number",
+            },
+
             {
                 header: "Txn Date",
                 accessorKey: "created_ts",
