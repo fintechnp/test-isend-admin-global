@@ -34,8 +34,6 @@ export default function ViewBatchTransaction({ title }) {
 
     const { response, loading } = useSelector((state) => state.get_batch_transaction_by_id);
 
-    console.log(response);
-
     useEffect(() => {
         dispatch(batchTransactionActions.get_batch_transaction(batchTransactionId, filterSchema));
     }, [filterSchema]);
