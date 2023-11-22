@@ -29,34 +29,34 @@ const actions = {
     DELETE_PAYMENT_RULES_FAILED: "DELETE_PAYMENT_RULES_FAILED",
     DELETE_PAYMENT_RULES_RESET: "DELETE_PAYMENT_RULES_RESET",
 
-    get_all_payemnt_rules: (query) => ({
+    get_all_payment_rules: (query) => ({
         type: actions.GET_PAYMENT_RULES,
         query,
     }),
 
-    get_payemnt_rules_details_by_id: (id) => ({
+    get_payment_rules_details_by_id: (id) => ({
         type: actions.GET_PAYMENT_RULES_DETAILS_BY_ID,
         id,
     }),
 
-    add_payemnt_rules: (data) => ({
+    add_payment_rules: (data) => ({
         type: actions.ADD_PAYMENT_RULES,
         data,
     }),
 
-    update_payemnt_rules: (id, data) => ({
+    update_payment_rules: (id, data) => ({
         type: actions.UPDATE_PAYMENT_RULES,
         data,
         id,
     }),
 
-    update_payemnt_rules_status: (data, id) => ({
+    update_payment_rules_status: (data, id) => ({
         type: actions.UPDATE_PAYMENT_RULES_STATUS,
         data,
         id,
     }),
 
-    delete_payemnt_rules: (id) => ({
+    delete_payment_rules: (id) => ({
         type: actions.DELETE_PAYMENT_RULES,
         id,
     }),

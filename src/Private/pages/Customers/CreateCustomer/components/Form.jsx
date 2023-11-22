@@ -52,7 +52,7 @@ function CustomerForm({ update_data, loading }) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [code, setCode] = React.useState(null);
+    const [code, setCode] = React.useState("null");
     const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});

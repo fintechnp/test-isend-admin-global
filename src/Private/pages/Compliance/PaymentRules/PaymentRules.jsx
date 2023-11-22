@@ -105,7 +105,7 @@ const PaymentRules = (props) => {
     );
 
     useEffect(() => {
-        dispatch(actions.get_all_payemnt_rules(filterSchema));
+        dispatch(actions.get_all_payment_rules(filterSchema));
         dispatch({ type: "ADD_PAYMENT_RULES_RESET" });
         dispatch({ type: "UPDATE_PAYMENT_RULES_RESET" });
         dispatch({ type: "DELETE_PAYMENT_RULES_RESET" });

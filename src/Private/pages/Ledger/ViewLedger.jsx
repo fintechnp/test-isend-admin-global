@@ -74,11 +74,12 @@ export default function ViewLedger() {
                         <RenderField label="Entity Type" value={response?.data?.entryTypeName} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Title/Narration" value={response?.data?.narration} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
                         <RenderField label="Created At" value={response?.data?.created} />
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RenderField label="Title/Narration" value={response?.data?.narration} />
+                    </Grid>
+
                     <Grid item xs={12} mt={2}>
                         <TanstackReactTable
                             columns={columns}
