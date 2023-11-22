@@ -188,7 +188,7 @@ function AddUpdatePaymentRules({ update_data, update }) {
     };
 
     const handlePaymentRulesSubmit = (data) => {
-        dispatch(actions.add_payemnt_rules(data));
+        dispatch(actions.add_payment_rules(data));
     };
 
     const handlePaymentRulesUpdate = (data) => {
