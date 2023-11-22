@@ -128,7 +128,7 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
                         <RenderField label="Name" value={data?.fullName} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Related Kyb" value={data?.relatedKybName} />
+                        <RenderField label="Parent Kyb" value={data?.relatedKybName} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Date of Birth" value={data?.dateOfBirth} />

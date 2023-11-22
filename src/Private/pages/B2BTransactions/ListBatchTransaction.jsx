@@ -44,10 +44,10 @@ export default function ListBatchTransaction() {
                     <NavLink to={buildRoute(routePaths.agent.viewBatchTransaction, getValue())}>{getValue()}</NavLink>
                 ),
             },
-            {
-                header: "Agent",
-                accessorKey: "agent_name",
-            },
+            // {
+            //     header: "Agent",
+            //     accessorKey: "agent_name",
+            // },
             {
                 header: "Business Name",
                 accessorKey: "business_name",

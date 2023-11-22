@@ -34,8 +34,6 @@ export default function ViewBatchTransaction({ title }) {
 
     const { response, loading } = useSelector((state) => state.get_batch_transaction_by_id);
 
-    console.log(response);
-
     useEffect(() => {
         dispatch(batchTransactionActions.get_batch_transaction(batchTransactionId, filterSchema));
     }, [filterSchema]);
@@ -58,6 +56,7 @@ export default function ViewBatchTransaction({ title }) {
             {
                 header: "Pin Number",
                 accessorKey: "pin_number",
+                cell: ({ getValue }) => <p>{getValue() ? getValue() : "-"}</p>,
             },
 
             {
@@ -122,9 +121,6 @@ export default function ViewBatchTransaction({ title }) {
             ) : (
                 <Grid container rowSpacing={1}>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Agent" value={response?.data?.agent_name} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
                         <RenderField label="Business Name" value={response?.data?.business_name} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -137,7 +133,7 @@ export default function ViewBatchTransaction({ title }) {
                         <RenderField label="No of approval" value={response?.data?.no_of_approval} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Status" value={response?.data?.status} />
+                        <RenderField label="Status" value={response?.data?.status_name} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField
@@ -147,7 +143,7 @@ export default function ViewBatchTransaction({ title }) {
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                        <RenderField label="Service Charge" value={response?.data?.service_charge} />
+                        <RenderField label="Service Charge" value={response?.data?.service_charge.toString()} />
                     </Grid>
                 </Grid>
             )}
