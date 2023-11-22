@@ -28,21 +28,6 @@ export const addUserKycValidationSchema = yup.object().shape({
         .nullable()
         .required("Required"),
     identityIssuedDate: yup.string().required("Identity issued date is required"),
-    identityExpiryDate: yup
-        .string()
-        .required("Identity expiry date is required")
-        .test(
-            "is-expiry-greater-than-issued",
-            "Expiry date must be greater than issued date",
-            function (expiryDate) {
-                const issuedDate = this.resolve(yup.ref("identityIssuedDate"));
-                if (!issuedDate || !expiryDate) {
-                    return true;
-                }
-                return new Date(expiryDate) > new Date(issuedDate);
-            },
-            "Expiry date must be greater than issued date",
-        ),
     designationId: yup
         .number()
         .transform((value) => (Number.isNaN(value) ? null : value))

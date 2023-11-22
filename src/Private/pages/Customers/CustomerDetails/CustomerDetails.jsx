@@ -82,7 +82,7 @@ const Value = styled(Typography)(({ value }) => ({
     lineHeight: 1.5,
     fontSize: "15px",
     fontWeight: 400,
-    textTransform: value === "Email Address" ? "lowercase" : "capitalize",
+    // textTransform: value === "Email Address" ? "lowercase" : "capitalize",
 }));
 
 const InfoWrapper = styled(Box)(({ theme }) => ({

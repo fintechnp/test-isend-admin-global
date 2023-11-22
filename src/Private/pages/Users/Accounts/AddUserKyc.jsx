@@ -23,7 +23,11 @@ export default function AddUserKyc() {
     const { loading, success } = useSelector((state) => state.add_system_user_kyc);
     const { response: userDetail, loading: detailLoading } = useSelector((state) => state.get_user_details_id);
 
-    const { setValue, setError } = methods;
+    const {
+        setValue,
+        setError,
+        formState: { errors },
+    } = methods;
 
     useEffect(() => {
         if (success) {
@@ -41,12 +45,12 @@ export default function AddUserKyc() {
     }, [userDetail]);
 
     const onSubmitData = (data) => {
-        console.log("🚀 ~ file: AddUserKyc.jsx:44 ~ onSubmitData ~ data:", data);
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({
                 documentTypeId: document.documentTypeId,
                 documentId: document.documentId,
+                documentName: document.documentName,
             }));
 
         const requiredEmptyDocuments = data.documents.filter((document, index) => {
@@ -106,7 +110,7 @@ export default function AddUserKyc() {
 
         const requestData = { ...dataToSend, documents: requiredDocuments };
 
-        // dispatch(actions.add_system_user_kyc(requestData));
+        dispatch(actions.add_system_user_kyc(requestData));
     };
 
     if (detailLoading) {
