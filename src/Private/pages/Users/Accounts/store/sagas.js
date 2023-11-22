@@ -160,6 +160,8 @@ export const addUserKyc = takeEvery(actions.ADD_SYSTEM_USER_KYC, function* (acti
             type: actions.ADD_SYSTEM_USER_KYC_FAILED,
             error: error?.data?.message,
         });
+        yield put({ type: actions.ADD_SYSTEM_USER_KYC_RESET });
+
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
@@ -178,6 +180,8 @@ export const updateSystemUserKyc = takeEvery(actions.UPDATE_SYSTEM_USER_KYC, fun
             type: actions.UPDATE_SYSTEM_USER_KYC_FAILED,
             error: error?.data?.message,
         });
+        yield put({ type: actions.UPDATE_SYSTEM_USER_KYC_RESET });
+
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });

@@ -62,7 +62,7 @@ export default function MarketMakerKycListing() {
                 accessorKey: "mobileNumber",
             },
             {
-                header: "Related KYB",
+                header: "Parent KYB",
                 accessorKey: "relatedKybName",
             },
             {

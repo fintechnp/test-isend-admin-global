@@ -9,9 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "App/components";
 import Modal from "App/components/Modal/Modal";
 import Button from "App/components/Button/Button";
-import { ReferenceNameByDataId } from "App/helpers";
 import { convertDate } from "App/utils/convertDate";
-import referenceTypeId from "Private/config/referenceTypeId";
 import PageContent from "App/components/Container/PageContent";
 import UpdateKycUserStatusForm from "Private/components/KycUser/UpdateKycUserStatusForm";
 import { RenderField, Title, TitleWrapper } from "../Customers/CustomerDetails/CustomerDetails";
@@ -85,10 +83,7 @@ export default function ViewKycUser() {
                         <RenderField label="Birth Country" value={response?.data?.birthCountry?.country} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RenderField
-                            label="Identity Type"
-                            value={ReferenceNameByDataId(referenceTypeId.identityTypes, response?.data?.identityTypeId)}
-                        />
+                        <RenderField label="Identity Type" value={response?.data?.identityType} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Identity No" value={response?.data?.identityNo} />
