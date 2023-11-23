@@ -424,6 +424,12 @@ const PrivateLayout = () => {
                         sub: false,
                     },
                     {
+                        path: routePaths.agent.listB2bAccount,
+                        key: "market-maker",
+                        text: "B2b Accounts",
+                        sub: false,
+                    },
+                    {
                         path: routePaths.agent.creditLimit,
                         key: "credit-limit",
                         text: "Credit Limits",
