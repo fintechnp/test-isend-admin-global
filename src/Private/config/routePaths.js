@@ -70,6 +70,8 @@ const routePaths = {
         listLedger: "/agent/ledger",
         viewLedger: "/agent/ledger/:ledgerId/view",
         addLedger: "/agent/ledger/add",
+
+        listB2bAccount: "/agent/b2b-account",
     },
 
     userKyc: {

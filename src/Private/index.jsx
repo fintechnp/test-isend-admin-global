@@ -514,6 +514,8 @@ import {
 
 import { GetAllLedgerReducer, GetLedgerDetailsReducer, AddLedgerReducer, ledgerSaga } from "Private/pages/Ledger/store";
 
+import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -913,6 +915,10 @@ export const privateReducer = {
     get_all_ledger: GetAllLedgerReducer,
     get_ledger_details: GetLedgerDetailsReducer,
     add_ledger: AddLedgerReducer,
+
+    //B2B ACCOUNT
+
+    get_all_b2b_account: GetAllB2bAccounts,
 };
 
 export const privateSaga = [
@@ -968,6 +974,7 @@ export const privateSaga = [
     businessChargeSaga(),
     KycUserSaga(),
     ledgerSaga(),
+    b2bAccountSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

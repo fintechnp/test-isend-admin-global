@@ -175,6 +175,10 @@ const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
 const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
 const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
 
+// B2b Account
+
+const ListB2bAccount = lazy(() => import("../pages/B2BAccount/ListAllAccounts"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -611,6 +615,13 @@ const privateRoutes = [
     {
         path: routePaths.agent.addLedger,
         component: <AddLedger />,
+    },
+
+    // B2b Account
+
+    {
+        path: routePaths.agent.listB2bAccount,
+        component: <ListB2bAccount />,
     },
 ];
 
