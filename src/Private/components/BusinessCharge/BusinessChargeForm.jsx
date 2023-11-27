@@ -166,6 +166,9 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                             valueKey="businessId"
                             labelKey="name"
                             disabled={!isAddMode}
+                            defaultQueryParams={{
+                                IsSelfRegistered: true,
+                            }}
                         />
                     </Box>
                     <Box
