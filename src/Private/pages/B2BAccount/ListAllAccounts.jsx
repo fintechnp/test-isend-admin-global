@@ -19,7 +19,6 @@ export default function ListB2bAccounts() {
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response, loading } = useSelector((state) => state.get_all_b2b_account);
-    console.log("🚀 ~ file: ListAllAccounts.jsx:22 ~ ListB2bAccounts ~ response:", response);
 
     useEffect(() => {
         dispatch(actions?.get_all_b2b_account(filterSchema));

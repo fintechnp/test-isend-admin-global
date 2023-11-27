@@ -117,7 +117,7 @@ function FormSearchAutoComplete(props) {
 
     const loadMoreResults = () => {
         if (!totalRecordCount || apiData.length < totalRecordCount) {
-            setParams({ ...params, [pageNumberQueryKey]: (params[pageNumberQueryKey] += 1) });
+            setParams({ ...params, ...defaultQueryParams, [pageNumberQueryKey]: (params[pageNumberQueryKey] += 1) });
         }
     };
 
