@@ -251,12 +251,11 @@ const AmlSuspicious = (props) => {
                         <Release
                             destroyOnUnmount
                             enableReinitialize
-                            initialValues={{ id: row?.original?.tid }}
-                            onSubmit={handleRelease}
-                            loading={u_loading}
+                            onSubmit={(data) => handleRelease(row.original.tid, data)}
                             validatation={true}
                             tooltext="Release Transaction"
                             form={`aml_release_form_${row?.original?.tid}`}
+                            reduxGlobalStateKey="update_aml_suspicious"
                         />
                     </Box>
                 ),
@@ -329,8 +328,8 @@ const AmlSuspicious = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleRelease = (data) => {
-        dispatch(actions.update_aml_suspicious(data?.id, { remarks: data.remarks }));
+    const handleRelease = (transactionId, data) => {
+        dispatch(actions.update_aml_suspicious(transactionId, { remarks: data.remarks }));
     };
 
     const handleChangeTab = useCallback((countryIso3) => {
@@ -342,7 +341,7 @@ const AmlSuspicious = (props) => {
 
     return (
         <PageContent title="AML Suspicious">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}

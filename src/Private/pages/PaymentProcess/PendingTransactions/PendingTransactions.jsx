@@ -330,7 +330,7 @@ const PendingTransactions = (props) => {
 
     return (
         <PageContent title="Pending Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}

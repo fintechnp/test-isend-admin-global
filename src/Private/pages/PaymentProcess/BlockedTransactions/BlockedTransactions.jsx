@@ -253,12 +253,11 @@ const BlockedTransactions = (props) => {
                         <Release
                             destroyOnUnmount
                             enableReinitialize
-                            initialValues={{ id: row?.original?.tid }}
-                            onSubmit={handleRelease}
-                            loading={u_loading}
+                            onSubmit={(data) => handleRelease(row.original.tid, data)}
                             validatation={true}
                             tooltext="Release Transaction"
                             form={`block_release_form_${row?.original?.tid}`}
+                            reduxGlobalStateKey="update_blocked_transactions"
                         />
                     </Box>
                 ),
@@ -331,9 +330,9 @@ const BlockedTransactions = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleRelease = (data) => {
+    const handleRelease = (transactionId, data) => {
         dispatch(
-            actions.update_blocked_transactions(data?.id, {
+            actions.update_blocked_transactions(transactionId, {
                 remarks: data?.remarks,
             }),
         );
@@ -348,7 +347,7 @@ const BlockedTransactions = (props) => {
 
     return (
         <PageContent title="Blocked Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}

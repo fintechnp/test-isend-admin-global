@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm, reset, change } from "redux-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,7 +17,7 @@ import Validator from "../../../utils/validators";
 import TextAreaField from "../../Fields/TextAreaField";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -70,7 +70,9 @@ const ReleaseButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
+function ReleaseDialog({ id, tooltext, handleSubmit, validatation, reduxGlobalStateKey }) {
+    const { loading } = useSelector((state) => state[reduxGlobalStateKey]);
+
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
@@ -112,12 +114,10 @@ function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
             </Tooltip>
             <BootstrapDialog
                 open={open}
-                onClose={handleClose}
+                onClose={loading ? undefined : handleClose}
                 aria-labelledby="responsive-dialog-title"
             >
-                <DialogTitle id="responsive-dialog-title">
-                    {"Do you want to Release this Transaction?"}
-                </DialogTitle>
+                <DialogTitle id="responsive-dialog-title">{"Do you want to Release this Transaction?"}</DialogTitle>
                 <Form onSubmit={handleSubmit}>
                     <DialogContent
                         sx={{
@@ -148,11 +148,7 @@ function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <CancelButton
-                            size="small"
-                            variant="contained"
-                            onClick={handleClose}
-                        >
+                        <CancelButton size="small" variant="contained" onClick={handleClose} disabled={loading}>
                             Cancel
                         </CancelButton>
                         <ReleaseButton
@@ -160,6 +156,7 @@ function ReleaseDialog({ id, loading, tooltext, handleSubmit, validatation }) {
                             variant="outlined"
                             loading={loading}
                             type="submit"
+                            disabled={loading}
                         >
                             Release
                         </ReleaseButton>
