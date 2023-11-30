@@ -27,6 +27,7 @@ function FormSelect(props) {
         variant,
         showChooseOption,
         chooseOptionLabel,
+        error,
         ...rest
     } = props;
 
@@ -70,7 +71,7 @@ function FormSelect(props) {
                                 </MenuItem>
                             ))}
                     </Select>
-                    <FormHelperText>{errors[name]?.message ?? ""}</FormHelperText>
+                    <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
                 </FormControl>
             )}
         />
@@ -101,6 +102,7 @@ FormSelect.propTypes = {
     ]).isRequired,
     showChooseOption: PropTypes.bool,
     chooseOptionLabel: PropTypes.string,
+    error: PropTypes.string,
     variant: PropTypes.oneOf(["outlined", "standard", "filled"]),
 };
 

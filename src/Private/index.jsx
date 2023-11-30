@@ -9,6 +9,8 @@ import {
     UpdateUserStatusReducer,
     GetUserNumberReducer,
     ForgotPasswordReducer,
+    AddUserKycReducer,
+    EditSystemUserKycReducer,
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 
@@ -409,6 +411,111 @@ import {
     updateBulkEmailCredentialReducer,
 } from "./features/bulk-emails/bulkEmailCredentialReducer";
 
+//MARKET MAKER
+
+import {
+    AddMarketMakerValueReducer,
+    GetAllMarketMakerValueReducer,
+    UpdateMarketMakerValueReducer,
+    MarketMakerSaga,
+    GetMarkerMakerByIdValueReducer,
+    UpdateMarketMakerStatusReducer,
+
+    //DOCUMENTS
+    GetDocumentSettingsReducer,
+    AddDocumentReducer,
+
+    //KYB
+    AddMarketMakerKYBReducer,
+    UpdateMarketMakerKYBReducer,
+
+    //KYC
+    AddMarketMakerKYCReducer,
+    EditMarketMakerKYCReducer,
+
+    //USERS
+    GetMarketMakerUsersReducer,
+} from "../Private/pages/MarketMaker/store";
+
+//CREDIT LIMIT
+
+import {
+    AddCreditLimitReducer,
+    GetAllCreditLimitReducer,
+    GetCreditLimitByIdReducer,
+    UpdateCreditLimitStatusReducer,
+    EditCreditLimitByIdReducer,
+    DeleteCreditLimitByIdReducer,
+    creditLimitSaga,
+} from "../Private/pages/CreditLimit/store";
+
+// BALANCE REQUEST
+
+import {
+    BalanceRequestSaga,
+    GetAllBalanceRequestValueReducer,
+    GetBalanceRequestIdValueReducer,
+    UpdateBalanceRequestStatusReducer,
+} from "../Private/pages/BalanceRequest/store";
+
+// Business
+
+import {
+    AddBusinessApprovalReducer,
+    GetAllBusinessReducer,
+    GetBusinessByIdReducer,
+    UpdateBusinessStatusReducer,
+    GetBusinessKybListingReducer,
+    GetBusinessKycListingReducer,
+    GetBusinessKycDetailsReducer,
+    UpdateBusinessKycStatusReducer,
+    GetBusinessKybDetailsReducer,
+    UpdateBusinessKybStatusReducer,
+    businessSaga,
+} from "../Private/pages/Business/store";
+import {
+    getSingleTransactionReducer,
+    getSingleTransactionsReducer,
+} from "./features/b2b-transactions/singleTransactionReducer";
+import {
+    getBatchTransactionReducer,
+    getBatchTransactionsReducer,
+} from "./features/b2b-transactions/batchTransactionReducer";
+import singleTransactionSaga from "./features/b2b-transactions/singleTransactionSaga";
+import batchTransactionSaga from "./features/b2b-transactions/batchTransactionSaga";
+
+//B2B Beneficiary List
+
+import {
+    GetAllB2BBeneficiaryReducer,
+    GetB2BBeneficiaryByIdReducer,
+    beneficiarySaga,
+} from "../Private/pages/Beneficiary/store";
+
+//Business Charge
+
+import {
+    GetAllBusinessChargeByIdReducer,
+    GetAllBusinessChargeReducer,
+    AddBusinessChargeReducer,
+    UpdateBusinessChargeStatusReducer,
+    UpdateBusinessChargeReducer,
+    businessChargeSaga,
+} from "Private/pages/BusinessServiceCharge/store";
+
+import {
+    GetAllKycUserValueReducer,
+    GetKycUserIdValueReducer,
+    KycUserSaga,
+    UpdateKycUserStatusReducer,
+} from "Private/pages/KycUser/store";
+
+//Ledger
+
+import { GetAllLedgerReducer, GetLedgerDetailsReducer, AddLedgerReducer, ledgerSaga } from "Private/pages/Ledger/store";
+
+import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -419,6 +526,8 @@ export const privateReducer = {
     update_user_status: UpdateUserStatusReducer,
     get_user_number: GetUserNumberReducer,
     forgot_password: ForgotPasswordReducer,
+    add_system_user_kyc: AddUserKycReducer,
+    update_system_user_kyc: EditSystemUserKycReducer,
 
     //Change Password
 
@@ -724,6 +833,92 @@ export const privateReducer = {
 
     get_bulk_email_credential: getBulkEmailCredentialReducer,
     update_bulk_email_credential: updateBulkEmailCredentialReducer,
+
+    //MARKET_MAKER
+
+    get_all_market_maker: GetAllMarketMakerValueReducer,
+    get_market_maker_details: GetMarkerMakerByIdValueReducer,
+    add_market_maker: AddMarketMakerValueReducer,
+    update_market_maker: UpdateMarketMakerValueReducer,
+    update_market_maker_status: UpdateMarketMakerStatusReducer,
+
+    //DOCUMENTS
+
+    get_document_settings: GetDocumentSettingsReducer,
+    add_document: AddDocumentReducer,
+
+    // KYB
+
+    add_market_maker_kyb: AddMarketMakerKYBReducer,
+    update_market_maker_kyb: UpdateMarketMakerKYBReducer,
+
+    // KYC
+
+    add_market_maker_kyc: AddMarketMakerKYCReducer,
+    update_market_maker_kyc: EditMarketMakerKYCReducer,
+
+    //MARKET MAKER USERS
+
+    get_market_maker_users: GetMarketMakerUsersReducer,
+
+    //CREDIT LIMIT
+    get_all_credit_limit: GetAllCreditLimitReducer,
+    get_credit_limit_details: GetCreditLimitByIdReducer,
+    add_credit_limit: AddCreditLimitReducer,
+    update_credit_limit: UpdateCreditLimitStatusReducer,
+    update_credit_limit_data: EditCreditLimitByIdReducer,
+
+    delete_credit_limit: DeleteCreditLimitByIdReducer,
+
+    // BALANCE REQUEST
+
+    get_all_balance_request: GetAllBalanceRequestValueReducer,
+    get_balance_request_details: GetBalanceRequestIdValueReducer,
+    update_balance_request_status: UpdateBalanceRequestStatusReducer,
+
+    //Business
+
+    get_all_business: GetAllBusinessReducer,
+    get_business_details: GetBusinessByIdReducer,
+    get_business_kyc: GetBusinessKycListingReducer,
+    get_business_kyb: GetBusinessKybListingReducer,
+    add_business_approval: AddBusinessApprovalReducer,
+    update_business_status: UpdateBusinessStatusReducer,
+    get_business_kyc_details: GetBusinessKycDetailsReducer,
+    update_business_kyc_status: UpdateBusinessKycStatusReducer,
+    get_business_kyb_details: GetBusinessKybDetailsReducer,
+    update_business_kyb_status: UpdateBusinessKybStatusReducer,
+
+    get_single_transaction_list: getSingleTransactionsReducer,
+    get_single_transaction_by_id: getSingleTransactionReducer,
+
+    get_batch_transaction_list: getBatchTransactionsReducer,
+    get_batch_transaction_by_id: getBatchTransactionReducer,
+
+    //B2B Beneficiary List
+    get_all_beneficiary: GetAllB2BBeneficiaryReducer,
+    get_beneficiary_details: GetB2BBeneficiaryByIdReducer,
+
+    //Business Charge
+    get_all_business_charge: GetAllBusinessChargeReducer,
+    get_business_charge_details: GetAllBusinessChargeByIdReducer,
+    add_business_charge: AddBusinessChargeReducer,
+    update_business_charge_status: UpdateBusinessChargeStatusReducer,
+    update_business_charge: UpdateBusinessChargeReducer,
+
+    //KYC USER
+    get_all_kyc_user: GetAllKycUserValueReducer,
+    get_kyc_user_details: GetKycUserIdValueReducer,
+    update_kyc_user_status: UpdateKycUserStatusReducer,
+
+    //LEDGER
+    get_all_ledger: GetAllLedgerReducer,
+    get_ledger_details: GetLedgerDetailsReducer,
+    add_ledger: AddLedgerReducer,
+
+    //B2B ACCOUNT
+
+    get_all_b2b_account: GetAllB2bAccounts,
 };
 
 export const privateSaga = [
@@ -769,6 +964,17 @@ export const privateSaga = [
     AllBankListSaga(),
     StreetTypeSaga(),
     UpdateChangePasswordSaga(),
+    MarketMakerSaga(),
+    creditLimitSaga(),
+    BalanceRequestSaga(),
+    businessSaga(),
+    singleTransactionSaga(),
+    batchTransactionSaga(),
+    beneficiarySaga(),
+    businessChargeSaga(),
+    KycUserSaga(),
+    ledgerSaga(),
+    b2bAccountSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

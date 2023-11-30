@@ -76,9 +76,10 @@ const actions = {
     GET_SANCTION_DETAILS_FAILED: "GET_SANCTION_DETAILS_FAILED",
 
     //FETCH
-    get_transaction_details: (id) => ({
+    get_transaction_details: (id, query) => ({
         type: actions.GET_TRANSACTION_DETAILS,
         id,
+        query,
     }),
 
     get_transaction_refund_block: (query) => ({

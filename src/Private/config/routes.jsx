@@ -6,6 +6,8 @@ const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 //users
 const Accounts = lazy(() => import("../pages/Users/Accounts"));
+const AddUserKyc = lazy(() => import("../pages/Users/Accounts/AddUserKyc"));
+const EditUserKyc = lazy(() => import("../pages/Users/Accounts/EditUserKyc"));
 const Menu = lazy(() => import("../pages/Users/Menu"));
 const SubMenu = lazy(() => import("../pages/Users/SubMenu"));
 
@@ -117,9 +119,77 @@ const ListBulkEmail = lazy(() => import("../pages/BulkEmail/ListBulkEmail"));
 const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
 const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFundingSource"));
 
+//Market Maker
+
+const ListMarketMaker = lazy(() => import("../pages/MarketMaker/ListMarketMaker"));
+const AddMarketMaker = lazy(() => import("../pages/MarketMaker/AddMarketMaker"));
+const ViewMarketMaker = lazy(() => import("../pages/MarketMaker/ViewMarketMaker"));
+const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMaker"));
+const AddMarketMakerKyb = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
+const AddMarketMakerKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyc"));
+const UpdateMarketMakerKyb = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyb"));
+const UpdateMarketMakerKyc = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyc"));
+
+///Credit Limit
+
+const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
+const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
+const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
+const EditCreditLimit = lazy(() => import("../pages/CreditLimit/EditCreditLimit"));
+
+// BALANCE REQUEST
+
+const ListBalanceRequest = lazy(() => import("../pages/BalanceRequest/ListBalanceRequest"));
+const ViewBalanceRequest = lazy(() => import("../pages/BalanceRequest/ViewBalanceRequest"));
+
+//Business
+const ListBusiness = lazy(() => import("../pages/Business/ListBusiness"));
+const ViewBusiness = lazy(() => import("../pages/Business/ViewBusiness"));
+const ListSingeTransaction = lazy(() => import("../pages/B2BTransactions/ListSingleTransaction"));
+const ViewSingleTransaction = lazy(() => import("../pages/B2BTransactions/ViewSingleTransaction"));
+const ListBatchTransaction = lazy(() => import("../pages/B2BTransactions/ListBatchTransaction"));
+const ViewBatchTransaction = lazy(() => import("../pages/B2BTransactions/ViewBatchTransaction"));
+
+// B2b Beneficiary
+
+const ListB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ListBeneficiary"));
+const ViewB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ViewBeneficiary"));
+
+// BUSINESS SERVICE CHARGE
+
+const ListBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/ListBusinessServiceCharge"));
+const AddBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/AddBusinessServiceCharge"));
+const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/UpdateBusinessServiceCharge"));
+
+//LIST KYC USER
+
+const ListKycUser = lazy(() => import("../pages/KycUser/ListKycUser"));
+const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
+
+const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
+const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
+
+//Ledger
+
+const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
+const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
+const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
+
+// B2b Account
+
+const ListB2bAccount = lazy(() => import("../pages/B2BAccount/ListAllAccounts"));
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
+    {
+        path: routePaths.userKyc.addSystemUserKyc,
+        component: <AddUserKyc />,
+    },
+    {
+        path: routePaths.userKyc.editSystemUserKyc,
+        component: <EditUserKyc />,
+    },
     {
         path: "/user/permission/:id",
         component: <UserPermission title="User Permissions" />,
@@ -457,6 +527,102 @@ const privateRoutes = [
 
     //Accounting
     { path: "/accounting", component: <Accounting title="Accounting" /> },
+
+    //Agent
+
+    { path: routePaths.agent.listMarketMaker, component: <ListMarketMaker /> },
+    { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker /> },
+    { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker /> },
+    { path: routePaths.agent.updateMarketMaker, component: <UpdateMarketMaker /> },
+    {
+        path: routePaths.agent.addMarketMakerKyb,
+        component: <AddMarketMakerKyb title="Add Market Maker KYB" />,
+    },
+    {
+        path: routePaths.agent.addMarketMakerKyc,
+        component: <AddMarketMakerKyc title="Add Market Maker KYC" />,
+    },
+
+    {
+        path: "/agent/market-maker/:marketMakerId/update-kyb/:kybId",
+        component: <UpdateMarketMakerKyb title="Update Market Maker KYB" />,
+    },
+    {
+        path: "/agent/market-maker/:marketMakerId/update-kyc/:kycId",
+        component: <UpdateMarketMakerKyc />,
+    },
+
+    ///Credit Limit
+    { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
+    { path: routePaths.agent.addCreditLimit, component: <AddCreditLimit title="Add Credit Limit" /> },
+    { path: routePaths.agent.viewCreditLimit, component: <ViewCreditLimit title="Credit Limit Detail" /> },
+    {
+        path: routePaths.agent.editCreditLimit,
+        component: <EditCreditLimit />,
+    },
+
+    //BALANCE REQUEST
+    { path: routePaths.agent.listBalanceRequest, component: <ListBalanceRequest title="List Balance Request" /> },
+    { path: routePaths.agent.viewBalanceRequest, component: <ViewBalanceRequest title="Balance Request Detail" /> },
+
+    //Business
+    { path: routePaths.agent.listBusiness, component: <ListBusiness title="Businesses" /> },
+    { path: routePaths.agent.viewBusiness, component: <ViewBusiness title="View Business" /> },
+
+    { path: routePaths.agent.listSingleTransactions, component: <ListSingeTransaction /> },
+    { path: routePaths.agent.viewSingleTransaction, component: <ViewSingleTransaction /> },
+    { path: routePaths.agent.listBatchTransactions, component: <ListBatchTransaction /> },
+    { path: routePaths.agent.viewBatchTransaction, component: <ViewBatchTransaction /> },
+
+    //B2b Beneficiary
+
+    { path: routePaths.agent.getAllB2bBeneficiary, component: <ListB2bBeneficiary /> },
+    { path: routePaths.agent.viewB2bBeneficiary, component: <ViewB2bBeneficiary /> },
+
+    // BUSINESS SERVICE CHARGE
+
+    {
+        path: routePaths.agent.listBusinessServiceCharge,
+        component: <ListBusinessServiceCharge />,
+    },
+    {
+        path: routePaths.agent.addBusinessServiceCharge,
+        component: <AddBusinessServiceCharge />,
+    },
+    {
+        path: routePaths.agent.updateBusinessServiceCharge,
+        component: <UpdateBusinessServiceCharge />,
+    },
+
+    // LIST KYC USER
+
+    { path: routePaths.agent.listKycUser, component: <ListKycUser /> },
+    { path: routePaths.agent.viewKycUser, component: <ViewKycUser /> },
+    { path: routePaths.agent.addUserKyc, component: <AddMarketMakerUserKyc /> },
+    { path: routePaths.agent.editUserKyc, component: <EditMarketMakerUserKyc /> },
+
+    //Ledger
+
+    {
+        path: routePaths.agent.listLedger,
+        component: <ListLedger />,
+    },
+
+    {
+        path: routePaths.agent.viewLedger,
+        component: <ViewLedger />,
+    },
+    {
+        path: routePaths.agent.addLedger,
+        component: <AddLedger />,
+    },
+
+    // B2b Account
+
+    {
+        path: routePaths.agent.listB2bAccount,
+        component: <ListB2bAccount />,
+    },
 ];
 
 export default privateRoutes;

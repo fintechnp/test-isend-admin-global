@@ -37,7 +37,7 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    transaction_id: 0,
+    transaction_id: null,
     pin_number: "",
     customer_id: 0,
     sending_agent_id: 0,
@@ -330,7 +330,7 @@ const PendingTransactions = (props) => {
 
     return (
         <PageContent title="Pending Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}

@@ -17,7 +17,7 @@ function Search(props) {
     const [search, setSearch] = useState(null);
     const [button, setButton] = useState(null);
     const [filterSchema, setFilterSchema] = useState({
-        transaction_id: 0,
+        transaction_id: null,
         pin_number: "",
     });
     const { response, loading, error } = useSelector((state) => state.get_transaction_refund_block);

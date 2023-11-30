@@ -38,7 +38,7 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    transaction_id: 0,
+    transaction_id: null,
     pin_number: "",
     customer_id: 0,
     sending_agent_id: 0,
@@ -254,12 +254,11 @@ const ExceptionTransactions = (props) => {
                         <Release
                             destroyOnUnmount
                             enableReinitialize
-                            initialValues={{ id: row?.original?.tid }}
-                            onSubmit={handleRelease}
-                            loading={u_loading}
+                            onSubmit={(data) => handleRelease(row.original.tid, data)}
                             validatation={true}
                             tooltext="Release Transaction"
                             form={`ex_release_form_${row?.original?.tid}`}
+                            reduxGlobalStateKey="update_exception_transactions"
                         />
                     </Box>
                 ),
@@ -332,9 +331,9 @@ const ExceptionTransactions = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleRelease = (data) => {
+    const handleRelease = (transactionId, data) => {
         dispatch(
-            actions.update_exception_transactions(data?.id, {
+            actions.update_exception_transactions(transactionId, {
                 remarks: data.remarks,
             }),
         );
@@ -349,7 +348,7 @@ const ExceptionTransactions = (props) => {
 
     return (
         <PageContent title="Exception Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}

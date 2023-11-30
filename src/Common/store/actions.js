@@ -9,6 +9,10 @@ const actions = {
     GET_ALL_COUNTRY_SUCCESS: "GET_ALL_COUNTRY_SUCCESS",
     GET_ALL_COUNTRY_FAILED: "GET_ALL_COUNTRY_FAILED",
 
+    GET_SEND_COUNTRY: "GET_SEND_COUNTRY",
+    GET_SEND_COUNTRY_SUCCESS: "GET_SEND_COUNTRY_SUCCESS",
+    GET_SEND_COUNTRY_FAILED: "GET_SEND_COUNTRY_FAILED",
+
     GET_ALL_REFERENCE: "GET_ALL_REFERENCE",
     GET_ALL_REFERENCE_SUCCESS: "GET_ALL_REFERENCE_SUCCESS",
     GET_ALL_REFERENCE_FAILED: "GET_ALL_REFERENCE_FAILED",
@@ -49,6 +53,10 @@ const actions = {
 
     get_all_country: () => ({
         type: actions.GET_ALL_COUNTRY,
+    }),
+
+    get_send_country: () => ({
+        type: actions.GET_SEND_COUNTRY,
     }),
 
     get_all_reference: (query) => ({

@@ -1,25 +1,22 @@
-import React, { Suspense, useContext, useEffect } from "react";
-import Drawer from "../../components/Drawer";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
-
-import Dashboard from "@mui/icons-material/Dashboard";
+import Report from "@mui/icons-material/Report";
+import Receipt from "@mui/icons-material/Receipt";
+import Payment from "@mui/icons-material/Payment";
 import Settings from "@mui/icons-material/Settings";
+import GroupAdd from "@mui/icons-material/GroupAdd";
+import Dashboard from "@mui/icons-material/Dashboard";
+import GroupWork from "@mui/icons-material/GroupWork";
 import AccountBox from "@mui/icons-material/AccountBox";
 import TrendingUp from "@mui/icons-material/TrendingUp";
-import Report from "@mui/icons-material/Report";
-import GroupWork from "@mui/icons-material/GroupWork";
-import Receipt from "@mui/icons-material/Receipt";
-import GroupAdd from "@mui/icons-material/GroupAdd";
-import Payment from "@mui/icons-material/Payment";
-
-import roles from "../../global/roles";
+import React, { Suspense, useContext, useEffect } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 
-import routePaths from "Private/config/routePaths";
-import { AuthConsumer, AuthContext } from "../../auth";
+import Drawer from "../../components/Drawer";
 import Loading from "./../../../App/components/Loading";
-import { localStorageSave } from "App/helpers/localStorage";
-import { INTENDED_PATH } from "App/global/constants";
+
+import roles from "../../global/roles";
+import { AuthContext } from "../../auth";
+import routePaths from "Private/config/routePaths";
 import { getIntendedPath, removeIntendedPath, preserveIntendedPath } from "App/routes";
 
 const PrivateLayout = () => {
@@ -356,7 +353,7 @@ const PrivateLayout = () => {
 
             //Utilities pannel
             {
-                key: "utilites",
+                key: "utilities",
                 text: "Utilities",
                 sub: true,
                 icon: <ForwardToInboxIcon />,
@@ -407,6 +404,83 @@ const PrivateLayout = () => {
                         path: "/compliance/sanction-list",
                         key: "sanction-compliance",
                         text: "Sanction List",
+                        sub: false,
+                    },
+                ],
+            },
+
+            //Market Maker
+            {
+                key: "agent",
+                text: "Agent",
+                sub: true,
+                icon: <AccountBox />,
+                permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER, roles.USER],
+                children: [
+                    {
+                        path: routePaths.agent.listMarketMaker,
+                        key: "market-maker",
+                        text: "Agents",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listB2bAccount,
+                        key: "market-maker",
+                        text: "B2b Accounts",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.creditLimit,
+                        key: "credit-limit",
+                        text: "Credit Limits",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listBalanceRequest,
+                        key: "balance-Request",
+                        text: "Balance Requests",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listBusiness,
+                        key: "business",
+                        text: "Business",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listSingleTransactions,
+                        key: "single-transactions",
+                        text: "Single Transactions",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listBatchTransactions,
+                        key: "batch-transactions",
+                        text: "Batch Transactions",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.getAllB2bBeneficiary,
+                        key: "beneficiary",
+                        text: "Beneficiaries",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listKycUser,
+                        key: "kyc-user",
+                        text: "KYC Users",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listBusinessServiceCharge,
+                        key: "business-service-charge",
+                        text: "Business Service Charge",
+                        sub: false,
+                    },
+                    {
+                        path: routePaths.agent.listLedger,
+                        key: "ledger",
+                        text: "Ledger",
                         sub: false,
                     },
                 ],

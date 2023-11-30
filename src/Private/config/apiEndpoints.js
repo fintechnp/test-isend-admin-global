@@ -86,6 +86,110 @@ const apiEndpoints = {
     settings: {
         changePassword: "/account/changePassword",
     },
+    marketMaker: {
+        getAll: "/marketmaker",
+        getById: "/marketmaker/:marketMakerId",
+        add: "/marketmaker",
+        update: "/marketmaker/:marketMakerId",
+        updateStatus: "/marketmaker/:marketMakerId/toggleactivestatus",
+
+        //KYB
+        addKyb: "/kyb",
+        updateKyb: "/kyb/:kybId",
+
+        //KYC
+
+        addKyc: "/kyc",
+        updateKyc: "/kyc/:kycId",
+
+        //USERS
+
+        getUsers: "/marketmaker/:marketMakerId/users",
+    },
+    creditLimit: {
+        getAll: "/creditlimits",
+        getById: "/creditlimits/:creditLimitId",
+        add: "/creditlimits",
+        update: "/creditlimits/:creditLimitId/statusupdate",
+        updateData: "/creditlimits/:creditLimitId/UpdateCreditLimit",
+        delete: "/creditlimits/:creditLimitId",
+    },
+    balanceRequest: {
+        getAll: "/balancerequests",
+        getById: "/balancerequest/:balanceRequestId",
+        updateStatus: "/balancerequest/:balanceRequestId/statusupdate",
+    },
+    business: {
+        getAll: "/business",
+        getById: "/business/:businessId",
+        addBusinessApproval: "/business/:businessId/approve",
+        updateBusinessStatus: "/business/:businessId/toggleactivestatus",
+
+        //KYB
+        getAllKyb: "/kyb",
+        getKybDetails: "/kyb/:kybId",
+        approveKyb: "kyb/:kybId/approve",
+
+        //KYC
+        getAllKyc: "/kyc",
+        getKycDetails: "/kyc/:kycId",
+        approveKyc: "kyc/:kycId/approve",
+    },
+    b2bTransaction: {
+        getSingleTransactions: "/b2b/transaction",
+        getSingleTransactionById: "/b2b/transaction/:transactionId",
+        getBatchTransactions: "/b2b/batchtransaction",
+        getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
+    },
+
+    document: {
+        documentSetting: "/documentsetting",
+        addDocument: "/document/b2b",
+    },
+
+    b2bBeneficiary: {
+        getAll: "/beneficiary/b2b",
+        getById: "/beneficiary/b2b/:beneficiaryId",
+    },
+
+    businessCharge: {
+        getAll: "/v1/business-servicecharges",
+        getById: "/v1/business-servicecharges/:businessServiceChargeId",
+        add: "/v1/business-servicecharges",
+        update: "/v1/business-servicecharges/:businessServiceChargeId",
+        updateStatus: "/v1/business-servicecharges/:businessServiceChargeId",
+    },
+
+    kycUser: {
+        getAll: "/kyc/user",
+        getById: "/kyc/user/:kycUserId",
+        updateStatus: "/kyc/user/:kycUserId/approve",
+    },
+
+    ledger: {
+        getAll: "/ledger",
+        getById: "/ledger/:ledgerId",
+        add: "/ledger",
+    },
+
+    account: {
+        getAll: "/b2b/account",
+    },
+
+    ledger: {
+        getAll: "/ledger",
+        getById: "/ledger/:ledgerId",
+        add: "/ledger",
+    },
+
+    account: {
+        getAll: "/b2b/account",
+    },
+
+    user: {
+        addKyc: "/kyc",
+        editKyc: "/kyc/:kycId",
+    },
 };
 
 export default apiEndpoints;

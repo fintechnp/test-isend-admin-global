@@ -48,7 +48,6 @@ const LocalizationDetails = ({ title }) => {
     };
 
     const handleStatus = useCallback((is_active, id) => {
-        console.log("Status");
         dispatch(actions.update_translation_value_status(id, { is_active: is_active }));
     }, []);
 

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -13,6 +13,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import actions from "./../store/actions";
 import TransactionSkeleton from "./Skeleton";
 import Details from "./Details";
+import transaction from "App/config/transaction";
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "8px",
@@ -44,8 +45,13 @@ const BackButton = styled(Button)(({ theme }) => ({
 
 function TransactionDetails(props) {
     const { id, tid } = useParams();
+
     const dispatch = useDispatch();
+
     const navigate = useNavigate();
+
+    const [params] = useSearchParams();
+
     const { response, loading } = useSelector((state) => state.get_transaction_details);
 
     const { response: aml_response, loading: aml_loading } = useSelector((state) => state.get_aml_suspicious_details);

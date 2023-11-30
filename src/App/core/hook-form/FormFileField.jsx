@@ -50,7 +50,6 @@ function FormFileField(props) {
             onChange={(e) => {
                 if (!e.target.files) return;
                 setValue(name, e.target.files[0]);
-                console.log(e.target.files[0]);
             }}
         />
     );

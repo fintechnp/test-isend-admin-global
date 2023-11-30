@@ -38,7 +38,7 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     search: "",
-    transaction_id: 0,
+    transaction_id: null,
     pin_number: "",
     customer_id: 0,
     sending_agent_id: 0,
@@ -245,12 +245,11 @@ const PendingPayment = (props) => {
                         <Release
                             destroyOnUnmount
                             enableReinitialize
-                            initialValues={{ id: row?.original?.tid }}
-                            onSubmit={handleRelease}
-                            loading={u_loading}
+                            onSubmit={(data) => handleRelease(row.original.tid, data)}
                             validatation={true}
                             tooltext="Release Transaction"
                             form={`pay_release_form_${row?.original?.tid}`}
+                            reduxGlobalStateKey="update_payment_pending"
                         />
                     </Box>
                 ),
@@ -323,8 +322,8 @@ const PendingPayment = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleRelease = (data) => {
-        dispatch(actions.update_payment_pending(data?.id, { remarks: data?.remarks }));
+    const handleRelease = (transactionId, data) => {
+        dispatch(actions.update_payment_pending(transactionId, { remarks: data?.remarks }));
     };
 
     const handleChangeTab = useCallback((countryIso3) => {
@@ -336,7 +335,7 @@ const PendingPayment = (props) => {
 
     return (
         <PageContent title="Pending Payment Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
+            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
             <Spacer />
             <Filter
                 handleSearch={handleSearch}

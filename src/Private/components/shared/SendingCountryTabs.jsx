@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -14,7 +15,7 @@ function a11yProps(index) {
     };
 }
 
-export default function SendingCountryTabs({ onChange, value }) {
+export default function SendingCountryTabs({ onChange, value, isLoading }) {
     const [activeIndex, setActiveIndex] = useState();
 
     const handleChange = (event, newValue) => {
@@ -32,6 +33,7 @@ export default function SendingCountryTabs({ onChange, value }) {
             <Tabs value={activeIndex} onChange={handleChange} aria-label="sending countries tabs">
                 {sendingCountries.map((sc, i) => (
                     <Tab
+                        key={i}
                         label={sc.label}
                         {...a11yProps(i)}
                         sx={{
@@ -42,6 +44,7 @@ export default function SendingCountryTabs({ onChange, value }) {
                                   }
                                 : {}),
                         }}
+                        disabled={isLoading}
                     />
                 ))}
             </Tabs>
@@ -49,3 +52,9 @@ export default function SendingCountryTabs({ onChange, value }) {
         </Box>
     );
 }
+
+SendingCountryTabs.propTypes = {
+    isLoading: PropTypes.bool,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+};
