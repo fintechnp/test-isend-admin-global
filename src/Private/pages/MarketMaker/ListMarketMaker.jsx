@@ -89,17 +89,7 @@ export default function ListMarketMaker({ title }) {
             },
             {
                 header: "Status",
-                accessorKey: "is_active",
-                cell: ({ getValue, row }) => {
-                    return (
-                        <Switch
-                            defaultChecked={getValue()}
-                            onChange={(e) => {
-                                dispatch(marketMakerActions.update_market_maker_status(row?.original?.marketMakerId));
-                            }}
-                        />
-                    );
-                },
+                accessorKey: "status_value",
             },
 
             {

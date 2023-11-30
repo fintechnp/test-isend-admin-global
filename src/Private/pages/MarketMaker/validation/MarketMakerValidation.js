@@ -11,7 +11,8 @@ export const marketMakerValidationSchema = yup.object().shape({
         .nullable()
         .required("Required"),
     currencyId: yup.string().required(),
-    email: yup.string().required(),
+    email: yup.string().email().required("Email is required"),
+    loginEmail: yup.string().email().required("Login email is required"),
     contactNo: yup.string().required(),
     website: yup
         .string()
