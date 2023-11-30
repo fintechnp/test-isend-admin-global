@@ -10,7 +10,23 @@ export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
     return {
-        plugins: [react(), svgrPlugin(), jsconfigPaths()],
+        plugins: [
+            react(),
+            svgrPlugin(),
+            jsconfigPaths(),
+            // Hot reload issue fix: "HMR error: Cannot access '...' before initialization" https://github.com/vitejs/vite/issues/3033
+            {
+                name: "singleHMR",
+                handleHotUpdate({ modules }) {
+                    modules.map((m) => {
+                        m.importedModules = new Set();
+                        m.importers = new Set();
+                    });
+
+                    return modules;
+                },
+            },
+        ],
         test: {
             globals: true,
             environment: "jsdom",
