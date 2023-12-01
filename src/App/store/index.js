@@ -9,8 +9,9 @@ import rootSaga from "./sagas";
 import Cookies from "js-cookie";
 
 const persistConfig = {
-    key: "root",
+    key: `root${import.meta.env.REACT_APP_VERSION}`,
     storage,
+    // version: 2, i haven't tried with a version if hydration works
 };
 
 // refresh middleware
