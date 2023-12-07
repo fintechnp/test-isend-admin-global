@@ -233,7 +233,7 @@ function CustomerForm({ update_data, loading }) {
                                     form={`update_customer_form`}
                                     initialValues={
                                         memoizedData && {
-                                            customer_type: memoizedData?.customer_type,
+                                            customer_type: memoizedData?.customer_type.toUpperCase(),
                                             title: memoizedData?.title,
                                             first_name: memoizedData?.first_name,
                                             middle_name: memoizedData?.middle_name,
