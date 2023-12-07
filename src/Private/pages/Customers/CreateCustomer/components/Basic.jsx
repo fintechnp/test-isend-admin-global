@@ -158,7 +158,7 @@ const Basic = ({
                                     reference
                                         ?.filter((ref_data) => ref_data.reference_type === 37)[0]
                                         .reference_data.map((data, index) => (
-                                            <option value={data.value} key={index}>
+                                            <option value={data.value.toUpperCase()} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
