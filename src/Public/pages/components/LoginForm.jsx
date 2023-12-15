@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import * as Yup from "yup";
 import Box from "@mui/material/Box";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,8 @@ import SubmitButton from "App/components/Button/SubmitButton";
 
 import FormTextField from "App/core/hook-form/FormTextField";
 import { ReactComponent as Logo } from "assets/long-logo.svg";
+import CountryStateFilter from "Private/components/country-states/CountryStateFilter";
+import sendingCountries from "Private/config/sendingCountries";
 
 const Paper = styled(MuiPaper)(({ theme }) => ({
     minWidth: "100%",
@@ -47,6 +49,10 @@ const LoginForm = ({ onSubmit, loading }) => {
         resolver: yupResolver(schema),
     });
 
+    const handleCountryChange = useCallback((event) => {
+        console.log("Selected Country:", event.target.value);
+    }, []);
+
     return (
         <Paper square={true}>
             <FormContainer>
@@ -56,8 +62,14 @@ const LoginForm = ({ onSubmit, loading }) => {
                         <Typography textAlign="center" variant="h6">
                             Sign In to your account
                         </Typography>
-                        <FormTextField size="large" name="email" label="Email" />
-                        <FormTextField size="large" type="password" name="password" label="Password" />
+                        <CountryStateFilter
+                            style={{ width: "100%" }}
+                            onCountryChange={handleCountryChange}
+                            countries={sendingCountries}
+                        />
+
+                        <FormTextField size="small" name="email" label="Email" />
+                        <FormTextField size="small" type="password" name="password" label="Password" />
                         <SubmitButton size="large" isLoading={loading} role="button" name="login">
                             {loading ? "Logging In" : "Login"}
                         </SubmitButton>
