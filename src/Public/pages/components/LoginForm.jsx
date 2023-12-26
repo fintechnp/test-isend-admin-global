@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import * as Yup from "yup";
 import Box from "@mui/material/Box";
 import { useForm } from "react-hook-form";
 import MuiPaper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import SelectField from "App/components/Fields/SelectField";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import HookFom from "App/core/hook-form/HookForm";
@@ -12,8 +13,12 @@ import SubmitButton from "App/components/Button/SubmitButton";
 
 import FormTextField from "App/core/hook-form/FormTextField";
 import { ReactComponent as Logo } from "assets/long-logo.svg";
-import CountryStateFilter from "Private/components/country-states/CountryStateFilter";
+
 import sendingCountries from "Private/config/sendingCountries";
+import { localStorageGet, localStorageSave } from "App/helpers/localStorage";
+import CountriesSelectFilter from "Private/components/country-states/CountriesSelectFilter";
+import FormSelect from "App/core/hook-form/FormSelect";
+import { Watch } from "@mui/icons-material";
 
 const Paper = styled(MuiPaper)(({ theme }) => ({
     minWidth: "100%",
@@ -42,6 +47,7 @@ const FormContainer = styled("div")(({ theme }) => ({
 const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string().required("Password is required"),
+    selectedCountry: Yup.string().required("Country is required"),
 });
 
 const LoginForm = ({ onSubmit, loading }) => {
@@ -50,8 +56,14 @@ const LoginForm = ({ onSubmit, loading }) => {
     });
 
     const handleCountryChange = useCallback((event) => {
-        console.log("Selected Country:", event.target.value);
+        localStorageSave("loginCountry", event.target.value);
     }, []);
+
+    const loginCountry = methods.watch("selectedCountry");
+
+    useEffect(() => {
+        if (loginCountry) localStorageSave("loginCountry", loginCountry);
+    }, [loginCountry]);
 
     return (
         <Paper square={true}>
@@ -62,11 +74,8 @@ const LoginForm = ({ onSubmit, loading }) => {
                         <Typography textAlign="center" variant="h6">
                             Sign In to your account
                         </Typography>
-                        <CountryStateFilter
-                            style={{ width: "100%" }}
-                            onCountryChange={handleCountryChange}
-                            countries={sendingCountries}
-                        />
+
+                        <FormSelect name="selectedCountry" label="Select Country" options={sendingCountries} />
 
                         <FormTextField size="small" name="email" label="Email" />
                         <FormTextField size="small" type="password" name="password" label="Password" />
