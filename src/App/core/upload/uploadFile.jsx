@@ -111,7 +111,9 @@ export default function UploadFile(props) {
     const handleRemove = (_e) => {
         setSelectedFile(undefined);
         setIsFileUploaded(false);
+        setIsUploading(false);
         if (inputRef.current) inputRef.current.value = "";
+
         if (typeof onFileRemove === "function") onFileRemove();
     };
     return (
