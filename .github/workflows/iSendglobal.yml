@@ -23,7 +23,7 @@ jobs:
         run: 
             REACT_APP_NAME="iSend Admin"
             REACT_APP_API_BASE_URL=https://devadminapi.isendglobal.com/api
-            REACT_APP_VERSION=v2.0.0
+            REACT_APP_VERSION=0.0.0
             npm run build
 
       - name: Upload to S3
