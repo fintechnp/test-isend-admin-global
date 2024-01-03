@@ -64,7 +64,7 @@ export default function UploadFile(props) {
     };
 
     useEffect(() => {
-        if (response) {
+        if (response && selectedFile) {
             setIsFileUploaded(true);
             if (typeof onUploadSuccess === "function") {
                 onUploadSuccess(response?.data);
