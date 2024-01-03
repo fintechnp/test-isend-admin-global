@@ -9,10 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Release } from "App/components";
-import Spacer from "App/components/Spacer/Spacer";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
-import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
 
 import app from "App/config/app";
 import actions from "./../store/actions";
@@ -34,7 +32,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
-    send_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     search: "",
@@ -338,17 +335,8 @@ const BlockedTransactions = (props) => {
         );
     };
 
-    const handleChangeTab = useCallback((countryIso3) => {
-        setFilterSchema({
-            ...filterSchema,
-            send_country: countryIso3,
-        });
-    }, []);
-
     return (
         <PageContent title="Blocked Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
-            <Spacer />
             <Filter
                 handleSearch={handleSearch}
                 handleSort={handleSort}

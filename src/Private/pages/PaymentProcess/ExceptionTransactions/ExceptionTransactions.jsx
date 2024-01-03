@@ -34,7 +34,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
-    send_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     search: "",
@@ -339,17 +338,8 @@ const ExceptionTransactions = (props) => {
         );
     };
 
-    const handleChangeTab = useCallback((countryIso3) => {
-        setFilterSchema({
-            ...filterSchema,
-            send_country: countryIso3,
-        });
-    }, []);
-
     return (
         <PageContent title="Exception Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
-            <Spacer />
             <Filter
                 handleSearch={handleSearch}
                 handleSort={handleSort}

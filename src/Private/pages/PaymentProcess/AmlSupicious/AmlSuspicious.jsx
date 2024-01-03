@@ -32,7 +32,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
-    send_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     search: "",
@@ -332,17 +331,8 @@ const AmlSuspicious = (props) => {
         dispatch(actions.update_aml_suspicious(transactionId, { remarks: data.remarks }));
     };
 
-    const handleChangeTab = useCallback((countryIso3) => {
-        setFilterSchema({
-            ...filterSchema,
-            send_country: countryIso3,
-        });
-    }, []);
-
     return (
         <PageContent title="AML Suspicious">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} isLoading={l_loading} />
-            <Spacer />
             <Filter
                 handleSearch={handleSearch}
                 handleSort={handleSort}
