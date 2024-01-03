@@ -1,4 +1,4 @@
-name: Upload isend-global-admin
+name: devremit.isendglobal.com
 
 on:
   workflow_dispatch:
