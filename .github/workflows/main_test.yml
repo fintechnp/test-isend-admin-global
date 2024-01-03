@@ -1,1 +1,39 @@
 
+name: Deploy remitadminapi.isendremit.com live
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm ci
+      - run: 
+          REACT_APP_NAME="iSend Admin"
+          REACT_APP_API_BASE_URL=https://{country}remitadminapi.isendremit.com/api
+          REACT_APP_VERSION=v2.0.1
+          npm run build:production --if-present
+
+      - name: Deploy via SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USERNAME: ${{ secrets.EC2_USER }}
+          SERVER_ADDRESS: ${{ secrets.EC2_HOST }} 
+          REMOTE_PATH: /home/admin/isendremit
+          working-directory: ./
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_ADDRESS >> ~/.ssh/known_hosts
+          # rsync -avz --delete --include=".*" --exclude="node_modules" ./* $SSH_USERNAME@$SERVER_ADDRESS:$REMOTE_PATH/
+          scp -r ./dist $SSH_USERNAME@$SERVER_ADDRESS:$REMOTE_PATH/
+          ssh $SSH_USERNAME@$SERVER_ADDRESS "sudo cp -r /home/admin/isendremit/dist/* /var/www/html/. && sudo systemctl restart nginx"
