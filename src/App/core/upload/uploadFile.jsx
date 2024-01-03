@@ -64,7 +64,7 @@ export default function UploadFile(props) {
     };
 
     useEffect(() => {
-        if (response) {
+        if (response && selectedFile) {
             setIsFileUploaded(true);
             if (typeof onUploadSuccess === "function") {
                 onUploadSuccess(response?.data);
@@ -111,7 +111,9 @@ export default function UploadFile(props) {
     const handleRemove = (_e) => {
         setSelectedFile(undefined);
         setIsFileUploaded(false);
+        setIsUploading(false);
         if (inputRef.current) inputRef.current.value = "";
+
         if (typeof onFileRemove === "function") onFileRemove();
     };
     return (
