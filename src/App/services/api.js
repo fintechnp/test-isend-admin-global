@@ -13,7 +13,7 @@ export const injectStore = (_store) => {
 export default class Api {
     constructor(setToken = true) {
         const selectedCountry = localStorage.getItem("loginCountry");
-        const baseUrl = app.apiBaseUrl.replace("{country}", selectedCountry);
+        const baseUrl = app.apiBaseUrl.replace("{country}", selectedCountry?.toLowerCase());
 
         this.axiosFunction = axios.create({
             baseURL: baseUrl,
