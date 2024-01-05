@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 import app from "App/config/app";
 import { preserveIntendedPath } from "App/routes";
-import { localStorageGet } from "App/helpers/localStorage";
+import { LOGIN_COUNTRY } from "App/global/constants";
 
 let store;
 export const injectStore = (_store) => {
@@ -12,7 +12,8 @@ export const injectStore = (_store) => {
 
 export default class Api {
     constructor(setToken = true) {
-        const selectedCountry = localStorage.getItem("loginCountry");
+        const selectedCountry = localStorage.getItem(LOGIN_COUNTRY);
+        
         const baseUrl = app.apiBaseUrl.replace("{country}", selectedCountry?.toLowerCase());
 
         this.axiosFunction = axios.create({
