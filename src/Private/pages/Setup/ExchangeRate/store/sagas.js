@@ -16,7 +16,7 @@ export const getAllExchangeRate = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_EXCHANGE_RATE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -38,7 +38,7 @@ export const getExchangeRateByPartner = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_EXCHANGE_RATE_BY_PARTNER_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -56,7 +56,7 @@ export const getExchangeRateDetails = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_EXCHANGE_RATE_DETAILS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -75,7 +75,7 @@ export const addExchangeRate = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_EXCHANGE_RATE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -99,7 +99,7 @@ export const updateExchangeRate = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_EXCHANGE_RATE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -119,7 +119,7 @@ export const deleteExchangeRate = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_EXCHANGE_RATE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

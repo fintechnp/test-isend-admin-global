@@ -20,7 +20,7 @@ export const getBeneficiary = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_BENEFICIARY_BY_CUSTOMER_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -38,7 +38,7 @@ export const getBeneficiaryById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_BENEFICIARY_BYID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -57,7 +57,7 @@ export const createBeneficiary = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CREATE_BENEFICIARY_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -81,7 +81,7 @@ export const updateBeneficiary = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_BENEFICIARY_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -105,9 +105,9 @@ export const BlockUnblockBeneficiary = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.BLOCK_UNBLOCK_BENEFICIARY_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );

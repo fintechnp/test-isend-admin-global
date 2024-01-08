@@ -31,7 +31,7 @@ export const getCreditLimitByIdDetails = takeEvery(actions.GET_CREDIT_LIMIT_DETA
     } catch (error) {
         yield put({
             type: actions.GET_CREDIT_LIMIT_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

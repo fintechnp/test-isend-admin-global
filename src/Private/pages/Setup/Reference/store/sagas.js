@@ -17,7 +17,7 @@ export const getAllReference = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_REFERENCE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -37,7 +37,7 @@ export const addReference = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_REFERENCE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -61,7 +61,7 @@ export const updateReference = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_REFERENCE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -84,7 +84,7 @@ export const getAllReferenceData = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_REFERENCE_DATA_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -107,7 +107,7 @@ export const addReferenceData = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_REFERENCE_DATA_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -131,7 +131,7 @@ export const updateReferenceData = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_REFERENCE_DATA_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -154,7 +154,7 @@ export const deleteReferenceData = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_REFERENCE_DATA_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

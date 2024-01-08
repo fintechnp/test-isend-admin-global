@@ -16,7 +16,7 @@ export const getAllSubMenu = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_ALL_SUB_MENU_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -28,7 +28,7 @@ export const addSubMenu = takeEvery(actions.ADD_SUB_MENU, function* (action) {
         yield put({ type: actions.ADD_SUB_MENU_SUCCESS, response: res });
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
-        yield put({ type: actions.ADD_SUB_MENU_FAILED, error: error.data });
+        yield put({ type: actions.ADD_SUB_MENU_FAILED, error: error?.data });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
@@ -47,7 +47,7 @@ export const updateSubMenu = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_SUB_MENU_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -71,7 +71,7 @@ export const updateSubMenuStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_SUB_MENU_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -91,7 +91,7 @@ export const deleteSubMenu = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_SUB_MENU_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

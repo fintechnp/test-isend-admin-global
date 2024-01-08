@@ -17,7 +17,7 @@ export const getFundingSources = takeEvery(actions.GET_FUNDING_SOURCES, function
     } catch (error) {
         yield put({
             type: actions.GET_FUNDING_SOURCES_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -33,9 +33,9 @@ export const addFundingSource = takeEvery(actions.ADD_FUNDING_SOURCE, function* 
     } catch (error) {
         yield put({
             type: actions.ADD_FUNDING_SOURCE_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -50,9 +50,9 @@ export const updateFundingSource = takeEvery(actions.UPDATE_FUNDING_SOURCE, func
     } catch (error) {
         yield put({
             type: actions.UPDATE_FUNDING_SOURCE_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -73,7 +73,7 @@ export const updateFundingSourceStatus = takeEvery(actions.UPDATE_FUNDING_SOURCE
     } catch (error) {
         yield put({
             type: actions.UPDATE_FUNDING_SOURCE_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -90,9 +90,9 @@ export const deleteFundingSource = takeEvery(actions.DELETE_FUNDING_SOURCE, func
     } catch (error) {
         yield put({
             type: actions.DELETE_FUNDING_SOURCE_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

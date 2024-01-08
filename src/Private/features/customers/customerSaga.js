@@ -23,9 +23,9 @@ export const updateCustomerAccount = takeEvery(customerActions.UPDATE_CUSTOMER_A
     } catch (error) {
         yield put({
             type: customerActions.UPDATE_CUSTOMER_ACCOUNT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

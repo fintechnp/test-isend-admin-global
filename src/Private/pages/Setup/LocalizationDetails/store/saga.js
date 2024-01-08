@@ -82,7 +82,7 @@ export const updateTranslationValueStatus = takeEvery(actions.UPDATE_TRANSLATION
     } catch (error) {
         yield put({
             type: actions.UPDATE_TRANSLATION_VALUE_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -99,9 +99,9 @@ export const deleteTranslationValue = takeEvery(actions.DELETE_TRANSLATION_VALUE
     } catch (error) {
         yield put({
             type: actions.DELETE_TRANSLATION_VALUE_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

@@ -17,7 +17,7 @@ export const getBulkEmailAddresses = takeEvery(actions.GET_BULK_EMAIL_ADDRESSES,
     } catch (error) {
         yield put({
             type: actions.GET_BULK_EMAIL_ADDRESSES_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -33,9 +33,9 @@ export const addBulkEmailAddress = takeEvery(actions.ADD_BULK_EMAIL_ADDRESS, fun
     } catch (error) {
         yield put({
             type: actions.ADD_BULK_EMAIL_ADDRESS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -54,9 +54,9 @@ export const updateBulkEmailAddress = takeEvery(actions.UPDATE_BULK_EMAIL_ADDRES
     } catch (error) {
         yield put({
             type: actions.UPDATE_BULK_EMAIL_ADDRESS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -77,7 +77,7 @@ export const updateFundingSourceStatus = takeEvery(actions.UPDATE_BULK_EMAIL_ADD
     } catch (error) {
         yield put({
             type: actions.UPDATE_BULK_EMAIL_ADDRESS_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -97,9 +97,9 @@ export const deleteBulkEmailAddress = takeEvery(actions.DELETE_BULK_EMAIL_ADDRES
     } catch (error) {
         yield put({
             type: actions.DELETE_BULK_EMAIL_ADDRESS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -118,9 +118,9 @@ export const importBulkEmailAddress = takeEvery(actions.IMPORT_BULK_EMAIL_ADDRES
     } catch (error) {
         yield put({
             type: actions.IMPORT_BULK_EMAIL_ADDRESS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -139,9 +139,9 @@ export const importConfirmBulkEmailAddress = takeEvery(actions.IMPORT_CONFIRM_BU
     } catch (error) {
         yield put({
             type: actions.IMPORT_CONFIRM_BULK_EMAIL_ADDRESS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

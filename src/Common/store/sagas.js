@@ -96,7 +96,7 @@ export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action
     } catch (error) {
         yield put({
             type: actions.PASSWORD_RESET_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -115,7 +115,7 @@ export const logout = takeEvery(actions.LOG_OUT, function* () {
     } catch (error) {
         yield put({
             type: actions.LOG_OUT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

@@ -15,7 +15,7 @@ export const getBanners = takeEvery(actions.GET_BANNERS, function* (action) {
   } catch (error) {
     yield put({
       type: actions.GET_BANNERS_FAILED,
-      error: error.data,
+      error: error?.data,
     });
   }
 });
@@ -30,7 +30,7 @@ export const getBanner = takeEvery(actions.GET_BANNER, function* (action) {
   } catch (error) {
     yield put({
       type: actions.GET_BANNER_FAILED,
-      error: error.data,
+      error: error?.data,
     });
   }
 });
@@ -46,9 +46,9 @@ export const addBanner = takeEvery(actions.ADD_BANNER, function* (action) {
   } catch (error) {
     yield put({
       type: actions.ADD_BANNER_FAILED,
-      error: error.data,
+      error: error?.data,
     });
-    yield put({ type: "SET_TOAST_DATA", response: error.data });
+    yield put({ type: "SET_TOAST_DATA", response: error?.data });
   }
 });
 
@@ -65,9 +65,9 @@ export const updateBanner = takeEvery(
     } catch (error) {
       yield put({
         type: actions.UPDATE_BANNER_FAILED,
-        error: error.data,
+        error: error?.data,
       });
-      yield put({ type: "SET_TOAST_DATA", response: error.data });
+      yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
   }
 );
@@ -86,7 +86,7 @@ export const updateBannerStatus = takeEvery(
     } catch (error) {
       yield put({
         type: actions.UPDATE_BANNER_STATUS_FAILED,
-        error: error.data,
+        error: error?.data,
       });
       yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -106,9 +106,9 @@ export const deleteBanner = takeEvery(
     } catch (error) {
       yield put({
         type: actions.DELETE_BANNER_FAILED,
-        error: error.data,
+        error: error?.data,
       });
-      yield put({ type: "SET_TOAST_DATA", response: error.data });
+      yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
   }
 );

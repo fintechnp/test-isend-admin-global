@@ -16,7 +16,7 @@ export const getApiConfig = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_API_CONFIG_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -34,7 +34,7 @@ export const getApiConfigDetails = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_API_CONFIG_DETAILS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -53,9 +53,9 @@ export const addApiConfig = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_API_CONFIG_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -77,9 +77,9 @@ export const updateApiConfig = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_API_CONFIG_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );

@@ -16,7 +16,7 @@ export const getCustomerReport = takeEvery(actions.CUSTOMER_REPORT, function* (a
     } catch (error) {
         yield put({
             type: actions.CUSTOMER_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -32,7 +32,7 @@ export const downloadReport = takeEvery(actions.DOWNLOAD_REPORT, function* (acti
     } catch (error) {
         yield put({
             type: actions.DOWNLOAD_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -48,7 +48,7 @@ export const getBeneficiaryReport = takeEvery(actions.BENEFICIARY_REPORT, functi
     } catch (error) {
         yield put({
             type: actions.BENEFICIARY_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -64,7 +64,7 @@ export const getTransactionsSummaryReport = takeEvery(actions.TRANSACTIONS_SUMMA
     } catch (error) {
         yield put({
             type: actions.TRANSACTIONS_SUMMARY_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -80,7 +80,7 @@ export const getYearlyTransactionsReport = takeEvery(actions.YEARLY_TRANSACTIONS
     } catch (error) {
         yield put({
             type: actions.YEARLY_TRANSACTIONS_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -96,7 +96,7 @@ export const getCancelledTransactionsReport = takeEvery(actions.CANCELLED_TRANSA
     } catch (error) {
         yield put({
             type: actions.CANCELLED_TRANSACTIONS_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -112,7 +112,7 @@ export const getSuspiciousTransactionsReport = takeEvery(actions.SUSPICIOUS_TRAN
     } catch (error) {
         yield put({
             type: actions.SUSPICIOUS_TRANSACTIONS_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -128,7 +128,7 @@ export const getUserIpWhitelistReport = takeEvery(actions.USER_IP_WHITELIST_REPO
     } catch (error) {
         yield put({
             type: actions.USER_IP_WHITELIST_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -144,7 +144,7 @@ export const getIcnResponseReport = takeEvery(actions.ICN_RESPONSE_REPORT, funct
     } catch (error) {
         yield put({
             type: actions.ICN_RESPONSE_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -160,7 +160,7 @@ export const getAchEntriesReport = takeEvery(actions.ACH_ENTRIES_REPORT, functio
     } catch (error) {
         yield put({
             type: actions.ACH_ENTRIES_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -176,7 +176,7 @@ export const getIncompleteRegistrationReport = takeEvery(actions.INCOMPLETE_REGI
     } catch (error) {
         yield put({
             type: actions.INCOMPLETE_REGISTRATION_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -192,7 +192,7 @@ export const getOnfidoReports = takeEvery(actions.ONFIDO_REPORT, function* (acti
     } catch (error) {
         yield put({
             type: actions.ONFIDO_REPORT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }

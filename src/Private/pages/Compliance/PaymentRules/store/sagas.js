@@ -16,7 +16,7 @@ export const getPaymentRules = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PAYMENT_RULES_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -34,7 +34,7 @@ export const getPaymentRulesDetailById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PAYMENT_RULES_DETAILS_BY_ID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -53,7 +53,7 @@ export const addPaymentRules = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_PAYMENT_RULES_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -77,7 +77,7 @@ export const updatePaymentRules = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PAYMENT_RULES_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -101,7 +101,7 @@ export const updatePaymentRuleStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PAYMENT_RULES_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -121,7 +121,7 @@ export const deletePaymentRules = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_PAYMENT_RULES_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

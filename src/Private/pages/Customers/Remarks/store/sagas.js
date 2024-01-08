@@ -18,7 +18,7 @@ export const getRemarks = takeEvery(actions.GET_REMARKS, function* (action) {
     } catch (error) {
         yield put({
             type: actions.GET_REMARKS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -36,7 +36,7 @@ export const getRemarksById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_REMARKS_BYID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -60,7 +60,7 @@ export const createRemarks = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CREATE_REMARKS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

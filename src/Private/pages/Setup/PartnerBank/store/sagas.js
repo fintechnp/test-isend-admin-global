@@ -16,7 +16,7 @@ export const getAllPartnerBank = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_ALL_PARTNER_BANK_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -34,7 +34,7 @@ export const getPartnerBankById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PARTNER_BANK_BYID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -52,7 +52,7 @@ export const getPartnerBankByAgentId = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PARTNER_BANK_AGENT_ID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -71,9 +71,9 @@ export const createPartnerBank = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CREATE_PARTNER_BANK_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -95,9 +95,9 @@ export const updatePartnerBank = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PARTNER_BANK_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -119,9 +119,9 @@ export const unmapPartnerBank = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.MAP_PARTNER_BANK_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -139,9 +139,9 @@ export const deletePartnerBank = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_PARTNER_BANK_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
