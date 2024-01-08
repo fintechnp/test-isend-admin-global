@@ -485,16 +485,6 @@ const PrivateLayout = () => {
                     },
                 ],
             },
-
-            //Account
-            {
-                path: "/accounting",
-                key: "accounting",
-                text: "Accounting",
-                sub: false,
-                icon: <Receipt />,
-                permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER],
-            },
         ];
     };
 
