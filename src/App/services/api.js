@@ -1,9 +1,9 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 
 import app from "App/config/app";
 import { preserveIntendedPath } from "App/routes";
 import { LOGIN_COUNTRY } from "App/global/constants";
+import AuthUtility from "App/utils/AuthUtility";
 
 let store;
 export const injectStore = (_store) => {
@@ -27,7 +27,7 @@ export default class Api {
     setToken = () => {
         this.axiosFunction.interceptors.request.use(
             (config) => {
-                config.headers["Authorization"] = "Bearer " + Cookies.get("token");
+                config.headers["Authorization"] = "Bearer " + AuthUtility.getAccessToken();
                 config.headers["source"] = "web";
                 config.headers["Accept"] = "application/json";
                 config.headers["Content-Type"] = "application/json";

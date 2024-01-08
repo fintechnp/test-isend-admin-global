@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { SubmissionError, reset } from "redux-form";
-import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
-import { Helmet } from "react-helmet-async";
 
-import { AuthContext } from "../../../App/auth";
 import LoginForm from "../components/LoginForm";
-import actions from "../../../Common/store/actions";
 
-function Login(props) {
+import { history } from "App/store";
+import { AuthContext } from "App/auth";
+import actions from "Common/store/actions";
+import AuthUtility from "App/utils/AuthUtility";
+
+function Login() {
+
     const dispatch = useDispatch();
+    
     const authContext = useContext(AuthContext);
+    
     const [loading, setLoading] = useState(false);
+    
     const { response: user, success, loading: user_loading } = useSelector((state) => state.get_user);
 
     useEffect(() => {
@@ -30,21 +35,21 @@ function Login(props) {
     const handleLogin = async (data) => {
         setLoading(true);
         try {
-            const res = await authContext.loginUser(data);
-            if (res) {
-                authContext.setToken(res.token);
-                Cookies.set("refreshToken", res.refresh_token);
-                dispatch(actions.get_user());
-                dispatch(actions.get_all_country());
-                dispatch(actions.get_send_country());
-                dispatch(
-                    actions.get_all_reference({
-                        page_number: 1,
-                        page_size: 100,
-                    }),
-                );
-                setLoading(false);
-            }
+            const response = await authContext.loginUser(data);
+            if (!response) return
+            AuthUtility.setAccessToken(response.token);
+            AuthUtility.setRefreshToken(response.refresh_token);
+            dispatch(actions.get_user());
+            dispatch(actions.get_all_country());
+            dispatch(actions.get_send_country());
+            dispatch(
+                actions.get_all_reference({
+                    page_number: 1,
+                    page_size: 100,
+                }),
+            );
+            setLoading(false);
+            history.push('/dashboard')
         } catch (err) {
             setLoading(false);
             dispatch({
@@ -53,16 +58,14 @@ function Login(props) {
             });
             if (err) {
                 throw new SubmissionError({
-                    password: err.data.message,
+                    password: err?.data?.message,
                 });
             }
         }
     };
 
     return (
-        <>
-            <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
-        </>
+        <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
     );
 }
 

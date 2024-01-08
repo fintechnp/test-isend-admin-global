@@ -1,12 +1,12 @@
-import { createStore, applyMiddleware } from "redux";
-import { createBrowserHistory } from "history";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import { composeWithDevTools } from "redux-devtools-extension";
-import createSagaMiddleware from "redux-saga";
-import createRootReducer from "./reducers";
 import rootSaga from "./sagas";
-import Cookies from "js-cookie";
+import createRootReducer from "./reducers";
+import createSagaMiddleware from "redux-saga";
+import { createBrowserHistory } from "history";
+import storage from "redux-persist/lib/storage";
+import AuthUtility from "App/utils/AuthUtility";
+import { createStore, applyMiddleware } from "redux";
+import { persistStore, persistReducer } from "redux-persist";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const persistConfig = {
     key: `root${import.meta.env.REACT_APP_VERSION}`,
@@ -18,6 +18,7 @@ const persistConfig = {
 let buffer = [];
 let failed = [];
 let wait = false;
+
 const lastActionMiddleware = (store) => (next) => (action) => {
     if (action.type.includes("FAILED") && action.type !== "REFRESH_TOKEN_FAILED") {
         failed.push(action.type.replace("_FAILED", ""));
@@ -43,22 +44,25 @@ const lastActionMiddleware = (store) => (next) => (action) => {
         store.dispatch({
             type: "REFRESH_TOKEN",
             data: {
-                access_token: Cookies.get("token"),
-                refresh_token: Cookies.get("refreshToken"),
+                access_token: AuthUtility.getAccessToken(),
+                refresh_token: AuthUtility.getRefreshToken(),
             },
         });
         wait = true;
     } else if (action.type === "REFRESH_TOKEN_FAILED") {
+
         wait = false;
+
         buffer = [];
+
         failed = [];
+
         store.dispatch({
             type: "RESET",
         });
-        Object.keys(Cookies.get()).forEach(function (cookie) {
-            Cookies.remove(cookie);
-        });
-        localStorage.clear();
+
+       AuthUtility.logOut()
+
         window.location.reload();
     } else if (action.type === "REFRESH_TOKEN_SUCCESS") {
         wait = false;
@@ -90,10 +94,22 @@ const history = createBrowserHistory();
 const resetEnhancer = (rootReducer) => (state, action) => {
     if (action.type !== "RESET") return rootReducer(state, action);
 
-    const newState = rootReducer(undefined, {});
-    newState.router = state.router;
+    const newState = {};
+    
+    // Iterate through known reducer keys and reset each one
+    Object.keys(state).forEach((key) => {
+        switch (key) {
+            case 'router':
+                newState[key] = state[key];
+                break;
+            default:
+                newState[key] = rootReducer(undefined, {});
+        }
+    });
+
     return newState;
 };
+
 
 const persistedReducer = persistReducer(persistConfig, resetEnhancer(createRootReducer()));
 
@@ -107,4 +123,5 @@ export const persistor = persistStore(store);
 sagaMiddleware.run(rootSaga);
 
 export { history };
+
 export default store;
