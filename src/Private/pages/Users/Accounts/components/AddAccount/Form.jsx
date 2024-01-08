@@ -269,6 +269,7 @@ const AccountForm = ({
                                 size="small"
                                 variant="contained"
                                 onClick={handleClose}
+                                disabled={loading}
                             >
                                 Cancel
                             </CancelButton>
@@ -280,6 +281,7 @@ const AccountForm = ({
                                 loading={loading}
                                 endIcon={update ? <UpdateIcon /> : <AddIcon />}
                                 type="submit"
+                                disabled={loading}
                             >
                                 {buttonText}
                             </CreateButton>

@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
 import { reset } from "redux-form";
-import { Helmet } from "react-helmet-async";
-import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
+import { Helmet } from "react-helmet-async";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import Loading from "./../../../../App/components/Loading";
-import actions from "./../store/actions";
-import MessageBox from "./components/MessageBox";
+import BlockForm from "./Form/BlockForm";
 import SearchForm from "./Form/SearchForm";
 import RefundForm from "./Form/RefundForm";
 import Details from "./components/Details";
-import BlockForm from "./Form/BlockForm";
+import Loading from "App/components/Loading";
+import MessageBox from "./components/MessageBox";
+
+import actions from "./../store/actions";
+import PageContent from "App/components/Container/PageContent";
 
 function Search(props) {
     const dispatch = useDispatch();
@@ -88,13 +90,10 @@ function Search(props) {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
+      <PageContent documentTitle="Search Transaction">
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <SearchForm onSubmit={handleSearch} initialValues={{ transaction_id: "", pin_number: "" }} />
+                    <SearchForm onSubmit={handleSearch} initialValues={{ transaction_id: "", pin_number: "" }} loading={loading} />
                 </Grid>
                 {loading && (
                     <Grid item xs={12}>
@@ -139,7 +138,7 @@ function Search(props) {
                     </>
                 )}
             </Grid>
-        </>
+      </PageContent>
     );
 }
 

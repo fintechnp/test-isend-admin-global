@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
+import SearchTextField from "App/components/Fields/SearchTextField";
 // import FilterTransactions from "../Dropdown";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
@@ -87,10 +88,12 @@ const orderData = [
 ];
 
 function Filter({ handleSearch, handleSort, handleOrder }) {
+
     return (
         <FilterWrapper>
             <SearchBox sx={{ columnGap: 1 }}>
-                <TextField
+                <SearchTextField onChange={handleSearch}/>
+                {/* <TextField
                     type="search"
                     variant="outlined"
                     placeholder="Search"
@@ -102,7 +105,7 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
                             </InputAdornment>
                         ),
                     }}
-                />
+                /> */}
             </SearchBox>
 
             <DropWrapper>

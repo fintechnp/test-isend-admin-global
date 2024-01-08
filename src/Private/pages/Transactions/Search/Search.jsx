@@ -15,10 +15,9 @@ import actions from "../store/actions";
 import Filter from "../../Reports/Shared/Filter";
 import NoResults from "../components/NoResults";
 import downloadActions from "../../Reports/store/actions";
-import Loading from "./../../../../App/components/Loading";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "./../../../../App/helpers";
-import transaction from "App/config/transaction";
+import Loading from "App/components/Loading";
+import Table, { TablePagination } from "App/components/Table";
+import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -432,6 +431,7 @@ function Search(props) {
                         }}
                         onSubmit={handleSearch}
                         handleReset={handleReset}
+                        loading={l_loading}
                     />
                 </Grid>
                 {l_loading && (

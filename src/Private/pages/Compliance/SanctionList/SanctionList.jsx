@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { Helmet } from "react-helmet-async";
 
 import actions from "./store/actions";
+import { Delete } from "App/components";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddSanction from "./components/AddSanction";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CountryName,
-    FormatDate,
-    ReferenceName,
-} from "./../../../../App/helpers";
-import { Delete } from "./../../../../App/components";
+import Table, { TablePagination } from "App/components/Table";
+import { CountryName, FormatDate, ReferenceName } from "App/helpers";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -57,19 +53,11 @@ const SanctionList = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: sanctionList, loading: l_loading } = useSelector(
-        (state) => state.get_sanction_list
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_sanction
-    );
+    const { response: sanctionList, loading: l_loading } = useSelector((state) => state.get_sanction_list);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_sanction);
     const { success: a_success } = useSelector((state) => state.add_sanction);
-    const { success: u_success } = useSelector(
-        (state) => state.update_sanction
-    );
-    const { success: i_success, loading: i_loading } = useSelector(
-        (state) => state.import_sanction
-    );
+    const { success: u_success } = useSelector((state) => state.update_sanction);
+    const { success: i_success, loading: i_loading } = useSelector((state) => state.import_sanction);
 
     useEffect(() => {
         dispatch(actions.get_sanction_list(filterSchema));
@@ -101,13 +89,8 @@ const SanctionList = (props) => {
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.type
-                                ? ReferenceName(30, data?.row?.original?.type)
-                                : "N/A"}
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
+                            {data?.row?.original?.type ? ReferenceName(30, data?.row?.original?.type) : "N/A"}
                         </Typography>
                     </Box>
                 ),
@@ -132,13 +115,8 @@ const SanctionList = (props) => {
                         >
                             {data.value ? CountryName(data.value) : "N/A"}
                         </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
-                            {data?.row?.original?.address
-                                ? data?.row?.original?.address
-                                : "N/A"}
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
+                            {data?.row?.original?.address ? data?.row?.original?.address : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -218,10 +196,7 @@ const SanctionList = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddSanction
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddSanction update={true} update_data={row?.original} />
                         <Delete
                             id={row?.original.tid}
                             handleDelete={handleDelete}
@@ -232,7 +207,7 @@ const SanctionList = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -250,15 +225,14 @@ const SanctionList = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -302,35 +276,26 @@ const SanctionList = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header loading={i_loading} />
-                <Filter
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                />
-                <Table
-                    columns={columns}
-                    title="Payment Rules"
-                    data={sanctionList?.data || []}
-                    sub_columns={sub_columns}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    handleDelete={handleDelete}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={sanctionList?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent documentTitle="Sanction">
+            <Header loading={i_loading} />
+            <Filter handleSearch={handleSearch} handleSort={handleSort} handleOrder={handleOrder} />
+            <Table
+                columns={columns}
+                title="Payment Rules"
+                data={sanctionList?.data || []}
+                sub_columns={sub_columns}
+                loading={l_loading}
+                rowsPerPage={8}
+                handleDelete={handleDelete}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={sanctionList?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

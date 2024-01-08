@@ -2,17 +2,9 @@ import rootSaga from "./sagas";
 import createRootReducer from "./reducers";
 import createSagaMiddleware from "redux-saga";
 import { createBrowserHistory } from "history";
-import storage from "redux-persist/lib/storage";
 import AuthUtility from "App/utils/AuthUtility";
 import { createStore, applyMiddleware } from "redux";
-import { persistStore, persistReducer } from "redux-persist";
 import { composeWithDevTools } from "redux-devtools-extension";
-
-const persistConfig = {
-    key: `root${import.meta.env.REACT_APP_VERSION}`,
-    storage,
-    // version: 2, i haven't tried with a version if hydration works
-};
 
 // refresh middleware
 let buffer = [];
@@ -110,15 +102,12 @@ const resetEnhancer = (rootReducer) => (state, action) => {
     return newState;
 };
 
-
-const persistedReducer = persistReducer(persistConfig, resetEnhancer(createRootReducer()));
-
+const appReducer = resetEnhancer(createRootReducer())
+ 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [lastActionMiddleware, sagaMiddleware];
 
-const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(...middlewares)));
-
-export const persistor = persistStore(store);
+const store = createStore(appReducer, composeWithDevTools(applyMiddleware(...middlewares)));
 
 sagaMiddleware.run(rootSaga);
 

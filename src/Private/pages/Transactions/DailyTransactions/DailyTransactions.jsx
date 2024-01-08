@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import Filter from "./../components/Filter";
 import Table, { TablePagination } from "App/components/Table";
@@ -12,9 +12,7 @@ import PageContent from "App/components/Container/PageContent";
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
-import app from "App/config/app";
-import Spacer from "App/components/Spacer/Spacer";
+
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -270,11 +268,10 @@ const DailyTransactions = (props) => {
     );
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },

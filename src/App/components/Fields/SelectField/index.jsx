@@ -39,7 +39,7 @@ const Select = styled(MuiSelect)(({ theme }) => ({
     },
     "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled":
         {
-            "-webkit-text-fill-color": "black",
+            "WebkitTextFillColor": "black",
             fontWeight: 600,
         },
     "&:focus": {

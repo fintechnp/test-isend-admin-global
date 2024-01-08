@@ -191,12 +191,12 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <ResetButton size="small" variant="outlined" onClick={handleReset}>
+                                    <ResetButton size="small" variant="outlined" onClick={handleReset} disabled={loading}>
                                         Reset
                                     </ResetButton>
                                 </Grid>
                                 <Grid item>
-                                    <SearchButton size="small" variant="outlined" type="submit">
+                                    <SearchButton size="small" variant="outlined" type="submit" disabled={loading}>
                                         Search
                                     </SearchButton>
                                 </Grid>

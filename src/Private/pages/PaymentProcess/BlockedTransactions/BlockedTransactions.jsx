@@ -12,7 +12,6 @@ import { Release } from "App/components";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 
-import app from "App/config/app";
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
 import Filter from "./../components/Filter";
@@ -264,11 +263,10 @@ const BlockedTransactions = (props) => {
     );
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },

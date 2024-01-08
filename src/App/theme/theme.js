@@ -44,6 +44,18 @@ export const ChangeTheme = (mode = true) => {
         typography: {
             fontFamily: "'Poppins', sans-serif",
         },
+        components: {
+            MuiButton: {
+                defaultProps: {
+                    disableElevation: true,
+                },
+                styleOverrides: {
+                    root: {
+                        textTransform: 'inherit'
+                    }
+                }
+            },
+        }
     });
 
     return theme;

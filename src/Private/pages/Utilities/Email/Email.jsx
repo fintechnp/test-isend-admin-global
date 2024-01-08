@@ -1,29 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
-import actions from "./../store/actions";
+import ViewMail from "./ViewMail";
+import CreateEmail from "./CreateEmail";
+import { Delete } from "App/components";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import CreateEmail from "./CreateEmail";
-import ViewMail from "./ViewMail";
-import { Delete } from "./../../../../App/components";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { FormatDate } from "./../../../../App/helpers";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
-const EmailContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import actions from "./../store/actions";
+import { FormatDate } from "App/helpers";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -49,13 +38,11 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Email = (props) => {
+const Email = () => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: EmailData, loading: l_loading } = useSelector(
-        (state) => state.get_email
-    );
+    const { response: EmailData, loading: l_loading } = useSelector((state) => state.get_email);
     const { success: c_success } = useSelector((state) => state.create_email);
     const { success: d_success } = useSelector((state) => state.delete_email);
 
@@ -94,13 +81,8 @@ const Email = (props) => {
                 accessor: "email_by",
                 Cell: (data) => (
                     <Box>
-                        <Tooltip
-                            title={data.value ? data.value : "empty"}
-                            arrow
-                        >
-                            <Text component="span">
-                                {data.value ? data.value : "N/A"}
-                            </Text>
+                        <Tooltip title={data.value ? data.value : "empty"} arrow>
+                            <Text component="span">{data.value ? data.value : "N/A"}</Text>
                         </Tooltip>
                     </Box>
                 ),
@@ -110,13 +92,8 @@ const Email = (props) => {
                 accessor: "email_to",
                 Cell: (data) => (
                     <Box>
-                        <Tooltip
-                            title={data.value ? data.value : "empty"}
-                            arrow
-                        >
-                            <Text component="span">
-                                {data.value ? data.value : "N/A"}
-                            </Text>
+                        <Tooltip title={data.value ? data.value : "empty"} arrow>
+                            <Text component="span">{data.value ? data.value : "N/A"}</Text>
                         </Tooltip>
                     </Box>
                 ),
@@ -130,9 +107,7 @@ const Email = (props) => {
                 accessor: "email_subject",
                 Cell: (data) => (
                     <Box>
-                        <Text component="span">
-                            {data?.value ? data?.value : "N/A"}
-                        </Text>
+                        <Text component="span">{data?.value ? data?.value : "N/A"}</Text>
                     </Box>
                 ),
             },
@@ -195,7 +170,7 @@ const Email = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -206,15 +181,14 @@ const Email = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -258,37 +232,32 @@ const Email = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <EmailContainer>
-                <Header title="Email List">
-                    <CreateEmail />
-                </Header>
-                <Filter
-                    sortData={sortData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                    filterSchema={filterSchema}
-                />
-                <Table
-                    columns={columns}
-                    data={EmailData?.data || []}
-                    title="Email Details"
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={EmailData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </EmailContainer>
-        </>
+        <PageContent documentTitle="Email">
+            <Header title="Email List">
+                <CreateEmail />
+            </Header>
+            <Filter
+                sortData={sortData}
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                filterSchema={filterSchema}
+            />
+            <Table
+                columns={columns}
+                data={EmailData?.data || []}
+                title="Email Details"
+                loading={l_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={EmailData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

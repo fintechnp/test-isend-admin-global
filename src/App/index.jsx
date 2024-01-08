@@ -7,13 +7,12 @@ import { HelmetProvider } from "react-helmet-async";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import GlobalStyles from "@mui/material/GlobalStyles";
-import { PersistGate } from "redux-persist/integration/react";
 
 import ErrorBoundary from "./components/ErrorBoundary";
 
+import store from "./store";
 import MainRoutes from "./routes";
 import AuthProvider from "./auth";
-import store from "./store";
 import { ChangeTheme } from "./theme/theme";
 import { injectStore } from "./services/api";
 import { ConfirmProvider } from "./core/mui-confirm";
