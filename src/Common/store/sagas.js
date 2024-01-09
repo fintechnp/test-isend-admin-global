@@ -91,7 +91,7 @@ export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action
     const apiBaseUrl = api_base_url.endsWith('/') ? api_base_url : api_base_url + '/';
 
     try {
-        const res = yield call(api.post, `${apiBaseUrl}account/resetpassword`, data);
+        const res = yield call(api.post, `${apiBaseUrl}api/account/resetpassword`, data);
         yield put({
             type: actions.PASSWORD_RESET_SUCCESS,
             response: res,
