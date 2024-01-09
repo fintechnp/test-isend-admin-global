@@ -166,7 +166,7 @@ function IncompleteRegistrationReport() {
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
-                    <IncompleteRegistrationFilterForm onSubmit={handleSearch} onReset={handleReset} />
+                    <IncompleteRegistrationFilterForm onSubmit={handleSearch} onReset={handleReset} loading={isReportLoading} />
                 </Grid>
 
                 {isReportLoading && (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
@@ -10,17 +9,11 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import { Delete } from "./../../../../App/components";
+import { Delete } from "App/components";
 import AddDeliveryRoute from "./components/AddDeliveryRoute";
-import {
-    CountryName,
-    CurrencyName,
-    ReferenceName,
-} from "./../../../../App/helpers";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
+import PageContent from "App/components/Container/PageContent";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
+import Table, { TablePagination, TableSwitch } from "App/components/Table";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -74,18 +67,10 @@ const DeliveryRoute = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: deliveryroute_data, loading: g_loading } = useSelector(
-        (state) => state.get_delivery_route
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_delivery_route
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.create_delivery_route
-    );
-    const { success: u_success } = useSelector(
-        (state) => state.update_delivery_route
-    );
+    const { response: deliveryroute_data, loading: g_loading } = useSelector((state) => state.get_delivery_route);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_delivery_route);
+    const { success: a_success } = useSelector((state) => state.create_delivery_route);
+    const { success: u_success } = useSelector((state) => state.update_delivery_route);
 
     useEffect(() => {
         dispatch(actions.get_delivery_route(filterSchema));
@@ -112,10 +97,7 @@ const DeliveryRoute = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
                             {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
@@ -130,9 +112,7 @@ const DeliveryRoute = (props) => {
                 accessor: "payout_agent",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                     </Box>
                 ),
             },
@@ -145,9 +125,7 @@ const DeliveryRoute = (props) => {
                 accessor: "payment_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? ReferenceName(1, data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? ReferenceName(1, data.value) : ""}</StyledText>
                     </Box>
                 ),
             },
@@ -160,9 +138,7 @@ const DeliveryRoute = (props) => {
                 accessor: "payout_country",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {CountryName(data.value)}
-                        </StyledText>
+                        <StyledText component="p">{CountryName(data.value)}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -170,11 +146,7 @@ const DeliveryRoute = (props) => {
                                 lineHeight: 1,
                             }}
                         >
-                            {data.value
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
-                                : ""}
+                            {data.value ? CurrencyName(data?.row?.original?.payout_currency) : ""}
                         </Typography>
                     </Box>
                 ),
@@ -189,11 +161,7 @@ const DeliveryRoute = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -241,10 +209,7 @@ const DeliveryRoute = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddDeliveryRoute
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddDeliveryRoute update={true} update_data={row?.original} />
                         <Delete
                             id={row.original.tid}
                             handleDelete={handleDelete}
@@ -255,7 +220,7 @@ const DeliveryRoute = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -275,21 +240,18 @@ const DeliveryRoute = (props) => {
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(
-            actions.update_delivery_route_status(id, { is_active: is_active })
-        );
+        dispatch(actions.update_delivery_route_status(id, { is_active: is_active }));
     }, []);
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleCountry = (e) => {
@@ -342,36 +304,31 @@ const DeliveryRoute = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header />
-                <Filter
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleCountry={handleCountry}
-                    handleOrder={handleOrder}
-                    handlePayemntType={handlePayemntType}
-                />
-                <Table
-                    columns={columns}
-                    title="Delivery Route Details"
-                    data={deliveryroute_data?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={deliveryroute_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent documentTitle="Delivery Option">
+            <Header />
+            <Filter
+                state={filterSchema}
+                handleSearch={handleSearch}
+                handleCountry={handleCountry}
+                handleOrder={handleOrder}
+                handlePayemntType={handlePayemntType}
+            />
+            <Table
+                columns={columns}
+                title="Delivery Route Details"
+                data={deliveryroute_data?.data || []}
+                sub_columns={sub_columns}
+                loading={g_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={deliveryroute_data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

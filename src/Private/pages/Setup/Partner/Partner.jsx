@@ -14,12 +14,10 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import { Delete } from "./../../../../App/components";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
-import { CountryName } from "./../../../../App/helpers";
+import { Delete } from "App/components";
+import Table, { TablePagination, TableSwitch } from "App/components/Table";
+import { CountryName } from "App/helpers";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -81,12 +79,8 @@ const Partner = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: partner_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_partner
-    );
-    const { success: d_success, loading: d_loading } = useSelector(
-        (state) => state.delete_partner
-    );
+    const { response: partner_data, loading: g_loading } = useSelector((state) => state.get_all_partner);
+    const { success: d_success, loading: d_loading } = useSelector((state) => state.delete_partner);
 
     useEffect(() => {
         dispatch(actions.get_all_partner(filterSchema));
@@ -160,9 +154,7 @@ const Partner = (props) => {
                 accessor: "agent_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "N/A"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "N/A"}</StyledText>
                     </Box>
                 ),
             },
@@ -175,9 +167,7 @@ const Partner = (props) => {
                 accessor: "country",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CountryName(data.value) : "N/A"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CountryName(data.value) : "N/A"}</StyledText>
                     </Box>
                 ),
             },
@@ -190,11 +180,7 @@ const Partner = (props) => {
                 accessor: "is_active",
                 Cell: (data) => (
                     <SwitchWrapper textAlign="center" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -216,9 +202,7 @@ const Partner = (props) => {
                         <Tooltip title="Branch" arrow>
                             <IconButton
                                 onClick={() =>
-                                    navigate(
-                                        `/setup/partner/branch/${row.original.name}/${row.original.agent_id}`
-                                    )
+                                    navigate(`/setup/partner/branch/${row.original.name}/${row.original.agent_id}`)
                                 }
                             >
                                 <AltRouteIcon
@@ -234,9 +218,7 @@ const Partner = (props) => {
                         <Tooltip title="See Corridor" arrow>
                             <IconButton
                                 onClick={() =>
-                                    navigate(
-                                        `/setup/partner/corridor/${row.original.name}/${row.original.agent_id}`
-                                    )
+                                    navigate(`/setup/partner/corridor/${row.original.name}/${row.original.agent_id}`)
                                 }
                             >
                                 <ShuffleIcon
@@ -250,13 +232,7 @@ const Partner = (props) => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Partner" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/setup/partner/update/${row.original.agent_id}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/setup/partner/update/${row.original.agent_id}`)}>
                                 <EditOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -277,7 +253,7 @@ const Partner = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const orderData = [
@@ -290,15 +266,14 @@ const Partner = (props) => {
     }, []);
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleCountry = (e) => {
@@ -356,44 +331,34 @@ const Partner = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header title="Our Partner List">
-                    <AddButton
-                        size="small"
-                        variant="outlined"
-                        onClick={handleAdd}
-                        endIcon={<AddIcon />}
-                    >
-                        Add Partner
-                    </AddButton>
-                </Header>
-                <Filter
-                    orderData={orderData}
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleCountry={handleCountry}
-                    handleOrder={handleOrder}
-                    handleAgentType={handleAgentType}
-                />
-                <Table
-                    columns={columns}
-                    data={partner_data?.data || []}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={partner_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent documentTitle="Partners">
+            <Header title="Our Partner List">
+                <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
+                    Add Partner
+                </AddButton>
+            </Header>
+            <Filter
+                orderData={orderData}
+                state={filterSchema}
+                handleSearch={handleSearch}
+                handleCountry={handleCountry}
+                handleOrder={handleOrder}
+                handleAgentType={handleAgentType}
+            />
+            <Table
+                columns={columns}
+                data={partner_data?.data || []}
+                loading={g_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={partner_data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

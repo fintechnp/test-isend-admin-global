@@ -5,9 +5,9 @@ import { styled } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
+    // minWidth: "100px",
     color: "#fff",
-    borderRadius: "2px",
+    // borderRadius: "2px",
     background: theme.palette.primary.main,
     "&:hover": {
         background: theme.palette.primary.dark,
@@ -24,7 +24,7 @@ const SubmitButton = React.forwardRef(
         <StyledButton
             ref={ref}
             type="submit"
-            size="medium"
+            size="small"
             variant="contained"
             disabled={isLoading}
             disableElevation

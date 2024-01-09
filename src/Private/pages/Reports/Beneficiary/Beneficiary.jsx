@@ -1,25 +1,24 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { reset } from "redux-form";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import { Helmet } from "react-helmet-async";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
-import Loading from "./../../../../App/components/Loading";
+import Loading from "App/components/Loading";
 
-import {
-    CountryName,
-    ReferenceName,
-    FormatDate,
-} from "./../../../../App/helpers";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import { CountryName, ReferenceName, FormatDate } from "App/helpers";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -74,9 +73,7 @@ function BeneficiaryReports(props) {
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: BeneficiaryReports, loading: l_loading } = useSelector(
-        (state) => state.get_beneficiary_report
-    );
+    const { response: BeneficiaryReports, loading: l_loading } = useSelector((state) => state.get_beneficiary_report);
 
     const {
         response: ReportsDownload,
@@ -135,8 +132,7 @@ function BeneficiaryReports(props) {
                         }}
                     >
                         <StyledName component="p">
-                            {data.value} {data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name}
+                            {data.value} {data?.row?.original?.middle_name} {data?.row?.original?.last_name}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -145,9 +141,7 @@ function BeneficiaryReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.receiver_type_data
-                                ? data?.row?.original?.receiver_type_data
-                                : "N/A"}
+                            {data?.row?.original?.receiver_type_data ? data?.row?.original?.receiver_type_data : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -171,18 +165,12 @@ function BeneficiaryReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data?.row?.original?.postcode}{" "}
-                            {data?.row?.original?.unit}{" "}
-                            {data?.row?.original?.street}{" "}
+                            {data?.row?.original?.postcode} {data?.row?.original?.unit} {data?.row?.original?.street}{" "}
                             {data?.row?.original?.address}
                         </StyledName>
-                        <StyledName
-                            component="span"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
+                        <StyledName component="span" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data?.row?.original?.state}
-                            {data?.row?.original?.state && ","}{" "}
-                            {CountryName(data.value)}
+                            {data?.row?.original?.state && ","} {CountryName(data.value)}
                         </StyledName>
                     </Box>
                 ),
@@ -256,9 +244,7 @@ function BeneficiaryReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.account_number
-                                ? data?.row?.original?.account_number
-                                : "N/A"}
+                            {data?.row?.original?.account_number ? data?.row?.original?.account_number : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -302,9 +288,7 @@ function BeneficiaryReports(props) {
             {
                 Header: () => (
                     <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>
-                            Since/Status
-                        </Typography>
+                        <Typography sx={{ fontSize: "15px" }}>Since/Status</Typography>
                     </Box>
                 ),
                 accessor: "created_ts",
@@ -323,15 +307,11 @@ function BeneficiaryReports(props) {
                         >
                             {data?.row?.original?.is_active ? (
                                 <Tooltip title="Active" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>
-                                        Active
-                                    </StyledName>
+                                    <StyledName sx={{ opacity: 0.8 }}>Active</StyledName>
                                 </Tooltip>
                             ) : (
                                 <Tooltip title="Blocked" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>
-                                        Inactive
-                                    </StyledName>
+                                    <StyledName sx={{ opacity: 0.8 }}>Inactive</StyledName>
                                 </Tooltip>
                             )}
                         </Box>
@@ -339,7 +319,7 @@ function BeneficiaryReports(props) {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -440,16 +420,11 @@ function BeneficiaryReports(props) {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(
-            actions.download_report(updatedFilterSchema, "report/beneficiary")
-        );
+        dispatch(actions.download_report(updatedFilterSchema, "report/beneficiary"));
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
+        <PageContent title="Filter Beneficiary" disableBorder>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <SearchForm
@@ -460,6 +435,7 @@ function BeneficiaryReports(props) {
                             created_from_date: moment().format("YYYY-MM-DD"),
                             created_to_date: moment().format("YYYY-MM-DD"),
                         }}
+                        loading={l_loading}
                     />
                 </Grid>
                 {l_loading && (
@@ -467,13 +443,11 @@ function BeneficiaryReports(props) {
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading &&
-                    BeneficiaryReports?.data &&
-                    BeneficiaryReports?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Beneficiary Found" />
-                        </Grid>
-                    )}
+                {!l_loading && BeneficiaryReports?.data && BeneficiaryReports?.data?.length === 0 && (
+                    <Grid item xs={12}>
+                        <NoResults text="No Beneficiary Found" />
+                    </Grid>
+                )}
                 {!l_loading && BeneficiaryReports?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <CustomerWrapper>
@@ -497,13 +471,9 @@ function BeneficiaryReports(props) {
                                 rowsPerPage={8}
                                 renderPagination={() => (
                                     <TablePagination
-                                        paginationData={
-                                            BeneficiaryReports?.pagination
-                                        }
+                                        paginationData={BeneficiaryReports?.pagination}
                                         handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={
-                                            handleChangeRowsPerPage
-                                        }
+                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                                     />
                                 )}
                             />
@@ -511,7 +481,7 @@ function BeneficiaryReports(props) {
                     </Grid>
                 )}
             </Grid>
-        </>
+        </PageContent>
     );
 }
 

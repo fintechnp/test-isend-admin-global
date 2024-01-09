@@ -10,7 +10,7 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import FormButtonContainer from "App/components/Container/FormButtonContainer";
 
-const OnfidoReportFilterForm = ({ onSubmit, onReset }) => {
+const OnfidoReportFilterForm = ({ onSubmit, onReset, loading }) => {
     const onfidoFormSchema = Yup.object().shape({
         customer_id: Yup.number().integer().typeError("Customer ID must be number").required("Customer ID is required"),
     });
@@ -57,8 +57,8 @@ const OnfidoReportFilterForm = ({ onSubmit, onReset }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <FormButtonContainer>
-                        <CancelButton onClick={handleReset}>Reset</CancelButton>
-                        <SubmitButton type="submit">Filter</SubmitButton>
+                        <CancelButton onClick={handleReset} disabled={loading}>Reset</CancelButton>
+                        <SubmitButton type="submit" disabled={loading}>Filter</SubmitButton>
                     </FormButtonContainer>
                 </Grid>
             </Grid>

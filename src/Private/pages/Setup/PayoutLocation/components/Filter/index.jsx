@@ -8,6 +8,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
+import SearchTextField from "App/components/Fields/SearchTextField";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -90,42 +91,19 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({
-    state,
-    handleSearch,
-    handleCountry,
-    handleOrder,
-    handlePayemntType,
-}) {
+function Filter({ state, handleSearch, handleCountry, handleOrder, handlePayemntType }) {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
         <FilterWrapper>
             <SearchBox>
-                <TextField
-                    type="search"
-                    variant="outlined"
-                    placeholder="Search"
-                    onChange={handleSearch}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
                 <Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            native
-                            onChange={handleCountry}
-                            displayEmpty
-                            defaultValue=""
-                        >
+                        <Select native onChange={handleCountry} displayEmpty defaultValue="">
                             <option value="">All Country</option>
                             {country &&
                                 country.map((sort) => (
@@ -143,17 +121,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Payment Type
                                         </Typography>
                                     );
                                 }
-                                const value = paymentTypeData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = paymentTypeData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -172,17 +145,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

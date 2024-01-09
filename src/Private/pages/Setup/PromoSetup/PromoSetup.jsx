@@ -11,17 +11,11 @@ import SubdirectoryArrowLeftIcon from "@mui/icons-material/SubdirectoryArrowLeft
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import {
-    CountryName,
-    CurrencyName,
-    ReferenceName,
-} from "./../../../../App/helpers";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import AddPromoSetup from "./components/AddPromoSetup";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
+import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import { useNavigate } from "react-router-dom";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -74,19 +68,11 @@ const PromoSetup = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: PromoSetData, loading: g_loading } = useSelector(
-        (state) => state.get_promo_setup
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.add_promo_setup
-    );
-    const { success: u_success } = useSelector(
-        (state) => state.update_promo_setup
-    );
+    const { response: PromoSetData, loading: g_loading } = useSelector((state) => state.get_promo_setup);
+    const { success: a_success } = useSelector((state) => state.add_promo_setup);
+    const { success: u_success } = useSelector((state) => state.update_promo_setup);
 
-    const { success: d_success } = useSelector(
-        (state) => state.delete_promo_setup
-    );
+    const { success: d_success } = useSelector((state) => state.delete_promo_setup);
 
     useEffect(() => {
         dispatch(actions.get_promo_setup(filterSchema));
@@ -127,9 +113,7 @@ const PromoSetup = (props) => {
                 accessor: "sending_agent_id",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -138,10 +122,7 @@ const PromoSetup = (props) => {
                             }}
                         >
                             {data?.row?.original?.payment_type
-                                ? ReferenceName(
-                                      1,
-                                      data?.row?.original?.payment_type
-                                  )
+                                ? ReferenceName(1, data?.row?.original?.payment_type)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -157,9 +138,7 @@ const PromoSetup = (props) => {
                 width: 130,
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CountryName(data.value) : "N/A"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CountryName(data.value) : "N/A"}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -168,9 +147,7 @@ const PromoSetup = (props) => {
                             }}
                         >
                             {data?.row?.original?.payout_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
+                                ? CurrencyName(data?.row?.original?.payout_currency)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -218,11 +195,7 @@ const PromoSetup = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -270,16 +243,11 @@ const PromoSetup = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPromoSetup
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddPromoSetup update={true} update_data={row?.original} />
                         <Tooltip title="Show Promo Codes" arrow>
                             <IconButton
                                 onClick={() =>
-                                    navigate(
-                                        `/setup/promo-code/${row?.original?.name}/${row?.original?.promo_id}`
-                                    )
+                                    navigate(`/setup/promo-code/${row?.original?.name}/${row?.original?.promo_id}`)
                                 }
                             >
                                 <SubdirectoryArrowLeftIcon
@@ -296,7 +264,7 @@ const PromoSetup = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -329,15 +297,14 @@ const PromoSetup = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -381,47 +348,40 @@ const PromoSetup = (props) => {
     };
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(
-            actions.update_promo_setup_status(id, { is_active: is_active })
-        );
+        dispatch(actions.update_promo_setup_status(id, { is_active: is_active }));
     }, []);
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header title="Promo Setup">
-                    <AddPromoSetup />
-                </Header>
-                <Filter
-                    state={filterSchema}
-                    sortData={sortData}
-                    orderData={orderData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                />
-                <Table
-                    columns={columns}
-                    handleDelete={handleDelete}
-                    title="Promo Setup Details"
-                    data={PromoSetData?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    totalPage={PromoSetData?.pagination?.totalPage || 1}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={PromoSetData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent documentTitle="Promo Setup">
+            <Header title="Promo Setup">
+                <AddPromoSetup />
+            </Header>
+            <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+            />
+            <Table
+                columns={columns}
+                handleDelete={handleDelete}
+                title="Promo Setup Details"
+                data={PromoSetData?.data || []}
+                sub_columns={sub_columns}
+                loading={g_loading}
+                rowsPerPage={8}
+                totalPage={PromoSetData?.pagination?.totalPage || 1}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={PromoSetData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

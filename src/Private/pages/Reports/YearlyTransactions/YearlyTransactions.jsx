@@ -1,22 +1,22 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
 import moment from "moment";
-import { Helmet } from "react-helmet-async";
-import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
-import Loading from "./../../../../App/components/Loading";
+import Loading from "App/components/Loading";
 
-import { FormatNumber } from "./../../../../App/helpers";
+import { FormatNumber } from "App/helpers";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -61,12 +61,10 @@ function YearlyTransactions(props) {
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: YearlyTransactions, loading: l_loading } = useSelector(
-        (state) => state.get_yearly_transactions_report
+        (state) => state.get_yearly_transactions_report,
     );
 
-    const { response: SendPartner, loading: s_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: SendPartner, loading: s_loading } = useSelector((state) => state.get_sending_partner);
 
     const {
         response: ReportsDownload,
@@ -149,9 +147,7 @@ function YearlyTransactions(props) {
                         accessor: "jan",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "JANUARY"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "JANUARY");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -174,9 +170,7 @@ function YearlyTransactions(props) {
                         accessor: "feb",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "FEBRUARY"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "FEBRUARY");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -199,9 +193,7 @@ function YearlyTransactions(props) {
                         accessor: "mar",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "MARCH"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "MARCH");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -224,9 +216,7 @@ function YearlyTransactions(props) {
                         accessor: "apr",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "APRIL"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "APRIL");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -249,9 +239,7 @@ function YearlyTransactions(props) {
                         accessor: "may",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "MAY"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "MAY");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -274,9 +262,7 @@ function YearlyTransactions(props) {
                         accessor: "jun",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "JUNE"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "JUNE");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -299,9 +285,7 @@ function YearlyTransactions(props) {
                         accessor: "jul",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "JULY"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "JULY");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -324,9 +308,7 @@ function YearlyTransactions(props) {
                         accessor: "aug",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "AUGUST"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "AUGUST");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -349,9 +331,7 @@ function YearlyTransactions(props) {
                         accessor: "sep",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "SEPTEMBER"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "SEPTEMBER");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -374,9 +354,7 @@ function YearlyTransactions(props) {
                         accessor: "oct",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "OCTOBER"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "OCTOBER");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -399,9 +377,7 @@ function YearlyTransactions(props) {
                         accessor: "nov",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "NOVEMBER"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "NOVEMBER");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -424,9 +400,7 @@ function YearlyTransactions(props) {
                         accessor: "dec",
                         width: "60",
                         Cell: ({ row }) => {
-                            const fmonth = row.original.month.find(
-                                (x) => x.txn_month === "DECEMBER"
-                            );
+                            const fmonth = row.original.month.find((x) => x.txn_month === "DECEMBER");
                             if (fmonth) {
                                 if (show === "avg_rate") {
                                     return fmonth.avg_rate.toFixed(2);
@@ -462,9 +436,7 @@ function YearlyTransactions(props) {
                     {
                         Header: () => (
                             <Box textAlign="center">
-                                <Typography sx={{ fontSize: "15px" }}>
-                                    Total Txn
-                                </Typography>
+                                <Typography sx={{ fontSize: "15px" }}>Total Txn</Typography>
                             </Box>
                         ),
                         accessor: "total_txn",
@@ -477,18 +449,14 @@ function YearlyTransactions(props) {
                                     alignItems: "center",
                                 }}
                             >
-                                <StyledName component="p">
-                                    {data.value ? data.value : "N/A"}
-                                </StyledName>
+                                <StyledName component="p">{data.value ? data.value : "N/A"}</StyledName>
                             </Box>
                         ),
                     },
                     {
                         Header: () => (
                             <Box textAlign="right">
-                                <Typography sx={{ fontSize: "15px" }}>
-                                    Total Amt
-                                </Typography>
+                                <Typography sx={{ fontSize: "15px" }}>Total Amt</Typography>
                             </Box>
                         ),
                         accessor: "total_amt",
@@ -496,9 +464,7 @@ function YearlyTransactions(props) {
                         Cell: (data) => (
                             <Box textAlign="right">
                                 <StyledName component="p" value={data.value}>
-                                    {data.value
-                                        ? FormatNumber(data.value)
-                                        : "N/A"}
+                                    {data.value ? FormatNumber(data.value) : "N/A"}
                                 </StyledName>
                             </Box>
                         ),
@@ -506,7 +472,7 @@ function YearlyTransactions(props) {
                 ],
             },
         ],
-        [show]
+        [show],
     );
 
     const sortData = [
@@ -611,19 +577,11 @@ function YearlyTransactions(props) {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(
-            actions.download_report(
-                updatedFilterSchema,
-                "report/transaction_yearly"
-            )
-        );
+        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_yearly"));
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
+        <PageContent title="Yearly Transactions" disableBorder>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <SearchForm
@@ -635,6 +593,7 @@ function YearlyTransactions(props) {
                         s_loading={s_loading}
                         SendPartner={SendPartner?.data}
                         handleReset={handleReset}
+                        loading={l_loading}
                     />
                 </Grid>
                 {l_loading && (
@@ -642,13 +601,11 @@ function YearlyTransactions(props) {
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading &&
-                    YearlyTransactions?.data &&
-                    YearlyTransactions?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Data Found" />
-                        </Grid>
-                    )}
+                {!l_loading && YearlyTransactions?.data && YearlyTransactions?.data?.length === 0 && (
+                    <Grid item xs={12}>
+                        <NoResults text="No Data Found" />
+                    </Grid>
+                )}
                 {!l_loading && YearlyTransactions?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <CustomerWrapper>
@@ -676,13 +633,9 @@ function YearlyTransactions(props) {
                                 rowsPerPage={8}
                                 renderPagination={() => (
                                     <TablePagination
-                                        paginationData={
-                                            YearlyTransactions?.pagination
-                                        }
+                                        paginationData={YearlyTransactions?.pagination}
                                         handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={
-                                            handleChangeRowsPerPage
-                                        }
+                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                                     />
                                 )}
                             />
@@ -690,7 +643,7 @@ function YearlyTransactions(props) {
                     </Grid>
                 )}
             </Grid>
-        </>
+        </PageContent>
     );
 }
 

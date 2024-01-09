@@ -1,4 +1,3 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
 import moment from "moment";
 import { reset } from "redux-form";
 import Grid from "@mui/material/Grid";
@@ -7,6 +6,7 @@ import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import SearchForm from "../components/SearchForm";
 
@@ -18,6 +18,7 @@ import downloadActions from "../../Reports/store/actions";
 import Loading from "App/components/Loading";
 import Table, { TablePagination } from "App/components/Table";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
+import PageContent from "App/components/Container/PageContent";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -417,10 +418,7 @@ function Search(props) {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
+        <PageContent documentTitle="Search Transactions" disableBorder>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <SearchForm
@@ -477,7 +475,7 @@ function Search(props) {
                     </Grid>
                 )}
             </Grid>
-        </>
+        </PageContent>
     );
 }
 

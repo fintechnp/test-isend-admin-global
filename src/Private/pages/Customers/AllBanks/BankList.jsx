@@ -102,7 +102,7 @@ const Banks = (props) => {
 
     return (
         <PageContent title="Bank Lists">
-            <FilterBank sortByOptions={sortByOptions || []} />
+            <FilterBank sortByOptions={sortByOptions || []} loading={bank_loading} />
             <Spacer />
             <TanstackReactTable
                 columns={columns}

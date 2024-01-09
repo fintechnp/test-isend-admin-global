@@ -11,7 +11,8 @@ import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddApiConfig from "./components/AddApiConfig";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const ConfigContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -65,13 +66,9 @@ const ApiConfiguration = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: ApiConfigData, loading: g_loading } = useSelector(
-        (state) => state.get_api_config
-    );
+    const { response: ApiConfigData, loading: g_loading } = useSelector((state) => state.get_api_config);
     const { success: a_success } = useSelector((state) => state.add_api_config);
-    const { success: u_success } = useSelector(
-        (state) => state.update_api_config
-    );
+    const { success: u_success } = useSelector((state) => state.update_api_config);
 
     useEffect(() => {
         dispatch(actions.get_api_config(filterSchema));
@@ -96,10 +93,7 @@ const ApiConfiguration = (props) => {
                             alignItems: "center",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "8px", opacity: 0.9 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
                             {data.value ? data.value : "n/a"}
                         </StyledName>
                     </Box>
@@ -116,9 +110,7 @@ const ApiConfiguration = (props) => {
                 Cell: (data) => (
                     <Box>
                         <Tooltip title={data.value ? data.value : ""} arrow>
-                            <UserIdText component="p">
-                                {data.value ? data.value : "N/A"}
-                            </UserIdText>
+                            <UserIdText component="p">{data.value ? data.value : "N/A"}</UserIdText>
                         </Tooltip>
                     </Box>
                 ),
@@ -134,9 +126,7 @@ const ApiConfiguration = (props) => {
                 Cell: (data) => (
                     <Box>
                         <Tooltip title={data.value ? data.value : ""} arrow>
-                            <UserIdText component="p">
-                                {data.value ? data.value : "N/A"}
-                            </UserIdText>
+                            <UserIdText component="p">{data.value ? data.value : "N/A"}</UserIdText>
                         </Tooltip>
                     </Box>
                 ),
@@ -152,9 +142,7 @@ const ApiConfiguration = (props) => {
                 Cell: (data) => (
                     <Box>
                         <Tooltip title={data.value ? data.value : ""} arrow>
-                            <UserIdText component="p">
-                                {data.value ? data.value : "N/A"}
-                            </UserIdText>
+                            <UserIdText component="p">{data.value ? data.value : "N/A"}</UserIdText>
                         </Tooltip>
                     </Box>
                 ),
@@ -203,15 +191,12 @@ const ApiConfiguration = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddApiConfig
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddApiConfig update={true} update_data={row?.original} />
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -240,15 +225,14 @@ const ApiConfiguration = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -288,40 +272,35 @@ const ApiConfiguration = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <ConfigContainer>
-                <Header title="API Configuration">
-                    <AddApiConfig />
-                </Header>
-                <Filter
-                    state={filterSchema}
-                    sortData={sortData}
-                    orderData={orderData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                />
-                <Table
-                    columns={columns}
-                    title="Api Config Details"
-                    data={ApiConfigData?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    totalPage={ApiConfigData?.pagination?.totalPage || 1}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={ApiConfigData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </ConfigContainer>
-        </>
+        <PageContent documentTitle="API Configuration">
+            <Header title="API Configuration">
+                <AddApiConfig />
+            </Header>
+            <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+            />
+            <Table
+                columns={columns}
+                title="Api Config Details"
+                data={ApiConfigData?.data || []}
+                sub_columns={sub_columns}
+                loading={g_loading}
+                rowsPerPage={8}
+                totalPage={ApiConfigData?.pagination?.totalPage || 1}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={ApiConfigData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

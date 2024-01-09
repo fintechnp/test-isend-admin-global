@@ -49,7 +49,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const SanctionList = (props) => {
+const SanctionList = () => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 

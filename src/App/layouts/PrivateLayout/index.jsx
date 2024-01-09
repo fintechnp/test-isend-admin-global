@@ -47,12 +47,12 @@ const PrivateLayout = () => {
                         text: "Accounts",
                         sub: false,
                     },
-                    {
-                        path: "/user/menu",
-                        key: "user-menu",
-                        text: "Menu",
-                        sub: false,
-                    },
+                    // {
+                    //     path: "/user/menu",
+                    //     key: "user-menu",
+                    //     text: "Menu",
+                    //     sub: false,
+                    // },
                 ],
             },
 

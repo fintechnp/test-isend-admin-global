@@ -1,14 +1,14 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button'
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm } from "redux-form";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -58,38 +58,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingRight: "4px",
 }));
 
-const ResetButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    border: `1px solid ${theme.palette.warning.main}`,
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-        border: `1px solid ${theme.palette.warning.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
-const SearchButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-        border: `1px solid ${theme.palette.primary.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
 function SearchForm({ handleSubmit, handleReset, partner_sending, partner_payout, loading }) {
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
@@ -285,14 +253,14 @@ function SearchForm({ handleSubmit, handleReset, partner_sending, partner_payout
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <ResetButton size="small" variant="outlined" onClick={handleResetButton} disabled={loading}>
+                                    <Button size="small" color="error" variant="contained" onClick={handleResetButton} disabled={loading}>
                                         Reset
-                                    </ResetButton>
+                                    </Button>
                                 </Grid>
                                 <Grid item>
-                                    <SearchButton loading={loading} size="small" variant="outlined" type="submit" disabled={loading}>
+                                    <Button loading={loading} size="small" variant="contained" type="submit" disabled={loading}>
                                         Search
-                                    </SearchButton>
+                                    </Button>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>

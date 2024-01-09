@@ -1,12 +1,12 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm } from "redux-form";
 
-import Validator from "../../../../../App/utils/validators";
-import TextAreaField from "../../../../../App/components/Fields/TextAreaField";
+import Validator from "App/utils/validators";
+import TextAreaField from "App/components/Fields/TextAreaField";
 
 const BlockBox = styled(Box)(({ theme }) => ({
     width: "100%",
