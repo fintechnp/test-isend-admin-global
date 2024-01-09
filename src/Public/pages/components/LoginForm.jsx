@@ -17,6 +17,12 @@ import { LOGIN_COUNTRY } from "App/global/constants";
 import { localStorageSave } from "App/helpers/localStorage";
 import sendingCountries from "Private/config/sendingCountries";
 
+import sendingCountries from "Private/config/sendingCountries";
+import { localStorageGet, localStorageSave } from "App/helpers/localStorage";
+import CountriesSelectFilter from "Private/components/country-states/CountriesSelectFilter";
+import FormSelect from "App/core/hook-form/FormSelect";
+import { Watch } from "@mui/icons-material";
+
 const Paper = styled(MuiPaper)(({ theme }) => ({
     minWidth: "100%",
     height: "100vh",
@@ -44,6 +50,7 @@ const FormContainer = styled("div")(({ theme }) => ({
 const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string().required("Password is required"),
+    selectedCountry: Yup.string().required("Country is required"),
 });
 
 const LoginForm = ({ onSubmit, loading }) => {
