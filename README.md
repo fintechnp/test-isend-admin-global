@@ -1,21 +1,35 @@
-# Resole production issue within vite.config.js file [May not not be required it is fixed]
+# iSend Global Admin
 
+This is an web app that for and administrative purpose which is accessed by compliance team to verify transaction created on `isendremit.com`, `agent.isendremit.com` and `biz.isendremit.com` 
 
-## Solution 2 (preferred but not tested)
+# Running project locally
 
-Problem [module not defined in redux-form after migrating to create react app to vite](https://github.com/FredKSchott/snowpack/discussions/2567)
-
-Solution (replace import statement) [import {reduxForm} from "redux-form/dist/redux-form";](https://github.com/FredKSchott/snowpack/discussions/2567#discussioncomment-735653)
-## solution 1
-
-remove `module: undefined` definition from `vite.config.js`
-
+1. Clone the repo 
 ```
-define: {
-  module: undefined,
-}
+git clone git@github.com:fintechnp/isend-global-admin.git
 ```
 
-With above configuration. it is working file in development but not working in production. This problem is caused by redux-form package.
+2. setting up environment file
+```
+cp .env.example .env.development
+```
+make a necessary changes in `.env.environment` file
 
+3. running development server
+```
+npm run dev
+```
+
+# Getting production build
+
+1. setting up environment file
+```
+cp .env.example .env.production
+```
+make a necessary changes in `.env.environment` file
+
+2. running development server
+```
+npm run build:production
+```
 
