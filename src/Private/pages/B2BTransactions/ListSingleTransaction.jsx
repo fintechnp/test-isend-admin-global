@@ -1,12 +1,9 @@
-import { format } from "date-fns";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
 import Spacer from "App/components/Spacer/Spacer";
@@ -14,10 +11,7 @@ import { TablePagination } from "App/components/Table";
 import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import buildRoute from "App/helpers/buildRoute";
-import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 import singleTransactionActions from "Private/features/b2b-transactions/singleTransactionActions";
@@ -30,8 +24,6 @@ const initialState = {
 
 export default function ListSingleTransaction() {
     const dispatch = useDispatch();
-
-    const navigate = useNavigate();
 
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -132,7 +124,7 @@ export default function ListSingleTransaction() {
 
     return (
         <PageContent title="Single Transactions">
-            <SingleTransactionFilterForm onSubmit={handleSearch} onReset={handleReset} />
+            <SingleTransactionFilterForm onSubmit={handleSearch} onReset={handleReset} loading={loading} />
 
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
