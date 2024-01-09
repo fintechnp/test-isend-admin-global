@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { Helmet } from "react-helmet-async";
 
 const NotFoundContainer = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -22,24 +21,14 @@ const StyledText = styled(Typography)(({ theme }) => ({
 
 const PageNotFound = (props) => {
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <NotFoundContainer
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-            >
-                <Grid item xs={12}>
-                    <StyledNumber>404</StyledNumber>
-                </Grid>
-                <Grid item xs={12}>
-                    <StyledText>Page not found.</StyledText>
-                </Grid>
-            </NotFoundContainer>
-        </>
+        <NotFoundContainer container direction="column" justifyContent="center" alignItems="center">
+            <Grid item xs={12}>
+                <StyledNumber>404</StyledNumber>
+            </Grid>
+            <Grid item xs={12}>
+                <StyledText>Page not found.</StyledText>
+            </Grid>
+        </NotFoundContainer>
     );
 };
 
