@@ -1,19 +1,13 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { AuthConsumer } from "../../auth";
+import React, { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import AuthUtility from "App/utils/AuthUtility";
 
-const PublicLayout = () => (
-    <AuthConsumer>
-        {(authContext) => {
-            return !(authContext && authContext.isUserLoggedIn) ? (
-                <>
-                    <Outlet />
-                </>
-            ) : (
-                <Navigate to="/" replace />
-            );
-        }}
-    </AuthConsumer>
-);
+const PublicLayout = () => {
+    useEffect(() => {
+        AuthUtility.logOut();
+    }, []);
+
+    return <Outlet />;
+};
 
 export default PublicLayout;
