@@ -16,11 +16,13 @@ function ResetPassword() {
 
     const [searchParams] = useSearchParams();
 
-    const apiBaseUrl = Buffer.from(searchParams.get("base_url"), "base64").toString("utf-8");
+    const apiBaseUrl = Buffer.from(searchParams.get("base_url"), "base64")
+        .toString("utf-8")
+        .replace("http://", "https://");
 
     let { success, loading } = useSelector((state) => state.reset_password);
 
-    if(isEmpty(apiBaseUrl)) return <PageNotFound/>
+    if (isEmpty(apiBaseUrl)) return <PageNotFound />;
 
     useEffect(() => {
         dispatch(reset("reset_password_form"));
@@ -37,10 +39,12 @@ function ResetPassword() {
     const handleReset = (data) => {
         data.code = code;
         data.user_id = user_id;
-        dispatch(actions.reset_password({
-            ...data,
-            api_base_url: apiBaseUrl
-        }));
+        dispatch(
+            actions.reset_password({
+                ...data,
+                api_base_url: apiBaseUrl,
+            }),
+        );
     };
 
     return (
