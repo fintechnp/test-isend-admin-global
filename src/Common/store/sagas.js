@@ -86,8 +86,9 @@ export const get_all_reference = takeEvery(actions.GET_ALL_REFERENCE, function* 
 
 export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action) {
     const api = new Api();
+    const { api_base_url, ...data } = action.data;
     try {
-        const res = yield call(api.post, `account/resetpassword`, action.data);
+        const res = yield call(api.post, `${api_base_url}account/resetpassword`, data);
         yield put({
             type: actions.PASSWORD_RESET_SUCCESS,
             response: res,
