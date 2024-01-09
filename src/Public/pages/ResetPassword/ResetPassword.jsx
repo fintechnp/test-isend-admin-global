@@ -18,7 +18,7 @@ function ResetPassword() {
 
     const apiBaseUrl = Buffer.from(searchParams.get("base_url"), "base64").toString("utf-8");
 
-    const { success, loading } = useSelector((state) => state.reset_password);
+    let { success, loading } = useSelector((state) => state.reset_password);
 
     if(isEmpty(apiBaseUrl)) return <PageNotFound/>
 
