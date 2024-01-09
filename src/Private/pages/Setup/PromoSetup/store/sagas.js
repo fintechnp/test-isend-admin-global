@@ -16,7 +16,7 @@ export const getPromoSetup = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PROMO_SETUP_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -34,7 +34,7 @@ export const getPromoSetupDetails = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PROMO_SETUP_DETAILS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -53,9 +53,9 @@ export const addPromoSetup = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_PROMO_SETUP_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -77,9 +77,9 @@ export const updatePromoSetup = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PROMO_SETUP_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -101,7 +101,7 @@ export const updatePromoSetupStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PROMO_SETUP_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -120,7 +120,7 @@ export const deletePromoSetup = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_PROMO_SETUP_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -143,7 +143,7 @@ export const getPromoCode = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PROMO_CODE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -164,7 +164,7 @@ export const deletePromoCode = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_PROMO_CODE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -187,9 +187,9 @@ export const addPromoCode = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_PROMO_CODE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -211,9 +211,9 @@ export const importPromoCode = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.PROMO_CODE_IMPORT_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -235,7 +235,7 @@ export const updatePromoCodeStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PROMO_CODE_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

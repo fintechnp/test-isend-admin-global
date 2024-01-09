@@ -1,14 +1,14 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm } from "redux-form";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -58,39 +58,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingRight: "4px",
 }));
 
-const ResetButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    border: `1px solid ${theme.palette.warning.main}`,
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-        border: `1px solid ${theme.palette.warning.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
-const SearchButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-        border: `1px solid ${theme.palette.primary.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
 function SearchForm({
     handleSubmit,
     handleReset,
@@ -99,6 +66,7 @@ function SearchForm({
     PayPartner,
     SendPartner,
     handlePayPartner,
+    loading,
 }) {
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
@@ -120,9 +88,7 @@ function SearchForm({
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <ContentPasteSearchIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
+                        <ContentPasteSearchIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                         <Title> Filter Transaction </Title>
                     </Box>
                 </TitleWrapper>
@@ -171,10 +137,7 @@ function SearchForm({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -189,9 +152,7 @@ function SearchForm({
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {s_loading
-                                        ? "Loading..."
-                                        : "Select Send Partner"}
+                                    {s_loading ? "Loading..." : "Select Send Partner"}
                                 </option>
                                 {!s_loading && SendPartner?.length === 0 && (
                                     <option value="" disabled>
@@ -200,10 +161,7 @@ function SearchForm({
                                 )}
                                 {SendPartner &&
                                     SendPartner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -218,9 +176,7 @@ function SearchForm({
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {p_loading
-                                        ? "Loading..."
-                                        : "Select Payout Partner"}
+                                    {p_loading ? "Loading..." : "Select Payout Partner"}
                                 </option>
                                 {!p_loading && PayPartner?.length === 0 && (
                                     <option value="" disabled>
@@ -234,10 +190,7 @@ function SearchForm({
                                 )}
                                 {PayPartner &&
                                     PayPartner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -256,13 +209,9 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date("2021-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: maxDate
-                                        ? new Date(maxDate)
-                                              .toISOString()
-                                              .slice(0, 10)
+                                        ? new Date(maxDate).toISOString().slice(0, 10)
                                         : new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -281,12 +230,8 @@ function SearchForm({
                                 }}
                                 inputProps={{
                                     min: minDate
-                                        ? new Date(minDate)
-                                              .toISOString()
-                                              .slice(0, 10)
-                                        : new Date("2021-01-01")
-                                              .toISOString()
-                                              .slice(0, 10),
+                                        ? new Date(minDate).toISOString().slice(0, 10)
+                                        : new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -304,42 +249,24 @@ function SearchForm({
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 1)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
                             </Field>
                         </FieldWrapperLabel>
                         <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
-                                name="status"
-                                placeholder="status"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
+                            <Field name="status" placeholder="status" type="text" small={12} component={SelectField}>
                                 <option disabled value="">
                                     Select Status
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 66
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 66)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -354,22 +281,20 @@ function SearchForm({
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <ResetButton
+                                    <Button
+                                        color="error"
                                         size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         onClick={handleResetButton}
+                                        disabled={loading}
                                     >
                                         Reset
-                                    </ResetButton>
+                                    </Button>
                                 </Grid>
                                 <Grid item>
-                                    <SearchButton
-                                        size="small"
-                                        variant="outlined"
-                                        type="submit"
-                                    >
+                                    <Button size="small" variant="contained" type="submit" disabled={loading}>
                                         Filter
-                                    </SearchButton>
+                                    </Button>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>
@@ -380,6 +305,4 @@ function SearchForm({
     );
 }
 
-export default reduxForm({ form: "search_form_suspicious_reports" })(
-    SearchForm
-);
+export default reduxForm({ form: "search_form_suspicious_reports" })(SearchForm);

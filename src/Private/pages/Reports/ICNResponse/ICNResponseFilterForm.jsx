@@ -46,7 +46,7 @@ const schema = Yup.object().shape({
         .required("From date is required"),
 });
 
-function ICNResponseFilterForm({ onSubmit, onReset }) {
+function ICNResponseFilterForm({ onSubmit, onReset, loading }) {
     const maxDate = dateUtils.today();
     const minDate = moment(maxDate).subtract(30, "days").format("YYYY-MM-DD");
 
@@ -101,8 +101,12 @@ function ICNResponseFilterForm({ onSubmit, onReset }) {
                 </Grid>
                 <Grid item xs={12}>
                     <FormButtonContainer>
-                        <CancelButton onClick={handleReset}>Reset</CancelButton>
-                        <SubmitButton type="submit">Filter</SubmitButton>
+                        <CancelButton onClick={handleReset} disabled={loading}>
+                            Reset
+                        </CancelButton>
+                        <SubmitButton type="submit" disabled={loading}>
+                            Filter
+                        </SubmitButton>
                     </FormButtonContainer>
                 </Grid>
             </Grid>

@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
+import SearchTextField from "App/components/Fields/SearchTextField";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -88,19 +89,7 @@ function Filter({
     return (
         <FilterWrapper>
             <SearchBox>
-                <TextField
-                    type="search"
-                    variant="outlined"
-                    placeholder="Search"
-                    onChange={handleSearch}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <SearchTextField onChange={handleSearch}/>
             </SearchBox>
 
             <DropWrapper>

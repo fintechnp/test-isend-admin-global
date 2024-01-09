@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
 import { Helmet } from "react-helmet-async";
-import { useSelector, useDispatch } from "react-redux";
+import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
+import { useSelector, useDispatch } from "react-redux";
+import { Box, Tooltip, Typography } from "@mui/material";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -56,9 +57,7 @@ const ExchangeRate = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: servicecharge_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_exchange_rate
-    );
+    const { response: servicecharge_data, loading: g_loading } = useSelector((state) => state.get_all_exchange_rate);
 
     useEffect(() => {
         dispatch(actions.get_all_exchange_rate(filterSchema));
@@ -121,7 +120,7 @@ const ExchangeRate = (props) => {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}`
+                                        `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}`,
                                     )
                                 }
                             >
@@ -139,7 +138,7 @@ const ExchangeRate = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -154,15 +153,14 @@ const ExchangeRate = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -202,38 +200,30 @@ const ExchangeRate = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header
-                    title="Partnerwise Exchange Rate"
-                    buttonText="Add Exchange Rate"
-                />
-                <Filter
-                    state={filterSchema}
-                    sortData={sortData}
-                    orderData={orderData}
-                    handleSearch={handleSearch}
-                    handleOrder={handleOrder}
-                    handleSort={handleSort}
-                />
-                <Table
-                    columns={columns}
-                    data={servicecharge_data?.data || []}
-                    loading={g_loading || false}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={servicecharge_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent documentTitle="Partnerwise Exchange Rate">
+            <Header title="Partnerwise Exchange Rate" buttonText="Add Exchange Rate" />
+            <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
+                handleSearch={handleSearch}
+                handleOrder={handleOrder}
+                handleSort={handleSort}
+            />
+            <Table
+                columns={columns}
+                data={servicecharge_data?.data || []}
+                loading={g_loading || false}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={servicecharge_data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

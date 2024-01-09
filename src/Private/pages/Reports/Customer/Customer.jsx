@@ -1,21 +1,24 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
-import { reset } from "redux-form";
-import { Link } from "react-router-dom";
 import moment from "moment";
-import { Helmet } from "react-helmet-async";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { reset } from "redux-form";
+import Box from '@mui/material/Box'
+import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
+import Tooltip from '@mui/material/Tooltip'
+import { styled } from "@mui/material/styles";
+import Typography from '@mui/material/Typography'
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
-import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
-import Loading from "./../../../../App/components/Loading";
+import Loading from "App/components/Loading";
+import PageContent from "App/components/Container/PageContent";
+import Table, { TablePagination } from "App/components/Table";
+
+import actions from "../store/actions";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import { CountryName, ReferenceName, FormatDate } from "./../../../../App/helpers";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import { CountryName, ReferenceName, FormatDate } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -442,17 +445,14 @@ function CustomerReports(props) {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <Grid container sx={{ pb: "24px" }}>
+       <PageContent title="Filter Customers" disableBorder>
+          <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <SearchForm
                         onSubmit={handleSearch}
                         handlePartner={handlePartner}
                         handleReset={handleReset}
-                        loading={p_loading}
+                        loading={l_loading}
                         partner={SendingPartner?.data}
                         initialValues={{
                             created_from_date: moment().format("YYYY-MM-DD"),
@@ -503,7 +503,7 @@ function CustomerReports(props) {
                     </Grid>
                 )}
             </Grid>
-        </>
+       </PageContent>
     );
 }
 

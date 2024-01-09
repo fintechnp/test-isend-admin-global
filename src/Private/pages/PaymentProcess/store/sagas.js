@@ -16,7 +16,7 @@ export const getTransactionDetails = takeEvery(actions.GET_TRANSACTION_DETAILS, 
     } catch (error) {
         yield put({
             type: actions.GET_TRANSACTION_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -31,7 +31,7 @@ export const getTransactionRefundBlock = takeEvery(actions.GET_TRANSACTION_REFUN
     } catch (error) {
         yield put({
             type: actions.GET_TRANSACTION_REFUND_BLOCK_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -47,7 +47,7 @@ export const getPaymentPending = takeEvery(actions.GET_PENDING_PAYMENT, function
     } catch (error) {
         yield put({
             type: actions.GET_PENDING_PAYMENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -62,7 +62,7 @@ export const getPendingTransactions = takeEvery(actions.GET_PENDING_TRANSACTIONS
     } catch (error) {
         yield put({
             type: actions.GET_PENDING_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -77,7 +77,7 @@ export const getBlockedTransactions = takeEvery(actions.GET_BLOCKED_TRANSACTIONS
     } catch (error) {
         yield put({
             type: actions.GET_BLOCKED_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -92,7 +92,7 @@ export const getAmlSuspicious = takeEvery(actions.GET_AML_SUSPICIOUS, function* 
     } catch (error) {
         yield put({
             type: actions.GET_AML_SUSPICIOUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -110,7 +110,7 @@ export const getDetailsAmlSuspicious = takeEvery(actions.GET_AML_SUSPICIOUS_DETA
     } catch (error) {
         yield put({
             type: actions.GET_AML_SUSPICIOUS_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -125,7 +125,7 @@ export const getExceptionTransactions = takeEvery(actions.GET_EXCEPTION_TRANSACT
     } catch (error) {
         yield put({
             type: actions.GET_EXCEPTION_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -141,7 +141,7 @@ export const updatePaymentPending = takeEvery(actions.RELEASE_PENDING_PAYMENT, f
     } catch (error) {
         yield put({
             type: actions.RELEASE_PENDING_PAYMENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -158,7 +158,7 @@ export const blockTransactions = takeEvery(actions.BLOCK_TRANSACTIONS, function*
     } catch (error) {
         yield put({
             type: actions.BLOCK_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -175,7 +175,7 @@ export const refundTransactions = takeEvery(actions.REFUND_TRANSACTIONS, functio
     } catch (error) {
         yield put({
             type: actions.REFUND_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -192,7 +192,7 @@ export const updateBlockedTransactions = takeEvery(actions.RELEASE_BLOCKED_TRANS
     } catch (error) {
         yield put({
             type: actions.RELEASE_BLOCKED_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -209,7 +209,7 @@ export const updateAmlSuspicious = takeEvery(actions.RELEASE_AML_SUSPICIOUS, fun
     } catch (error) {
         yield put({
             type: actions.RELEASE_AML_SUSPICIOUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -226,7 +226,7 @@ export const updateExceptionTransactions = takeEvery(actions.RELEASE_EXCEPTION_T
     } catch (error) {
         yield put({
             type: actions.RELEASE_EXCEPTION_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -242,7 +242,7 @@ export const getTransactionDocuments = takeEvery(actions.GET_TRANSACTION_DOCUMEN
     } catch (error) {
         yield put({
             type: actions.GET_TRANSACTION_DOCUMENTS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -257,7 +257,7 @@ export const getSanctionDetails = takeEvery(actions.GET_SANCTION_DETAILS, functi
     } catch (error) {
         yield put({
             type: actions.GET_SANCTION_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

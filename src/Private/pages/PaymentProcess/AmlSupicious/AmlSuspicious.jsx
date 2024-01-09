@@ -7,12 +7,9 @@ import MuiIconButton from "@mui/material/IconButton";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Release } from "App/components";
-import Spacer from "App/components/Spacer/Spacer";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
-import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
 
-import app from "App/config/app";
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
 import Filter from "./../components/Filter";
@@ -264,11 +261,10 @@ const AmlSuspicious = (props) => {
     );
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },

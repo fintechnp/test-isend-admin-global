@@ -20,7 +20,7 @@ export const getDocuments = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_DOCUMENTS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -39,7 +39,7 @@ export const getDocumentsById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_DOCUMENTS_BYID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -63,7 +63,7 @@ export const uploadDocuments = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPLOAD_DOCUMENTS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -85,7 +85,7 @@ export const updateKyc = takeEvery(actions.UPDATE_KYC, function* (action) {
     } catch (error) {
         yield put({
             type: actions.UPDATE_KYC_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -107,7 +107,7 @@ export const deleteDocuments = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_DOCUMENTS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

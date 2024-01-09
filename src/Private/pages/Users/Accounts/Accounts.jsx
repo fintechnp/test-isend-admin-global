@@ -1,13 +1,13 @@
 import { Grid } from "@mui/material";
-import { Helmet } from "react-helmet-async";
 import { useDispatch } from "react-redux";
 import React, { useEffect } from "react";
 
 import actions from "./store/actions";
 import Numbers from "./components/Numbers";
 import AccountTable from "./components/AccountTable";
+import PageContent from "App/components/Container/PageContent";
 
-function Accounts(props) {
+function Accounts() {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,10 +21,7 @@ function Accounts(props) {
     }, []);
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
+        <PageContent documentTitle="User Accounts">
             <Grid container spacing={2} sx={{ paddingTop: "8px" }}>
                 <Grid item xs={12}>
                     <Numbers />
@@ -33,7 +30,7 @@ function Accounts(props) {
                     <AccountTable />
                 </Grid>
             </Grid>
-        </>
+        </PageContent>
     );
 }
 

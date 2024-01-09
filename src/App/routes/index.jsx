@@ -6,7 +6,6 @@ import React, { useEffect, Suspense } from "react";
 import showToast from "../components/Toast";
 import { publicRoutes } from "../../Public";
 import { privateRoutes } from "../../Private";
-import Loading from "./../../App/components/Loading";
 import PageNotFound from "../components/PageNotFound";
 import { PublicLayout, PrivateLayout } from "../layouts";
 

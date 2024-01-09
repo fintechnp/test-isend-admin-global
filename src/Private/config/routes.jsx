@@ -111,9 +111,6 @@ const Messages = lazy(() => import("../pages/Messages"));
 //My Account
 const MyAccount = lazy(() => import("../pages/MyAccount"));
 
-//Accounting
-const Accounting = lazy(() => import("../pages/Accounting"));
-
 const ListBanner = lazy(() => import("../pages/Setup/Banner/ListBanner"));
 const ListBulkEmail = lazy(() => import("../pages/BulkEmail/ListBulkEmail"));
 const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
@@ -178,6 +175,171 @@ const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
 // B2b Account
 
 const ListB2bAccount = lazy(() => import("../pages/B2BAccount/ListAllAccounts"));
+
+// //Dashboard
+// import Dashboard from "../pages/Dashboard";
+
+// //users
+// import Accounts from "../pages/Users/Accounts";
+// import AddUserKyc from "../pages/Users/Accounts/AddUserKyc";
+// import EditUserKyc from "../pages/Users/Accounts/EditUserKyc";
+// import Menu from "../pages/Users/Menu";
+// import SubMenu from "../pages/Users/SubMenu";
+
+// //users permission
+// import UserPermission from "../pages/Users/UserPermission";
+
+// //setup
+// import DeliveryOption from "../pages/Setup/DeliveryOption";
+// import DeliveryRoute from "../pages/Setup/DeliveryRoute";
+// import ExchangeRate from "../pages/Setup/ExchangeRate";
+// import ExchangeRateList from "../pages/Setup/ExchangeRate/ExchangeRateList";
+// import AddUpdateExchangeRate from "../pages/Setup/ExchangeRate/AddUpdateExchangeRate";
+// import ExchangeRateDetails from "../pages/Setup/ExchangeRate/ExchangeRateDetails";
+// import Partner from "../pages/Setup/Partner";
+// import AddUpdatePartner from "../pages/Setup/Partner/AddUpdatePartner";
+// import PartnerDetails from "../pages/Setup/Partner/PartnerDetails";
+// import Corridor from "../pages/Setup/Partner/Corridor";
+// import PartnerBranch from "../pages/Setup/Partner/PartnerBranch";
+// import AddPartnerBranch from "../pages/Setup/Partner/PartnerBranch/AddBranch";
+// import PartnerBank from "../pages/Setup/PartnerBank";
+// import MapBank from "../pages/Setup/PartnerBank/MapBank";
+// import PayoutLocation from "../pages/Setup/PayoutLocation";
+// import Reference from "../pages/Setup/Reference";
+// import ReferenceData from "../pages/Setup/Reference/ReferenceData";
+// import ServiceCharge from "../pages/Setup/ServiceCharge";
+// import ServiceChargeList from "../pages/Setup/ServiceCharge/ServiceChargeList";
+// import AddUpdateServiceCharge from "../pages/Setup/ServiceCharge/AddUpdateServiceCharge";
+// import ServiceChargeDetails from "../pages/Setup/ServiceCharge/ServiceChargeDetails";
+// import PromoSetup from "../pages/Setup/PromoSetup";
+// import PromoCode from "../pages/Setup/PromoSetup/PromoCode";
+// import ApiConfiguration from "../pages/Setup/ApiConfiguration";
+// import LanguageSetup from "../pages/Setup/LanguageSetup/LanguageSetup";
+// import LanguageCountry from "../pages/Setup/LanguageCountry/LanguageCountry";
+// import AddLanguage from "../pages/Setup/AddLanguage/AddLanguage";
+// import LocalizationDetails from "../pages/Setup/LocalizationDetails/LocalizationDetails";
+// import StreetType from "../pages/Setup/StreetType/StreetType";
+
+// //Customers
+// import CustomerSearch from "../pages/Customers/Search";
+// import CreateCustomer from "../pages/Customers/CreateCustomer";
+// import CustomerDetails from "../pages/Customers/CustomerDetails";
+// import AllBeneficiary from "../pages/Customers/Beneficiary";
+// import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
+// import BeneficiaryDetails from "../pages/Customers/Beneficiary/Details";
+// import CustomerTransactions from "../pages/Customers/Transactions";
+// import CustomerBanks from "../pages/Customers/Banks/Banks";
+// import AllBanks from "../pages/Customers/AllBanks/BankList";
+
+// //Documents
+// import Documents from "../pages/Customers/Documents";
+
+// //remarks
+// import CustomerRemarks from "../pages/Customers/Remarks";
+
+// //Transactions
+// import CreateTransactions from "../pages/Transactions/Create";
+// import DailyTransactions from "../pages/Transactions/DailyTransactions";
+// import SearchTransactions from "../pages/Transactions/Search";
+// import TransactionRemarks from "../pages/Transactions/Remarks";
+
+// //Reports
+// import CustomerReport from "../pages/Reports/Customer";
+// import BeneficiaryReport from "../pages/Reports/Beneficiary";
+// import YearlyTransactions from "../pages/Reports/YearlyTransactions";
+// import TransactionsSummary from "../pages/Reports/TransactionsSummary";
+// import CancelledTransactions from "../pages/Reports/CancelledTransactions";
+// import ACHEntriesReport from "../pages/Reports/ACHEntries/ACHEntriesReport";
+// import SuspiciousTransactions from "../pages/Reports/SuspiciousTransactions";
+// import ICNResponseReport from "../pages/Reports/ICNResponse/ICNResponseReport";
+// import UserIPWhitelistReport from "../pages/Reports/UserIPWhitelist/UserIPWhitelistReport";
+// import IncompleteRegistrationReport from "../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport";
+// import OnfidoReport from "../pages/Reports/OnfidoReports/OnfidoReport";
+
+// //PaymentProcess
+// import PendingPayment from "../pages/PaymentProcess/PendingPayment";
+// import PendingTransactions from "../pages/PaymentProcess/PendingTransactions";
+// import BlockedTransactions from "../pages/PaymentProcess/BlockedTransactions";
+// import Search from "../pages/PaymentProcess/Search";
+// import AmlSupicious from "../pages/PaymentProcess/AmlSupicious";
+// import ExceptionTransactions from "../pages/PaymentProcess/ExceptionTransactions";
+// import TransactionsDetails from "../pages/PaymentProcess/Details";
+// import TransactionDocuments from "../pages/PaymentProcess/Details/Documents";
+
+// //Utilities
+// import Sms from "../pages/Utilities/Sms";
+// import Email from "../pages/Utilities/Email";
+// import Fcm from "../pages/Utilities/Fcm";
+
+// //Compliance
+// import SanctionList from "../pages/Compliance/SanctionList";
+// import CompliancePaymentRules from "../pages/Compliance/PaymentRules";
+
+// //Settings
+// import Settings from "../pages/Settings";
+
+// //Messages
+// import Messages from "../pages/Messages";
+
+// //My Account
+// import MyAccount from "../pages/MyAccount";
+
+// import ListBanner from "../pages/Setup/Banner/ListBanner";
+// import ListBulkEmail from "../pages/BulkEmail/ListBulkEmail";
+// import ListCountryState from "../pages/Setup/CountryState/ListCountryState";
+// import ListFundingSource from "../pages/Setup/FundingSource/ListFundingSource";
+
+// //Market Maker
+// import ListMarketMaker from "../pages/MarketMaker/ListMarketMaker";
+// import AddMarketMaker from "../pages/MarketMaker/AddMarketMaker";
+// import ViewMarketMaker from "../pages/MarketMaker/ViewMarketMaker";
+// import UpdateMarketMaker from "../pages/MarketMaker/UpdateMarketMaker";
+// import AddMarketMakerKyb from "../pages/MarketMaker/AddMarketMakerKyb";
+// import AddMarketMakerKyc from "../pages/MarketMaker/AddMarketMakerKyc";
+// import UpdateMarketMakerKyb from "../pages/MarketMaker/UpdateMarketMakerKyb";
+// import UpdateMarketMakerKyc from "../pages/MarketMaker/UpdateMarketMakerKyc";
+
+// ///Credit Limit
+// import CreditLimit from "../pages/CreditLimit/CreditLimit";
+// import AddCreditLimit from "../pages/CreditLimit/AddCreditLimit";
+// import ViewCreditLimit from "../pages/CreditLimit/ViewCreditLimit";
+// import EditCreditLimit from "../pages/CreditLimit/EditCreditLimit";
+
+// // BALANCE REQUEST
+// import ListBalanceRequest from "../pages/BalanceRequest/ListBalanceRequest";
+// import ViewBalanceRequest from "../pages/BalanceRequest/ViewBalanceRequest";
+
+// //Business
+// import ListBusiness from "../pages/Business/ListBusiness";
+// import ViewBusiness from "../pages/Business/ViewBusiness";
+// import ListSingeTransaction from "../pages/B2BTransactions/ListSingleTransaction";
+// import ViewSingleTransaction from "../pages/B2BTransactions/ViewSingleTransaction";
+// import ListBatchTransaction from "../pages/B2BTransactions/ListBatchTransaction";
+// import ViewBatchTransaction from "../pages/B2BTransactions/ViewBatchTransaction";
+
+// // B2b Beneficiary
+// import ListB2bBeneficiary from "../pages/Beneficiary/ListBeneficiary";
+// import ViewB2bBeneficiary from "../pages/Beneficiary/ViewBeneficiary";
+
+// // BUSINESS SERVICE CHARGE
+// import ListBusinessServiceCharge from "../pages/BusinessServiceCharge/ListBusinessServiceCharge";
+// import AddBusinessServiceCharge from "../pages/BusinessServiceCharge/AddBusinessServiceCharge";
+// import UpdateBusinessServiceCharge from "../pages/BusinessServiceCharge/UpdateBusinessServiceCharge";
+
+// //LIST KYC USER
+// import ListKycUser from "../pages/KycUser/ListKycUser";
+// import ViewKycUser from "../pages/KycUser/ViewKycUser";
+// import AddMarketMakerUserKyc from "../pages/MarketMaker/AddMarketMakerUserKyc";
+// import EditMarketMakerUserKyc from "../pages/MarketMaker/EditMarketMakerUserKyc";
+
+// //Ledger
+// import ListLedger from "../pages/Ledger/ListLedger";
+// import ViewLedger from "../pages/Ledger/ViewLedger";
+// import AddLedger from "../pages/Ledger/AddLedger";
+
+// // B2b Account
+// import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
+
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -522,14 +684,7 @@ const privateRoutes = [
     //MyAccount
     { path: "/account", component: <MyAccount title="My Account" /> },
 
-    //Accounting
-    { path: "/accounting", component: <Accounting title="Accounting" /> },
-
-    //Accounting
-    { path: "/accounting", component: <Accounting title="Accounting" /> },
-
     //Agent
-
     { path: routePaths.agent.listMarketMaker, component: <ListMarketMaker /> },
     { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker /> },
     { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker /> },

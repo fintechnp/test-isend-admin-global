@@ -17,7 +17,7 @@ export const getBulkEmailCredential = takeEvery(actions.GET_BULK_EMAIL_CREDENTIA
     } catch (error) {
         yield put({
             type: actions.GET_BULK_EMAIL_CREDENTIAL_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -37,9 +37,9 @@ export const updateBulkEmailCredential = takeEvery(actions.UPDATE_BULK_EMAIL_CRE
     } catch (error) {
         yield put({
             type: actions.UPDATE_BULK_EMAIL_CREDENTIAL_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

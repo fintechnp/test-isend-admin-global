@@ -18,7 +18,7 @@ export const getBatchTransactions = takeEvery(batchTransactionActions.GET_BATCH_
     } catch (error) {
         yield put({
             type: batchTransactionActions.GET_BATCH_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -39,7 +39,7 @@ export const getBatchTransaction = takeEvery(batchTransactionActions.GET_BATCH_T
     } catch (error) {
         yield put({
             type: batchTransactionActions.GET_BATCH_TRANSACTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

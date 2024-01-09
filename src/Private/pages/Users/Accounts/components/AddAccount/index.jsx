@@ -59,7 +59,7 @@ const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
 }));
 
 const BootstrapDialogTitle = (props) => {
-    const { children, onClose, ...other } = props;
+    const { children, onClose, loading, ...other } = props;
 
     return (
         <DialogTitle
@@ -84,7 +84,7 @@ const BootstrapDialogTitle = (props) => {
                 <HeaderIcon />
             </Box>
             {children}
-            {onClose ? (
+            {typeof onClose === 'function' ? (
                 <CloseButton aria-label="close" onClick={onClose}>
                     <CloseIcon />
                 </CloseButton>
@@ -105,11 +105,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AddAccount({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const {
-        response: add_user,
-        success: add_success,
-        loading: add_loading,
-    } = useSelector((state) => state.add_user);
+    const { response: add_user, success: add_success, loading: add_loading } = useSelector((state) => state.add_user);
     const {
         response: update_user,
         success: update_success,
@@ -156,24 +152,19 @@ function AddAccount({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Account
                 </AddButton>
             )}
             <BootstrapDialog
-                onClose={handleClose}
+                onClose={add_loading || update_loading ? () => {} : handleClose}
                 TransitionComponent={Transition}
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
                 <BootstrapDialogTitle
                     id="customized-dialog-title"
-                    onClose={handleClose}
+                    onClose={add_loading || update_loading ? () => {} : handleClose}
                 >
                     {update ? "Update" : "Create New"} Account
                 </BootstrapDialogTitle>
@@ -183,8 +174,7 @@ function AddAccount({ update_data, update }) {
                             destroyOnUnmount
                             initialValues={{
                                 id: memoizedData?.id,
-                                first_name:
-                                    memoizedData && memoizedData?.first_name,
+                                first_name: memoizedData && memoizedData?.first_name,
                                 last_name: memoizedData?.last_name,
                                 user_type: memoizedData?.user_type,
                                 phone_number: memoizedData?.phone_number,

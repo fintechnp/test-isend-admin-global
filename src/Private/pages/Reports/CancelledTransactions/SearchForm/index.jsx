@@ -1,14 +1,15 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button'
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm } from "redux-form";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -98,6 +99,7 @@ function SearchForm({
     p_loading,
     PayPartner,
     SendPartner,
+    loading
 }) {
     const [minDate, setMinDate] = React.useState(null);
     const [maxDate, setMaxDate] = React.useState(null);
@@ -110,16 +112,6 @@ function SearchForm({
 
     return (
         <Container container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <ContentPasteSearchIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title> Filter Transaction </Title>
-                    </Box>
-                </TitleWrapper>
-            </Grid>
             <Grid item xs={12}>
                 <Form onSubmit={handleSubmit}>
                     <FormWrapper container direction="row">
@@ -256,22 +248,25 @@ function SearchForm({
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <ResetButton
+                                    <Button
+                                        color="error"
                                         size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         onClick={handleResetButton}
+                                        disabled={loading}
                                     >
                                         Reset
-                                    </ResetButton>
+                                    </Button>
                                 </Grid>
                                 <Grid item>
-                                    <SearchButton
+                                    <Button
                                         size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         type="submit"
+                                        disabled={loading}
                                     >
                                         Filter
-                                    </SearchButton>
+                                    </Button>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>

@@ -173,7 +173,6 @@ export default function Appbar({ handleDrawerToggle, open }) {
     dispatch({ type: "SET_THEME", mode: !mode });
   };
 
-  const handleSearch = (e) => {};
 
   const handleProfile = () => {
     setAnchorEl(null);
@@ -318,29 +317,6 @@ export default function Appbar({ handleDrawerToggle, open }) {
             columnGap: "4px",
           }}
         >
-          <SearchBar handleSearch={handleSearch} />
-          <RightIconButton
-            edge={false}
-            size="small"
-            disableRipple
-            onClick={handleTheme}
-          >
-            {mode ? (
-              <LightModeIcon fontSize="small" />
-            ) : (
-              <SettingsBrightnessIcon fontSize="small" />
-            )}
-          </RightIconButton>
-          <RightIconButton
-            edge="start"
-            size="small"
-            disableRipple
-            onClick={() => navigate("/messages")}
-          >
-            <Badge badgeContent={4} color="error">
-              <ChatBubbleOutlineIcon fontSize="medium" />
-            </Badge>
-          </RightIconButton>
           <ProfileIcon
             size="small"
             edge="end"
@@ -358,8 +334,9 @@ export default function Appbar({ handleDrawerToggle, open }) {
                 borderRadius: "6px",
                 fontSize: "14px",
                 textTransform: "capitalize",
+                background: theme => theme.palette.primary.main
               }}
-              {...stringAvatar(currentUser?.name || "Admin")}
+              {...stringAvatar(currentUser?.name)}
             />
             <OpenIcon />
           </ProfileIcon>

@@ -1,25 +1,26 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
 import { reset } from "redux-form";
+import Grid from "@mui/material/Grid";
+import { Helmet } from "react-helmet-async";
+import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import MuiIconButton from "@mui/material/IconButton";
+import { useDispatch, useSelector } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
+import { Block } from "App/components";
 import Filter from "./components/Header";
-import actions from "./store/actions";
 import SearchForm from "./components/Form";
+import Loading from "App/components/Loading";
 import NoResults from "./components/NoResults";
-import { Block } from "./../../../../App/components";
-import Loading from "./../../../../App/components/Loading";
-import { CountryName, ReferenceName } from "./../../../../App/helpers";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
+
+import actions from "./store/actions";
+import { CountryName, ReferenceName } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -463,7 +464,7 @@ function Search(props) {
                         onSubmit={handleSearch}
                         handleReset={handleReset}
                         SendPartner={SendPartner?.data || []}
-                        loading={p_loading}
+                        loading={l_loading}
                     />
                 </Grid>
                 {l_loading && (

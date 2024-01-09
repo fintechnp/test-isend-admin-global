@@ -1,28 +1,22 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { reset } from "redux-form";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
 import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
-import Loading from "./../../../../App/components/Loading";
+import Loading from "App/components/Loading";
+import PageContent from "App/components/Container/PageContent";
 
-import {
-    CountryName,
-    CurrencyName,
-    FormatNumber,
-    FormatDate,
-    ReferenceName,
-} from "./../../../../App/helpers";
+import { CountryName, CurrencyName, FormatNumber, FormatDate, ReferenceName } from "App/helpers";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -79,17 +73,11 @@ function CancelledTransactions(props) {
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: CancelledTransactions, loading: l_loading } = useSelector(
-        (state) => state.get_cancelled_report
-    );
+    const { response: CancelledTransactions, loading: l_loading } = useSelector((state) => state.get_cancelled_report);
 
-    const { response: SendPartner, loading: s_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: SendPartner, loading: s_loading } = useSelector((state) => state.get_sending_partner);
 
-    const { response: PayPartner, loading: p_loading } = useSelector(
-        (state) => state.get_payout_partner
-    );
+    const { response: PayPartner, loading: p_loading } = useSelector((state) => state.get_payout_partner);
 
     const {
         response: ReportsDownload,
@@ -135,9 +123,7 @@ function CancelledTransactions(props) {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p">
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
+                        <StyledName component="p">{data.value ? data.value : "N/A"}</StyledName>
                     </Box>
                 ),
             },
@@ -165,9 +151,7 @@ function CancelledTransactions(props) {
                             }}
                         >
                             {data?.row?.original?.collected_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.collected_currency
-                                  )
+                                ? CurrencyName(data?.row?.original?.collected_currency)
                                 : "N/A"}
                         </StyledName>
                     </Box>
@@ -197,9 +181,7 @@ function CancelledTransactions(props) {
                             }}
                         >
                             {data?.row?.original?.payout_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.payout_currency
-                                  )
+                                ? CurrencyName(data?.row?.original?.payout_currency)
                                 : "N/A"}
                         </StyledName>
                     </Box>
@@ -234,9 +216,7 @@ function CancelledTransactions(props) {
                             }}
                         >
                             {data?.row?.original?.service_charge
-                                ? FormatNumber(
-                                      data?.row?.original?.service_charge
-                                  )
+                                ? FormatNumber(data?.row?.original?.service_charge)
                                 : "N/A"}
                         </StyledName>
                     </Box>
@@ -272,9 +252,7 @@ function CancelledTransactions(props) {
                             }}
                         >
                             {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                                ? FormatNumber(data?.row?.original?.payout_amount)
                                 : "N/A"}
                         </StyledName>
                     </Box>
@@ -283,9 +261,7 @@ function CancelledTransactions(props) {
             {
                 Header: () => (
                     <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>
-                            Refund Date
-                        </Typography>
+                        <Typography sx={{ fontSize: "15px" }}>Refund Date</Typography>
                     </Box>
                 ),
                 accessor: "refund_ts",
@@ -299,7 +275,7 @@ function CancelledTransactions(props) {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -398,19 +374,11 @@ function CancelledTransactions(props) {
             ...filterSchema,
             page_size: 10000,
         };
-        dispatch(
-            actions.download_report(
-                updatedFilterSchema,
-                "report/transaction_cancel"
-            )
-        );
+        dispatch(actions.download_report(updatedFilterSchema, "report/transaction_cancel"));
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
+        <PageContent title="Cancelled Transactions" disableBorder>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <SearchForm
@@ -425,6 +393,7 @@ function CancelledTransactions(props) {
                         SendPartner={SendPartner?.data}
                         PayPartner={PayPartner?.data}
                         handleReset={handleReset}
+                        loading={l_loading}
                     />
                 </Grid>
                 {l_loading && (
@@ -432,13 +401,11 @@ function CancelledTransactions(props) {
                         <Loading loading={l_loading} />
                     </Grid>
                 )}
-                {!l_loading &&
-                    CancelledTransactions?.data &&
-                    CancelledTransactions?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Transaction Found" />
-                        </Grid>
-                    )}
+                {!l_loading && CancelledTransactions?.data && CancelledTransactions?.data?.length === 0 && (
+                    <Grid item xs={12}>
+                        <NoResults text="No Transaction Found" />
+                    </Grid>
+                )}
                 {!l_loading && CancelledTransactions?.data?.length > 0 && (
                     <Grid item xs={12}>
                         <CustomerWrapper>
@@ -462,13 +429,9 @@ function CancelledTransactions(props) {
                                 rowsPerPage={8}
                                 renderPagination={() => (
                                     <TablePagination
-                                        paginationData={
-                                            CancelledTransactions?.pagination
-                                        }
+                                        paginationData={CancelledTransactions?.pagination}
                                         handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={
-                                            handleChangeRowsPerPage
-                                        }
+                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                                     />
                                 )}
                             />
@@ -476,7 +439,7 @@ function CancelledTransactions(props) {
                     </Grid>
                 )}
             </Grid>
-        </>
+        </PageContent>
     );
 }
 

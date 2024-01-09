@@ -31,7 +31,7 @@ export const getAllLanguageValue = takeEvery(actions.GET_LANGUAGE_VALUE, functio
 //     } catch (error) {
 //         yield put({
 //             type: actions.GET_LANGUAGE_OPTION_DETAILS_FAILED,
-//             error: error.data,
+//             error: error?.data,
 //         });
 //     }
 // });
@@ -82,7 +82,7 @@ export const updateLanguageValue = takeEvery(actions.UPDATE_LANGUAGE_VALUE, func
 //     } catch (error) {
 //         yield put({
 //             type: actions.UPDATE_LANGUAGE_COUNTRY_STATUS_FAILED,
-//             error: error.data,
+//             error: error?.data,
 //         });
 //         yield put({ type: "SET_TOAST_DATA", response: error?.data });
 //     }
@@ -99,9 +99,9 @@ export const deleteLanguageValue = takeEvery(actions.DELETE_LANGUAGE_VALUE, func
     } catch (error) {
         yield put({
             type: actions.DELETE_LANGUAGE_VALUE_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

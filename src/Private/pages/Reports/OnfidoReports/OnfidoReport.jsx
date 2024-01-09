@@ -114,7 +114,7 @@ function OnfidoReport() {
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
-                    <OnfidoReportFilterForm onSubmit={handleSubmit} onReset={handleReset} />
+                    <OnfidoReportFilterForm onSubmit={handleSubmit} onReset={handleReset} loading={l_loading} />
                 </Grid>
 
                 {l_loading && (

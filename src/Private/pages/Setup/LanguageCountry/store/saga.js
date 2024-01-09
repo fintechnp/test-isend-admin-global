@@ -31,7 +31,7 @@ export const getAllLanguageCountry = takeEvery(actions.GET_LANGUAGE_COUNTRY, fun
 //     } catch (error) {
 //         yield put({
 //             type: actions.GET_LANGUAGE_OPTION_DETAILS_FAILED,
-//             error: error.data,
+//             error: error?.data,
 //         });
 //     }
 // });
@@ -47,9 +47,9 @@ export const addLanguageCountry = takeEvery(actions.ADD_LANGUAGE_COUNTRY, functi
     } catch (error) {
         yield put({
             type: actions.ADD_LANGUAGE_COUNTRY_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -64,9 +64,9 @@ export const updateLanguageCountry = takeEvery(actions.UPDATE_LANGUAGE_COUNTRY, 
     } catch (error) {
         yield put({
             type: actions.UPDATE_LANGUAGE_COUNTRY_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -82,7 +82,7 @@ export const updateLanguageCountryStatus = takeEvery(actions.UPDATE_LANGUAGE_COU
     } catch (error) {
         yield put({
             type: actions.UPDATE_LANGUAGE_COUNTRY_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -99,9 +99,9 @@ export const deleteLanguageCountry = takeEvery(actions.DELETE_LANGUAGE_COUNTRY, 
     } catch (error) {
         yield put({
             type: actions.DELETE_LANGUAGE_COUNTRY_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

@@ -5,14 +5,17 @@ import { useForm } from "react-hook-form";
 import MuiPaper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import SelectField from "App/components/Fields/SelectField";
+import FormSelect from "App/core/hook-form/FormSelect";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import HookFom from "App/core/hook-form/HookForm";
-import SubmitButton from "App/components/Button/SubmitButton";
-
 import FormTextField from "App/core/hook-form/FormTextField";
 import { ReactComponent as Logo } from "assets/long-logo.svg";
+import SubmitButton from "App/components/Button/SubmitButton";
+
+import { LOGIN_COUNTRY } from "App/global/constants";
+import { localStorageSave } from "App/helpers/localStorage";
+import sendingCountries from "Private/config/sendingCountries";
 
 import sendingCountries from "Private/config/sendingCountries";
 import { localStorageGet, localStorageSave } from "App/helpers/localStorage";
@@ -53,29 +56,28 @@ const schema = Yup.object().shape({
 const LoginForm = ({ onSubmit, loading }) => {
     const methods = useForm({
         resolver: yupResolver(schema),
+        defaultValues: {
+            loginCountry: sendingCountries[0].value
+        }
     });
 
-    const handleCountryChange = useCallback((event) => {
-        localStorageSave("loginCountry", event.target.value);
-    }, []);
-
-    const loginCountry = methods.watch("selectedCountry");
+    const loginCountry = methods.watch(LOGIN_COUNTRY);
 
     useEffect(() => {
-        if (loginCountry) localStorageSave("loginCountry", loginCountry);
+        if (loginCountry) localStorageSave(LOGIN_COUNTRY, loginCountry);
     }, [loginCountry]);
 
     return (
         <Paper square={true}>
             <FormContainer>
                 <HookFom onSubmit={onSubmit} {...methods}>
-                    <Box display="flex" flexDirection="column" gap={3}>
+                    <Box display="flex" flexDirection="column" gap={2}>
                         <Logo style={{ height: "100px" }} />
                         <Typography textAlign="center" variant="h6">
                             Sign In to your account
                         </Typography>
 
-                        <FormSelect name="selectedCountry" label="Select Country" options={sendingCountries} />
+                        <FormSelect name="loginCountry" label="Select Country" options={sendingCountries} />
 
                         <FormTextField size="small" name="email" label="Email" />
                         <FormTextField size="small" type="password" name="password" label="Password" />

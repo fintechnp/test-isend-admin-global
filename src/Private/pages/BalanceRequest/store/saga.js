@@ -31,7 +31,7 @@ export const getBalanceRequestByIdDetails = takeEvery(actions.GET_BALANCE_REQUES
     } catch (error) {
         yield put({
             type: actions.GET_BALANCE_REQUEST_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

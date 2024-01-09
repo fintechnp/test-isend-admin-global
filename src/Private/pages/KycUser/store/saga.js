@@ -31,7 +31,7 @@ export const getKycUserIdDetails = takeEvery(actions.GET_KYC_USER_DETAILS, funct
     } catch (error) {
         yield put({
             type: actions.GET_KYC_USER_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

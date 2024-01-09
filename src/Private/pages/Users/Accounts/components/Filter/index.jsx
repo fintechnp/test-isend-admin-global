@@ -1,13 +1,12 @@
+import React from "react";
+import MuiSelect from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import MenuItem from "@mui/material/MenuItem";
 import { Box, Typography } from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import MuiSelect from "@mui/material/Select";
 
-import React from "react";
+import SearchTextField from "App/components/Fields/SearchTextField";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -79,19 +78,7 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
     return (
         <FilterWrapper>
             <SearchBox>
-                <TextField
-                    type="search"
-                    variant="outlined"
-                    placeholder="Search"
-                    onChange={handleSearch}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+               <SearchTextField onChange={handleSearch}/>
             </SearchBox>
 
             <DropWrapper>

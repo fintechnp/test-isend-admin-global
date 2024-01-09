@@ -16,9 +16,9 @@ export const getAllPayoutLocation = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PAYOUT_LOCATION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -35,9 +35,9 @@ export const getPayoutLocationDetails = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_PAYOUT_LOCATION_DETAILS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -55,9 +55,9 @@ export const addPayoutLocation = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_PAYOUT_LOCATION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -79,9 +79,9 @@ export const updatePayoutLocation = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PAYOUT_LOCATION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -103,9 +103,9 @@ export const updatePayoutLocationStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PAYOUT_LOCATION_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -124,9 +124,9 @@ export const deletePayoutLocation = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_PAYOUT_LOCATION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );

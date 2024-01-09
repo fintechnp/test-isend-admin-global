@@ -1,13 +1,11 @@
 import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
+import Button from '@mui/material/Button'
 
 import HookForm from "App/core/hook-form/HookForm";
-import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import PageContent from "App/components/Container/PageContent";
-import FormDatePicker from "App/core/hook-form/FormDatePicker";
-import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 import { localStorageGet } from "App/helpers/localStorage";
 
 const orderByOptions = [
@@ -58,14 +56,14 @@ export default function FilterForm({ sortByOptions = [], setFilterSchema, loadin
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <ResetButton size="small" variant="outlined" onClick={handleReset}>
+                                <Button color="error" size="small" variant="contained" onClick={handleReset} disabled={loading}>
                                     Reset
-                                </ResetButton>
+                                </Button>
                             </Grid>
                             <Grid item>
-                                <SearchButton size="small" variant="outlined" type="submit">
+                                <Button size="small" variant="contained" type="submit" disabled={loading}> 
                                     Search
-                                </SearchButton>
+                                </Button>
                             </Grid>
                         </ButtonWrapper>
                     </Grid>

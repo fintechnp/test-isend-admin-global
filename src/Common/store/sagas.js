@@ -2,7 +2,7 @@ import { put, takeEvery, call, all } from "redux-saga/effects";
 
 import Api from "../../App/services/api";
 import actions from "./actions";
-import Cookies from "js-cookie";
+import AuthUtility from "App/utils/AuthUtility";
 
 const headers = {
     source: "web",
@@ -13,11 +13,11 @@ export const refreshToken = takeEvery(actions.REFRESH_TOKEN, function* (action) 
     try {
         const res = yield call(api.post, `account/refreshtoken`, action.data, headers);
         yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
-        Cookies.set("token", res.token);
-        Cookies.set("refreshToken", res.refresh_token);
+        AuthUtility.setAccessToken(res.token);
+        AuthUtility.setRefreshToken(res.refresh_token);
     } catch (error) {
-        yield put({ type: actions.REFRESH_TOKEN_FAILED, error: error });
         yield put({ type: "SET_TOAST_DATA", data: error?.data });
+        yield put({ type: actions.REFRESH_TOKEN_FAILED, error: error });
     }
 });
 
@@ -96,7 +96,7 @@ export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action
     } catch (error) {
         yield put({
             type: actions.PASSWORD_RESET_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -115,7 +115,7 @@ export const logout = takeEvery(actions.LOG_OUT, function* () {
     } catch (error) {
         yield put({
             type: actions.LOG_OUT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

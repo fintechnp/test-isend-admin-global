@@ -20,7 +20,7 @@ export const getAllPermission = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_ALL_PERMISSION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -43,7 +43,7 @@ export const createUserPermission = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_USER_PERMISSION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

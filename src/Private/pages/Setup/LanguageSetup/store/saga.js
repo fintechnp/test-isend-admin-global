@@ -31,7 +31,7 @@ export const getAllLanguageOptionDetails = takeEvery(actions.GET_LANGUAGE_OPTION
     } catch (error) {
         yield put({
             type: actions.GET_LANGUAGE_OPTION_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -47,9 +47,9 @@ export const addLanguageOption = takeEvery(actions.ADD_LANGUAGE_OPTION, function
     } catch (error) {
         yield put({
             type: actions.ADD_LANGUAGE_OPTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -64,9 +64,9 @@ export const updateLanguageOption = takeEvery(actions.UPDATE_LANGUAGE_OPTION, fu
     } catch (error) {
         yield put({
             type: actions.UPDATE_LANGUAGE_OPTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -82,7 +82,7 @@ export const updateLanguageOptionStatus = takeEvery(actions.UPDATE_LANGUAGE_OPTI
     } catch (error) {
         yield put({
             type: actions.UPDATE_LANGUAGE_OPTION_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -99,9 +99,9 @@ export const deleteLanguageOption = takeEvery(actions.DELETE_LANGUAGE_OPTION, fu
     } catch (error) {
         yield put({
             type: actions.DELETE_LANGUAGE_OPTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

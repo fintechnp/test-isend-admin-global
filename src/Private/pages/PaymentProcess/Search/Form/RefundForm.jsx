@@ -1,13 +1,13 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, reset } from "redux-form";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm, reset } from "redux-form";
 
-import Validator from "../../../../../App/utils/validators";
-import CheckboxField from "../../../../../App/components/Fields/CheckboxField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
+import Validator from "App/utils/validators";
+import SelectField from "App/components/Fields/SelectField";
+import CheckboxField from "App/components/Fields/CheckboxField";
 
 const BlockBox = styled(Box)(({ theme }) => ({
     width: "100%",

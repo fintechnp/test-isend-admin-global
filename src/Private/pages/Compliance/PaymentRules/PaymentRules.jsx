@@ -1,34 +1,20 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
+import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { Helmet } from "react-helmet-async";
 
-import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddPaymentRules from "./components/AddPaymentRules";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../App/components/Table";
-import { CountryName, FormatNumber } from "./../../../../App/helpers";
-import { Delete } from "./../../../../App/components";
+import Table, { TablePagination, TableSwitch } from "App/components/Table";
+import { Delete } from "App/components";
 
-const PaymentContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import actions from "./store/actions";
+import { CountryName, FormatNumber } from "App/helpers";
+import PageContent from "App/components/Container/PageContent";
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
     "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
@@ -91,18 +77,10 @@ const PaymentRules = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: paymentRules, loading: l_loading } = useSelector(
-        (state) => state.get_payment_rules
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_payment_rules
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.add_payment_rules
-    );
-    const { success: u_success } = useSelector(
-        (state) => state.update_payment_rules
-    );
+    const { response: paymentRules, loading: l_loading } = useSelector((state) => state.get_payment_rules);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_payment_rules);
+    const { success: a_success } = useSelector((state) => state.add_payment_rules);
+    const { success: u_success } = useSelector((state) => state.update_payment_rules);
 
     useEffect(() => {
         dispatch(actions.get_all_payment_rules(filterSchema));
@@ -133,18 +111,13 @@ const PaymentRules = (props) => {
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
                             {data.value ? data.value : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "10px", opacity: 0.7 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "10px", opacity: 0.7 }}>
                             {data?.row?.original?.send_country
                                 ? CountryName(data?.row?.original?.send_country)
                                 : "null"}{" "}
                             to{" "}
                             {data?.row?.original?.payout_country
-                                ? CountryName(
-                                      data?.row?.original?.payout_country
-                                  )
+                                ? CountryName(data?.row?.original?.payout_country)
                                 : "null"}
                         </Typography>
                     </Box>
@@ -162,10 +135,7 @@ const PaymentRules = (props) => {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "4px", fontSize: "13px" }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                         <StyledName
@@ -176,9 +146,7 @@ const PaymentRules = (props) => {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_agent
-                                ? data?.row?.original?.payout_agent
-                                : "N/A"}
+                            {data?.row?.original?.payout_agent ? data?.row?.original?.payout_agent : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -241,10 +209,7 @@ const PaymentRules = (props) => {
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="center">
-                        <StyledAction
-                            component="p"
-                            value={data.value ? data.value : "Null"}
-                        >
+                        <StyledAction component="p" value={data.value ? data.value : "Null"}>
                             {data.value ? data.value : "N/A"}
                         </StyledAction>
                     </Box>
@@ -260,11 +225,7 @@ const PaymentRules = (props) => {
                 width: 80,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="right">
-                        <TableSwitch
-                            value={data?.value}
-                            data={data?.row?.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data?.row?.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -285,10 +246,7 @@ const PaymentRules = (props) => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip
-                                    title="Hide Payment Rules Details"
-                                    arrow
-                                >
+                                <Tooltip title="Hide Payment Rules Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -301,10 +259,7 @@ const PaymentRules = (props) => {
                                     </IconButton>
                                 </Tooltip>
                             ) : (
-                                <Tooltip
-                                    title="Show Payment Rules Details"
-                                    arrow
-                                >
+                                <Tooltip title="Show Payment Rules Details" arrow>
                                     <IconButton>
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
@@ -318,10 +273,7 @@ const PaymentRules = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPaymentRules
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddPaymentRules update={true} update_data={row?.original} />
                         <Delete
                             id={row.original.tid}
                             handleDelete={handleDelete}
@@ -332,7 +284,7 @@ const PaymentRules = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -358,21 +310,18 @@ const PaymentRules = (props) => {
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(
-            actions.update_payemnt_rules_status({ is_active: is_active }, id)
-        );
+        dispatch(actions.update_payemnt_rules_status({ is_active: is_active }, id));
     }, []);
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleFilterAgent = (e) => {
@@ -425,37 +374,32 @@ const PaymentRules = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <PaymentContainer>
-                <Header />
-                <Filter
-                    handleSearch={handleSearch}
-                    handleFilterAgent={handleFilterAgent}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                    filterSchema={filterSchema}
-                />
-                <Table
-                    columns={columns}
-                    title="Payment Rules"
-                    data={paymentRules?.data || []}
-                    sub_columns={sub_columns}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    handleDelete={handleDelete}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={paymentRules?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </PaymentContainer>
-        </>
+        <PageContent documentTitle="Payment Rules">
+            <Header />
+            <Filter
+                handleSearch={handleSearch}
+                handleFilterAgent={handleFilterAgent}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                filterSchema={filterSchema}
+            />
+            <Table
+                columns={columns}
+                title="Payment Rules"
+                data={paymentRules?.data || []}
+                sub_columns={sub_columns}
+                loading={l_loading}
+                rowsPerPage={8}
+                handleDelete={handleDelete}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={paymentRules?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

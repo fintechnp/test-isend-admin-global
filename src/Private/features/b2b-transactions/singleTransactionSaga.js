@@ -17,7 +17,7 @@ export const getSingleTransactions = takeEvery(singleTransactionActions.GET_SING
     } catch (error) {
         yield put({
             type: singleTransactionActions.GET_SINGLE_TRANSACTIONS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -35,7 +35,7 @@ export const getSingleTransaction = takeEvery(singleTransactionActions.GET_SINGL
     } catch (error) {
         yield put({
             type: singleTransactionActions.GET_SINGLE_TRANSACTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

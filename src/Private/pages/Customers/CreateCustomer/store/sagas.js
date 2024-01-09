@@ -16,7 +16,7 @@ export const getCustomerById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_CUSTOMER_BYID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -35,7 +35,7 @@ export const createCustomers = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CREATE_CUSTOMERS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -59,7 +59,7 @@ export const updateCustomers = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_CUSTOMERS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

@@ -1,5 +1,5 @@
 const app = {
-    name: import.meta.REACT_APP_NAME ?? "iSend",
+    name: import.meta.REACT_APP_NAME ?? "iSend Global Admin",
 
     isDevelopmentMode: import.meta.env.MODE === "development",
 
