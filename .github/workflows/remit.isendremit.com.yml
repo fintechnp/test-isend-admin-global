@@ -1,4 +1,4 @@
-name: Upload remitadminapi.isendremit.com
+name: remit.isendremit.com
 
 on:
   workflow_dispatch:
