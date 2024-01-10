@@ -5,4 +5,4 @@ export const LEGEND_CONTAINER_ID = "legend-container";
 
 export const INTENDED_PATH = "intendedPath";
 
-export const LOGIN_COUNTRY = 'iSendGlobalAdmin.61c3f430f788c9f3a993eba593ec7c68.BasePathPrefix'
+export const LOGIN_COUNTRY = 'iSendGlobalAdmin.61c3f430f788c9f3a993eba593ec7c68.4039950939'
