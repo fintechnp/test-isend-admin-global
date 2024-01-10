@@ -5,7 +5,7 @@ import { preserveIntendedPath } from "App/routes";
 import { LOGIN_COUNTRY } from "App/global/constants";
 import AuthUtility from "App/utils/AuthUtility";
 import sendingCountries from "Private/config/sendingCountries";
-import { localStorageRemove } from "App/helpers/localStorage";
+import { localStorageGet, localStorageRemove } from "App/helpers/localStorage";
 
 let store;
 export const injectStore = (_store) => {
@@ -14,13 +14,14 @@ export const injectStore = (_store) => {
 
 export default class Api {
     constructor(setToken = true) {
-        const selectedCountry = localStorage.getItem(LOGIN_COUNTRY)?.toLowerCase();
+        
+        const selectedCountry = localStorageGet(LOGIN_COUNTRY)?.toLowerCase();
 
         const availableCountries = sendingCountries.map(c => c.value.toLowerCase());
 
         if(!availableCountries.includes(selectedCountry) && app.apiBaseUrl.match(/{country}/g)) {
-            localStorageRemove(LOGIN_COUNTRY);
-            window.location.href = '/'
+            AuthUtility.logOut();
+            window.location.href = '/login'
             return;
         }
         

@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect } from "react";
 import * as Yup from "yup";
 import Box from "@mui/material/Box";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
 import MuiPaper from "@mui/material/Paper";
+import { DevTool } from "@hookform/devtools";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import FormSelect from "App/core/hook-form/FormSelect";
 import { yupResolver } from "@hookform/resolvers/yup";
+import FormSelect from "App/core/hook-form/FormSelect";
+import { FormProvider, useForm } from "react-hook-form";
 
-import HookFom from "App/core/hook-form/HookForm";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { ReactComponent as Logo } from "assets/long-logo.svg";
 import SubmitButton from "App/components/Button/SubmitButton";
@@ -44,18 +44,20 @@ const FormContainer = styled("div")(({ theme }) => ({
 const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string().required("Password is required"),
-    loginCountry: Yup.string().required("Country is required"),
+    identifier: Yup.string().required("Country is required"),
 });
 
 const LoginForm = ({ onSubmit, loading }) => {
     const methods = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            loginCountry: sendingCountries[0].value
-        }
+            identifier: sendingCountries[0].value,
+        },
     });
 
-    const loginCountry = methods.watch(LOGIN_COUNTRY);
+    const { watch, control } = methods;
+
+    const loginCountry = watch("identifier");
 
     useEffect(() => {
         if (loginCountry) localStorageSave(LOGIN_COUNTRY, loginCountry);
@@ -64,22 +66,23 @@ const LoginForm = ({ onSubmit, loading }) => {
     return (
         <Paper square={true}>
             <FormContainer>
-                <HookFom onSubmit={onSubmit} {...methods}>
-                    <Box display="flex" flexDirection="column" gap={2}>
-                        <Logo style={{ height: "100px" }} />
-                        <Typography textAlign="center" variant="h6">
-                            Sign In to your account
-                        </Typography>
-
-                        <FormSelect name="loginCountry" label="Select Country" options={sendingCountries} />
-
-                        <FormTextField size="small" name="email" label="Email" />
-                        <FormTextField size="small" type="password" name="password" label="Password" />
-                        <SubmitButton size="large" isLoading={loading} role="button" name="login">
-                            {loading ? "Logging In" : "Login"}
-                        </SubmitButton>
-                    </Box>
-                </HookFom>
+                <FormProvider {...methods}>
+                    <form onSubmit={methods.handleSubmit(onSubmit)}>
+                        <Box display="flex" flexDirection="column" gap={2}>
+                            <Logo style={{ height: "100px" }} />
+                            <Typography textAlign="center" variant="h6">
+                                Sign In to your account
+                            </Typography>
+                            <FormSelect name="identifier" label="Select Country" options={sendingCountries} />
+                            <FormTextField size="small" name="email" label="Email" />
+                            <FormTextField size="small" type="password" name="password" label="Password" />
+                            <SubmitButton size="large" isLoading={loading} role="button" name="login">
+                                {loading ? "Logging In" : "Login"}
+                            </SubmitButton>
+                        </Box>
+                        <DevTool control={control} />
+                    </form>
+                </FormProvider>
             </FormContainer>
         </Paper>
     );

@@ -6,6 +6,7 @@ import Api from "./../services/api";
 import store from "./../store";
 import { preserveIntendedPath } from "App/routes";
 import AuthUtility from "App/utils/AuthUtility";
+import isEmpty from "App/helpers/isEmpty";
 
 const initialState = {
     authStatusReported: false,
@@ -48,7 +49,7 @@ export default class AuthProvider extends Component {
 
         const token = AuthUtility.getAccessToken();
 
-        if (token === "undefined" || token === undefined) {
+        if (isEmpty(token)) {
             AuthUtility.logOut();
             this.setState({
                 authStatusReported: true,
@@ -61,14 +62,9 @@ export default class AuthProvider extends Component {
     };
 
     verifyToken = async (token) => {
-        const api = new Api(false);
         const user = JSON.parse(localStorage.getItem("user"));
         try {
             
-            // const res = await api.post("/health-check", {
-            //     token,
-            // });
-
             if (AuthUtility.isLoggedIn() && user) {
                 this.setState({
                     authStatusReported: true,
