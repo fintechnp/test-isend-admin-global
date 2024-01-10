@@ -122,7 +122,6 @@ export default function AddUserKyc() {
             ...rest,
         };
 
-        console.log("data", { dataToSend, kycId });
         dispatch(actions.update_system_user_kyc(kycId, dataToSend));
     };
 

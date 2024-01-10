@@ -19,7 +19,6 @@ export default class Api {
         const availableCountries = sendingCountries.map(c => c.value.toLowerCase());
 
         if(!availableCountries.includes(selectedCountry) && app.apiBaseUrl.match(/{country}/g)) {
-            console.log('login country')
             localStorageRemove(LOGIN_COUNTRY);
             window.location.href = '/'
             return;
