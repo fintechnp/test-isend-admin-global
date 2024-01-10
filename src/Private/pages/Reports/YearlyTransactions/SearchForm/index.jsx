@@ -1,14 +1,11 @@
 import React from "react";
+import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button'
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import SelectField from "../../../../../App/components/Fields/SelectField";
-import DatePickerField from "../../../../../App/components/Fields/DatePickerField";
+import SelectField from "App/components/Fields/SelectField";
+import DatePickerField from "App/components/Fields/DatePickerField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -19,24 +16,6 @@ const Container = styled(Grid)(({ theme }) => ({
     border: `1px solid ${theme.palette.border.main}`,
 }));
 
-const TitleWrapper = styled(Box)(({ theme }) => ({
-    paddingBottom: "8px",
-    display: "flex",
-    paddingLeft: "14px",
-    alignItems: "center",
-    justifyContent: "space-between",
-    [theme.breakpoints.down("sm")]: {
-        alignItems: "flex-start",
-        flexDirection: "column",
-    },
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    fontSize: "18px",
-    fontWeight: 600,
-    paddingLeft: "8px",
-}));
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
     padding: "0px 12px",
@@ -58,56 +37,14 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingRight: "4px",
 }));
 
-const ResetButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    border: `1px solid ${theme.palette.warning.main}`,
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-        border: `1px solid ${theme.palette.warning.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
 
-const SearchButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-        border: `1px solid ${theme.palette.primary.main}`,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
-function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner }) {
+function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner, loading }) {
     const handleResetButton = (e) => {
         handleReset();
     };
 
     return (
         <Container container>
-            <Grid item xs={12}>
-                <TitleWrapper>
-                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <ContentPasteSearchIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
-                        <Title> Filter Transaction </Title>
-                    </Box>
-                </TitleWrapper>
-            </Grid>
             <Grid item xs={12}>
                 <Form onSubmit={handleSubmit}>
                     <FormWrapper container direction="row">
@@ -164,22 +101,26 @@ function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner }) {
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <ResetButton
+                                    <Button
                                         size="small"
-                                        variant="outlined"
+                                        color="error"
+                                        variant="contained"
                                         onClick={handleResetButton}
+                                        disabled={loading}
                                     >
                                         Reset
-                                    </ResetButton>
+                                    </Button>
                                 </Grid>
                                 <Grid item>
-                                    <SearchButton
+                                    <Button
                                         size="small"
-                                        variant="outlined"
+                                        variant="contained"
                                         type="submit"
+                                        disabled={loading}
+
                                     >
                                         Filter
-                                    </SearchButton>
+                                    </Button>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>

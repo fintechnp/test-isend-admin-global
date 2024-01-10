@@ -13,7 +13,8 @@ import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddReference from "./components/AddReference";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -65,13 +66,9 @@ const Reference = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: referenceTypeData, loading: g_loading } = useSelector(
-        (state) => state.get_all_reference
-    );
+    const { response: referenceTypeData, loading: g_loading } = useSelector((state) => state.get_all_reference);
     const { success: a_success } = useSelector((state) => state.add_reference);
-    const { success: u_success } = useSelector(
-        (state) => state.update_reference
-    );
+    const { success: u_success } = useSelector((state) => state.update_reference);
 
     useEffect(() => {
         dispatch(actions.get_all_reference(filterSchema));
@@ -115,9 +112,7 @@ const Reference = (props) => {
             accessor: "description",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">
-                        {data.value ? data.value : "n/a"}
-                    </StyledText>
+                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                 </Box>
             ),
         },
@@ -170,7 +165,7 @@ const Reference = (props) => {
                         <IconButton
                             onClick={() =>
                                 navigate(
-                                    `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`
+                                    `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`,
                                 )
                             }
                         >
@@ -197,15 +192,14 @@ const Reference = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleOrder = (e) => {
@@ -245,36 +239,31 @@ const Reference = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header title="All Reference Type" type={true} />
-                <Filter
-                    type={true}
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleOrder={handleOrder}
-                    handleSortBy={handleSortBy}
-                />
-                <Table
-                    columns={columns}
-                    title="Reference Type Details"
-                    data={referenceTypeData?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={referenceTypeData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+        <PageContent documentTitle="Reference Type">
+            <Header title="All Reference Type" type={true} />
+            <Filter
+                type={true}
+                state={filterSchema}
+                handleSearch={handleSearch}
+                handleOrder={handleOrder}
+                handleSortBy={handleSortBy}
+            />
+            <Table
+                columns={columns}
+                title="Reference Type Details"
+                data={referenceTypeData?.data || []}
+                sub_columns={sub_columns}
+                loading={g_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={referenceTypeData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

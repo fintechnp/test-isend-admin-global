@@ -1,11 +1,12 @@
 import React from "react";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Field, Form, reduxForm } from "redux-form";
 
-import TextField from "../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../App/components/Fields/SelectField";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     borderRadius: "5px",
@@ -213,14 +214,14 @@ const FilterForm = ({ handleSubmit, partner_sending, partner_payout, loading, ha
                                 alignItems="center"
                             >
                                 <Grid item>
-                                    <CancelButton size="small" variant="contained" onClick={handleClose}>
+                                    <Button size="small" color="error" variant="contained" onClick={handleClose}>
                                         Cancel
-                                    </CancelButton>
+                                    </Button>
                                 </Grid>
                                 <Grid item>
-                                    <CreateButton size="small" variant="outlined" loading={loading} type="submit">
+                                    <Button size="small" variant="contained" loading={loading} type="submit">
                                         Filter
-                                    </CreateButton>
+                                    </Button>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>

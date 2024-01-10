@@ -156,7 +156,7 @@ export default function ListLedger() {
                 </Button>
             }
         >
-            <LedgerFilterForm setFilterSchema={setFilterSchema} />
+            <LedgerFilterForm setFilterSchema={setFilterSchema} loading={loading}/>
             <TanstackReactTable
                 columns={columns}
                 title="Ledger"

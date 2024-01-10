@@ -66,9 +66,9 @@ export const deleteStreetType = takeEvery(actions.DELETE_STREET_TYPE, function* 
     } catch (error) {
         yield put({
             type: actions.DELETE_STREET_TYPE_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

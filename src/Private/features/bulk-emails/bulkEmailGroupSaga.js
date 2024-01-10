@@ -17,7 +17,7 @@ export const getBulkEmailGroups = takeEvery(actions.GET_BULK_EMAIL_GROUPS, funct
     } catch (error) {
         yield put({
             type: actions.GET_BULK_EMAIL_GROUPS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -33,9 +33,9 @@ export const addBulkEmailGroup = takeEvery(actions.ADD_BULK_EMAIL_GROUP, functio
     } catch (error) {
         yield put({
             type: actions.ADD_BULK_EMAIL_GROUP_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -54,9 +54,9 @@ export const updateBulkEmailGroup = takeEvery(actions.UPDATE_BULK_EMAIL_GROUP, f
     } catch (error) {
         yield put({
             type: actions.UPDATE_BULK_EMAIL_GROUP_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -71,9 +71,9 @@ export const deleteBulkEmailGroup = takeEvery(actions.DELETE_BULK_EMAIL_GROUP, f
     } catch (error) {
         yield put({
             type: actions.DELETE_BULK_EMAIL_GROUP_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

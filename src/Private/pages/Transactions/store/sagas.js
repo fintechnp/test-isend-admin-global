@@ -16,7 +16,7 @@ export const getTransactions = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_TRANSACTIONS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -38,7 +38,7 @@ export const getTransactionById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_TRANSACTIONS_BYID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -60,7 +60,7 @@ export const getTransactionsByCustomer = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_TRANSACTIONS_BY_CUSTOMER_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -78,7 +78,7 @@ export const calculateTransaction = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CALCULATE_TRANSACTIONS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -96,7 +96,7 @@ export const createTransaction = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CREATE_TRANSACTIONS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -118,7 +118,7 @@ export const updateTransaction = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_TRANSACTIONS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }

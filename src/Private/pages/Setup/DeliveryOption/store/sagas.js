@@ -29,7 +29,7 @@ export const getDeliveryOptionDetails = takeEvery(actions.GET_DELIVERY_OPTION_DE
     } catch (error) {
         yield put({
             type: actions.GET_DELIVERY_OPTION_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -45,9 +45,9 @@ export const addDeliveryOption = takeEvery(actions.ADD_DELIVERY_OPTION, function
     } catch (error) {
         yield put({
             type: actions.ADD_DELIVERY_OPTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -62,9 +62,9 @@ export const updateDeliveryOption = takeEvery(actions.UPDATE_DELIVERY_OPTION, fu
     } catch (error) {
         yield put({
             type: actions.UPDATE_DELIVERY_OPTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -80,7 +80,7 @@ export const updateDeliveryOptionStatus = takeEvery(actions.UPDATE_DELIVERY_OPTI
     } catch (error) {
         yield put({
             type: actions.UPDATE_DELIVERY_OPTION_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -97,9 +97,9 @@ export const deleteDeliveryOption = takeEvery(actions.DELETE_DELIVERY_OPTION, fu
     } catch (error) {
         yield put({
             type: actions.DELETE_DELIVERY_OPTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

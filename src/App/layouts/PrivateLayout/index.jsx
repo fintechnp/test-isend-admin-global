@@ -47,12 +47,12 @@ const PrivateLayout = () => {
                         text: "Accounts",
                         sub: false,
                     },
-                    {
-                        path: "/user/menu",
-                        key: "user-menu",
-                        text: "Menu",
-                        sub: false,
-                    },
+                    // {
+                    //     path: "/user/menu",
+                    //     key: "user-menu",
+                    //     text: "Menu",
+                    //     sub: false,
+                    // },
                 ],
             },
 
@@ -484,16 +484,6 @@ const PrivateLayout = () => {
                         sub: false,
                     },
                 ],
-            },
-
-            //Account
-            {
-                path: "/accounting",
-                key: "accounting",
-                text: "Accounting",
-                sub: false,
-                icon: <Receipt />,
-                permission: [roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER],
             },
         ];
     };

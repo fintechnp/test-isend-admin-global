@@ -17,7 +17,7 @@ export const getBulkEmailContents = takeEvery(actions.GET_BULK_EMAIL_CONTENTS, f
     } catch (error) {
         yield put({
             type: actions.GET_BULK_EMAIL_CONTENTS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -33,9 +33,9 @@ export const addBulkEmailContent = takeEvery(actions.ADD_BULK_EMAIL_CONTENT, fun
     } catch (error) {
         yield put({
             type: actions.ADD_BULK_EMAIL_CONTENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -54,9 +54,9 @@ export const updateBulkEmailContent = takeEvery(actions.UPDATE_BULK_EMAIL_CONTEN
     } catch (error) {
         yield put({
             type: actions.UPDATE_BULK_EMAIL_CONTENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -77,7 +77,7 @@ export const updateBulkEmailContentStatus = takeEvery(actions.UPDATE_BULK_EMAIL_
     } catch (error) {
         yield put({
             type: actions.UPDATE_BULK_EMAIL_CONTENT_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -97,9 +97,9 @@ export const deleteBulkEmailContent = takeEvery(actions.DELETE_BULK_EMAIL_CONTEN
     } catch (error) {
         yield put({
             type: actions.DELETE_BULK_EMAIL_CONTENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 
@@ -113,7 +113,7 @@ export const getBulkEmailContent = takeEvery(actions.VIEW_BULK_EMAIL_CONTENT, fu
     } catch (error) {
         yield put({
             type: actions.VIEW_BULK_EMAIL_CONTENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -129,9 +129,9 @@ export const sendBulkEmailContent = takeEvery(actions.SEND_BULK_EMAIL_CONTENT, f
     } catch (error) {
         yield put({
             type: actions.SEND_BULK_EMAIL_CONTENT_FAILED,
-            error: error.data,
+            error: error?.data,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
 

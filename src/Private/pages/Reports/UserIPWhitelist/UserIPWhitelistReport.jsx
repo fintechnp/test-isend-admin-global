@@ -123,7 +123,7 @@ function UserIPWhitelistReport() {
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
-                    <UserIPWhitelistFilterForm onSubmit={handleSearch} onReset={handleReset} />
+                    <UserIPWhitelistFilterForm onSubmit={handleSearch} onReset={handleReset} loading={l_loading} />
                 </Grid>
                 {l_loading && (
                     <Grid item xs={12}>

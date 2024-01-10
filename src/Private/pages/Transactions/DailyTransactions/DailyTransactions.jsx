@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import Filter from "./../components/Filter";
 import Table, { TablePagination } from "App/components/Table";
@@ -12,9 +12,7 @@ import PageContent from "App/components/Container/PageContent";
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
-import app from "App/config/app";
-import Spacer from "App/components/Spacer/Spacer";
+
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -22,7 +20,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const initialState = {
-    send_country: app.defaultSendingCountry,
     page_number: 1,
     page_size: 15,
     from_date: new Date().toISOString().slice(0, 10),
@@ -271,11 +268,10 @@ const DailyTransactions = (props) => {
     );
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
@@ -334,17 +330,8 @@ const DailyTransactions = (props) => {
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleChangeTab = useCallback((countryIso3) => {
-        setFilterSchema({
-            ...filterSchema,
-            send_country: countryIso3,
-        });
-    }, []);
-
     return (
         <PageContent title="Daily Transactions">
-            <SendingCountryTabs value={filterSchema.send_country} onChange={handleChangeTab} />
-            <Spacer />
             <Filter
                 handleSearch={handleSearch}
                 handleSort={handleSort}

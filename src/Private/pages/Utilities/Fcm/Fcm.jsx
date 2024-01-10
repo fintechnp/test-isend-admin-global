@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
+import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
+import CreateFcm from "./CreateFcm";
+import { Delete } from "App/components";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import CreateFcm from "./CreateFcm";
-import { Delete } from "./../../../../App/components";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { FormatDate, ReferenceName } from "./../../../../App/helpers";
+import { FormatDate, ReferenceName } from "App/helpers";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const EmailContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -58,13 +58,11 @@ const initialState = {
     order_by: "DESC",
 };
 
-const Fcm = (props) => {
+const Fcm = () => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: FcmData, loading: l_loading } = useSelector(
-        (state) => state.get_fcm
-    );
+    const { response: FcmData, loading: l_loading } = useSelector((state) => state.get_fcm);
     const { success: c_success } = useSelector((state) => state.create_fcm);
     const { success: u_success } = useSelector((state) => state.update_fcm);
     const { success: d_success } = useSelector((state) => state.delete_fcm);
@@ -88,10 +86,7 @@ const Fcm = (props) => {
                 accessor: "title",
                 Cell: (data) => (
                     <Box>
-                        <StyledName
-                            component="p"
-                            sx={{ fontSize: "14px", opacity: 0.9 }}
-                        >
+                        <StyledName component="p" sx={{ fontSize: "14px", opacity: 0.9 }}>
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
@@ -143,9 +138,7 @@ const Fcm = (props) => {
                 accessor: "body",
                 Cell: (data) => (
                     <Box>
-                        <Text component="span">
-                            {data?.value ? data?.value : "N/A"}
-                        </Text>
+                        <Text component="span">{data?.value ? data?.value : "N/A"}</Text>
                     </Box>
                 ),
             },
@@ -159,10 +152,7 @@ const Fcm = (props) => {
                 maxWidth: 100,
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data.value ? ReferenceName(88, data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -177,10 +167,7 @@ const Fcm = (props) => {
                 accessor: "created_ts",
                 Cell: (data) => (
                     <Box textAlign="center" sx={{}}>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -241,7 +228,7 @@ const Fcm = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -271,15 +258,14 @@ const Fcm = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -323,38 +309,33 @@ const Fcm = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <EmailContainer>
-                <Header title="FCM Message List">
-                    <CreateFcm />
-                </Header>
-                <Filter
-                    sortData={sortData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                    filterSchema={filterSchema}
-                />
-                <Table
-                    columns={columns}
-                    data={FcmData?.data || []}
-                    title="Fcm Message Details"
-                    sub_columns={sub_columns}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={FcmData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </EmailContainer>
-        </>
+        <PageContent documentTitle="FCM">
+            <Header title="FCM Message List">
+                <CreateFcm />
+            </Header>
+            <Filter
+                sortData={sortData}
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                filterSchema={filterSchema}
+            />
+            <Table
+                columns={columns}
+                data={FcmData?.data || []}
+                title="Fcm Message Details"
+                sub_columns={sub_columns}
+                loading={l_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={FcmData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

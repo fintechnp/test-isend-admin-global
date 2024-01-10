@@ -1,16 +1,16 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch } from "react-redux";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button'
+import { Field, Form, reduxForm } from "redux-form";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import Validator from "../../../../../App/utils/validators";
-import SelectField from "../../../../../App/components/Fields/SelectField";
-import TextField from "../../../../../App/components/Fields/TextField";
+import Validator from "App/utils/validators";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -53,22 +53,8 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingRight: "4px",
 }));
 
-const SearchButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    marginTop: "8px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
 
-function SearchForm({ handleSubmit }) {
+function SearchForm({ handleSubmit, loading }) {
     const dispatch = useDispatch();
     const [id, setId] = React.useState("transaction_id");
     const [name, setName] = React.useState("Transaction Id");
@@ -126,9 +112,9 @@ function SearchForm({ handleSubmit }) {
                         <Grid item xs={12}>
                             <ButtonWrapper container direction="row" justifyContent="flex-end" alignItems="center">
                                 <Grid item>
-                                    <SearchButton size="small" variant="outlined" type="submit">
+                                    <Button variant="contained" type="submit" disabled={loading}>
                                         Search
-                                    </SearchButton>
+                                    </Button>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>

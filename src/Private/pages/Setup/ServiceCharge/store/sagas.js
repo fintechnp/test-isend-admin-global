@@ -16,7 +16,7 @@ export const getAllServiceCharge = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_SERVICE_CHARGE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -38,7 +38,7 @@ export const getServiceChargeByPartner = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_SERVICE_CHARGE_BY_PARTNER_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -56,7 +56,7 @@ export const getServiceChargeDetails = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_SERVICE_CHARGE_DETAILS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -75,7 +75,7 @@ export const addServiceCharge = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.ADD_SERVICE_CHARGE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -99,7 +99,7 @@ export const updateServiceCharge = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_SERVICE_CHARGE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -123,9 +123,9 @@ export const updateServiceChargeStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_SERVICE_CHARGE_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -143,7 +143,7 @@ export const deleteServiceCharge = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_SERVICE_CHARGE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

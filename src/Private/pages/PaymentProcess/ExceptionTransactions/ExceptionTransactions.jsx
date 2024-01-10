@@ -10,11 +10,8 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Release } from "App/components";
 import Filter from "./../components/Filter";
-import Spacer from "App/components/Spacer/Spacer";
 import PageContent from "App/components/Container/PageContent";
-import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
 
-import app from "App/config/app";
 import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
 import Table, { TablePagination } from "App/components/Table";
@@ -267,11 +264,10 @@ const ExceptionTransactions = (props) => {
     );
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },

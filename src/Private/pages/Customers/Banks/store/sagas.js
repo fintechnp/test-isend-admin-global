@@ -14,7 +14,7 @@ export const getBankDetails = takeEvery(actions.GET_BANK_DETAILS, function* (act
     } catch (error) {
         yield put({
             type: actions.GET_BANK_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -29,7 +29,7 @@ export const refreshBank = takeEvery(actions.REFRESH_BANK, function* (action) {
     } catch (error) {
         yield put({
             type: actions.REFRESH_BANK_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

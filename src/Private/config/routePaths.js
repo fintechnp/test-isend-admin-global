@@ -76,7 +76,7 @@ const routePaths = {
 
     userKyc: {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
-        editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId ",
+        editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
 };
 

@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, Suspense } from "react";
 
 import showToast from "../components/Toast";
-import { publicRoutes } from "../../Public";
 import { privateRoutes } from "../../Private";
-import Loading from "./../../App/components/Loading";
 import PageNotFound from "../components/PageNotFound";
 import { PublicLayout, PrivateLayout } from "../layouts";
+import { publicRoutes, guestRoutes } from "Public/config/routes";
+import GuestLayout from "App/layouts/GuestLayout";
 
 const MainRoutes = ({ setMode }) => {
     const dispatch = useDispatch();
@@ -35,11 +35,17 @@ const MainRoutes = ({ setMode }) => {
 
     return (
         <Routes>
+            <Route element={<GuestLayout />}>
+                {guestRoutes.map((route, i) => (
+                    <Route key={i} path={route.path} element={route.component} />
+                ))}
+            </Route>
             <Route element={<PublicLayout />}>
                 {publicRoutes.map((route, i) => (
                     <Route key={i} path={route.path} element={route.component} />
                 ))}
             </Route>
+
             <Route element={<PrivateLayout />}>
                 {privateRoutes.map((route, i) => (
                     <Route key={i} path={route.path} element={route.component} />

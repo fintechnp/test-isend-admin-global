@@ -31,7 +31,7 @@ export const getLedgerDetails = takeEvery(actions.GET_LEDGER_DETAILS, function* 
     } catch (error) {
         yield put({
             type: actions.GET_LEDGER_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

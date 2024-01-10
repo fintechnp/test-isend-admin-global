@@ -16,7 +16,7 @@ export const getDeliveryRoute = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_DELIVERY_ROUTE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -34,7 +34,7 @@ export const getDeliveryRouteById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_DELIVERY_ROUTE_BY_ID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -53,9 +53,9 @@ export const createDeliveryRoute = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.CREATE_DELIVERY_ROUTE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -77,9 +77,9 @@ export const updateDeliveryRoute = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_DELIVERY_ROUTE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -101,9 +101,9 @@ export const updateDeliveryRouteStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_DELIVERY_ROUTE_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -121,9 +121,9 @@ export const deleteDeliveryRoute = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_DELIVERY_ROUTE_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );

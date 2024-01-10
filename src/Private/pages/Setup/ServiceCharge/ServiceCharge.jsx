@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -10,7 +9,8 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import Table, { TablePagination } from "./../../../../App/components/Table";
+import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -55,9 +55,7 @@ const ServiceCharge = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: servicecharge_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_service_charge
-    );
+    const { response: servicecharge_data, loading: g_loading } = useSelector((state) => state.get_all_service_charge);
 
     useEffect(() => {
         dispatch(actions.get_all_service_charge(filterSchema));
@@ -121,7 +119,7 @@ const ServiceCharge = (props) => {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/setup/service-charge/${row?.original?.agent_name}/${row?.original?.sending_agent_id}`
+                                        `/setup/service-charge/${row?.original?.agent_name}/${row?.original?.sending_agent_id}`,
                                     )
                                 }
                             >
@@ -139,7 +137,7 @@ const ServiceCharge = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -153,15 +151,14 @@ const ServiceCharge = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -201,39 +198,31 @@ const ServiceCharge = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header
-                    title="Partnerwise Service Charge"
-                    buttonText="Add Service Charge"
-                />
+        <PageContent documentTitle="Partnerwise Service Charge">
+            <Header title="Partnerwise Service Charge" buttonText="Add Service Charge" />
 
-                <Filter
-                    state={filterSchema}
-                    sortData={sortData}
-                    orderData={orderData}
-                    handleSearch={handleSearch}
-                    handleOrder={handleOrder}
-                    handleSort={handleSort}
-                />
-                <Table
-                    columns={columns}
-                    data={servicecharge_data?.data || []}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={servicecharge_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+            <Filter
+                state={filterSchema}
+                sortData={sortData}
+                orderData={orderData}
+                handleSearch={handleSearch}
+                handleOrder={handleOrder}
+                handleSort={handleSort}
+            />
+            <Table
+                columns={columns}
+                data={servicecharge_data?.data || []}
+                loading={g_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={servicecharge_data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

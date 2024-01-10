@@ -19,7 +19,7 @@ import NoResults from "../Transactions/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
-import FilterForm from "Private/components/BusinessCharge/BusinessChargeFilterForm";
+import BusinessChargeFilterForm from "Private/components/BusinessCharge/BusinessChargeFilterForm";
 import BusinessChargeModal from "Private/components/BusinessCharge/BusinessChargeModal";
 
 const initialState = {
@@ -163,7 +163,7 @@ export default function ListBusinessServiceCharge() {
                     </Button>
                 }
             >
-                <FilterForm setFilterSchema={setFilterSchema} loading={loading} />
+                <BusinessChargeFilterForm setFilterSchema={setFilterSchema} loading={loading} />
 
                 {!loading && response?.data && response?.data?.length === 0 ? (
                     <Grid item xs={12}>

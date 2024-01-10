@@ -1,19 +1,20 @@
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import Button from '@mui/material/Button'
 
 import HookForm from "App/core/hook-form/HookForm";
+import { ButtonWrapper } from "../AllButtons/Buttons";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import actions from "../../pages/Customers/AllBanks/store/action";
-import { ButtonWrapper, ResetButton, SearchButton } from "../AllButtons/Buttons";
 
 const orderByOptions = [
     { label: "Ascending", value: "asc" },
     { label: "Descending", value: "desc" },
 ];
 
-const FilterBank = ({ sortByOptions }) => {
+const FilterBank = ({ sortByOptions, loading }) => {
     const methods = useForm();
     const dispatch = useDispatch();
 
@@ -58,14 +59,14 @@ const FilterBank = ({ sortByOptions }) => {
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <ResetButton size="small" variant="outlined" onClick={handleReset}>
+                                <Button size="small" color="error" variant="contained" onClick={handleReset} disabled={loading}>
                                     Reset
-                                </ResetButton>
+                                </Button>
                             </Grid>
                             <Grid item>
-                                <SearchButton size="small" variant="outlined" type="submit">
+                                <Button size="small" variant="contained" type="submit" disabled={loading}>
                                     Search
-                                </SearchButton>
+                                </Button>
                             </Grid>
                         </ButtonWrapper>
                     </Grid>

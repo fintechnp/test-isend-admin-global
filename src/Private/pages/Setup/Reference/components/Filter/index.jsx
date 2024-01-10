@@ -8,6 +8,7 @@ import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
 import React from "react";
+import SearchTextField from "App/components/Fields/SearchTextField";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -52,7 +53,6 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
 }));
 
 const Select = styled(MuiSelect)(({ theme }) => ({
-    // minWidth: "max-content",
     "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
         padding: "8px 10px",
         paddingRight: "28px",
@@ -94,19 +94,7 @@ function Filter({ type, state, handleSearch, handleOrder, handleSortBy }) {
     return (
         <FilterWrapper>
             <SearchBox>
-                <TextField
-                    type="search"
-                    variant="outlined"
-                    placeholder="Search"
-                    onChange={handleSearch}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
@@ -119,17 +107,12 @@ function Filter({ type, state, handleSearch, handleOrder, handleSortBy }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = (
-                                    type ? sortType : sortData
-                                ).filter((type) => type.value === selected);
+                                const value = (type ? sortType : sortData).filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -148,17 +131,12 @@ function Filter({ type, state, handleSearch, handleOrder, handleSortBy }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

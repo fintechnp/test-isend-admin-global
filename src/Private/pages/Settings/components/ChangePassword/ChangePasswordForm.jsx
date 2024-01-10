@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { Alert, AlertTitle, Grid } from "@mui/material";
+import { Alert, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -7,12 +7,12 @@ import HookForm from "App/core/hook-form/HookForm";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { changePasswordActions as actions } from "../../store";
 import { CommonAction } from "Common/store";
-import { AddButton, CancelButton } from "Private/components/AllButtons/Buttons";
+import { AddButton } from "Private/components/AllButtons/Buttons";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthUtility from "App/utils/AuthUtility";
 
 const changePasswordSchema = yup.object().shape({
     current_password: yup.string().required("Old Password is required"),
@@ -39,8 +39,7 @@ export const ChangePasswordForm = () => {
             dispatch(CommonAction.log_out());
             if (logoutSuccess) {
                 navigate("/login");
-                Cookies.remove("token");
-                Cookies.remove("refresh_token");
+               AuthUtility.logOut()
             }
         }
     }, [success, loading, logoutSuccess, logoutLoading]);

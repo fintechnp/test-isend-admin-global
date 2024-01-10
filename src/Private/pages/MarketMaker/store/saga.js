@@ -31,7 +31,7 @@ export const getMarketMakerByIdDetails = takeEvery(actions.GET_MARKET_MAKER_DETA
     } catch (error) {
         yield put({
             type: actions.GET_MARKET_MAKER_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });

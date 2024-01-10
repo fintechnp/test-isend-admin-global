@@ -16,7 +16,7 @@ export const getSanctionList = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_SANCTION_LIST_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -35,7 +35,7 @@ export const importSanctionList = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.IMPORT_SANCTION_LIST_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -54,7 +54,7 @@ export const getSanctionById = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.GET_SANCTION_BY_ID_FAILED,
-                error: error.data,
+                error: error?.data,
             });
         }
     }
@@ -71,7 +71,7 @@ export const addSanction = takeEvery(actions.ADD_SANCTION, function* (action) {
     } catch (error) {
         yield put({
             type: actions.ADD_SANCTION_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -94,7 +94,7 @@ export const updateSanction = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_SANCTION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
@@ -114,7 +114,7 @@ export const deleteSanction = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.DELETE_SANCTION_FAILED,
-                error: error.data,
+                error: error?.data,
             });
             yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }

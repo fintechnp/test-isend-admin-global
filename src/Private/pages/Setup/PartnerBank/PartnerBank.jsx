@@ -1,28 +1,24 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import CableIcon from "@mui/icons-material/Cable";
+import MuiIconButton from "@mui/material/IconButton";
+import { useSelector, useDispatch } from "react-redux";
+import { Box, Tooltip, Typography } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddPartnerBank from "./components/AddPartnerBank";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CountryName,
-    CurrencyName,
-    ReferenceName,
-} from "./../../../../App/helpers";
-import Unmap from "../../../../App/components/Dialog/Unmap";
+import Table, { TablePagination } from "App/components/Table";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
+import Unmap from "App/components/Dialog/Unmap";
 import PartnerActions from "./../Partner/store/actions";
+import PageContent from "App/components/Container/PageContent";
 
 const PartnerBankContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -79,21 +75,11 @@ const PartnerBank = (props) => {
         order_by: "DESC",
     });
 
-    const { response: partnerbank_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_partner_bank
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_partner_bank
-    );
-    const { loading: un_loading, success: un_success } = useSelector(
-        (state) => state.unmapp_partner_bank
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.create_partner_bank
-    );
-    const { success: u_success } = useSelector(
-        (state) => state.update_partner_bank
-    );
+    const { response: partnerbank_data, loading: g_loading } = useSelector((state) => state.get_all_partner_bank);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_partner_bank);
+    const { loading: un_loading, success: un_success } = useSelector((state) => state.unmapp_partner_bank);
+    const { success: a_success } = useSelector((state) => state.create_partner_bank);
+    const { success: u_success } = useSelector((state) => state.update_partner_bank);
 
     React.useEffect(() => {
         dispatch(PartnerActions.get_payout_partner(filter));
@@ -140,9 +126,7 @@ const PartnerBank = (props) => {
                 accessor: "external_bank_code",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                     </Box>
                 ),
             },
@@ -155,11 +139,7 @@ const PartnerBank = (props) => {
                 accessor: "payment_type",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data?.value
-                                ? ReferenceName(1, data?.value)
-                                : "N/A"}
-                        </StyledText>
+                        <StyledText component="p">{data?.value ? ReferenceName(1, data?.value) : "N/A"}</StyledText>
                     </Box>
                 ),
             },
@@ -168,9 +148,7 @@ const PartnerBank = (props) => {
                 accessor: "country",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CountryName(data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CountryName(data.value) : ""}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -178,9 +156,7 @@ const PartnerBank = (props) => {
                                 lineHeight: 1,
                             }}
                         >
-                            {data?.row?.original?.currency
-                                ? CurrencyName(data?.row?.original?.currency)
-                                : ""}
+                            {data?.row?.original?.currency ? CurrencyName(data?.row?.original?.currency) : ""}
                         </Typography>
                     </Box>
                 ),
@@ -196,15 +172,11 @@ const PartnerBank = (props) => {
                     <MapWrapper textAlign="center" sx={{}}>
                         {data.value ? (
                             <Tooltip title="Mapped" arrow>
-                                <CheckCircleOutlineIcon
-                                    sx={{ color: "success.main" }}
-                                />
+                                <CheckCircleOutlineIcon sx={{ color: "success.main" }} />
                             </Tooltip>
                         ) : (
                             <Tooltip title="Not Mapped" arrow>
-                                <RemoveCircleOutlineIcon
-                                    sx={{ color: "border.main" }}
-                                />
+                                <RemoveCircleOutlineIcon sx={{ color: "border.main" }} />
                             </Tooltip>
                         )}
                     </MapWrapper>
@@ -227,10 +199,7 @@ const PartnerBank = (props) => {
                     >
                         <span {...row.getToggleRowExpandedProps({})}>
                             {row.isExpanded ? (
-                                <Tooltip
-                                    title="Hide Partner Bank Details"
-                                    arrow
-                                >
+                                <Tooltip title="Hide Partner Bank Details" arrow>
                                     <IconButton>
                                         <VisibilityOffOutlinedIcon
                                             sx={{
@@ -243,10 +212,7 @@ const PartnerBank = (props) => {
                                     </IconButton>
                                 </Tooltip>
                             ) : (
-                                <Tooltip
-                                    title="Show Partner Bank Details"
-                                    arrow
-                                >
+                                <Tooltip title="Show Partner Bank Details" arrow>
                                     <IconButton>
                                         <RemoveRedEyeOutlinedIcon
                                             sx={{
@@ -260,10 +226,7 @@ const PartnerBank = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPartnerBank
-                            update={true}
-                            update_data={row?.original}
-                        />
+                        <AddPartnerBank update={true} update_data={row?.original} />
                         {row?.original?.is_mapped ? (
                             <Unmap
                                 success={un_success}
@@ -279,7 +242,7 @@ const PartnerBank = (props) => {
                                 <IconButton
                                     onClick={() =>
                                         navigate(
-                                            `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}/${row?.original?.tid}`
+                                            `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}/${row?.original?.tid}`,
                                         )
                                     }
                                 >
@@ -298,12 +261,12 @@ const PartnerBank = (props) => {
                 ),
             },
         ],
-        [un_success]
+        [un_success],
     );
 
     const sub_columns = [
-        { key: "partner_bank_id", name: "Id", type: "default"  },
-        { key: "agent_id", name: "Payout Agent", type: "default"  },
+        { key: "partner_bank_id", name: "Id", type: "default" },
+        { key: "agent_id", name: "Payout Agent", type: "default" },
         { key: "country", name: "Country", type: "country" },
         { key: "currency", name: "Currency", type: "currency" },
         {
@@ -324,15 +287,14 @@ const PartnerBank = (props) => {
     }, []);
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleFilterAgent = (e) => {
@@ -389,37 +351,32 @@ const PartnerBank = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <PartnerBankContainer>
-                <Header handleCloseDialog={handleCloseDialog} />
-                <Filter
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleFilterAgent={handleFilterAgent}
-                    handleOrder={handleOrder}
-                    handleSort={handleSort}
-                />
-                <Table
-                    columns={columns}
-                    handleDelete={handleDelete}
-                    title="Partner Bank Details"
-                    data={partnerbank_data?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={partnerbank_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </PartnerBankContainer>
-        </>
+        <PageContent documentTitle="Partner Banks">
+            <Header handleCloseDialog={handleCloseDialog} />
+            <Filter
+                state={filterSchema}
+                handleSearch={handleSearch}
+                handleFilterAgent={handleFilterAgent}
+                handleOrder={handleOrder}
+                handleSort={handleSort}
+            />
+            <Table
+                columns={columns}
+                handleDelete={handleDelete}
+                title="Partner Bank Details"
+                data={partnerbank_data?.data || []}
+                sub_columns={sub_columns}
+                loading={g_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={partnerbank_data?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

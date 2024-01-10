@@ -148,7 +148,7 @@ export default function ListBeneficiary() {
                 </Grid>
             )}
 
-            <BeneficiaryFilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} />
+            <BeneficiaryFilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} loading={loading} />
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
                     <NoResults text="No Beneficiary Found" />

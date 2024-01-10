@@ -5,6 +5,7 @@ import showToast from "../components/Toast";
 import Api from "./../services/api";
 import store from "./../store";
 import { preserveIntendedPath } from "App/routes";
+import AuthUtility from "App/utils/AuthUtility";
 
 const initialState = {
     authStatusReported: false,
@@ -27,13 +28,6 @@ const initialState = {
         localStorage.clear();
         window.location.reload();
     },
-    setToken: (token) => {
-        Cookies.set("token", token);
-    },
-    getToken: () => {
-        return Cookies.get("token");
-    },
-    setUserData: () => {},
 };
 
 export const AuthContext = createContext(initialState);
@@ -52,12 +46,10 @@ export default class AuthProvider extends Component {
             },
         });
 
-        const token = Cookies.get("token");
+        const token = AuthUtility.getAccessToken();
+
         if (token === "undefined" || token === undefined) {
-            Object.keys(Cookies.get()).forEach(function (cookie) {
-                Cookies.remove(cookie);
-            });
-            localStorage.clear();
+            AuthUtility.logOut();
             this.setState({
                 authStatusReported: true,
                 isUserLoggedIn: false,
@@ -72,10 +64,12 @@ export default class AuthProvider extends Component {
         const api = new Api(false);
         const user = JSON.parse(localStorage.getItem("user"));
         try {
-            const res = await api.post("/health-check", {
-                token,
-            });
-            if (res?.code === 200 && user) {
+            
+            // const res = await api.post("/health-check", {
+            //     token,
+            // });
+
+            if (AuthUtility.isLoggedIn() && user) {
                 this.setState({
                     authStatusReported: true,
                     isUserLoggedIn: true,

@@ -1,17 +1,28 @@
 import React, { useEffect } from "react";
 import { reset } from "redux-form";
+import { Buffer } from "buffer";
 import { useSelector, useDispatch } from "react-redux";
-import { Helmet } from "react-helmet-async";
 
 import ResetForm from "../components/ResetForm";
 import actions from "../../../Common/store/actions";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import isEmpty from "App/helpers/isEmpty";
+import PageNotFound from "App/components/PageNotFound";
 
-function ResetPassword(props) {
+function ResetPassword() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user_id, code } = useParams();
-    const { success, loading } = useSelector((state) => state.reset_password);
+
+    const [searchParams] = useSearchParams();
+
+    const apiBaseUrl = Buffer.from(searchParams.get("base_url"), "base64")
+        .toString("utf-8")
+        .replace("http://", "https://");
+
+    let { success, loading } = useSelector((state) => state.reset_password);
+
+    if (isEmpty(apiBaseUrl)) return <PageNotFound />;
 
     useEffect(() => {
         dispatch(reset("reset_password_form"));
@@ -28,14 +39,16 @@ function ResetPassword(props) {
     const handleReset = (data) => {
         data.code = code;
         data.user_id = user_id;
-        dispatch(actions.reset_password(data));
+        dispatch(
+            actions.reset_password({
+                ...data,
+                api_base_url: apiBaseUrl,
+            }),
+        );
     };
 
     return (
         <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
             <ResetForm onSubmit={handleReset} loading={loading} />
         </>
     );

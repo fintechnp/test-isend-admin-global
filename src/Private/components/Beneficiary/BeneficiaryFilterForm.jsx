@@ -2,6 +2,7 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import Button from '@mui/material/Button'
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
@@ -13,7 +14,6 @@ import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 import { localStorageGet } from "App/helpers/localStorage";
 
-import { beneficiaryActions as actions } from "Private/pages/Beneficiary/store";
 
 const orderByOptions = [
     { label: "Ascending", value: "ASC" },
@@ -31,7 +31,7 @@ const relatedToOptions = [
     },
 ];
 
-export default function BeneficiaryFilterForm({ filterSchema, setFilterSchema, sortByOptions = [] }) {
+export default function BeneficiaryFilterForm({ filterSchema, setFilterSchema, sortByOptions = [], loading }) {
     const methods = useForm();
     const dispatch = useDispatch();
 
@@ -129,14 +129,14 @@ export default function BeneficiaryFilterForm({ filterSchema, setFilterSchema, s
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <ResetButton size="small" variant="outlined" onClick={handleReset}>
+                                <Button size="small" color="error" variant="contained" onClick={handleReset} disabled={loading}>
                                     Reset
-                                </ResetButton>
+                                </Button>
                             </Grid>
                             <Grid item>
-                                <SearchButton size="small" variant="outlined" type="submit">
+                                <Button size="small" variant="contained" type="submit" disabled={loading}>
                                     Search
-                                </SearchButton>
+                                </Button>
                             </Grid>
                         </ButtonWrapper>
                     </Grid>

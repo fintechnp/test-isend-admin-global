@@ -16,7 +16,7 @@ export const getAllUser = takeEvery(actions.GET_ACCOUNT_USER, function* (action)
     } catch (error) {
         yield put({
             type: actions.GET_ACCOUNT_USER_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -31,7 +31,7 @@ export const getUserNumber = takeEvery(actions.GET_ACCOUNT_NUMBER, function* (ac
     } catch (error) {
         yield put({
             type: actions.GET_ACCOUNT_NUMBER_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -46,7 +46,7 @@ export const getUserDetails = takeEvery(actions.GET_ACCOUNT_USER_DETAILS, functi
     } catch (error) {
         yield put({
             type: actions.GET_ACCOUNT_USER_DETAILS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -61,7 +61,7 @@ export const getUserDetailById = takeEvery(actions.GET_ACCOUNT_USER_DETAILS_BY_I
     } catch (error) {
         yield put({
             type: actions.GET_ACCOUNT_USER_DETAILS_BY_ID_FAILED,
-            error: error.data,
+            error: error?.data,
         });
     }
 });
@@ -72,7 +72,7 @@ export const addUser = takeEvery(actions.ADD_ACCOUNT_USER, function* (action) {
         yield put({ type: actions.ADD_ACCOUNT_USER_SUCCESS, response: res });
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
-        yield put({ type: actions.ADD_ACCOUNT_USER_FAILED, error: error.data });
+        yield put({ type: actions.ADD_ACCOUNT_USER_FAILED, error: error?.data });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
@@ -88,7 +88,7 @@ export const updateUser = takeEvery(actions.UPDATE_ACCOUNT_USER, function* (acti
     } catch (error) {
         yield put({
             type: actions.UPDATE_ACCOUNT_USER_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -106,7 +106,7 @@ export const updateUserStatus = takeEvery(actions.UPDATE_ACCOUNT_STATUS, functio
     } catch (error) {
         yield put({
             type: actions.UPDATE_ACCOUNT_STATUS_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -123,7 +123,7 @@ export const deleteUser = takeEvery(actions.DELETE_ACCOUNT_USER, function* (acti
     } catch (error) {
         yield put({
             type: actions.DELETE_ACCOUNT_USER_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
@@ -140,7 +140,7 @@ export const forgotPassword = takeEvery(actions.FORGOT_PASSWORD, function* (acti
     } catch (error) {
         yield put({
             type: actions.FORGOT_PASSWORD_FAILED,
-            error: error.data,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }

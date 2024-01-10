@@ -1,4 +1,7 @@
 export default function buildRoute(routePath, ...params) {
+
+    console.log({routePath, params})
+
     let arrayContainsObject = params.some((e) => Object.prototype.toString.call(e) === "[object Object]");
 
     if (arrayContainsObject && params.length > 1)

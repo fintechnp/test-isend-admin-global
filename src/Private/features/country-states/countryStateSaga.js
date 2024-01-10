@@ -25,7 +25,7 @@ export const getCountryStates = takeEvery(
     } catch (error) {
       yield put({
         type: actions.GET_COUNTRY_STATES_FAILED,
-        error: error.data,
+        error: error?.data,
       });
     }
   }
@@ -48,9 +48,9 @@ export const addCountryState = takeEvery(
     } catch (error) {
       yield put({
         type: actions.ADD_COUNTRY_STATE_FAILED,
-        error: error.data,
+        error: error?.data,
       });
-      yield put({ type: "SET_TOAST_DATA", response: error.data });
+      yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
   }
 );
@@ -72,9 +72,9 @@ export const updateCountryState = takeEvery(
     } catch (error) {
       yield put({
         type: actions.UPDATE_COUNTRY_STATE_FAILED,
-        error: error.data,
+        error: error?.data,
       });
-      yield put({ type: "SET_TOAST_DATA", response: error.data });
+      yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
   }
 );
@@ -95,9 +95,9 @@ export const deleteCountryState = takeEvery(
     } catch (error) {
       yield put({
         type: actions.DELETE_COUNTRY_STATE_FAILED,
-        error: error.data,
+        error: error?.data,
       });
-      yield put({ type: "SET_TOAST_DATA", response: error.data });
+      yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
   }
 );

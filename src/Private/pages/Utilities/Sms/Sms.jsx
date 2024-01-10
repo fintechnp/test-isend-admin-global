@@ -1,35 +1,20 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
+import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
+import CreateSms from "./CreateSms";
+import { Delete } from "App/components";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import CreateSms from "./CreateSms";
-import { Delete } from "./../../../../App/components";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CountryName,
-    FormatDate,
-    ReferenceName,
-} from "./../../../../App/helpers";
+import Table, { TablePagination } from "App/components/Table";
+import { CountryName, FormatDate, ReferenceName } from "App/helpers";
+import PageContent from "App/components/Container/PageContent";
 
-const SmsContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -41,17 +26,6 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
     color: "border.main",
-}));
-
-const Text = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    width: "100%",
-    display: "block",
-    fontSize: "14px",
-    color: "border.main",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
 }));
 
 const initialState = {
@@ -66,9 +40,7 @@ const Sms = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: SmsData, loading: l_loading } = useSelector(
-        (state) => state.get_sms
-    );
+    const { response: SmsData, loading: l_loading } = useSelector((state) => state.get_sms);
     const { success: c_success } = useSelector((state) => state.create_sms);
     const { success: d_success } = useSelector((state) => state.delete_sms);
 
@@ -90,10 +62,7 @@ const Sms = (props) => {
                 accessor: "sms_by",
                 Cell: (data) => (
                     <Box>
-                        <StyledName
-                            component="p"
-                            sx={{ fontSize: "14px", opacity: 0.9 }}
-                        >
+                        <StyledName component="p" sx={{ fontSize: "14px", opacity: 0.9 }}>
                             {data.value ? data.value : "N/A"}
                         </StyledName>
                     </Box>
@@ -150,10 +119,7 @@ const Sms = (props) => {
                 maxWidth: 100,
                 Cell: (data) => (
                     <Box textAlign="left" sx={{}}>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data.value ? ReferenceName(88, data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -169,10 +135,7 @@ const Sms = (props) => {
                 maxWidth: 120,
                 Cell: (data) => (
                     <Box textAlign="center" sx={{}}>
-                        <StyledName
-                            component="p"
-                            sx={{ paddingLeft: "2px", opacity: 0.8 }}
-                        >
+                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
                             {data.value ? FormatDate(data.value) : "N/A"}
                         </StyledName>
                     </Box>
@@ -233,7 +196,7 @@ const Sms = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -254,15 +217,14 @@ const Sms = (props) => {
     ];
 
     const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
+        (value) => {
             const updatedFilterSchema = {
                 ...filterSchema,
-                search: searchValue,
+                search: value,
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -306,38 +268,33 @@ const Sms = (props) => {
     };
 
     return (
-        <>
-            <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
-            </Helmet>
-            <SmsContainer>
-                <Header title="SMS List">
-                    <CreateSms />
-                </Header>
-                <Filter
-                    sortData={sortData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                    filterSchema={filterSchema}
-                />
-                <Table
-                    columns={columns}
-                    data={SmsData?.data || []}
-                    title="SMS Details"
-                    sub_columns={sub_columns}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={SmsData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </SmsContainer>
-        </>
+        <PageContent documentTitle="SMS">
+            <Header title="SMS List">
+                <CreateSms />
+            </Header>
+            <Filter
+                sortData={sortData}
+                handleSearch={handleSearch}
+                handleSort={handleSort}
+                handleOrder={handleOrder}
+                filterSchema={filterSchema}
+            />
+            <Table
+                columns={columns}
+                data={SmsData?.data || []}
+                title="SMS Details"
+                sub_columns={sub_columns}
+                loading={l_loading}
+                rowsPerPage={8}
+                renderPagination={() => (
+                    <TablePagination
+                        paginationData={SmsData?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                )}
+            />
+        </PageContent>
     );
 };
 

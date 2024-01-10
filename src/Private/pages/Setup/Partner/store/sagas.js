@@ -114,9 +114,9 @@ export const updateAgentStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_PARTNER_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
@@ -362,9 +362,9 @@ export const updateBranchStatus = takeEvery(
         } catch (error) {
             yield put({
                 type: actions.UPDATE_AGENT_BRANCH_STATUS_FAILED,
-                error: error.data,
+                error: error?.data,
             });
-            yield put({ type: "SET_TOAST_DATA", response: error.data });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
         }
     }
 );
