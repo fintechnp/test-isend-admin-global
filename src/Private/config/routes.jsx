@@ -1,344 +1,344 @@
 import { lazy } from "react";
 import routePaths from "./routePaths";
 
-//Dashboard
-const Dashboard = lazy(() => import("../pages/Dashboard"));
-
-//users
-const Accounts = lazy(() => import("../pages/Users/Accounts"));
-const AddUserKyc = lazy(() => import("../pages/Users/Accounts/AddUserKyc"));
-const EditUserKyc = lazy(() => import("../pages/Users/Accounts/EditUserKyc"));
-const Menu = lazy(() => import("../pages/Users/Menu"));
-const SubMenu = lazy(() => import("../pages/Users/SubMenu"));
-
-//users permission
-const UserPermission = lazy(() => import("../pages/Users/UserPermission"));
-
-//setup
-const DeliveryOption = lazy(() => import("../pages/Setup/DeliveryOption"));
-const DeliveryRoute = lazy(() => import("../pages/Setup/DeliveryRoute"));
-const ExchangeRate = lazy(() => import("../pages/Setup/ExchangeRate"));
-const ExchangeRateList = lazy(() => import("../pages/Setup/ExchangeRate/ExchangeRateList"));
-const AddUpdateExchangeRate = lazy(() => import("../pages/Setup/ExchangeRate/AddUpdateExchangeRate"));
-const ExchangeRateDetails = lazy(() => import("../pages/Setup/ExchangeRate/ExchangeRateDetails"));
-const Partner = lazy(() => import("../pages/Setup/Partner"));
-const AddUpdatePartner = lazy(() => import("../pages/Setup/Partner/AddUpdatePartner"));
-const PartnerDetails = lazy(() => import("../pages/Setup/Partner/PartnerDetails"));
-const Corridor = lazy(() => import("../pages/Setup/Partner/Corridor"));
-const PartnerBranch = lazy(() => import("../pages/Setup/Partner/PartnerBranch"));
-const AddPartnerBranch = lazy(() => import("../pages/Setup/Partner/PartnerBranch/AddBranch"));
-const PartnerBank = lazy(() => import("../pages/Setup/PartnerBank"));
-const MapBank = lazy(() => import("../pages/Setup/PartnerBank/MapBank"));
-const PayoutLocation = lazy(() => import("../pages/Setup/PayoutLocation"));
-const Reference = lazy(() => import("../pages/Setup/Reference"));
-const ReferenceData = lazy(() => import("../pages/Setup/Reference/ReferenceData"));
-const ServiceCharge = lazy(() => import("../pages/Setup/ServiceCharge"));
-const ServiceChargeList = lazy(() => import("../pages/Setup/ServiceCharge/ServiceChargeList"));
-const AddUpdateServiceCharge = lazy(() => import("../pages/Setup/ServiceCharge/AddUpdateServiceCharge"));
-const ServiceChargeDetails = lazy(() => import("../pages/Setup/ServiceCharge/ServiceChargeDetails"));
-const PromoSetup = lazy(() => import("../pages/Setup/PromoSetup"));
-const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
-const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
-const LanguageSetup = lazy(() => import("../pages/Setup/LanguageSetup/LanguageSetup"));
-const LanguageCountry = lazy(() => import("../pages/Setup/LanguageCountry/LanguageCountry"));
-const AddLanguage = lazy(() => import("../pages/Setup/AddLanguage/AddLanguage"));
-const LocalizationDetails = lazy(() => import("../pages/Setup/LocalizationDetails/LocalizationDetails"));
-const StreetType = lazy(() => import("../pages/Setup/StreetType/StreetType"));
-
-//Customers
-const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
-const CreateCustomer = lazy(() => import("../pages/Customers/CreateCustomer"));
-const CustomerDetails = lazy(() => import("../pages/Customers/CustomerDetails"));
-const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
-const AddBeneficiary = lazy(() => import("../pages/Customers/Beneficiary/AddUpdateBeneficiary"));
-const BeneficiaryDetails = lazy(() => import("../pages/Customers/Beneficiary/Details"));
-const CustomerTransactions = lazy(() => import("../pages/Customers/Transactions"));
-const CustomerBanks = lazy(() => import("../pages/Customers/Banks/Banks"));
-const AllBanks = lazy(() => import("./../pages/Customers/AllBanks/BankList"));
-
-//Documents
-const Documents = lazy(() => import("../pages/Customers/Documents"));
-
-//remarks
-const CustomerRemarks = lazy(() => import("../pages/Customers/Remarks"));
-
-//Transactions
-const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
-const DailyTransactions = lazy(() => import("../pages/Transactions/DailyTransactions"));
-const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
-const TransactionRemarks = lazy(() => import("../pages/Transactions/Remarks"));
-
-//Reports
-const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
-const BeneficiaryReport = lazy(() => import("../pages/Reports/Beneficiary"));
-const YearlyTransactions = lazy(() => import("../pages/Reports/YearlyTransactions"));
-const TransactionsSummary = lazy(() => import("../pages/Reports/TransactionsSummary"));
-const CancelledTransactions = lazy(() => import("../pages/Reports/CancelledTransactions"));
-const ACHEntriesReport = lazy(() => import("../pages/Reports/ACHEntries/ACHEntriesReport"));
-const SuspiciousTransactions = lazy(() => import("../pages/Reports/SuspiciousTransactions"));
-const ICNResponseReport = lazy(() => import("../pages/Reports/ICNResponse/ICNResponseReport"));
-const UserIPWhitelistReport = lazy(() => import("../pages/Reports/UserIPWhitelist/UserIPWhitelistReport"));
-const IncompleteRegistrationReport = lazy(() =>
-    import("../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport"),
-);
-const OnfidoReport = lazy(() => import("../pages/Reports/OnfidoReports/OnfidoReport"));
-
-//PaymentProcess
-const PendingPayment = lazy(() => import("../pages/PaymentProcess/PendingPayment"));
-const PendingTransactions = lazy(() => import("../pages/PaymentProcess/PendingTransactions"));
-const BlockedTransactions = lazy(() => import("../pages/PaymentProcess/BlockedTransactions"));
-const Search = lazy(() => import("../pages/PaymentProcess/Search"));
-const AmlSupicious = lazy(() => import("../pages/PaymentProcess/AmlSupicious"));
-const ExceptionTransactions = lazy(() => import("../pages/PaymentProcess/ExceptionTransactions"));
-const TransactionsDetails = lazy(() => import("../pages/PaymentProcess/Details"));
-const TransactionDocuments = lazy(() => import("../pages/PaymentProcess/Details/Documents"));
-
-//Utilities
-const Sms = lazy(() => import("../pages/Utilities/Sms"));
-const Email = lazy(() => import("../pages/Utilities/Email"));
-const Fcm = lazy(() => import("../pages/Utilities/Fcm"));
-
-//Compliance
-const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
-const CompliancePaymentRules = lazy(() => import("../pages/Compliance/PaymentRules"));
-
-//Settings
-const Settings = lazy(() => import("../pages/Settings"));
-
-//Messages
-const Messages = lazy(() => import("../pages/Messages"));
-
-//My Account
-const MyAccount = lazy(() => import("../pages/MyAccount"));
-
-const ListBanner = lazy(() => import("../pages/Setup/Banner/ListBanner"));
-const ListBulkEmail = lazy(() => import("../pages/BulkEmail/ListBulkEmail"));
-const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
-const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFundingSource"));
-
-//Market Maker
-
-const ListMarketMaker = lazy(() => import("../pages/MarketMaker/ListMarketMaker"));
-const AddMarketMaker = lazy(() => import("../pages/MarketMaker/AddMarketMaker"));
-const ViewMarketMaker = lazy(() => import("../pages/MarketMaker/ViewMarketMaker"));
-const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMaker"));
-const AddMarketMakerKyb = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
-const AddMarketMakerKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyc"));
-const UpdateMarketMakerKyb = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyb"));
-const UpdateMarketMakerKyc = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyc"));
-
-///Credit Limit
-
-const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
-const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
-const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
-const EditCreditLimit = lazy(() => import("../pages/CreditLimit/EditCreditLimit"));
-
-// BALANCE REQUEST
-
-const ListBalanceRequest = lazy(() => import("../pages/BalanceRequest/ListBalanceRequest"));
-const ViewBalanceRequest = lazy(() => import("../pages/BalanceRequest/ViewBalanceRequest"));
-
-//Business
-const ListBusiness = lazy(() => import("../pages/Business/ListBusiness"));
-const ViewBusiness = lazy(() => import("../pages/Business/ViewBusiness"));
-const ListSingeTransaction = lazy(() => import("../pages/B2BTransactions/ListSingleTransaction"));
-const ViewSingleTransaction = lazy(() => import("../pages/B2BTransactions/ViewSingleTransaction"));
-const ListBatchTransaction = lazy(() => import("../pages/B2BTransactions/ListBatchTransaction"));
-const ViewBatchTransaction = lazy(() => import("../pages/B2BTransactions/ViewBatchTransaction"));
-
-// B2b Beneficiary
-
-const ListB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ListBeneficiary"));
-const ViewB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ViewBeneficiary"));
-
-// BUSINESS SERVICE CHARGE
-
-const ListBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/ListBusinessServiceCharge"));
-const AddBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/AddBusinessServiceCharge"));
-const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/UpdateBusinessServiceCharge"));
-
-//LIST KYC USER
-
-const ListKycUser = lazy(() => import("../pages/KycUser/ListKycUser"));
-const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
-
-const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
-const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
-
-//Ledger
-
-const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
-const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
-const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
-
-// B2b Account
-
-const ListB2bAccount = lazy(() => import("../pages/B2BAccount/ListAllAccounts"));
-
 // //Dashboard
-// import Dashboard from "../pages/Dashboard";
+// const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 // //users
-// import Accounts from "../pages/Users/Accounts";
-// import AddUserKyc from "../pages/Users/Accounts/AddUserKyc";
-// import EditUserKyc from "../pages/Users/Accounts/EditUserKyc";
-// import Menu from "../pages/Users/Menu";
-// import SubMenu from "../pages/Users/SubMenu";
+// const Accounts = lazy(() => import("../pages/Users/Accounts"));
+// const AddUserKyc = lazy(() => import("../pages/Users/Accounts/AddUserKyc"));
+// const EditUserKyc = lazy(() => import("../pages/Users/Accounts/EditUserKyc"));
+// const Menu = lazy(() => import("../pages/Users/Menu"));
+// const SubMenu = lazy(() => import("../pages/Users/SubMenu"));
 
 // //users permission
-// import UserPermission from "../pages/Users/UserPermission";
+// const UserPermission = lazy(() => import("../pages/Users/UserPermission"));
 
 // //setup
-// import DeliveryOption from "../pages/Setup/DeliveryOption";
-// import DeliveryRoute from "../pages/Setup/DeliveryRoute";
-// import ExchangeRate from "../pages/Setup/ExchangeRate";
-// import ExchangeRateList from "../pages/Setup/ExchangeRate/ExchangeRateList";
-// import AddUpdateExchangeRate from "../pages/Setup/ExchangeRate/AddUpdateExchangeRate";
-// import ExchangeRateDetails from "../pages/Setup/ExchangeRate/ExchangeRateDetails";
-// import Partner from "../pages/Setup/Partner";
-// import AddUpdatePartner from "../pages/Setup/Partner/AddUpdatePartner";
-// import PartnerDetails from "../pages/Setup/Partner/PartnerDetails";
-// import Corridor from "../pages/Setup/Partner/Corridor";
-// import PartnerBranch from "../pages/Setup/Partner/PartnerBranch";
-// import AddPartnerBranch from "../pages/Setup/Partner/PartnerBranch/AddBranch";
-// import PartnerBank from "../pages/Setup/PartnerBank";
-// import MapBank from "../pages/Setup/PartnerBank/MapBank";
-// import PayoutLocation from "../pages/Setup/PayoutLocation";
-// import Reference from "../pages/Setup/Reference";
-// import ReferenceData from "../pages/Setup/Reference/ReferenceData";
-// import ServiceCharge from "../pages/Setup/ServiceCharge";
-// import ServiceChargeList from "../pages/Setup/ServiceCharge/ServiceChargeList";
-// import AddUpdateServiceCharge from "../pages/Setup/ServiceCharge/AddUpdateServiceCharge";
-// import ServiceChargeDetails from "../pages/Setup/ServiceCharge/ServiceChargeDetails";
-// import PromoSetup from "../pages/Setup/PromoSetup";
-// import PromoCode from "../pages/Setup/PromoSetup/PromoCode";
-// import ApiConfiguration from "../pages/Setup/ApiConfiguration";
-// import LanguageSetup from "../pages/Setup/LanguageSetup/LanguageSetup";
-// import LanguageCountry from "../pages/Setup/LanguageCountry/LanguageCountry";
-// import AddLanguage from "../pages/Setup/AddLanguage/AddLanguage";
-// import LocalizationDetails from "../pages/Setup/LocalizationDetails/LocalizationDetails";
-// import StreetType from "../pages/Setup/StreetType/StreetType";
+// const DeliveryOption = lazy(() => import("../pages/Setup/DeliveryOption"));
+// const DeliveryRoute = lazy(() => import("../pages/Setup/DeliveryRoute"));
+// const ExchangeRate = lazy(() => import("../pages/Setup/ExchangeRate"));
+// const ExchangeRateList = lazy(() => import("../pages/Setup/ExchangeRate/ExchangeRateList"));
+// const AddUpdateExchangeRate = lazy(() => import("../pages/Setup/ExchangeRate/AddUpdateExchangeRate"));
+// const ExchangeRateDetails = lazy(() => import("../pages/Setup/ExchangeRate/ExchangeRateDetails"));
+// const Partner = lazy(() => import("../pages/Setup/Partner"));
+// const AddUpdatePartner = lazy(() => import("../pages/Setup/Partner/AddUpdatePartner"));
+// const PartnerDetails = lazy(() => import("../pages/Setup/Partner/PartnerDetails"));
+// const Corridor = lazy(() => import("../pages/Setup/Partner/Corridor"));
+// const PartnerBranch = lazy(() => import("../pages/Setup/Partner/PartnerBranch"));
+// const AddPartnerBranch = lazy(() => import("../pages/Setup/Partner/PartnerBranch/AddBranch"));
+// const PartnerBank = lazy(() => import("../pages/Setup/PartnerBank"));
+// const MapBank = lazy(() => import("../pages/Setup/PartnerBank/MapBank"));
+// const PayoutLocation = lazy(() => import("../pages/Setup/PayoutLocation"));
+// const Reference = lazy(() => import("../pages/Setup/Reference"));
+// const ReferenceData = lazy(() => import("../pages/Setup/Reference/ReferenceData"));
+// const ServiceCharge = lazy(() => import("../pages/Setup/ServiceCharge"));
+// const ServiceChargeList = lazy(() => import("../pages/Setup/ServiceCharge/ServiceChargeList"));
+// const AddUpdateServiceCharge = lazy(() => import("../pages/Setup/ServiceCharge/AddUpdateServiceCharge"));
+// const ServiceChargeDetails = lazy(() => import("../pages/Setup/ServiceCharge/ServiceChargeDetails"));
+// const PromoSetup = lazy(() => import("../pages/Setup/PromoSetup"));
+// const PromoCode = lazy(() => import("../pages/Setup/PromoSetup/PromoCode"));
+// const ApiConfiguration = lazy(() => import("../pages/Setup/ApiConfiguration"));
+// const LanguageSetup = lazy(() => import("../pages/Setup/LanguageSetup/LanguageSetup"));
+// const LanguageCountry = lazy(() => import("../pages/Setup/LanguageCountry/LanguageCountry"));
+// const AddLanguage = lazy(() => import("../pages/Setup/AddLanguage/AddLanguage"));
+// const LocalizationDetails = lazy(() => import("../pages/Setup/LocalizationDetails/LocalizationDetails"));
+// const StreetType = lazy(() => import("../pages/Setup/StreetType/StreetType"));
 
 // //Customers
-// import CustomerSearch from "../pages/Customers/Search";
-// import CreateCustomer from "../pages/Customers/CreateCustomer";
-// import CustomerDetails from "../pages/Customers/CustomerDetails";
-// import AllBeneficiary from "../pages/Customers/Beneficiary";
-// import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
-// import BeneficiaryDetails from "../pages/Customers/Beneficiary/Details";
-// import CustomerTransactions from "../pages/Customers/Transactions";
-// import CustomerBanks from "../pages/Customers/Banks/Banks";
-// import AllBanks from "../pages/Customers/AllBanks/BankList";
+// const CustomerSearch = lazy(() => import("../pages/Customers/Search"));
+// const CreateCustomer = lazy(() => import("../pages/Customers/CreateCustomer"));
+// const CustomerDetails = lazy(() => import("../pages/Customers/CustomerDetails"));
+// const AllBeneficiary = lazy(() => import("../pages/Customers/Beneficiary"));
+// const AddBeneficiary = lazy(() => import("../pages/Customers/Beneficiary/AddUpdateBeneficiary"));
+// const BeneficiaryDetails = lazy(() => import("../pages/Customers/Beneficiary/Details"));
+// const CustomerTransactions = lazy(() => import("../pages/Customers/Transactions"));
+// const CustomerBanks = lazy(() => import("../pages/Customers/Banks/Banks"));
+// const AllBanks = lazy(() => import("./../pages/Customers/AllBanks/BankList"));
 
 // //Documents
-// import Documents from "../pages/Customers/Documents";
+// const Documents = lazy(() => import("../pages/Customers/Documents"));
 
 // //remarks
-// import CustomerRemarks from "../pages/Customers/Remarks";
+// const CustomerRemarks = lazy(() => import("../pages/Customers/Remarks"));
 
 // //Transactions
-// import CreateTransactions from "../pages/Transactions/Create";
-// import DailyTransactions from "../pages/Transactions/DailyTransactions";
-// import SearchTransactions from "../pages/Transactions/Search";
-// import TransactionRemarks from "../pages/Transactions/Remarks";
+// const CreateTransactions = lazy(() => import("../pages/Transactions/Create"));
+// const DailyTransactions = lazy(() => import("../pages/Transactions/DailyTransactions"));
+// const SearchTransactions = lazy(() => import("../pages/Transactions/Search"));
+// const TransactionRemarks = lazy(() => import("../pages/Transactions/Remarks"));
 
 // //Reports
-// import CustomerReport from "../pages/Reports/Customer";
-// import BeneficiaryReport from "../pages/Reports/Beneficiary";
-// import YearlyTransactions from "../pages/Reports/YearlyTransactions";
-// import TransactionsSummary from "../pages/Reports/TransactionsSummary";
-// import CancelledTransactions from "../pages/Reports/CancelledTransactions";
-// import ACHEntriesReport from "../pages/Reports/ACHEntries/ACHEntriesReport";
-// import SuspiciousTransactions from "../pages/Reports/SuspiciousTransactions";
-// import ICNResponseReport from "../pages/Reports/ICNResponse/ICNResponseReport";
-// import UserIPWhitelistReport from "../pages/Reports/UserIPWhitelist/UserIPWhitelistReport";
-// import IncompleteRegistrationReport from "../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport";
-// import OnfidoReport from "../pages/Reports/OnfidoReports/OnfidoReport";
+// const CustomerReport = lazy(() => import("../pages/Reports/Customer"));
+// const BeneficiaryReport = lazy(() => import("../pages/Reports/Beneficiary"));
+// const YearlyTransactions = lazy(() => import("../pages/Reports/YearlyTransactions"));
+// const TransactionsSummary = lazy(() => import("../pages/Reports/TransactionsSummary"));
+// const CancelledTransactions = lazy(() => import("../pages/Reports/CancelledTransactions"));
+// const ACHEntriesReport = lazy(() => import("../pages/Reports/ACHEntries/ACHEntriesReport"));
+// const SuspiciousTransactions = lazy(() => import("../pages/Reports/SuspiciousTransactions"));
+// const ICNResponseReport = lazy(() => import("../pages/Reports/ICNResponse/ICNResponseReport"));
+// const UserIPWhitelistReport = lazy(() => import("../pages/Reports/UserIPWhitelist/UserIPWhitelistReport"));
+// const IncompleteRegistrationReport = lazy(() =>
+//     import("../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport"),
+// );
+// const OnfidoReport = lazy(() => import("../pages/Reports/OnfidoReports/OnfidoReport"));
 
 // //PaymentProcess
-// import PendingPayment from "../pages/PaymentProcess/PendingPayment";
-// import PendingTransactions from "../pages/PaymentProcess/PendingTransactions";
-// import BlockedTransactions from "../pages/PaymentProcess/BlockedTransactions";
-// import Search from "../pages/PaymentProcess/Search";
-// import AmlSupicious from "../pages/PaymentProcess/AmlSupicious";
-// import ExceptionTransactions from "../pages/PaymentProcess/ExceptionTransactions";
-// import TransactionsDetails from "../pages/PaymentProcess/Details";
-// import TransactionDocuments from "../pages/PaymentProcess/Details/Documents";
+// const PendingPayment = lazy(() => import("../pages/PaymentProcess/PendingPayment"));
+// const PendingTransactions = lazy(() => import("../pages/PaymentProcess/PendingTransactions"));
+// const BlockedTransactions = lazy(() => import("../pages/PaymentProcess/BlockedTransactions"));
+// const Search = lazy(() => import("../pages/PaymentProcess/Search"));
+// const AmlSupicious = lazy(() => import("../pages/PaymentProcess/AmlSupicious"));
+// const ExceptionTransactions = lazy(() => import("../pages/PaymentProcess/ExceptionTransactions"));
+// const TransactionsDetails = lazy(() => import("../pages/PaymentProcess/Details"));
+// const TransactionDocuments = lazy(() => import("../pages/PaymentProcess/Details/Documents"));
 
 // //Utilities
-// import Sms from "../pages/Utilities/Sms";
-// import Email from "../pages/Utilities/Email";
-// import Fcm from "../pages/Utilities/Fcm";
+// const Sms = lazy(() => import("../pages/Utilities/Sms"));
+// const Email = lazy(() => import("../pages/Utilities/Email"));
+// const Fcm = lazy(() => import("../pages/Utilities/Fcm"));
 
 // //Compliance
-// import SanctionList from "../pages/Compliance/SanctionList";
-// import CompliancePaymentRules from "../pages/Compliance/PaymentRules";
+// const SanctionList = lazy(() => import("../pages/Compliance/SanctionList"));
+// const CompliancePaymentRules = lazy(() => import("../pages/Compliance/PaymentRules"));
 
 // //Settings
-// import Settings from "../pages/Settings";
+// const Settings = lazy(() => import("../pages/Settings"));
 
 // //Messages
-// import Messages from "../pages/Messages";
+// const Messages = lazy(() => import("../pages/Messages"));
 
 // //My Account
-// import MyAccount from "../pages/MyAccount";
+// const MyAccount = lazy(() => import("../pages/MyAccount"));
 
-// import ListBanner from "../pages/Setup/Banner/ListBanner";
-// import ListBulkEmail from "../pages/BulkEmail/ListBulkEmail";
-// import ListCountryState from "../pages/Setup/CountryState/ListCountryState";
-// import ListFundingSource from "../pages/Setup/FundingSource/ListFundingSource";
+// const ListBanner = lazy(() => import("../pages/Setup/Banner/ListBanner"));
+// const ListBulkEmail = lazy(() => import("../pages/BulkEmail/ListBulkEmail"));
+// const ListCountryState = lazy(() => import("../pages/Setup/CountryState/ListCountryState"));
+// const ListFundingSource = lazy(() => import("../pages/Setup/FundingSource/ListFundingSource"));
 
 // //Market Maker
-// import ListMarketMaker from "../pages/MarketMaker/ListMarketMaker";
-// import AddMarketMaker from "../pages/MarketMaker/AddMarketMaker";
-// import ViewMarketMaker from "../pages/MarketMaker/ViewMarketMaker";
-// import UpdateMarketMaker from "../pages/MarketMaker/UpdateMarketMaker";
-// import AddMarketMakerKyb from "../pages/MarketMaker/AddMarketMakerKyb";
-// import AddMarketMakerKyc from "../pages/MarketMaker/AddMarketMakerKyc";
-// import UpdateMarketMakerKyb from "../pages/MarketMaker/UpdateMarketMakerKyb";
-// import UpdateMarketMakerKyc from "../pages/MarketMaker/UpdateMarketMakerKyc";
+
+// const ListMarketMaker = lazy(() => import("../pages/MarketMaker/ListMarketMaker"));
+// const AddMarketMaker = lazy(() => import("../pages/MarketMaker/AddMarketMaker"));
+// const ViewMarketMaker = lazy(() => import("../pages/MarketMaker/ViewMarketMaker"));
+// const UpdateMarketMaker = lazy(() => import("../pages/MarketMaker/UpdateMarketMaker"));
+// const AddMarketMakerKyb = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyb"));
+// const AddMarketMakerKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerKyc"));
+// const UpdateMarketMakerKyb = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyb"));
+// const UpdateMarketMakerKyc = lazy(() => import("../pages/MarketMaker/UpdateMarketMakerKyc"));
 
 // ///Credit Limit
-// import CreditLimit from "../pages/CreditLimit/CreditLimit";
-// import AddCreditLimit from "../pages/CreditLimit/AddCreditLimit";
-// import ViewCreditLimit from "../pages/CreditLimit/ViewCreditLimit";
-// import EditCreditLimit from "../pages/CreditLimit/EditCreditLimit";
+
+// const CreditLimit = lazy(() => import("../pages/CreditLimit/CreditLimit"));
+// const AddCreditLimit = lazy(() => import("../pages/CreditLimit/AddCreditLimit"));
+// const ViewCreditLimit = lazy(() => import("../pages/CreditLimit/ViewCreditLimit"));
+// const EditCreditLimit = lazy(() => import("../pages/CreditLimit/EditCreditLimit"));
 
 // // BALANCE REQUEST
-// import ListBalanceRequest from "../pages/BalanceRequest/ListBalanceRequest";
-// import ViewBalanceRequest from "../pages/BalanceRequest/ViewBalanceRequest";
+
+// const ListBalanceRequest = lazy(() => import("../pages/BalanceRequest/ListBalanceRequest"));
+// const ViewBalanceRequest = lazy(() => import("../pages/BalanceRequest/ViewBalanceRequest"));
 
 // //Business
-// import ListBusiness from "../pages/Business/ListBusiness";
-// import ViewBusiness from "../pages/Business/ViewBusiness";
-// import ListSingeTransaction from "../pages/B2BTransactions/ListSingleTransaction";
-// import ViewSingleTransaction from "../pages/B2BTransactions/ViewSingleTransaction";
-// import ListBatchTransaction from "../pages/B2BTransactions/ListBatchTransaction";
-// import ViewBatchTransaction from "../pages/B2BTransactions/ViewBatchTransaction";
+// const ListBusiness = lazy(() => import("../pages/Business/ListBusiness"));
+// const ViewBusiness = lazy(() => import("../pages/Business/ViewBusiness"));
+// const ListSingeTransaction = lazy(() => import("../pages/B2BTransactions/ListSingleTransaction"));
+// const ViewSingleTransaction = lazy(() => import("../pages/B2BTransactions/ViewSingleTransaction"));
+// const ListBatchTransaction = lazy(() => import("../pages/B2BTransactions/ListBatchTransaction"));
+// const ViewBatchTransaction = lazy(() => import("../pages/B2BTransactions/ViewBatchTransaction"));
 
 // // B2b Beneficiary
-// import ListB2bBeneficiary from "../pages/Beneficiary/ListBeneficiary";
-// import ViewB2bBeneficiary from "../pages/Beneficiary/ViewBeneficiary";
+
+// const ListB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ListBeneficiary"));
+// const ViewB2bBeneficiary = lazy(() => import("../pages/Beneficiary/ViewBeneficiary"));
 
 // // BUSINESS SERVICE CHARGE
-// import ListBusinessServiceCharge from "../pages/BusinessServiceCharge/ListBusinessServiceCharge";
-// import AddBusinessServiceCharge from "../pages/BusinessServiceCharge/AddBusinessServiceCharge";
-// import UpdateBusinessServiceCharge from "../pages/BusinessServiceCharge/UpdateBusinessServiceCharge";
+
+// const ListBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/ListBusinessServiceCharge"));
+// const AddBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/AddBusinessServiceCharge"));
+// const UpdateBusinessServiceCharge = lazy(() => import("../pages/BusinessServiceCharge/UpdateBusinessServiceCharge"));
 
 // //LIST KYC USER
-// import ListKycUser from "../pages/KycUser/ListKycUser";
-// import ViewKycUser from "../pages/KycUser/ViewKycUser";
-// import AddMarketMakerUserKyc from "../pages/MarketMaker/AddMarketMakerUserKyc";
-// import EditMarketMakerUserKyc from "../pages/MarketMaker/EditMarketMakerUserKyc";
+
+// const ListKycUser = lazy(() => import("../pages/KycUser/ListKycUser"));
+// const ViewKycUser = lazy(() => import("../pages/KycUser/ViewKycUser"));
+
+// const AddMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/AddMarketMakerUserKyc"));
+// const EditMarketMakerUserKyc = lazy(() => import("../pages/MarketMaker/EditMarketMakerUserKyc"));
 
 // //Ledger
-// import ListLedger from "../pages/Ledger/ListLedger";
-// import ViewLedger from "../pages/Ledger/ViewLedger";
-// import AddLedger from "../pages/Ledger/AddLedger";
+
+// const ListLedger = lazy(() => import("../pages/Ledger/ListLedger"));
+// const ViewLedger = lazy(() => import("../pages/Ledger/ViewLedger"));
+// const AddLedger = lazy(() => import("../pages/Ledger/AddLedger"));
 
 // // B2b Account
-// import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
+
+// const ListB2bAccount = lazy(() => import("../pages/B2BAccount/ListAllAccounts"));
+
+//Dashboard
+import Dashboard from "../pages/Dashboard";
+
+//users
+import Accounts from "../pages/Users/Accounts";
+import AddUserKyc from "../pages/Users/Accounts/AddUserKyc";
+import EditUserKyc from "../pages/Users/Accounts/EditUserKyc";
+import Menu from "../pages/Users/Menu";
+import SubMenu from "../pages/Users/SubMenu";
+
+//users permission
+import UserPermission from "../pages/Users/UserPermission";
+
+//setup
+import DeliveryOption from "../pages/Setup/DeliveryOption";
+import DeliveryRoute from "../pages/Setup/DeliveryRoute";
+import ExchangeRate from "../pages/Setup/ExchangeRate";
+import ExchangeRateList from "../pages/Setup/ExchangeRate/ExchangeRateList";
+import AddUpdateExchangeRate from "../pages/Setup/ExchangeRate/AddUpdateExchangeRate";
+import ExchangeRateDetails from "../pages/Setup/ExchangeRate/ExchangeRateDetails";
+import Partner from "../pages/Setup/Partner";
+import AddUpdatePartner from "../pages/Setup/Partner/AddUpdatePartner";
+import PartnerDetails from "../pages/Setup/Partner/PartnerDetails";
+import Corridor from "../pages/Setup/Partner/Corridor";
+import PartnerBranch from "../pages/Setup/Partner/PartnerBranch";
+import AddPartnerBranch from "../pages/Setup/Partner/PartnerBranch/AddBranch";
+import PartnerBank from "../pages/Setup/PartnerBank";
+import MapBank from "../pages/Setup/PartnerBank/MapBank";
+import PayoutLocation from "../pages/Setup/PayoutLocation";
+import Reference from "../pages/Setup/Reference";
+import ReferenceData from "../pages/Setup/Reference/ReferenceData";
+import ServiceCharge from "../pages/Setup/ServiceCharge";
+import ServiceChargeList from "../pages/Setup/ServiceCharge/ServiceChargeList";
+import AddUpdateServiceCharge from "../pages/Setup/ServiceCharge/AddUpdateServiceCharge";
+import ServiceChargeDetails from "../pages/Setup/ServiceCharge/ServiceChargeDetails";
+import PromoSetup from "../pages/Setup/PromoSetup";
+import PromoCode from "../pages/Setup/PromoSetup/PromoCode";
+import ApiConfiguration from "../pages/Setup/ApiConfiguration";
+import LanguageSetup from "../pages/Setup/LanguageSetup/LanguageSetup";
+import LanguageCountry from "../pages/Setup/LanguageCountry/LanguageCountry";
+import AddLanguage from "../pages/Setup/AddLanguage/AddLanguage";
+import LocalizationDetails from "../pages/Setup/LocalizationDetails/LocalizationDetails";
+import StreetType from "../pages/Setup/StreetType/StreetType";
+
+//Customers
+import CustomerSearch from "../pages/Customers/Search";
+import CreateCustomer from "../pages/Customers/CreateCustomer";
+import CustomerDetails from "../pages/Customers/CustomerDetails";
+import AllBeneficiary from "../pages/Customers/Beneficiary";
+import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
+import BeneficiaryDetails from "../pages/Customers/Beneficiary/Details";
+import CustomerTransactions from "../pages/Customers/Transactions";
+import CustomerBanks from "../pages/Customers/Banks/Banks";
+import AllBanks from "../pages/Customers/AllBanks/BankList";
+
+//Documents
+import Documents from "../pages/Customers/Documents";
+
+//remarks
+import CustomerRemarks from "../pages/Customers/Remarks";
+
+//Transactions
+import CreateTransactions from "../pages/Transactions/Create";
+import DailyTransactions from "../pages/Transactions/DailyTransactions";
+import SearchTransactions from "../pages/Transactions/Search";
+import TransactionRemarks from "../pages/Transactions/Remarks";
+
+//Reports
+import CustomerReport from "../pages/Reports/Customer";
+import BeneficiaryReport from "../pages/Reports/Beneficiary";
+import YearlyTransactions from "../pages/Reports/YearlyTransactions";
+import TransactionsSummary from "../pages/Reports/TransactionsSummary";
+import CancelledTransactions from "../pages/Reports/CancelledTransactions";
+import ACHEntriesReport from "../pages/Reports/ACHEntries/ACHEntriesReport";
+import SuspiciousTransactions from "../pages/Reports/SuspiciousTransactions";
+import ICNResponseReport from "../pages/Reports/ICNResponse/ICNResponseReport";
+import UserIPWhitelistReport from "../pages/Reports/UserIPWhitelist/UserIPWhitelistReport";
+import IncompleteRegistrationReport from "../pages/Reports/IncompleteRegistration/IncompleteRegistrationReport";
+import OnfidoReport from "../pages/Reports/OnfidoReports/OnfidoReport";
+
+//PaymentProcess
+import PendingPayment from "../pages/PaymentProcess/PendingPayment";
+import PendingTransactions from "../pages/PaymentProcess/PendingTransactions";
+import BlockedTransactions from "../pages/PaymentProcess/BlockedTransactions";
+import Search from "../pages/PaymentProcess/Search";
+import AmlSupicious from "../pages/PaymentProcess/AmlSupicious";
+import ExceptionTransactions from "../pages/PaymentProcess/ExceptionTransactions";
+import TransactionsDetails from "../pages/PaymentProcess/Details";
+import TransactionDocuments from "../pages/PaymentProcess/Details/Documents";
+
+//Utilities
+import Sms from "../pages/Utilities/Sms";
+import Email from "../pages/Utilities/Email";
+import Fcm from "../pages/Utilities/Fcm";
+
+//Compliance
+import SanctionList from "../pages/Compliance/SanctionList";
+import CompliancePaymentRules from "../pages/Compliance/PaymentRules";
+
+//Settings
+import Settings from "../pages/Settings";
+
+//Messages
+import Messages from "../pages/Messages";
+
+//My Account
+import MyAccount from "../pages/MyAccount";
+
+import ListBanner from "../pages/Setup/Banner/ListBanner";
+import ListBulkEmail from "../pages/BulkEmail/ListBulkEmail";
+import ListCountryState from "../pages/Setup/CountryState/ListCountryState";
+import ListFundingSource from "../pages/Setup/FundingSource/ListFundingSource";
+
+//Market Maker
+import ListMarketMaker from "../pages/MarketMaker/ListMarketMaker";
+import AddMarketMaker from "../pages/MarketMaker/AddMarketMaker";
+import ViewMarketMaker from "../pages/MarketMaker/ViewMarketMaker";
+import UpdateMarketMaker from "../pages/MarketMaker/UpdateMarketMaker";
+import AddMarketMakerKyb from "../pages/MarketMaker/AddMarketMakerKyb";
+import AddMarketMakerKyc from "../pages/MarketMaker/AddMarketMakerKyc";
+import UpdateMarketMakerKyb from "../pages/MarketMaker/UpdateMarketMakerKyb";
+import UpdateMarketMakerKyc from "../pages/MarketMaker/UpdateMarketMakerKyc";
+
+///Credit Limit
+import CreditLimit from "../pages/CreditLimit/CreditLimit";
+import AddCreditLimit from "../pages/CreditLimit/AddCreditLimit";
+import ViewCreditLimit from "../pages/CreditLimit/ViewCreditLimit";
+import EditCreditLimit from "../pages/CreditLimit/EditCreditLimit";
+
+// BALANCE REQUEST
+import ListBalanceRequest from "../pages/BalanceRequest/ListBalanceRequest";
+import ViewBalanceRequest from "../pages/BalanceRequest/ViewBalanceRequest";
+
+//Business
+import ListBusiness from "../pages/Business/ListBusiness";
+import ViewBusiness from "../pages/Business/ViewBusiness";
+import ListSingeTransaction from "../pages/B2BTransactions/ListSingleTransaction";
+import ViewSingleTransaction from "../pages/B2BTransactions/ViewSingleTransaction";
+import ListBatchTransaction from "../pages/B2BTransactions/ListBatchTransaction";
+import ViewBatchTransaction from "../pages/B2BTransactions/ViewBatchTransaction";
+
+// B2b Beneficiary
+import ListB2bBeneficiary from "../pages/Beneficiary/ListBeneficiary";
+import ViewB2bBeneficiary from "../pages/Beneficiary/ViewBeneficiary";
+
+// BUSINESS SERVICE CHARGE
+import ListBusinessServiceCharge from "../pages/BusinessServiceCharge/ListBusinessServiceCharge";
+import AddBusinessServiceCharge from "../pages/BusinessServiceCharge/AddBusinessServiceCharge";
+import UpdateBusinessServiceCharge from "../pages/BusinessServiceCharge/UpdateBusinessServiceCharge";
+
+//LIST KYC USER
+import ListKycUser from "../pages/KycUser/ListKycUser";
+import ViewKycUser from "../pages/KycUser/ViewKycUser";
+import AddMarketMakerUserKyc from "../pages/MarketMaker/AddMarketMakerUserKyc";
+import EditMarketMakerUserKyc from "../pages/MarketMaker/EditMarketMakerUserKyc";
+
+//Ledger
+import ListLedger from "../pages/Ledger/ListLedger";
+import ViewLedger from "../pages/Ledger/ViewLedger";
+import AddLedger from "../pages/Ledger/AddLedger";
+
+// B2b Account
+import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
 
 
 const privateRoutes = [
