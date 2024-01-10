@@ -32,8 +32,6 @@ export default function MarketMakerUserKycListing() {
     );
     const { response: users, loading: userLoading } = useSelector((state) => state.get_market_maker_users);
 
-    console.log("🚀 ~ file: MarketMakerUserKycListing.jsx:34 ~ MarketMakerUserKycListing ~ users:", users);
-
     useEffect(() => {
         dispatch(mActions.get_market_maker_users(marketMakerId));
     }, [marketMakerId]);
