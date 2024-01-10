@@ -49,7 +49,7 @@ function Login() {
                 }),
             );
             setLoading(false);
-            history.push('/dashboard')
+            history.push('/')
         } catch (err) {
             setLoading(false);
             dispatch({
