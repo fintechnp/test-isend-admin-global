@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { reset } from "redux-form";
-import { Buffer } from "buffer";
 import { useSelector, useDispatch } from "react-redux";
 
 import ResetForm from "../components/ResetForm";
@@ -16,8 +15,7 @@ function ResetPassword() {
 
     const [searchParams] = useSearchParams();
 
-    const apiBaseUrl = Buffer.from(searchParams.get("base_url"), "base64")
-        .toString("utf-8")
+    const apiBaseUrl = atob(searchParams.get("base_url") ?? '')
         .replace("http://", "https://");
 
     let { success, loading } = useSelector((state) => state.reset_password);
