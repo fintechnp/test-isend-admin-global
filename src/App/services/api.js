@@ -19,7 +19,7 @@ export default class Api {
 
         const availableCountries = sendingCountries.map(c => c.value.toLowerCase());
 
-        if(!availableCountries.includes(selectedCountry) && app.apiBaseUrl.match(/{country}/g)) {
+        if(!availableCountries.includes(selectedCountry) && !window.location.pathname.startsWith('/reset/')) {
             AuthUtility.logOut();
             window.location.href = '/login'
             return;

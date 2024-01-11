@@ -1,12 +1,12 @@
-import React, { createContext, useContext, Component } from "react";
 import Cookies from "js-cookie";
-import authService from "./authHelper";
-import showToast from "../components/Toast";
-import Api from "./../services/api";
+import React, { createContext, useContext, Component } from "react";
+
 import store from "./../store";
-import { preserveIntendedPath } from "App/routes";
-import AuthUtility from "App/utils/AuthUtility";
+import authService from "./authHelper";
 import isEmpty from "App/helpers/isEmpty";
+import showToast from "../components/Toast";
+import AuthUtility from "App/utils/AuthUtility";
+import { preserveIntendedPath } from "App/routes";
 
 const initialState = {
     authStatusReported: false,
@@ -119,7 +119,6 @@ export default class AuthProvider extends Component {
 
     render() {
         const { children } = this.props;
-        const { authStatusReported } = this.state;
         return <AuthContext.Provider value={this.state}>{children}</AuthContext.Provider>
     }
 }
