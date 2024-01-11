@@ -37,6 +37,10 @@ export default class AuthProvider extends Component {
     state = initialState;
 
     componentDidMount = async () => {
+
+        // @ignore check for reset password 
+        if(window.location.pathname.startsWith('/reset/'))  return;
+
         this.setState({
             setUserData: (data) => {
                 this.setState({
@@ -116,13 +120,7 @@ export default class AuthProvider extends Component {
     render() {
         const { children } = this.props;
         const { authStatusReported } = this.state;
-        return authStatusReported ? (
-            <>
-                <AuthContext.Provider value={this.state}>{children}</AuthContext.Provider>
-            </>
-        ) : (
-            <></>
-        );
+        return <AuthContext.Provider value={this.state}>{children}</AuthContext.Provider>
     }
 }
 
