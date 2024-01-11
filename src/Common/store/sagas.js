@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { put, takeEvery, call, all } from "redux-saga/effects";
 
 import Api from "../../App/services/api";
@@ -85,24 +86,25 @@ export const get_all_reference = takeEvery(actions.GET_ALL_REFERENCE, function* 
 });
 
 export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action) {
-    const api = new Api();
     const { api_base_url, ...data } = action.data;
 
     const apiBaseUrl = api_base_url.endsWith('/') ? api_base_url : api_base_url + '/';
 
     try {
-        const res = yield call(api.post, `${apiBaseUrl}api/account/resetpassword`, data);
+        const res = yield call(axios.post, `${apiBaseUrl}api/account/resetpassword`, data);
         yield put({
             type: actions.PASSWORD_RESET_SUCCESS,
             response: res,
         });
+
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
+        
         yield put({
             type: actions.PASSWORD_RESET_FAILED,
-            error: error?.data,
+            error: error?.data ,
         });
-        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data ?? error?.response?.data });
     }
 });
 
