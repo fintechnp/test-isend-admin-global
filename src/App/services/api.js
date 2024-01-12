@@ -2,25 +2,32 @@ import axios from "axios";
 
 import AuthUtility from "App/utils/AuthUtility";
 import { preserveIntendedPath } from "App/routes";
-import BaseUrlConfiguration from 'App/lib/BaseUrlConfiguration'
+import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
 let store;
 export const injectStore = (_store) => {
     store = _store;
 };
 
+const axiosInstance = axios.create();
+
+axiosInstance.interceptors.request.use((config) => ({
+    ...config,
+    headers: {
+        ...config.headers,
+    },
+    baseURL: BaseUrlConfiguration.getApiBaseUrl(),
+}));
+
 export default class Api {
     constructor(setToken = true) {
-        
-        if(!BaseUrlConfiguration.getDefaultSendingCountryIso3() && !window.location.pathname.startsWith('/reset/')) {
+        if (!BaseUrlConfiguration.getDefaultSendingCountryIso3() && !window.location.pathname.startsWith("/reset/")) {
             AuthUtility.logOut();
-            window.location.href = '/login'
+            window.location.href = "/login";
             return;
         }
-        
-        this.axiosFunction = axios.create({
-            baseURL: BaseUrlConfiguration.getApiBaseUrl(),
-        });
+
+        this.axiosFunction = axiosInstance;
 
         if (setToken) {
             this.setToken();
