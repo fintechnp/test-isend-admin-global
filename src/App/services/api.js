@@ -1,11 +1,8 @@
 import axios from "axios";
 
-import app from "App/config/app";
-import { preserveIntendedPath } from "App/routes";
-import { LOGIN_COUNTRY } from "App/global/constants";
 import AuthUtility from "App/utils/AuthUtility";
-import sendingCountries from "Private/config/sendingCountries";
-import { localStorageGet, localStorageRemove } from "App/helpers/localStorage";
+import { preserveIntendedPath } from "App/routes";
+import BaseUrlConfiguration from 'App/lib/BaseUrlConfiguration'
 
 let store;
 export const injectStore = (_store) => {
@@ -15,21 +12,16 @@ export const injectStore = (_store) => {
 export default class Api {
     constructor(setToken = true) {
         
-        const selectedCountry = localStorageGet(LOGIN_COUNTRY)?.toLowerCase();
-
-        const availableCountries = sendingCountries.map(c => c.value.toLowerCase());
-
-        if(!availableCountries.includes(selectedCountry) && !window.location.pathname.startsWith('/reset/')) {
+        if(!BaseUrlConfiguration.getDefaultSendingCountryIso3() && !window.location.pathname.startsWith('/reset/')) {
             AuthUtility.logOut();
             window.location.href = '/login'
             return;
         }
         
-        const baseUrl = app.apiBaseUrl.replace("{country}", selectedCountry);
-
         this.axiosFunction = axios.create({
-            baseURL: baseUrl,
+            baseURL: BaseUrlConfiguration.getApiBaseUrl(),
         });
+
         if (setToken) {
             this.setToken();
         }

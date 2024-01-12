@@ -8,13 +8,11 @@ import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormSelect from "App/core/hook-form/FormSelect";
 import { FormProvider, useForm } from "react-hook-form";
+import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
 import FormTextField from "App/core/hook-form/FormTextField";
 import { ReactComponent as Logo } from "assets/long-logo.svg";
 import SubmitButton from "App/components/Button/SubmitButton";
-
-import { LOGIN_COUNTRY } from "App/global/constants";
-import { localStorageSave } from "App/helpers/localStorage";
 import sendingCountries from "Private/config/sendingCountries";
 
 const Paper = styled(MuiPaper)(({ theme }) => ({
@@ -51,7 +49,7 @@ const LoginForm = ({ onSubmit, loading }) => {
     const methods = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            identifier: sendingCountries[0].value,
+            identifier: BaseUrlConfiguration.getDefaultSendingCountryIso3(),
         },
     });
 
@@ -60,7 +58,12 @@ const LoginForm = ({ onSubmit, loading }) => {
     const loginCountry = watch("identifier");
 
     useEffect(() => {
-        if (loginCountry) localStorageSave(LOGIN_COUNTRY, loginCountry);
+        console.log({ loginCountry });
+        if (loginCountry) {
+            BaseUrlConfiguration.saveCountry(loginCountry);
+        } else {
+            BaseUrlConfiguration.removeCountry();
+        }
     }, [loginCountry]);
 
     return (
@@ -73,7 +76,20 @@ const LoginForm = ({ onSubmit, loading }) => {
                             <Typography textAlign="center" variant="h6">
                                 Sign In to your account
                             </Typography>
-                            <FormSelect name="identifier" label="Select Country" options={sendingCountries} />
+                            <FormSelect
+                                name="identifier"
+                                label="Select Country"
+                                options={sendingCountries}
+                                // onChange={(e) => {
+                                //     const value = e.target.value;
+                                //     if (value) {
+                                //         methods.setValue("identifier", e.target.value);
+                                //         BaseUrlConfiguration.saveCountry(e.target.value);
+                                //     } else {
+                                //         BaseUrlConfiguration.removeCountry();
+                                //     }
+                                // }}
+                            />
                             <FormTextField size="small" name="email" label="Email" />
                             <FormTextField size="small" type="password" name="password" label="Password" />
                             <SubmitButton size="large" isLoading={loading} role="button" name="login">
