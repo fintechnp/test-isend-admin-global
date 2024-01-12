@@ -53,7 +53,18 @@ const LoginForm = ({ onSubmit, loading }) => {
         },
     });
 
-    const { control } = methods;
+    const { watch, control } = methods;
+
+    const loginCountry = watch("identifier");
+
+    useEffect(() => {
+        console.log({ loginCountry });
+        if (loginCountry) {
+            BaseUrlConfiguration.saveCountry(loginCountry);
+        } else {
+            BaseUrlConfiguration.removeCountry();
+        }
+    }, [loginCountry]);
 
     return (
         <Paper square={true}>
@@ -69,15 +80,15 @@ const LoginForm = ({ onSubmit, loading }) => {
                                 name="identifier"
                                 label="Select Country"
                                 options={sendingCountries}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    if (value) {
-                                        BaseUrlConfiguration.saveCountry(e.target.value);
-                                        methods.setValue("identifier", e.target.value);
-                                    } else {
-                                        BaseUrlConfiguration.removeCountry();
-                                    }
-                                }}
+                                // onChange={(e) => {
+                                //     const value = e.target.value;
+                                //     if (value) {
+                                //         methods.setValue("identifier", e.target.value);
+                                //         BaseUrlConfiguration.saveCountry(e.target.value);
+                                //     } else {
+                                //         BaseUrlConfiguration.removeCountry();
+                                //     }
+                                // }}
                             />
                             <FormTextField size="small" name="email" label="Email" />
                             <FormTextField size="small" type="password" name="password" label="Password" />
