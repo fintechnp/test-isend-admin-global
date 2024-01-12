@@ -8,13 +8,11 @@ import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormSelect from "App/core/hook-form/FormSelect";
 import { FormProvider, useForm } from "react-hook-form";
+import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
 import FormTextField from "App/core/hook-form/FormTextField";
 import { ReactComponent as Logo } from "assets/long-logo.svg";
 import SubmitButton from "App/components/Button/SubmitButton";
-
-import { LOGIN_COUNTRY } from "App/global/constants";
-import { localStorageSave } from "App/helpers/localStorage";
 import sendingCountries from "Private/config/sendingCountries";
 
 const Paper = styled(MuiPaper)(({ theme }) => ({
@@ -51,7 +49,7 @@ const LoginForm = ({ onSubmit, loading }) => {
     const methods = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            identifier: sendingCountries[0].value,
+            identifier: BaseUrlConfiguration.getDefaultSendingCountryIso3(),
         },
     });
 
@@ -60,7 +58,11 @@ const LoginForm = ({ onSubmit, loading }) => {
     const loginCountry = watch("identifier");
 
     useEffect(() => {
-        if (loginCountry) localStorageSave(LOGIN_COUNTRY, loginCountry);
+        if (loginCountry) {
+            BaseUrlConfiguration.saveCountry(loginCountry)
+        }else {
+            BaseUrlConfiguration.removeCountry()
+        }
     }, [loginCountry]);
 
     return (
