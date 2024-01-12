@@ -53,17 +53,7 @@ const LoginForm = ({ onSubmit, loading }) => {
         },
     });
 
-    const { watch, control } = methods;
-
-    const loginCountry = watch("identifier");
-
-    useEffect(() => {
-        if (loginCountry) {
-            BaseUrlConfiguration.saveCountry(loginCountry)
-        }else {
-            BaseUrlConfiguration.removeCountry()
-        }
-    }, [loginCountry]);
+    const { control } = methods;
 
     return (
         <Paper square={true}>
@@ -75,7 +65,20 @@ const LoginForm = ({ onSubmit, loading }) => {
                             <Typography textAlign="center" variant="h6">
                                 Sign In to your account
                             </Typography>
-                            <FormSelect name="identifier" label="Select Country" options={sendingCountries} />
+                            <FormSelect
+                                name="identifier"
+                                label="Select Country"
+                                options={sendingCountries}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value) {
+                                        BaseUrlConfiguration.saveCountry(e.target.value);
+                                        methods.setValue("identifier", e.target.value);
+                                    } else {
+                                        BaseUrlConfiguration.removeCountry();
+                                    }
+                                }}
+                            />
                             <FormTextField size="small" name="email" label="Email" />
                             <FormTextField size="small" type="password" name="password" label="Password" />
                             <SubmitButton size="large" isLoading={loading} role="button" name="login">
