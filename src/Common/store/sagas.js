@@ -1,10 +1,10 @@
-import axios from 'axios'
+import axios from "axios";
 import { put, takeEvery, call, all } from "redux-saga/effects";
 
 import actions from "./actions";
 import Api from "../../App/services/api";
 import AuthUtility from "App/utils/AuthUtility";
-import guestHttpService from 'App/services/guestHttpService';
+import guestHttpService from "App/services/guestHttpService";
 
 const headers = {
     source: "web",
@@ -14,8 +14,8 @@ export const refreshToken = takeEvery(actions.REFRESH_TOKEN, function* (action) 
     try {
         const res = yield call(guestHttpService.post, `account/refreshtoken`, action.data, headers);
         yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
-        AuthUtility.setAccessToken(res.token);
-        AuthUtility.setRefreshToken(res.refresh_token);
+        AuthUtility.setAccessToken(res?.data?.token);
+        AuthUtility.setRefreshToken(res?.data?.refresh_token);
     } catch (error) {
         yield put({ type: "SET_TOAST_DATA", data: error?.data });
         yield put({ type: actions.REFRESH_TOKEN_FAILED, error: error });
@@ -88,7 +88,7 @@ export const get_all_reference = takeEvery(actions.GET_ALL_REFERENCE, function* 
 export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action) {
     const { api_base_url, ...data } = action.data;
 
-    const apiBaseUrl = api_base_url.endsWith('/') ? api_base_url : api_base_url + '/';
+    const apiBaseUrl = api_base_url.endsWith("/") ? api_base_url : api_base_url + "/";
 
     try {
         const res = yield call(axios.post, `${apiBaseUrl}api/account/resetpassword`, data);
@@ -99,10 +99,9 @@ export const resetPassword = takeEvery(actions.PASSWORD_RESET, function* (action
 
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
-        
         yield put({
             type: actions.PASSWORD_RESET_FAILED,
-            error: error?.data ,
+            error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data ?? error?.response?.data });
     }
