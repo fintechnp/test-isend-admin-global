@@ -1,18 +1,18 @@
 import axios from 'axios'
 import { put, takeEvery, call, all } from "redux-saga/effects";
 
-import Api from "../../App/services/api";
 import actions from "./actions";
+import Api from "../../App/services/api";
 import AuthUtility from "App/utils/AuthUtility";
+import guestHttpService from 'App/services/guestHttpService';
 
 const headers = {
     source: "web",
 };
 
 export const refreshToken = takeEvery(actions.REFRESH_TOKEN, function* (action) {
-    const api = new Api(false);
     try {
-        const res = yield call(api.post, `account/refreshtoken`, action.data, headers);
+        const res = yield call(guestHttpService.post, `account/refreshtoken`, action.data, headers);
         yield put({ type: actions.REFRESH_TOKEN_SUCCESS, response: res });
         AuthUtility.setAccessToken(res.token);
         AuthUtility.setRefreshToken(res.refresh_token);
