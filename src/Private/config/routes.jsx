@@ -339,7 +339,7 @@ import AddLedger from "../pages/Ledger/AddLedger";
 
 // B2b Account
 import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
-
+import ListAccountList from "Private/pages/AccountList/ListAccountList";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -777,6 +777,11 @@ const privateRoutes = [
     {
         path: routePaths.agent.listB2bAccount,
         component: <ListB2bAccount />,
+    },
+
+    {
+        path: routePaths.agent.listAccounts,
+        component: <ListAccountList />,
     },
 ];
 
