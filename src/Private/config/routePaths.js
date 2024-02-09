@@ -72,6 +72,7 @@ const routePaths = {
         addLedger: "/agent/ledger/add",
 
         listB2bAccount: "/agent/b2b-account",
+        listAccounts: "/agent/account-lists",
     },
 
     userKyc: {

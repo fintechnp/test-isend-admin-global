@@ -37,8 +37,8 @@ export default defineConfig(({ mode }) => {
             ...(process.env.NODE_ENV === "production"
                 ? {}
                 : {
-                      module: undefined,
-                  }),
+                    module: undefined,
+                }),
         },
         server: {
             open: true,

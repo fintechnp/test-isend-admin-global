@@ -430,6 +430,12 @@ const PrivateLayout = () => {
                         sub: false,
                     },
                     {
+                        path: routePaths.agent.listAccounts,
+                        key: "market-maker",
+                        text: "Account List",
+                        sub: false,
+                    },
+                    {
                         path: routePaths.agent.creditLimit,
                         key: "credit-limit",
                         text: "Credit Limits",

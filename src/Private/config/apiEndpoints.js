@@ -186,6 +186,11 @@ const apiEndpoints = {
         getAll: "/b2b/account",
     },
 
+    accountList: {
+        getAll: "/b2b/accountlist",
+        getBalance: "/b2b/AccountBalance/:id",
+    },
+
     user: {
         addKyc: "/kyc",
         editKyc: "/kyc/:kycId",
