@@ -41,7 +41,7 @@ jobs:
             password: ${{ secrets.Charoit_UAT_Password }}
             port: ${{ secrets.Charoit_UAT_Port }}
             script: |
-              mv /home/admin/deploy/publish /home/admin/deploy/adminui &&
+              mv /home/admin/deploy/dist /home/admin/deploy/adminui &&
               chown -R www-data:www-data /home/admin/deploy/adminui/ &&
               rm -rf /var/www/html/adminui
               mv /home/admin/deploy/adminui /var/www/html/ &&
