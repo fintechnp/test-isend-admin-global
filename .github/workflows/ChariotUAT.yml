@@ -1,0 +1,34 @@
+name: CI/CD Pipeline for Admin UI Charoit (UAT)
+
+on: [workflow_dispatch]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: 
+            REACT_APP_NAME="iSend Admin"
+            REACT_APP_API_BASE_URL=https://devadminapi.chariot.com.sg/api
+            REACT_APP_VERSION=v2.0.0
+            npm run build
+
+      - name: Transfer files to Charoit Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.Charoit_UAT_Host }}
+          username: ${{ secrets.Charoit_UAT_User }}
+          password: ${{ secrets.Charoit_UAT_Password }}
+          source: 'dist/'
+          target: '/home/admin/uideploy'
