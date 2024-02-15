@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Admin UI Charoit (UAT)
+name: CI/CD Pipeline for User API Charoit (UAT)
 
 on: [workflow_dispatch]
 
@@ -31,4 +31,19 @@ jobs:
           username: ${{ secrets.Charoit_UAT_User }}
           password: ${{ secrets.Charoit_UAT_Password }}
           source: 'dist/'
-          target: '/home/admin/uideploy'
+          target: '/home/admin/deploy'
+
+      - name: SSH into Charoit Server and run command
+        uses: appleboy/ssh-action@master
+        with:
+            host: ${{ secrets.Charoit_UAT_Host }}
+            username: ${{ secrets.Charoit_UAT_User }}
+            password: ${{ secrets.Charoit_UAT_Password }}
+            port: ${{ secrets.Charoit_UAT_Port }}
+            script: |
+              mv /home/admin/deploy/publish /home/admin/deploy/adminui &&
+              chown -R www-data:www-data /home/admin/deploy/adminui/ &&
+              rm -rf /var/www/html/adminui
+              mv /home/admin/deploy/adminui /var/www/html/ &&
+              systemctl daemon-reload &&
+              systemctl restart nginx
