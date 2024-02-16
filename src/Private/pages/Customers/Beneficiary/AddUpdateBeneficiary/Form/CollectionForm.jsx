@@ -244,7 +244,7 @@ const CollectionForm = ({
                                     <Field
                                         name="branch_identifier_value"
                                         label="Branch Identifier Value"
-                                        type="number"
+                                        type="text"
                                         small={12}
                                         component={TextField}
                                         validate={Validator.emptyValidator}
