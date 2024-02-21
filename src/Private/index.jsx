@@ -221,6 +221,13 @@ import {
 
 import { AllBankListActions, AllBankListSaga, GetAllBankListReducer } from "./pages/Customers/AllBanks/store";
 
+import {
+    GetAllCustomerDeleteListReducer,
+    GetCustomerDeleteDetailReducer,
+    UpdateCustomerDeleteReducer,
+    customerDeleteSaga,
+} from "./pages/Customers/DeleteList/store";
+
 //Documents
 import {
     GetDocumentsReducer,
@@ -926,6 +933,11 @@ export const privateReducer = {
 
     get_all_account_list: ListAccountReducer,
     get_account_balance_by_id: ListAccountDetailReducer,
+
+    //Customer Delete List
+    get_all_customer_delete_list: GetAllCustomerDeleteListReducer,
+    get_customer_delete_details: GetCustomerDeleteDetailReducer,
+    update_delete_request: UpdateCustomerDeleteReducer,
 };
 
 export const privateSaga = [
@@ -983,6 +995,7 @@ export const privateSaga = [
     ledgerSaga(),
     b2bAccountSaga(),
     accountListSaga(),
+    customerDeleteSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
