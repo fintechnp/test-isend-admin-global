@@ -1,8 +1,9 @@
-import actions from "./actions";
-import buildRoute from "App/helpers/buildRoute";
-import Api from "App/services/api";
-import apiEndpoints from "Private/config/apiEndpoints";
 import { put, takeEvery, call, all } from "redux-saga/effects";
+
+import actions from "./actions";
+import Api from "App/services/api";
+import buildRoute from "App/helpers/buildRoute";
+import apiEndpoints from "Private/config/apiEndpoints";
 
 const api = new Api();
 
