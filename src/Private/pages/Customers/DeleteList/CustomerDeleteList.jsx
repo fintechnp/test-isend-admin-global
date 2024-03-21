@@ -108,7 +108,7 @@ export default function CustomerDeleteList() {
         setFilterSchema(updatedFilterSchema);
     };
     return (
-        <PageContent title="Customer Delete List">
+        <PageContent title="Account Delete Request">
             <CustomerDeleteFilterForm
                 isProcessing={loading}
                 onSubmit={handleFilterSubmit}
