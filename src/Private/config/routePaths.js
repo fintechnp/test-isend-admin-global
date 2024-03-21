@@ -28,6 +28,8 @@ const routePaths = {
     customer: {
         banks: "/customer/banks/:customerId",
         allBank: "/customer/banks",
+        deleteList: "/customer/delete-list",
+        deleteRequestDetails: "/customer/delete-request-details/:id",
     },
     agent: {
         listMarketMaker: "/agent/market-maker",

@@ -195,6 +195,12 @@ const PrivateLayout = () => {
                         text: "Bank List",
                         sub: false,
                     },
+                    {
+                        path: routePaths.customer.deleteList,
+                        key: "delete_list",
+                        text: "Delete List",
+                        sub: false,
+                    },
                 ],
             },
 
