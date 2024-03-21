@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Badge from "@mui/material/Badge";
+import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
@@ -106,7 +106,7 @@ const ValueWrapper = styled(Box)(({ theme }) => ({
     color: theme.palette.text.main,
 }));
 
-const Fetching = styled(Typography)(({ theme }) => ({
+export const Fetching = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.main,
     fontSize: "16px",
     fontWeight: 400,

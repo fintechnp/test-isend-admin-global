@@ -230,6 +230,7 @@ import BeneficiaryDetails from "../pages/Customers/Beneficiary/Details";
 import CustomerTransactions from "../pages/Customers/Transactions";
 import CustomerBanks from "../pages/Customers/Banks/Banks";
 import AllBanks from "../pages/Customers/AllBanks/BankList";
+import CustomerDeleteList from "Private/pages/Customers/DeleteList/CustomerDeleteList";
 
 //Documents
 import Documents from "../pages/Customers/Documents";
@@ -340,6 +341,7 @@ import AddLedger from "../pages/Ledger/AddLedger";
 // B2b Account
 import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
 import ListAccountList from "Private/pages/AccountList/ListAccountList";
+import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -554,6 +556,14 @@ const privateRoutes = [
     {
         path: routePaths.customer.allBank,
         component: <AllBanks />,
+    },
+    {
+        path: routePaths.customer.deleteList,
+        component: <CustomerDeleteList />,
+    },
+    {
+        path: routePaths.customer.deleteRequestDetails,
+        component: <CustomerDeleteRequestDetail />,
     },
 
     //Transactions
