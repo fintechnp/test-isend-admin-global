@@ -1,3 +1,5 @@
+import { de } from "date-fns/locale";
+
 const apiEndpoints = {
     countryStates: {
         list: "common/:country/states",
@@ -21,6 +23,9 @@ const apiEndpoints = {
     },
     customers: {
         updateAccount: "customer/account/:customerId",
+        deleteList: "customer/deleterequest",
+        deleteRequestDetails: "customer/deleterequest/:deleteRequestId",
+        approveDeleteRequest: "customer/delete/:deleteRequestId/action"
     },
     bulkEmailGroup: {
         create: "bulkemail/group",
