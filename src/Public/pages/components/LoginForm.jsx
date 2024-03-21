@@ -2,7 +2,6 @@ import * as Yup from "yup";
 import Box from "@mui/material/Box";
 import React, { useEffect } from "react";
 import MuiPaper from "@mui/material/Paper";
-import { DevTool } from "@hookform/devtools";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -86,7 +85,6 @@ const LoginForm = ({ onSubmit, loading }) => {
                                 {loading ? "Logging In" : "Login"}
                             </SubmitButton>
                         </Box>
-                        <DevTool control={control} />
                     </form>
                 </FormProvider>
             </FormContainer>
