@@ -198,7 +198,7 @@ const PrivateLayout = () => {
                     {
                         path: routePaths.customer.deleteList,
                         key: "delete_list",
-                        text: "Delete List",
+                        text: "Account Delete Requests",
                         sub: false,
                     },
                 ],
