@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
+import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -16,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import actions from "../store/actions";
 import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
+
+import CommentForm from "../../Comments/AddComment/Form";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -77,6 +80,8 @@ function Details({ data, isAML = false }) {
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
     const [count, setCount] = useState(0);
 
+    const [open, setOpen] = useState(false);
+
     const sanctionDetails = useSelector((state) => state.get_sanction_details);
 
     const sanctionMessage = sanctionDetails?.response?.data
@@ -112,6 +117,12 @@ function Details({ data, isAML = false }) {
     if (data === undefined || data.length == 0) {
         return <MessageBox text="Invalid Transaction Id" />;
     }
+
+    // Drawer added
+
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
 
     return (
         <>
@@ -452,19 +463,42 @@ function Details({ data, isAML = false }) {
                     >
                         Documents
                     </BottomButton>
+                    {/* <BottomButton
+                        size="small"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                        onClick={() => setOpen(false)}
+                    >
+                        Add Comments
+                    </BottomButton> */}
+
+                    <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
+                        Add Comments
+                    </Button>
                     {isAML && (
-                        <BottomButton
-                            size="small"
-                            variant="outlined"
-                            disableElevation
-                            disableRipple
-                            onClick={() => {
-                                setOpenSuspiciosModal(true);
-                            }}
-                        >
-                            View Sanction
-                        </BottomButton>
+                        <>
+                            <BottomButton
+                                size="small"
+                                variant="outlined"
+                                disableElevation
+                                disableRipple
+                                onClick={() => {
+                                    setOpenSuspiciosModal(true);
+                                }}
+                            >
+                                View Sanction
+                            </BottomButton>
+                        </>
                     )}
+                    <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                        <Box sx={{ width: 650, padding: "1rem" }}>
+                            <h1>This is the drawer part</h1>
+                            <p>This is the drawer second part </p>
+
+                            <CommentForm />
+                        </Box>
+                    </Drawer>
                 </Grid>
             </Grid>
             <SuspiciosModal open={openSuspiciosModal} data={sanctionMessage} handleClose={handleCloseSuspiciosModal} />

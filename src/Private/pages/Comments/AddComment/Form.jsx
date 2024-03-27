@@ -6,8 +6,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
 
-import TextAreaField from "../../../../../App/components/Fields/TextAreaField";
-import Validator from "../../../../../App/utils/validators";
+import validators from "App/utils/validators";
+import TextAreaField from "App/components/Fields/TextAreaField";
+
+
 
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
@@ -55,26 +57,22 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
+const CommentForm = ({ handleSubmit, loading, handleClose }) => {
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12}>
-                            <Field   
-                                name="remarks"
-                                label="Remarks"
-                                placeholder="Write remarks..."
+                            <Field
+                                name="commentText"
+                                label="Add Comment"
+                                placeholder="Write comment..."
                                 type="text"
                                 minRows={5}
                                 small={12}
                                 component={TextAreaField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength500,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[validators.emptyValidator, validators.maxLength500, validators.minValue1]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -91,11 +89,7 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>
@@ -117,4 +111,4 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
     );
 };
 
-export default React.memo(reduxForm({ form: "remarks_form" })(RemarksForm));
+export default React.memo(reduxForm({ form: "comment_Form" })(CommentForm));
