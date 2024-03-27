@@ -19,6 +19,7 @@ import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
 
 import CommentForm from "../../Comments/AddComment/Form";
+import AddComment from "Private/pages/Comments/AddComment";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -74,6 +75,9 @@ function Details({ data, isAML = false }) {
     const { id, tid } = useParams();
 
     const transactionId = tid ?? id;
+
+    console.log(transactionId)
+    
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -493,11 +497,14 @@ function Details({ data, isAML = false }) {
                     )}
                     <Drawer anchor="right" open={open} onClose={toggleDrawer}>
                         <Box sx={{ width: 650, padding: "1rem" }}>
-                            <h1>This is the drawer part</h1>
-                            <p>This is the drawer second part </p>
+                  
 
-                            <CommentForm />
+                          <AddComment referenceId={transactionId} referenceType="Transaction"  />
+
+                          
                         </Box>
+
+                        
                     </Drawer>
                 </Grid>
             </Grid>

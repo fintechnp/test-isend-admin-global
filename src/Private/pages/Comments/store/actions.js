@@ -9,7 +9,7 @@ const actions = {
     ADD_COMMENT_FAILURE: "ADD_COMMENT_FAILURE",
     ADD_COMMENT_RESET: "ADD_COMMENT_RESET",
 
-    get_all_comments: () => ({ type: actions.GET_COMMENT, query }),
+    get_all_comments: (query) => ({ type: actions.GET_COMMENT, query }),
 
     add_comment: (data) => ({ type: actions.ADD_COMMENT, data }),
 };

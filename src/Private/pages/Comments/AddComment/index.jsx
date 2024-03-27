@@ -14,9 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import CommentFrom from "./Form";
+import Drawer from "@mui/material/Drawer";
 
-import actions from "./../../store/actions";
+
+import actions from "../store/actions";
 import { Box } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -38,12 +41,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
-const AddButton = styled(Button)(({ theme }) => ({
-    padding: "6px 12px",
-    textTransform: "capitalize",
-    color: theme.palette.secondary.contrastText,
-    borderColor: theme.palette.border.main,
-}));
+
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
     padding: "4px",
@@ -54,14 +52,29 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
     borderRadius: "3px",
 }));
 
-const HeaderIcon = styled(AddTaskIcon)(({ theme }) => ({
-    color: theme.palette.border.main,
-}));
 
-function AddReference() {
+
+function AddComment({ referenceId, referenceType, data }) {
+    const methods = useForm({
+        defaultValues: {
+            referenceId,
+            referenceType,
+        },
+    });
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_reference);
+
+    const comments = useSelector(state => state.get_all_comments); 
+    console.log("🚀 ~ AddComment ~ comments:", comments)
+    
+
+    React.useEffect(() => {
+        dispatch(actions.get_all_comments())
+    }, [dispatch])
+
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -71,19 +84,36 @@ function AddReference() {
         setOpen(false);
     };
 
+    const handleTypeSubmit = (data) => {
+        console.log(data)
+        dispatch(actions.add_comment(data));
+        // handleClose();
+    };
+
     return (
         <div>
-            <Button onClick={handleClickOpen} endIcon={<AddIcon />}>
-                Add
-            </Button>
             <DialogContent dividers>
-                <CommentFrom open={open} handleClose={handleClose} success={add_success} loading={add_loading} />
+                <CommentFrom onSubmit={handleTypeSubmit} method={methods} handleClose={handleClose} />
                 <CloseButton onClick={handleClose}>
                     <CloseIcon />
                 </CloseButton>
+
+                
             </DialogContent>
+
+            {
+                comments?.map((comment) => (
+                    <div>
+                        <p>{comment?.commentText}</p>
+                        <p>{comment?.commentedDate}</p>
+                    </div>
+                ))
+            }
         </div>
     );
 }
+
+
+
 
 export default React.memo(AddComment);

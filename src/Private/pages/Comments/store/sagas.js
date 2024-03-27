@@ -1,7 +1,7 @@
 import { takeEvery } from "redux-saga/effects";
 
-const { default: Api } = require("App/services/api");
 import actions from "./actions";
+import Api from "App/services/api";
 
 const api = new Api();
 
@@ -14,27 +14,23 @@ export const getAllComments = takeEvery(actions.GET_COMMENT, function* (action) 
     }
 });
 
-
-export const addComment = takeEvery(
-    actions.ADD_COMMENT,
-    function* (action) {
-    try{
-        const res = yield call(
-            api.post,
-            `comment`,
-            action.data
-        );
+export const addComment = takeEvery(actions.ADD_COMMENT, function* (action) {
+    try {
+        const res = yield call(api.post, `comment`, action.data);
         yield put({
-            type: actions.ADD_COMMENT_SUCCESS, 
-            response:res
+            type: actions.ADD_COMMENT_SUCCESS,
+            response: res,
         });
-        yield put({type: "SET_TOAST_DATA", response: res});
+        yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({
             type: actions.ADD_COMMENT_FAILURE,
             error: error?.data,
         }),
-        yield put({type: "SET_TOAST_DATA", response: error?.data});
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
+});
+
+export default function* saga() {
+    yield all([getAllComments, addComment]);
 }
-)
