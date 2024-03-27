@@ -1003,7 +1003,7 @@ export const privateSaga = [
     b2bAccountSaga(),
     accountListSaga(),
     customerDeleteSaga(),
-    // commentSaga()
+    commentSaga()
 ];
 
 export { default as privateRoutes } from "./config/routes";

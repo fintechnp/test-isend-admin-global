@@ -16,9 +16,8 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 import CommentFrom from "./Form";
 import Drawer from "@mui/material/Drawer";
 
-
 import actions from "../store/actions";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -41,8 +40,6 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
-
-
 const CloseButton = styled(IconButton)(({ theme }) => ({
     padding: "4px",
     position: "absolute",
@@ -51,8 +48,6 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.grey[500],
     borderRadius: "3px",
 }));
-
-
 
 function AddComment({ referenceId, referenceType, data }) {
     const methods = useForm({
@@ -64,13 +59,19 @@ function AddComment({ referenceId, referenceType, data }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
-    const comments = useSelector(state => state.get_all_comments); 
-    console.log("🚀 ~ AddComment ~ comments:", comments)
     
 
+    const { response, loading } = useSelector((state) => state.get_all_comments);
+    console.log("🚀 ~ AddComment ~ comments:", response);
+
     React.useEffect(() => {
-        dispatch(actions.get_all_comments())
-    }, [dispatch])
+        dispatch(
+            actions.get_all_comments({
+                reference_type: "Transaction",
+                reference_id: referenceId,
+            }),
+        );
+    }, [dispatch]);
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -85,7 +86,7 @@ function AddComment({ referenceId, referenceType, data }) {
     };
 
     const handleTypeSubmit = (data) => {
-        console.log(data)
+        console.log(data);
         dispatch(actions.add_comment(data));
         // handleClose();
     };
@@ -97,23 +98,20 @@ function AddComment({ referenceId, referenceType, data }) {
                 <CloseButton onClick={handleClose}>
                     <CloseIcon />
                 </CloseButton>
-
-                
             </DialogContent>
 
-            {
-                comments?.map((comment) => (
-                    <div>
-                        <p>{comment?.commentText}</p>
-                        <p>{comment?.commentedDate}</p>
-                    </div>
-                ))
-            }
+            {response?.data?.map((comment, index) => (
+                <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {comment?.userName}
+                    </Typography>
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                        {comment?.comment}
+                    </Typography>
+                </Box>
+            ))}
         </div>
     );
 }
-
-
-
 
 export default React.memo(AddComment);

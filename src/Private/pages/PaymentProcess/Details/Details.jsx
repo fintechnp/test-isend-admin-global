@@ -478,7 +478,7 @@ function Details({ data, isAML = false }) {
                     </BottomButton> */}
 
                     <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
-                        Add Comments
+                        Show Comments
                     </Button>
                     {isAML && (
                         <>
