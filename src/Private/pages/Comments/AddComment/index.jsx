@@ -60,7 +60,7 @@ function AddComment({ referenceId, referenceType, data }) {
     const [open, setOpen] = React.useState(false);
 
     const { response, loading } = useSelector((state) => state.get_all_comments);
-    console.log("🚀 ~ AddComment ~ comments:", response);
+    
 
     React.useEffect(() => {
         dispatch(
@@ -93,7 +93,7 @@ function AddComment({ referenceId, referenceType, data }) {
             }),
         );
 
-        // handleClose();
+ 
     };
 
     return (
