@@ -59,8 +59,6 @@ function AddComment({ referenceId, referenceType, data }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
-    
-
     const { response, loading } = useSelector((state) => state.get_all_comments);
     console.log("🚀 ~ AddComment ~ comments:", response);
 
@@ -86,28 +84,44 @@ function AddComment({ referenceId, referenceType, data }) {
     };
 
     const handleTypeSubmit = (data) => {
-        console.log(data);
         dispatch(actions.add_comment(data));
+
+        dispatch(
+            actions.get_all_comments({
+                reference_type: "Transaction",
+                reference_id: referenceId,
+            }),
+        );
+
         // handleClose();
     };
 
     return (
         <div>
-            <DialogContent dividers>
-                <CommentFrom onSubmit={handleTypeSubmit} method={methods} handleClose={handleClose} />
-                <CloseButton onClick={handleClose}>
-                    <CloseIcon />
-                </CloseButton>
-            </DialogContent>
+            <CommentFrom onSubmit={handleTypeSubmit} method={methods} handleClose={handleClose} />
+            <CloseButton onClick={handleClose}>
+                <CloseIcon />
+            </CloseButton>
 
             {response?.data?.map((comment, index) => (
                 <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                         {comment?.userName}
                     </Typography>
-                    <Typography variant="body1" sx={{ mt: 1 }}>
-                        {comment?.comment}
-                    </Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Typography variant="body1" sx={{ mt: 1 }}>
+                            {comment?.comment}
+                        </Typography>
+                        <Typography variant="body2" sx={{ mt: 1 }}>
+                            {new Date(comment?.commentedDate).toLocaleDateString()}
+                        </Typography>
+                    </Box>
                 </Box>
             ))}
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button } from "@mui/material";
+import { Grid, Button, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
@@ -59,18 +59,13 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-
-
-
-
 const CommentForm = ({ method, loading, handleClose, onSubmit }) => {
-
-  
-
-
     return (
-        <HookForm onSubmit={method.handleSubmit(onSubmit)}  {...method}>
+        <HookForm onSubmit={method.handleSubmit(onSubmit)} {...method}>
             <Container container direction="column">
+                <Typography marginY="1rem" align="center" variant="h5">
+                    Add Comment
+                </Typography>
                 <Grid item xs={12}>
                     <FormTextField name="commentText" label="Comment" />
                 </Grid>
