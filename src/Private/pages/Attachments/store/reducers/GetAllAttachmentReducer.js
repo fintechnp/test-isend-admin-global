@@ -1,4 +1,4 @@
-import actions from "../action";
+import actions from "../actions";
 
 const initialState = {
     success: false,

@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 
-import actions from "./action";
+import actions from "./actions";
 import Api from "App/services/api";
 
 const api = new Api();

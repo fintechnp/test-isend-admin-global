@@ -1,2 +1,2 @@
-export {default as GetAllAttachmentsReducer} from "./action";
-export {default as attachmentSaga} from "./sagas"
+export { default as GetAllAttachmentsReducer } from "./actions";
+export { default as attachmentSaga } from "./sagas";
