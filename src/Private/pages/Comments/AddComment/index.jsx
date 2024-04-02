@@ -58,18 +58,21 @@ function AddComment({ referenceId, referenceType, data }) {
     });
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
+    const [pageNumber, setPageNumber] = React.useState(1);
+    const [pageSize, setPageSize] = React.useState(5);
 
     const { response, loading } = useSelector((state) => state.get_all_comments);
-    console.log("🚀 ~ AddComment ~ comments:", response);
 
     React.useEffect(() => {
         dispatch(
             actions.get_all_comments({
                 reference_type: "Transaction",
                 reference_id: referenceId,
+                page_number: pageNumber,
+                page_size: pageSize,
             }),
         );
-    }, [dispatch]);
+    }, [dispatch, pageNumber, pageSize, referenceId]);
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -90,10 +93,18 @@ function AddComment({ referenceId, referenceType, data }) {
             actions.get_all_comments({
                 reference_type: "Transaction",
                 reference_id: referenceId,
+                page_number: pageNumber,
+                page_size: pageSize,
             }),
         );
+    };
 
-        // handleClose();
+    const handlePageChange = (newPageNumber) => {
+        setPageNumber(newPageNumber);
+    };
+
+    const handlePageSizeChange = (newPageSize) => {
+        setPageSize(newPageSize);
     };
 
     return (
@@ -124,6 +135,19 @@ function AddComment({ referenceId, referenceType, data }) {
                     </Box>
                 </Box>
             ))}
+
+            <Pagination
+                page={pageNumber}
+                count={Math.ceil(response?.total / pageSize)}
+                onChange={(event, newPage) => handlePageChange(newPage)}
+                showFirstButton
+                showLastButton
+                variant="outlined"
+                shape="rounded"
+                color="primary"
+                size="large"
+                style={{ marginTop: "20px" }}
+            />
         </div>
     );
 }
