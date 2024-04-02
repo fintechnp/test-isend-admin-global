@@ -19,6 +19,7 @@ import Drawer from "@mui/material/Drawer";
 import actions from "../store/actions";
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { Pagination } from "@tanstack/react-table";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -49,7 +50,7 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
     borderRadius: "3px",
 }));
 
-function AddComment({ referenceId, referenceType, data }) {
+function AddComment({ referenceId, referenceType, data, handleClose }) {
     const methods = useForm({
         defaultValues: {
             referenceId,
@@ -73,18 +74,6 @@ function AddComment({ referenceId, referenceType, data }) {
             }),
         );
     }, [dispatch, pageNumber, pageSize, referenceId]);
-
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     const handleTypeSubmit = (data) => {
         dispatch(actions.add_comment(data));
@@ -113,7 +102,6 @@ function AddComment({ referenceId, referenceType, data }) {
             <CloseButton onClick={handleClose}>
                 <CloseIcon />
             </CloseButton>
-
             {response?.data?.map((comment, index) => (
                 <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -135,8 +123,7 @@ function AddComment({ referenceId, referenceType, data }) {
                     </Box>
                 </Box>
             ))}
-
-            <Pagination
+            {/* <Pagination
                 page={pageNumber}
                 count={Math.ceil(response?.total / pageSize)}
                 onChange={(event, newPage) => handlePageChange(newPage)}
@@ -147,9 +134,9 @@ function AddComment({ referenceId, referenceType, data }) {
                 color="primary"
                 size="large"
                 style={{ marginTop: "20px" }}
-            />
+            /> */}
         </div>
     );
 }
 
-export default React.memo(AddComment);
+export default AddComment;

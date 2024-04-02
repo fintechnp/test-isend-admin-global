@@ -11,7 +11,7 @@ const actions = {
 
     get_all_attachments: (query) => ({ type: actions.GET_ATTACHMENT, query }),
 
-    upload_attachment: (data) => ({ type: actions.UPLOAD_ATTACHMENT, attachmentObjectId, data }),
+    upload_attachment: (data) => ({ type: actions.UPLOAD_ATTACHMENT, data }),
 };
 
 export default actions;

@@ -1,20 +1,15 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
+import { TablePagination } from "App/components/Table";
+import AddAttachmentForm from "../AddAttachments/AddAttachmentForm";
+
 import actions from "../store/actions";
-import { Box, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -45,30 +40,48 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
     borderRadius: "3px",
 }));
 
-function GetAttachment({ attachmentType, attachmentId, data }) {
-    const methods = useForm({
-        defaultValues: {
-            attachmentId,
-            attachmentType,
-        },
-    });
-
+function GetAttachment({ attachmentType, attachmentId, onClose }) {
     const dispatch = useDispatch();
-    const [open, setOpen] = React.useState(false);
+    const [filterSchema, setFilterSchema] = React.useState({
+        attachmentType: "Transaction",
+        attachmentId: attachmentId,
+        page_number: 1,
+        page_size: 10,
+    });
+    const { response, loading } = useSelector((state) => state.get_all_attachments);
+    const { success } = useSelector((state) => state.upload_attachment);
 
     React.useEffect(() => {
-        dispatch(
-            actions.get_all_attachments({
-                attachmentType: "Transaction",
-                attachmentId: referenceId,
-            }),
-        );
-    }, [dispatch]);
+        dispatch(actions.get_all_attachments(filterSchema));
+    }, [dispatch, filterSchema]);
 
-    const { response, loading } = useSelector((state) => state.get_all_attachments);
+    React.useEffect(() => {
+        if (success) {
+            dispatch(actions.get_all_attachments(filterSchema));
+        }
+    }, [success]);
+
+    const handleChangePage = (e, newPage) => {
+        const updatedFilter = {
+            ...filterSchema,
+            page_number: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
+    };
+
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     return (
         <div>
+            <AddAttachmentForm attachmentObjectId={attachmentId} attachmentObjectType="Transaction" onClose={onClose} />
+
             {response?.data?.map((attachments, index) => (
                 <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -111,6 +124,16 @@ function GetAttachment({ attachmentType, attachmentId, data }) {
                     </Typography>
                 </Box>
             ))}
+            {loading && (
+                <Typography align="center" fontSize={20}>
+                    Loading...
+                </Typography>
+            )}
+            <TablePagination
+                paginationData={response?.pagination}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
+            />
         </div>
     );
 }

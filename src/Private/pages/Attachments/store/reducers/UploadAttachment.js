@@ -9,6 +9,11 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actions.UPLOAD_ATTACHMENT:
+            return {
+                ...state,
+                loading: true,
+            };
         case actions.UPLOAD_ATTACHMENT_SUCCESS:
             return {
                 ...state,

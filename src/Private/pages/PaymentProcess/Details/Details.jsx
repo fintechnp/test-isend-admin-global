@@ -21,6 +21,7 @@ import buildRoute from "App/helpers/buildRoute";
 import CommentForm from "../../Comments/AddComment/Form";
 import AddComment from "Private/pages/Comments/AddComment";
 import GetAttachment from "Private/pages/Attachments/GetAttachment";
+import { set } from "date-fns";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -77,14 +78,13 @@ function Details({ data, isAML = false }) {
 
     const transactionId = tid ?? id;
 
-    console.log(transactionId);
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
     const [count, setCount] = useState(0);
 
-    const [open, setOpen] = useState(false);
+    const [openCommentDrawer, setOpenCommentDrawer] = useState(false);
+    const [openAttachmentDrawer, setOpenAttachmentDrawer] = useState(false);
 
     const sanctionDetails = useSelector((state) => state.get_sanction_details);
 
@@ -124,8 +124,12 @@ function Details({ data, isAML = false }) {
 
     // Drawer added
 
-    const toggleDrawer = () => {
-        setOpen(!open);
+    const toggleCommentDrawer = () => {
+        setOpenCommentDrawer(!openCommentDrawer);
+    };
+
+    const toggleAttachmentDrawer = () => {
+        setOpenAttachmentDrawer(!openAttachmentDrawer);
     };
 
     return (
@@ -477,11 +481,11 @@ function Details({ data, isAML = false }) {
                         Add Comments
                     </BottomButton> */}
 
-                    <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
+                    <Button variant="outlined" color="primary" onClick={() => setOpenCommentDrawer(true)}>
                         Show Comments
                     </Button>
 
-                    <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
+                    <Button variant="outlined" color="primary" onClick={() => setOpenAttachmentDrawer(true)}>
                         Show Attachments
                     </Button>
 
@@ -500,16 +504,25 @@ function Details({ data, isAML = false }) {
                             </BottomButton>
                         </>
                     )}
-                    <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                    <Drawer anchor="right" open={openCommentDrawer} onClose={toggleCommentDrawer}>
                         <Box sx={{ width: 650, padding: "1rem" }}>
-                            <AddComment referenceId={transactionId} referenceType="Transaction" />
+                            <AddComment
+                                referenceId={transactionId}
+                                referenceType="Transaction"
+                                handleClose={() => {
+                                    setOpenCommentDrawer(false);
+                                }}
+                            />
                         </Box>
                     </Drawer>
 
-                    <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                    <Drawer anchor="right" open={openAttachmentDrawer} onClose={toggleAttachmentDrawer}>
                         <Box sx={{ width: 650, padding: "1rem" }}>
-                           
-                            <GetAttachment attachmentType="Transaction" attachmentId={transactionId} />
+                            <GetAttachment
+                                attachmentType="Transaction"
+                                attachmentId={transactionId}
+                                onClose={setOpenAttachmentDrawer}
+                            />
                         </Box>
                     </Drawer>
                 </Grid>
