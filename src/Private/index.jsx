@@ -324,6 +324,7 @@ import {
     UpdateFcmReducer,
     DeleteFcmReducer,
     UtilitiesSaga,
+    ResendNotification,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -791,6 +792,7 @@ export const privateReducer = {
     create_fcm: CreateFcmReducer,
     update_fcm: UpdateFcmReducer,
     delete_fcm: DeleteFcmReducer,
+    resend_notification: ResendNotification,
 
     //Sanction
     get_sanction_list: GetSanctionListReducer,

@@ -200,6 +200,9 @@ const apiEndpoints = {
         addKyc: "/kyc",
         editKyc: "/kyc/:kycId",
     },
+    notification: {
+        resend: "/notification/resend",
+    }
 };
 
 export default apiEndpoints;

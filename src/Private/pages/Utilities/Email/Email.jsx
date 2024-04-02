@@ -8,8 +8,10 @@ import CreateEmail from "./CreateEmail";
 import { Delete } from "App/components";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
+import { useConfirm } from "App/core/mui-confirm";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import ResendIconButton from "App/components/Button/ResendIconButton";
 
 import actions from "./../store/actions";
 import { FormatDate } from "App/helpers";
@@ -40,6 +42,8 @@ const initialState = {
 
 const Email = () => {
     const dispatch = useDispatch();
+
+    const confirm = useConfirm();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: EmailData, loading: l_loading } = useSelector((state) => state.get_email);
@@ -166,6 +170,11 @@ const Email = () => {
                             loading={false}
                             tooltext="Delete Email"
                         />
+                        <ResendIconButton
+                            onClick={() => {
+                                handleOnResend(row?.original?.tid);
+                            }}
+                        />
                     </Box>
                 ),
             },
@@ -231,6 +240,19 @@ const Email = () => {
         dispatch(actions.delete_email(id));
     };
 
+    const handleOnResend = (id) => {
+        confirm({
+            description: "Do you want to resend this notification?",
+            confirmationText: "Yes",
+        }).then(() => {
+            dispatch(
+                actions.resend_notification({
+                    notification_id: id,
+                    type: "email",
+                }),
+            );
+        });
+    };
     return (
         <PageContent documentTitle="Email">
             <Header title="Email List">
