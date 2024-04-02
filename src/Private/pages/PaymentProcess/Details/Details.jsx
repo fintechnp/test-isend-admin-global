@@ -20,6 +20,7 @@ import buildRoute from "App/helpers/buildRoute";
 
 import CommentForm from "../../Comments/AddComment/Form";
 import AddComment from "Private/pages/Comments/AddComment";
+import GetAttachment from "Private/pages/Attachments/GetAttachment";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -76,8 +77,7 @@ function Details({ data, isAML = false }) {
 
     const transactionId = tid ?? id;
 
-    console.log(transactionId)
-    
+    console.log(transactionId);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -480,6 +480,11 @@ function Details({ data, isAML = false }) {
                     <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
                         Show Comments
                     </Button>
+
+                    <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
+                        Show Attachments
+                    </Button>
+
                     {isAML && (
                         <>
                             <BottomButton
@@ -497,14 +502,15 @@ function Details({ data, isAML = false }) {
                     )}
                     <Drawer anchor="right" open={open} onClose={toggleDrawer}>
                         <Box sx={{ width: 650, padding: "1rem" }}>
-                  
-
-                          <AddComment referenceId={transactionId} referenceType="Transaction"  />
-
-                          
+                            <AddComment referenceId={transactionId} referenceType="Transaction" />
                         </Box>
+                    </Drawer>
 
-                        
+                    <Drawer anchor="right" open={open} onClose={toggleDrawer}>
+                        <Box sx={{ width: 650, padding: "1rem" }}>
+                           
+                            <GetAttachment attachmentType="Transaction" attachmentId={transactionId} />
+                        </Box>
                     </Drawer>
                 </Grid>
             </Grid>
