@@ -20,6 +20,7 @@ import PageContent from "App/components/Container/PageContent";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
 import { CountryName, FormatDate, ReferenceName } from "App/helpers";
+import isEmpty from "App/helpers/isEmpty";
 
 const Header = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
@@ -132,7 +133,7 @@ function stringToColor(string = "Avatar") {
     return color;
 }
 
-function stringAvatar(first = "A", last) {
+function stringAvatar(first = "Customer", last) {
     return {
         sx: {
             bgcolor: stringToColor(first),
@@ -249,19 +250,25 @@ function CustomerDetails(props) {
                                 }
                             >
                                 <Avatar
-                                    {...stringAvatar(customersData?.data?.first_name, customersData?.data?.last_name)}
+                                    {...stringAvatar(
+                                        customersData?.data?.first_name ?? "Customer",
+                                        customersData?.data?.last_name ?? "",
+                                    )}
                                 />
                             </Badge>
                         </Box>
                         <NameField>
                             <RenderTopField
                                 label="Name"
-                                value={`${customersData?.data?.first_name}${" "}${
-                                    customersData?.data?.middle_name
-                                        ? " " + customersData?.data?.middle_name + " "
-                                        : " "
-                                }${customersData?.data?.last_name ? customersData?.data?.last_name : ""}`}
+                                value={[
+                                    customersData?.data?.first_name,
+                                    customersData?.data?.middle_name,
+                                    customersData?.data?.last_name,
+                                ]
+                                    .filter((v) => !isEmpty(v))
+                                    .join(" ")}
                             />
+
                             <RenderTopField label="Customer Id" value={customersData?.data?.customer_id} />
                         </NameField>
                     </NameBox>
