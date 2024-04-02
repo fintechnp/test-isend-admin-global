@@ -525,13 +525,9 @@ import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/stor
 
 import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/AccountList/store";
 
-import {AddCommentReducer,GetAllCommentsReducer,commentSaga} from "Private/pages/Comments/store";
+import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/pages/Comments/store";
 
-
-
-import {GetAllAttachmentsReducer, attachmentSaga} from "Private/pages/Attachments/store"
-
-
+import { GetAllAttachmentsReducer, UploadAttachmentReducer, attachmentSaga } from "Private/pages/Attachments/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -949,14 +945,12 @@ export const privateReducer = {
 
     //Comment Reducers
 
-    get_all_comments:GetAllCommentsReducer,
-    add_comment:AddCommentReducer,
-
+    get_all_comments: GetAllCommentsReducer,
+    add_comment: AddCommentReducer,
 
     // Attachment Reducers
     get_all_attachments: GetAllAttachmentsReducer,
-
-
+    upload_attachment: UploadAttachmentReducer,
 };
 
 export const privateSaga = [
