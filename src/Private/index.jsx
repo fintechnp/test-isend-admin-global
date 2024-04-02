@@ -525,6 +525,8 @@ import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/stor
 
 import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/AccountList/store";
 
+import {AddCommentReducer,GetAllCommentsReducer,commentSaga} from "Private/pages/Comments/store"
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -938,6 +940,11 @@ export const privateReducer = {
     get_all_customer_delete_list: GetAllCustomerDeleteListReducer,
     get_customer_delete_details: GetCustomerDeleteDetailReducer,
     update_delete_request: UpdateCustomerDeleteReducer,
+
+    //Comment Reducers
+
+    get_all_comments:GetAllCommentsReducer,
+    add_comment:AddCommentReducer,
 };
 
 export const privateSaga = [
@@ -996,6 +1003,7 @@ export const privateSaga = [
     b2bAccountSaga(),
     accountListSaga(),
     customerDeleteSaga(),
+    commentSaga()
 ];
 
 export { default as privateRoutes } from "./config/routes";

@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button } from "@mui/material";
+import { Grid, Button, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
+import actions from "../store/actions";
 
-import TextAreaField from "../../../../../App/components/Fields/TextAreaField";
-import Validator from "../../../../../App/utils/validators";
+import validators from "App/utils/validators";
+import TextAreaField from "App/components/Fields/TextAreaField";
+import HookForm from "App/core/hook-form/HookForm";
+import FormTextField from "App/core/hook-form/FormTextField";
+import { useDispatch } from "react-redux";
 
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
@@ -55,29 +59,15 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
+const CommentForm = ({ method, loading, handleClose, onSubmit }) => {
     return (
-        <Form onSubmit={handleSubmit}>
+        <HookForm onSubmit={method.handleSubmit(onSubmit)} {...method}>
             <Container container direction="column">
+                <Typography marginY="1rem" align="center" variant="h5">
+                    Add Comment
+                </Typography>
                 <Grid item xs={12}>
-                    <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12}>
-                            <Field   
-                                name="remarks"
-                                label="Remarks"
-                                placeholder="Write remarks..."
-                                type="text"
-                                minRows={5}
-                                small={12}
-                                component={TextAreaField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength500,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                    </FormWrapper>
+                    <FormTextField name="commentText" label="Comment" />
                 </Grid>
                 <Grid item>
                     <Divider sx={{ pt: 1.2 }} />
@@ -91,11 +81,7 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>
@@ -113,8 +99,8 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
                     </ButtonWrapper>
                 </Grid>
             </Container>
-        </Form>
+        </HookForm>
     );
 };
 
-export default React.memo(reduxForm({ form: "remarks_form" })(RemarksForm));
+export default CommentForm;
