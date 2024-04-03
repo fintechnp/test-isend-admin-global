@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Admin UI Charoit (UAT)
+name: Charoit - UAT
 
 on: [workflow_dispatch]
 
@@ -21,7 +21,9 @@ jobs:
         run: 
             REACT_APP_NAME="iSend Admin"
             REACT_APP_API_BASE_URL=https://devadminapi.chariot.com.sg/api
-            REACT_APP_VERSION=v2.0.0
+            REACT_APP_VERSION=v1.0.0
+            REACT_APP_POWERED_BY_COMPANY_LABEL=www.isendremit.com
+            REACT_APP_POWERED_BY_COMPANY_URL=https://isendremit.com
             npm run build
 
       - name: Transfer files to Charoit Server
