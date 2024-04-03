@@ -10,6 +10,7 @@ import AddAttachmentForm from "../AddAttachments/AddAttachmentForm";
 
 import actions from "../store/actions";
 import Row from "App/components/Row/Row";
+import { format } from "date-fns";
 
 function GetAttachment({ attachmentType, attachmentId, onClose }) {
     const dispatch = useDispatch();
@@ -50,59 +51,86 @@ function GetAttachment({ attachmentType, attachmentId, onClose }) {
     };
 
     return (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Row justifyContent="space-between">
                 <Typography marginY="1rem" variant="h6">
-                    Comments
+                    Attachments
                 </Typography>
                 <IconButton color="error" onClick={onClose}>
                     <CloseIcon />
                 </IconButton>
             </Row>
             <AddAttachmentForm attachmentObjectId={attachmentId} attachmentObjectType="Transaction" onClose={onClose} />
-
-            {response?.data?.map((attachments, index) => (
-                <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
-                    <Typography variant="h6">
-                        {attachments?.userName}
-                    </Typography>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                        }}
-                    >
-                        <Typography variant="body1" sx={{ mt: 1 }}>
-                            {attachments?.attachmnetName}
-                        </Typography>
-                        <Typography variant="body2" sx={{ mt: 1 }}>
-                            {
-                                <a
-                                    href={attachments?.attachment}
-                                    target="_blank"
-                                    style={{
-                                        cursor: "pointer",
+            <Box
+                sx={{
+                    flex: 1,
+                    overflowY: "auto",
+                }}
+            >
+                {response?.data?.map((attachments, index) => (
+                    <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
+                        <Box display="flex" justifyContent="space-between">
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Box
+                                    sx={{
+                                        width: "50px",
+                                        height: "50px",
+                                        borderRadius: "50%",
+                                        backgroundColor: "#f3f3f3",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        fontSize: "20px",
+                                        color: "#333",
                                     }}
                                 >
-                                    <img
-                                        src={attachments?.attachment}
-                                        alt={attachments?.attachmnetName}
+                                    {attachments?.userName
+                                        ?.split(" ")
+                                        .map((name) => name[0])
+                                        .join("")
+                                        .toUpperCase()}
+                                </Box>
+                                <Typography fontSize={18}>{attachments?.userName}</Typography>
+                            </Box>
+                            <Typography variant="body2" sx={{ mt: 1 }}>
+                                {format(new Date(attachments?.uploadedDate), "MMMM d, yyyy h:mm:ss a")}
+                            </Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <Typography variant="body1" sx={{ mt: 1 }}>
+                                {attachments?.attachmnetName}
+                            </Typography>
+                            <Typography variant="body2" sx={{ mt: 1 }}>
+                                {
+                                    <a
+                                        href={attachments?.attachment}
+                                        target="_blank"
                                         style={{
-                                            width: "100%",
-                                            height: "50px",
-                                            objectFit: "cover",
+                                            cursor: "pointer",
                                         }}
-                                    ></img>
-                                </a>
-                            }
-                        </Typography>
+                                    >
+                                        <img
+                                            src={attachments?.attachment}
+                                            alt={attachments?.attachmnetName}
+                                            style={{
+                                                width: "100%",
+                                                height: "70px",
+                                                objectFit: "cover",
+                                            }}
+                                        ></img>
+                                    </a>
+                                }
+                            </Typography>
+                        </Box>
                     </Box>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                        {new Date(attachments?.uploadedDate).toLocaleDateString()}
-                    </Typography>
-                </Box>
-            ))}
+                ))}
+            </Box>
             {loading && (
                 <Typography align="center" fontSize={20}>
                     Loading...

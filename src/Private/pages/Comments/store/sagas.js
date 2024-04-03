@@ -21,6 +21,10 @@ export const addComment = takeEvery(actions.ADD_COMMENT, function* (action) {
             type: actions.ADD_COMMENT_SUCCESS,
             response: res,
         });
+        yield put({
+            type: actions.ADD_COMMENT_RESET,
+        });
+
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({
