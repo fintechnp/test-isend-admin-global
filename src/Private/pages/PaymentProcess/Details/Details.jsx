@@ -471,22 +471,13 @@ function Details({ data, isAML = false }) {
                     >
                         Documents
                     </BottomButton>
-                    {/* <BottomButton
-                        size="small"
-                        variant="outlined"
-                        disableElevation
-                        disableRipple
-                        onClick={() => setOpen(false)}
-                    >
-                        Add Comments
-                    </BottomButton> */}
 
                     <Button variant="outlined" color="primary" onClick={() => setOpenCommentDrawer(true)}>
-                        Show Comments
+                        Comments
                     </Button>
 
                     <Button variant="outlined" color="primary" onClick={() => setOpenAttachmentDrawer(true)}>
-                        Show Attachments
+                        Attachments
                     </Button>
 
                     {isAML && (
@@ -505,7 +496,7 @@ function Details({ data, isAML = false }) {
                         </>
                     )}
                     <Drawer anchor="right" open={openCommentDrawer} onClose={toggleCommentDrawer}>
-                        <Box sx={{ width: 650, padding: "1rem" }}>
+                        <Box sx={{ width: 650, px: 2 }}>
                             <AddComment
                                 referenceId={transactionId}
                                 referenceType="Transaction"

@@ -1,104 +1,29 @@
-import React, { useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
+import React from "react";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import Divider from "@mui/material/Divider";
-import actions from "../store/actions";
 
-import validators from "App/utils/validators";
-import TextAreaField from "App/components/Fields/TextAreaField";
 import HookForm from "App/core/hook-form/HookForm";
 import FormTextField from "App/core/hook-form/FormTextField";
-import { useDispatch } from "react-redux";
+import Row from "App/components/Row/Row";
+import SubmitButton from "App/components/Button/SubmitButton";
 
-const Container = styled(Grid)(({ theme }) => ({
-    maxWidth: "900px",
-    borderRadius: "5px",
-    [theme.breakpoints.up("sm")]: {
-        minWidth: "350px",
-    },
-}));
-
-const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
-    backgroundColor: theme.palette.background.light,
-}));
-
-const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
-}));
-
-const ButtonWrapper = styled(Grid)(({ theme }) => ({
-    paddingTop: "12px",
-}));
-
-const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-    },
-}));
-
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
-const CommentForm = ({ method, loading, handleClose, onSubmit }) => {
+const CommentForm = ({ method, loading, handleClose, onSubmit, isSubmitting }) => {
     return (
         <HookForm onSubmit={method.handleSubmit(onSubmit)} {...method}>
-            <Container container direction="column">
-                <Typography marginY="1rem" align="center" variant="h5">
-                    Add Comment
-                </Typography>
+            <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <FormTextField name="commentText" label="Comment" />
                 </Grid>
-                <Grid item>
-                    <Divider sx={{ pt: 1.2 }} />
+                <Grid item xs={12}>
+                    <Row gap={2} justifyContent="flex-end">
+                        <Button size="small" color="error" variant="contained" onClick={handleClose} disabled={loading}>
+                            Cancel
+                        </Button>
+                        <SubmitButton disabled={loading}>Add</SubmitButton>
+                    </Row>
                 </Grid>
-                <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <CancelButton size="small" variant="contained" onClick={handleClose}>
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
-                                size="small"
-                                variant="outlined"
-                                loading={loading}
-                                endIcon={<AddIcon />}
-                                type="submit"
-                            >
-                                Add
-                            </CreateButton>
-                        </Grid>
-                    </ButtonWrapper>
-                </Grid>
-            </Container>
+            </Grid>
         </HookForm>
     );
 };

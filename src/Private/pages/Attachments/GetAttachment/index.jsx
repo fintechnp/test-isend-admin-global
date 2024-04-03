@@ -1,7 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import { styled } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,35 +9,7 @@ import { TablePagination } from "App/components/Table";
 import AddAttachmentForm from "../AddAttachments/AddAttachmentForm";
 
 import actions from "../store/actions";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    "& .MuiDialog-container": {
-        backdropFilter: "blur(3px)",
-    },
-    "& .MuiDialog-paper": {
-        maxWidth: "90%",
-        backgroundColor: theme.palette.background.dark,
-    },
-    "& .MuiDialogActions-root": {
-        padding: theme.spacing(1),
-    },
-}));
-
-const UpdateButton = styled(IconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const CloseButton = styled(IconButton)(({ theme }) => ({
-    padding: "4px",
-    position: "absolute",
-    right: "15px",
-    top: "15px",
-    color: theme.palette.grey[500],
-    borderRadius: "3px",
-}));
+import Row from "App/components/Row/Row";
 
 function GetAttachment({ attachmentType, attachmentId, onClose }) {
     const dispatch = useDispatch();
@@ -80,11 +51,19 @@ function GetAttachment({ attachmentType, attachmentId, onClose }) {
 
     return (
         <div>
+            <Row justifyContent="space-between">
+                <Typography marginY="1rem" variant="h6">
+                    Comments
+                </Typography>
+                <IconButton color="error" onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            </Row>
             <AddAttachmentForm attachmentObjectId={attachmentId} attachmentObjectType="Transaction" onClose={onClose} />
 
             {response?.data?.map((attachments, index) => (
                 <Box key={index} sx={{ my: 2, p: 2, border: "1px solid #ccc", borderRadius: "8px" }}>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    <Typography variant="h6">
                         {attachments?.userName}
                     </Typography>
                     <Box
@@ -111,7 +90,7 @@ function GetAttachment({ attachmentType, attachmentId, onClose }) {
                                         alt={attachments?.attachmnetName}
                                         style={{
                                             width: "100%",
-                                            height: "200px",
+                                            height: "50px",
                                             objectFit: "cover",
                                         }}
                                     ></img>

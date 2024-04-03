@@ -62,11 +62,6 @@ export default function AddAttachmentForm({ attachmentObjectId, attachmentObject
         <HookForm onSubmit={methods.handleSubmit(handleSubmit)} {...methods}>
             <Grid xs={12} container spacing={2}>
                 <Grid item xs={12}>
-                    <Typography fontSize={24} textAlign="center">
-                        Add Attachment
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
                     <FormTextField name="attachmentName" label="Attachment Name" />
                 </Grid>
                 <Grid item xs={12}>
