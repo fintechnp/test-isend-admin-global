@@ -17,9 +17,6 @@ const CommentForm = ({ method, loading, handleClose, onSubmit, isSubmitting }) =
                 </Grid>
                 <Grid item xs={12}>
                     <Row gap={2} justifyContent="flex-end">
-                        <Button size="small" color="error" variant="contained" onClick={handleClose} disabled={loading}>
-                            Cancel
-                        </Button>
                         <SubmitButton disabled={loading}>Add</SubmitButton>
                     </Row>
                 </Grid>
