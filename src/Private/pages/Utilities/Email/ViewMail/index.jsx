@@ -142,7 +142,7 @@ function VeiwEmail({ id }) {
                     id="customized-dialog-title"
                     onClose={handleClose}
                 >
-                    Veiw Email
+                    View Email
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <View loading={get_loading} data={EmailData?.data || []} />
