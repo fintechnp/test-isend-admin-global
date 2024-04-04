@@ -42,7 +42,7 @@ export default function ListBusiness({ title }) {
                 accessorKey: "name",
             },
             {
-                header: "Type",
+                header: "Business Type",
                 accessorKey: "businessType",
             },
             {

@@ -23,6 +23,7 @@ import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 import CircularProgress from "App/components/Loading/CircularProgress";
 
 import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
 
 export default function MarketMakerForm({ isAddMode = true }) {
     const dispatch = useDispatch();
@@ -190,7 +191,13 @@ export default function MarketMakerForm({ isAddMode = true }) {
                     <Grid item xs={12} md={3}>
                         <FormTextField name="name" label="Name" />
                     </Grid>
-
+                    <Grid item xs={12} md={3}>
+                        <FormReferenceDataAutoComplete
+                            name="typeOfBusinessId"
+                            label="Business Type"
+                            referenceTypeId={referenceTypeId.businessTypes}
+                        />
+                    </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="registrationNo" label="Registration Number" />
                     </Grid>

@@ -78,6 +78,9 @@ export default function ViewMarketMaker() {
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Name" value={marketMakerDetail?.name} />
                         </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <RenderField label="Business Type" value={marketMakerDetail?.businessType} />
+                        </Grid>
 
                         <Grid item xs={12} sm={6}>
                             <RenderField label="Email" value={marketMakerDetail?.email} />
