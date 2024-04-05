@@ -19,6 +19,7 @@ import Logo from "../../../assets/isend_long.png";
 import useDrawerItems from "App/hooks/useDrawerItems";
 import Logo_short from "../../../assets/short-logo.svg";
 import SearchTextField from "../Fields/SearchTextField";
+import useDetectScreen from "App/hooks/useDetectScreen";
 
 const drawerWidth = 280;
 
@@ -168,9 +169,14 @@ const CustomizedDrawer = styled(MuiDrawer, {
     "& .no-search-result__container": {
         display: "block !important",
     },
+    "& .MuiPaper-root": {
+        padding: "0px",
+    },
 }));
 
 function Drawer({ children }) {
+    const { isDesktop } = useDetectScreen();
+
     const theme = useTheme();
     const navigate = useNavigate();
     const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -200,7 +206,16 @@ function Drawer({ children }) {
     };
 
     const drawerMenu = (
-        <div style={{ overflowY: "auto" }}>
+        <div
+            style={{
+                overflowY: "auto",
+                ...(!open
+                    ? {
+                          padding: theme.spacing(0, 1),
+                      }
+                    : undefined),
+            }}
+        >
             <List open={open}>
                 {drawerItems.map((item, index) =>
                     item.sub ? (
@@ -265,26 +280,21 @@ function Drawer({ children }) {
                         margin: "0px",
                     }}
                 />
-                <SearchTextField
-                    placeholder="Search Menu"
-                    sx={{
-                        "& .MuiInputBase-root": {
-                            background: (theme) => theme.palette.background.paper,
-                            ...(open
-                                ? {
-                                      mx: 1,
-                                      mt: 1,
-                                  }
-                                : {
-                                    mt: 1
-                                }),
-                        },
-                    }}
-                    onChange={(value) => setMenuSearchQuery(value)}
-                    debounceTime={0}
-                    onClear={() => setMenuSearchQuery("")}
-                    onClick={() => setOpen(true)}
-                />
+                {isDesktop && (
+                    <SearchTextField
+                        placeholder="Search Menu"
+                        sx={{
+                            "& .MuiInputBase-root": {
+                                background: (theme) => theme.palette.background.paper,
+                                m: theme.spacing(1, 1, 0, 1),
+                            },
+                        }}
+                        onChange={(value) => setMenuSearchQuery(value)}
+                        debounceTime={0}
+                        onClear={() => setMenuSearchQuery("")}
+                        onClick={() => setOpen(true)}
+                    />
+                )}
                 {drawerItems.length > 0 ? (
                     drawerMenu
                 ) : (
