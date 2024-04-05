@@ -184,7 +184,12 @@ function Drawer({ children }) {
 
     const [menuSearchQuery, setMenuSearchQuery] = useState("");
 
-    const { drawerItems } = useDrawerItems(menuSearchQuery);
+    const { drawerItems, filterItems } = useDrawerItems(menuSearchQuery);
+
+    const handleFilter = (searchQuery) => {
+        setMenuSearchQuery(searchQuery);
+        filterItems(searchQuery);
+    };
 
     React.useEffect(() => {
         setOpen(matches);
@@ -289,9 +294,9 @@ function Drawer({ children }) {
                                 m: theme.spacing(1, 1, 0, 1),
                             },
                         }}
-                        onChange={(value) => setMenuSearchQuery(value)}
+                        onChange={(value) => handleFilter(value)}
                         debounceTime={0}
-                        onClear={() => setMenuSearchQuery("")}
+                        onClear={() => handleFilter("")}
                         onClick={() => setOpen(true)}
                     />
                 )}

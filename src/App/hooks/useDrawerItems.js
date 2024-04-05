@@ -1,37 +1,44 @@
+import isEmpty from "App/helpers/isEmpty";
 import { useState, useEffect } from "react";
+import cloneDeep from 'lodash/cloneDeep'
 import { drawerItems } from "App/data/drawer-items";
 
-const useDrawerItems = (searchQuery) => {
-    const [filteredDrawerItems, setFilteredDrawerItems] = useState(drawerItems);
+const useDrawerItems = () => {
+    const [filteredDrawerItems, setFilteredDrawerItems] = useState([...drawerItems]);
 
-    useEffect(() => {
-        const filterItems = () => {
-            return [...drawerItems].filter((item) => {
-                const searchText = searchQuery.toLowerCase();
-                const itemText = item.text.toLowerCase();
+    console.log({ drawerItems, filteredDrawerItems });
 
-                const matchParent = itemText.includes(searchText);
-                const matchChildren =
-                    item.children && item.children.some((child) => child.text.toLowerCase().includes(searchText));
+    const filterItems = (searchQuery) => {
+        const searchText = searchQuery.toLowerCase();
 
-                if (matchParent) {
-                    return true;
-                }
+        const drawerItems1 =  cloneDeep(drawerItems);
 
-                if (matchChildren) {
-                    item.children = item.children.filter((child) => child.text.toLowerCase().includes(searchText));
-                    return true;
-                }
+        const filteredItems = drawerItems1.filter((item) => {
+            const itemText = item.text.toLowerCase();
 
-                return false;
-            });
-        };
+            const matchParent = itemText.includes(searchText);
+            const matchChildren =
+                item.children && item.children.some((child) => child.text.toLowerCase().includes(searchText));
 
-        const filteredItems = filterItems();
-        setFilteredDrawerItems(filteredItems);
-    }, [searchQuery]);
+            if (matchParent) {
+                return true;
+            }
 
-    return { drawerItems: filteredDrawerItems };
+            if (matchChildren) {
+                item.children = item.children.filter((child) => child.text.toLowerCase().includes(searchText));
+                return true;
+            }
+
+            return false;
+        });
+        if (isEmpty(searchQuery)) {
+            setFilteredDrawerItems([...drawerItems]);
+        } else {
+            setFilteredDrawerItems(filteredItems);
+        }
+    };
+
+    return { drawerItems: filteredDrawerItems, filterItems };
 };
 
 export default useDrawerItems;
