@@ -6,8 +6,6 @@ import { drawerItems } from "App/data/drawer-items";
 const useDrawerItems = () => {
     const [filteredDrawerItems, setFilteredDrawerItems] = useState([...drawerItems]);
 
-    console.log({ drawerItems, filteredDrawerItems });
-
     const filterItems = (searchQuery) => {
         const searchText = searchQuery.toLowerCase();
 
