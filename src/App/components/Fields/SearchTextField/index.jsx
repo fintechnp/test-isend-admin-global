@@ -1,48 +1,77 @@
+import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import React, { useEffect, useRef, useState } from "react";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 
-const SearchTextField = React.memo(({ debounceTime = 500, onChange, ...rest }) => {
-  const firstRender = useRef(true);
-  const [value, setValue] = useState("");
-  const timeout = useRef();
+import isEmpty from "App/helpers/isEmpty";
 
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+const SearchTextField = React.memo(({ debounceTime = 500, onChange, onClear, onClick, ...rest }) => {
+    const firstRender = useRef(true);
+    const [value, setValue] = useState("");
+    const timeout = useRef();
 
-  useEffect(() => {
-    clearTimeout(timeout.current);
+    const handleChange = (e) => {
+        setValue(e.target.value);
+    };
 
-    timeout.current = setTimeout(() => {
-      if (typeof onChange === "function" && !firstRender.current) {
-        onChange(value || "");
-      }
-    }, debounceTime);
+    useEffect(() => {
+        clearTimeout(timeout.current);
 
-    firstRender.current = false;
+        timeout.current = setTimeout(() => {
+            if (typeof onChange === "function" && !firstRender.current) {
+                onChange(value || "");
+            }
+        }, debounceTime);
 
-    return () => clearTimeout(timeout.current);
+        firstRender.current = false;
 
-  }, [value]);
+        return () => clearTimeout(timeout.current);
+    }, [value]);
 
-  return (
-    <TextField
-      {...rest}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        )
-      }}
-      size="small"
-      placeholder="Search"
-      value={value}
-      onChange={handleChange}
-    />
-  );
-})
+    return (
+        <TextField
+            {...rest}
+            InputProps={{
+                startAdornment: (
+                    <InputAdornment position="start">
+                        <SearchIcon />
+                    </InputAdornment>
+                ),
+                ...(typeof onClear === "function" && !isEmpty(value)
+                    ? {
+                          endAdornment: (
+                              <InputAdornment position="end">
+                                  <IconButton
+                                      color="error"
+                                      onClick={() => {
+                                          setValue("");
+                                          onClear?.();
+                                      }}
+                                  >
+                                      <ClearRoundedIcon />
+                                  </IconButton>
+                              </InputAdornment>
+                          ),
+                      }
+                    : undefined),
+            }}
+            size="small"
+            placeholder={rest?.placeholder ?? "Search"}
+            value={value}
+            onChange={handleChange}
+            onClick={onClick}
+        />
+    );
+});
 
 export default SearchTextField;
+
+SearchTextField.propTypes = {
+    debounceTime: PropTypes.number,
+    onChange: PropTypes.func,
+    onClear: PropTypes.func,
+    onClick: PropTypes.func
+};

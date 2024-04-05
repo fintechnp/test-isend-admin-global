@@ -1,20 +1,35 @@
-import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
+import MuiList from "@mui/material/List";
+import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
-import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { useNavigate } from "react-router-dom";
+import MainButton from "../List/components/MainButton";
+import MainHeader from "../List/components/MainHeader";
 
 import Toolbar from "./../Toolbar";
-import DrawerList from "../List";
+import isEmpty from "App/helpers/isEmpty";
 import Logo from "../../../assets/isend_long.png";
+import useDrawerItems from "App/hooks/useDrawerItems";
 import Logo_short from "../../../assets/short-logo.svg";
+import SearchTextField from "../Fields/SearchTextField";
 
 const drawerWidth = 280;
+
+const List = styled(MuiList)(({ theme, open }) => ({
+    ...(open && {
+        padding: "8px",
+    }),
+    ...(!open && {
+        margin: "0px",
+    }),
+}));
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -135,7 +150,7 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const Drawer = styled(MuiDrawer, {
+const CustomizedDrawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
     width: drawerWidth,
@@ -150,13 +165,20 @@ const Drawer = styled(MuiDrawer, {
         ...closedMixin(theme),
         "& .MuiDrawer-paper": closedMixin(theme),
     }),
+    "& .no-search-result__container": {
+        display: "block !important",
+    },
 }));
 
-function SideDrawer({ children, menus }) {
+function Drawer({ children }) {
     const theme = useTheme();
     const navigate = useNavigate();
     const matches = useMediaQuery(theme.breakpoints.up("md"));
     const [open, setOpen] = React.useState(matches);
+
+    const [menuSearchQuery, setMenuSearchQuery] = useState("");
+
+    const { drawerItems } = useDrawerItems(menuSearchQuery);
 
     React.useEffect(() => {
         setOpen(matches);
@@ -170,9 +192,49 @@ function SideDrawer({ children, menus }) {
         navigate("/");
     };
 
+    const [selectedKey, setSelectedKey] = React.useState("");
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+    const handleListItemClick = (key) => {
+        setSelectedKey(key);
+    };
+
     const drawerMenu = (
         <div style={{ overflowY: "auto" }}>
-            <DrawerList items={menus()} open={open} />
+            <List open={open}>
+                {drawerItems.map((item, index) =>
+                    item.sub ? (
+                        <MainButton
+                            key={index}
+                            open={open}
+                            item={item}
+                            index={index}
+                            selectedIndex={selectedIndex}
+                            selectedkey={selectedKey}
+                            setSelectedIndex={setSelectedIndex}
+                            handleListItemClick={handleListItemClick}
+                            isSearching={!isEmpty(menuSearchQuery)}
+                        />
+                    ) : (
+                        <MainHeader
+                            key={index}
+                            open={open}
+                            item={item}
+                            index={index}
+                            selectedkey={selectedKey}
+                            setSelectedIndex={setSelectedIndex}
+                            handleListItemClick={handleListItemClick}
+                        />
+                    ),
+                )}
+                <Divider
+                    sx={{
+                        margin: "8px 0px",
+                        borderColor: "#ffffff",
+                        opacity: 0.25,
+                    }}
+                />
+            </List>
         </div>
     );
 
@@ -183,7 +245,7 @@ function SideDrawer({ children, menus }) {
                     <Toolbar handleDrawerToggle={handleDrawerToggle} open={open} />
                 </Box>
             </AppBar>
-            <Drawer variant="permanent" open={open} className="isend__sidebar">
+            <CustomizedDrawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerHeader>
                     {open ? (
                         <LongLogoWrapper component="img" image={Logo} alt="isend logo" onClick={handleDashboard} />
@@ -203,8 +265,34 @@ function SideDrawer({ children, menus }) {
                         margin: "0px",
                     }}
                 />
-                {drawerMenu}
-            </Drawer>
+                <SearchTextField
+                    placeholder="Search Menu"
+                    sx={{
+                        "& .MuiInputBase-root": {
+                            background: (theme) => theme.palette.background.paper,
+                            ...(open
+                                ? {
+                                      mx: 1,
+                                      mt: 1,
+                                  }
+                                : {
+                                    mt: 1
+                                }),
+                        },
+                    }}
+                    onChange={(value) => setMenuSearchQuery(value)}
+                    debounceTime={0}
+                    onClear={() => setMenuSearchQuery("")}
+                    onClick={() => setOpen(true)}
+                />
+                {drawerItems.length > 0 ? (
+                    drawerMenu
+                ) : (
+                    <Box className="no-search-result__container" px={2} mt={2}>
+                        <Typography color="white">No Results !</Typography>
+                    </Box>
+                )}
+            </CustomizedDrawer>
             <Box
                 component="main"
                 sx={{
@@ -220,4 +308,4 @@ function SideDrawer({ children, menus }) {
     );
 }
 
-export default SideDrawer;
+export default Drawer;
