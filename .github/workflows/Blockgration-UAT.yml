@@ -19,6 +19,9 @@ jobs:
 
       - name: Build app
         run: 
+            REACT_APP_NAME="Blockgration Admin"
+            REACT_APP_API_BASE_URL=https://devbradminapi.isendglobal.com/api
+            REACT_APP_VERSION=v2.0.0
             npm run build
 
       - name: Transfer files to Blockgration Server
