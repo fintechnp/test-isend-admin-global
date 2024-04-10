@@ -1,5 +1,5 @@
 const app = {
-    name: import.meta.REACT_APP_NAME,
+    name: import.meta.env.REACT_APP_NAME,
 
     isDevelopmentMode: import.meta.env.MODE === "development",
 
