@@ -295,7 +295,7 @@ const ExchangeRateList = (props) => {
     return (
         <>
             <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
+                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header

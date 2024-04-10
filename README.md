@@ -1,4 +1,4 @@
-# iSend Global Admin
+# Remittance Platform Admin
 
 This is an web app that for and administrative purpose which is accessed by compliance team to verify transaction created on `isendremit.com`, `agent.isendremit.com` and `biz.isendremit.com` 
 
