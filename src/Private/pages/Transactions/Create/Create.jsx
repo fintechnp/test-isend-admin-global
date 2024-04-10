@@ -60,7 +60,7 @@ function AddUpdateTransactions(props) {
     return (
         <>
             <Helmet>
-                <title>Isend Global Admin | {props.title}</title>
+                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
             </Helmet>
             <Container container>
                 <Grid item xs={12}>
