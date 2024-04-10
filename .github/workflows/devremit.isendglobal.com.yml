@@ -6,6 +6,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_NAME: "iSend Admin"
+      REACT_APP_API_BASE_URL: https://devadminapi.isendglobal.com/api
+      REACT_APP_VERSION: v2.0.0 
 
     steps:
       - name: Checkout code
@@ -21,9 +25,7 @@ jobs:
 
       - name: Build app
         run: 
-            REACT_APP_NAME="iSend Admin"
-            REACT_APP_API_BASE_URL=https://devadminapi.isendglobal.com/api
-            REACT_APP_VERSION=v2.0.0
+
             npm run build
 
       - name: Upload to S3
