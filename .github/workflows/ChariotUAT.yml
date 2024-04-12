@@ -5,6 +5,11 @@ on: [workflow_dispatch]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_NAME: "Charoit Remit"
+      REACT_APP_API_BASE_URL: "https://devadminapi.chariot.com.sg/api"
+      REACT_APP_VERSION: "v1.0.0"
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,9 +24,7 @@ jobs:
 
       - name: Build app
         run: 
-            REACT_APP_NAME="iSend Admin"
-            REACT_APP_API_BASE_URL=https://devadminapi.chariot.com.sg/api
-            REACT_APP_VERSION=v2.0.0
+
             npm run build
 
       - name: Transfer files to Charoit Server
