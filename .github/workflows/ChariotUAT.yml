@@ -9,6 +9,8 @@ jobs:
       REACT_APP_NAME: "Charoit Remit"
       REACT_APP_API_BASE_URL: "https://devadminapi.chariot.com.sg/api"
       REACT_APP_VERSION: "v1.0.0"
+      REACT_APP_POWERED_BY_COMPANY_LABEL: "www.isendremit.com"
+      REACT_APP_POWERED_BY_COMPANY_URL: "https://isendremit.com"
       
     steps:
       - name: Checkout code
