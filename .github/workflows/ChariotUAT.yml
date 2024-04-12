@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Admin UI Charoit (UAT)
+name: Charoit - UAT
 
 on: [workflow_dispatch]
 
