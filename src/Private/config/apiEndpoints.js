@@ -1,4 +1,5 @@
 import { de } from "date-fns/locale";
+import { updateAchTransactionStatus } from "Private/pages/Transactions/AchTransactions/store/saga";
 
 const apiEndpoints = {
     countryStates: {
@@ -202,6 +203,10 @@ const apiEndpoints = {
     },
     notification: {
         resend: "/notification/resend",
+    },
+    transaction:{
+        achTransaction:"/AchTransactions",
+        updateAchTransactionStatus:"/AchTransactions/:id"
     }
 };
 

@@ -43,10 +43,13 @@ export default function BulkEmailCredentialTab() {
                 initialState={{
                     host: response?.data?.host ?? "",
                     port: response?.data?.port ?? "",
-                    enable_ssl: response?.data?.enable_ssl ?? true,
+                    sender_name: response?.data?.sender_name ?? "",
                     credential_email: response?.data?.credential_email ?? "",
                     pwd: response?.data?.pwd ?? "",
-                    sender_name: response?.data?.sender_name ?? "",
+                    display_name: response?.data?.display_name ?? "",
+                    from_address: response?.data?.from_address ?? "",
+                    replyto_address: response?.data?.replyto_address ?? "",
+                    enable_ssl: response?.data?.enable_ssl ?? true,
                 }}
                 isProcessing={isUpdating}
             />
