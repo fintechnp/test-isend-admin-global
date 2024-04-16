@@ -62,6 +62,12 @@ const actions = {
     DELETE_FCM_FAILED: "DELETE_FCM_FAILED",
     DELETE_FCM_RESET: "DELETE_FCM_RESET",
 
+    RESEND_NOTIFICATION: "RESEND_NOTIFICATION",
+    RESEND_NOTIFICATION_SUCCESS: "RESEND_NOTIFICATION_SUCCESS",
+    RESEND_NOTIFICATION_FAILED: "RESEND_NOTIFICATION_FAILED",
+    RESEND_NOTIFICATION_RESET: "RESEND_NOTIFICATION_RESET",
+
+
     //sms
     get_sms: (query) => ({
         type: actions.GET_SMS,
@@ -134,6 +140,10 @@ const actions = {
     delete_fcm: (id) => ({
         type: actions.DELETE_FCM,
         id,
+    }),
+    resend_notification: (data) => ({
+        type: actions.RESEND_NOTIFICATION,
+        data,
     }),
 };
 

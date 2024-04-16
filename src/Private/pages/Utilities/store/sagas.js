@@ -1,6 +1,7 @@
 import { put, takeEvery, call, all } from "redux-saga/effects";
 import Api from "../../../../App/services/api";
 import actions from "./actions";
+import apiEndpoints from "Private/config/apiEndpoints";
 
 const api = new Api();
 
@@ -192,6 +193,17 @@ export const deleteFcm = takeEvery(actions.DELETE_FCM, function* (action) {
     }
 });
 
+export const resendNotification = takeEvery(actions.RESEND_NOTIFICATION, function* (action) {
+    try {
+        const res = yield call(api.post, apiEndpoints.notification.resend, action.data);
+        yield put({ type: actions.RESEND_NOTIFICATION_SUCCESS, response: res });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: actions.RESEND_NOTIFICATION_RESET });
+    } catch (error) {
+        yield put({ type: actions.RESEND_NOTIFICATION_FAILED, error: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
 export default function* saga() {
     yield all([
         getSms,
@@ -208,5 +220,6 @@ export default function* saga() {
         createFcm,
         updateFcm,
         deleteFcm,
+        resendNotification,
     ]);
 }

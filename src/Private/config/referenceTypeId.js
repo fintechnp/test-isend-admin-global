@@ -4,6 +4,7 @@ const referenceTypeId = {
     sourceOfIncomes: 6,
     remittancePurposes: 7,
     transactionStatus: 66,
+    businessTypes: 146
 };
 
 export default referenceTypeId;

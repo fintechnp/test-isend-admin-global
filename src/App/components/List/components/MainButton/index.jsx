@@ -1,15 +1,16 @@
 import * as React from "react";
+import PropTypes from 'prop-types'
 import MuiList from "@mui/material/List";
+import Collapse from "@mui/material/Collapse";
+import { styled } from "@mui/material/styles";
+import { useLocation } from "react-router-dom";
 import MuiListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
+import ListItemButton from "@mui/material/ListItemButton";
 import MuiExpandLess from "@mui/icons-material/ExpandLess";
 import MuiExpandMore from "@mui/icons-material/ExpandMore";
-import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import { useLocation } from "react-router-dom";
 
 import SubHeader from "./SubHeader";
 
@@ -192,6 +193,7 @@ function MainButton({
     handleListItemClick,
     index,
     setSelectedIndex,
+    isSearching
 }) {
     const { pathname } = useLocation();
     const [extend, setExtend] = React.useState(false);
@@ -259,8 +261,8 @@ function MainButton({
                     )}
                 </ListButton>
                 <StyledCollapse
-                    open={open}
-                    in={extend}
+                    open={open || isSearching}
+                    in={extend || isSearching}
                     timeout="auto"
                     unmountOnExit
                 >
@@ -284,3 +286,7 @@ function MainButton({
 }
 
 export default MainButton;
+
+MainButton.propTypes = {
+    isSearching: PropTypes.bool
+}

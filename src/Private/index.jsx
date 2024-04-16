@@ -324,6 +324,7 @@ import {
     UpdateFcmReducer,
     DeleteFcmReducer,
     UtilitiesSaga,
+    ResendNotification,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -524,6 +525,12 @@ import { GetAllLedgerReducer, GetLedgerDetailsReducer, AddLedgerReducer, ledgerS
 import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/store";
 
 import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/AccountList/store";
+
+import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/pages/Comments/store";
+
+import { GetAllAttachmentsReducer, UploadAttachmentReducer, attachmentSaga } from "Private/pages/Attachments/store";
+
+import {GetACHTransactionReducer,UpdateAchTransactionStatusReducer,achTransactionSaga} from "Private/pages/Transactions/AchTransactions/store"
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -787,6 +794,7 @@ export const privateReducer = {
     create_fcm: CreateFcmReducer,
     update_fcm: UpdateFcmReducer,
     delete_fcm: DeleteFcmReducer,
+    resend_notification: ResendNotification,
 
     //Sanction
     get_sanction_list: GetSanctionListReducer,
@@ -938,6 +946,20 @@ export const privateReducer = {
     get_all_customer_delete_list: GetAllCustomerDeleteListReducer,
     get_customer_delete_details: GetCustomerDeleteDetailReducer,
     update_delete_request: UpdateCustomerDeleteReducer,
+
+    //Comment Reducers
+
+    get_all_comments: GetAllCommentsReducer,
+    add_comment: AddCommentReducer,
+
+    // Attachment Reducers
+    get_all_attachments: GetAllAttachmentsReducer,
+    upload_attachment: UploadAttachmentReducer,
+
+    //ACH Transactions
+
+    get_ach_transactions:GetACHTransactionReducer,
+    update_ach_transaction_status:UpdateAchTransactionStatusReducer,
 };
 
 export const privateSaga = [
@@ -996,6 +1018,9 @@ export const privateSaga = [
     b2bAccountSaga(),
     accountListSaga(),
     customerDeleteSaga(),
+    commentSaga(),
+    attachmentSaga(),
+    achTransactionSaga()
 ];
 
 export { default as privateRoutes } from "./config/routes";

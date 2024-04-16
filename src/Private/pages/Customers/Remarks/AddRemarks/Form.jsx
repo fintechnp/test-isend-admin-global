@@ -62,7 +62,7 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
                 <Grid item xs={12}>
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12}>
-                            <Field
+                            <Field   
                                 name="remarks"
                                 label="Remarks"
                                 placeholder="Write remarks..."

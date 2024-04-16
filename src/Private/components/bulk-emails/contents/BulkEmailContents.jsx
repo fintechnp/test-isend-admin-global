@@ -23,7 +23,7 @@ import debounce from "App/helpers/debounce";
 import { useConfirm } from "App/core/mui-confirm";
 
 const initialState = {
-    page_number: 1,
+    _number: 1,
     page_size: 15,
     sort_by: "created_ts",
     order_by: "DESC",

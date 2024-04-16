@@ -11,9 +11,11 @@ import { Delete } from "App/components";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
+import { useConfirm } from "App/core/mui-confirm";
 import { FormatDate, ReferenceName } from "App/helpers";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import ResendIconButton from "App/components/Button/ResendIconButton";
 
 const EmailContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -60,6 +62,8 @@ const initialState = {
 
 const Fcm = () => {
     const dispatch = useDispatch();
+    const confirm = useConfirm();
+
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: FcmData, loading: l_loading } = useSelector((state) => state.get_fcm);
@@ -224,6 +228,11 @@ const Fcm = () => {
                             loading={false}
                             tooltext="Delete FCM Message"
                         />
+                        <ResendIconButton
+                            onClick={() => {
+                                handleOnResend(row?.original?.tid);
+                            }}
+                        />
                     </Box>
                 ),
             },
@@ -306,6 +315,20 @@ const Fcm = () => {
 
     const handleDelete = (id) => {
         dispatch(actions.delete_fcm(id));
+    };
+
+    const handleOnResend = (id) => {
+        confirm({
+            description: "Do you want to resend this notification?",
+            confirmationText: "Yes",
+        }).then(() => {
+            dispatch(
+                actions.resend_notification({
+                    notification_id: id,
+                    type: "fcm",
+                }),
+            );
+        });
     };
 
     return (

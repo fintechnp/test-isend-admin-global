@@ -1,12 +1,16 @@
 import React from "react";
 import moment from "moment";
+import { useDispatch } from "react-redux";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm } from "redux-form";
+import { Field, Form, reduxForm, change, formValueSelector } from "redux-form";
 
+import MuiTextField from "@mui/material/TextField";
 import TextField from "App/components/Fields/TextField";
 import SelectField from "App/components/Fields/SelectField";
+
+import dateUtils from "App/utils/dateUtils";
 
 const Container = styled(Grid)(({ theme }) => ({
     width: "100%",
@@ -37,13 +41,19 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingRight: "4px",
 }));
 
-function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading }) {
+const SEARCH_FORM_CUSTOMER_REPORTS = "search_form_customer_reports";
+
+function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading, initialValues }) {
+    console.log(initialValues);
+
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
-    const [minDate, setMinDate] = React.useState(null);
-    const [maxDate, setMaxDate] = React.useState(null);
+    const [minDate, setMinDate] = React.useState(initialValues?.created_form_date);
+    const [maxDate, setMaxDate] = React.useState(initialValues?.created_to_date);
     const [minKycDate, setMinKycDate] = React.useState(null);
     const [maxKycDate, setMaxKycDate] = React.useState(null);
+
+    const dispatch = useDispatch();
 
     const handleResetButton = (e) => {
         setMinDate(null);
@@ -160,14 +170,24 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                             <Field name="email" placeholder="Email" type="email" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
+                            <MuiTextField
+                                size="small"
                                 name="created_from_date"
-                                showLabel={true}
+                                label="Member From"
                                 placeholder="Member From"
                                 type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMinDate(e.target.value)}
+                                value={moment(minDate).format("YYYY-MM-DD")}
+                                onChange={(e) => {
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getFromDate(value);
+                                        setMinDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_from_date", date));
+                                    } else {
+                                        setMinDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_from_date", ""));
+                                    }
+                                }}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -177,17 +197,28 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                         ? new Date(maxDate).toISOString().slice(0, 10)
                                         : new Date().toISOString().slice(0, 10),
                                 }}
+                                fullWidth
                             />
                         </FieldWrapperLabel>
                         <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
+                            <MuiTextField
+                                size="small"
                                 name="created_to_date"
                                 showLabel={true}
                                 placeholder="Member To"
                                 type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMaxDate(e.target.value)}
+                                value={moment(maxDate).format("YYYY-MM-DD")}
+                                onChange={(e) => {
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getToDate(value);
+                                        setMaxDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_to_date", date));
+                                    } else {
+                                        setMaxDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_to_date", ""));
+                                    }
+                                }}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -197,6 +228,7 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                         : new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
+                                fullWidth
                             />
                         </FieldWrapperLabel>
                         <FieldWrapperLabel item xs={12} sm={6}>
@@ -238,14 +270,24 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                             </Field>
                         </FieldWrapperLabel>
                         <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
+                            <MuiTextField
+                                size="small"
                                 name="kyc_from_date"
-                                showLabel={true}
+                                label="Kyc Date From"
                                 placeholder="Kyc Date From"
                                 type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMinKycDate(e.target.value)}
+                                value={moment(minKycDate).format("YYYY-MM-DD")}
+                                onChange={(e) => {
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getFromDate(value);
+                                        setMinKycDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_from_date", date));
+                                    } else {
+                                        setMinKycDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_from_date", ""));
+                                    }
+                                }}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -255,17 +297,28 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                         ? new Date(maxKycDate).toISOString().slice(0, 10)
                                         : new Date().toISOString().slice(0, 10),
                                 }}
+                                fullWidth
                             />
                         </FieldWrapperLabel>
                         <FieldWrapperLabel item xs={12} sm={6}>
-                            <Field
+                            <MuiTextField
+                                size="small"
                                 name="kyc_to_date"
-                                showLabel={true}
+                                label="Kyc Date To"
                                 placeholder="Kyc Date To"
                                 type="date"
-                                small={12}
-                                component={TextField}
-                                onChange={(e) => setMaxKycDate(e.target.value)}
+                                value={moment(maxKycDate).format("YYYY-MM-DD")}
+                                onChange={(e) => {
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getToDate(value);
+                                        setMaxKycDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_to_date", date));
+                                    } else {
+                                        setMaxKycDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_to_date", ""));
+                                    }
+                                }}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -275,6 +328,7 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                         : new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
+                                fullWidth
                             />
                         </FieldWrapperLabel>
                         <Grid item xs={12}>
@@ -310,4 +364,4 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
     );
 }
 
-export default reduxForm({ form: "search_form_customer_reports" })(SearchForm);
+export default reduxForm({ form: SEARCH_FORM_CUSTOMER_REPORTS })(SearchForm);

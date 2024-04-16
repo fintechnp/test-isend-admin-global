@@ -10,9 +10,9 @@ import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
 
-import { MarketMakerActions as actions } from "./store";
-import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
 import isEmpty from "App/helpers/isEmpty";
+import { MarketMakerActions as actions } from "./store";
+import { editMarketMakerValidationSchema, marketMakerValidationSchema } from "./validation/MarketMakerValidation";
 
 export default function UpdateMarketMaker({ title }) {
     const dispatch = useDispatch();
@@ -21,11 +21,13 @@ export default function UpdateMarketMaker({ title }) {
     const { response, loading } = useSelector((state) => state.get_market_maker_details);
 
     const methods = useForm({
-        resolver: yupResolver(marketMakerValidationSchema),
+        resolver: yupResolver(editMarketMakerValidationSchema),
     });
-    const { handleSubmit, setValue, setError } = methods;
+    const { handleSubmit, setValue, setError, formState } = methods;
 
     const marketMakerDetail = response?.data;
+
+    console.log(formState.errors)
 
     useEffect(() => {
         dispatch(actions.get_market_maker_details(marketMakerId));
@@ -37,13 +39,14 @@ export default function UpdateMarketMaker({ title }) {
         //detail
         setValue("name", marketMakerDetail?.name);
         setValue("registrationNo", marketMakerDetail?.registrationNo);
+        setValue("typeOfBusinessId", marketMakerDetail?.typeOfBusinessId);
         setValue("registereddate", marketMakerDetail?.registeredDate);
         setValue("brandName", marketMakerDetail?.brandName);
         setValue("registeredCountryId", marketMakerDetail?.registeredCountryId);
         setValue("currencyId", marketMakerDetail?.currencyId);
         setValue("email", marketMakerDetail?.email);
         setValue("contactNo", marketMakerDetail?.contactNo);
-        setValue("website", marketMakerDetail?.name);
+        setValue("website", marketMakerDetail?.website);
         setValue("allowedCountryIds", allowedCountries);
 
         //address

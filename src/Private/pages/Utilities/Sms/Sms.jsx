@@ -11,10 +11,11 @@ import { Delete } from "App/components";
 import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
+import { useConfirm } from "App/core/mui-confirm";
 import Table, { TablePagination } from "App/components/Table";
-import { CountryName, FormatDate, ReferenceName } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
-
+import { CountryName, FormatDate, ReferenceName } from "App/helpers";
+import ResendIconButton from "App/components/Button/ResendIconButton";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -38,6 +39,7 @@ const initialState = {
 
 const Sms = (props) => {
     const dispatch = useDispatch();
+    const confirm = useConfirm();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: SmsData, loading: l_loading } = useSelector((state) => state.get_sms);
@@ -192,6 +194,11 @@ const Sms = (props) => {
                             loading={false}
                             tooltext="Delete SMS"
                         />
+                        <ResendIconButton
+                            onClick={() => {
+                                handleOnResend(row?.original?.tid);
+                            }}
+                        />
                     </Box>
                 ),
             },
@@ -265,6 +272,20 @@ const Sms = (props) => {
 
     const handleDelete = (id) => {
         dispatch(actions.delete_sms(id));
+    };
+
+    const handleOnResend = (id) => {
+        confirm({
+            description: "Do you want to resend this notification?",
+            confirmationText: "Yes",
+        }).then(() => {
+            dispatch(
+                actions.resend_notification({
+                    notification_id: id,
+                    type: "sms",
+                }),
+            );
+        });
     };
 
     return (

@@ -16,3 +16,6 @@ export { default as CreateFcmReducer } from "./reducers/CreateFcm";
 export { default as UpdateFcmReducer } from "./reducers/UpdateFcm";
 export { default as DeleteFcmReducer } from "./reducers/deleteFcm";
 export { default as UtilitiesAction } from "./actions";
+
+
+export { default as ResendNotification } from "./reducers/resendNotification"

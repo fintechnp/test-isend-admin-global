@@ -5,7 +5,6 @@ import Divider from "@mui/material/Divider";
 
 import MainButton from "./components/MainButton";
 import MainHeader from "./components/MainHeader";
-import { AuthContext } from "../../auth";
 
 const List = styled(MuiList)(({ theme, open }) => ({
     ...(open && {
@@ -18,8 +17,7 @@ const List = styled(MuiList)(({ theme, open }) => ({
 
 function DrawerList(props) {
     const { items, open } = props;
-    const { currentUser } = useContext(AuthContext);
-    const [selectedkey, setSelectedKey] = React.useState("");
+    const [selectedKey, setSelectedKey] = React.useState("");
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
     const handleListItemClick = (key) => {
@@ -36,7 +34,7 @@ function DrawerList(props) {
                         item={item}
                         index={index}
                         selectedIndex={selectedIndex}
-                        selectedkey={selectedkey}
+                        selectedkey={selectedKey}
                         setSelectedIndex={setSelectedIndex}
                         handleListItemClick={handleListItemClick}
                     />
@@ -46,7 +44,7 @@ function DrawerList(props) {
                         open={open}
                         item={item}
                         index={index}
-                        selectedkey={selectedkey}
+                        selectedkey={selectedKey}
                         setSelectedIndex={setSelectedIndex}
                         handleListItemClick={handleListItemClick}
                     />

@@ -56,14 +56,18 @@ function IncompleteRegistrationFilterForm({ onSubmit, onReset, loading }) {
     const methods = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            created_from_date: minDate,
-            created_to_date: maxDate,
+            created_from_date: dateUtils.getFromDate(minDate),
+            created_to_date: dateUtils.getToDate(maxDate),
             sort_by: "created_ts",
             order_by: "ASC",
         },
     });
 
-    const { reset, setValue } = methods;
+    const { reset, setValue, watch } = methods;
+
+    const createdToDate = watch("created_to_date");
+
+    const createdFromDate = watch("created_to_date");
 
     const handleReset = () => {
         setValue("created_from_date", minDate);
@@ -87,13 +91,35 @@ function IncompleteRegistrationFilterForm({ onSubmit, onReset, loading }) {
                     <FormSelectCountry name="country" label="Country" />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                    <FormDatePicker name="created_from_date" label="From Date" />
+                    <FormDatePicker
+                        name="created_from_date"
+                        label="From Date"
+                        onChange={(value) => {
+                            if (value) {
+                                setValue("created_from_date", dateUtils.getFromDate(value));
+                            } else {
+                                setValue("");
+                            }
+                        }}
+                        maxDate={new Date(createdToDate)}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                    <FormDatePicker name="created_to_date" label="To Date" />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <FormDatePicker name="created_to_date" label="To Date" />
+                    <FormDatePicker
+                        name="created_to_date"
+                        label="To Date"
+                        onChange={(value) => {
+                            if (value) {
+                                setValue("created_to_date", dateUtils.getToDate(value));
+                                if (new Date(createdFromDate) >= new Date(value)) {
+                                    setValue("created_from_date", dateUtils.getFromDate(value));
+                                }
+                            } else {
+                                setValue("");
+                            }
+                        }}
+                        maxDate={new Date()}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                     <FormSelect
