@@ -228,11 +228,11 @@ const Fcm = () => {
                             loading={false}
                             tooltext="Delete FCM Message"
                         />
-                        <ResendIconButton
+                        {/* <ResendIconButton
                             onClick={() => {
                                 handleOnResend(row?.original?.tid);
                             }}
-                        />
+                        /> */}
                     </Box>
                 ),
             },

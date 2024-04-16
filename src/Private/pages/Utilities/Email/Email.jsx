@@ -170,11 +170,11 @@ const Email = () => {
                             loading={false}
                             tooltext="Delete Email"
                         />
-                        <ResendIconButton
+                        {/* <ResendIconButton
                             onClick={() => {
                                 handleOnResend(row?.original?.tid);
                             }}
-                        />
+                        /> */}
                     </Box>
                 ),
             },
