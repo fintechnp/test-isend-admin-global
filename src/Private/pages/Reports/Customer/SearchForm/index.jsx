@@ -178,9 +178,15 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                 type="date"
                                 value={moment(minDate).format("YYYY-MM-DD")}
                                 onChange={(e) => {
-                                    const date = dateUtils.getFromDate(e.target.value);
-                                    setMinDate(date);
-                                    dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_from_date", date));
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getFromDate(value);
+                                        setMinDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_from_date", date));
+                                    } else {
+                                        setMinDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_from_date", ""));
+                                    }
                                 }}
                                 InputLabelProps={{
                                     shrink: true,
@@ -203,9 +209,15 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                 type="date"
                                 value={moment(maxDate).format("YYYY-MM-DD")}
                                 onChange={(e) => {
-                                    const date = dateUtils.getToDate(e.target.value);
-                                    setMaxDate(date);
-                                    dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_to_date", date));
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getToDate(value);
+                                        setMaxDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_to_date", date));
+                                    } else {
+                                        setMaxDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "created_to_date", ""));
+                                    }
                                 }}
                                 InputLabelProps={{
                                     shrink: true,
@@ -266,9 +278,15 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                 type="date"
                                 value={moment(minKycDate).format("YYYY-MM-DD")}
                                 onChange={(e) => {
-                                    const date = dateUtils.getFromDate(e.target.value);
-                                    setMinKycDate(date);
-                                    dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_from_date", date));
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getFromDate(value);
+                                        setMinKycDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_from_date", date));
+                                    } else {
+                                        setMinKycDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_from_date", ""));
+                                    }
                                 }}
                                 InputLabelProps={{
                                     shrink: true,
@@ -291,9 +309,15 @@ function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading
                                 type="date"
                                 value={moment(maxKycDate).format("YYYY-MM-DD")}
                                 onChange={(e) => {
-                                    const date = dateUtils.getToDate(e.target.value);
-                                    setMaxKycDate(date);
-                                    dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_to_date", date));
+                                    const { value } = e.target;
+                                    if (value) {
+                                        const date = dateUtils.getToDate(value);
+                                        setMaxKycDate(date);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_to_date", date));
+                                    } else {
+                                        setMaxKycDate(null);
+                                        dispatch(change(SEARCH_FORM_CUSTOMER_REPORTS, "kyc_to_date", ""));
+                                    }
                                 }}
                                 InputLabelProps={{
                                     shrink: true,

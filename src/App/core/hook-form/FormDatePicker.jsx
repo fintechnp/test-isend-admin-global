@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -26,8 +26,10 @@ function FormDatePicker({
     disablePast,
     disableFuture,
     placeholder,
-    onChange
+    onChange,
 }) {
+    const [open, setOpen] = useState(false);
+
     const {
         control,
         clearErrors,
@@ -48,6 +50,9 @@ function FormDatePicker({
             render={({ field }) => (
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
+                        open={open}
+                        onOpen={() => setOpen(true)}
+                        onClose={() => setOpen(false)}
                         label={label}
                         onChange={(date) => {
                             if (date) {
@@ -57,12 +62,11 @@ function FormDatePicker({
                                     .replace(/dd/g, String(date.getDate()).padStart(2, "0"));
 
                                 setValue(name, newDate);
-                                onChange?.(date)
+                                onChange?.(date);
                             } else {
                                 setValue(name, "");
-                                onChange?.(null)
+                                onChange?.(null);
                             }
-                            
                         }}
                         value={field.value ?? ""}
                         inputFormat={dateFormat}
@@ -83,6 +87,11 @@ function FormDatePicker({
                                 autoComplete="off"
                                 value={field.value ?? ""}
                                 aria-readonly
+                                inputProps={{
+                                    ...params.inputProps,
+                                    readOnly: true,
+                                    onClick: (e) => setOpen(true),
+                                }}
                             />
                         )}
                         mask={dateMask}
@@ -121,7 +130,7 @@ FormDatePicker.propTypes = {
     disableFuture: PropTypes.any,
     disablePast: PropTypes.any,
     placeholder: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
 };
 
 FormDatePicker.defaultProps = {
