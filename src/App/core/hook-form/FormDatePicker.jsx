@@ -26,6 +26,7 @@ function FormDatePicker({
     disablePast,
     disableFuture,
     placeholder,
+    onChange
 }) {
     const {
         control,
@@ -56,9 +57,12 @@ function FormDatePicker({
                                     .replace(/dd/g, String(date.getDate()).padStart(2, "0"));
 
                                 setValue(name, newDate);
+                                onChange?.(date)
                             } else {
                                 setValue(name, "");
+                                onChange?.(null)
                             }
+                            
                         }}
                         value={field.value ?? ""}
                         inputFormat={dateFormat}
@@ -117,6 +121,7 @@ FormDatePicker.propTypes = {
     disableFuture: PropTypes.any,
     disablePast: PropTypes.any,
     placeholder: PropTypes.string,
+    onChange: PropTypes.func
 };
 
 FormDatePicker.defaultProps = {
