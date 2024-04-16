@@ -333,6 +333,7 @@ function CustomerReports(props) {
     //Filter
     const sortData = [
         { key: "None", value: "created_ts" },
+        { key: "Customer ID", value: "customer_id" },
         { key: "Name", value: "first_name" },
         { key: "Partner", value: "register_agent_id" },
         { key: "Country", value: "country" },
