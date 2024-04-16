@@ -219,12 +219,12 @@ export const drawerItems = [
                 text: "Daily Transactions",
                 sub: false,
             },
-            {
-                path: routePaths.transaction.achTransaction,
-                key: "ach-transaction",
-                text: "ACH Transactions",
-                sub: false,
-            },
+            // {
+            //     path: routePaths.transaction.achTransaction,
+            //     key: "ach-transaction",
+            //     text: "ACH Transactions",
+            //     sub: false,
+            // },
         ],
     },
 
