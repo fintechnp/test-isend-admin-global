@@ -12,10 +12,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 import MainButton from "../List/components/MainButton";
 import MainHeader from "../List/components/MainHeader";
+import { ReactComponent as Logo } from "assets/isend/isend-logo-default.svg";
 
 import Toolbar from "./../Toolbar";
 import isEmpty from "App/helpers/isEmpty";
-import Logo from "../../../assets/isend_long.png";
 import useDrawerItems from "App/hooks/useDrawerItems";
 import Logo_short from "../../../assets/short-logo.svg";
 import SearchTextField from "../Fields/SearchTextField";
@@ -268,7 +268,9 @@ function Drawer({ children }) {
             <CustomizedDrawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerHeader>
                     {open ? (
-                        <LongLogoWrapper component="img" image={Logo} alt="isend logo" onClick={handleDashboard} />
+                        <>
+                            <Logo onClick={handleDashboard}/>
+                        </>
                     ) : (
                         <ShortLogoWrapper
                             component="img"

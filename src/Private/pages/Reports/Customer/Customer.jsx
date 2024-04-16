@@ -19,6 +19,7 @@ import Table, { TablePagination } from "App/components/Table";
 import actions from "../store/actions";
 import PartnerActions from "../../Setup/Partner/store/actions";
 import { CountryName, ReferenceName, FormatDate } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -455,8 +456,8 @@ function CustomerReports(props) {
                         loading={l_loading}
                         partner={SendingPartner?.data}
                         initialValues={{
-                            created_from_date: moment().format("YYYY-MM-DD"),
-                            created_to_date: moment().format("YYYY-MM-DD"),
+                            created_from_date: dateUtils.getFromDate(moment().format("YYYY-MM-DD")),
+                            created_to_date: dateUtils.getToDate(moment().format("YYYY-MM-DD")),
                         }}
                     />
                 </Grid>
