@@ -25,10 +25,10 @@ export default function SendMail({ onClose }) {
     const { loading, success } = useSelector((state) => state.send_mail_transaction);
 
     useEffect(() => {
-        if(success){
+        if (success) {
             onClose();
         }
-    },[])
+    }, []);
 
     const handleSubmit = (data) => {
         dispatch(actions.send_mail_transaction(data));
