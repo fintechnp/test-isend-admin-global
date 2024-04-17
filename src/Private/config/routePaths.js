@@ -81,6 +81,9 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
+    transaction:{
+        achTransaction:"/transaction/ach-transaction",
+    }
 };
 
 export default routePaths;

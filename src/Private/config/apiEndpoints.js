@@ -1,4 +1,5 @@
 import { de } from "date-fns/locale";
+import { updateAchTransactionStatus } from "Private/pages/Transactions/AchTransactions/store/saga";
 
 const apiEndpoints = {
     countryStates: {
@@ -145,6 +146,9 @@ const apiEndpoints = {
         getSingleTransactionById: "/b2b/transaction/:transactionId",
         getBatchTransactions: "/b2b/batchtransaction",
         getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
+
+        downloadPdf: "/b2b/transaction/downloadtransactionpdf",
+        sendMail:"/b2b/transaction/sendmail",
     },
 
     document: {
@@ -202,6 +206,10 @@ const apiEndpoints = {
     },
     notification: {
         resend: "/notification/resend",
+    },
+    transaction:{
+        achTransaction:"/AchTransactions",
+        updateAchTransactionStatus:"/AchTransactions/:id"
     }
 };
 

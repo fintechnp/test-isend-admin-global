@@ -75,6 +75,15 @@ const actions = {
     GET_SANCTION_DETAILS_SUCCESS: "GET_SANCTION_DETAILS_SUCCESS",
     GET_SANCTION_DETAILS_FAILED: "GET_SANCTION_DETAILS_FAILED",
 
+    DOWNLOAD_TRANSACTION_PDF: "DOWNLOAD_TRANSACTION_PDF",
+    DOWNLOAD_TRANSACTION_PDF_SUCCESS: "DOWNLOAD_TRANSACTION_PDF_SUCCESS",
+    DOWNLOAD_TRANSACTION_PDF_FAILED: "DOWNLOAD_TRANSACTION_PDF_FAILED",
+
+    SEND_MAIL_TRANSACTION: "SEND_MAIL_TRANSACTION",
+    SEND_MAIL_TRANSACTION_SUCCESS: "SEND_MAIL_TRANSACTION_SUCCESS",
+    SEND_MAIL_TRANSACTION_FAILED: "SEND_MAIL_TRANSACTION_FAILED",
+    SEND_MAIL_TRANSACTION_RESET: "SEND_MAIL_TRANSACTION_RESET",
+
     //FETCH
     get_transaction_details: (id, query) => ({
         type: actions.GET_TRANSACTION_DETAILS,
@@ -157,6 +166,16 @@ const actions = {
     get_sanction_details: (payload) => ({
         type: actions.GET_SANCTION_DETAILS,
         payload,
+    }),
+
+    download_transaction_pdf: (query) => ({
+        type: actions.DOWNLOAD_TRANSACTION_PDF,
+        query,
+    }),
+
+    send_mail_transaction: (query) => ({
+        type: actions.SEND_MAIL_TRANSACTION,
+        query,
     }),
 };
 

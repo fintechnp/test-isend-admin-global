@@ -51,10 +51,13 @@ export default function ListMarketMaker({ title }) {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
-
             {
                 header: "Name",
                 accessorKey: "name",
+            },
+            {
+                header: "Business Type",
+                accessorKey: "businessType",
             },
             {
                 header: "Registration Number",
@@ -83,10 +86,10 @@ export default function ListMarketMaker({ title }) {
                 header: "Registered Date",
                 accessorKey: "registeredDate",
             },
-            {
-                header: "Contact Person",
-                accessorKey: "contactPerson.name",
-            },
+            // {
+            //     header: "Contact Person",
+            //     accessorKey: "contactPerson.name",
+            // },
             {
                 header: "Status",
                 accessorKey: "status_value",

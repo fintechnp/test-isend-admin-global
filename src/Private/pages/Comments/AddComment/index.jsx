@@ -11,12 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import CommentFrom from "./Form";
 
 import actions from "../store/actions";
-import { Pagination } from "@tanstack/react-table";
 import Row from "App/components/Row/Row";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { format } from "date-fns";
 import { TablePagination } from "App/components/Table";
+
 
 const commentFormSchema = yup.object().shape({
     commentText: yup.string().required("Required"),
@@ -29,6 +29,7 @@ function AddComment({ referenceId, referenceType, data, handleClose }) {
         page_number: 1,
         page_size: 10,
     });
+
     const methods = useForm({
         resolver: yupResolver(commentFormSchema),
         defaultValues: {
@@ -127,8 +128,7 @@ function AddComment({ referenceId, referenceType, data, handleClose }) {
                                 {comment?.comment}
                             </Typography>
                             <Typography variant="body2" sx={{ mt: 1 }}>
-                                {/* {new Date(comment?.commentedDate).toLocaleDateString()} */}
-                                {format(new Date(comment?.commentedDate), "MMMM d, yyyy 'at' h:mm a")}
+                                {format(new Date(comment?.commentedDate), "MMMM d, yyyy 'at' hh:mm a")}
                             </Typography>
                         </Box>
                     </Box>

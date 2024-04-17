@@ -15,10 +15,13 @@ import { useConfirm } from "App/core/mui-confirm";
 const schema = Yup.object().shape({
     host: Yup.string().required(),
     port: Yup.string().required(),
-    sender_name: Yup.string().required(),
+    enable_ssl: Yup.bool().required(),
     credential_email: Yup.string().required(),
     pwd: Yup.string().required(),
-    enable_ssl: Yup.bool().required(),
+    sender_name: Yup.string().required(),
+    from_address: Yup.string().required(),
+    replyto_address: Yup.string().required(),
+    display_name: Yup.string().required(),
 });
 
 export default function BulkEmailCredentialForm({ onSubmit, initialState, isProcessing }) {
@@ -54,6 +57,16 @@ export default function BulkEmailCredentialForm({ onSubmit, initialState, isProc
                 <Grid item xs={12} md={6}>
                     <FormTextField type="password" name="pwd" label="Password" />
                 </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="display_name" label="Display Name" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="from_address" label="From Address" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="replyto_address" label="Reply To Address" />
+                </Grid>
+              
                 <Grid item xs={12} md={6}>
                     <FormCheckbox name="enable_ssl" label="Enable SSL" />
                 </Grid>

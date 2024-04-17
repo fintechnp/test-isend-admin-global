@@ -293,6 +293,8 @@ import {
     GetTransactionDocumentReducer,
     PaymentProcessingSaga,
     GetSanctionDetailsReducer,
+    DownloadTransactionPdfReducer,
+    SendMailTransactionReducer,
 } from "./pages/PaymentProcess/store";
 
 //Reports
@@ -530,6 +532,8 @@ import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/p
 
 import { GetAllAttachmentsReducer, UploadAttachmentReducer, attachmentSaga } from "Private/pages/Attachments/store";
 
+import {GetACHTransactionReducer,UpdateAchTransactionStatusReducer,achTransactionSaga} from "Private/pages/Transactions/AchTransactions/store"
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -760,6 +764,8 @@ export const privateReducer = {
     update_exception_transactions: UpdateExceptionTransactionsReducer,
     get_transaction_documents: GetTransactionDocumentReducer,
     get_sanction_details: GetSanctionDetailsReducer,
+    download_transaction_pdf: DownloadTransactionPdfReducer,
+    send_mail_transaction:SendMailTransactionReducer,
 
     //Reports
     get_customer_report: GetCustomerReportsReducer,
@@ -953,6 +959,11 @@ export const privateReducer = {
     // Attachment Reducers
     get_all_attachments: GetAllAttachmentsReducer,
     upload_attachment: UploadAttachmentReducer,
+
+    //ACH Transactions
+
+    get_ach_transactions:GetACHTransactionReducer,
+    update_ach_transaction_status:UpdateAchTransactionStatusReducer,
 };
 
 export const privateSaga = [
@@ -1013,6 +1024,7 @@ export const privateSaga = [
     customerDeleteSaga(),
     commentSaga(),
     attachmentSaga(),
+    achTransactionSaga()
 ];
 
 export { default as privateRoutes } from "./config/routes";

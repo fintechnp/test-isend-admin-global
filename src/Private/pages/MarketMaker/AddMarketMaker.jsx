@@ -7,9 +7,9 @@ import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
 
+import isEmpty from "App/helpers/isEmpty";
 import { MarketMakerActions as actions } from "./store";
 import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
-import isEmpty from "App/helpers/isEmpty";
 
 export default function AddMarketMaker() {
     const dispatch = useDispatch();
@@ -18,9 +18,12 @@ export default function AddMarketMaker() {
         resolver: yupResolver(marketMakerValidationSchema),
     });
 
-    const { handleSubmit, setError } = methods;
+    const { handleSubmit, setError, formState: {errors} } = methods;
+
+    console.log(errors)
 
     const onSubmitData = (data) => {
+
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({

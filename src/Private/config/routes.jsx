@@ -342,6 +342,7 @@ import AddLedger from "../pages/Ledger/AddLedger";
 import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
 import ListAccountList from "Private/pages/AccountList/ListAccountList";
 import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
+import AchTransactions from "Private/pages/Transactions/AchTransactions/AchTransactions";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -586,6 +587,10 @@ const privateRoutes = [
     {
         path: "/transaction/remarks/:id",
         component: <TransactionRemarks title="Transaction's Remarks" />,
+    },
+    {
+        path: routePaths.transaction.achTransaction,
+        component: <AchTransactions />,
     },
 
     //Reports

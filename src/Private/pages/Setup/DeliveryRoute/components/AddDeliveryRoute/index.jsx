@@ -213,43 +213,6 @@ function AddDeliveryRoute({ update_data, update }) {
                     {update ? "Update" : "Create New"} Delivery Route
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    {/* {update ? (
-                        <AccountForm
-                            destroyOnUnmount
-                            initialValues={{
-                                tid: memoizedData?.tid,
-                                send_agent_id: memoizedData?.send_agent_id,
-                                payout_agent_id: memoizedData?.payout_agent_id,
-                                payout_country: memoizedData?.payout_country,
-                                payout_currency: memoizedData?.payout_currency,
-                                payment_type: memoizedData?.payment_type,
-                                is_active: memoizedData?.is_active,
-                            }}
-                            onSubmit={handleRouteUpdate}
-                            buttonText="Update"
-                            update={update}
-                            payout_country={memoizedData?.payout_country}
-                            loading={update_loading}
-                            form={`update_delivery_route_form`}
-                            handleClose={handleClose}
-                            handleAgent={handleAgent}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
-                        />
-                    ) : (
-                        <AccountForm
-                            update={update}
-                            enableReinitialize={true}
-                            onSubmit={handleRouteSubmit}
-                            buttonText="Create"
-                            form={`add_delivery_route_form`}
-                            loading={add_loading}
-                            handleAgent={handleAgent}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
-                            handleClose={handleClose}
-                        />
-                    )} */}
                     {update ? (
                         <DeliveryRoute
                             initialValues={{

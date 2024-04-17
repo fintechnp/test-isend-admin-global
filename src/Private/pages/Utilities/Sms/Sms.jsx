@@ -194,11 +194,11 @@ const Sms = (props) => {
                             loading={false}
                             tooltext="Delete SMS"
                         />
-                        <ResendIconButton
+                        {/* <ResendIconButton
                             onClick={() => {
                                 handleOnResend(row?.original?.tid);
                             }}
-                        />
+                        /> */}
                     </Box>
                 ),
             },

@@ -1,20 +1,25 @@
+import * as Yup from 'yup';
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
-import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
-
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../../App/utils/validators";
-import HookForm from "App/core/hook-form/HookForm";
 import { useForm } from "react-hook-form";
+import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormCheckbox from "App/core/hook-form/FormCheckbox";
+import SubmitButton from "App/components/Button/SubmitButton";
+import CancelButton from "App/components/Button/CancelButton";
+
+const deliveryRouteSchema = Yup.object().shape({
+    payment_type: Yup.string().required("Required"),
+    payout_country: Yup.string().required("Required"),
+    payout_currency: Yup.string().required("Required"),
+    send_agent_id: Yup.string().required("Required"),
+    payout_agent_id: Yup.string().required("Required"),
+});
 
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
@@ -43,31 +48,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingTop: "12px",
 }));
 
-const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.warning.main,
-    "&:hover": {
-        background: theme.palette.warning.dark,
-    },
-}));
-
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
-    textTransform: "capitalize",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
-    "& .MuiCircularProgress-root": {
-        color: theme.palette.primary.contrastText,
-    },
-}));
-
 const DeliveryRoute = ({
     // handleSubmit,
     onSubmit,
@@ -81,13 +61,12 @@ const DeliveryRoute = ({
     initialValues,
     partner_payout,
 }) => {
-    const dispatch = useDispatch();
     const methods = useForm({
         defaultValues: initialValues,
-        // resolver: yupResolver(deliveryOptionsSchema),
+        resolver: yupResolver(deliveryRouteSchema),
     });
 
-    const { reset, setValue, getValues } = methods;
+    const { setValue, getValues } = methods;
 
     const countryDataChanged = getValues();
     const reference = JSON.parse(localStorage.getItem("reference"));
@@ -152,223 +131,7 @@ const DeliveryRoute = ({
         }
     }, [countryDataChanged.payout_country]);
 
-    // const handleCurrency = (e) => {
-    //     handleAgent(e.target.value);
-    //     if (update) {
-    //         dispatch(change("update_delivery_route_form", "payout_currency", convertCurrency(e.target.value)));
-    //     } else {
-    //         dispatch(change("add_delivery_route_form", "payout_currency", convertCurrency(e.target.value)));
-    //     }
-    // };
-
     return (
-        // <Form onSubmit={handleSubmit}>
-        //     <Container container direction="column">
-        //         <Grid item xs={12}>
-        //             <FormWrapper container direction="row">
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payment_type"
-        //                         label="Payment Type"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Payment Type
-        //                         </option>
-        //                         {reference &&
-        //                             reference
-        //                                 ?.filter(
-        //                                     (ref_data) =>
-        //                                         ref_data.reference_type === 1
-        //                                 )[0]
-        //                                 .reference_data.map((data) => (
-        //                                     <option
-        //                                         value={data.value}
-        //                                         key={data.reference_id}
-        //                                     >
-        //                                         {data.name}
-        //                                     </option>
-        //                                 ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_country"
-        //                         label="Country"
-        //                         type="number"
-        //                         small={12}
-        //                         onChange={handleCurrency}
-        //                         component={SelectField}
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Country
-        //                         </option>
-        //                         {country &&
-        //                             country.map((data) => (
-        //                                 <option
-        //                                     value={data.iso3}
-        //                                     key={data.tid}
-        //                                 >
-        //                                     {data.country}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_currency"
-        //                         label="Currency"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Currency
-        //                         </option>
-        //                         {country &&
-        //                             country.map((data) => (
-        //                                 <option
-        //                                     value={data.currency}
-        //                                     key={data.tid}
-        //                                 >
-        //                                     {data.currency_name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="send_agent_id"
-        //                         label="Sending Agent"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         disabled={
-        //                             partner_sending.length > 0 ? false : true
-        //                         }
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Sending Agent
-        //                         </option>
-        //                         {partner_sending &&
-        //                             partner_sending.map((data, index) => (
-        //                                 <option
-        //                                     value={data.agent_id}
-        //                                     key={data?.tid}
-        //                                 >
-        //                                     {data.name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_agent_id"
-        //                         label="Payout Agent"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         disabled={
-        //                             partner_payout.length > 0 ? false : true
-        //                         }
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Payout Agent
-        //                         </option>
-        //                         {partner_payout &&
-        //                             partner_payout.map((data) => (
-        //                                 <option
-        //                                     value={data.agent_id}
-        //                                     key={data?.tid}
-        //                                 >
-        //                                     {data.name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 {update && (
-        //                     <FieldWrapper item xs={12} sm={6}>
-        //                         <Grid
-        //                             container
-        //                             alignItems="flex-end"
-        //                             justifyContent="flex-end"
-        //                         >
-        //                             <Grid item xs={12}>
-        //                                 <StatusText component="p">
-        //                                     Status
-        //                                 </StatusText>
-        //                             </Grid>
-        //                             <Grid item xs={12}>
-        //                                 <Field
-        //                                     name="is_active"
-        //                                     label="Active"
-        //                                     small={12}
-        //                                     reverse="row-reverse"
-        //                                     component={CheckboxField}
-        //                                 />
-        //                             </Grid>
-        //                         </Grid>
-        //                     </FieldWrapper>
-        //                 )}
-        //             </FormWrapper>
-        //         </Grid>
-        //         <Grid item>
-        //             <Divider sx={{ pt: 1.2 }} />
-        //         </Grid>
-        //         <Grid item>
-        //             <ButtonWrapper
-        //                 container
-        //                 columnGap={2}
-        //                 direction="row"
-        //                 justifyContent="flex-end"
-        //                 alignItems="center"
-        //             >
-        //                 <Grid item>
-        //                     <CancelButton
-        //                         size="small"
-        //                         variant="contained"
-        //                         onClick={handleClose}
-        //                     >
-        //                         Cancel
-        //                     </CancelButton>
-        //                 </Grid>
-        //                 <Grid item>
-        //                     <CreateButton
-        //                         size="small"
-        //                         variant="outlined"
-        //                         loading={loading}
-        //                         endIcon={update ? <UpdateIcon /> : <AddIcon />}
-        //                         type="submit"
-        //                     >
-        //                         {buttonText}
-        //                     </CreateButton>
-        //                 </Grid>
-        //             </ButtonWrapper>
-        //         </Grid>
-        //     </Container>
-        // </Form>
         <>
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Container>
@@ -420,20 +183,12 @@ const DeliveryRoute = ({
                                 alignItems="center"
                             >
                                 <Grid item>
-                                    <CancelButton size="small" variant="contained" onClick={handleClose}>
+                                    <CancelButton onClick={handleClose} disabled={loading}>
                                         Cancel
                                     </CancelButton>
                                 </Grid>
                                 <Grid item>
-                                    <CreateButton
-                                        size="small"
-                                        variant="outlined"
-                                        loading={loading}
-                                        endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                        type="submit"
-                                    >
-                                        {buttonText}
-                                    </CreateButton>
+                                    <SubmitButton isLoading={loading}>{buttonText}</SubmitButton>
                                 </Grid>
                             </ButtonWrapper>
                         </Grid>

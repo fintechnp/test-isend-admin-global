@@ -93,7 +93,7 @@ function GetAttachment({ attachmentType, attachmentId, onClose }) {
                                 <Typography fontSize={18}>{attachments?.userName}</Typography>
                             </Box>
                             <Typography variant="body2" sx={{ mt: 1 }}>
-                                {format(new Date(attachments?.uploadedDate), "MMMM d, yyyy h:mm:ss a")}
+                                {format(new Date(attachments?.uploadedDate), "MMMM d, yyyy hh:mm:ss a")}
                             </Typography>
                         </Box>
                         <Box
