@@ -287,7 +287,7 @@ export const downloadTransactionPdf = takeEvery(actions.DOWNLOAD_TRANSACTION_PDF
 
 export const sendMailTransaction = takeEvery(actions.SEND_MAIL_TRANSACTION, function* (action) {
     try {
-        const res = yield call(api.post, apiEndpoints.b2bTransaction.sendMail, action.query);
+        const res = yield call(api.post, apiEndpoints.b2bTransaction.sendMail, action.data);
         yield put({
             type: actions.SEND_MAIL_TRANSACTION_SUCCESS,
             response: res,

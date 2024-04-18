@@ -18,10 +18,8 @@ import actions from "../store/actions";
 import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
 
-import CommentForm from "../../Comments/AddComment/Form";
 import AddComment from "Private/pages/Comments/AddComment";
 import GetAttachment from "Private/pages/Attachments/GetAttachment";
-import { set } from "date-fns";
 import Modal from "App/components/Modal/Modal";
 import SendMail from "./SendMailModal";
 
@@ -91,6 +89,8 @@ function Details({ data, isAML = false }) {
     const [openAttachmentDrawer, setOpenAttachmentDrawer] = useState(false);
 
     const sanctionDetails = useSelector((state) => state.get_sanction_details);
+
+    const {loading: downloadPdfLoading} = useSelector(state => state.download_transaction_pdf)
 
     const sanctionMessage = sanctionDetails?.response?.data
         ? JSON.parse(sanctionDetails?.response?.data?.sanction_message)
@@ -495,7 +495,7 @@ function Details({ data, isAML = false }) {
                     <Button variant="outlined" color="primary" onClick={() => setOpenAttachmentDrawer(true)}>
                         Attachments
                     </Button>
-                    <Button variant="outlined" color="primary" onClick={handleDownloadPDF}>
+                    <Button variant="outlined" color="primary" onClick={handleDownloadPDF} disabled={downloadPdfLoading}>
                         Export PDF
                     </Button>
                     <Button variant="outlined" color="primary" onClick={handleSendMail}>
@@ -550,9 +550,14 @@ function Details({ data, isAML = false }) {
                 sx={{
                     width: "30%",
                 }}
-                children={<SendMail id={transactionId}  onClose={() => {
-                    setOpenModal(false);
-                }}/>}
+                children={
+                    <SendMail
+                        id={transactionId}
+                        onClose={() => {
+                            setOpenModal(false);
+                        }}
+                    />
+                }
             />
         </>
     );

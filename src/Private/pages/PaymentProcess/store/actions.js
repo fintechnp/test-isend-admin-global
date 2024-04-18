@@ -173,9 +173,9 @@ const actions = {
         query,
     }),
 
-    send_mail_transaction: (query) => ({
+    send_mail_transaction: (data) => ({
         type: actions.SEND_MAIL_TRANSACTION,
-        query,
+        data,
     }),
 };
 

@@ -148,7 +148,7 @@ const apiEndpoints = {
         getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
 
         downloadPdf: "/b2b/transaction/downloadtransactionpdf",
-        sendMail:"/b2b/transaction/sendmail",
+        sendMail:"/b2b/transaction/mailtransactionreciptpdf",
     },
 
     document: {
