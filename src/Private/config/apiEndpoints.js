@@ -146,6 +146,9 @@ const apiEndpoints = {
         getSingleTransactionById: "/b2b/transaction/:transactionId",
         getBatchTransactions: "/b2b/batchtransaction",
         getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
+
+        downloadPdf: "/b2b/transaction/downloadtransactionpdf",
+        sendMail:"/b2b/transaction/mailtransactionreciptpdf",
     },
 
     document: {

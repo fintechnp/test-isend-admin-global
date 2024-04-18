@@ -18,10 +18,10 @@ import actions from "../store/actions";
 import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
 
-import CommentForm from "../../Comments/AddComment/Form";
 import AddComment from "Private/pages/Comments/AddComment";
 import GetAttachment from "Private/pages/Attachments/GetAttachment";
-import { set } from "date-fns";
+import Modal from "App/components/Modal/Modal";
+import SendMail from "./SendMailModal";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -81,12 +81,16 @@ function Details({ data, isAML = false }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
+
+    const [openModal, setOpenModal] = useState(false);
     const [count, setCount] = useState(0);
 
     const [openCommentDrawer, setOpenCommentDrawer] = useState(false);
     const [openAttachmentDrawer, setOpenAttachmentDrawer] = useState(false);
 
     const sanctionDetails = useSelector((state) => state.get_sanction_details);
+
+    const {loading: downloadPdfLoading} = useSelector(state => state.download_transaction_pdf)
 
     const sanctionMessage = sanctionDetails?.response?.data
         ? JSON.parse(sanctionDetails?.response?.data?.sanction_message)
@@ -130,6 +134,18 @@ function Details({ data, isAML = false }) {
 
     const toggleAttachmentDrawer = () => {
         setOpenAttachmentDrawer(!openAttachmentDrawer);
+    };
+
+    const handleDownloadPDF = () => {
+        dispatch(
+            actions.download_transaction_pdf({
+                transactionId: transactionId,
+            }),
+        );
+    };
+
+    const handleSendMail = () => {
+        setOpenModal(true);
     };
 
     return (
@@ -479,6 +495,12 @@ function Details({ data, isAML = false }) {
                     <Button variant="outlined" color="primary" onClick={() => setOpenAttachmentDrawer(true)}>
                         Attachments
                     </Button>
+                    <Button variant="outlined" color="primary" onClick={handleDownloadPDF} disabled={downloadPdfLoading}>
+                        Export PDF
+                    </Button>
+                    <Button variant="outlined" color="primary" onClick={handleSendMail}>
+                        Send Mail
+                    </Button>
 
                     {isAML && (
                         <>
@@ -519,6 +541,24 @@ function Details({ data, isAML = false }) {
                 </Grid>
             </Grid>
             <SuspiciosModal open={openSuspiciosModal} data={sanctionMessage} handleClose={handleCloseSuspiciosModal} />
+            <Modal
+                title="Send Mail"
+                open={openModal}
+                onClose={() => {
+                    setOpenModal(false);
+                }}
+                sx={{
+                    width: "30%",
+                }}
+                children={
+                    <SendMail
+                        id={transactionId}
+                        onClose={() => {
+                            setOpenModal(false);
+                        }}
+                    />
+                }
+            />
         </>
     );
 }

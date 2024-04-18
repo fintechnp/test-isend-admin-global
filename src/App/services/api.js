@@ -99,6 +99,21 @@ export default class Api {
                 throw err?.response;
             });
     };
+    getBlob = (url, data, headers = null) => {
+        if (headers) {
+            for (const header in headers) {
+                if (headers[header]) {
+                    this.axiosFunction.defaults.headers[header] = headers[header];
+                }
+            }
+        }
+        return this.axiosFunction
+            .get(url, { params: data,responseType: "blob"})
+            .then((response) => response)
+            .catch((err) => {
+                throw err?.response;
+            });
+    };
 
     post = (url, data, headers = null) => {
         if (headers) {

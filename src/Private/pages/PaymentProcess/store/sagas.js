@@ -2,11 +2,12 @@ import * as qs from "qs";
 import { put, takeEvery, call, all } from "redux-saga/effects";
 import Api from "../../../../App/services/api";
 import actions from "./actions";
+import apiEndpoints from "Private/config/apiEndpoints";
+import { getBlob } from "App/helpers/getBlobFile";
 
 const api = new Api();
 
 export const getTransactionDetails = takeEvery(actions.GET_TRANSACTION_DETAILS, function* (action) {
-
     try {
         const res = yield call(api.get, `transaction/${action.id}?${qs.stringify(action?.query ?? {})}`);
         yield put({
@@ -262,6 +263,46 @@ export const getSanctionDetails = takeEvery(actions.GET_SANCTION_DETAILS, functi
     }
 });
 
+export const downloadTransactionPdf = takeEvery(actions.DOWNLOAD_TRANSACTION_PDF, function* (action) {
+    try {
+        const res = yield call(api.getBlob, apiEndpoints.b2bTransaction.downloadPdf + `?${qs.stringify(action.query)}`);
+
+        getBlob(res, "transaction_report", "application/pdf", "pdf");
+
+        yield put({
+            type: actions.DOWNLOAD_TRANSACTION_PDF_SUCCESS,
+            response: res,
+        });
+
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.DOWNLOAD_TRANSACTION_PDF_FAILED,
+            error: error?.data,
+        });
+
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const sendMailTransaction = takeEvery(actions.SEND_MAIL_TRANSACTION, function* (action) {
+    try {
+        const res = yield call(api.post, apiEndpoints.b2bTransaction.sendMail, action.data);
+        yield put({
+            type: actions.SEND_MAIL_TRANSACTION_SUCCESS,
+            response: res,
+        });
+
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.SEND_MAIL_TRANSACTION_FAILED,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
     yield all([
         getTransactionDetails,
@@ -280,5 +321,7 @@ export default function* saga() {
         updateExceptionTransactions,
         getTransactionDocuments,
         getSanctionDetails,
+        downloadTransactionPdf,
+        sendMailTransaction,
     ]);
 }
