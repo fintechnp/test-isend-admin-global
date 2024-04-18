@@ -90,7 +90,7 @@ function Details({ data, isAML = false }) {
 
     const sanctionDetails = useSelector((state) => state.get_sanction_details);
 
-    const {loading: downloadPdfLoading} = useSelector(state => state.download_transaction_pdf)
+    const { loading: downloadPdfLoading } = useSelector((state) => state.download_transaction_pdf);
 
     const sanctionMessage = sanctionDetails?.response?.data
         ? JSON.parse(sanctionDetails?.response?.data?.sanction_message)
@@ -495,10 +495,21 @@ function Details({ data, isAML = false }) {
                     <Button variant="outlined" color="primary" onClick={() => setOpenAttachmentDrawer(true)}>
                         Attachments
                     </Button>
-                    <Button variant="outlined" color="primary" onClick={handleDownloadPDF} disabled={downloadPdfLoading}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleDownloadPDF}
+                        disabled={downloadPdfLoading}
+                    >
                         Export PDF
                     </Button>
-                    <Button variant="outlined" color="primary" onClick={handleSendMail}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                            handleSendMail();
+                        }}
+                    >
                         Send Mail
                     </Button>
 

@@ -26,9 +26,12 @@ export default function SendMail({ id, onClose }) {
 
     useEffect(() => {
         if (success) {
+            dispatch({
+                type:"SEND_MAIL_TRANSACTION_RESET"
+            })
             onClose();
         }
-    }, []);
+    }, [success]);
 
     const handleSubmit = (data) => {
         const requestPayload = {
