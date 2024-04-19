@@ -495,23 +495,27 @@ function Details({ data, isAML = false }) {
                     <Button variant="outlined" color="primary" onClick={() => setOpenAttachmentDrawer(true)}>
                         Attachments
                     </Button>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleDownloadPDF}
-                        disabled={downloadPdfLoading}
-                    >
-                        Export PDF
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={() => {
-                            handleSendMail();
-                        }}
-                    >
-                        Send Mail
-                    </Button>
+                    {data?.is_b2b && (
+                        <>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={handleDownloadPDF}
+                                disabled={downloadPdfLoading}
+                            >
+                                Export PDF
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => {
+                                    handleSendMail();
+                                }}
+                            >
+                                Send Mail
+                            </Button>
+                        </>
+                    )}
 
                     {isAML && (
                         <>
