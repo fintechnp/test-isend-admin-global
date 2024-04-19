@@ -121,7 +121,7 @@ export const FormatDate = (date) => {
 export const FormatDateTime = (date) => {
     if (date) {
         const newDate = new Date(date);
-        return format(newDate, "MMM dd yyyy, h: m a");
+        return format(newDate, "MMM dd, yyyy hh:mm a");
     } else {
         return "N/A";
     }

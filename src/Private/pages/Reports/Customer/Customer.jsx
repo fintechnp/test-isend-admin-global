@@ -1,11 +1,11 @@
 import moment from "moment";
 import { reset } from "redux-form";
-import Box from '@mui/material/Box'
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-import Tooltip from '@mui/material/Tooltip'
+import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import Typography from '@mui/material/Typography'
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 
@@ -18,7 +18,7 @@ import Table, { TablePagination } from "App/components/Table";
 
 import actions from "../store/actions";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import { CountryName, ReferenceName, FormatDate } from "App/helpers";
+import { CountryName, ReferenceName, FormatDate, FormatDateTime } from "App/helpers";
 import dateUtils from "App/utils/dateUtils";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -300,11 +300,11 @@ function CustomerReports(props) {
                     </Box>
                 ),
                 accessor: "created_ts",
-                maxWidth: 100,
+                maxWidth: 110,
                 Cell: (data) => (
                     <Box textAlign="left">
                         <StyledName component="p" value={data.value}>
-                            {FormatDate(data?.value)}
+                            {FormatDateTime(data?.value)}
                         </StyledName>
                         <Box
                             sx={{
@@ -447,8 +447,8 @@ function CustomerReports(props) {
     };
 
     return (
-       <PageContent title="Filter Customers" disableBorder>
-          <Grid container sx={{ pb: "24px" }}>
+        <PageContent title="Filter Customers" disableBorder>
+            <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <SearchForm
                         onSubmit={handleSearch}
@@ -505,7 +505,7 @@ function CustomerReports(props) {
                     </Grid>
                 )}
             </Grid>
-       </PageContent>
+        </PageContent>
     );
 }
 
