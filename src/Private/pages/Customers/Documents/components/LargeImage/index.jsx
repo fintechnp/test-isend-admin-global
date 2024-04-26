@@ -1,21 +1,26 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import CardMedia from "@mui/material/CardMedia";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
 import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
+import Dialog from "@mui/material/Dialog";
 import Tooltip from "@mui/material/Tooltip";
-import MuiIconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
+import CardMedia from "@mui/material/CardMedia";
 import CloseIcon from "@mui/icons-material/Close";
-import FitScreenOutlinedIcon from "@mui/icons-material/FitScreenOutlined";
+import Typography from "@mui/material/Typography";
+import DialogTitle from "@mui/material/DialogTitle";
+import MuiIconButton from "@mui/material/IconButton";
+import DialogContent from "@mui/material/DialogContent";
 import SettingsOverscanIcon from "@mui/icons-material/SettingsOverscan";
-import { ReferenceName } from "./../../../../../../App/helpers";
+import FitScreenOutlinedIcon from "@mui/icons-material/FitScreenOutlined";
+
+import Row from "App/components/Row/Row";
+import TextButton from "App/components/Button/TextButton";
+
+import { ReferenceName } from "App/helpers";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -38,8 +43,7 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const ImageWrapper = styled(Box)(({ theme }) => ({
     width: "100%",
-    height: "420px",
-    minHeight: "200px",
+    maxHeight: "90svh",
     padding: "8px",
     display: "flex",
     flexDirection: "column",
@@ -129,10 +133,7 @@ function LargeImage({ image, side, title }) {
     return (
         <div>
             <Tooltip title="Enlarge Image" arrow>
-                <IconButton
-                    sx={{ paddingRight: "6px" }}
-                    onClick={handleClickOpen}
-                >
+                <IconButton sx={{ paddingRight: "6px" }} onClick={handleClickOpen}>
                     <SettingsOverscanIcon
                         sx={{
                             fontSize: "25px",
@@ -149,19 +150,19 @@ function LargeImage({ image, side, title }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
-                    {ReferenceName(2, title)} [{ReferenceName(48, side)}]
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+                    <Row alignItems="center" justifyContent="space-between">
+                        <Typography>
+                            {ReferenceName(2, title)} [{ReferenceName(48, side)}
+                        </Typography>
+                        <TextButton sx={{marginRight: '40px'}} onClick={() => {
+                            window.open(image, '_blank')
+                        }}>Open this document in new tab</TextButton>
+                    </Row>
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <ImageWrapper>
-                        <CardMedia
-                            component="img"
-                            image={image}
-                            alt="doc img"
-                        />
+                        <CardMedia component="img" image={image} alt="doc img" />
                     </ImageWrapper>
                 </DialogContent>
             </BootstrapDialog>
