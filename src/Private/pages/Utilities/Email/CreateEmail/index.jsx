@@ -34,7 +34,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    color: theme.palette.secondary.contrastText,
+    
     borderColor: theme.palette.border.main,
 }));
 

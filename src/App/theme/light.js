@@ -4,13 +4,13 @@ const light = {
         light: "#addbd6",
         main: "#2D6FB5",
         dark: "#1761AE",
-        // contrastText: "#ffffff",
+        contrastText: "#ffffff",
     },
     secondary: {
         light: "#c2ccde",
         main: "#A1B0CC",
         dark: "#8094ba",
-        // contrastText: "#ffffff",
+        contrastText: "#ffffff",
     },
     success: {
         light: "#71cb96",
