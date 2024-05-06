@@ -60,7 +60,7 @@ function FormSelect(props) {
                         {...rest}
                     >
                         {showChooseOption && (
-                            <MenuItem>
+                            <MenuItem disabled>
                                 <em>{chooseOptionLabel}</em>
                             </MenuItem>
                         )}
@@ -116,7 +116,7 @@ FormSelect.defaultProps = {
     multiline: false,
     multiple: false,
     options: [],
-    showChooseOption: true,
+    showChooseOption: false,
     variant: "outlined",
     fullWidth: true,
     chooseOptionLabel: "Choose",

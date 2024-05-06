@@ -5,6 +5,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Controller, useFormContext } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dateUtils from "App/utils/dateUtils";
 
 function FormDatePicker({
     name,
@@ -27,6 +28,8 @@ function FormDatePicker({
     disableFuture,
     placeholder,
     onChange,
+    withStartDayTimezone,
+    withEndDayTimezone,
 }) {
     const [open, setOpen] = useState(false);
 
@@ -61,6 +64,11 @@ function FormDatePicker({
                                     .replace(/MM/g, String(date.getMonth() + 1).padStart(2, "0"))
                                     .replace(/dd/g, String(date.getDate()).padStart(2, "0"));
 
+                                if (withStartDayTimezone) {
+                                    newDate = dateUtils.getFromDate(newDate);
+                                } else if (withEndDayTimezone) {
+                                    newDate = dateUtils.getToDate(newDate);
+                                }
                                 setValue(name, newDate);
                                 onChange?.(date);
                             } else {
@@ -131,6 +139,8 @@ FormDatePicker.propTypes = {
     disablePast: PropTypes.any,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
+    withStartDayTimezone: PropTypes.bool,
+    withEndDayTimezone: PropTypes.bool,
 };
 
 FormDatePicker.defaultProps = {
