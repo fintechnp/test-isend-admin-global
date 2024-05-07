@@ -56,7 +56,17 @@ export default function CustomerDeleteList() {
             },
             {
                 header: "Phone Number",
-                accessorKey: "phone_number",
+                accessorKey: "mobile_number",
+                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
+            },
+            {
+                header: "Deletion Reason",
+                accessorKey: "deletion_reason",
+                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
+            },
+            {
+                header: "Remarks",
+                accessorKey: "remarks",
                 cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
             },
 
