@@ -51,7 +51,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     fontSize: "14px",
-    color: theme.palette.secondary.contrastText,
+    
     textTransform: "capitalize",
 }));
 

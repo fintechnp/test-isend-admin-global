@@ -10,32 +10,19 @@ import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormCheckbox from "App/core/hook-form/FormCheckbox";
 import FormTextField from "App/core/hook-form/FormTextField";
-import { CancelButton, AddButton } from "../AllButtons/Buttons";
+import CancelButton from "App/components/Button/CancelButton";
+import SubmitButton from "App/components/Button/SubmitButton";
 
 import { customerDeleteActions } from "Private/pages/Customers/DeleteList/store";
 
 const UpdateStatusFormValidation = yup.object().shape({
-    // status: yup.string().required("Action is required"),
     remarks: yup.string().required("Remarks is required"),
-    isApproved: yup.boolean(),
 });
 
-// const actionOptions = [
-//     {
-//         label: "Approve",
-//         value: "approve",
-//     },
-//     {
-//         label: "Reject",
-//         value: "reject",
-//     },
-// ];
+
 export default function CustomerDeleteApproveRejectModalForm({ setOpen }) {
     const methods = useForm({
         resolver: yupResolver(UpdateStatusFormValidation),
-        defaultValues: {
-            isApproved: false,
-        },
     });
     const dispatch = useDispatch();
 
@@ -61,14 +48,8 @@ export default function CustomerDeleteApproveRejectModalForm({ setOpen }) {
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
             <Grid container item xs={12} direction="row" spacing={2}>
-                {/* <Grid item xs={12} sm={12}>
-                    <FormSelect name="status" label="Status" options={actionOptions ?? []} showChooseOption={false} />
-                </Grid> */}
                 <Grid item xs={12} sm={12}>
-                    <FormTextField name="remarks" label="Remarks" />
-                </Grid>
-                <Grid item xs={12}>
-                    <FormCheckbox label="Is Approved" name="isApproved" />
+                    <FormTextField name="remarks" label="Remarks" multiline />
                 </Grid>
                 <Grid item xs={12}>
                     <Grid
@@ -86,14 +67,13 @@ export default function CustomerDeleteApproveRejectModalForm({ setOpen }) {
                                 onClick={() => {
                                     setOpen(false);
                                 }}
+                                disabled={loading}
                             >
                                 Cancel
                             </CancelButton>
                         </Grid>
                         <Grid item>
-                            <AddButton size="small" variant="outlined" type="submit" loading={loading}>
-                                Update
-                            </AddButton>
+                            <SubmitButton submitText="Approve" submittingText="Approving" isLoading={loading}/>
                         </Grid>
                     </Grid>
                 </Grid>

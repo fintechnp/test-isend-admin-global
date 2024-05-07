@@ -293,6 +293,8 @@ import {
     GetTransactionDocumentReducer,
     PaymentProcessingSaga,
     GetSanctionDetailsReducer,
+    DownloadTransactionPdfReducer,
+    SendMailTransactionReducer,
 } from "./pages/PaymentProcess/store";
 
 //Reports
@@ -762,6 +764,8 @@ export const privateReducer = {
     update_exception_transactions: UpdateExceptionTransactionsReducer,
     get_transaction_documents: GetTransactionDocumentReducer,
     get_sanction_details: GetSanctionDetailsReducer,
+    download_transaction_pdf: DownloadTransactionPdfReducer,
+    send_mail_transaction:SendMailTransactionReducer,
 
     //Reports
     get_customer_report: GetCustomerReportsReducer,

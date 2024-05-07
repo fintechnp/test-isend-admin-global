@@ -16,7 +16,7 @@ const Label = styled(Typography)(({ theme }) => ({
     paddingTop: "2px",
     paddingBottom: "2px",
     textAlign: "left",
-    color: theme.palette.secondary.contrastText,
+    
 }));
 
 const FormControl = styled(MuiFormControl)(({ theme }) => ({
@@ -33,7 +33,7 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
 const Input = styled(MuiTextareaAutosize)(({ theme }) => ({
     width: "100%",
     padding: "9px 10px",
-    color: theme.palette.secondary.contrastText,
+    
     fontSize: "14px",
     border: "1px solid #D0D3D5",
     borderRadius: "6px",

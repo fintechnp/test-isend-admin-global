@@ -52,13 +52,13 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
-    color: theme.palette.secondary.contrastText,
+    
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
     fontSize: "15px",
-    color: theme.palette.secondary.contrastText,
+    
 }));
 
 const initialState = {

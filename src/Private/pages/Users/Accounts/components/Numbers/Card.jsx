@@ -22,7 +22,7 @@ const CardWapper = styled(Box)(({ theme }) => ({
 const CardName = styled(Typography)(({ theme }) => ({
     fontSize: "18px",
     fontWeight: 500,
-    color: theme.palette.secondary.contrastText,
+    
 }));
 
 const BottomWraper = styled(Box)(({ theme }) => ({
@@ -35,7 +35,7 @@ const TotalNumber = styled(Typography)(({ theme }) => ({
     fontWeight: 600,
     fontSize: "16px",
     textAlign: "right",
-    color: theme.palette.secondary.contrastText,
+    
 }));
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme, color }) => ({

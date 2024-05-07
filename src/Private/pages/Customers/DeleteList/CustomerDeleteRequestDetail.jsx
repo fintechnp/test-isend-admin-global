@@ -6,12 +6,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Modal from "App/components/Modal/Modal";
+import StatusBadge from "./components/StatusBadge";
 import Button from "App/components/Button/Button";
 import PageContent from "App/components/Container/PageContent";
 import { Fetching, RenderField, Title, TitleWrapper } from "../CustomerDetails/CustomerDetails";
 import CustomerDeleteApproveRejectModalForm from "Private/components/customers/CustomerDeleteApproveRejectModalForm";
 
 import { customerDeleteActions } from "./store";
+import { DeleteAccountStatus } from "./data/DeleteAccountStatus";
 
 export default function CustomerDeleteRequestDetail() {
     const dispatch = useDispatch();
@@ -42,24 +44,11 @@ export default function CustomerDeleteRequestDetail() {
     }
 
     return (
-        <PageContent
-            title="Delete Request Detail"
-            topRightEndContent={
-                deleteRequestDetails?.status !== "approved" && (
-                    <Button
-                        onClick={() => {
-                            setOpen(true);
-                        }}
-                    >
-                        Approve
-                    </Button>
-                )
-            }
-        >
+        <PageContent title="Delete Account Request">
             <Grid container rowSpacing={1}>
                 <Grid item xs={12}>
                     <TitleWrapper>
-                        <Title>Details</Title>
+                        <Title>Customer Details</Title>
                         <Divider sx={{ flexGrow: 1, ml: 1 }} />
                     </TitleWrapper>
                 </Grid>
@@ -67,28 +56,41 @@ export default function CustomerDeleteRequestDetail() {
                     <RenderField label="Full Name" value={deleteRequestDetails?.full_name} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <RenderField label="Email" value={deleteRequestDetails?.email} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField label="Phone Number" value={deleteRequestDetails?.phone_number} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <RenderField label="Deletion Reason" value={deleteRequestDetails?.deletion_reason} />
+                </Grid>
+                <Grid item xs={12}>
+                    <TitleWrapper>
+                        <Title>Status Details</Title>
+                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
+                    </TitleWrapper>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <RenderField
+                        label="Status"
+                        value={<StatusBadge status={deleteRequestDetails?.status ?? DeleteAccountStatus.PENDING} />}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Remarks" value={deleteRequestDetails?.remarks} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Status" value={deleteRequestDetails?.status} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Is Completed" value={deleteRequestDetails?.is_completed ? "Yes" : "No"} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Is Confirmation Accepted"
-                        value={deleteRequestDetails?.is_confirmation_accepted ? "Yes" : "No"}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Is Valid Request"
-                        value={deleteRequestDetails?.is_valid_request ? "Yes" : "No"}
-                    />
+                    {deleteRequestDetails?.status?.toLowerCase() !== DeleteAccountStatus.APPROVED && (
+                        <Button
+                            onClick={() => {
+                                setOpen(true);
+                            }}
+                            variant="contained"
+                            color="success"
+                        >
+                            Approve
+                        </Button>
+                    )}
                 </Grid>
             </Grid>
             <Modal
