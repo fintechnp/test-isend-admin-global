@@ -33,10 +33,10 @@ const validators = {
             return "Upload .png or .jpeg format only";
         }
         if (value && value.size < 50000) {
-            return "Must be greater than 50Kb";
+            return "File size must be greater than 50Kb";
         }
         if (value && value.size > 4096000) {
-            return "Must be less than 4Mb";
+            return "File size must be less or equal to 4Mb.";
         }
         return undefined;
     },
