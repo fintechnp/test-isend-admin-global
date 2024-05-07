@@ -31,6 +31,7 @@ const ImagePreview = ({ imagefile }) => (
         <CardMedia
             component="img"
             height="140"
+            sx={{ maxWidth: "100%" }}
             image={URL.createObjectURL(imagefile[0])}
             alt="doc img"
         />
