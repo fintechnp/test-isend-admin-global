@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Field, Form, reduxForm } from "redux-form";
@@ -85,6 +85,15 @@ function SearchForm({ handleSubmit, handleReset, partner_sending, partner_payout
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
+                                name="full_name"
+                                placeholder="Full Name"
+                                type="text"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
                                 name="transaction_id"
                                 placeholder="Transaction Id"
                                 type="text"
@@ -110,6 +119,20 @@ function SearchForm({ handleSubmit, handleReset, partner_sending, partner_payout
                                 component={TextField}
                             />
                         </FieldWrapper>
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field name="email" placeholder="Email" type="text" small={12} component={TextField} />
+                        </FieldWrapper>
+
+                        <FieldWrapper item xs={12} sm={6}>
+                            <Field
+                                name="mobile"
+                                placeholder="Mobile Number"
+                                type="number"
+                                small={12}
+                                component={TextField}
+                            />
+                        </FieldWrapper>
+
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="payout_country"
@@ -253,12 +276,24 @@ function SearchForm({ handleSubmit, handleReset, partner_sending, partner_payout
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <Button size="small" color="error" variant="contained" onClick={handleResetButton} disabled={loading}>
+                                    <Button
+                                        size="small"
+                                        color="error"
+                                        variant="contained"
+                                        onClick={handleResetButton}
+                                        disabled={loading}
+                                    >
                                         Reset
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button loading={loading} size="small" variant="contained" type="submit" disabled={loading}>
+                                    <Button
+                                        loading={loading}
+                                        size="small"
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={loading}
+                                    >
                                         Search
                                     </Button>
                                 </Grid>

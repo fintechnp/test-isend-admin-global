@@ -10,6 +10,10 @@ class dateUtils {
         return dateArray;
     }
 
+    getFormattedDate(date, dateFormat = "MMM D, YYYY hh:mm A") {
+        return moment(date).format(dateFormat)
+    }
+
     getFromDate(date, dateFormat = "YYYY/MM/DD") {
         const date1 = moment(date).format(dateFormat);
         return new Date(`${date1} 00:00:00`).toISOString();

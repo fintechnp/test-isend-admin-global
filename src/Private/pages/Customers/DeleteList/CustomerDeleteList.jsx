@@ -7,14 +7,18 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
+import StatusBadge from "./components/StatusBadge";
 import routePaths from "Private/config/routePaths";
+import TableFilter from "./components/TableFilter";
 import { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 import CustomerDeleteFilterForm from "Private/components/customers/CustomerDeleteFilterForm";
 
+import dateUtils from "App/utils/dateUtils";
 import { customerDeleteActions as actions } from "./store";
+import { DeleteAccountStatus } from "./data/DeleteAccountStatus";
 
 const initialState = {
     pageNumber: 1,
@@ -37,22 +41,44 @@ export default function CustomerDeleteList() {
                 header: "SN",
                 accessorKey: "f_serial_no",
             },
-
             {
                 header: "Full Name",
                 accessorKey: "full_name",
             },
             {
+                header: "Customer ID",
+                accessorKey: "customer_id",
+            },
+            {
+                header: "Email",
+                accessorKey: "email",
+                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
+            },
+            {
+                header: "Phone Number",
+                accessorKey: "mobile_number",
+                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
+            },
+            {
+                header: "Deletion Reason",
+                accessorKey: "deletion_reason",
+                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
+            },
+            {
                 header: "Remarks",
                 accessorKey: "remarks",
-                cell: ({ row }) => {
-                    return <Typography>{row?.original?.remarks || "N/A"}</Typography>;
-                },
+                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
             },
 
             {
                 header: "Status",
                 accessorKey: "status",
+                cell: ({ getValue }) => <StatusBadge status={getValue() ?? DeleteAccountStatus.PENDING} />,
+            },
+            {
+                header: "Requested Date",
+                accessorKey: "created_ts",
+                cell: ({ getValue }) => <Typography>{dateUtils.getFormattedDate(getValue())}</Typography>,
             },
 
             {
@@ -88,7 +114,11 @@ export default function CustomerDeleteList() {
     };
 
     const handleFilterReset = () => {
-        setFilterSchema(initialState);
+        setFilterSchema({
+            ...handleTableFilter,
+            sortBy: filterSchema.sortBy,
+            orderBy: filterSchema.orderBy
+        });
     };
 
     const handleChangePage = (e, newPage) => {
@@ -107,6 +137,14 @@ export default function CustomerDeleteList() {
         };
         setFilterSchema(updatedFilterSchema);
     };
+
+    const handleTableFilter = (data) => {
+        setFilterSchema({
+            ...filterSchema,
+            ...data,
+        });
+    };
+
     return (
         <PageContent title="Account Delete Request">
             <CustomerDeleteFilterForm
@@ -115,6 +153,7 @@ export default function CustomerDeleteList() {
                 onReset={handleFilterReset}
             />
             <Spacer />
+            <TableFilter onSubmit={handleTableFilter} />
             <TanstackReactTable
                 columns={columns}
                 title="Delete List"

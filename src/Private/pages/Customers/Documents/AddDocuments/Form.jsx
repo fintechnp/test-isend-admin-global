@@ -5,6 +5,7 @@ import { Grid, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
+import Alert from "@mui/material/Alert";
 
 import TextField from "../../../../../App/components/Fields/TextField";
 import SelectField from "../../../../../App/components/Fields/SelectField";
@@ -80,11 +81,7 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength100,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength100, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -94,26 +91,16 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength50,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength50, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 2
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 2)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -126,25 +113,16 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 48
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 48)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -158,10 +136,7 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 small={12}
                                 disabled
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12}>
@@ -174,11 +149,13 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                                 handleOnDrop={handleOnDrop}
                                 component={ImageUploadField}
                                 // validate={Validator.imageValidator}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.imageValidator,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.imageValidatorCustomerDocument]}
                             />
+                        </FieldWrapper>
+                        <FieldWrapper item xs={12} mt={1}>
+                            <Alert variant="filled" severity="info">
+                                Supported file formats .png, .jpeg. File size must be greater than 50Kb and less or equal to 4Mb. 
+                            </Alert>
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -194,11 +171,7 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>
@@ -220,6 +193,4 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
     );
 };
 
-export default React.memo(
-    reduxForm({ form: "add_documents_form" })(DocumentsForm)
-);
+export default React.memo(reduxForm({ form: "add_documents_form" })(DocumentsForm));
