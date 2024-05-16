@@ -26,7 +26,7 @@ const apiEndpoints = {
         updateAccount: "customer/account/:customerId",
         deleteList: "customer/deleterequest",
         deleteRequestDetails: "customer/deleterequest/:deleteRequestId",
-        approveDeleteRequest: "customer/delete/:deleteRequestId/action"
+        approveDeleteRequest: "customer/delete/:deleteRequestId/action",
     },
     bulkEmailGroup: {
         create: "bulkemail/group",
@@ -148,7 +148,7 @@ const apiEndpoints = {
         getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
 
         downloadPdf: "/b2b/transaction/downloadtransactionpdf",
-        sendMail:"/b2b/transaction/mailtransactionreciptpdf",
+        sendMail: "/b2b/transaction/mailtransactionreciptpdf",
     },
 
     document: {
@@ -207,10 +207,15 @@ const apiEndpoints = {
     notification: {
         resend: "/notification/resend",
     },
-    transaction:{
-        achTransaction:"/AchTransactions",
-        updateAchTransactionStatus:"/AchTransactions/:id"
-    }
+    transaction: {
+        achTransaction: "/AchTransactions",
+        updateAchTransactionStatus: "/AchTransactions/:id",
+        zaiGetTransactions: "/zai/transactions",
+        zaiCheckBalance: "/zai/:customerId/check-balance",
+        zaiMakePayment: "/zai/make-payment",
+        zaiLogs: "/zai/webhook-log",
+        zaiRefundPayment: "/zai/refund-payment",
+    },
 };
 
 export default apiEndpoints;

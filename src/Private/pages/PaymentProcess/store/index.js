@@ -8,6 +8,16 @@ export { default as GetAmlSuspiciousDetailsReducer } from "./reducers/getAmlSusp
 export { default as GetExceptionTransactionsReducer } from "./reducers/getExceptionTransactions";
 export { default as GetRefundBlockTransactionsReducer } from "./reducers/getRefundBlockTransactions";
 
+export { default as GetZaiAustraliaPaymentReducer } from "./reducers/getZaiAustraliaPayment";
+
+export { default as GetZaiLogsReducer } from "./reducers/getZaiLogs";
+
+export { default as GetRefundPaymentReducer } from "./reducers/refundPayment";
+
+export { default as GetMakePaymentReducer } from "./reducers/makePayment";
+
+export { default as GetBalanceDetailsReducers } from "./reducers/getBalanceDetails";
+
 export { default as BlockTransactionsReducer } from "./reducers/blockTransactions";
 export { default as RefundTransactionsReducer } from "./reducers/refundTransactions";
 export { default as UpdatePaymentPendingReducer } from "./reducers/updatePaymentPending";

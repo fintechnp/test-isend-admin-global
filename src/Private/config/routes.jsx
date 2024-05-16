@@ -341,8 +341,9 @@ import AddLedger from "../pages/Ledger/AddLedger";
 // B2b Account
 import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
 import ListAccountList from "Private/pages/AccountList/ListAccountList";
-import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
 import AchTransactions from "Private/pages/Transactions/AchTransactions/AchTransactions";
+import ZaiAustraliaPayment from "Private/pages/PaymentProcess/ZaiAustraliaPayment/ZaiAustraliaPayment";
+import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -672,6 +673,10 @@ const privateRoutes = [
     {
         path: "/transaction/documents/:id",
         component: <TransactionDocuments />,
+    },
+    {
+        path: routePaths.transaction.zaiTransaction,
+        component: <ZaiAustraliaPayment />,
     },
 
     //Utilities

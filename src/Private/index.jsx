@@ -295,6 +295,11 @@ import {
     GetSanctionDetailsReducer,
     DownloadTransactionPdfReducer,
     SendMailTransactionReducer,
+    GetZaiAustraliaPaymentReducer,
+    GetBalanceDetailsReducers,
+    GetZaiLogsReducer,
+    GetRefundPaymentReducer,
+    GetMakePaymentReducer,
 } from "./pages/PaymentProcess/store";
 
 //Reports
@@ -532,7 +537,11 @@ import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/p
 
 import { GetAllAttachmentsReducer, UploadAttachmentReducer, attachmentSaga } from "Private/pages/Attachments/store";
 
-import {GetACHTransactionReducer,UpdateAchTransactionStatusReducer,achTransactionSaga} from "Private/pages/Transactions/AchTransactions/store"
+import {
+    GetACHTransactionReducer,
+    UpdateAchTransactionStatusReducer,
+    achTransactionSaga,
+} from "Private/pages/Transactions/AchTransactions/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -753,9 +762,23 @@ export const privateReducer = {
     get_pending_transactions: GetPendingTransactionsReducer,
     get_blocked_transactions: GetBlockedTransactionsReducer,
     get_aml_suspicious: GetAmlSuspiciousReducer,
+
     get_aml_suspicious_details: GetAmlSuspiciousDetailsReducer,
     get_exception_transactions: GetExceptionTransactionsReducer,
     get_transaction_refund_block: GetRefundBlockTransactionsReducer,
+
+    get_zai_australia_payment_details: GetZaiAustraliaPaymentReducer,
+
+    get_balance_details: GetBalanceDetailsReducers,
+
+    get_zai_logs: GetZaiLogsReducer,
+
+    make_payment: GetMakePaymentReducer,
+
+    refund_payment: GetRefundPaymentReducer,
+
+    // GET_BALANCE_DETAILS
+
     block_transactions: BlockTransactionsReducer,
     refund_transactions: RefundTransactionsReducer,
     update_payment_pending: UpdatePaymentPendingReducer,
@@ -765,7 +788,7 @@ export const privateReducer = {
     get_transaction_documents: GetTransactionDocumentReducer,
     get_sanction_details: GetSanctionDetailsReducer,
     download_transaction_pdf: DownloadTransactionPdfReducer,
-    send_mail_transaction:SendMailTransactionReducer,
+    send_mail_transaction: SendMailTransactionReducer,
 
     //Reports
     get_customer_report: GetCustomerReportsReducer,
@@ -962,8 +985,8 @@ export const privateReducer = {
 
     //ACH Transactions
 
-    get_ach_transactions:GetACHTransactionReducer,
-    update_ach_transaction_status:UpdateAchTransactionStatusReducer,
+    get_ach_transactions: GetACHTransactionReducer,
+    update_ach_transaction_status: UpdateAchTransactionStatusReducer,
 };
 
 export const privateSaga = [
@@ -1024,7 +1047,7 @@ export const privateSaga = [
     customerDeleteSaga(),
     commentSaga(),
     attachmentSaga(),
-    achTransactionSaga()
+    achTransactionSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

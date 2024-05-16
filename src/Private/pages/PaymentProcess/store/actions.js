@@ -63,6 +63,31 @@ const actions = {
     RELEASE_EXCEPTION_TRANSACTIONS_FAILED: "RELEASE_EXCEPTION_TRANSACTIONS_FAILED",
     RELEASE_EXCEPTION_TRANSACTIONS_RESET: "RELEASE_EXCEPTION_TRANSACTIONS_RESET",
 
+    GET_ZAI_AUSTRALIA_PAYMENT: "GET_ZAI_AUSTRALIA_PAYMENT",
+    GET_ZAI_AUSTRALIA_PAYMENT_SUCCESS: "GET_ZAI_AUSTRALIA_PAYMENT_SUCCESS",
+    GET_ZAI_AUSTRALIA_PAYMENT_FAILED: "GET_ZAI_AUSTRALIA_PAYMENT_FAILED",
+    GET_ZAI_AUSTRALIA_PAYMENT_RESET: "GET_ZAI_AUSTRALIA_PAYMENT_RESET",
+
+    CHECK_BALANCE_DETAILS: "CHECK_BALANCE_DETAILS",
+    CHECK_BALANCE_DETAILS_SUCCESS: "CHECK_BALANCE_DETAILS_SUCCESS",
+    CHECK_BALANCE_DETAILS_FAILED: "CHECK_BALANCE_DETAILS_FAILED",
+    CHECK_BALANCE_DETAILS_RESET: "CHECK_BALANCE_DETAILS_RESET",
+
+    GET_ZAI_LOGS: "GET_ZAI_LOGS",
+    GET_ZAI_LOGS_SUCCESS: "GET_ZAI_LOGS_SUCCESS",
+    GET_ZAI_LOGS_FAILED: "GET_ZAI_LOGS_FAILED",
+    GET_ZAI_LOGS_RESET: "GET_ZAI_LOGS_RESET",
+
+    MAKE_PAYMENT: "MAKE_PAYMENT",
+    MAKE_PAYMENT_SUCCESS: "MAKE_PAYMENT_SUCCESS",
+    MAKE_PAYMENT_FAILED: "MAKE_PAYMENT_FAILED",
+    MAKE_PAYMENT_RESET: "MAKE_PAYMENT_RESET",
+
+    REFUND_PAYMENT: "REFUND_PAYMENT",
+    REFUND_PAYMENT_SUCCESS: "REFUND_PAYMENT_SUCCESS",
+    REFUND_PAYMENT_FAILED: "REFUND_PAYMENT_FAILED",
+    REFUND_PAYMENT_RESET: "REFUND_PAYMENT_RESET",
+
     /////////////////////////  TRANSACTION DOCUMENTS  /////////////////////////
 
     GET_TRANSACTION_DOCUMENTS: "GET_TRANSACTION_DOCUMENTS",
@@ -124,6 +149,37 @@ const actions = {
     get_exception_transactions: (query) => ({
         type: actions.GET_EXCEPTION_TRANSACTIONS,
         query,
+    }),
+
+    get_zai_australia_payment_details: (query) => ({
+        type: actions.GET_ZAI_AUSTRALIA_PAYMENT,
+        query,
+    }),
+
+    get_zai_logs: (query) => ({
+        type: actions.GET_ZAI_LOGS,
+        query,
+    }),
+
+    get_balance_details: (id) => ({
+        type: actions.CHECK_BALANCE_DETAILS,
+        id,
+    }),
+
+    //create
+
+    make_payment: (data) => ({
+        type: actions.MAKE_PAYMENT,
+        data,
+    }),
+
+    refund_payment: (data) => ({
+        type: actions.REFUND_PAYMENT,
+        data,
+    }),
+
+    refund_payment_reset: (data) => ({
+        type: actions.REFUND_PAYMENT_RESET,
     }),
 
     //update

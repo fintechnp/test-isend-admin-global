@@ -14,7 +14,6 @@ import CheckboxField from "App/components/Fields/CheckboxField";
 import Validator from "App/utils/validators";
 import actions from "./../../../../Setup/Partner/store/actions";
 
-
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
     borderRadius: "5px",

@@ -81,9 +81,11 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
-    transaction:{
-        achTransaction:"/transaction/ach-transaction",
-    }
+    transaction: {
+        achTransaction: "/transaction/ach-transaction",
+        zaiTransaction: "/payment/zai-australia-payment",
+        ziaLogs: "/transaction/zia-logs",
+    },
 };
 
 export default routePaths;

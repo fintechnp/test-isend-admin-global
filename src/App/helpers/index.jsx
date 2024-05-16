@@ -127,6 +127,24 @@ export const FormatDateTime = (date) => {
     }
 };
 
+export const getFormattedDate = (data, dateFormat = "MMM dd, yyyy") => {
+    if (data) {
+        const newDate = new Date(data);
+        return format(newDate, dateFormat);
+    } else {
+        return "N/A";
+    }
+};
+
+export const getFormattedTime = (data, timeFormat = "hh:mm a") => {
+    if (data) {
+        const newDate = new Date(data);
+        return format(newDate, timeFormat);
+    } else {
+        return "N/A";
+    }
+};
+
 export const FormatNumber = (value) => {
     if (value) {
         return <NumberFormat value={value} displayType={"text"} thousandSeparator={true} />;

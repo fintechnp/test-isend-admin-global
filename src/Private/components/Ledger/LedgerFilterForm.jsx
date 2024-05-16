@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Box, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import EntryType from "Private/pages/Ledger/enum/EntryType";
@@ -156,7 +156,13 @@ export default function LedgerFilterForm({ setFilterSchema, loading }) {
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <Button color="error" size="small" variant="contained" onClick={handleReset} disabled={loading}>
+                                <Button
+                                    color="error"
+                                    size="small"
+                                    variant="contained"
+                                    onClick={handleReset}
+                                    disabled={loading}
+                                >
                                     Reset
                                 </Button>
                             </Grid>

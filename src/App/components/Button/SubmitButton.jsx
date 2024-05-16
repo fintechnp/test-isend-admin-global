@@ -20,13 +20,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const SubmitButton = React.forwardRef(
-    ({ isLoading, children, isAddMode, submitText, submittingText, ...rest }, ref) => (
+    ({ isLoading, children, isAddMode, submitText, submittingText, disabled, ...rest }, ref) => (
         <StyledButton
             ref={ref}
             type="submit"
             size="small"
             variant="contained"
-            disabled={isLoading}
+            disabled={isLoading || disabled}
             disableElevation
             {...rest}
         >

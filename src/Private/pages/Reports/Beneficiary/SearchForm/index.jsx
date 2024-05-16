@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Field, Form, reduxForm } from "redux-form";
@@ -73,13 +73,7 @@ function SearchForm({ handleSubmit, handleReset, loading }) {
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="name"
-                                placeholder="Name"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="name" placeholder="Name" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -100,13 +94,7 @@ function SearchForm({ handleSubmit, handleReset, loading }) {
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="email"
-                                placeholder="Email"
-                                type="email"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="email" placeholder="Email" type="email" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapperLabel item xs={12} sm={6}>
                             <Field
@@ -121,13 +109,9 @@ function SearchForm({ handleSubmit, handleReset, loading }) {
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date("2021-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: maxDate
-                                        ? new Date(maxDate)
-                                              .toISOString()
-                                              .slice(0, 10)
+                                        ? new Date(maxDate).toISOString().slice(0, 10)
                                         : new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -146,33 +130,20 @@ function SearchForm({ handleSubmit, handleReset, loading }) {
                                 }}
                                 inputProps={{
                                     min: minDate
-                                        ? new Date(minDate)
-                                              .toISOString()
-                                              .slice(0, 10)
-                                        : new Date("2021-01-01")
-                                              .toISOString()
-                                              .slice(0, 10),
+                                        ? new Date(minDate).toISOString().slice(0, 10)
+                                        : new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
                         </FieldWrapperLabel>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="country"
-                                placeholder="Country"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
+                            <Field name="country" placeholder="Country" type="text" small={12} component={SelectField}>
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -198,12 +169,7 @@ function SearchForm({ handleSubmit, handleReset, loading }) {
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={loading}
-                                    >
+                                    <Button size="small" variant="contained" type="submit" disabled={loading}>
                                         Filter
                                     </Button>
                                 </Grid>
@@ -216,6 +182,4 @@ function SearchForm({ handleSubmit, handleReset, loading }) {
     );
 }
 
-export default reduxForm({ form: "search_form_beneficiary_reports" })(
-    SearchForm
-);
+export default reduxForm({ form: "search_form_beneficiary_reports" })(SearchForm);

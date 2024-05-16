@@ -272,6 +272,12 @@ export const drawerItems = [
                 text: "Exception Transactions",
                 sub: false,
             },
+            {
+                path: routePaths.transaction.zaiTransaction,
+                key: "zai-australia-payment",
+                text: "Zai Australia Payment",
+                sub: false,
+            },
         ],
     },
 
