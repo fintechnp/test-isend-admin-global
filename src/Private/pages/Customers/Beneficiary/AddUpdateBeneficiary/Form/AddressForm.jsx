@@ -133,8 +133,8 @@ const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, 
                                     Select Country
                                 </option>
                                 {country &&
-                                    country.map((data) => (
-                                        <option value={data.iso3} key={data.iso3}>
+                                    country.map((data, i) => (
+                                        <option value={data.iso3} key={i}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -176,8 +176,6 @@ const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, 
                             />
                         </FieldWrapper>
 
-
-
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
                                 name="mobile_number"
@@ -213,8 +211,6 @@ const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, 
                                 validate={Validator.emptyValidator}
                             />
                         </FieldWrapper>
-
-
                     </FormWrapper>
                 </Grid>
                 <Grid item>
