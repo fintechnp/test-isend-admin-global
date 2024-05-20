@@ -15,10 +15,7 @@ import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import AddPromoCode from "./AddPromoCode";
 import { FormatDate } from "./../../../../../App/helpers";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../../App/components/Table";
+import Table, { TablePagination, TableSwitch } from "./../../../../../App/components/Table";
 import { Delete } from "../../../../../App/components";
 
 const MenuContainer = styled("div")(({ theme }) => ({
@@ -70,15 +67,9 @@ const PromoCode = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: PromoCodeData, loading: g_loading } = useSelector(
-        (state) => state.get_promo_code
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_promo_code
-    );
-    const { loading: i_loading, success: i_success } = useSelector(
-        (state) => state.import_promo_code
-    );
+    const { response: PromoCodeData, loading: g_loading } = useSelector((state) => state.get_promo_code);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_promo_code);
+    const { loading: i_loading, success: i_success } = useSelector((state) => state.import_promo_code);
     const { success: a_success } = useSelector((state) => state.add_promo_code);
 
     useEffect(() => {
@@ -123,9 +114,7 @@ const PromoCode = (props) => {
                 accessor: "expiry_date",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? FormatDate(data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? FormatDate(data.value) : ""}</StyledText>
                     </Box>
                 ),
             },
@@ -146,15 +135,11 @@ const PromoCode = (props) => {
                     >
                         {data.value ? (
                             <Tooltip title="Multiple Use" arrow>
-                                <CheckCircleOutlineIcon
-                                    sx={{ color: "success.main" }}
-                                />
+                                <CheckCircleOutlineIcon sx={{ color: "success.main" }} />
                             </Tooltip>
                         ) : (
                             <Tooltip title="No Multiple Use" arrow>
-                                <RemoveCircleOutlineIcon
-                                    sx={{ color: "border.main" }}
-                                />
+                                <RemoveCircleOutlineIcon sx={{ color: "border.main" }} />
                             </Tooltip>
                         )}
                     </Box>
@@ -170,11 +155,7 @@ const PromoCode = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="center" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -232,7 +213,7 @@ const PromoCode = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -266,7 +247,7 @@ const PromoCode = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleOrder = (e) => {
@@ -313,22 +294,17 @@ const PromoCode = (props) => {
         dispatch(
             actions.update_promo_code_status(id, promo_id, {
                 is_active: is_active,
-            })
+            }),
         );
     }, []);
 
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MenuContainer>
-                <Header
-                    title="Promo Code"
-                    id={id}
-                    name={name}
-                    loading={i_loading}
-                >
+                <Header title="Promo Code" id={id} name={name} loading={i_loading}>
                     <AddPromoCode promo_id={id} />
                 </Header>
                 <Filter

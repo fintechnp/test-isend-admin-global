@@ -15,10 +15,10 @@ import Header from "./../components/Header";
 import Filter from "./../components/Filter";
 import { Delete } from "./../../../../../App/components";
 import { CountryName } from "./../../../../../App/helpers";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../../App/components/Table";
+import Table, { TablePagination, TableSwitch } from "./../../../../../App/components/Table";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -78,12 +78,8 @@ const PartnerBranch = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: BranchData, loading: g_loading } = useSelector(
-        (state) => state.get_all_branch_by_partner
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_branch
-    );
+    const { response: BranchData, loading: g_loading } = useSelector((state) => state.get_all_branch_by_partner);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_branch);
     const { success: a_success } = useSelector((state) => state.add_branch);
     const { success: u_success } = useSelector((state) => state.update_branch);
 
@@ -132,13 +128,9 @@ const PartnerBranch = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : ""}</StyledText>
                         <StyledText component="p" sx={{ opacity: 0.9 }}>
-                            {data?.row?.original?.short_code
-                                ? data?.row?.original?.short_code
-                                : "n/a"}
+                            {data?.row?.original?.short_code ? data?.row?.original?.short_code : "n/a"}
                         </StyledText>
                     </Box>
                 ),
@@ -153,13 +145,9 @@ const PartnerBranch = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                         <StyledText component="p" sx={{ opacity: 0.9 }}>
-                            {data?.row?.original?.end_time
-                                ? data?.row?.original?.end_time
-                                : ""}
+                            {data?.row?.original?.end_time ? data?.row?.original?.end_time : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -173,13 +161,9 @@ const PartnerBranch = (props) => {
                 accessor: "city",
                 Cell: (data) => (
                     <Box>
+                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                         <StyledText component="p">
-                            {data.value ? data.value : "n/a"}
-                        </StyledText>
-                        <StyledText component="p">
-                            {data?.row?.original?.country
-                                ? CountryName(data?.row?.original?.country)
-                                : ""}
+                            {data?.row?.original?.country ? CountryName(data?.row?.original?.country) : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -193,13 +177,9 @@ const PartnerBranch = (props) => {
                 accessor: "phone_number",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? data?.value : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data?.value : ""}</StyledText>
                         <StyledText component="p" sx={{ opacity: 0.9 }}>
-                            {data?.row?.original?.email
-                                ? data?.row?.original?.email
-                                : ""}
+                            {data?.row?.original?.email ? data?.row?.original?.email : ""}
                         </StyledText>
                     </Box>
                 ),
@@ -214,11 +194,7 @@ const PartnerBranch = (props) => {
                 width: 120,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -266,35 +242,35 @@ const PartnerBranch = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <Tooltip title="Edit Branch" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/setup/partner/branch/update/${id}/${row?.original?.tid}`
-                                    )
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Remove Partner"
-                        />
+                        <HasPermission permission={permissions.EDIT_PARTNER_BRANCH}>
+                            <Tooltip title="Edit Branch" arrow>
+                                <IconButton
+                                    onClick={() => navigate(`/setup/partner/branch/update/${id}/${row?.original?.tid}`)}
+                                >
+                                    <EditOutlinedIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_PARTNER_BRANCH}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Remove Partner"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -335,7 +311,7 @@ const PartnerBranch = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -390,18 +366,15 @@ const PartnerBranch = (props) => {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title={`Branch List of ${name}`}>
-                    <AddButton
-                        size="small"
-                        variant="outlined"
-                        onClick={handleAdd}
-                        endIcon={<AddIcon />}
-                    >
-                        Add Branch
-                    </AddButton>
+                    <HasPermission permission={permissions.CREATE_PARTNER_BRANCH}>
+                        <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
+                            Add Branch
+                        </AddButton>
+                    </HasPermission>
                 </Header>
                 <Filter
                     state={filterSchema}
@@ -431,4 +404,4 @@ const PartnerBranch = (props) => {
     );
 };
 
-export default PartnerBranch;
+export default withPermission({ permission: [permissions.READ_PARTNER_BRANCH] })(PartnerBranch);

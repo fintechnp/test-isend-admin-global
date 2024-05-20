@@ -11,3 +11,5 @@ export { default as LogOutReducer } from "./reducers/logout";
 export { default as SendCountryReducer } from "./reducers/sendCountry";
 
 export { default as CommonAction } from "./actions";
+
+export { default as getUserMenusAndPermissionsReducer } from "./reducers/getUserMenusAndPermissionsReducer";

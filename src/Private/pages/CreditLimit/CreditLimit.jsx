@@ -160,8 +160,8 @@ export default function CreditLimit({ title }) {
 
     return (
         <PageContent
-            title={title}
-            documentTitle="Credit Limit"
+            title="Credit Limits"
+            documentTitle="Credit Limits"
             topRightEndContent={
                 <Button
                     onClick={() => {

@@ -18,6 +18,10 @@ import { Delete } from "App/components";
 import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import { CountryName } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -78,6 +82,7 @@ const Partner = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
+    const { can } = useAuthUser();
 
     const { response: partner_data, loading: g_loading } = useSelector((state) => state.get_all_partner);
     const { success: d_success, loading: d_loading } = useSelector((state) => state.delete_partner);
@@ -179,9 +184,17 @@ const Partner = (props) => {
                 ),
                 accessor: "is_active",
                 Cell: (data) => (
-                    <SwitchWrapper textAlign="center" sx={{}}>
-                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
-                    </SwitchWrapper>
+                    <>
+                        {!can(permissions.EDIT_PARTNER) ? (
+                            <SwitchWrapper textAlign="center" sx={{}}>
+                                <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
+                            </SwitchWrapper>
+                        ) : (
+                            <Typography align="center">
+                                {data.row.original.is_active ? "Active" : "Inactive"}
+                            </Typography>
+                        )}
+                    </>
                 ),
             },
             {
@@ -199,56 +212,66 @@ const Partner = (props) => {
                             justifyContent: "center",
                         }}
                     >
-                        <Tooltip title="Branch" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(`/setup/partner/branch/${row.original.name}/${row.original.agent_id}`)
-                                }
-                            >
-                                <AltRouteIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="See Corridor" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(`/setup/partner/corridor/${row.original.name}/${row.original.agent_id}`)
-                                }
-                            >
-                                <ShuffleIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit Partner" arrow>
-                            <IconButton onClick={() => navigate(`/setup/partner/update/${row.original.agent_id}`)}>
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Remove Partner"
-                        />
+                        <HasPermission permission={permissions.READ_PARTNER_BRANCH}>
+                            <Tooltip title="Branch" arrow>
+                                <IconButton
+                                    onClick={() =>
+                                        navigate(`/setup/partner/branch/${row.original.name}/${row.original.agent_id}`)
+                                    }
+                                >
+                                    <AltRouteIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                        </HasPermission>
+                        <HasPermission permission={permissions.READ_PARTNER_CORRIDOR}>
+                            <Tooltip title="See Corridor" arrow>
+                                <IconButton
+                                    onClick={() =>
+                                        navigate(
+                                            `/setup/partner/corridor/${row.original.name}/${row.original.agent_id}`,
+                                        )
+                                    }
+                                >
+                                    <ShuffleIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                        </HasPermission>
+                        <HasPermission permission={permissions.EDIT_PARTNER}>
+                            <Tooltip title="Edit Partner" arrow>
+                                <IconButton onClick={() => navigate(`/setup/partner/update/${row.original.agent_id}`)}>
+                                    <EditOutlinedIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_PARTNER}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Remove Partner"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -333,9 +356,11 @@ const Partner = (props) => {
     return (
         <PageContent documentTitle="Partners">
             <Header title="Our Partner List">
-                <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
-                    Add Partner
-                </AddButton>
+                <HasPermission permission={permissions.CREATE_PARTNER}>
+                    <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
+                        Add Partner
+                    </AddButton>
+                </HasPermission>
             </Header>
             <Filter
                 orderData={orderData}
@@ -362,4 +387,4 @@ const Partner = (props) => {
     );
 };
 
-export default Partner;
+export default withPermission({ permission: [permissions.READ_PARTNER] })(Partner);

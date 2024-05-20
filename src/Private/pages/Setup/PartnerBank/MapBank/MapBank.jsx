@@ -10,11 +10,7 @@ import payoutActions from "../../PayoutLocation/store/actions";
 import Header from "./Header";
 import Filter from "./Filter";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
-import {
-    CountryName,
-    CurrencyName,
-    ReferenceName,
-} from "./../../../../../App/helpers";
+import { CountryName, CurrencyName, ReferenceName } from "./../../../../../App/helpers";
 import Map from "../../../../../App/components/Dialog/Unmap";
 
 const MapContainer = styled("div")(({ theme }) => ({
@@ -55,12 +51,8 @@ const MapBank = (props) => {
         order_by: "DESC",
     });
 
-    const { response: payoutloaction_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_payout_location
-    );
-    const { loading: un_loading, success: un_success } = useSelector(
-        (state) => state.unmapp_partner_bank
-    );
+    const { response: payoutloaction_data, loading: g_loading } = useSelector((state) => state.get_all_payout_location);
+    const { loading: un_loading, success: un_success } = useSelector((state) => state.unmapp_partner_bank);
 
     useEffect(() => {
         if (un_success) {
@@ -109,9 +101,7 @@ const MapBank = (props) => {
             Cell: (data) => (
                 <Box>
                     <StyledText component="p">{data.value}</StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
-                    >
+                    <Typography sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}>
                         {data?.row?.original?.receiving_currency}
                     </Typography>
                 </Box>
@@ -126,9 +116,7 @@ const MapBank = (props) => {
             accessor: "payment_type",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">
-                        {ReferenceName(1, data.value)}
-                    </StyledText>
+                    <StyledText component="p">{ReferenceName(1, data.value)}</StyledText>
                 </Box>
             ),
         },
@@ -141,12 +129,8 @@ const MapBank = (props) => {
             accessor: "country",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">
-                        {CountryName(data.value)}
-                    </StyledText>
-                    <Typography
-                        sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}
-                    >
+                    <StyledText component="p">{CountryName(data.value)}</StyledText>
+                    <Typography sx={{ opacity: 0.6, fontSize: "12px", lineHeight: 1 }}>
                         {CurrencyName(data?.row?.original?.currency)}
                     </Typography>
                 </Box>
@@ -188,7 +172,7 @@ const MapBank = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleOrder = (e) => {
@@ -234,13 +218,10 @@ const MapBank = (props) => {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MapContainer>
-                <Header
-                    title="Exchange Rate List"
-                    buttonText="Add Exchange Rate"
-                />
+                <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />
                 <Filter
                     state={filterSchema}
                     handleSearch={handleSearch}

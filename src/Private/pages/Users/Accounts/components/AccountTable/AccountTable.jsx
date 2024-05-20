@@ -1,39 +1,36 @@
-import { styled } from "@mui/material/styles";
-import React, { useMemo, useEffect, useState, useCallback } from "react";
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useMemo, useEffect, useState, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import SyncAltOutlinedIcon from "@mui/icons-material/SyncAltOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Avatar from "@mui/material/Avatar";
-import { useNavigate } from "react-router-dom";
 
-import Table, { TablePagination, TableSwitch } from "./../../../../../../App/components/Table";
-import actions from "./../../store/actions";
-import AddAccount from "./../AddAccount";
-import Header from "./../Header";
 import Filter from "./../Filter";
+import AddAccount from "./../AddAccount";
+import Modal from "App/components/Modal/Modal";
 import Button from "App/components/Button/Button";
+import Table, { TablePagination, TableSwitch } from "App/components/Table";
+import BusinessKycDetail from "Private/components/Business/BusinessKycDetail";
+
+import actions from "./../../store/actions";
 import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
-import BusinessKycDetail from "Private/components/Business/BusinessKycDetail";
-import Modal from "App/components/Modal/Modal";
-
+import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
 import { businessActions } from "Private/pages/Business/store";
+import Column from "App/components/Column/Column";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const TransactionsContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
 }));
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
@@ -79,6 +76,8 @@ function AccountTable() {
     const { success: a_success } = useSelector((state) => state.add_user);
     const { success: u_success } = useSelector((state) => state.update_user);
     const { success: d_success } = useSelector((state) => state.delete_user);
+
+    const { can } = useAuthUser();
 
     const { response: kycDetailData, loading: kycDetailLoading } = useSelector(
         (state) => state.get_business_kyc_details,
@@ -139,14 +138,16 @@ function AccountTable() {
             },
             {
                 Header: () => (
-                    <Box textAlign="center">
+                    <Box>
                         <Typography>Role</Typography>
                     </Box>
                 ),
-                accessor: "user_type",
+                accessor: "roles",
                 Cell: (data) => (
-                    <Box textAlign="center">
-                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <Box>
+                        <StyledText component="p">
+                            {data.value ? data.value?.map((r) => r.name).join(", ") : "n/a"}
+                        </StyledText>
                     </Box>
                 ),
             },
@@ -169,94 +170,114 @@ function AccountTable() {
                     </>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Status</Typography>
-                    </Box>
-                ),
-                accessor: "is_active",
-                width: 120,
-                Cell: (data) => (
-                    <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
-                    </SwitchWrapper>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>KYC</Typography>
-                    </Box>
-                ),
-                accessor: "kyc",
-                Cell: ({ row }) => {
-                    return (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "center",
-                            }}
-                        >
-                            {row?.original?.has_kyc ? (
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        justifyContent: "center",
-                                        gap: 2,
-                                    }}
-                                >
-                                    <Tooltip title="Show KYC" arrow>
-                                        <Button
-                                            size="small"
-                                            onClick={() => {
-                                                setOpen(true);
-                                                dispatch(
-                                                    businessActions.get_business_kyc_details(row?.original?.kyc_id),
-                                                );
-                                            }}
-                                        >
-                                            Show Kyc
-                                        </Button>
-                                    </Tooltip>
-                                    <Tooltip title="Edit KYC" arrow>
-                                        <Button
-                                            size="small"
-                                            onClick={() => {
-                                                navigate(
-                                                    buildRoute(routePaths.userKyc.editSystemUserKyc, {
-                                                        id: row?.original?.id,
-                                                        kycId: row?.original?.kyc_id,
-                                                    }),
-                                                );
-                                            }}
-                                        >
-                                            Edit Kyc
-                                        </Button>
-                                    </Tooltip>
-                                </Box>
-                            ) : (
-                                <Tooltip title="Add KYC" arrow>
-                                    <Button
-                                        size="small"
-                                        onClick={() => {
-                                            navigate(
-                                                buildRoute(routePaths.userKyc.addSystemUserKyc, {
-                                                    id: row?.original?.id,
-                                                }),
-                                            );
-                                        }}
-                                    >
-                                        Add Kyc
-                                    </Button>
-                                </Tooltip>
-                            )}
-                        </Box>
-                    );
-                },
-            },
+            ...(can(permissions.EDIT_USER)
+                ? [
+                      {
+                          Header: () => (
+                              <Box textAlign="right" sx={{}}>
+                                  <Typography>Status</Typography>
+                              </Box>
+                          ),
+                          accessor: "is_active",
+                          width: 120,
+                          Cell: (data) => (
+                              <SwitchWrapper textAlign="right" sx={{}}>
+                                  <TableSwitch
+                                      value={data?.value}
+                                      data={data.row.original}
+                                      handleStatus={handleStatus}
+                                  />
+                              </SwitchWrapper>
+                          ),
+                      },
+                  ]
+                : []),
+            ...(can([permissions.CREATE_USER_KYC, permissions.READ_USER_KYC, permissions.EDIT_USER_KYC])
+                ? [
+                      {
+                          Header: () => (
+                              <Box textAlign="center">
+                                  <Typography>KYC</Typography>
+                              </Box>
+                          ),
+                          accessor: "kyc",
+                          Cell: ({ row }) => {
+                              return (
+                                  <Box
+                                      sx={{
+                                          display: "flex",
+                                          flexDirection: "row",
+                                          justifyContent: "center",
+                                      }}
+                                  >
+                                      {row?.original?.has_kyc ? (
+                                          <Box
+                                              sx={{
+                                                  display: "flex",
+                                                  flexDirection: "row",
+                                                  justifyContent: "center",
+                                                  gap: 2,
+                                              }}
+                                          >
+                                              <HasPermission permission={permissions.READ_USER_KYC}>
+                                                  <Tooltip title="Show KYC" arrow>
+                                                      <Button
+                                                          size="small"
+                                                          onClick={() => {
+                                                              setOpen(true);
+                                                              dispatch(
+                                                                  businessActions.get_business_kyc_details(
+                                                                      row?.original?.kyc_id,
+                                                                  ),
+                                                              );
+                                                          }}
+                                                      >
+                                                          Show Kyc
+                                                      </Button>
+                                                  </Tooltip>
+                                              </HasPermission>
+                                              <HasPermission permission={permissions.EDIT_USER_KYC}>
+                                                  <Tooltip title="Edit KYC" arrow>
+                                                      <Button
+                                                          size="small"
+                                                          onClick={() => {
+                                                              navigate(
+                                                                  buildRoute(routePaths.userKyc.editSystemUserKyc, {
+                                                                      id: row?.original?.id,
+                                                                      kycId: row?.original?.kyc_id,
+                                                                  }),
+                                                              );
+                                                          }}
+                                                      >
+                                                          Edit Kyc
+                                                      </Button>
+                                                  </Tooltip>
+                                              </HasPermission>
+                                          </Box>
+                                      ) : (
+                                          <HasPermission permission={permissions.CREATE_USER_KYC}>
+                                              <Tooltip title="Add KYC" arrow>
+                                                  <Button
+                                                      size="small"
+                                                      onClick={() => {
+                                                          navigate(
+                                                              buildRoute(routePaths.userKyc.addSystemUserKyc, {
+                                                                  id: row?.original?.id,
+                                                              }),
+                                                          );
+                                                      }}
+                                                  >
+                                                      Add Kyc
+                                                  </Button>
+                                              </Tooltip>
+                                          </HasPermission>
+                                      )}
+                                  </Box>
+                              );
+                          },
+                      },
+                  ]
+                : []),
             {
                 Header: () => (
                     <Box textAlign="center">
@@ -298,19 +319,9 @@ function AccountTable() {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddAccount update={true} update_data={row?.original} />
-                        <Tooltip title="Map Privilege" arrow>
-                            <IconButton onClick={() => navigate(`/user/permission/${row?.original?.id}`)}>
-                                <SyncAltOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
+                        <HasPermission permission={permissions.EDIT_USER}>
+                            <AddAccount update={true} update_data={row?.original} />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -322,7 +333,7 @@ function AccountTable() {
         { key: "name", name: "Name", type: "default" },
         { key: "phone_number", name: "Phone Number", type: "default" },
         { key: "email", name: "Email", type: "default" },
-        { key: "user_type", name: "User Type", type: "default" },
+        { key: "user_type", name: "User Profile", type: "default" },
         { key: "agent_id", name: "Agent", type: "default" },
         { key: "is_active", name: "Status", type: "boolean" },
         { key: "created_by", name: "Created By", type: "default" },
@@ -401,20 +412,24 @@ function AccountTable() {
     return (
         <>
             <TransactionsContainer>
-                <Header />
-                <Filter
-                    handleSearch={handleSearch}
-                    filterUserType={filterUserType}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                />
+                <Column justifyContent="flex-end" alignItems="flex-end" p={1}>
+                    <HasPermission permission={permissions.CREATE_USER}>
+                        <AddAccount update={false} />
+                    </HasPermission>
+                    <Filter
+                        handleSearch={handleSearch}
+                        filterUserType={filterUserType}
+                        handleSort={handleSort}
+                        handleOrder={handleOrder}
+                    />
+                </Column>
                 <Table
                     columns={columns}
                     title="Account Details"
                     data={user_list?.data || []}
                     sub_columns={sub_columns}
-                    handleDelete={handleDelete}
-                    handleForgotPassword={handleForgotPassword}
+                    handleDelete={can(permissions.DELETE_USER) ? handleDelete : undefined}
+                    handleForgotPassword={can(permissions.RESET_USER_PASSWORD) ? handleForgotPassword : undefined}
                     loading={loading}
                     rowsPerPage={8}
                     renderPagination={() => (

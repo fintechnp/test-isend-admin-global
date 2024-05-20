@@ -14,6 +14,9 @@ import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import FilterLanguage from "../../../components/AddLanguage/FilterLanguage";
 import LanguageValueModal from "../../../components/AddLanguage/AddLanguageValueModal";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
@@ -172,13 +175,17 @@ const AddLanguage = () => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <LanguageValueModal update={true} update_data={row?.original} />
-                        <Delete
-                            id={row?.original?.localization_id}
-                            handleDelete={handleDelete}
-                            loading={getLanguageValueLoading}
-                            tooltext="Delete Language Value"
-                        />
+                        <HasPermission permission={permissions.EDIT_LOCALIZATION}>
+                            <LanguageValueModal update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_LOCALIZATION}>
+                            <Delete
+                                id={row?.original?.localization_id}
+                                handleDelete={handleDelete}
+                                loading={getLanguageValueLoading}
+                                tooltext="Delete Language Value"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -189,14 +196,16 @@ const AddLanguage = () => {
         <PageContent
             documentTitle="Add Language"
             title={
-                <>
+                <HasPermission permission={permissions.CREATE_LOCALIZATION}>
                     <Typography>Add Localization Value</Typography>
-                </>
+                </HasPermission>
             }
         >
             <FilterLanguage sortByOptions={sortByOptions} />
             <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
-                <LanguageValueModal update={false} />
+                <HasPermission permission={permissions.CREATE_LOCALIZATION}>
+                    <LanguageValueModal update={false} />
+                </HasPermission>
             </div>
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
@@ -221,7 +230,7 @@ const AddLanguage = () => {
     );
 };
 
-export default AddLanguage;
+export default withPermission({ permission: permissions.READ_LOCALIZATION })(AddLanguage);
 
 export const PageLimitSelect = ({ onChange }) => {
     return (

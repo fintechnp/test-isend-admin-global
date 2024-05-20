@@ -1,22 +1,26 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useDispatch, useSelector } from "react-redux";
+import DialogContent from "@mui/material/DialogContent";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import AccountForm from "./Form";
+import Box from "@mui/material/Box";
 import actions from "./../../store/actions";
-import { Box } from "@mui/material";
+import HasPermission from "Private/components/shared/HasPermission";
+
+import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -84,7 +88,7 @@ const BootstrapDialogTitle = (props) => {
                 <HeaderIcon />
             </Box>
             {children}
-            {typeof onClose === 'function' ? (
+            {typeof onClose === "function" ? (
                 <CloseButton aria-label="close" onClick={onClose}>
                     <CloseIcon />
                 </CloseButton>
@@ -103,6 +107,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function AddAccount({ update_data, update }) {
+    const { can } = useAuthUser();
+
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const { response: add_user, success: add_success, loading: add_loading } = useSelector((state) => state.add_user);
@@ -140,21 +146,25 @@ function AddAccount({ update_data, update }) {
         <div>
             {update ? (
                 <Tooltip title="Edit Account" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
+                    <HasPermission permission={permissions.EDIT_USER}>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </HasPermission>
                 </Tooltip>
             ) : (
-                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                    Add Account
-                </AddButton>
+                <HasPermission permission={permissions.CREATE_USER}>
+                    <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
+                        Add Account
+                    </AddButton>
+                </HasPermission>
             )}
             <BootstrapDialog
                 onClose={add_loading || update_loading ? () => {} : handleClose}
@@ -171,33 +181,26 @@ function AddAccount({ update_data, update }) {
                 <DialogContent dividers>
                     {update ? (
                         <AccountForm
-                            destroyOnUnmount
-                            initialValues={{
+                            defaultValues={{
                                 id: memoizedData?.id,
                                 first_name: memoizedData && memoizedData?.first_name,
                                 last_name: memoizedData?.last_name,
-                                user_type: memoizedData?.user_type,
                                 phone_number: memoizedData?.phone_number,
                                 email: memoizedData?.email,
-                                agent_id: memoizedData?.agent_id,
                                 is_active: memoizedData?.is_active,
+                                gender: memoizedData?.gender,
+                                user_profile: memoizedData?.roles?.map((r) => r.id) ?? [],
                             }}
-                            onSubmit={handleUpdateUser}
-                            buttonText="Update"
                             update={update}
-                            user_type={update_data?.user_type}
+                            onSubmit={handleUpdateUser}
                             loading={update_loading}
-                            form={`update_user_form`}
                             handleClose={handleClose}
                         />
                     ) : (
                         <AccountForm
                             update={update}
-                            enableReinitialize={true}
                             onSubmit={handleNewUser}
-                            buttonText="Create"
-                            form={`add_user_form`}
-                            initialValues={{ is_active: false, agent_id: 0 }}
+                            defaultValues={{ is_active: true }}
                             loading={add_loading}
                             handleClose={handleClose}
                         />

@@ -46,9 +46,7 @@ function PartnerDetails(props) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, loading } = useSelector(
-        (state) => state.get_partner_details
-    );
+    const { response, loading } = useSelector((state) => state.get_partner_details);
 
     useEffect(() => {
         if (id) {
@@ -63,22 +61,16 @@ function PartnerDetails(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <ContactPageIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <ContactPageIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title> Partner Details </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleBack}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleBack}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -86,11 +78,7 @@ function PartnerDetails(props) {
                 <Grid item xs={12}>
                     <Divider sx={{ mb: 1.2 }} />
                 </Grid>
-                {loading ? (
-                    <PartnerSkeleton />
-                ) : (
-                    <Details data={response?.data} />
-                )}
+                {loading ? <PartnerSkeleton /> : <Details data={response?.data} />}
             </Grid>
         </>
     );

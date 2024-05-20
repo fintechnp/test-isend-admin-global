@@ -1,11 +1,11 @@
-import { Grid } from "@mui/material";
 import { useDispatch } from "react-redux";
 import React, { useEffect } from "react";
 
 import actions from "./store/actions";
-import Numbers from "./components/Numbers";
 import AccountTable from "./components/AccountTable";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 function Accounts() {
     const dispatch = useDispatch();
@@ -21,17 +21,21 @@ function Accounts() {
     }, []);
 
     return (
-        <PageContent documentTitle="User Accounts">
-            <Grid container spacing={2} sx={{ paddingTop: "8px" }}>
-                <Grid item xs={12}>
-                    <Numbers />
-                </Grid>
-                <Grid item xs={12}>
-                    <AccountTable />
-                </Grid>
-            </Grid>
+        <PageContent
+            documentTitle="User Accounts"
+            breadcrumbs={[
+                {
+                    label: "Users",
+                },
+                {
+                    label: "User Setups",
+                },
+            ]}
+            disablePadding
+        >
+            <AccountTable />
         </PageContent>
     );
 }
 
-export default Accounts;
+export default withPermission({ permission: [permissions.READ_USER] })(Accounts);

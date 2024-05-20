@@ -36,12 +36,12 @@ export const drawerItems = [
                 text: "Accounts",
                 sub: false,
             },
-            // {
-            //     path: "/user/menu",
-            //     key: "user-menu",
-            //     text: "Menu",
-            //     sub: false,
-            // },
+            {
+                path: routePaths.users.listProfileSetup,
+                key: "list-profile-setup",
+                text: "User Profile Setup",
+                sub: false,
+            },
         ],
     },
 
@@ -431,15 +431,21 @@ export const drawerItems = [
                 sub: false,
             },
             {
-                path: routePaths.agent.listB2bAccount,
-                key: "market-maker",
-                text: "B2b Accounts",
+                path: routePaths.agent.listBusiness,
+                key: "business",
+                text: "Businesses",
                 sub: false,
             },
             {
-                path: routePaths.agent.listAccounts,
+                path: routePaths.agent.listB2bAccount,
                 key: "market-maker",
-                text: "Account List",
+                text: "Balance Accounts",
+                sub: false,
+            },
+            {
+                path: routePaths.agent.listBalanceRequest,
+                key: "balance-request",
+                text: "Balance Requests",
                 sub: false,
             },
             {
@@ -448,18 +454,7 @@ export const drawerItems = [
                 text: "Credit Limits",
                 sub: false,
             },
-            {
-                path: routePaths.agent.listBalanceRequest,
-                key: "balance-Request",
-                text: "Balance Requests",
-                sub: false,
-            },
-            {
-                path: routePaths.agent.listBusiness,
-                key: "business",
-                text: "Business",
-                sub: false,
-            },
+
             {
                 path: routePaths.agent.listSingleTransactions,
                 key: "single-transactions",
@@ -481,19 +476,25 @@ export const drawerItems = [
             {
                 path: routePaths.agent.listKycUser,
                 key: "kyc-user",
-                text: "KYC Users",
+                text: "Users KYC",
                 sub: false,
             },
             {
                 path: routePaths.agent.listBusinessServiceCharge,
                 key: "business-service-charge",
-                text: "Business Service Charge",
+                text: "Business Service Charges",
+                sub: false,
+            },
+            {
+                path: routePaths.agent.listAccounts,
+                key: "market-maker",
+                text: "Legder Accounts",
                 sub: false,
             },
             {
                 path: routePaths.agent.listLedger,
                 key: "ledger",
-                text: "Ledger",
+                text: "Ledgers",
                 sub: false,
             },
         ],

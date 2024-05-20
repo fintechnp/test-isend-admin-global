@@ -3,6 +3,8 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 
 import AddPaymentRules from "../AddPaymentRules";
+import HasPermission from "Private/components/shared/HasPermission";
+import { permissions } from "Private/data/permissions";
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -14,7 +16,9 @@ function Header() {
     return (
         <HeaderWrapper>
             <Typography sx={{ fontSize: "22px" }}>Payment Rules</Typography>
-            <AddPaymentRules update={false} />
+            <HasPermission permission={permissions.CREATE_PAYMENT_RULE}>
+                <AddPaymentRules update={false} />
+            </HasPermission>
         </HeaderWrapper>
     );
 }

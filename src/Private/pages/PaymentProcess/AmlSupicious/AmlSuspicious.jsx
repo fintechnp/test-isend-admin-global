@@ -1,18 +1,23 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip'
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Release } from "App/components";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import HasPermission from "Private/components/shared/HasPermission";
 
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
 import Filter from "./../components/Filter";
+import { permissions } from "Private/data/permissions";
 import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -244,15 +249,17 @@ const AmlSuspicious = (props) => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Release
-                            destroyOnUnmount
-                            enableReinitialize
-                            onSubmit={(data) => handleRelease(row.original.tid, data)}
-                            validatation={true}
-                            tooltext="Release Transaction"
-                            form={`aml_release_form_${row?.original?.tid}`}
-                            reduxGlobalStateKey="update_aml_suspicious"
-                        />
+                        <HasPermission permission={permissions.RELEASE_AML_SUSPICIOUS_TRANSACTION}>
+                            <Release
+                                destroyOnUnmount
+                                enableReinitialize
+                                onSubmit={(data) => handleRelease(row.original.tid, data)}
+                                validatation={true}
+                                tooltext="Release Transaction"
+                                form={`aml_release_form_${row?.original?.tid}`}
+                                reduxGlobalStateKey="update_aml_suspicious"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -352,4 +359,4 @@ const AmlSuspicious = (props) => {
     );
 };
 
-export default AmlSuspicious;
+export default withPermission({ permission: [permissions.READ_AML_SUSPICIOUS_TRANSACTION] })(AmlSuspicious);

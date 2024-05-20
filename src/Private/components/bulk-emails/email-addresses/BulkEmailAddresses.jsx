@@ -99,7 +99,7 @@ const BulkEmailAddresses = (props) => {
                 accessor: "email",
             },
             {
-                Header: "Name",
+                Header: "Group",
                 accessor: "group_name",
             },
             {

@@ -3,27 +3,35 @@ import { useDispatch } from "react-redux";
 
 import Button from "App/components/Button/Button";
 import Banners from "Private/components/banners/Banners";
+import withPermission from "Private/HOC/withPermission";
 import PageContent from "App/components/Container/PageContent";
+import HasPermission from "Private/components/shared/HasPermission";
 import AddBannerModal from "Private/components/banners/AddBannerModal";
 import EditBannerModal from "Private/components/banners/EditBannerModal";
 
-export default function ListBanner() {
-  const dispatch = useDispatch();
+import { permissions } from "Private/data/permissions";
 
-  return (
-    <PageContent
-      title="Banners"
-      topRightEndContent={
-        <>
-          <Button onClick={() => dispatch({ type: "OPEN_ADD_BANNER_MODAL" })}>
-            AddBanner
-          </Button>
-        </>
-      }
-    >
-      <AddBannerModal />
-      <EditBannerModal />
-      <Banners />
-    </PageContent>
-  );
+function ListBanner() {
+    const dispatch = useDispatch();
+
+    return (
+        <PageContent
+            title="Banners"
+            topRightEndContent={
+                <HasPermission permission={[permissions.CREATE_BANNER]}>
+                    <Button onClick={() => dispatch({ type: "OPEN_ADD_BANNER_MODAL" })}>AddBanner</Button>
+                </HasPermission>
+            }
+        >
+            <HasPermission permission={[permissions.CREATE_BANNER]}>
+                <AddBannerModal />
+            </HasPermission>
+            <HasPermission permission={[permissions.EDIT_BANNER]}>
+                <EditBannerModal />
+            </HasPermission>
+            <Banners />
+        </PageContent>
+    );
 }
+
+export default withPermission({ permission: [permissions.READ_BANNER] })(ListBanner);

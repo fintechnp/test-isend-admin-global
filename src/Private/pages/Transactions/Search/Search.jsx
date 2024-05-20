@@ -19,6 +19,8 @@ import Loading from "App/components/Loading";
 import Table, { TablePagination } from "App/components/Table";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -479,4 +481,4 @@ function Search(props) {
     );
 }
 
-export default Search;
+export default withPermission({ permission: [permissions.SEARCH_TRANSACTION] })(Search);

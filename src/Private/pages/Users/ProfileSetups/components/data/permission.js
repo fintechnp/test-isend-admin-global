@@ -1,0 +1,101 @@
+export const permissions = [
+    {
+        id: 1,
+        display_name: "Dashboard",
+        name: "Dashboard",
+        type: "MENU",
+        parent_id: null,
+    },
+    {
+        id: 2,
+        display_name: "Users",
+        name: "USERS",
+        type: "MENU",
+        parent_id: null,
+        children: [
+            {
+                id: 21,
+                display_name: "User Setups",
+                name: "USER_SETUPS",
+                type: "SUBMENU",
+                parent_id: 2,
+                children: [
+                    {
+                        id: 211,
+                        display_name: "Create",
+                        name: "CREATE_USER_SETUPS",
+                        type: "PERMISSION",
+                        parent_id: 21,
+                    },
+                    {
+                        id: 212,
+                        display_name: "Edit",
+                        name: "EDIT_USER_SETUPS",
+                        type: "PERMISSION",
+                        parent_id: 21,
+                    },
+                    {
+                        id: 213,
+                        display_name: "Read",
+                        name: "READ_USER_PROFILE_SETUPS",
+                        type: "PERMISSION",
+                        parent_id: 21,
+                    },
+                ],
+            },
+            {
+                id: 22,
+                display_name: "User Profile Setups",
+                name: "USER_PROFILE_SETUPS",
+                parent_id: 2,
+                type: 'SUBMENU',
+                children: [
+                    {
+                        id: 221,
+                        display_name: "Create",
+                        name: "CREATE_USER_PROFILE_SETUPS",
+                        type: "PERMISSION",
+                        parent_id: 22,
+                    },
+                    {
+                        id: 222,
+                        display_name: "Edit",
+                        name: "EDIT_USER_PROFILE_SETUPS",
+                        type: "PERMISSION",
+                        parent_id: 22,
+                    },
+                    {
+                        id: 223,
+                        display_name: "Read",
+                        name: "READ_USER_PROFILE_SETUPS",
+                        type: "PERMISSION",
+                        parent_id: 22,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        id: 3,
+        display_name: "Users1",
+        name: "USERS2",
+        type: "MENU",
+        parent_id: null,
+        children: [
+            {
+                id: 31,
+                display_name: "User Setups 1",
+                name: "USER_SETUPS1",
+                type: "SUBMENU",
+                parent_id: 3,
+            },
+            {
+                id: 32,
+                display_name: "User Profile Setups 1",
+                name: "USER_PROFILE_SETUPS1",
+                type: "SUBMENU",
+                parent_id: 3,
+            },
+        ],
+    },
+];

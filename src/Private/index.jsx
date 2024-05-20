@@ -14,23 +14,6 @@ import {
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 
-//permission
-import { GetAllPermissionReducer, UpdateUserPermissionRdcr, PermissionSaga } from "./pages/Users/UserPermission/store";
-import {
-    GetAllMenuReducer,
-    AddMenuReducer,
-    UpdateMenuReducer,
-    DeleteMenuReducer,
-    MenuSaga,
-} from "./pages/Users/Menu/store";
-import {
-    GetAllSubMenuReducer,
-    AddSubMenuReducer,
-    UpdateSubMenuReducer,
-    DeleteSubMenuReducer,
-    SubMenuSaga,
-} from "./pages/Users/SubMenu/store";
-
 //setup
 import {
     GetAllDeliveryOptionReducer,
@@ -543,6 +526,16 @@ import {
     achTransactionSaga,
 } from "Private/pages/Transactions/AchTransactions/store";
 
+// region: User Profile Setup
+import {
+    UserProfileSetupSaga,
+    AddUserProfileSetupReducer,
+    UpdateUserProfileSetupReducer,
+    GetUserProfileSetupsReducer,
+    GetUserProfileSetupByIdReducer,
+    GetUserProfileSetupsForSelectReducer,
+} from "./pages/Users/ProfileSetups/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -559,22 +552,6 @@ export const privateReducer = {
     //Change Password
 
     change_password: UpdateChangePasswordReducer,
-
-    //permission
-    get_all_permission: GetAllPermissionReducer,
-    update_user_permission: UpdateUserPermissionRdcr,
-
-    //menu
-    get_all_menu: GetAllMenuReducer,
-    add_menu: AddMenuReducer,
-    update_menu: UpdateMenuReducer,
-    delete_menu: DeleteMenuReducer,
-
-    //sub-menu
-    get_all_sub_menu: GetAllSubMenuReducer,
-    add_sub_menu: AddSubMenuReducer,
-    update_sub_menu: UpdateSubMenuReducer,
-    delete_sub_menu: DeleteSubMenuReducer,
 
     //setup
     //delivery option
@@ -987,13 +964,17 @@ export const privateReducer = {
 
     get_ach_transactions: GetACHTransactionReducer,
     update_ach_transaction_status: UpdateAchTransactionStatusReducer,
+
+    // region: User Profile Setup
+    list_user_profile_setup: GetUserProfileSetupsReducer,
+    get_user_profile_setup_by_id: GetUserProfileSetupByIdReducer,
+    add_user_profile_setup: AddUserProfileSetupReducer,
+    update_user_profile_setup: UpdateUserProfileSetupReducer,
+    list_user_profile_setup_for_select: GetUserProfileSetupsForSelectReducer,
 };
 
 export const privateSaga = [
     AccountSaga(),
-    PermissionSaga(),
-    MenuSaga(),
-    SubMenuSaga(),
     DeliveryOptionSaga(),
     DeliveryRouteSaga(),
     PartnerSaga(),
@@ -1048,6 +1029,7 @@ export const privateSaga = [
     commentSaga(),
     attachmentSaga(),
     achTransactionSaga(),
+    UserProfileSetupSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

@@ -12,11 +12,13 @@ import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-
-import { FormatNumber } from "App/helpers";
-import PartnerActions from "../../Setup/Partner/store/actions";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+
+import { FormatNumber } from "App/helpers";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import PartnerActions from "../../Setup/Partner/store/actions";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -647,4 +649,4 @@ function YearlyTransactions(props) {
     );
 }
 
-export default YearlyTransactions;
+export default withPermission({permission: [permissions.GENERATE_YEARLY_TRANSACTION_REPORT]})(YearlyTransactions);

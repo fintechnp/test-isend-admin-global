@@ -4,6 +4,7 @@ import React, { createContext, useContext, Component } from "react";
 import store from "./../store";
 import authService from "./authHelper";
 import isEmpty from "App/helpers/isEmpty";
+import actions from "Common/store/actions";
 import showToast from "../components/Toast";
 import AuthUtility from "App/utils/AuthUtility";
 import { preserveIntendedPath } from "App/routes";
@@ -29,6 +30,8 @@ const initialState = {
         localStorage.clear();
         window.location.reload();
     },
+    permissions: [],
+    roles: [],
 };
 
 export const AuthContext = createContext(initialState);
@@ -36,10 +39,23 @@ export const AuthContext = createContext(initialState);
 export default class AuthProvider extends Component {
     state = initialState;
 
-    componentDidMount = async () => {
+    setPermissions = (permissions) => {
+        this.setState({
+            ...this.state,
+            permissions,
+        });
+    };
 
-        // @ignore check for reset password 
-        if(window.location.pathname.startsWith('/reset/'))  return;
+    setRoles = (roles) => {
+        this.setState({
+            ...this.state,
+            roles,
+        });
+    };
+
+    componentDidMount = async () => {
+        // @ignore check for reset password
+        if (window.location.pathname.startsWith("/reset/")) return;
 
         this.setState({
             setUserData: (data) => {
@@ -68,7 +84,6 @@ export default class AuthProvider extends Component {
     verifyToken = async (token) => {
         const user = JSON.parse(localStorage.getItem("user"));
         try {
-            
             if (AuthUtility.isLoggedIn() && user) {
                 this.setState({
                     authStatusReported: true,
@@ -80,6 +95,9 @@ export default class AuthProvider extends Component {
                 });
                 store.dispatch({
                     type: "GET_SEND_COUNTRY",
+                });
+                store.dispatch({
+                    type: actions.GET_USER_MENUS_AND_PERMISSIONS,
                 });
                 store.dispatch({
                     type: "GET_ALL_REFERENCE",
@@ -119,7 +137,19 @@ export default class AuthProvider extends Component {
 
     render() {
         const { children } = this.props;
-        return <AuthContext.Provider value={this.state}>{children}</AuthContext.Provider>
+        return (
+            <AuthContext.Provider
+                value={{
+                    ...this.state,
+                    permissions: this.state.permissions,
+                    setPermissions: this.setPermissions,
+                    roles: this.state.roles,
+                    setRoles: this.setRoles,
+                }}
+            >
+                {children}
+            </AuthContext.Provider>
+        );
     }
 }
 

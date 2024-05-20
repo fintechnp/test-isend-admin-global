@@ -62,19 +62,11 @@ function AddUpdateExchangeRate(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { response: partner_sending, loading: partner_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: exchangeData, loading: get_loading } = useSelector(
-        (state) => state.get_exchange_rate_details
-    );
+    const { response: partner_sending, loading: partner_loading } = useSelector((state) => state.get_sending_partner);
+    const { response: exchangeData, loading: get_loading } = useSelector((state) => state.get_exchange_rate_details);
 
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_exchange_rate
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_exchange_rate
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_exchange_rate);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_exchange_rate);
 
     React.useEffect(() => {
         dispatch(PartnerActions.get_sending_partner(filter));
@@ -110,16 +102,10 @@ function AddUpdateExchangeRate(props) {
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <PublishedWithChangesIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <PublishedWithChangesIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title>{id ? "Update" : "Add"} Exchange Rate</Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleClose}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleClose}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -139,24 +125,16 @@ function AddUpdateExchangeRate(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <PublishedWithChangesIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
-                            <Title>
-                                {id ? "Update" : "Add"} Exchange Rate{" "}
-                            </Title>
+                            <PublishedWithChangesIcon sx={{ color: "primary.main", fontSize: "28px" }} />
+                            <Title>{id ? "Update" : "Add"} Exchange Rate </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleClose}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleClose}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -171,39 +149,20 @@ function AddUpdateExchangeRate(props) {
                             enableReinitialize={true}
                             initialValues={
                                 exchangeData?.data && {
-                                    base_to_sending:
-                                        exchangeData?.data?.base_to_sending,
-                                    base_to_sending_margin:
-                                        exchangeData?.data
-                                            ?.base_to_sending_margin,
-                                    base_to_sending_settle:
-                                        exchangeData?.data
-                                            ?.base_to_sending_settle,
-                                    send_min_amount:
-                                        exchangeData?.data?.send_min_amount,
-                                    send_max_amount:
-                                        exchangeData?.data?.send_max_amount,
-                                    round_send_amount:
-                                        exchangeData?.data?.round_send_amount,
-                                    base_to_receiving:
-                                        exchangeData?.data?.base_to_receiving,
-                                    base_to_receiving_margin:
-                                        exchangeData?.data
-                                            ?.base_to_receiving_margin,
-                                    base_to_receiving_settle:
-                                        exchangeData?.data
-                                            ?.base_to_receiving_settle,
-                                    receive_min_amount:
-                                        exchangeData?.data?.receive_min_amount,
-                                    receive_max_amount:
-                                        exchangeData?.data?.receive_max_amount,
-                                    round_receiving_amount:
-                                        exchangeData?.data
-                                            ?.round_receiving_amount,
-                                    customer_rate:
-                                        exchangeData?.data?.customer_rate,
-                                    round_customer_rate:
-                                        exchangeData?.data?.round_customer_rate,
+                                    base_to_sending: exchangeData?.data?.base_to_sending,
+                                    base_to_sending_margin: exchangeData?.data?.base_to_sending_margin,
+                                    base_to_sending_settle: exchangeData?.data?.base_to_sending_settle,
+                                    send_min_amount: exchangeData?.data?.send_min_amount,
+                                    send_max_amount: exchangeData?.data?.send_max_amount,
+                                    round_send_amount: exchangeData?.data?.round_send_amount,
+                                    base_to_receiving: exchangeData?.data?.base_to_receiving,
+                                    base_to_receiving_margin: exchangeData?.data?.base_to_receiving_margin,
+                                    base_to_receiving_settle: exchangeData?.data?.base_to_receiving_settle,
+                                    receive_min_amount: exchangeData?.data?.receive_min_amount,
+                                    receive_max_amount: exchangeData?.data?.receive_max_amount,
+                                    round_receiving_amount: exchangeData?.data?.round_receiving_amount,
+                                    customer_rate: exchangeData?.data?.customer_rate,
+                                    round_customer_rate: exchangeData?.data?.round_customer_rate,
                                 }
                             }
                             data={exchangeData?.data}

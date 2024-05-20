@@ -61,16 +61,10 @@ function AddUpdateServiceCharge(props) {
     const { id, agent_id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_service_charge
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_service_charge
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_service_charge);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_service_charge);
 
-    const { response: chargeData, loading: get_loading } = useSelector(
-        (state) => state.get_service_charge_details
-    );
+    const { response: chargeData, loading: get_loading } = useSelector((state) => state.get_service_charge_details);
 
     useEffect(() => {
         if (id) {
@@ -106,29 +100,21 @@ function AddUpdateServiceCharge(props) {
         return (
             <>
                 <Helmet>
-                    <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                    <title>BNB Admin | {props.title}</title>
                 </Helmet>
                 <Grid container>
                     <Grid item xs={12}>
                         <TitleWrapper>
-                            <Box
-                                sx={{ display: "flex", alignItems: "flex-end" }}
-                            >
+                            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                                 <PublishedWithChangesIcon
                                     sx={{
                                         color: "primary.main",
                                         fontSize: "28px",
                                     }}
                                 />
-                                <Title>
-                                    {id ? "Update" : "Add"} Service Charge
-                                </Title>
+                                <Title>{id ? "Update" : "Add"} Service Charge</Title>
                             </Box>
-                            <BackButton
-                                variant="outlined"
-                                size="small"
-                                onClick={handleClose}
-                            >
+                            <BackButton variant="outlined" size="small" onClick={handleClose}>
                                 Back
                             </BackButton>
                         </TitleWrapper>
@@ -149,24 +135,16 @@ function AddUpdateServiceCharge(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <PublishedWithChangesIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
-                            <Title>
-                                {id ? "Update" : "Add"} Service Charge
-                            </Title>
+                            <PublishedWithChangesIcon sx={{ color: "primary.main", fontSize: "28px" }} />
+                            <Title>{id ? "Update" : "Add"} Service Charge</Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleClose}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleClose}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -186,27 +164,18 @@ function AddUpdateServiceCharge(props) {
                                     charge_mode: chargeData?.data?.charge_mode,
                                     charge_flat: chargeData?.data?.charge_flat,
                                     charge_per: chargeData?.data?.charge_per,
-                                    send_commission_type:
-                                        chargeData?.data?.send_commission_type,
-                                    send_commission_amount:
-                                        chargeData?.data
-                                            ?.send_commission_amount,
-                                    pay_commission_type:
-                                        chargeData?.data?.pay_commission_type,
-                                    pay_commission_amount:
-                                        chargeData?.data?.pay_commission_amount,
-                                    additional_fee:
-                                        chargeData?.data?.additional_fee,
+                                    send_commission_type: chargeData?.data?.send_commission_type,
+                                    send_commission_amount: chargeData?.data?.send_commission_amount,
+                                    pay_commission_type: chargeData?.data?.pay_commission_type,
+                                    pay_commission_amount: chargeData?.data?.pay_commission_amount,
+                                    additional_fee: chargeData?.data?.additional_fee,
                                     is_enable: chargeData?.data?.is_enable,
                                 }
                             }
                             onSubmit={handleChargeUpdate}
                             buttonText="Update"
                             update={true}
-                            c_mode={
-                                chargeData?.data &&
-                                chargeData?.data?.charge_mode
-                            }
+                            c_mode={chargeData?.data && chargeData?.data?.charge_mode}
                             handleClose={handleClose}
                             loading={update_loading}
                             form={`update_service_charge_form`}

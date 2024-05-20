@@ -15,6 +15,9 @@ import ResendIconButton from "App/components/Button/ResendIconButton";
 
 import actions from "./../store/actions";
 import { FormatDate } from "App/helpers";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -164,17 +167,21 @@ const Email = () => {
                         }}
                     >
                         <ViewMail id={row.original.tid} />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={false}
-                            tooltext="Delete Email"
-                        />
-                        {/* <ResendIconButton
-                            onClick={() => {
-                                handleOnResend(row?.original?.tid);
-                            }}
-                        /> */}
+                        <HasPermission permission={permissions.DELETE_FCM}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={false}
+                                tooltext="Delete Email"
+                            />
+                        </HasPermission>
+                        <HasPermission permission={permissions.RESEND_EMAIL}>
+                            <ResendIconButton
+                                onClick={() => {
+                                    handleOnResend(row?.original?.tid);
+                                }}
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -256,7 +263,9 @@ const Email = () => {
     return (
         <PageContent documentTitle="Email">
             <Header title="Email List">
-                <CreateEmail />
+                <HasPermission permission={permissions.CREATE_EMAIL}>
+                    <CreateEmail />
+                </HasPermission>
             </Header>
             <Filter
                 sortData={sortData}
@@ -283,4 +292,4 @@ const Email = () => {
     );
 };
 
-export default Email;
+export default withPermission({ permission: [permissions.READ_EMAIL] })(Email);

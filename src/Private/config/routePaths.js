@@ -81,10 +81,22 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
+    transaction:{
+        achTransaction:"/transaction/ach-transaction",
+    },
+    users: {
+        listUserSetup: "/user/setups",
+        listProfileSetup: "/user/profile-setups",
+        showProfileSetup: "/user/profile-setups/:userProfileSetupId",
+        editProfileSetup: "/user/profile-setups/:userProfileSetupId/edit",
+    },
     transaction: {
         achTransaction: "/transaction/ach-transaction",
         zaiTransaction: "/payment/zai-australia-payment",
         ziaLogs: "/transaction/zia-logs",
+    },
+    dashboard: {
+        base: "/",
     },
 };
 

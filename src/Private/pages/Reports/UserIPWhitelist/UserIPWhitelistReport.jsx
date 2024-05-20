@@ -3,17 +3,19 @@ import { reset } from "redux-form";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 
-import actions from "../store/actions";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
 import { TablePagination } from "App/components/Table";
-import PageContent from "App/components/Container/PageContent";
-
-import { FormatDateTime } from "App/helpers";
-import apiEndpoints from "Private/config/apiEndpoints";
 import ReportTitle from "App/components/Title/ReportTitle";
+import PageContent from "App/components/Container/PageContent";
 import ReportTable from "Private/components/reports/ReportTable";
 import UserIPWhitelistFilterForm from "./UserIPWhitelistFilterForm";
+
+import actions from "../store/actions";
+import { FormatDateTime } from "App/helpers";
+import apiEndpoints from "Private/config/apiEndpoints";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 const initialState = {
     page_number: 1,
@@ -160,4 +162,4 @@ function UserIPWhitelistReport() {
     );
 }
 
-export default UserIPWhitelistReport;
+export default withPermission({permission: [permissions.GENERATE_USER_IP_WHITELIST_REPORT]})(UserIPWhitelistReport);

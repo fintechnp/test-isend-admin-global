@@ -3,6 +3,9 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 
 import AddDeliveryRoute from "../AddDeliveryRoute";
+import HasPermission from "Private/components/shared/HasPermission";
+
+import { permissions } from "Private/data/permissions";
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -14,7 +17,9 @@ function Header() {
     return (
         <HeaderWrapper>
             <Typography sx={{ fontSize: "22px" }}>Delivery Routes</Typography>
-            <AddDeliveryRoute update={false} />
+            <HasPermission permission={permissions.CREATE_DELIVERY_ROUTE}>
+                <AddDeliveryRoute update={false} />
+            </HasPermission>
         </HeaderWrapper>
     );
 }

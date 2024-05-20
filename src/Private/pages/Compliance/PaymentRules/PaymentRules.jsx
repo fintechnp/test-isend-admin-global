@@ -15,6 +15,10 @@ import { Delete } from "App/components";
 import actions from "./store/actions";
 import { CountryName, FormatNumber } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
     "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
@@ -76,6 +80,8 @@ function stringToColor(string) {
 const PaymentRules = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const { can } = useAuthUser();
 
     const { response: paymentRules, loading: l_loading } = useSelector((state) => state.get_payment_rules);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_payment_rules);
@@ -161,9 +167,13 @@ const PaymentRules = (props) => {
                 maxWidth: 90,
                 Cell: (data) => (
                     <Box textAlign="right">
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
+                        {can(permissions.EDIT_PAYMENT_RULE) ? (
+                            <StyledName component="p" sx={{ paddingLeft: "8px" }}>
+                                {data.value ? FormatNumber(data.value) : "N/A"}
+                            </StyledName>
+                        ) : (
+                            <>{!!data?.value ? "Active" : "Inactive"}</>
+                        )}
                     </Box>
                 ),
             },
@@ -224,9 +234,11 @@ const PaymentRules = (props) => {
                 accessor: "is_active",
                 width: 80,
                 Cell: (data) => (
-                    <SwitchWrapper textAlign="right">
-                        <TableSwitch value={data?.value} data={data?.row?.original} handleStatus={handleStatus} />
-                    </SwitchWrapper>
+                    <>
+                        <SwitchWrapper textAlign="right">
+                            <TableSwitch value={data?.value} data={data?.row?.original} handleStatus={handleStatus} />
+                        </SwitchWrapper>
+                    </>
                 ),
             },
             {
@@ -273,13 +285,17 @@ const PaymentRules = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPaymentRules update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Payment Rules"
-                        />
+                        <HasPermission permission={permissions.EDIT_PAYMENT_RULE}>
+                            <AddPaymentRules update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_PAYMENT_RULE}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Delete Payment Rules"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -403,4 +419,4 @@ const PaymentRules = (props) => {
     );
 };
 
-export default PaymentRules;
+export default withPermission({ permission: [permissions.READ_PAYMENT_RULE] })(PaymentRules);

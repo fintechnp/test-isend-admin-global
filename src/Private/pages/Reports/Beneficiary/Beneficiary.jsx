@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,10 +14,12 @@ import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-
-import { CountryName, ReferenceName, FormatDate } from "App/helpers";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+
+import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import { CountryName, ReferenceName, FormatDate } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -485,4 +486,4 @@ function BeneficiaryReports(props) {
     );
 }
 
-export default BeneficiaryReports;
+export default withPermission({ permission: [permissions.GENERATE_BENEFICIARY_REPORT] })(BeneficiaryReports);

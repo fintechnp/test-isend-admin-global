@@ -14,6 +14,7 @@ const FilterWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    width: "100%",
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
@@ -78,12 +79,12 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
     return (
         <FilterWrapper>
             <SearchBox>
-               <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
                 <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    {/* <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={filterUserType}
                             displayEmpty
@@ -124,7 +125,7 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                                     </MenuItem>
                                 ))}
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleSort}
@@ -133,17 +134,12 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = sortData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -162,17 +158,12 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

@@ -12,7 +12,8 @@ import PageContent from "App/components/Container/PageContent";
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -355,4 +356,4 @@ const DailyTransactions = (props) => {
     );
 };
 
-export default DailyTransactions;
+export default withPermission({ permission: [permissions.READ_DAILY_TRANSACTION] })(DailyTransactions);

@@ -72,9 +72,8 @@ export default function ListB2bAccounts() {
         setFilterSchema(updatedFilterSchema);
     };
     return (
-        <PageContent title="B2B Accounts">
+        <PageContent title="Balance Accounts">
             <AccountFilterForm setFilterSchema={setFilterSchema} />
-
             <TanstackReactTable
                 columns={columns}
                 title="B2b Accounts"

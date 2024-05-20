@@ -1,5 +1,5 @@
 import * as React from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import MuiList from "@mui/material/List";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
@@ -61,6 +61,9 @@ const ListItem = styled(MuiListItem)(({ theme }) => ({
         [theme.breakpoints.down("sm")]: {
             display: "none",
         },
+        svg: {
+            fill: theme.palette.primary.main,
+        },
     },
 }));
 
@@ -89,6 +92,9 @@ const ListButton = styled(ListItemButton)(({ theme, open }) => ({
     ...(!open && {
         padding: "8px 8px !important",
     }),
+    svg: {
+        fill: theme.palette.background.paper,
+    },
     "&:hover": {
         borderRadius: "6px",
         color: theme.palette.primary.dark,
@@ -98,6 +104,9 @@ const ListButton = styled(ListItemButton)(({ theme, open }) => ({
         },
         "& .MuiListItemText-root": {
             color: theme.palette.primary.dark,
+        },
+        svg: {
+            fill: theme.palette.primary.main,
         },
     },
 }));
@@ -169,32 +178,24 @@ const StyledCollapse = styled(Collapse)(({ theme, open }) => ({
     }),
 }));
 
-const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.white,
-        "&::before": {
+const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
+    ({ theme }) => ({
+        [`& .${tooltipClasses.arrow}`]: {
+            color: theme.palette.common.white,
+            "&::before": {
+                background: theme.palette.primary.main,
+                border: `1px solid ${theme.palette.primary.dark}`,
+            },
+        },
+        [`& .${tooltipClasses.tooltip}`]: {
             background: theme.palette.primary.main,
+            width: 260,
             border: `1px solid ${theme.palette.primary.dark}`,
         },
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-        background: theme.palette.primary.main,
-        width: 260,
-        border: `1px solid ${theme.palette.primary.dark}`,
-    },
-}));
+    }),
+);
 
-function MainButton({
-    item,
-    open,
-    selectedkey,
-    handleListItemClick,
-    index,
-    setSelectedIndex,
-    isSearching
-}) {
+function MainButton({ item, open, selectedkey, handleListItemClick, index, setSelectedIndex, isSearching }) {
     const { pathname } = useLocation();
     const [extend, setExtend] = React.useState(false);
     const [select, setSelect] = React.useState(false);
@@ -225,7 +226,11 @@ function MainButton({
                 <React.Fragment>
                     <List>
                         <ListHeader disabled>
-                            <ListIcon>{item.icon}</ListIcon>
+                            {typeof item.icon === "string" ? (
+                                <div dangerouslySetInnerHTML={{ __html: item.icon }}></div>
+                            ) : (
+                                <ListIcon>{item.icon}</ListIcon>
+                            )}
                             <ListText primary={item.text} open={!open} />
                         </ListHeader>
                         {item?.children.map((child, ind) => (
@@ -247,25 +252,16 @@ function MainButton({
             placement="right"
         >
             <ListItem dense disablePadding open={open}>
-                <ListButton
-                    open={open}
-                    selected={selectedkey === item.key}
-                    onClick={() => handleMainButton(item.key)}
-                >
-                    <ListIcon>{item.icon}</ListIcon>
-                    <ListText primary={item.text} open={open} />
-                    {extend ? (
-                        <ExpandLess open={open} />
+                <ListButton open={open} selected={selectedkey === item.key} onClick={() => handleMainButton(item.key)}>
+                    {typeof item.icon === "string" ? (
+                        <div dangerouslySetInnerHTML={{ __html: item.icon }}></div>
                     ) : (
-                        <ExpandMore open={open} />
+                        <ListIcon>{item.icon}</ListIcon>
                     )}
+                    <ListText primary={item.text} open={open} />
+                    {extend ? <ExpandLess open={open} /> : <ExpandMore open={open} />}
                 </ListButton>
-                <StyledCollapse
-                    open={open || isSearching}
-                    in={extend || isSearching}
-                    timeout="auto"
-                    unmountOnExit
-                >
+                <StyledCollapse open={open || isSearching} in={extend || isSearching} timeout="auto" unmountOnExit>
                     <List>
                         {item?.children.map((child, ind) => (
                             <SubHeader
@@ -288,5 +284,5 @@ function MainButton({
 export default MainButton;
 
 MainButton.propTypes = {
-    isSearching: PropTypes.bool
-}
+    isSearching: PropTypes.bool,
+};

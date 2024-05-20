@@ -8,26 +8,18 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 
 import CreateFcm from "./CreateFcm";
 import { Delete } from "App/components";
-import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import { useConfirm } from "App/core/mui-confirm";
-import { FormatDate, ReferenceName } from "App/helpers";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import HasPermission from "Private/components/shared/HasPermission";
 import ResendIconButton from "App/components/Button/ResendIconButton";
 
-const EmailContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import actions from "./../store/actions";
+import { useConfirm } from "App/core/mui-confirm";
+import { permissions } from "Private/data/permissions";
+import { FormatDate, ReferenceName } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -221,18 +213,24 @@ const Fcm = () => {
                                 </Tooltip>
                             )}
                         </span>
-                        <CreateFcm update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={false}
-                            tooltext="Delete FCM Message"
-                        />
-                        {/* <ResendIconButton
-                            onClick={() => {
-                                handleOnResend(row?.original?.tid);
-                            }}
-                        /> */}
+                        <HasPermission permission={permissions.EDIT_FCM}>
+                            <CreateFcm update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_FCM}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={false}
+                                tooltext="Delete FCM Message"
+                            />
+                        </HasPermission>
+                        <HasPermission permission={permissions.RESEND_FCM}>
+                            <ResendIconButton
+                                onClick={() => {
+                                    handleOnResend(row?.original?.tid);
+                                }}
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -334,7 +332,9 @@ const Fcm = () => {
     return (
         <PageContent documentTitle="FCM">
             <Header title="FCM Message List">
-                <CreateFcm />
+                <HasPermission permission={permissions.CREATE_FCM}>
+                    <CreateFcm />
+                </HasPermission>
             </Header>
             <Filter
                 sortData={sortData}
@@ -362,4 +362,4 @@ const Fcm = () => {
     );
 };
 
-export default Fcm;
+export default withPermission({ permission: [permissions.READ_FCM] })(Fcm);

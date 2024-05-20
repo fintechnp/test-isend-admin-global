@@ -13,10 +13,15 @@ import NoResults from "Private/pages/Transactions/components/NoResults";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 import AddTranslationData from "Private/components/Localization/LocalizationTranslation/AddLocaltionTranslation";
+import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const LocalizationDetails = ({ title }) => {
     const dispatch = useDispatch();
     const { id } = useParams();
+
+    const { can } = useAuthUser();
 
     const { response: LocalizationDetails, loading: l_detail_loading } = useSelector(
         (state) => state.get_localization_details,
@@ -79,41 +84,61 @@ const LocalizationDetails = ({ title }) => {
                 accessorKey: "is_active",
                 cell: (data) => {
                     return (
-                        <TableSwitch
-                            value={data.row.original?.is_active ?? false}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                            dataId={data.row.original?.translated_id}
-                        />
+                        <>
+                            {!can(permissions.EDIT_LOCALIZATION) ? (
+                                <TableSwitch
+                                    value={data.row.original?.is_active ?? false}
+                                    data={data.row.original}
+                                    handleStatus={handleStatus}
+                                    dataId={data.row.original?.translated_id}
+                                />
+                            ) : (
+                                <>{!!data?.value ? "Active" : "Inactive"}</>
+                            )}
+                        </>
                     );
                 },
             },
-
-            {
-                header: "Actions",
-                accessorKey: "show",
-                cell: ({ row }) => (
-                    <TableRowActionContainer>
-                        <AddTranslationData
-                            id={row?.original?.translated_id}
-                            update={true}
-                            updatedData={row?.original}
-                        />
-                        <Delete
-                            id={row.original.translated_id}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Translation Value"
-                        />
-                    </TableRowActionContainer>
-                ),
-            },
+            ...(can([permissions.EDIT_LOCALIZATION, permissions.DELETE_LOCALIZATION])
+                ? [
+                      {
+                          header: "Actions",
+                          accessorKey: "show",
+                          cell: ({ row }) => (
+                              <TableRowActionContainer>
+                                  <HasPermission permission={permissions.CREATE_LOCALIZATION}>
+                                      <AddTranslationData
+                                          id={row?.original?.translated_id}
+                                          update={true}
+                                          updatedData={row?.original}
+                                      />
+                                  </HasPermission>
+                                  <HasPermission permission={permissions.DELETE_LOCALIZATION}>
+                                      <Delete
+                                          id={row.original.translated_id}
+                                          handleDelete={handleDelete}
+                                          loading={d_loading}
+                                          tooltext="Delete Translation Value"
+                                      />
+                                  </HasPermission>
+                              </TableRowActionContainer>
+                          ),
+                      },
+                  ]
+                : []),
         ],
         [],
     );
 
     return (
-        <PageContent title={title} topRightEndContent={<AddTranslationData id={Number(id)} />}>
+        <PageContent
+            title={title}
+            topRightEndContent={
+                <HasPermission permission={permissions.CREATE_LOCALIZATION}>
+                    <AddTranslationData id={Number(id)} />
+                </HasPermission>
+            }
+        >
             {l_detail_loading && (
                 <Grid item xs={12}>
                     <Loading loading={l_detail_loading} />

@@ -14,6 +14,10 @@ import AddDeliveryRoute from "./components/AddDeliveryRoute";
 import PageContent from "App/components/Container/PageContent";
 import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import Table, { TablePagination, TableSwitch } from "App/components/Table";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -66,6 +70,8 @@ const initialState = {
 const DeliveryRoute = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const { can } = useAuthUser();
 
     const { response: deliveryroute_data, loading: g_loading } = useSelector((state) => state.get_delivery_route);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_delivery_route);
@@ -160,11 +166,18 @@ const DeliveryRoute = (props) => {
                 accessor: "is_active",
                 width: 120,
                 Cell: (data) => (
-                    <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
-                    </SwitchWrapper>
+                    <>
+                        {can(permissions.EDIT_DELIVERY_ROUTE) ? (
+                            <SwitchWrapper textAlign="right" sx={{}}>
+                                <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
+                            </SwitchWrapper>
+                        ) : (
+                            <>{!!data.value ? "Active" : "Inactive"}</>
+                        )}
+                    </>
                 ),
             },
+
             {
                 Header: () => (
                     <Box textAlign="center">
@@ -209,13 +222,17 @@ const DeliveryRoute = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddDeliveryRoute update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Delivery Route"
-                        />
+                        <HasPermission permission={permissions.EDIT_DELIVERY_ROUTE}>
+                            <AddDeliveryRoute update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_DELIVERY_ROUTE}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Delete Delivery Route"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -332,4 +349,4 @@ const DeliveryRoute = (props) => {
     );
 };
 
-export default DeliveryRoute;
+export default withPermission({ permission: [permissions.READ_DELIVERY_ROUTE] })(DeliveryRoute);

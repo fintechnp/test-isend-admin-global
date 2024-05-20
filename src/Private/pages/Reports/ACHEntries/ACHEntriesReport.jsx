@@ -14,6 +14,8 @@ import ReportTable from "Private/components/reports/ReportTable";
 
 import { FormatDateTime } from "App/helpers";
 import apiEndpoints from "Private/config/apiEndpoints";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 const initialState = {
     page_number: 1,
@@ -180,4 +182,4 @@ function ACHEntriesReport() {
     );
 }
 
-export default ACHEntriesReport;
+export default withPermission({permission: [permissions.GENERATE_ACH_ENTRIES_REPORT]})(ACHEntriesReport);

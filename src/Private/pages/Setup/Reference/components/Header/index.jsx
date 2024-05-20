@@ -4,6 +4,9 @@ import React from "react";
 
 import AddReference from "../AddReference";
 import AddReferenceData from "../AddReferenceData";
+import HasPermission from "Private/components/shared/HasPermission";
+
+import { permissions } from "Private/data/permissions";
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -18,9 +21,13 @@ function Header({ title, type, id, name }) {
                 {title} {name && `of ${name}`}
             </Typography>
             {type ? (
-                <AddReference update={false} />
+                <HasPermission permission={permissions.CREATE_REFERENCE_TYPE}>
+                    <AddReference update={false} />
+                </HasPermission>
             ) : (
-                <AddReferenceData update={false} id={id} />
+                <HasPermission permission={permissions.CREATE_REFERENCE_DATA}>
+                    <AddReferenceData update={false} id={id} />
+                </HasPermission>
             )}
         </HeaderWrapper>
     );

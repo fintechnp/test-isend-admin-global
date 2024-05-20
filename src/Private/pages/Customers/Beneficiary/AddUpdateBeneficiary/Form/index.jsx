@@ -44,11 +44,7 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-const steps = [
-    "Basic Information",
-    "Address Details",
-    "Collection Information",
-];
+const steps = ["Personal Information", "Contact Information", "Payout Information"];
 
 function BeneficiaryForm({ update_data, loading }) {
     const { id, bene_id } = useParams();
@@ -103,9 +99,7 @@ function BeneficiaryForm({ update_data, loading }) {
 
     const handleNext = () => {
         const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
+            isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
         setActiveStep(newActiveStep);
     };
 
@@ -144,12 +138,7 @@ function BeneficiaryForm({ update_data, loading }) {
     if (loading) {
         return (
             <Box sx={{ width: "100%", pt: "16px" }}>
-                <Stepper
-                    nonLinear
-                    activeStep={activeStep}
-                    alternativeLabel
-                    sx={{ width: "100%", padding: "16px 0px" }}
-                >
+                <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                     {steps.map((label, index) => (
                         <Step key={label} completed={completed[index]}>
                             <StepLabel color="inherit">{label}</StepLabel>
@@ -165,12 +154,7 @@ function BeneficiaryForm({ update_data, loading }) {
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
-            <Stepper
-                nonLinear
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{ width: "100%", padding: "16px 0px" }}
-            >
+            <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
                         <StepLabel color="inherit">{label}</StepLabel>
@@ -188,12 +172,9 @@ function BeneficiaryForm({ update_data, loading }) {
                                 fontSize: "18px",
                             }}
                         >
-                            All steps completed - Please submit to create
-                            Partner.
+                            All steps completed - Please submit to create Partner.
                         </Typography>
-                        <CheckCircleOutlineIcon
-                            sx={{ fontSize: "64px", color: "success.main" }}
-                        />
+                        <CheckCircleOutlineIcon sx={{ fontSize: "64px", color: "success.main" }} />
                         <LoadingButton
                             size="small"
                             variant="outlined"
@@ -228,20 +209,15 @@ function BeneficiaryForm({ update_data, loading }) {
                                     initialValues={
                                         memoizedData && {
                                             customer_id: id,
-                                            first_name:
-                                                memoizedData?.first_name,
-                                            middle_name:
-                                                memoizedData?.middle_name,
+                                            first_name: memoizedData?.first_name,
+                                            middle_name: memoizedData?.middle_name,
                                             last_name: memoizedData?.last_name,
-                                            receiver_type:
-                                                memoizedData?.receiver_type,
+                                            receiver_type: memoizedData?.receiver_type,
                                             title: memoizedData?.title,
                                             country: memoizedData?.country,
                                             currency: memoizedData?.currency,
-                                            phone_country_code:
-                                                memoizedData?.phone_country_code,
-                                            mobile_number:
-                                                memoizedData?.mobile_number,
+                                            phone_country_code: memoizedData?.phone_country_code,
+                                            mobile_number: memoizedData?.mobile_number,
                                             email: memoizedData?.email,
                                             postcode: memoizedData?.postcode,
                                             unit: memoizedData?.unit,
@@ -250,32 +226,21 @@ function BeneficiaryForm({ update_data, loading }) {
                                             state: memoizedData?.state,
                                             address: memoizedData?.address,
                                             relation: memoizedData?.relation,
-                                            reason_for_remittance:
-                                                memoizedData?.reason_for_remittance,
-                                            source_of_income:
-                                                memoizedData?.source_of_income,
-                                            delivery_option_id:
-                                                memoizedData?.delivery_option_id,
-                                            payment_type:
-                                                memoizedData?.payment_type,
-                                            payout_location_id:
-                                                memoizedData?.payout_location_id,
-                                            account_number:
-                                                memoizedData?.account_number,
-                                            account_type:
-                                                memoizedData?.account_type,
-                                            branch_identifier_type:
-                                                memoizedData?.branch_identifier_type,
-                                            branch_identifier_value:
-                                                memoizedData?.branch_identifier_value,
+                                            reason_for_remittance: memoizedData?.reason_for_remittance,
+                                            source_of_income: memoizedData?.source_of_income,
+                                            delivery_option_id: memoizedData?.delivery_option_id,
+                                            payment_type: memoizedData?.payment_type,
+                                            payout_location_id: memoizedData?.payout_location_id,
+                                            account_number: memoizedData?.account_number,
+                                            account_type: memoizedData?.account_type,
+                                            branch_identifier_type: memoizedData?.branch_identifier_type,
+                                            branch_identifier_value: memoizedData?.branch_identifier_value,
                                             is_active: memoizedData?.is_active,
                                         }
                                     }
                                     steps={steps}
                                     pcountry={memoizedData?.country}
-                                    phone_code={
-                                        memoizedData?.phone_country_code
-                                    }
+                                    phone_code={memoizedData?.phone_country_code}
                                     buttonText="Next"
                                     activeStep={activeStep}
                                     handleBack={handleBack}
@@ -304,9 +269,7 @@ function BeneficiaryForm({ update_data, loading }) {
                                     buttonText="Update"
                                     pcountry={memoizedData?.country}
                                     payment_type={memoizedData?.payment_type}
-                                    delivery_option_id={
-                                        memoizedData?.delivery_option_id
-                                    }
+                                    delivery_option_id={memoizedData?.delivery_option_id}
                                     activeStep={activeStep}
                                     handleBack={handleBack}
                                     onSubmit={handleBusinessForm}

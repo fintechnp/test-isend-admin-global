@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
@@ -6,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import Filter from "./../components/Filter";
-import Spacer from "App/components/Spacer/Spacer";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
-import SendingCountryTabs from "Private/components/shared/SendingCountryTabs";
 
-import app from "App/config/app";
 import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
+import { permissions } from "Private/data/permissions";
 import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -344,4 +343,4 @@ const PendingTransactions = (props) => {
     );
 };
 
-export default PendingTransactions;
+export default withPermission({ permission: [permissions.READ_PENDING_TRANSACTION] })(PendingTransactions);

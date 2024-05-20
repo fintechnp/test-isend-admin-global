@@ -46,9 +46,7 @@ function ServiceChargeDetails(props) {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { response, loading } = useSelector(
-        (state) => state.get_service_charge_details
-    );
+    const { response, loading } = useSelector((state) => state.get_service_charge_details);
 
     useEffect(() => {
         if (id) {
@@ -63,22 +61,16 @@ function ServiceChargeDetails(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <AddCardIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <AddCardIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title> Service Charge Details </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleBack}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleBack}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -86,11 +78,7 @@ function ServiceChargeDetails(props) {
                 <Grid item xs={12}>
                     <Divider sx={{ mb: 1.2 }} />
                 </Grid>
-                {loading ? (
-                    <Skeleton />
-                ) : (
-                    <Details data={response?.data || []} />
-                )}
+                {loading ? <Skeleton /> : <Details data={response?.data || []} />}
             </Grid>
         </>
     );

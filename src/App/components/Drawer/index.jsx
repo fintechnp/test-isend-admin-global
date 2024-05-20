@@ -4,6 +4,7 @@ import MuiList from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
+import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
@@ -12,14 +13,17 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 import MainButton from "../List/components/MainButton";
 import MainHeader from "../List/components/MainHeader";
+
+import Logo_short from "../../../assets/short-logo.svg";
 import { ReactComponent as Logo } from "assets/isend/isend-logo-default.svg";
 
 import Toolbar from "./../Toolbar";
+import range from "App/helpers/range";
 import isEmpty from "App/helpers/isEmpty";
 import useDrawerItems from "App/hooks/useDrawerItems";
-import Logo_short from "../../../assets/short-logo.svg";
 import SearchTextField from "../Fields/SearchTextField";
 import useDetectScreen from "App/hooks/useDetectScreen";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 280;
 
@@ -42,9 +46,9 @@ const openedMixin = (theme) => ({
     overflowX: "hidden",
     overflow: "visible",
     border: "none",
-    "& .MuiBox-root": {
-        display: "none",
-    },
+    // "& .MuiBox-root": {
+    //     display: "none",
+    // },
     "&:hover .MuiBox-root": {
         [theme.breakpoints.up("md")]: {
             display: "block",
@@ -68,9 +72,9 @@ const closedMixin = (theme) => ({
     overflow: "visible",
     width: 0,
     border: "none",
-    "& .MuiBox-root": {
-        display: "none",
-    },
+    // "& .MuiBox-root": {
+    //     display: "none",
+    // },
     "&:hover .MuiBox-root": {
         [theme.breakpoints.up("md")]: {
             display: "block",
@@ -88,19 +92,17 @@ const DrawerHeader = styled("div", {
     shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    minHeight: "48px",
+    alignItems: "center",
+    borderRight: `1px solid ${theme.palette.divider}`,
+    height: "56px",
 }));
 
 const LongLogoWrapper = styled(CardMedia)(({ theme }) => ({
     padding: "6px",
-    maxHeight: "56px",
+    maxHeight: "32px",
     width: "100%",
     objectFit: "contain",
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
 }));
 
 const ShortLogoWrapper = styled(CardMedia)(({ theme }) => ({
@@ -184,7 +186,9 @@ function Drawer({ children }) {
 
     const [menuSearchQuery, setMenuSearchQuery] = useState("");
 
-    const { drawerItems, filterItems } = useDrawerItems(menuSearchQuery);
+    const { drawerItems, filteredDrawerItems, filterItems } = useDrawerItems(menuSearchQuery);
+
+    const { loading: isLoading } = useSelector((state) => state.get_user_menus_and_permissions);
 
     const handleFilter = (searchQuery) => {
         setMenuSearchQuery(searchQuery);
@@ -210,6 +214,7 @@ function Drawer({ children }) {
         setSelectedKey(key);
     };
 
+
     const drawerMenu = (
         <div
             style={{
@@ -222,7 +227,7 @@ function Drawer({ children }) {
             }}
         >
             <List open={open}>
-                {drawerItems.map((item, index) =>
+                {filteredDrawerItems.map((item, index) =>
                     item.sub ? (
                         <MainButton
                             key={index}
@@ -258,6 +263,16 @@ function Drawer({ children }) {
         </div>
     );
 
+    const renderSkeleton = () => {
+        return (
+            <Box display="flex" flexDirection="column" px={1} mt={2}>
+                {range(1, 9).map((i) => (
+                    <Skeleton key={i} height="50px" />
+                ))}
+            </Box>
+        );
+    };
+
     return (
         <Box sx={{ display: "flex" }}>
             <AppBar position="fixed" open={open}>
@@ -269,7 +284,7 @@ function Drawer({ children }) {
                 <DrawerHeader>
                     {open ? (
                         <>
-                            <Logo onClick={handleDashboard}/>
+                            <Logo onClick={handleDashboard} />
                         </>
                     ) : (
                         <ShortLogoWrapper
@@ -302,13 +317,18 @@ function Drawer({ children }) {
                         onClick={() => setOpen(true)}
                     />
                 )}
-                {drawerItems.length > 0 ? (
-                    drawerMenu
-                ) : (
-                    <Box className="no-search-result__container" px={2} mt={2}>
-                        <Typography color="white">No Results !</Typography>
-                    </Box>
-                )}
+                {isLoading && renderSkeleton()}
+                {(() => {
+                    if (isLoading) renderSkeleton();
+                    if (!isLoading && filteredDrawerItems.length > 0) return drawerMenu;
+                    if (!isEmpty(menuSearchQuery) && filteredDrawerItems.length === 0)
+                        return (
+                            <Box className="no-search-result__container" px={2} mt={2}>
+                                <Typography color="white">No Results !</Typography>
+                            </Box>
+                        );
+                    return renderSkeleton();
+                })()}
             </CustomizedDrawer>
             <Box
                 component="main"

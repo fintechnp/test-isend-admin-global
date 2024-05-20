@@ -2,22 +2,23 @@ import moment from "moment";
 import { reset } from "redux-form";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
-import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-
-import { CountryName, CurrencyName, FormatNumber } from "App/helpers";
-import PartnerActions from "../../Setup/Partner/store/actions";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+
+import actions from "../store/actions";
+import { permissions } from "Private/data/permissions";
+import PartnerActions from "../../Setup/Partner/store/actions";
+import { CountryName, CurrencyName, FormatNumber } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -495,4 +496,4 @@ function TransactionsSummaryReports(props) {
     );
 }
 
-export default TransactionsSummaryReports;
+export default withPermission({permission: [permissions.GENERATE_TRANSACTION_REPORT]})(TransactionsSummaryReports);

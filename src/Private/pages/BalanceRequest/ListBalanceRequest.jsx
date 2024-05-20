@@ -155,7 +155,7 @@ export default function ListBalanceRequest({ title }) {
         setFilterSchema(updatedFilterSchema);
     };
     return (
-        <PageContent title={title || "List Balance Request"} documentTitle="List Balance Request">
+        <PageContent title="Balance Requests" documentTitle="List Balance Request">
             <FilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} loading={loading} />
             {loading && (
                 <Grid item xs={12}>

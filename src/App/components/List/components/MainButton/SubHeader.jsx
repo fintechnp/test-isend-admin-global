@@ -93,8 +93,8 @@ function SubHeader({
                 <ListButton
                     open={open}
                     selected={
-                        selectedSub === sub_item.path ||
-                        pathname === sub_item.path
+                        selectedSub === sub_item?.path ||
+                        pathname === sub_item?.path
                     }
                     onClick={() => handleSubHeader(sub_item)}
                 >

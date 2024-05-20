@@ -14,6 +14,9 @@ import actions from "../store/actions";
 import { Delete } from "./../../../../../App/components";
 import { CountryName, CurrencyName } from "./../../../../../App/helpers";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -87,16 +90,10 @@ const Corridor = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: corridor_data, loading: g_loading } = useSelector(
-        (state) => state.get_all_corridor
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_corridor
-    );
+    const { response: corridor_data, loading: g_loading } = useSelector((state) => state.get_all_corridor);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_corridor);
     const { success: a_success } = useSelector((state) => state.add_corridor);
-    const { success: u_success } = useSelector(
-        (state) => state.update_corridor
-    );
+    const { success: u_success } = useSelector((state) => state.update_corridor);
 
     useEffect(() => {
         if (id) {
@@ -142,9 +139,7 @@ const Corridor = (props) => {
                 accessor: "country",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CountryName(data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CountryName(data.value) : ""}</StyledText>
                     </Box>
                 ),
             },
@@ -157,9 +152,7 @@ const Corridor = (props) => {
                 accessor: "transaction_currency",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CurrencyName(data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CurrencyName(data.value) : ""}</StyledText>
                     </Box>
                 ),
             },
@@ -228,21 +221,22 @@ const Corridor = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddCorridor
-                            update={true}
-                            update_data={row?.original}
-                        />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Remove Partner"
-                        />
+                        <HasPermission permission={permissions.EDIT_PARTNER_CORRIDOR}>
+                            <AddCorridor update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_PARTNER_CORRIDOR}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Remove Partner"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sub_columns = [
@@ -282,11 +276,13 @@ const Corridor = (props) => {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title={`Corridor List of ${name}`}>
-                    <AddCorridor />
+                    <HasPermission permission={permissions.CREATE_PARTNER_CORRIDOR}>
+                        <AddCorridor />
+                    </HasPermission>
                 </Header>
                 <Table
                     columns={columns}
@@ -308,4 +304,4 @@ const Corridor = (props) => {
     );
 };
 
-export default Corridor;
+export default withPermission({ permission: [permissions.READ_PARTNER_CORRIDOR] })(Corridor);

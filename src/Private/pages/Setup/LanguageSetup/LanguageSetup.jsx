@@ -14,6 +14,10 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { Delete, Loading } from "App/components";
 import AddDeliveryOption from "../DeliveryOption/components/AddDeliveryOption";
 import AddLanguageOption from "./Components/AddLanguageOption";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -29,6 +33,8 @@ const StyledName = styled(Typography)(({ theme }) => ({
 
 function LanguageSetup() {
     const dispatch = useDispatch();
+
+    const { can } = useAuthUser();
 
     const { response: languageData, loading: lang_loading } = useSelector((state) => state.get_all_language_option);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_language_option);
@@ -95,36 +101,44 @@ function LanguageSetup() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? "active" : "inactive"}
+                            {data.value ? "Active" : "Inactive"}
                         </StyledName>
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <AddLanguageOption update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.language_id}
-                            handleDelete={handleDelete}
-                            loading={lang_loading}
-                            tooltext="Delete Delivery Option"
-                        />
-                    </Box>
-                ),
-            },
+            ...(can([permissions.EDIT_LANGUAGE_SETUP, permissions.DELETE_LANGUAGE_SETUP])
+                ? [
+                      {
+                          Header: () => (
+                              <Box textAlign="center">
+                                  <Typography>Actions</Typography>
+                              </Box>
+                          ),
+                          accessor: "show",
+                          Cell: ({ row }) => (
+                              <Box
+                                  sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      justifyContent: "center",
+                                  }}
+                              >
+                                  <HasPermission permission={permissions.EDIT_LANGUAGE_SETUP}>
+                                      <AddLanguageOption update={true} update_data={row?.original} />
+                                  </HasPermission>
+                                  <HasPermission permission={permissions.DELETE_LANGUAGE_SETUP}>
+                                      <Delete
+                                          id={row.original.language_id}
+                                          handleDelete={handleDelete}
+                                          loading={lang_loading}
+                                          tooltext="Delete Delivery Option"
+                                      />
+                                  </HasPermission>
+                              </Box>
+                          ),
+                      },
+                  ]
+                : []),
         ],
         [],
     );
@@ -139,7 +153,9 @@ function LanguageSetup() {
             }
         >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginBottom: "1rem" }}>
-                <AddLanguageOption update={false} />
+                <HasPermission permission={permissions.CREATE_LANGUAGE_SETUP}>
+                    <AddLanguageOption update={false} />
+                </HasPermission>
             </div>
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 {lang_loading && (
@@ -170,4 +186,4 @@ function LanguageSetup() {
     );
 }
 
-export default LanguageSetup;
+export default withPermission({ permission: [permissions.READ_LANGUAGE_SETUP] })(LanguageSetup);

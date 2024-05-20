@@ -42,6 +42,7 @@ function Login() {
             dispatch(actions.get_user());
             dispatch(actions.get_all_country());
             dispatch(actions.get_send_country());
+            dispatch(actions.get_user_menus_and_permissions());
             dispatch(
                 actions.get_all_reference({
                     page_number: 1,
