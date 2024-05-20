@@ -45,7 +45,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    // 
+    color: theme.palette.secondary.contrastText,
     borderColor: theme.palette.border.main,
 }));
 
@@ -162,7 +162,7 @@ function AddAccount({ update_data, update }) {
             ) : (
                 <HasPermission permission={permissions.CREATE_USER}>
                     <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                        Add Account
+                        Add User
                     </AddButton>
                 </HasPermission>
             )}

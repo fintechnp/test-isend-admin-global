@@ -91,7 +91,7 @@ export default function AddProfileSetupTableRowForm({ isSubmitting = false }) {
                     </RadioGroup>
                 </FormControl>
             </TableCell>
-            <TableCell colSpan={4}></TableCell>
+            <TableCell colSpan={2}></TableCell>
             <TableCell>
                 <SubmitButton
                     type="button"

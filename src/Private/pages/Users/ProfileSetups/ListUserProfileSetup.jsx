@@ -27,6 +27,7 @@ import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import dateUtils from "App/utils/dateUtils";
 import ViewUserProfileSetupModal from "./components/ViewUserProfileSetupModal";
+import { Box } from "@mui/material";
 
 const initialQueryParams = {
     page_number: 1,
@@ -111,13 +112,7 @@ function ListUserProfileSetup() {
                                 <Typography color="white">Created At</Typography>
                             </TableCell>
                             <TableCell color="white">
-                                <Typography color="white">Created By</Typography>
-                            </TableCell>
-                            <TableCell color="white">
                                 <Typography color="white">Updated At</Typography>
-                            </TableCell>
-                            <TableCell color="white">
-                                <Typography color="white">Updated By</Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography color="white">Actions</Typography>
@@ -126,7 +121,7 @@ function ListUserProfileSetup() {
                     </TableHead>
                     <TableBody>
                         {loading ? (
-                            <TableBodySkeleton columnCount={8} />
+                            <TableBodySkeleton columnCount={6} />
                         ) : (
                             <>
                                 {canUserProfileSetup && response?.pagination?.currentPage === 1 && (
@@ -145,14 +140,22 @@ function ListUserProfileSetup() {
                                                 {role.is_active ? "Active" : "Inactive"}
                                             </Typography>
                                         </TableCell>
-                                        <TableCell>{dateUtils.getFormattedDate(role.created_ts)}</TableCell>
-                                        <TableCell>{role.created_by ?? "-"}</TableCell>
                                         <TableCell>
-                                            {role.updated_ts ? dateUtils.getFormattedDate(role.updated_ts) : "-"}
+                                            <Box>
+                                                <Typography> {dateUtils.getFormattedDate(role.created_ts)}</Typography>
+                                                <Typography>{role.created_by ?? ""}</Typography>
+                                            </Box>
                                         </TableCell>
-                                        <TableCell>{role.updated_by ?? "-"}</TableCell>
                                         <TableCell>
-                                            <ViewUserProfileSetupModal userProfileSetupId={role.id}/>
+                                            <Box>
+                                                <Typography>
+                                                    {role.updated_ts ? dateUtils.getFormattedDate(role.updated_ts) : "-"}
+                                                </Typography>
+                                                <Typography>{role.updated_by}</Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <ViewUserProfileSetupModal userProfileSetupId={role.id} />
                                             {can(permissions.EDIT_USER_PROFILE_SETUP) && !!role?.is_editable && (
                                                 <EditIconButton
                                                     onClick={() =>

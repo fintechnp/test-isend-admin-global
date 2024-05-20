@@ -12,8 +12,11 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 
 import Filter from "./../Filter";
 import AddAccount from "./../AddAccount";
+import FilterForm from "../Filter/FilterForm";
 import Modal from "App/components/Modal/Modal";
 import Button from "App/components/Button/Button";
+import Column from "App/components/Column/Column";
+import HasPermission from "Private/components/shared/HasPermission";
 import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import BusinessKycDetail from "Private/components/Business/BusinessKycDetail";
 
@@ -23,8 +26,7 @@ import routePaths from "Private/config/routePaths";
 import useAuthUser from "Private/hooks/useAuthUser";
 import { permissions } from "Private/data/permissions";
 import { businessActions } from "Private/pages/Business/store";
-import Column from "App/components/Column/Column";
-import HasPermission from "Private/components/shared/HasPermission";
+import dateUtils from "App/utils/dateUtils";
 
 const TransactionsContainer = styled("div")(({ theme }) => ({
     width: "100%",
@@ -49,13 +51,11 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
-    
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
     fontSize: "15px",
-    
 }));
 
 const initialState = {
@@ -76,6 +76,7 @@ function AccountTable() {
     const { success: a_success } = useSelector((state) => state.add_user);
     const { success: u_success } = useSelector((state) => state.update_user);
     const { success: d_success } = useSelector((state) => state.delete_user);
+    const [isOpenFilterForm, setIsOpenFilterForm] = useState(false);
 
     const { can } = useAuthUser();
 
@@ -127,8 +128,6 @@ function AccountTable() {
                         }}
                     >
                         <Avatar sx={{ fontSize: "15px" }}>
-                            {/* {data?.value.charAt(1)} */}
-                            {/* {data?.value.split(" ")[1][0]} */}
                         </Avatar>
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
                             {data.value ? data.value : "n/a"}
@@ -192,6 +191,28 @@ function AccountTable() {
                       },
                   ]
                 : []),
+            {
+                Header: "Created At",
+                accessor: "created_ts",
+                maxWidth: 250,
+                Cell: ({ row, value }) => (
+                    <Box>
+                        <Typography component="p">{value ? dateUtils.getFormattedDate(value) : "n/a"}</Typography>
+                        <Typography variant="caption">{row.original.created_by}</Typography>
+                    </Box>
+                ),
+            },
+            {
+                Header: "Updated At",
+                accessor: "updated_ts",
+                maxWidth: 250,
+                Cell: ({ row, value }) => (
+                    <Box>
+                        <Typography component="p">{value ? dateUtils.getFormattedDate(value) : "n/a"}</Typography>
+                        <Typography variant="caption">{row.original.updated_by ?? '-'}</Typography>
+                    </Box>
+                ),
+            },
             ...(can([permissions.CREATE_USER_KYC, permissions.READ_USER_KYC, permissions.EDIT_USER_KYC])
                 ? [
                       {
@@ -333,8 +354,6 @@ function AccountTable() {
         { key: "name", name: "Name", type: "default" },
         { key: "phone_number", name: "Phone Number", type: "default" },
         { key: "email", name: "Email", type: "default" },
-        { key: "user_type", name: "User Profile", type: "default" },
-        { key: "agent_id", name: "Agent", type: "default" },
         { key: "is_active", name: "Status", type: "boolean" },
         { key: "created_by", name: "Created By", type: "default" },
         { key: "created_ts", name: "Created Date", type: "date" },
@@ -409,14 +428,32 @@ function AccountTable() {
         dispatch(actions.forgot_password({ email: email }));
     };
 
+    const handleFilter = useCallback((data) => {
+        setFilterSchema((prev) => ({
+            ...prev,
+            ...data,
+        }));
+    }, []);
+
+    const handleReset = useCallback(
+        (value) => {
+            const params = { ...filterSchema };
+            ["name", "email", "role", "phone_number", "status"].forEach((key) => delete params[key]);
+            setFilterSchema(params);
+        },
+        [filterSchema],
+    );
     return (
         <>
             <TransactionsContainer>
+                <FilterForm isOpen={isOpenFilterForm} onSubmit={handleFilter} onReset={handleReset} />
                 <Column justifyContent="flex-end" alignItems="flex-end" p={1}>
                     <HasPermission permission={permissions.CREATE_USER}>
                         <AddAccount update={false} />
                     </HasPermission>
                     <Filter
+                        isOpenFilterForm={isOpenFilterForm}
+                        onClickFilter={() => setIsOpenFilterForm((value) => !value)}
                         handleSearch={handleSearch}
                         filterUserType={filterUserType}
                         handleSort={handleSort}

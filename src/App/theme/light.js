@@ -10,7 +10,7 @@ const light = {
         light: "#c2ccde",
         main: "#A1B0CC",
         dark: "#8094ba",
-        contrastText: "#ffffff",
+        contrastText: "#000",
     },
     success: {
         light: "#71cb96",
