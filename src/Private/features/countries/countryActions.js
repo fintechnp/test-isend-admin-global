@@ -1,0 +1,37 @@
+const countryActions = {
+    GET_COUNTRIES: "GET_COUNTRIES",
+    GET_COUNTRIES_SUCCESS: "GET_COUNTRIES_SUCCESS",
+    GET_COUNTRIES_FAILURE: "GET_COUNTRIES_FAILURE",
+
+    ADD_COUNTRY: "ADD_COUNTRY",
+    ADD_COUNTRY_SUCCESS: "ADD_COUNTRY_SUCCESS",
+    ADD_COUNTRY_FAILURE: "ADD_COUNTRY_FAILURE",
+    ADD_COUNTRY_RESET: "ADD_COUNTRY_RESET",
+    OPEN_ADD_COUNTRY_MODAL: "OPEN_ADD_COUNTRY_MODAL",
+    CLOSE_ADD_COUNTRY_MODAL: "CLOSE_ADD_COUNTRY_MODAL",
+
+    UPDATE_COUNTRY: "UPDATE_COUNTRY",
+    UPDATE_COUNTRY_SUCCESS: "UPDATE_COUNTRY_SUCCESS",
+    UPDATE_COUNTRY_FAILURE: "UPDATE_COUNTRY_FAILURE",
+    UPDATE_COUNTRY_RESET: "UPDATE_COUNTRY_RESET",
+    OPEN_UPDATE_COUNTRY_MODAL: "OPEN_UPDATE_COUNTRY_MODAL",
+    CLOSE_UPDATE_COUNTRY_MODAL: "CLOSE_UPDATE_COUNTRY_MODAL",
+
+    get_countries: (query) => ({
+        type: countryActions.GET_COUNTRIES,
+        query,
+    }),
+
+    add_country: (data) => ({
+        type: countryActions.ADD_COUNTRY,
+        data,
+    }),
+
+    update_country: (id, data) => ({
+        type: countryActions.UPDATE_COUNTRY,
+        data,
+        id,
+    }),
+};
+
+export default countryActions;

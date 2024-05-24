@@ -120,6 +120,18 @@ export const drawerItems = [
                 sub: false,
             },
             {
+                path: routePaths.countries.index,
+                key: "countries",
+                text: "Countries",
+                sub: false,
+            },
+            {
+                path: routePaths.documentAcceptance.index,
+                key: "Document Acceptance",
+                text: "Document Acceptance",
+                sub: false,
+            },
+            {
                 path: routePaths.countryStates.index,
                 key: "country-states",
                 text: "Country States",

@@ -7,6 +7,18 @@ const apiEndpoints = {
         update: "common/states/:stateId",
         delete: "common/states/:stateId",
     },
+    documentAcceptance: {
+        list: "/documentacceptancelist",
+        create: "/documentacceptance",
+        update: "/documentacceptance/:id",
+    },
+
+    countries: {
+        list: "/countries",
+        create: "/country",
+        update: "/country/:countryId",
+    },
+
     fundingSources: {
         list: "fundingsource/getall",
         create: "fundingsource",

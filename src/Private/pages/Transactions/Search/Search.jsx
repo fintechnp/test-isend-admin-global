@@ -19,6 +19,7 @@ import Loading from "App/components/Loading";
 import Table, { TablePagination } from "App/components/Table";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import Column from "App/components/Column/Column";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
 

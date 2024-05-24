@@ -133,8 +133,8 @@ const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, 
                                     Select Country
                                 </option>
                                 {country &&
-                                    country.map((data, i) => (
-                                        <option value={data.iso3} key={i}>
+                                    country.map((data) => (
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}

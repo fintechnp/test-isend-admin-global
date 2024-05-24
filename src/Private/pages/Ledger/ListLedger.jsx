@@ -143,6 +143,7 @@ export default function ListLedger() {
         };
         setFilterSchema(updatedFilterSchema);
     };
+
     return (
         <PageContent
             title="Ledger List"
@@ -156,7 +157,7 @@ export default function ListLedger() {
                 </Button>
             }
         >
-            <LedgerFilterForm setFilterSchema={setFilterSchema} loading={loading}/>
+            <LedgerFilterForm setFilterSchema={setFilterSchema} loading={loading} />
             <TanstackReactTable
                 columns={columns}
                 title="Ledger"

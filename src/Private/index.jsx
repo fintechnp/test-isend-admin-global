@@ -525,6 +525,16 @@ import {
     UpdateAchTransactionStatusReducer,
     achTransactionSaga,
 } from "Private/pages/Transactions/AchTransactions/store";
+import { addCountryReducer, getCountryReducer, updateCountryReducer } from "./features/countries/countryReducer";
+import countrySaga from "./features/countries/countrySaga";
+import documentAcceptanceSaga, {
+    getDocumentAcceptanceList,
+} from "./features/documentAcceptance/documentAcceptanceSaga";
+import {
+    addDocumentAcceptanceReducer,
+    getDocumentAcceptanceReducer,
+    updateDocumentAcceptanceReducer,
+} from "./features/documentAcceptance/documentAcceptanceReducer";
 
 // region: User Profile Setup
 import {
@@ -821,6 +831,16 @@ export const privateReducer = {
     update_country_state: updateCountryStateReducer,
     delete_country_state: deleteCountryStateReducer,
 
+    // countries
+    get_countries: getCountryReducer,
+    add_country: addCountryReducer,
+    update_country: updateCountryReducer,
+
+    //documentAcceptance
+    get_document_acceptance_list: getDocumentAcceptanceReducer,
+    add_document_acceptance: addDocumentAcceptanceReducer,
+    update_document_acceptance: updateDocumentAcceptanceReducer,
+
     // funding sources
     get_funding_source_list: getFundingSourcesReducer,
     add_funding_source: addFundingSourceReducer,
@@ -1029,6 +1049,8 @@ export const privateSaga = [
     commentSaga(),
     attachmentSaga(),
     achTransactionSaga(),
+    countrySaga(),
+    documentAcceptanceSaga(),
     UserProfileSetupSaga(),
 ];
 

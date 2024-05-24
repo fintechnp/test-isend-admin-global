@@ -57,6 +57,7 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
     fontSize: "15px",
+    
 }));
 
 const initialState = {

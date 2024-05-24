@@ -2,9 +2,18 @@ const routePaths = {
     banners: {
         index: "/setup/banners",
     },
+    countries: {
+        index: "/setup/countries",
+    },
+
     countryStates: {
         index: "/setup/country-states",
     },
+
+    documentAcceptance: {
+        index: "/setup/documentacceptance",
+    },
+
     fundingSources: {
         index: "/setup/funding-sources",
     },

@@ -163,6 +163,8 @@ import AddLedger from "../pages/Ledger/AddLedger";
 import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
 import ListAccountList from "Private/pages/AccountList/ListAccountList";
 import AchTransactions from "Private/pages/Transactions/AchTransactions/AchTransactions";
+import ListCountries from "Private/pages/Setup/Countries/ListCountries";
+import ListDocumentAcceptance from "Private/pages/Setup/DocumentAcceptance/ListDocumentAcceptance";
 import ZaiAustraliaPayment from "Private/pages/PaymentProcess/ZaiAustraliaPayment/ZaiAustraliaPayment";
 import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
 
@@ -290,10 +292,21 @@ const privateRoutes = [
         path: "/setup/banners",
         component: <ListBanner />,
     },
+
+    {
+        path: routePaths.countries.index,
+        component: <ListCountries />,
+    },
+
     {
         path: routePaths.countryStates.index,
         component: <ListCountryState />,
     },
+    {
+        path: routePaths.documentAcceptance.index,
+        component: <ListDocumentAcceptance />,
+    },
+
     {
         path: routePaths.fundingSources.index,
         component: <ListFundingSource />,
