@@ -1,6 +1,7 @@
 export const DeleteAccountStatus = {
     PENDING: 'pending',
-    APPROVED: 'approved'
+    APPROVED: 'approved',
+    REJECTED: 'rejected'
 }
 
 export const DeleteAccountStatusOptions = [
@@ -11,6 +12,10 @@ export const DeleteAccountStatusOptions = [
     {
         label: 'Approved',
         value: DeleteAccountStatus.APPROVED
+    },
+    {
+        label: 'Rejected',
+        value: DeleteAccountStatus.REJECTED
     }
 ]
 

@@ -12,13 +12,10 @@ export default function StatusBadge({ status }) {
         if (status === DeleteAccountStatus.APPROVED) {
             return "success";
         }
+        if (status === DeleteAccountStatus.REJECTED) {
+            return "error";
+        }
     };
 
-    return (
-        <Chip
-            color={getColor()}
-            label={capitalize(status)}
-            size="small"
-        />
-    );
+    return <Chip color={getColor()} label={capitalize(status)} size="small" />;
 }

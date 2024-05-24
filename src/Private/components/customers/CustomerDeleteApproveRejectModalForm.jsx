@@ -14,21 +14,32 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 
 import { customerDeleteActions } from "Private/pages/Customers/DeleteList/store";
+import { DeleteAccountStatus } from "Private/pages/Customers/DeleteList/data/DeleteAccountStatus";
 
 const UpdateStatusFormValidation = yup.object().shape({
     remarks: yup.string().required("Remarks is required"),
 });
 
-
-export default function CustomerDeleteApproveRejectModalForm({ setOpen }) {
+export default function CustomerDeleteApproveRejectModalForm({ setOpen, status }) {
     const methods = useForm({
         resolver: yupResolver(UpdateStatusFormValidation),
     });
+
+    const { setValue, getValues, watch } = methods;
+
     const dispatch = useDispatch();
 
     const { id } = useParams();
 
+    const s = watch("status");
+
     const { loading, success } = useSelector((state) => state.update_delete_request);
+
+    useEffect(() => {
+        if (status) {
+            setValue("status", status);
+        }
+    }, [status]);
 
     const handleSubmit = (data) => {
         try {
@@ -47,6 +58,7 @@ export default function CustomerDeleteApproveRejectModalForm({ setOpen }) {
 
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
+            {JSON.stringify({ s })}
             <Grid container item xs={12} direction="row" spacing={2}>
                 <Grid item xs={12} sm={12}>
                     <FormTextField name="remarks" label="Remarks" multiline />
@@ -73,7 +85,11 @@ export default function CustomerDeleteApproveRejectModalForm({ setOpen }) {
                             </CancelButton>
                         </Grid>
                         <Grid item>
-                            <SubmitButton submitText="Approve" submittingText="Approving" isLoading={loading}/>
+                            <SubmitButton
+                                submitText={status === DeleteAccountStatus.APPROVED ? "Approve" : "Reject"}
+                                submittingText="Approving"
+                                isLoading={loading}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
