@@ -11,9 +11,9 @@ import PageContent from "App/components/Container/PageContent";
 
 import actions from "./../store/actions";
 import ucfirst from "App/helpers/ucfirst";
-import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -82,6 +82,7 @@ const DailyTransactions = (props) => {
                     </Box>
                 ),
             },
+
             {
                 Header: "C/B Id",
                 accessor: "customer_id",

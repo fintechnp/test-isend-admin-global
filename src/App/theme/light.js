@@ -10,12 +10,12 @@ const light = {
         light: "#c2ccde",
         main: "#A1B0CC",
         dark: "#8094ba",
-        contrastText: "#000",
+        contrastText: "#ffffff",
     },
     success: {
         light: "#71cb96",
         main: "#4CBD7A",
-        dark: '#3a9c62',
+        dark: "#3a9c62",
         contrastText: "#ffffff",
     },
     warning: {
@@ -42,6 +42,9 @@ const light = {
     appbar: {
         main: "#fff",
         icon: "#2D6FB5",
+    },
+    surface: {
+        1: "linear-gradient(116.82deg, #4980FF 0%, #00D4FF 100%)",
     },
 };
 

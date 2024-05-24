@@ -1,9 +1,10 @@
 import React from "react";
 import Box from "@mui/material/Box";
 
-export default function Center({ children, sx }) {
+export default function Center({ children, sx, ...rest }) {
     return (
         <Box
+            {...rest}
             sx={{
                 display: "flex",
                 flexDirection: "row",

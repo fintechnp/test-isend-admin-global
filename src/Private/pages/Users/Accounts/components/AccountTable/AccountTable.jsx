@@ -51,6 +51,7 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
+    
 }));
 
 const StyledText = styled(Typography)(({ theme }) => ({

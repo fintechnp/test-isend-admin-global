@@ -1,42 +1,18 @@
 import * as Yup from "yup";
-import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import MuiPaper from "@mui/material/Paper";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
-import FormSelect from "App/core/hook-form/FormSelect";
 import { FormProvider, useForm } from "react-hook-form";
-import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
+import Link from "App/components/Link/Link";
+import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
-import { ReactComponent as Logo } from "assets/long-logo.svg";
 import SubmitButton from "App/components/Button/SubmitButton";
+
 import sendingCountries from "Private/config/sendingCountries";
-
-const Paper = styled(MuiPaper)(({ theme }) => ({
-    minWidth: "100%",
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
-}));
-
-const FormContainer = styled("div")(({ theme }) => ({
-    padding: "16px 20px",
-    paddingBottom: "30px",
-    maxWidth: "300px",
-    backgroundColor: "#fcfcfc",
-    borderRadius: "6px",
-    [theme.breakpoints.up("sm")]: {
-        minWidth: "340px",
-    },
-    boxShadow: "10px 0px 8px 5px rgba(0, 0, 0, .1)",
-    "&:hover": {
-        boxShadow: "10px 0px 20px 5px rgba(0, 0, 0, .2)",
-    },
-}));
+import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
+import { publicRoutePaths } from "Public/config/pubicRoutePaths";
 
 const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Email is required"),
@@ -65,30 +41,38 @@ const LoginForm = ({ onSubmit, loading }) => {
     }, [loginCountry]);
 
     return (
-        <Paper square={true}>
-            <FormContainer>
-                <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <Box display="flex" flexDirection="column" gap={2}>
-                            <Logo style={{ height: "100px" }} />
-                            <Typography textAlign="center" variant="h6">
-                                Sign In to your account
+        <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
+                <Grid container gap="24px">
+                    <Grid item xs={12} mt={2}>
+                        <FormSelect size="medium" name="identifier" label="Select Country" options={sendingCountries} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormTextField size="medium" name="email" label="Email" />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormTextField size="medium" type="password" name="password" label="Password" />
+                        <Link to={publicRoutePaths.forgotPassword}>
+                            <Typography fontWeight={500} fontSize="0.813rem" lineHeight="1.875">
+                                Forgot Password ?
                             </Typography>
-                            <FormSelect
-                                name="identifier"
-                                label="Select Country"
-                                options={sendingCountries}
-                            />
-                            <FormTextField size="small" name="email" label="Email" />
-                            <FormTextField size="small" type="password" name="password" label="Password" />
-                            <SubmitButton size="large" isLoading={loading} role="button" name="login">
-                                {loading ? "Logging In" : "Login"}
-                            </SubmitButton>
-                        </Box>
-                    </form>
-                </FormProvider>
-            </FormContainer>
-        </Paper>
+                        </Link>
+                    </Grid>
+                    <Grid item xs={12} mt={2}>
+                        <SubmitButton
+                            size="large"
+                            isLoading={loading}
+                            role="button"
+                            name="login"
+                            sx={{ textTransform: "uppercase" }}
+                            fullWidth
+                        >
+                            {loading ? "Logging In" : "Login"}
+                        </SubmitButton>
+                    </Grid>
+                </Grid>
+            </form>
+        </FormProvider>
     );
 };
 

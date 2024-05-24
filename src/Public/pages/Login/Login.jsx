@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
 import { SubmissionError, reset } from "redux-form";
 import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useContext } from "react";
 
 import LoginForm from "../components/LoginForm";
+import FormContainer from "Public/components/container/FormContainer";
+import PublicLayoutContainer from "../components/PublicLayoutContainer";
 
 import { history } from "App/store";
 import { AuthContext } from "App/auth";
 import actions from "Common/store/actions";
 import AuthUtility from "App/utils/AuthUtility";
 
-function Login() {
 
+function Login() {
     const dispatch = useDispatch();
-    
+
     const authContext = useContext(AuthContext);
-    
+
     const [loading, setLoading] = useState(false);
-    
+
     const { response: user, success, loading: user_loading } = useSelector((state) => state.get_user);
 
     useEffect(() => {
@@ -36,7 +38,7 @@ function Login() {
         setLoading(true);
         try {
             const response = await authContext.loginUser(data);
-            if (!response) return
+            if (!response) return;
             AuthUtility.setAccessToken(response.token);
             AuthUtility.setRefreshToken(response.refresh_token);
             dispatch(actions.get_user());
@@ -50,7 +52,7 @@ function Login() {
                 }),
             );
             setLoading(false);
-            history.push('/')
+            history.push("/");
         } catch (err) {
             setLoading(false);
             dispatch({
@@ -66,7 +68,11 @@ function Login() {
     };
 
     return (
-        <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
+        <PublicLayoutContainer>
+            <FormContainer title="Sign In to your account">
+                <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
+            </FormContainer>
+        </PublicLayoutContainer>
     );
 }
 

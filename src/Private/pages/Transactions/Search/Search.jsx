@@ -53,6 +53,9 @@ const initialState = {
     status: "",
     from_date: "",
     to_date: "",
+    full_name: "",
+    email: "",
+    mobile: "",
     sort_by: "created_ts",
     order_by: "DESC",
 };
@@ -125,6 +128,19 @@ function Search(props) {
                             {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
                         </Typography>
                     </Box>
+                ),
+            },
+            {
+                Header: "Phone Number/Email",
+                accessor: "customer_email",
+                maxWidth: 850,
+                Cell: (data) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body2">{data?.row?.original?.customer_phone}</Typography>
+                        <Typography variant="caption" fontSize="12px">
+                            {data.value ? data.value : "N/A"}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
@@ -340,6 +356,9 @@ function Search(props) {
             status: data?.status,
             from_date: data?.from_date,
             to_date: data?.to_date,
+            full_name: data?.full_name,
+            mobile: data?.mobile,
+            email: data?.email,
         };
         setFilterSchema(updatedFilterSchema);
     };

@@ -1,5 +1,6 @@
 
 const apiEndpoints = {
+    forgotPassword: '/account/forgotpassword',
     countryStates: {
         list: "common/:country/states",
         create: "common/states",

@@ -24,7 +24,24 @@ export const ChangeTheme = (mode = true) => {
                 textTransform: "none",
             },
         },
+        palette: mode ? LightPalette : DarkPalette,
 
+        overrides: {
+            MuiPaper: {
+                root: {
+                    maxWidth: "100%",
+                },
+            },
+            MuiAppBar: {
+                root: {
+                    width: "none",
+                },
+                positionFixed: {
+                    right: "auto",
+                    maxWidth: "100%",
+                },
+            },
+        },
         components: {
             MuiCssBaseline: {
                 styleOverrides: `
@@ -106,23 +123,24 @@ export const ChangeTheme = (mode = true) => {
             },
             MuiButton: {
                 defaultProps: {
-                    disableElevation: true,
+                    // disableElevation: true,
                 },
                 variants: [
-                    {
-                        props: {
-                            size: "large",
-                        },
-                        style: {
-                            padding: "14px 32px 14px 32px",
-                            fontSize: "1rem",
-                            lineHeight: "1.5rem",
-                        },
-                    },
+                    // {
+                    //     props: {
+                    //         size: "large",
+                    //     },
+                    //     style: {
+                    //         padding: "14px 32px 14px 32px",
+                    //         fontSize: "1rem",
+                    //         lineHeight: "1.5rem",
+                    //     },
+                    // },
                 ],
                 styleOverrides: {
                     root: ({ ownerState, theme }) => ({
                         borderRadius: buttonBorderRadius.outer,
+                        textTransform: "uppercase",
                     }),
                 },
             },
@@ -256,38 +274,6 @@ export const ChangeTheme = (mode = true) => {
                         "& .MuiTypography-root": {
                             fontFamily: fonts.secondary,
                         },
-                    },
-                },
-            },
-        },
-        overrides: {
-            MuiPaper: {
-                root: {
-                    maxWidth: "100%",
-                },
-            },
-            MuiAppBar: {
-                root: {
-                    width: "none",
-                },
-                positionFixed: {
-                    right: "auto",
-                    maxWidth: "100%",
-                },
-            },
-        },
-        palette: mode ? LightPalette : DarkPalette,
-        typography: {
-            fontFamily: "'Poppins', sans-serif",
-        },
-        components: {
-            MuiButton: {
-                defaultProps: {
-                    disableElevation: true,
-                },
-                styleOverrides: {
-                    root: {
-                        textTransform: "inherit",
                     },
                 },
             },

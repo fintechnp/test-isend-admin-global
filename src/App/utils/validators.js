@@ -32,22 +32,6 @@ const validators = {
         }
         return undefined;
     },
-    imageValidatorCustomerDocument: (value) => {
-        if (
-            value &&
-            value.type !== "image/jpeg" && value.type !== "image/jpg" &&
-            value.type !== "image/png"
-        ) {
-            return "Upload .png or .jpeg format only";
-        }
-        if (value && value.size < 50000) {
-            return "File size must be greater than 50Kb";
-        }
-        if (value && value.size > 4096000) {
-            return "File size must be less or equal to 4Mb.";
-        }
-        return undefined;
-    },
     urlValidator: (value) => {
         if (value && !/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(value)) {
             return "Invalid image url";
