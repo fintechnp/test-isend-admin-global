@@ -7,8 +7,14 @@ import MenuItem from "@mui/material/MenuItem";
 import MuiFormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
 
-import React from "react";
+import React, { useEffect } from "react";
 import SearchTextField from "App/components/Fields/SearchTextField";
+import Button from "App/components/Button/Button";
+import { useDispatch, useSelector } from "react-redux";
+import actions from "../../store/actions";
+import Row from "App/components/Row/Row";
+import { useLocation, useSearchParams } from "react-router-dom";
+import dateUtils from "App/utils/dateUtils";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -81,13 +87,48 @@ function Filter({
     handleSort,
     sortData,
     orderData,
+    onRefreshSuccess,
+    lastUpdatedAt,
 }) {
+    const pathname = useLocation();
+
+    const [params] = useSearchParams();
+
+    const dispatch = useDispatch();
+
+    const { loading: isRefreshing, success: isSuccess } = useSelector((state) => state.refresh_exchange_rate);
+
+    const sendingAgentId = params.get("sending_agent_id");
+
+    const handleOnRefreshExchangeRate = () => {
+        dispatch(actions.refresh_exchange_rate({ sendingAgentId }));
+    };
+
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(actions.reset_refresh_exchange_rate());
+            onRefreshSuccess?.();
+        }
+    }, [isSuccess]);
+
     return (
         <FilterWrapper>
             <SearchBox>
-                <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
-
+            {sendingAgentId && (
+                <>
+                    {lastUpdatedAt && (
+                        <Box display="flex" flexDirection="row">
+                            <Typography mr={2}>Last updated at:</Typography>
+                            <Typography mr={2}>{dateUtils.getFormattedDate(lastUpdatedAt)}</Typography>
+                        </Box>
+                    )}
+                    <Button size="large" onClick={handleOnRefreshExchangeRate} disabled={isRefreshing}>
+                        Pull exchange rate from IPAY
+                    </Button>
+                </>
+            )}
             <DropWrapper>
                 <Box>
                     {handleSort && (
@@ -99,25 +140,17 @@ function Filter({
                                 renderValue={(selected) => {
                                     if (selected.length === 0) {
                                         return (
-                                            <Typography
-                                                component="p"
-                                                sx={{ opacity: 0.6 }}
-                                            >
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
                                                 Sort By
                                             </Typography>
                                         );
                                     }
-                                    const value = sortData.filter(
-                                        (type) => type.value === selected
-                                    );
+                                    const value = sortData.filter((type) => type.value === selected);
                                     return value[0]?.key;
                                 }}
                             >
                                 {sortData.map((order) => (
-                                    <MenuItem
-                                        value={order.value}
-                                        key={order.value}
-                                    >
+                                    <MenuItem value={order.value} key={order.value}>
                                         {order.key}
                                     </MenuItem>
                                 ))}
@@ -132,17 +165,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

@@ -279,6 +279,14 @@ const ExchangeRateList = (props) => {
         dispatch(actions.delete_exchange_rate(id));
     };
 
+    const handleOnRefreshExchangeRateSuccess = () => {
+        dispatch(actions.get_exchange_rate_by_partner(id, filterSchema));
+    };
+
+    const lastUpdatedAt = useMemo(() => {
+        return rateList?.data?.[0]?.updated_ts;
+    }, [rateList]);
+
     return (
         <>
             <Helmet>
@@ -293,6 +301,8 @@ const ExchangeRateList = (props) => {
                     sending_currency={sending_currency}
                 />
                 <Filter
+                    onRefreshSuccess={handleOnRefreshExchangeRateSuccess}
+                    lastUpdatedAt={lastUpdatedAt}
                     state={filterSchema}
                     sortData={sortData}
                     orderData={orderData}

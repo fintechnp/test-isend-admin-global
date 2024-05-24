@@ -118,6 +118,7 @@ import {
     AddExchangeRateReducer,
     UpdateExchangeRateReducer,
     DeleteExchangeRateReducer,
+    RefreshExchangeRateReducer,
     ExchangeRateSaga,
 } from "./pages/Setup/ExchangeRate/store";
 
@@ -673,6 +674,7 @@ export const privateReducer = {
     add_exchange_rate: AddExchangeRateReducer,
     update_exchange_rate: UpdateExchangeRateReducer,
     delete_excahnge_rate: DeleteExchangeRateReducer,
+    refresh_exchange_rate: RefreshExchangeRateReducer,
 
     //reference type and data
     get_all_reference: GetAllReferenceReducer,
