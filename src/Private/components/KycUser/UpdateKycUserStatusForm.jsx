@@ -11,7 +11,7 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 
-import { KycUserActions } from "Private/pages/KycUser/store";
+import { KycUserActions } from "Private/pages/Agent/KycUser/store";
 import { statusOptions } from "../Business/BusinessKycDetail";
 
 const UpdateStatusFormValidation = yup.object().shape({

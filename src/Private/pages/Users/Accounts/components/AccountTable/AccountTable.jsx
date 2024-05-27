@@ -25,7 +25,7 @@ import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import useAuthUser from "Private/hooks/useAuthUser";
 import { permissions } from "Private/data/permissions";
-import { businessActions } from "Private/pages/Business/store";
+import { businessActions } from "Private/pages/Agent/Business/store";
 import dateUtils from "App/utils/dateUtils";
 
 const TransactionsContainer = styled("div")(({ theme }) => ({

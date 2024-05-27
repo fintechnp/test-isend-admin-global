@@ -1,40 +1,59 @@
 import Grid from "@mui/material/Grid";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useMemo, useState } from "react";
 
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Loading } from "App/components";
-import Modal from "App/components/Modal/Modal";
+import buildRoute from "App/helpers/buildRoute";
 import Spacer from "App/components/Spacer/Spacer";
-import BusinessKycDetail from "./BusinessKycDetail";
-import NoResults from "Private/pages/Transactions/components/NoResults";
+import routePaths from "Private/config/routePaths";
+import { TablePagination } from "App/components/Table";
+import NoResults from "../../Transactions/components/NoResults";
+import PageContent from "App/components/Container/PageContent";
+import FilterForm from "Private/components/KycUser/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { businessActions as actions } from "Private/pages/Agent/Business/store";
+import { KycUserActions as actions } from "Private/pages/Agent/KycUser/store";
 
-export default function BusinessKycListing() {
-    const { businessId } = useParams();
+const initialState = {
+    Page: 1,
+    PageSize: 10,
+};
+
+export default function ListKycUser() {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
-    const { response, loading } = useSelector((state) => state.get_business_kyc);
+    const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: kycDetailData, loading: kycDetailLoading } = useSelector(
-        (state) => state.get_business_kyc_details,
-    );
-
-    const { success } = useSelector((state) => state.update_business_kyc_status);
+    const { response, loading } = useSelector((state) => state.get_all_kyc_user);
 
     useEffect(() => {
-        if (success) {
-            setOpen(false);
-        }
-    }, [success]);
+        dispatch(actions.get_all_kyc_user(filterSchema));
+    }, []);
+
+    const handleChangePage = (e, newPage) => {
+        const updatedFilter = {
+            ...filterSchema,
+            Page: ++newPage,
+        };
+        setFilterSchema(updatedFilter);
+    };
+
+    const handleChangeRowsPerPage = (e) => {
+        const pageSize = e.target.value;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            PageSize: pageSize,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
 
     const columns = useMemo(
         () => [
@@ -66,10 +85,6 @@ export default function BusinessKycListing() {
                 header: "Mobile Number",
                 accessorKey: "mobileNumber",
             },
-            {
-                header: "Related KYB",
-                accessorKey: "relatedKybName",
-            },
 
             {
                 header: "Remarks",
@@ -79,15 +94,13 @@ export default function BusinessKycListing() {
                 header: "Status",
                 accessorKey: "statusName",
             },
-
             {
                 header: "Actions",
                 cell: ({ row }) => (
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                setOpen(true);
-                                dispatch(actions.get_business_kyc_details(row?.original?.kycId));
+                                navigate(buildRoute(routePaths.agent.viewKycUser, row?.original?.kycId));
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon
@@ -106,44 +119,36 @@ export default function BusinessKycListing() {
         [],
     );
 
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    useEffect(() => {
-        dispatch(
-            actions.get_business_kyc({
-                businessId,
-            }),
-        );
-    }, []);
     return (
-        <>
+        <PageContent title="Kyc Users">
             {loading && (
                 <Grid item xs={12}>
                     <Loading loading={loading} />
                 </Grid>
             )}
+            <FilterForm setFilterSchema={setFilterSchema} loading={loading} />
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>
-                    <NoResults text="No KYC Found" />
+                    <NoResults text="No KYC Users Found" />
                 </Grid>
             ) : (
                 <>
                     <Spacer />
-                    <TanstackReactTable columns={columns} title="KYB" data={response?.data ?? []} loading={loading} />
+                    <TanstackReactTable
+                        columns={columns}
+                        title="KYC USERS"
+                        data={response?.data ?? []}
+                        loading={loading}
+                        renderPagination={() => (
+                            <TablePagination
+                                paginationData={response?.pagination}
+                                handleChangePage={handleChangePage}
+                                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                            />
+                        )}
+                    />
                 </>
             )}
-            <Modal
-                title="Kyc Detail"
-                open={open}
-                onClose={handleClose}
-                sx={{
-                    width: "60%",
-                }}
-            >
-                <BusinessKycDetail data={kycDetailData?.data} loading={kycDetailLoading} />
-            </Modal>
-        </>
+        </PageContent>
     );
 }

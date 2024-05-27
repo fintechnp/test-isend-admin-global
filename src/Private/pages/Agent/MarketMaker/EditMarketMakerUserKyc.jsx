@@ -4,39 +4,36 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import HookForm from "App/core/hook-form/HookForm";
-import PageContent from "App/components/Container/PageContent";
-import { addUserKycValidationSchema } from "./validations/addUserKycValidation";
-import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
-
-import { AccountAction as actions } from "./store";
 import { Loading } from "App/components";
-import { businessActions } from "Private/pages/Agent/Business/store";
+import Center from "App/components/Center/Center";
+import HookForm from "App/core/hook-form/HookForm";
+import routePaths from "Private/config/routePaths";
+import PageContent from "App/components/Container/PageContent";
 
-export default function AddUserKyc() {
+import { businessActions } from "Private/pages/Agent/Business/store";
+import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycForm";
+import { marketMakerUserKycValidationSchema } from "./validation/MarketMakerKycValidation";
+import isEmpty from "App/helpers/isEmpty";
+
+export default function UpdateMarketMakerKyc() {
+    const { userId, kycId } = useParams();
     const dispatch = useDispatch();
-    const { id, kycId } = useParams();
     const navigate = useNavigate();
+
     const methods = useForm({
-        resolver: yupResolver(addUserKycValidationSchema),
+        resolver: yupResolver(marketMakerUserKycValidationSchema),
     });
 
-    const { response, loading: kycDetailLoading } = useSelector((state) => state.get_business_kyc_details);
-    const { success, loading } = useSelector((state) => state.update_system_user_kyc);
+    const { response, loading } = useSelector((state) => state.get_business_kyc_details);
+
+    const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_market_maker_kyc);
 
     const kycData = response?.data;
 
-    const { setValue } = methods;
-
     useEffect(() => {
         dispatch(businessActions.get_business_kyc_details(kycId));
-    }, [kycId]);
-
-    useEffect(() => {
-        if (success) {
-            navigate("/user/accounts");
-        }
-    }, [success]);
+    }, []);
 
     useEffect(() => {
         //Details
@@ -78,7 +75,39 @@ export default function AddUserKyc() {
         setValue("documents", kycData?.documents || []);
     }, [response]);
 
+    useEffect(() => {
+        if (updateSuccess) {
+            navigate(routePaths.agent.listMarketMaker);
+        }
+    }, [updateSuccess]);
+
+    const {
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = methods;
+
     const onSubmitData = (data) => {
+        const requiredDocuments = data.documents
+            .filter((document) => !!document.documentTypeId && !!document.documentId)
+            .map((document) => ({
+                documentTypeId: document.documentTypeId,
+                documentId: document.documentId,
+                documentName: document.documentName,
+            }));
+
+        const requiredEmptyDocuments = data.documents.filter((document, index) => {
+            if (document.isRequired && isEmpty(document.documentId)) {
+                setError(`documents.${index}.documentId`, {
+                    type: "required",
+                    message: "Document is required",
+                });
+            }
+            return document.isRequired && isEmpty(document.documentId);
+        });
+
+        if (requiredEmptyDocuments.length > 0) return;
+
         const {
             temporaryAddressCountryId,
             temporaryAddressPostCode,
@@ -117,21 +146,21 @@ export default function AddUserKyc() {
                 state: permanentAddressState,
                 address: permanentAddressAddress,
             },
-            userId: id,
-            isBusinessUser: false,
             ...rest,
         };
-
-        dispatch(actions.update_system_user_kyc(kycId, dataToSend));
+        const requestData = { ...dataToSend, documents: requiredDocuments };
+        dispatch(actions.update_market_maker_kyc(kycId, requestData));
     };
-
-    if (kycDetailLoading) {
-        return <Loading loading={kycDetailLoading} />;
-    }
     return (
-        <PageContent title="Edit User KYC">
-            <HookForm onSubmit={onSubmitData} {...methods}>
-                <MarketMakerKycForm formLoading={loading} isUserKyc={true} isAddMode={false} />
+        <PageContent title="Edit Agent User KYC ">
+            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
+                {loading ? (
+                    <Center>
+                        <Loading loading={loading} />
+                    </Center>
+                ) : (
+                    <MarketMakerKycForm isAddMode={false} formLoading={updating} isUserKyc={true} />
+                )}
             </HookForm>
         </PageContent>
     );

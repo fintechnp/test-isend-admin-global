@@ -375,7 +375,7 @@ import customerSaga from "./features/customers/customerSaga";
 import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
 import getOnfidoReportReducer from "./pages/Reports/store/reducers/getOnfidoReportReducer";
 
-import { UpdateChangePasswordReducer, UpdateChangePasswordSaga } from "./pages/Settings/store";
+import { UpdateChangePasswordReducer, UpdateChangePasswordSaga } from "./pages/Auth/Settings/store";
 
 import {
     addBulkEmailGroupReducer,
@@ -434,7 +434,7 @@ import {
 
     //USERS
     GetMarketMakerUsersReducer,
-} from "../Private/pages/MarketMaker/store";
+} from "./pages/Agent/MarketMaker/store";
 
 //CREDIT LIMIT
 
@@ -446,7 +446,7 @@ import {
     EditCreditLimitByIdReducer,
     DeleteCreditLimitByIdReducer,
     creditLimitSaga,
-} from "../Private/pages/CreditLimit/store";
+} from "../Private/pages/Agent/CreditLimit/store";
 
 // BALANCE REQUEST
 
@@ -455,7 +455,7 @@ import {
     GetAllBalanceRequestValueReducer,
     GetBalanceRequestIdValueReducer,
     UpdateBalanceRequestStatusReducer,
-} from "../Private/pages/BalanceRequest/store";
+} from "../Private/pages/Agent/BalanceRequest/store";
 
 // Business
 
@@ -471,7 +471,7 @@ import {
     GetBusinessKybDetailsReducer,
     UpdateBusinessKybStatusReducer,
     businessSaga,
-} from "../Private/pages/Business/store";
+} from "../Private/pages/Agent/Business/store";
 import {
     getSingleTransactionReducer,
     getSingleTransactionsReducer,
@@ -489,10 +489,9 @@ import {
     GetAllB2BBeneficiaryReducer,
     GetB2BBeneficiaryByIdReducer,
     beneficiarySaga,
-} from "../Private/pages/Beneficiary/store";
+} from "./pages/Agent/Beneficiary/store";
 
-//Business Charge
-
+// region: Business Charge
 import {
     GetAllBusinessChargeByIdReducer,
     GetAllBusinessChargeReducer,
@@ -500,26 +499,35 @@ import {
     UpdateBusinessChargeStatusReducer,
     UpdateBusinessChargeReducer,
     businessChargeSaga,
-} from "Private/pages/BusinessServiceCharge/store";
+} from "Private/pages/Agent/BusinessServiceCharge/store";
 
 import {
     GetAllKycUserValueReducer,
     GetKycUserIdValueReducer,
     KycUserSaga,
     UpdateKycUserStatusReducer,
-} from "Private/pages/KycUser/store";
+} from "Private/pages/Agent/KycUser/store";
 
 //Ledger
 
-import { GetAllLedgerReducer, GetLedgerDetailsReducer, AddLedgerReducer, ledgerSaga } from "Private/pages/Ledger/store";
+import {
+    GetAllLedgerReducer,
+    GetLedgerDetailsReducer,
+    AddLedgerReducer,
+    ledgerSaga,
+} from "Private/pages/Agent/Ledger/store";
 
-import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/store";
+import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/Agent/B2BAccount/store";
 
-import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/AccountList/store";
+import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/Agent/AccountList/store";
 
-import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/pages/Comments/store";
+import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/pages/Transactions/Comments/store";
 
-import { GetAllAttachmentsReducer, UploadAttachmentReducer, attachmentSaga } from "Private/pages/Attachments/store";
+import {
+    GetAllAttachmentsReducer,
+    UploadAttachmentReducer,
+    attachmentSaga,
+} from "Private/pages/Transactions/Attachments/store";
 
 import {
     GetACHTransactionReducer,

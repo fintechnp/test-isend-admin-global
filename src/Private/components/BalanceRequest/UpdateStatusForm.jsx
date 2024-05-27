@@ -11,7 +11,7 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 
-import { BalanceRequestActions } from "Private/pages/BalanceRequest/store";
+import { BalanceRequestActions } from "Private/pages/Agent/BalanceRequest/store";
 
 const actionOptions = [
     {

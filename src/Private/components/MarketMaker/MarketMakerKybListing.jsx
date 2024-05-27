@@ -16,7 +16,7 @@ import BusinessKybDetail from "../Business/BusinessKybDetail";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { businessActions as actions } from "Private/pages/Business/store";
+import { businessActions as actions } from "Private/pages/Agent/Business/store";
 
 export default function MarketMakerKybListing() {
     const dispatch = useDispatch();

@@ -16,7 +16,7 @@ import FormTextField from "App/core/hook-form/FormTextField";
 import { ApproveSchema, statusOptions } from "./BusinessKycDetail";
 import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
 
-import { businessActions } from "Private/pages/Business/store";
+import { businessActions } from "Private/pages/Agent/Business/store";
 
 export default function BusinessKybDetail({ data, loading, relatedTo }) {
     const methods = useForm({

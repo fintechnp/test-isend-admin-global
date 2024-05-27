@@ -15,7 +15,7 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
 
-import { businessActions } from "Private/pages/Business/store";
+import { businessActions } from "Private/pages/Agent/Business/store";
 
 import * as yup from "yup";
 

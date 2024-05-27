@@ -17,7 +17,7 @@ import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 
-import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 
 export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
     const dispatch = useDispatch();

@@ -98,70 +98,69 @@ import SanctionList from "../pages/Compliance/SanctionList";
 import CompliancePaymentRules from "../pages/Compliance/PaymentRules";
 
 //Settings
-import Settings from "../pages/Settings";
-
-//Messages
-import Messages from "../pages/Messages";
+import Settings from "../pages/Auth/Settings";
 
 //My Account
-import MyAccount from "../pages/MyAccount";
+import MyAccount from "../pages/Auth/MyAccount";
 
 import ListBanner from "../pages/Setup/Banner/ListBanner";
 import ListBulkEmail from "../pages/Utilities/BulkEmail/ListBulkEmail";
 import ListCountryState from "../pages/Setup/CountryState/ListCountryState";
 import ListFundingSource from "../pages/Setup/FundingSource/ListFundingSource";
 
+// region: B2B
+
 //Market Maker
-import ListMarketMaker from "../pages/MarketMaker/ListMarketMaker";
-import AddMarketMaker from "../pages/MarketMaker/AddMarketMaker";
-import ViewMarketMaker from "../pages/MarketMaker/ViewMarketMaker";
-import UpdateMarketMaker from "../pages/MarketMaker/UpdateMarketMaker";
-import AddMarketMakerKyb from "../pages/MarketMaker/AddMarketMakerKyb";
-import AddMarketMakerKyc from "../pages/MarketMaker/AddMarketMakerKyc";
-import UpdateMarketMakerKyb from "../pages/MarketMaker/UpdateMarketMakerKyb";
-import UpdateMarketMakerKyc from "../pages/MarketMaker/UpdateMarketMakerKyc";
+import ListMarketMaker from "../pages/Agent/MarketMaker/ListMarketMaker";
+import AddMarketMaker from "../pages/Agent/MarketMaker/AddMarketMaker";
+import ViewMarketMaker from "../pages/Agent/MarketMaker/ViewMarketMaker";
+import UpdateMarketMaker from "../pages/Agent/MarketMaker/UpdateMarketMaker";
+import AddMarketMakerKyb from "../pages/Agent/MarketMaker/AddMarketMakerKyb";
+import AddMarketMakerKyc from "../pages/Agent/MarketMaker/AddMarketMakerKyc";
+import UpdateMarketMakerKyb from "../pages/Agent/MarketMaker/UpdateMarketMakerKyb";
+import UpdateMarketMakerKyc from "../pages/Agent/MarketMaker/UpdateMarketMakerKyc";
 
 ///Credit Limit
-import CreditLimit from "../pages/CreditLimit/CreditLimit";
-import AddCreditLimit from "../pages/CreditLimit/AddCreditLimit";
-import ViewCreditLimit from "../pages/CreditLimit/ViewCreditLimit";
-import EditCreditLimit from "../pages/CreditLimit/EditCreditLimit";
+import CreditLimit from "../pages/Agent/CreditLimit/CreditLimit";
+import AddCreditLimit from "../pages/Agent/CreditLimit/AddCreditLimit";
+import ViewCreditLimit from "../pages/Agent/CreditLimit/ViewCreditLimit";
+import EditCreditLimit from "../pages/Agent/CreditLimit/EditCreditLimit";
 
 // BALANCE REQUEST
-import ListBalanceRequest from "../pages/BalanceRequest/ListBalanceRequest";
-import ViewBalanceRequest from "../pages/BalanceRequest/ViewBalanceRequest";
+import ListBalanceRequest from "../pages/Agent/BalanceRequest/ListBalanceRequest";
+import ViewBalanceRequest from "../pages/Agent/BalanceRequest/ViewBalanceRequest";
 
 //Business
-import ListBusiness from "../pages/Business/ListBusiness";
-import ViewBusiness from "../pages/Business/ViewBusiness";
-import ListSingeTransaction from "../pages/B2BTransactions/ListSingleTransaction";
-import ViewSingleTransaction from "../pages/B2BTransactions/ViewSingleTransaction";
-import ListBatchTransaction from "../pages/B2BTransactions/ListBatchTransaction";
-import ViewBatchTransaction from "../pages/B2BTransactions/ViewBatchTransaction";
+import ListBusiness from "../pages/Agent/Business/ListBusiness";
+import ViewBusiness from "../pages/Agent/Business/ViewBusiness";
+import ListSingeTransaction from "../pages/Agent/B2BTransactions/ListSingleTransaction";
+import ViewSingleTransaction from "../pages/Agent/B2BTransactions/ViewSingleTransaction";
+import ListBatchTransaction from "../pages/Agent/B2BTransactions/ListBatchTransaction";
+import ViewBatchTransaction from "../pages/Agent/B2BTransactions/ViewBatchTransaction";
 
 // B2b Beneficiary
-import ListB2bBeneficiary from "../pages/Beneficiary/ListBeneficiary";
-import ViewB2bBeneficiary from "../pages/Beneficiary/ViewBeneficiary";
+import ListB2bBeneficiary from "../pages/Agent/Beneficiary/ListBeneficiary";
+import ViewB2bBeneficiary from "../pages/Agent/Beneficiary/ViewBeneficiary";
 
 // BUSINESS SERVICE CHARGE
-import ListBusinessServiceCharge from "../pages/BusinessServiceCharge/ListBusinessServiceCharge";
-import AddBusinessServiceCharge from "../pages/BusinessServiceCharge/AddBusinessServiceCharge";
-import UpdateBusinessServiceCharge from "../pages/BusinessServiceCharge/UpdateBusinessServiceCharge";
+import ListBusinessServiceCharge from "../pages/Agent/BusinessServiceCharge/ListBusinessServiceCharge";
+import AddBusinessServiceCharge from "../pages/Agent/BusinessServiceCharge/AddBusinessServiceCharge";
+import UpdateBusinessServiceCharge from "../pages/Agent/BusinessServiceCharge/UpdateBusinessServiceCharge";
 
 //LIST KYC USER
-import ListKycUser from "../pages/KycUser/ListKycUser";
-import ViewKycUser from "../pages/KycUser/ViewKycUser";
-import AddMarketMakerUserKyc from "../pages/MarketMaker/AddMarketMakerUserKyc";
-import EditMarketMakerUserKyc from "../pages/MarketMaker/EditMarketMakerUserKyc";
+import ListKycUser from "../pages/Agent/KycUser/ListKycUser";
+import ViewKycUser from "../pages/Agent/KycUser/ViewKycUser";
+import AddMarketMakerUserKyc from "../pages/Agent/MarketMaker/AddMarketMakerUserKyc";
+import EditMarketMakerUserKyc from "../pages/Agent/MarketMaker/EditMarketMakerUserKyc";
 
 //Ledger
-import ListLedger from "../pages/Ledger/ListLedger";
-import ViewLedger from "../pages/Ledger/ViewLedger";
-import AddLedger from "../pages/Ledger/AddLedger";
+import ListLedger from "../pages/Agent/Ledger/ListLedger";
+import ViewLedger from "../pages/Agent/Ledger/ViewLedger";
+import AddLedger from "../pages/Agent/Ledger/AddLedger";
 
 // B2b Account
-import ListB2bAccount from "../pages/B2BAccount/ListAllAccounts";
-import ListAccountList from "Private/pages/AccountList/ListAccountList";
+import ListB2bAccount from "../pages/Agent/B2BAccount/ListAllAccounts";
+import ListAccountList from "Private/pages/Agent/AccountList/ListAccountList";
 import AchTransactions from "Private/pages/Transactions/AchTransactions/AchTransactions";
 import ListCountries from "Private/pages/Setup/Countries/ListCountries";
 import ListDocumentAcceptance from "Private/pages/Setup/DocumentAcceptance/ListDocumentAcceptance";
@@ -523,9 +522,6 @@ const privateRoutes = [
 
     //Settings
     { path: "/settings", component: <Settings title="Settings" /> },
-
-    //Messages
-    { path: "/messages", component: <Messages title="Messages" /> },
 
     //MyAccount
     { path: "/account", component: <MyAccount title="My Account" /> },
