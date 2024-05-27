@@ -15,6 +15,9 @@ import actions from "../../store/actions";
 import Row from "App/components/Row/Row";
 import { useLocation, useSearchParams } from "react-router-dom";
 import dateUtils from "App/utils/dateUtils";
+import SubmitButton from "App/components/Button/SubmitButton";
+import HasPermission from "Private/components/shared/HasPermission";
+import { permissions } from "Private/data/permissions";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -124,9 +127,17 @@ function Filter({
                             <Typography mr={2}>{dateUtils.getFormattedDate(lastUpdatedAt)}</Typography>
                         </Box>
                     )}
-                    <Button size="large" onClick={handleOnRefreshExchangeRate} disabled={isRefreshing}>
-                        Pull exchange rate from IPAY
-                    </Button>
+                    <HasPermission permission={permissions.PULL_EXCHANGE_RATE_FROM_IPAY}>
+                        <SubmitButton
+                            type="button"
+                            size="large"
+                            variant="outlined"
+                            onClick={handleOnRefreshExchangeRate}
+                            isLoading={isRefreshing}
+                        >
+                            Pull exchange rate from IPAY
+                        </SubmitButton>
+                    </HasPermission>
                 </>
             )}
             <DropWrapper>

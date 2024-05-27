@@ -65,8 +65,8 @@ function Documents(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
+                Header: "SN",
+                accessor: "f_serial_no",
                 maxWidth: 50,
             },
             {
@@ -131,6 +131,12 @@ function Documents(props) {
                         </StyledName>
                     </Box>
                 ),
+            },
+            {
+                Header: "Status",
+                accessor: "status",
+                maxWidth: 50,
+                Cell: (data) => <>{data.value}</>
             },
             {
                 Header: () => (

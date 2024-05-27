@@ -5,13 +5,6 @@ import { styled } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    // minWidth: "100px",
-    color: "#fff",
-    // borderRadius: "2px",
-    background: theme.palette.primary.main,
-    "&:hover": {
-        background: theme.palette.primary.dark,
-    },
     textTransform: "capitalize",
     display: "flex",
     gap: theme.spacing(1),
