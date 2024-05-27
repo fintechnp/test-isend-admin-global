@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { Field, change, Form, reduxForm } from "redux-form";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import { useDispatch } from "react-redux";
+import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import React, { useState, useEffect } from "react";
+import { Field, Form, reduxForm } from "redux-form";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import Validator from "../../../../../../App/utils/validators";
+import Validator from "App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -28,12 +27,6 @@ const FormWrapper = styled(Grid)(({ theme }) => ({
 
 const FieldWrapper = styled(Grid)(({ theme }) => ({
     padding: "1px 16px",
-}));
-
-const CodeText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "14px",
-    paddingLeft: "8px",
 }));
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
@@ -65,11 +58,9 @@ const NextButton = styled(Button)(({ theme }) => ({
 const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText, update, pcountry, phone_code }) => {
     const dispatch = useDispatch();
 
-    const [code, setCode] = useState("01");
 
     const reference = JSON.parse(localStorage.getItem("reference"));
 
-    const country = JSON.parse(localStorage.getItem("country"));
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
         page_size: 100,
@@ -99,9 +90,6 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText, update
             dispatch({ type: "GET_DELIVERY_OPTION", query: filterSchema });
         }
     }, [dispatch, filterSchema]);
-
-
-
 
     return (
         <Form onSubmit={handleSubmit}>

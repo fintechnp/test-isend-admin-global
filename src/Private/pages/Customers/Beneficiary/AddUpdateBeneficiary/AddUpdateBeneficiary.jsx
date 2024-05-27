@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
-import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
 import { reset } from "redux-form";
-import { useNavigate, useParams } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
+import { Helmet } from "react-helmet-async";
 import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 
-import actions from "./../store/actions";
 import BeneficiaryForm from "./Form";
+
+import actions from "./../store/actions";
 
 const Container = styled(Grid)(({ theme }) => ({
     display: "flex",

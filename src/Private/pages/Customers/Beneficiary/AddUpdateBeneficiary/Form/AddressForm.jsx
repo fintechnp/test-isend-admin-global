@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, change } from "redux-form";
-import { Grid, Button } from "@mui/material";
-import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-
+import { useDispatch } from "react-redux";
 import Divider from "@mui/material/Divider";
+import { Grid, Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import React, { useState, useEffect } from "react";
+import { Field, Form, reduxForm, change } from "redux-form";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import Validator from "../../../../../../App/utils/validators";
+
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
+
+import Validator from "App/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -65,7 +66,7 @@ const NextButton = styled(Button)(({ theme }) => ({
 const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, phone_code, update }) => {
     const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
-    const [code, setCode] = useState("01");
+    const [code, setCode] = useState("");
 
     const [filterSchema, setFilterSchema] = useState({
         page_number: 1,
@@ -186,16 +187,20 @@ const AddressForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, 
                                 validate={Validator.mobileValidator}
                                 InputProps={{
                                     startAdornment: (
-                                        <Box
-                                            sx={{
-                                                minWidth: "52px",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                            }}
-                                        >
-                                            <CodeText>+{code}</CodeText>
-                                        </Box>
+                                        <>
+                                            {code && (
+                                                <Box
+                                                    sx={{
+                                                        minWidth: "52px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                    }}
+                                                >
+                                                    <CodeText>+{code}</CodeText>
+                                                </Box>
+                                            )}
+                                        </>
                                     ),
                                 }}
                             />

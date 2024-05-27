@@ -1,18 +1,19 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import MuiStepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
+import { styled } from "@mui/material/styles";
+import MuiStepper from "@mui/material/Stepper";
 import StepLabel from "@mui/material/StepLabel";
-import { useNavigate, useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import BasicForm from "./BasicForm";
 import AddressForm from "./AddressForm";
 import CollectionForm from "./CollectionForm";
+
 import actions from "./../../store/actions";
 
 const CompletedWrapper = styled(Box)(({ theme }) => ({
@@ -281,7 +282,6 @@ function BeneficiaryForm({ update_data, loading }) {
                         <Box>
                             {activeStep === 0 && (
                                 <BasicForm
-                                    enableReinitialize
                                     destroyOnUnmount={false}
                                     shouldError={() => true}
                                     initialValues={{ customer_id: id }}

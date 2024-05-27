@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, change, getFormValues, reduxForm } from "redux-form";
-import { Grid, Button } from "@mui/material";
 import Divider from "@mui/material/Divider";
+import { Grid, Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { formValueSelector } from "redux-form";
+import { Field, Form, change, getFormValues, reduxForm } from "redux-form";
+import TextField from "App/components/Fields/TextField";
+import SelectField from "App/components/Fields/SelectField";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import Validator from "../../../../../../App/utils/validators";
+import Validator from "App/utils/validators";
 import locationActions from "./../../../../Setup/PayoutLocation/store/actions";
 import deliveryOptionActions from "Private/pages/Setup/DeliveryOption/store/actions";
 
