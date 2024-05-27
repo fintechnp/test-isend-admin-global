@@ -8,6 +8,8 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import DocumentAcceptanceFilterForm from "./DocumentAcceptanceFilterForm";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
+import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
 import documentAcceptanceActions from "Private/features/documentAcceptance/documentAcceptanceActions";
 
 const initialState = {
@@ -17,6 +19,8 @@ const initialState = {
 
 const DocumentAcceptance = () => {
     const dispatch = useDispatch();
+
+    const { can } = useAuthUser();
 
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -67,34 +71,36 @@ const DocumentAcceptance = () => {
                 header: "Shufti Document Type",
                 accessorKey: "shufti_document_type",
             },
-            {
-                header: "Actions",
-                cell: ({ row }) => {
-                    console.log("row", row.original);
-
-                    return (
-                        <TableRowActionContainer>
-                            <IconButton
-                                onClick={() =>
-                                    dispatch({
-                                        type: "OPEN_UPDATE_DOCUMENT_ACCEPTANCE_MODAL",
-                                        payload: row.original,
-                                    })
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </TableRowActionContainer>
-                    );
-                },
-            },
+            ...(can(permissions.EDIT_KYC_DOCUMENT_SETUP)
+                ? [
+                      {
+                          header: "Actions",
+                          cell: ({ row }) => {
+                              return (
+                                  <TableRowActionContainer>
+                                      <IconButton
+                                          onClick={() =>
+                                              dispatch({
+                                                  type: "OPEN_UPDATE_DOCUMENT_ACCEPTANCE_MODAL",
+                                                  payload: row.original,
+                                              })
+                                          }
+                                      >
+                                          <EditOutlinedIcon
+                                              sx={{
+                                                  fontSize: "20px",
+                                                  "&:hover": {
+                                                      background: "transparent",
+                                                  },
+                                              }}
+                                          />
+                                      </IconButton>
+                                  </TableRowActionContainer>
+                              );
+                          },
+                      },
+                  ]
+                : []),
         ],
         [dispatch],
     );

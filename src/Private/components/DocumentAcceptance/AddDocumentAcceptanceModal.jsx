@@ -21,7 +21,7 @@ export default function AddDocumentAcceptanceModal() {
     if (!isOpen) <></>;
 
     return (
-        <Modal open={isOpen} onClose={handleClose} title="Add Document Acceptance Form">
+        <Modal open={isOpen} onClose={handleClose} title="Add Document">
             <DocumentAcceptanceForm
                 onSubmit={handleSubmit}
                 handleClose={handleClose}

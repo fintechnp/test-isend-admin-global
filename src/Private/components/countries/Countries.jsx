@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo } from "react";
-import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import dateUtils from "App/utils/dateUtils";
@@ -10,6 +10,9 @@ import countryActions from "Private/features/countries/countryActions";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
+import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
+
 const initialState = {
     page_number: 1,
     page_size: 15,
@@ -17,6 +20,9 @@ const initialState = {
 
 const Countries = () => {
     const dispatch = useDispatch();
+
+    const { can } = useAuthUser();
+
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const countriesList = JSON.parse(localStorage.getItem("country"));
@@ -87,31 +93,35 @@ const Countries = () => {
                     return <Typography>{dateUtils.getFormattedDate(row.original.updated_ts)}</Typography>;
                 },
             },
-            {
-                header: "Actions",
-                accessorKey: "show",
-                cell: ({ row }) => (
-                    <TableRowActionContainer>
-                        <IconButton
-                            onClick={() =>
-                                dispatch({
-                                    type: "OPEN_UPDATE_COUNTRY_MODAL",
-                                    payload: row.original,
-                                })
-                            }
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </TableRowActionContainer>
-                ),
-            },
+            ...(can(permissions.EDIT_COUNTRY_SETUP)
+                ? [
+                      {
+                          header: "Actions",
+                          accessorKey: "show",
+                          cell: ({ row }) => (
+                              <TableRowActionContainer>
+                                  <IconButton
+                                      onClick={() =>
+                                          dispatch({
+                                              type: "OPEN_UPDATE_COUNTRY_MODAL",
+                                              payload: row.original,
+                                          })
+                                      }
+                                  >
+                                      <EditOutlinedIcon
+                                          sx={{
+                                              fontSize: "20px",
+                                              "&:hover": {
+                                                  background: "transparent",
+                                              },
+                                          }}
+                                      />
+                                  </IconButton>
+                              </TableRowActionContainer>
+                          ),
+                      },
+                  ]
+                : []),
         ],
         [],
     );

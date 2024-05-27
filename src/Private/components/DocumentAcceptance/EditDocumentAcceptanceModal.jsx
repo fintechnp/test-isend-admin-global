@@ -27,7 +27,7 @@ export default function EditDocumentAcceptanceModal() {
     };
 
     return (
-        <Modal open={isOpen} onClose={handleClose} title="Edit Document Acceptance">
+        <Modal open={isOpen} onClose={handleClose} title="Edit Document">
             <DocumentAcceptanceForm
                 onSubmit={handleSubmit}
                 handleClose={handleClose}
