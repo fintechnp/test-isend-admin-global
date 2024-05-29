@@ -83,7 +83,9 @@ export default function CustomerDeleteRequestDetail() {
                     <RenderField label="Remarks" value={deleteRequestDetails?.remarks} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {deleteRequestDetails?.status?.toLowerCase() !== DeleteAccountStatus.APPROVED && (
+                    {![DeleteAccountStatus.APPROVED, DeleteAccountStatus.REJECTED].includes(
+                        deleteRequestDetails?.status?.toLowerCase(),
+                    ) && (
                         <Row gap={2}>
                             <Button
                                 onClick={() => {

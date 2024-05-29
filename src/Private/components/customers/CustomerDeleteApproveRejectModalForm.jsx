@@ -86,7 +86,7 @@ export default function CustomerDeleteApproveRejectModalForm({ setOpen, status }
                         <Grid item>
                             <SubmitButton
                                 submitText={status === DeleteAccountStatus.APPROVED ? "Approve" : "Reject"}
-                                submittingText="Approving"
+                                submittingText={status === DeleteAccountStatus.APPROVED ? "Approving" : "Rejecting"}
                                 isLoading={loading}
                             />
                         </Grid>
