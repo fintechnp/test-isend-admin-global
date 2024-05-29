@@ -7,21 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import SubmitButton from "App/components/Button/SubmitButton";
 
 import actions from "../../store/actions";
-import { refundPaymentSchema } from "../schema/refundPaymentSchema";
+import { makePaymentSchema } from "../schema/makePaymentSchema";
 
-export default function RefundRowForm({ row, onRefundSuccess }) {
+export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transactionId }) {
     const dispatch = useDispatch();
 
-    const { loading, success, webhookId } = useSelector((state) => state.refund_payment);
+    const { loading, success, webhookId } = useSelector((state) => state.make_payment);
 
     const [formData, setFormData] = useState({
+        transactionId: transactionId,
         webhookId: row.webhook_id,
-        amount: null,
+        paymentAmount: null,
         remarks: null,
     });
 
     const [errors, setErrors] = useState({
-        amount: "",
+        paymentAmount: "",
         remarks: "",
     });
 
@@ -31,8 +32,8 @@ export default function RefundRowForm({ row, onRefundSuccess }) {
 
     const handleMakePaymentClick = async () => {
         try {
-            await refundPaymentSchema.validate(formData, { abortEarly: false });
-            dispatch(actions.refund_payment(formData));
+            await makePaymentSchema.validate(formData, { abortEarly: false });
+            dispatch(actions.make_payment(formData));
         } catch (err) {
             const validationErrors = {};
             err.inner.forEach((error) => {
@@ -46,8 +47,8 @@ export default function RefundRowForm({ row, onRefundSuccess }) {
 
     useEffect(() => {
         if (success) {
-            onRefundSuccess?.();
-            dispatch(actions.refund_payment_reset());
+            onMakePaymentSuccess?.();
+            dispatch(actions.make_payment_reset());
         }
     }, [success]);
 
@@ -61,13 +62,13 @@ export default function RefundRowForm({ row, onRefundSuccess }) {
                 <TextField
                     type="text"
                     inputMode="numeric"
-                    name="amount"
+                    name="paymentAmount"
                     size="small"
                     placeholder="Enter amount"
                     onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
-                    helperText={errors?.amount}
-                    error={!!errors?.amount}
-                    onFocus={() => clearErrors("amount")}
+                    helperText={errors?.paymentAmount}
+                    error={!!errors?.paymentAmount}
+                    onFocus={() => clearErrors("paymentAmount")}
                 />
             </TableCell>
             <TableCell>
@@ -89,8 +90,8 @@ export default function RefundRowForm({ row, onRefundSuccess }) {
                     onClick={handleMakePaymentClick}
                     isLoading={loading && webhookId === row.webhook_id}
                     disabled={loading && webhookId !== row.webhook_id}
-                    submitText="Refund"
-                    submittingText="Refunding"
+                    submitText="Submit"
+                    submittingText="Processing"
                 />
             </TableCell>
         </TableRow>

@@ -1,6 +1,5 @@
-
 const apiEndpoints = {
-    forgotPassword: '/account/forgotpassword',
+    forgotPassword: "/account/forgotpassword",
     countryStates: {
         list: "common/:country/states",
         create: "common/states",
@@ -218,9 +217,9 @@ const apiEndpoints = {
     notification: {
         resend: "/notification/resend",
     },
-    transaction:{
-        achTransaction:"/AchTransactions",
-        updateAchTransactionStatus:"/AchTransactions/:id"
+    transaction: {
+        achTransaction: "/AchTransactions",
+        updateAchTransactionStatus: "/AchTransactions/:id",
     },
     userProfileSetups: {
         list: "/Roles/GetRoles",
@@ -239,6 +238,7 @@ const apiEndpoints = {
         zaiMakePayment: "/zai/make-payment",
         zaiLogs: "/zai/webhook-log",
         zaiRefundPayment: "/zai/refund-payment",
+        zaiRefundLogs: "/zai/refund-log",
     },
 };
 

@@ -235,16 +235,19 @@ export const ChangeTheme = (mode = true) => {
             },
             MuiTableHead: {
                 styleOverrides: {
-                    root: {
-                        "& .MuiTableCell-root,.MuiTypography-root": {
+                    root: ({ theme }) => ({
+                        "& .MuiTableCell-root": {
+                            background: theme.palette.primary.main,
                             fontFamily: fonts.secondary,
                             lineHeight: "1.5rem",
+                            color: theme.palette.common.white,
                             "& .MuiTypography-root": {
+                                color: theme.palette.common.white,
                                 fontFamily: fonts.secondary,
                                 lineHeight: "1.5rem",
                             },
                         },
-                    },
+                    }),
                 },
             },
             MuiTableBody: {

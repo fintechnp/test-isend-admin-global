@@ -88,6 +88,11 @@ const actions = {
     REFUND_PAYMENT_FAILED: "REFUND_PAYMENT_FAILED",
     REFUND_PAYMENT_RESET: "REFUND_PAYMENT_RESET",
 
+    GET_ZAI_REFUND_LOGS: "GET_ZAI_REFUND_LOGS",
+    GET_ZAI_REFUND_LOGS_SUCCESS: "GET_ZAI_REFUND_LOGS_SUCCESS",
+    GET_ZAI_REFUND_LOGS_FAILED: "GET_ZAI_REFUND_LOGS_FAILED",
+    GET_ZAI_REFUND_LOGS_RESET: "GET_ZAI_REFUND_LOGS_RESET",
+
     /////////////////////////  TRANSACTION DOCUMENTS  /////////////////////////
 
     GET_TRANSACTION_DOCUMENTS: "GET_TRANSACTION_DOCUMENTS",
@@ -166,10 +171,20 @@ const actions = {
         id,
     }),
 
+    get_zai_refund_logs: (query) => ({
+        type: actions.GET_ZAI_REFUND_LOGS,
+        query,
+    }),
+
     //create
 
     make_payment: (data) => ({
         type: actions.MAKE_PAYMENT,
+        data,
+    }),
+
+    make_payment_reset: (data) => ({
+        type: actions.MAKE_PAYMENT_RESET,
         data,
     }),
 

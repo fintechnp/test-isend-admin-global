@@ -1,7 +1,6 @@
 import actions from "../actions";
 
 const initialState = {
-    webhookId: null,
     success: false,
     loading: false,
     error: null,
@@ -10,28 +9,32 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.MAKE_PAYMENT:
+        case actions.GET_ZAI_REFUND_LOGS:
             return {
                 ...state,
-                webhookId: action.data.webhookId,
                 loading: true,
             };
-        case actions.MAKE_PAYMENT_SUCCESS:
+        case actions.GET_ZAI_REFUND_LOGS_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
             };
-        case actions.MAKE_PAYMENT_FAILED:
+        case actions.GET_ZAI_REFUND_LOGS_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
             };
-        case actions.MAKE_PAYMENT_RESET:
-            return initialState;
+        case actions.GET_ZAI_REFUND_LOGS_RESET:
+            return {
+                success: false,
+                loading: false,
+                error: null,
+                response: [],
+            };
         default:
             return state;
     }

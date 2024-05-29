@@ -10,6 +10,7 @@ import FormDatePicker from "App/core/hook-form/FormDatePicker";
 
 import FormTextField from "App/core/hook-form/FormTextField";
 import FormSelect from "App/core/hook-form/FormSelect";
+import referenceTypeId from "Private/config/referenceTypeId";
 
 export default function ZaiFilterForm({ loading, setFilterSchema, handleReset }) {
     const reference = JSON.parse(localStorage.getItem("reference"));
@@ -50,13 +51,14 @@ export default function ZaiFilterForm({ loading, setFilterSchema, handleReset })
                             name="send_status"
                             label="Transaction Status"
                             options={
-                                reference &&
                                 reference
-                                    ?.filter((ref_data) => ref_data.reference_type === 66)[0]
+                                    ?.filter(
+                                        (ref_data) => ref_data.reference_type === referenceTypeId.transactionStatus,
+                                    )[0]
                                     .reference_data.map((ref) => ({
                                         label: ref.name,
                                         value: ref.value,
-                                    }))
+                                    })) ?? []
                             }
                         />
                     </Grid>

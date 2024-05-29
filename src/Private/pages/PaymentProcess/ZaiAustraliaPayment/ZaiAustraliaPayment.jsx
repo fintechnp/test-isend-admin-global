@@ -12,10 +12,10 @@ import { ReferenceName, getFormattedDate, getFormattedTime } from "App/helpers";
 
 import actions from "../store/actions";
 import ViewBalance from "./ViewBalance";
-import MakePayment from "./MakePayment";
-import PopoverAction from "./ViewBalance/PopoverAction";
-import ViewPaymentLogs from "./RefundPayment/ViewPaymentLogs";
 import ZaiFilterForm from "./SearchForm";
+import PopoverAction from "./ViewBalance/PopoverAction";
+import RefundPaymentModal from "./RefundPayment/RefundPaymentModal";
+import MakePaymentModal from "./MakePayment/MakePaymentModal";
 
 const initialState = {
     page_number: 1,
@@ -43,19 +43,18 @@ const ZaiAustraliaPayment = () => {
 
     const [showPayment, setShowPayment] = useState({
         isOpen: false,
-        transactionRefNo: null,
+        customerId: null,
+        customerName: null,
+        transactionId: null,
     });
 
     const [showRefund, setShowRefund] = useState({
         isOpen: false,
         customerId: null,
+        customerName: null,
     });
 
-    const { response: ZaiAustraliaPaymentDetails, loading: l_loading } = useSelector(
-        (state) => state.get_zai_australia_payment_details,
-    );
-
-    console.log("The Zai payments", ZaiAustraliaPaymentDetails);
+    const { response, loading: l_loading } = useSelector((state) => state.get_zai_australia_payment_details);
 
     useEffect(() => {
         dispatch(actions?.get_zai_australia_payment_details(filterSchema));
@@ -156,13 +155,16 @@ const ZaiAustraliaPayment = () => {
                         onMakePayment={() => {
                             setShowPayment({
                                 isOpen: true,
-                                transactionRefNo: row?.original?.transaction_id,
+                                customerId: row.original.customer_id,
+                                customerName: row.original.customer_name,
+                                transactionId: row.original.transaction_id,
                             });
                         }}
                         onRefundPayment={() => {
                             setShowRefund({
                                 isOpen: true,
                                 customerId: row.original.customer_id,
+                                customerName: row.original.customer_name,
                             });
                         }}
                     />
@@ -184,24 +186,24 @@ const ZaiAustraliaPayment = () => {
         const pageSize = e.target.value;
         const updatedFilterSchema = {
             ...filterSchema,
-
             page_size: pageSize,
         };
         setFilterSchema(updatedFilterSchema);
     };
 
+    console.log({ showPayment });
+
     return (
         <PageContent title="Zai Australia Payment">
             <ZaiFilterForm loading={l_loading} setFilterSchema={setFilterSchema} handleReset={handleReset} />
-
             <TanstackReactTable
                 columns={columns}
                 title="Zai Australia Payment"
-                data={ZaiAustraliaPaymentDetails?.data?.result ?? []}
+                data={response?.data ?? []}
                 loading={l_loading}
                 renderPagination={() => (
                     <TablePagination
-                        paginationData={ZaiAustraliaPaymentDetails?.pagination}
+                        paginationData={response?.pagination}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
                     />
@@ -218,24 +220,30 @@ const ZaiAustraliaPayment = () => {
                 }
             />
 
-            <MakePayment
-                transactionRefNo={showPayment?.transactionRefNo}
+            <MakePaymentModal
+                customerId={showPayment?.customerId}
+                customerName={showPayment.customerName}
+                transactionId={showPayment.transactionId}
                 isOpen={showPayment?.isOpen}
                 onClose={() => {
                     setShowPayment({
                         isOpen: false,
-                        transactionRefNo: null,
+                        customerId: null,
+                        customerName: null,
+                        transactionId: null,
                     });
                 }}
             />
 
-            <ViewPaymentLogs
+            <RefundPaymentModal
                 customerId={showRefund?.customerId}
+                customerName={showRefund.customerName}
                 isOpen={showRefund?.isOpen}
                 onClose={() => {
                     setShowRefund({
                         isOpen: false,
                         customerId: null,
+                        customerName: null,
                     });
                 }}
             />

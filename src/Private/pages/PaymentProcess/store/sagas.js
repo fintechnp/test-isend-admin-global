@@ -371,6 +371,22 @@ export const checkBalance = takeEvery(actions.CHECK_BALANCE_DETAILS, function* (
     }
 });
 
+export const getZaiRefundLogs = takeEvery(actions.GET_ZAI_REFUND_LOGS, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.transaction.zaiRefundLogs, action.query);
+
+        yield put({
+            type: actions.GET_ZAI_REFUND_LOGS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_ZAI_REFUND_LOGS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getTransactionDetails,
@@ -396,5 +412,6 @@ export default function* saga() {
         makePayment,
         refundPayment,
         getZaiLogs,
+        getZaiRefundLogs,
     ]);
 }

@@ -284,6 +284,7 @@ import {
     GetZaiLogsReducer,
     GetRefundPaymentReducer,
     GetMakePaymentReducer,
+    GetZaiRefundLogsReducer,
 } from "./pages/PaymentProcess/store";
 
 //Reports
@@ -763,16 +764,12 @@ export const privateReducer = {
     get_aml_suspicious_details: GetAmlSuspiciousDetailsReducer,
     get_exception_transactions: GetExceptionTransactionsReducer,
     get_transaction_refund_block: GetRefundBlockTransactionsReducer,
-
     get_zai_australia_payment_details: GetZaiAustraliaPaymentReducer,
-
     get_balance_details: GetBalanceDetailsReducers,
-
     get_zai_logs: GetZaiLogsReducer,
-
     make_payment: GetMakePaymentReducer,
-
     refund_payment: GetRefundPaymentReducer,
+    get_zai_refund_logs: GetZaiRefundLogsReducer,
 
     // GET_BALANCE_DETAILS
 

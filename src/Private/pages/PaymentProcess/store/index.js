@@ -30,3 +30,5 @@ export { default as GetSanctionDetailsReducer } from "./reducers/getAMLSanctionD
 export { default as DownloadTransactionPdfReducer } from "./reducers/downloadTransactionPdf";
 export { default as SendMailTransactionReducer } from "./reducers/sendMailTransaction";
 export { default as PaymentProcessingAction } from "./actions";
+
+export { default as GetZaiRefundLogsReducer } from "./reducers/getZaiRefundLogs";
