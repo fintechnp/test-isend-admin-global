@@ -58,7 +58,6 @@ export default function CustomerDeleteApproveRejectModalForm({ setOpen, status }
 
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
-            {JSON.stringify({ s })}
             <Grid container item xs={12} direction="row" spacing={2}>
                 <Grid item xs={12} sm={12}>
                     <FormTextField name="remarks" label="Remarks" multiline />
