@@ -1,15 +1,14 @@
 .wave-animation-container {
     position: fixed;
     top: 80%;
-    left: 0;
+    left: 5svw;
 }
 
 .wave {
     position: absolute;
     opacity: 0.4;
-    width: 2000px;
-    height: 2000px;
-    margin-right: 0;
+    width: 90svw;
+    height: 90svw;
     border-radius: 43%;
 }
 
