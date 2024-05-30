@@ -198,7 +198,7 @@ function Documents(props) {
                             fontSize="25px"
                             loading={d_loading}
                             id={row.original.tid}
-                            handleDelete={handleDelete}
+                            handleDelete={() => handleDelete(row.original.document_id)}
                             tooltext="Delete Documents"
                         />
                     </Box>
