@@ -1,4 +1,4 @@
-name: Charoit - UAT
+name: Charoit - UAT 🟡
 
 on: [workflow_dispatch]
 
