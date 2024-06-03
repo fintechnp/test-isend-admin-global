@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 import MuiList from "@mui/material/List";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
@@ -14,37 +15,25 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 import SubHeader from "./SubHeader";
 
-const ListItem = styled(MuiListItem)(({ theme }) => ({
+const ListDropdownItem = styled(
+    MuiListItem,
+    {
+        shou
+    },
+)(({ theme, isSearching }) => ({
+    borderRadius: "4px",
+    overflow: "hidden",
     display: "flex",
     flexDirection: "column",
-    margin: "4px 0px",
-    background: theme.palette.primary.main,
+    margin: "8px 0px",
     "&:hover": {
-        borderRadius: "6px",
-    },
-    "&:focus": {
-        borderRadius: "6px",
-        background: theme.palette.background.main,
-        "& .MuiListItemText-root": {
-            color: theme.palette.primary.dark,
-        },
-        "& .MuiListItemIcon-root": {
-            color: theme.palette.primary.dark,
-        },
-    },
-    "& .MuiSvgIcon-root": {
-        color: theme.palette.primary.contrastText,
-        [theme.breakpoints.down("sm")]: {
-            display: "none",
-        },
+        borderRadius: "4px",
     },
     "& .MuiListItemText-root": {
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.common.white,
     },
     "& .MuiListItemButton-root.Mui-selected": {
-        borderRadius: "6px",
-        color: theme.palette.primary.dark,
-        background: theme.palette.primary.contrastText,
+        background: theme.palette.common.white,
         "& .MuiListItemText-root": {
             color: theme.palette.primary.dark,
         },
@@ -56,7 +45,7 @@ const ListItem = styled(MuiListItem)(({ theme }) => ({
         },
         "&:hover": {
             color: theme.palette.primary.dark,
-            background: theme.palette.background.light,
+            background: theme.palette.common.white,
         },
         [theme.breakpoints.down("sm")]: {
             display: "none",
@@ -65,15 +54,20 @@ const ListItem = styled(MuiListItem)(({ theme }) => ({
             fill: theme.palette.primary.main,
         },
     },
+    ...(isSearching
+        ? {
+              background: theme.palette.common.white,
+          }
+        : undefined),
 }));
 
 const ListHeader = styled(ListItemButton)(({ theme, open }) => ({
     width: "100%",
-    padding: "6px 8px !important",
+    padding: "4px 8px !important",
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
-    borderRadius: "6px",
+    borderRadius: "4px",
     background: theme.palette.background.dark,
     "& .MuiSvgIcon-root": {
         color: theme.palette.text.main,
@@ -83,27 +77,29 @@ const ListHeader = styled(ListItemButton)(({ theme, open }) => ({
     },
 }));
 
-const ListButton = styled(ListItemButton)(({ theme, open }) => ({
+const ListButton = styled(ListItemButton, {
+    shouldForwardProp: (prop) => prop !== "isSearching",
+})(({ theme, open, isSearching }) => ({
     width: "100%",
-    padding: "6px 8px !important",
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    ...(!open && {
-        padding: "8px 8px !important",
-    }),
+    height: "36px",
+    ...(isSearching
+        ? {
+              backgroundColor: theme.palette.common.white,
+          }
+        : undefined),
     svg: {
+        height: "20px",
         fill: theme.palette.background.paper,
     },
+    padding: "9px 11px",
     "&:hover": {
-        borderRadius: "6px",
-        color: theme.palette.primary.dark,
-        background: theme.palette.background.light,
+        background: theme.palette.common.white,
         "& .MuiSvgIcon-root": {
-            color: theme.palette.primary.dark,
+            color: theme.palette.primary.main,
         },
         "& .MuiListItemText-root": {
-            color: theme.palette.primary.dark,
+            color: theme.palette.primary.main,
         },
         svg: {
             fill: theme.palette.primary.main,
@@ -112,14 +108,9 @@ const ListButton = styled(ListItemButton)(({ theme, open }) => ({
 }));
 
 const ListIcon = styled(ListItemIcon)(({ theme }) => ({
-    minWidth: "28px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    color: theme.palette.primary.contrastText,
-    "& .MuiSvgIcon-root": {
-        fontSize: "22px",
-    },
     [theme.breakpoints.down("sm")]: {
         display: "none",
     },
@@ -157,18 +148,13 @@ const ExpandLess = styled(MuiExpandLess)(({ open }) => ({
     }),
 }));
 
-const List = styled(MuiList)(({ theme, open }) => ({
+// dropdown children container
+const List = styled(MuiList)(({ theme, isSearching }) => ({
     flex: 1,
-    padding: "8px",
-    margin: "8px 0px",
-    borderRadius: "4px",
-    background: theme.palette.primary.dark,
-    "&:hover": {
-        background: theme.palette.primary.dark,
+    background: theme.palette.common.white,
+    "& .MuiListItemText-root": {
+        color: theme.palette.grey[600],
     },
-    ...(!open && {
-        margin: "4px 0px",
-    }),
 }));
 
 const StyledCollapse = styled(Collapse)(({ theme, open }) => ({
@@ -188,7 +174,7 @@ const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} clas
             },
         },
         [`& .${tooltipClasses.tooltip}`]: {
-            background: theme.palette.primary.main,
+            background: theme.palette.surface[1],
             width: 260,
             border: `1px solid ${theme.palette.primary.dark}`,
         },
@@ -251,10 +237,14 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
             arrow
             placement="right"
         >
-            <ListItem dense disablePadding open={open}>
-                <ListButton open={open} selected={selectedkey === item.key} onClick={() => handleMainButton(item.key)}>
+            <ListDropdownItem dense disablePadding open={open} isSearching={isSearching}>
+                <ListButton
+                    open={open || isSearching}
+                    selected={selectedkey === item.key}
+                    onClick={() => handleMainButton(item.key)}
+                >
                     {typeof item.icon === "string" ? (
-                        <div dangerouslySetInnerHTML={{ __html: item.icon }}></div>
+                        <Box className="IconContainer--root" dangerouslySetInnerHTML={{ __html: item.icon }}></Box>
                     ) : (
                         <ListIcon>{item.icon}</ListIcon>
                     )}
@@ -276,7 +266,7 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
                         ))}
                     </List>
                 </StyledCollapse>
-            </ListItem>
+            </ListDropdownItem>
         </HtmlTooltip>
     );
 }

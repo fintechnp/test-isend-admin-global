@@ -16,7 +16,7 @@ const List = styled(MuiList)(({ theme, open }) => ({
 }));
 
 function DrawerList(props) {
-    const { items, open } = props;
+    const { items, open, isSearching } = props;
     const [selectedKey, setSelectedKey] = React.useState("");
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
@@ -37,6 +37,7 @@ function DrawerList(props) {
                         selectedkey={selectedKey}
                         setSelectedIndex={setSelectedIndex}
                         handleListItemClick={handleListItemClick}
+                        isSearching={isSearching}
                     />
                 ) : (
                     <MainHeader
@@ -48,7 +49,7 @@ function DrawerList(props) {
                         setSelectedIndex={setSelectedIndex}
                         handleListItemClick={handleListItemClick}
                     />
-                )
+                ),
             )}
             <Divider
                 sx={{

@@ -50,7 +50,7 @@ const Container = styled("div", {
               border: `1px solid ${theme.palette.border.light}`,
           }),
     background: theme.palette.background.dark,
-    maxWidth: `calc(100vw - ${280 + 65}px)`,
+    // maxWidth: `calc(100vw - ${280 + 65}px)`,
     overflowX: "auto",
 }));
 
