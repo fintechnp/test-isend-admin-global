@@ -15,12 +15,9 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 import SubHeader from "./SubHeader";
 
-const ListDropdownItem = styled(
-    MuiListItem,
-    {
-        shou
-    },
-)(({ theme, isSearching }) => ({
+const ListDropdownItem = styled(MuiListItem, {
+    shouldForwardProp: (prop) => prop !== "isSearching",
+})(({ theme, isSearching }) => ({
     borderRadius: "4px",
     overflow: "hidden",
     display: "flex",
@@ -83,14 +80,12 @@ const ListButton = styled(ListItemButton, {
     width: "100%",
     display: "flex",
     height: "36px",
-    ...(isSearching
-        ? {
-              backgroundColor: theme.palette.common.white,
-          }
-        : undefined),
     svg: {
         height: "20px",
-        fill: theme.palette.background.paper,
+        fill: isSearching ? theme.palette.primary.main : theme.palette.common.white,
+    },
+    "& .MuiListItemText-root": {
+        color: isSearching ? theme.palette.primary.main : theme.palette.common.white,
     },
     padding: "9px 11px",
     "&:hover": {
@@ -239,9 +234,10 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
         >
             <ListDropdownItem dense disablePadding open={open} isSearching={isSearching}>
                 <ListButton
-                    open={open || isSearching}
+                    open={open}
                     selected={selectedkey === item.key}
                     onClick={() => handleMainButton(item.key)}
+                    isSearching={isSearching}
                 >
                     {typeof item.icon === "string" ? (
                         <Box className="IconContainer--root" dangerouslySetInnerHTML={{ __html: item.icon }}></Box>
