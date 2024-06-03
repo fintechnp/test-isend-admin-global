@@ -23,6 +23,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import { AuthContext } from "../../auth";
 import { useConfirm } from "App/core/mui-confirm";
+import getGreeting from "App/helpers/getGreeting";
+import MyAccountIcon from "../Icon/MyAccountIcon";
+import ChangePasswordIcon from "../Icon/ChangePasswordIcon";
+import LogoutIcon from "../Icon/LogoutIcon";
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     minHeight: "56px",
@@ -49,20 +53,14 @@ const StyledMenu = styled((props) => (
 ))(({ theme }) => ({
     marginTop: "36px",
     "& .MuiPaper-root": {
-        padding: 8,
-        borderRadius: 4,
         overflow: "visible",
         marginTop: theme.spacing(1),
         minWidth: 220,
-        border: `1px solid ${theme.palette.border.light}`,
-        color: theme.palette.mode === "light" ? "rgba(205, 208, 213, 0.508)" : theme.palette.grey[300],
+        border: `1px solid ${theme.palette.grey[200]}`,
         background: theme.palette.background.dark,
-        boxShadow:
-            "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-        "& .MuiMenu-list": {
-            padding: "4px 0",
-        },
+        boxShadow: "0px 8px 10px 0px #0000000F",
         "& .MuiMenuItem-root": {
+            height: "36px",
             "& .MuiSvgIcon-root": {
                 fontSize: 18,
                 color: theme.palette.text.secondary,
@@ -106,25 +104,6 @@ const ProfileIcon = styled(IconButton)(({ theme }) => ({
     },
 }));
 
-const ProfileName = styled(Typography)(({ theme }) => ({
-    textAlign: "left",
-    fontSize: "16px",
-    color: theme.palette.text.main,
-    textTransform: "capitalize",
-}));
-
-const RoleName = styled(Typography)(({ theme }) => ({
-    fontSize: "12px",
-    color: theme.palette.text.main,
-    textTransform: "capitalize",
-}));
-
-const OpenIcon = styled(KeyboardArrowDownIcon)(({ theme }) => ({
-    paddingLeft: "2px",
-    fontSize: "22px",
-    color: "#8F9198",
-}));
-
 export default function Appbar({ handleDrawerToggle, open }) {
     const theme = useTheme();
     const navigate = useNavigate();
@@ -162,8 +141,8 @@ export default function Appbar({ handleDrawerToggle, open }) {
 
     const handleLogout = () => {
         confirm({
-          description: "You want to logout.",
-          confirmationText: "Logout",
+            description: "You want to logout.",
+            confirmationText: "Logout",
         }).then(() => {
             setAnchorEl(null);
             Object.keys(Cookies.get()).forEach(function (cookie) {
@@ -228,46 +207,17 @@ export default function Appbar({ handleDrawerToggle, open }) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem
-                disableGutters
-                disableRipple
-                sx={{
-                    padding: "8px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    flexDirection: "row",
-                    backgroundColor: "background.main",
-                    borderRadius: "4px",
-                }}
-            >
-                <Avatar
-                    sx={{
-                        height: "72px",
-                        width: "72px",
-                        borderRadius: "6px",
-                        textTransform: "capitalize",
-                    }}
-                    variant="rounded"
-                    {...stringAvatar(currentUser?.name || "Admin")}
-                />
-                <Box sx={{ paddingLeft: 1.5, paddingRight: 0.5 }}>
-                    <ProfileName>{currentUser && currentUser?.name}</ProfileName>
-                    <RoleName>{currentUser && currentUser?.user_type}</RoleName>
-                </Box>
-            </MenuItem>
-            <Divider sx={{ my: 0.5 }} />
             <MenuItem onClick={handleProfile} disableRipple>
-                <AccountBoxIcon />
-                <Typography sx={{ color: "text.main" }}>My Account</Typography>
+                <MyAccountIcon />
+                <Typography sx={{ color: "text.primary", ml: 1 }}>My Account</Typography>
             </MenuItem>
             <MenuItem onClick={handleSettings} disableRipple>
-                <SettingsOutlinedIcon />
-                <Typography sx={{ color: "text.main" }}>Settings</Typography>
+                <ChangePasswordIcon />
+                <Typography sx={{ color: "text.primary", ml: 1 }}>Change Password</Typography>
             </MenuItem>
             <MenuItem onClick={handleLogout} disableRipple>
-                <ExitToAppIcon />
-                <Typography sx={{ color: "text.main" }}>Log Out</Typography>
+                <LogoutIcon />
+                <Typography sx={{ color: "text.primary", ml: 1 }}>Log Out</Typography>
             </MenuItem>
         </StyledMenu>
     );
@@ -287,67 +237,50 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     {hover && <MenuOpenIcon open={open} />}
                     {!hover && <MenuCloseIcon />}
                 </MenuIconButton>
+                <Box className="GreetingContainer--root" ml={1}>
+                    <Typography color="text.primary" lineHeight="20px" fontWeight={600}>
+                        {getGreeting()}
+                    </Typography>
+                    <Typography color="text.secondary" fontSize="0.857rem">
+                        Admin Panel
+                    </Typography>
+                </Box>
                 <Box sx={{ flexGrow: 1 }} />
-                <Box
-                    sx={{
-                        display: { xs: "none", sm: "flex" },
-                        color: "primary.dark",
-                        columnGap: "4px",
-                    }}
+                <ProfileIcon
+                    size="small"
+                    edge="end"
+                    disableRipple
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
+                    color="inherit"
                 >
-                    <ProfileIcon
-                        size="small"
-                        edge="end"
-                        disableRipple
-                        aria-label="account of current user"
-                        aria-controls={menuId}
-                        aria-haspopup="true"
-                        onClick={handleProfileMenuOpen}
-                        color="inherit"
+                    <Avatar
+                        sx={{
+                            height: "36px",
+                            width: "36px",
+                            borderRadius: "50%",
+                            fontSize: "14px",
+                            textTransform: "capitalize",
+                            background: (theme) => theme.palette.primary.main,
+                        }}
+                        {...stringAvatar(currentUser?.name)}
+                    />
+                    <Box
+                        ml={1}
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
                     >
-                        <Avatar
-                            sx={{
-                                height: "36px",
-                                width: "36px",
-                                borderRadius: "6px",
-                                fontSize: "14px",
-                                textTransform: "capitalize",
-                                background: (theme) => theme.palette.primary.main,
-                            }}
-                            {...stringAvatar(currentUser?.name)}
-                        />
-                        <OpenIcon />
-                    </ProfileIcon>
-                </Box>
-                <Box
-                    sx={{
-                        display: { xs: "flex", sm: "none" },
-                        color: "primary.dark",
-                    }}
-                >
-                    <ProfileIcon
-                        size="medium"
-                        edge="end"
-                        aria-label="account of current user"
-                        aria-controls={menuId}
-                        aria-haspopup="true"
-                        onClick={handleProfileMenuOpen}
-                    >
-                        <Avatar
-                            sx={{
-                                height: "36px",
-                                width: "36px",
-                                borderRadius: "6px",
-                                color: "primary.main",
-                                backgroundColor: "#fff",
-                                border: `1px solid #1761AE`,
-                            }}
-                            variant="rounded"
-                        >
-                            <MenuIcon />
-                        </Avatar>
-                    </ProfileIcon>
-                </Box>
+                        <Typography lineHeight="20px" color="text.primary">
+                            Admin User
+                        </Typography>
+                        <Typography lineHeight="16px" color="text.secondary" fontSize="0.857rem">
+                            Admin
+                        </Typography>
+                    </Box>
+                </ProfileIcon>
             </Toolbar>
             {renderMenu}
         </>

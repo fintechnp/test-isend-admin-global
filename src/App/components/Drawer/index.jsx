@@ -86,7 +86,6 @@ const AppBar = styled(MuiAppBar, {
 })(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer,
     boxShadow: "none",
-    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
     background: theme.palette.appbar.main,
     [theme.breakpoints.down("md")]: {
         marginLeft: `calc(${theme.spacing(8)} + 1px)`,
