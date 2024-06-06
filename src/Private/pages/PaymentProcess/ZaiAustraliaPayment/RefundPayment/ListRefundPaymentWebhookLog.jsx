@@ -77,7 +77,7 @@ function ListRefundPaymentWebhookLog({ customerId }) {
                     <TableHead>
                         <TableRow>
                             <TableCell>SN</TableCell>
-                            <TableCell>Webhook ID</TableCell>
+                            <TableCell>Transaction ID</TableCell>
                             <TableCell align="right">Transaction Amount </TableCell>
                             <TableCell>Currency</TableCell>
                             <TableCell>Amount to refund</TableCell>

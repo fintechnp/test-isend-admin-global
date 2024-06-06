@@ -54,7 +54,7 @@ export default function RefundRowForm({ row, onRefundSuccess }) {
     return (
         <TableRow key={row.f_serial_no}>
             <TableCell>{row.f_serial_no}</TableCell>
-            <TableCell>{row.webhook_id}</TableCell>
+            <TableCell>{row.transaction_id}</TableCell>
             <TableCell align="right">{row.transaction_amount.toLocaleString()} </TableCell>
             <TableCell>{row.transaction_currency}</TableCell>
             <TableCell>

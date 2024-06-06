@@ -63,7 +63,7 @@ function ListRefundPaymentLog({ customerId }) {
                     <TableHead>
                         <TableRow>
                             <TableCell>SN</TableCell>
-                            <TableCell>Webhook ID</TableCell>
+                            <TableCell>Transaction ID</TableCell>
                             <TableCell>
                                 <Typography align="right">Transaction Amount</Typography>
                             </TableCell>
@@ -87,7 +87,7 @@ function ListRefundPaymentLog({ customerId }) {
                             logData.data?.map((row) => (
                                 <TableRow key={row.id}>
                                     <TableCell>{row.f_serial_no}</TableCell>
-                                    <TableCell>{row.webhook_id}</TableCell>
+                                    <TableCell>{row.zai_transaction_id}</TableCell>
                                     <TableCell align="right">{row.transaction_amount.toLocaleString()}</TableCell>
                                     <TableCell align="right">{row.refund_amount.toLocaleString()}</TableCell>
                                     <TableCell>{row.transaction_currency}</TableCell>
