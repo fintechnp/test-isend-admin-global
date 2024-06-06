@@ -1,5 +1,10 @@
 const apiEndpoints = {
     forgotPassword: "/account/forgotpassword",
+    dashboard: {
+        getCustomerCountByDeviceType: "/dashboard/customer",
+        getCustomerKycCountByStatus: "/dashboard/customer-kyc",
+        getTransactionCountByStatus: "/dashboard/transaction-status",
+    },
     countryStates: {
         list: "common/:country/states",
         create: "common/states",

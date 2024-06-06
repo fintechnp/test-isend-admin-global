@@ -10,8 +10,6 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link as RouterLink } from "react-router-dom";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
-import Spacer from "../Spacer/Spacer";
-
 import app from "App/config/app";
 import routePaths from "Private/config/routePaths";
 
@@ -32,25 +30,19 @@ const TitleContainer = styled("div")(({ theme }) => ({
 
 const Container = styled("div", {
     shouldForwardProp: (prop) => prop !== "disableBorder" && prop !== "disablePadding",
-})(({ theme, disableBorder, disablePadding }) => ({
+})(({ theme, disablePadding }) => ({
     margin: "8px 0px",
     borderRadius: "6px",
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
-    ...(disableBorder
-        ? {}
+    ...(disablePadding
+        ? undefined
         : {
-              ...(disablePadding
-                  ? {}
-                  : {
-                        padding: theme.spacing(2),
-                    }),
-              border: `1px solid ${theme.palette.border.light}`,
+              padding: "24px",
           }),
-    background: theme.palette.background.dark,
-    // maxWidth: `calc(100vw - ${280 + 65}px)`,
+    backgroundColor: theme.palette.background.primarySecond,
     overflowX: "auto",
 }));
 
@@ -64,7 +56,6 @@ export default function PageContent(props) {
         breadcrumbs,
         disableBreadcrumb,
         disablePadding,
-        disableContentPadding
     } = props;
 
     useEffect(() => {
@@ -129,7 +120,7 @@ export default function PageContent(props) {
                 </TitleContainer>
                 <Box>{topRightEndContent}</Box>
             </Box>
-            <Box py={2}>{children}</Box>
+            <Box>{children}</Box>
         </Container>
     );
 }
@@ -157,5 +148,5 @@ PageContent.defaultProps = {
     breadcrumbs: [],
     disableBreadcrumb: false,
     disablePadding: false,
-    disableContentPadding: false
+    disableContentPadding: false,
 };

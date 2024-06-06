@@ -51,14 +51,6 @@ export const ChangeTheme = (mode = true) => {
                                 padding: 0,
                                 boxSizing: "border-box",
                             },
-                            html: {
-                                height: "100%",
-                            },
-                            body: {
-                                height: "100%",
-                                backgroundColor: "#fff",
-                                lineHeight: 1.42857,
-                            },
                         },`,
             },
             MuiTypography: {
@@ -85,7 +77,12 @@ export const ChangeTheme = (mode = true) => {
                     },
                     {
                         props: { variant: "h6" },
-                        style: { fontFamily: fonts.primary },
+                        style: {
+                            fontFamily: fonts.primary,
+                            fontSize: "1.286rem",
+                            lineHeight: "1.786rem",
+                            fontWeight: 600,
+                        },
                     },
                     {
                         props: { variant: "subtitle1" },

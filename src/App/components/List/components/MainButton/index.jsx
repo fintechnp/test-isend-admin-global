@@ -144,7 +144,7 @@ const ExpandLess = styled(MuiExpandLess)(({ open }) => ({
 }));
 
 // dropdown children container
-const List = styled(MuiList)(({ theme, isSearching }) => ({
+const List = styled(MuiList)(({ theme }) => ({
     flex: 1,
     background: theme.palette.common.white,
     "& .MuiListItemText-root": {
@@ -206,12 +206,7 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
             title={
                 <React.Fragment>
                     <List>
-                        <ListHeader disabled>
-                            {typeof item.icon === "string" ? (
-                                <div dangerouslySetInnerHTML={{ __html: item.icon }}></div>
-                            ) : (
-                                <ListIcon>{item.icon}</ListIcon>
-                            )}
+                        <ListHeader>
                             <ListText primary={item.text} open={!open} />
                         </ListHeader>
                         {item?.children.map((child, ind) => (
@@ -258,6 +253,7 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
                                 selectedSub={selectedSub}
                                 setSelectedIndex={setSelectedIndex}
                                 handleListItemSelect={handleListItemSelect}
+                                isSearching={isSearching}
                             />
                         ))}
                     </List>

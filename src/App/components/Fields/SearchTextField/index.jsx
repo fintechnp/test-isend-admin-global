@@ -9,27 +9,24 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import isEmpty from "App/helpers/isEmpty";
 
 const SearchTextField = React.memo(({ debounceTime = 500, onChange, onClear, onClick, ...rest }) => {
-    const firstRender = useRef(true);
     const [value, setValue] = useState("");
     const timeout = useRef();
 
     const handleChange = (e) => {
-        setValue(e.target.value);
+        const newValue = e.target.value;
+        setValue(newValue);
+
+        clearTimeout(timeout.current);
+        timeout.current = setTimeout(() => {
+            if (typeof onChange === "function") {
+                onChange(newValue || "");
+            }
+        }, debounceTime);
     };
 
     useEffect(() => {
-        clearTimeout(timeout.current);
-
-        timeout.current = setTimeout(() => {
-            if (typeof onChange === "function" && !firstRender.current) {
-                onChange(value || "");
-            }
-        }, debounceTime);
-
-        firstRender.current = false;
-
-        return () => clearTimeout(timeout.current);
-    }, [value]);
+        return () => clearTimeout(timeout)
+    }, [])
 
     return (
         <TextField
@@ -40,23 +37,20 @@ const SearchTextField = React.memo(({ debounceTime = 500, onChange, onClear, onC
                         <SearchIcon />
                     </InputAdornment>
                 ),
-                ...(typeof onClear === "function" && !isEmpty(value)
-                    ? {
-                          endAdornment: (
-                              <InputAdornment position="end">
-                                  <IconButton
-                                      color="error"
-                                      onClick={() => {
-                                          setValue("");
-                                          onClear?.();
-                                      }}
-                                  >
-                                      <ClearRoundedIcon />
-                                  </IconButton>
-                              </InputAdornment>
-                          ),
-                      }
-                    : undefined),
+                endAdornment:
+                    !isEmpty(value) && typeof onClear === "function" ? (
+                        <InputAdornment position="end">
+                            <IconButton
+                                color="error"
+                                onClick={() => {
+                                    setValue("");
+                                    onClear();
+                                }}
+                            >
+                                <ClearRoundedIcon />
+                            </IconButton>
+                        </InputAdornment>
+                    ) : null,
             }}
             size="small"
             placeholder={rest?.placeholder ?? "Search"}
@@ -67,11 +61,11 @@ const SearchTextField = React.memo(({ debounceTime = 500, onChange, onClear, onC
     );
 });
 
-export default SearchTextField;
-
 SearchTextField.propTypes = {
     debounceTime: PropTypes.number,
     onChange: PropTypes.func,
     onClear: PropTypes.func,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
 };
+
+export default SearchTextField;

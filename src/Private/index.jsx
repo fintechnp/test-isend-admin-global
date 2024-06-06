@@ -556,6 +556,16 @@ import {
     GetUserProfileSetupsForSelectReducer,
 } from "./pages/Users/ProfileSetups/store";
 
+// region: Dashboard
+import {
+    DashboardSaga,
+    GetCustomerCountByDeviceTypeReducer,
+    GetCustomerKycCountByStatusReducer,
+    GetTransactionCountByStatusReducer,
+    DashboardFilterParamsReducer,
+    GetCustomerKycCountByStatusPreviousReducer,
+} from "./pages/Dashboard/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -998,6 +1008,13 @@ export const privateReducer = {
     add_user_profile_setup: AddUserProfileSetupReducer,
     update_user_profile_setup: UpdateUserProfileSetupReducer,
     list_user_profile_setup_for_select: GetUserProfileSetupsForSelectReducer,
+
+    // region: Dashboard
+    get_customer_count_by_device_type: GetCustomerCountByDeviceTypeReducer,
+    get_customer_kyc_count_by_status: GetCustomerKycCountByStatusReducer,
+    get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
+    get_transaction_count_by_status: GetTransactionCountByStatusReducer,
+    dashboard_filter_params: DashboardFilterParamsReducer,
 };
 
 export const privateSaga = [
@@ -1059,6 +1076,7 @@ export const privateSaga = [
     countrySaga(),
     documentAcceptanceSaga(),
     UserProfileSetupSaga(),
+    DashboardSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

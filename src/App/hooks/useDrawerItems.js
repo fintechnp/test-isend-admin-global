@@ -78,8 +78,10 @@ const useDrawerItems = () => {
 
     useEffect(() => {
         const data = response?.data?.role_response?.menus ?? [];
-        setDrawerItems(transformMenuData(data));
-        setFilteredDrawerItems(transformMenuData(data));
+        if(data.length <= 0) return;
+        const menus = transformMenuData(data)
+        setDrawerItems(menus);
+        setFilteredDrawerItems(menus);
     }, [response]);
 
     return {

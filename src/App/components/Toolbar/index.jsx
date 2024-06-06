@@ -225,24 +225,12 @@ export default function Appbar({ handleDrawerToggle, open }) {
     return (
         <>
             <Toolbar disableGutters variant="dense">
-                <MenuIconButton
-                    size="medium"
-                    edge="start"
-                    disableRipple
-                    aria-label="open drawer"
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-                    onClick={handleDrawerToggle}
-                >
-                    {hover && <MenuOpenIcon open={open} />}
-                    {!hover && <MenuCloseIcon />}
-                </MenuIconButton>
                 <Box className="GreetingContainer--root" ml={1}>
                     <Typography color="text.primary" lineHeight="20px" fontWeight={600}>
                         {getGreeting()}
                     </Typography>
                     <Typography color="text.secondary" fontSize="0.857rem">
-                        Admin Panel
+                        {currentUser?.name}
                     </Typography>
                 </Box>
                 <Box sx={{ flexGrow: 1 }} />
@@ -266,20 +254,6 @@ export default function Appbar({ handleDrawerToggle, open }) {
                         }}
                         {...stringAvatar(currentUser?.name)}
                     />
-                    <Box
-                        ml={1}
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="flex-start"
-                        alignItems="flex-start"
-                    >
-                        <Typography lineHeight="20px" color="text.primary">
-                            Admin User
-                        </Typography>
-                        <Typography lineHeight="16px" color="text.secondary" fontSize="0.857rem">
-                            Admin
-                        </Typography>
-                    </Box>
                 </ProfileIcon>
             </Toolbar>
             {renderMenu}

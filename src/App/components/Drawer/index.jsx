@@ -7,9 +7,11 @@ import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled, useTheme, alpha } from "@mui/material/styles";
+import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 
 import MainButton from "../List/components/MainButton";
 import MainHeader from "../List/components/MainHeader";
@@ -22,6 +24,8 @@ import SearchTextField from "../Fields/SearchTextField";
 import useDetectScreen from "App/hooks/useDetectScreen";
 
 import ISendLogo from "../Logo/ISendLogo";
+import NavMenu from "./NavMenu";
+import Row from "../Row/Row";
 
 const drawerWidth = 280;
 
@@ -37,11 +41,6 @@ const openedMixin = (theme) => ({
     overflowX: "hidden",
     overflow: "visible",
     border: "none",
-    "&:hover .MuiBox-root": {
-        [theme.breakpoints.up("md")]: {
-            display: "block",
-        },
-    },
     [theme.breakpoints.down("md")]: {
         width: theme.spacing(8),
     },
@@ -60,11 +59,6 @@ const closedMixin = (theme) => ({
     overflow: "visible",
     width: 0,
     border: "none",
-    "&:hover .MuiBox-root": {
-        [theme.breakpoints.up("md")]: {
-            display: "block",
-        },
-    },
     background: theme.palette.primary.main,
     [theme.breakpoints.up("sm")]: {
         padding: "8px",
@@ -136,24 +130,30 @@ const CustomizedDrawer = styled(MuiDrawer, {
               }),
         background: "transparent",
     },
-    width: open ? "264px" : "60px",
+    width: open ? "264px" : "70px",
     "& .no-search-result__container": {
         display: "block !important",
     },
     "& .MuiPaper-root": {
         padding: "0px",
     },
+    "& .SideBarItemContainer-root": {
+        "&::-webkit-scrollbar-thumb": {
+            background: "",
+        },
+    },
 }));
 
 const DrawerContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== "isDrawerOpen",
 })(({ theme, isDrawerOpen }) => ({
-    height: "100svh",
+    height: "calc(100svh - 16px)",
     margin: "8px",
     borderRadius: "16px",
     padding: isDrawerOpen ? "16px" : "8px",
     background: theme.palette.surface[1],
     minWidth: "60px",
+    overflow: "hidden",
 }));
 
 function Drawer({ children }) {
@@ -196,7 +196,9 @@ function Drawer({ children }) {
 
     const drawerMenu = (
         <Box
+            className="SideBarItemContainer-root"
             sx={{
+                height: "calc(100svh - 100px)",
                 overflowY: "auto",
             }}
         >
@@ -250,15 +252,34 @@ function Drawer({ children }) {
             <CustomizedDrawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerContainer className="drawer-content__container" isDrawerOpen={open}>
                     <DrawerHeader>
-                        <ISendLogo
-                            onClick={handleDashboard}
-                            {...(open
-                                ? {
-                                      variant: "default",
-                                      color: "white",
-                                  }
-                                : { variant: "short", color: "white" })}
-                        />
+                        <Row justifyContent={open ? "space-between" : "center"} alignItems="center">
+                            <Box flex={1}>
+                                {open && (
+                                    <ISendLogo
+                                        onClick={handleDashboard}
+                                        {...(open
+                                            ? {
+                                                  variant: "default",
+                                                  color: "white",
+                                              }
+                                            : { variant: "short", color: "white" })}
+                                    />
+                                )}
+                            </Box>
+                            <IconButton onClick={() => setOpen((value) => !open)}>
+                                <MenuOpenRoundedIcon
+                                    color="white"
+                                    sx={{
+                                        fill: "white",
+                                        ...(!open
+                                            ? {
+                                                  transform: "scale(-1)",
+                                              }
+                                            : undefined),
+                                    }}
+                                />
+                            </IconButton>
+                        </Row>
                     </DrawerHeader>
                     <Divider />
                     {isDesktop && (
@@ -269,6 +290,11 @@ function Drawer({ children }) {
                                 "& .MuiInputBase-root": {
                                     background: (theme) => theme.palette.background.paper,
                                     marginTop: "8px",
+                                    transition: (theme) =>
+                                        theme.transitions.create("width", {
+                                            easing: theme.transitions.easing.sharp,
+                                            duration: theme.transitions.duration.leavingScreen,
+                                        }),
                                 },
                             }}
                             onChange={(value) => handleFilter(value)}
@@ -277,10 +303,9 @@ function Drawer({ children }) {
                             onClick={() => setOpen(true)}
                         />
                     )}
-                    {isLoading && renderSkeleton()}
                     {(() => {
                         if (isLoading) renderSkeleton();
-                        if (!isLoading && filteredDrawerItems.length > 0) return drawerMenu;
+                        if (filteredDrawerItems.length > 0) return drawerMenu;
                         if (!isEmpty(menuSearchQuery) && filteredDrawerItems.length === 0)
                             return (
                                 <Box className="no-search-result__container" px={2} mt={2}>

@@ -7,12 +7,14 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 
 const ListItem = styled(MuiListItem)(({ theme, open }) => ({
+    // maxWidth: "220px",
+    // overflow: 'auto',
     "& .MuiListItemText-root": {
-        color: theme.palette.grey[600],
+        color: theme.palette.text.secondary,
     },
     "& .MuiSvgIcon-root": {
         fontSize: "6px",
-        fill: theme.palette.grey[600],
+        fill: theme.palette.text.secondary,
     },
     "&:hover": {
         "& .MuiListItemText-root": {
@@ -26,7 +28,6 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
         "& .MuiListItemText-root": {
             color: theme.palette.primary.main,
         },
-
         [theme.breakpoints.down("sm")]: {
             display: "none",
         },
@@ -34,27 +35,22 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
 }));
 
 const ListButton = styled(ListItemButton)(({ theme, open }) => ({
-    height: '24px',
+    height: "28px",
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
     "&:hover": {
         background: "transparent",
     },
-    // padding: '4px 20px',
-    // margin: '4px 0',
+    padding: "8px 28px",
+    margin: "4px 0",
 }));
 
-const ListText = styled(ListItemText)(({ theme, open }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
+const ListText = styled(ListItemText)(({ theme, open, isSearching }) => ({
     padding: theme.spacing(0, 1),
     textDecoration: "none",
     lineHeight: "1rem",
 }));
 
-function SubHeader({ sub_item, open, handleListItemSelect, selectedSub, setSelectedIndex, index }) {
+function SubHeader({ sub_item, open, handleListItemSelect, selectedSub, setSelectedIndex, index, isSearching }) {
     const { pathname } = useLocation();
 
     const handleSubHeader = (item) => {
@@ -72,7 +68,7 @@ function SubHeader({ sub_item, open, handleListItemSelect, selectedSub, setSelec
                     disableRipple
                 >
                     <CircleIcon />
-                    <ListText primary={sub_item.text} open={open} />
+                    <ListText primary={sub_item.text} open={open} isSearching={isSearching} />
                 </ListButton>
             </ListItem>
         </Link>
