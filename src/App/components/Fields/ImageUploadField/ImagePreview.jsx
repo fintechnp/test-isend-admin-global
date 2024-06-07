@@ -1,6 +1,6 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import CardMedia from "@mui/material/CardMedia";
 
 const ImageWrapper = styled(Box)(({ theme }) => ({

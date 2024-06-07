@@ -29,15 +29,15 @@ export default function EditBannerModal() {
             <BannerForm
                 initialValues={{
                     banner_name: initialFormState?.banner_name,
-                    link: initialFormState?.link,
-                    weblink: initialFormState?.weblink,
+                    mobile_image_link: initialFormState?.link,
+                    web_image_link: initialFormState?.weblink,
                     is_active: initialFormState?.is_active,
                 }}
                 isAddMode={false}
-                onSubmit={handleSubmit}
-                onCancel={handleClose}
+                handleSubmit={handleSubmit}
+                handleClose={handleClose}
                 form="update_banner_form"
-                isProcessing={loading}
+                loading={loading}
             />
         </Modal>
     );

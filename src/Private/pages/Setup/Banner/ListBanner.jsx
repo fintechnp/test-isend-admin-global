@@ -19,7 +19,7 @@ function ListBanner() {
             title="Banners"
             topRightEndContent={
                 <HasPermission permission={[permissions.CREATE_BANNER]}>
-                    <Button onClick={() => dispatch({ type: "OPEN_ADD_BANNER_MODAL" })}>AddBanner</Button>
+                    <Button onClick={() => dispatch({ type: "OPEN_ADD_BANNER_MODAL" })}>Add Banner</Button>
                 </HasPermission>
             }
         >

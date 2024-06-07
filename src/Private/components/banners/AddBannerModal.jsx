@@ -5,6 +5,7 @@ import BannerForm from "./BannerForm";
 import Modal from "App/components/Modal/Modal";
 import bannerActions from "Private/features/banners/bannerActions";
 
+// AddBannerModal.jsx
 export default function AddBannerModal() {
     const dispatch = useDispatch();
 
@@ -21,14 +22,8 @@ export default function AddBannerModal() {
     if (!isOpen) <></>;
 
     return (
-        <Modal open={isOpen} onClose={handleClose}>
-            <BannerForm
-                isAddMode={true}
-                onSubmit={handleSubmit}
-                onCancel={handleClose}
-                form="add_banner_form"
-                isProcessing={loading}
-            />
+        <Modal title="Add Banner" open={isOpen} onClose={handleClose}>
+            <BannerForm isAddMode={true} handleClose={handleClose} handleSubmit={handleSubmit} loading={loading} />
         </Modal>
     );
 }

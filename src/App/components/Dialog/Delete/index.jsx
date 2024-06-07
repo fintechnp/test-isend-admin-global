@@ -156,7 +156,9 @@ function DeleteDialog({ fontSize, loading, parent_id, id, handleDelete, tooltext
                 )}
             </Tooltip>
             <BootstrapDialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
-                <DialogTitle id="responsive-dialog-title">{"Do you want to delete this?"}</DialogTitle>
+                <DialogTitle textAlign="center" id="responsive-dialog-title">
+                    {"Do you want to delete this?"}
+                </DialogTitle>
                 <DialogContent
                     sx={{
                         display: "flex",
