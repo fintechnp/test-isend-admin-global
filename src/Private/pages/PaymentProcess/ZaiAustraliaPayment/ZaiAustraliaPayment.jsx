@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import Box from "@mui/material/Box";
 import { useForm } from "react-hook-form";
 import Typography from "@mui/material/Typography";
@@ -102,7 +103,7 @@ const ZaiAustraliaPayment = () => {
             header: "Txn Date",
             cell: ({ row }) => (
                 <Box>
-                    <Typography>{getFormattedDate(row?.original?.created_ts)}</Typography>
+                    <Typography>{dayjs(row?.original?.created_ts + 'Z').format('MMM DD, YYYY')}</Typography>
                     <Typography>
                         <AccessTimeIcon
                             sx={{
@@ -112,7 +113,7 @@ const ZaiAustraliaPayment = () => {
                             }}
                             fontSize="10px"
                         />
-                        {getFormattedTime(row?.original?.created_ts)}
+                        {dayjs(row?.original?.created_ts + 'Z').format('hh:mm A')}
                     </Typography>
                 </Box>
             ),
@@ -152,14 +153,6 @@ const ZaiAustraliaPayment = () => {
                                 customerId: row.original.customer_id,
                             });
                         }}
-                        onMakePayment={() => {
-                            setShowPayment({
-                                isOpen: true,
-                                customerId: row.original.customer_id,
-                                customerName: row.original.customer_name,
-                                transactionId: row.original.transaction_id,
-                            });
-                        }}
                         onRefundPayment={() => {
                             setShowRefund({
                                 isOpen: true,
@@ -167,6 +160,16 @@ const ZaiAustraliaPayment = () => {
                                 customerName: row.original.customer_name,
                             });
                         }}
+                        {...(row.original.send_status === 'W') ? {
+                            onMakePayment: () => {
+                                setShowPayment({
+                                    isOpen: true,
+                                    customerId: row.original.customer_id,
+                                    customerName: row.original.customer_name,
+                                    transactionId: row.original.transaction_id,
+                                });
+                            }
+                        }  : undefined}
                     />
                 </Box>
             ),
@@ -190,8 +193,6 @@ const ZaiAustraliaPayment = () => {
         };
         setFilterSchema(updatedFilterSchema);
     };
-
-    console.log({ showPayment });
 
     return (
         <PageContent title="Zai Australia Payment">
