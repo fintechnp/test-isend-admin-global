@@ -6,12 +6,13 @@ import React, { useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
+import MuiBreadcrumbs from "@mui/material/Breadcrumbs";
 import { Link as RouterLink } from "react-router-dom";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import app from "App/config/app";
 import routePaths from "Private/config/routePaths";
+import Row from "../Row/Row";
 
 const TitleContainer = styled("div")(({ theme }) => ({
     display: "flex",
@@ -46,6 +47,22 @@ const Container = styled("div", {
     overflowX: "auto",
 }));
 
+const Breadcrumbs = styled(MuiBreadcrumbs)(({ theme }) => ({
+    p: (theme) => theme.spacing(1),
+    "& li:not(:last-of-type)": {
+        color: theme.palette.text.secondary,
+        p: {
+            color: theme.palette.text.secondary,
+        },
+    },
+    "& li:last-of-type": {
+        color: "red",
+        p: {
+            color: theme.palette.text.primary,
+        },
+    },
+}));
+
 export default function PageContent(props) {
     const {
         children,
@@ -66,24 +83,15 @@ export default function PageContent(props) {
     return (
         <Container disableBorder={disableBorder} disablePadding={disablePadding}>
             {!disableBreadcrumb && breadcrumbs.length > 0 && (
-                <Box>
-                    <Breadcrumbs
-                        separator="›"
-                        aria-label="breadcrumb"
-                        sx={{
-                            p: (theme) => theme.spacing(1),
-                        }}
-                    >
-                        <Link component={RouterLink} underline="hover" color="inherit" to={routePaths.dashboard.base}>
-                            <HomeRoundedIcon />
-                        </Link>
+                <Row sx={{ mb: "16px" }} alignItems="center" justifyContent="space-between">
+                    <Breadcrumbs separator="/" aria-label="breadcrumb">
                         {breadcrumbs.map((breadcrumb, index) => {
                             if (isEmpty(breadcrumb?.link)) {
                                 return (
                                     <Typography
                                         key={breadcrumb.label}
                                         color="text.primary"
-                                        fontWeight={breadcrumbs.length === index + 1 ? 500 : 400}
+                                        // fontWeight={breadcrumbs.length === index + 1 ? 500 : 400}
                                     >
                                         {breadcrumb.label}
                                     </Typography>
@@ -96,17 +104,19 @@ export default function PageContent(props) {
                                     underline="hover"
                                     color="inherit"
                                     to={breadcrumb.link}
-                                    sx={{
-                                        fontWeight: breadcrumbs.length === index + 1 ? 500 : 400,
-                                    }}
+                                    sx={
+                                        {
+                                            // fontWeight: breadcrumbs.length === index + 1 ? 500 : 400,
+                                        }
+                                    }
                                 >
                                     {breadcrumb.label}
                                 </Link>
                             );
                         })}
                     </Breadcrumbs>
-                    <Divider />
-                </Box>
+                    <Box>{topRightEndContent}</Box>
+                </Row>
             )}
             <Box display="flex" flexDirection="row" justifyContent="space-between">
                 <TitleContainer>
@@ -118,7 +128,7 @@ export default function PageContent(props) {
                         title
                     )}
                 </TitleContainer>
-                <Box>{topRightEndContent}</Box>
+                <Box>{breadcrumbs.length === 0 ? topRightEndContent : null}</Box>
             </Box>
             <Box>{children}</Box>
         </Container>

@@ -64,6 +64,23 @@ class dateUtils {
             previousEndDate: previousEndDate.toISOString(),
         };
     }
+
+    /**
+     * get local date from UTC
+    */
+    getLocalDateFromUTC(utcDateTime, dateFormat ='MM/DD/YYYY'){
+        if(!utcDateTime?.endsWith('Z')) utcDateTime = utcDateTime + 'Z'
+        return dayjs(utcDateTime).format(dateFormat)
+    }
+
+       /**
+     * get local date from UTC
+    */
+       getLocalTimeFromUTC(utcDateTime, timeFormat ='hh:mm A'){
+        if(!utcDateTime.endsWith('Z')) utcDateTime = utcDateTime + 'Z'
+        return dayjs(utcDateTime).format(dateFormat)
+    }
+
 }
 
 export default new dateUtils();

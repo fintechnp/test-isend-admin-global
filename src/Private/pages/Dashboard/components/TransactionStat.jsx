@@ -32,7 +32,7 @@ export default function TransactionStat() {
                 <Box>
                     <Typography variant="h6">Transaction Forecast</Typography>
                 </Box>
-                <Row justifyContent="flex-end" gap="16px">
+                <Row flex={1} justifyContent="flex-end" gap="16px">
                     {statsData.map((stat) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
                             <FiberManualRecordIcon sx={{ fill: stat.color }} />

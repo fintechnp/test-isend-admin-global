@@ -35,6 +35,7 @@ const routePaths = {
         streetType: "/setup/street-type",
     },
     customer: {
+        create: "/customer/create",
         banks: "/customer/banks/:customerId",
         allBank: "/customer/banks",
         deleteList: "/customer/delete-requests",
@@ -90,8 +91,8 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
-    transaction:{
-        achTransaction:"/transaction/ach-transaction",
+    transaction: {
+        achTransaction: "/transaction/ach-transaction",
     },
     users: {
         listUserSetup: "/user/setups",

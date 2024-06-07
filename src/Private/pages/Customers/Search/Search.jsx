@@ -1,97 +1,43 @@
 import { reset } from "redux-form";
-import Grid from "@mui/material/Grid";
-import { Helmet } from "react-helmet-async";
-import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import MuiIconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ListItemButton from "@mui/material/ListItemButton";
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Block } from "App/components";
-import Filter from "./components/Header";
-import SearchForm from "./components/Form";
-import Loading from "App/components/Loading";
-import NoResults from "./components/NoResults";
-import Table, { TablePagination } from "App/components/Table";
+import Row from "App/components/Row/Row";
+import Column from "App/components/Column/Column";
+import PhoneIcon from "App/components/Icon/PhoneIcon";
+import KycStatusBadge from "./components/KycStatusBadge";
+import CustomerAvatar from "./components/CustomerAvatar";
+import FilterForm from "App/components/Filter/FilterForm";
+import FilterButton from "App/components/Button/FilterButton";
+import PopoverButton from "App/components/Button/PopoverButton";
+import PageContent from "App/components/Container/PageContent";
+import CustomerStatusBadge from "./components/CustomerStatusBadge";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 
 import actions from "./store/actions";
-import { CountryName, ReferenceName } from "App/helpers";
-
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "14px",
-    color: "border.main",
-    textTransform: "capitalize",
-}));
-
-const StyledStatus = styled(Typography)(({ theme, value }) => ({
-    opacity: 0.8,
-    paddingTop: "4px",
-    paddingBottom: "4px",
-    fontSize: "11px",
-    borderRadius: "6px",
-    textTransform: "capitalize",
-    color: theme.palette.primary.contrastText,
-    background: stringToColor(value),
-    "&: hover": {
-        background: stringToColor(value),
-    },
-}));
-
-const StyledMail = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    width: "100%",
-    display: "block",
-    fontSize: "14px",
-    color: "border.main",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-}));
-
-function stringToColor(string) {
-    switch (string.toUpperCase()) {
-        case "R":
-            return "#b81220";
-        case "P":
-            return "#bbd14d";
-        case "N":
-            return "#848581";
-        case "C":
-            return "#117308";
-        default:
-            return "#1a4b87";
-    }
-}
+import dateUtils from "App/utils/dateUtils";
+import { ReferenceName } from "App/helpers";
+import routePaths from "Private/config/routePaths";
+import calculateAge from "App/helpers/calculateAge";
+import getCustomerName from "App/helpers/getCustomerName";
+import referenceTypeId from "Private/config/referenceTypeId";
+import { TablePagination } from "App/components/Table";
+import HasPermission from "Private/components/shared/HasPermission";
+import { permissions } from "Private/data/permissions";
+import KycStat from "./components/KycStat";
 
 const initialState = {
     page_number: 1,
     page_size: 15,
     name: "",
-    customer_id: 0,
+    // customer_id: 0,
     id_number: "",
     mobile_number: "",
     email: "",
@@ -109,22 +55,16 @@ const filter = {
     order_by: "DESC",
 };
 
-function Search(props) {
+function Search() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isMounted = useRef(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: customersData, loading: l_loading } = useSelector(
-        (state) => state.get_customers
-    );
-    const { success: b_success, loading: b_loading } = useSelector(
-        (state) => state.block_unblock_customer
-    );
+    const { response: customersData, loading: isLoading, isFilterOpen } = useSelector((state) => state.get_customers);
+    const { success: b_success, loading: b_loading } = useSelector((state) => state.block_unblock_customer);
 
-    const { response: SendPartner, loading: p_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: SendPartner, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     useEffect(() => {
         dispatch(reset("block_customer_form"));
@@ -150,241 +90,147 @@ function Search(props) {
     }, [dispatch, filterSchema, b_success]);
 
     const handleBlock = (data) => {
-        dispatch(
-            actions.block_unblock_customer(
-                data?.id,
-                { is_active: !data?.is_active },
-                { remarks: data?.remarks }
-            )
-        );
+        dispatch(actions.block_unblock_customer(data?.id, { is_active: !data?.is_active }, { remarks: data?.remarks }));
     };
 
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Name",
-                accessor: "first_name",
-                maxWidth: 140,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value && data.value}{" "}
-                            {data?.row?.original?.middle_name &&
-                                data?.row?.original?.middle_name}{" "}
-                            {data?.row?.original?.last_name &&
-                                data?.row?.original?.last_name}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.customer_type_data
-                                ? data?.row?.original?.customer_type_data
-                                : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Address",
-                accessor: "country",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : ""}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.address
-                                ? data?.row?.original?.address
-                                : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Contact",
-                accessor: "mobile_number",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <Tooltip title={data?.row?.original?.email} arrow>
-                            <StyledMail
-                                component="p"
-                                sx={{
-                                    paddingLeft: "4px",
-                                    fontSize: "13px",
-                                    opacity: 0.6,
-                                }}
-                            >
-                                {data?.row?.original?.email
-                                    ? data?.row?.original?.email
-                                    : ""}
-                            </StyledMail>
-                        </Tooltip>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>KYC Status</Typography>
-                    </Box>
-                ),
-                accessor: "kyc_status",
-                Cell: (data) => (
-                    <Box textAlign="center" sx={{ margin: "0px 12px" }}>
-                        <StyledStatus component="p" value={data.value}>
-                            {data.value ? ReferenceName(21, data.value) : ""}
-                        </StyledStatus>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Acc. Status</Typography>
-                    </Box>
-                ),
-                accessor: "is_active",
-                maxWidth: 90,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        {data.value ? (
-                            <Tooltip title="Active" arrow>
-                                <CheckCircleOutlineIcon
-                                    sx={{ color: "success.main" }}
-                                />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Blocked" arrow>
-                                <RemoveCircleOutlineIcon
-                                    sx={{ color: "border.main" }}
-                                />
-                            </Tooltip>
-                        )}
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Tooltip title="Customer Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/customer/details/${data.row.original.tid}`
-                                    )
-                                }
-                            >
-                                <RemoveRedEyeOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit Customer" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/customer/update/${data.row.original.tid}`
-                                    )
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Block
-                            id={data?.row.original.tid}
-                            name="Customer"
-                            destroyOnUnmount
-                            enableReinitialize
-                            remark={true}
-                            initialValues={{
-                                id: data?.row.original.tid,
-                                is_active: data.row.original.is_active,
-                                remarks: "",
-                            }}
-                            onSubmit={handleBlock}
-                            loading={b_loading}
-                            form={`block_form_customer${data?.row.original.tid}`}
-                            status={data?.row?.original?.is_active}
+                header: "Customer Details",
+                accessorKey: "first_name",
+                cell: ({ row }) => (
+                    <Row gap="8px">
+                        <CustomerAvatar
+                            name={getCustomerName(row.original)}
+                            countryIso2Code={row.original.country_iso2}
                         />
-                    </Box>
+                        <Column>
+                            <Typography fontWeight={500}>
+                                {getCustomerName(row.original)} ({row.original.customer_id})
+                            </Typography>
+                            <Row alignItems="center" gap="2px">
+                                <PhoneIcon />
+                                <Typography variant="caption">
+                                    {row.original.phone_number}, {calculateAge(row.original.date_of_birth)}y /{" "}
+                                    {row.original.gender ?? "-"}
+                                </Typography>
+                            </Row>
+                        </Column>
+                    </Row>
                 ),
+            },
+            {
+                header: "Email",
+                accessorKey: "email",
+            },
+            {
+                header: "Acc. Status",
+                accessorKey: "is_active",
+                cell: ({ getValue }) => <CustomerStatusBadge status={getValue() ? "active" : "blocked"} />,
+            },
+            {
+                header: "Created Status",
+                accessorKey: "created_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                        <Typography>By: {row.original.created_by}</Typography>
+                    </Column>
+                ),
+            },
+            {
+                header: "KYC Status",
+                accessorKey: "kyc_status",
+                cell: ({ getValue }) => (
+                    <KycStatusBadge
+                        status={getValue()}
+                        label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : ""}
+                    />
+                ),
+            },
+            {
+                header: "Action",
+                accessorKey: "action",
+                cell: ({ row }) => {
+                    return (
+                        <PopoverButton>
+                            <ListItemButton onClick={() => navigate(`/customer/details/${row.original.tid}`)}>
+                                View
+                            </ListItemButton>
+                            <ListItemButton onClick={() => navigate(`/customer/update/${row.original.tid}`)}>
+                                Edit
+                            </ListItemButton>
+                            <Block
+                                enablePopoverAction
+                                id={row.original.tid}
+                                name="Customer"
+                                destroyOnUnmount
+                                enableReinitialize
+                                remark={true}
+                                initialValues={{
+                                    id: row.original.tid,
+                                    is_active: row.original.is_active,
+                                    remarks: "",
+                                }}
+                                onSubmit={handleBlock}
+                                loading={b_loading}
+                                form={`block_form_customer${row.original.tid}`}
+                                status={row?.original?.is_active}
+                            />
+                        </PopoverButton>
+                    );
+                },
             },
         ],
-        [handleBlock, b_loading]
+        [handleBlock, b_loading],
     );
+
+    const filterFields = [
+        {
+            type: "date",
+            name: "from_date",
+            label: "From Date",
+        },
+        {
+            type: "date",
+            name: "to_date",
+            label: "To Date",
+        },
+        {
+            type: "textfield",
+            name: "name",
+            label: "Customer Name",
+        },
+        {
+            type: "textfield",
+            name: "customer_id",
+            label: "Customer ID",
+        },
+        {
+            type: "textfield",
+            name: "id_number",
+            label: "Identity Number",
+        },
+        {
+            type: "textfield",
+            name: "mobile_number",
+            label: "Mobile Number",
+        },
+        {
+            type: "textfield",
+            name: "email",
+            label: "Email",
+        },
+        {
+            type: "date",
+            name: "date_of_birth",
+            label: "Date of birth",
+        },
+    ];
 
     const sortData = [
         { key: "None", value: "created_ts" },
@@ -393,46 +239,25 @@ function Search(props) {
         { key: "Country", value: "country" },
     ];
 
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
-    const handleSort = (e) => {
-        const type = e.target.value;
+    const handleQuickFilter = (name, value) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            sort_by: type,
+            [name]: value,
         };
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleOrder = (e) => {
-        const order = e.target.value;
+    const handleOnSubmit = (data) => {
         const updatedFilterSchema = {
             ...filterSchema,
-            order_by: order,
+            ...data,
         };
         setFilterSchema(updatedFilterSchema);
     };
 
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            name: data?.name,
-            customer_id: data?.customer_id,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
+    const handleOnReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
-        dispatch(reset("search_form_customer"));
         dispatch({ type: "GET_CUSTOMERS_RESET" });
     };
 
@@ -454,65 +279,67 @@ function Search(props) {
         setFilterSchema(updatedFilterSchema);
     };
 
+    useEffect(() => {
+        handleOnSubmit();
+    }, []);
+
     return (
-        <>
-            <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
-            </Helmet>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        SendPartner={SendPartner?.data || []}
-                        loading={l_loading}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading &&
-                    customersData?.data &&
-                    customersData?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Customer Found" />
-                        </Grid>
-                    )}
-                {!l_loading && customersData?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
-                            <Filter
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Customer List"
-                                state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
+        <PageContent
+            documentTitle="Customers"
+            topRightEndContent={
+                <FilterButton
+                    size="small"
+                    onClick={() => dispatch(isFilterOpen ? actions.close_filter() : actions.open_filter())}
+                />
+            }
+            breadcrumbs={[
+                {
+                    label: "Dashboard",
+                },
+                {
+                    label: "Customer",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <FilterForm
+                    open={isFilterOpen}
+                    onClose={() => dispatch(actions.close_filter())}
+                    onSubmit={handleOnSubmit}
+                    onReset={handleOnReset}
+                    fields={filterFields}
+                    values={filterSchema}
+                />
+                <Paper sx={{ p: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
+                    <Row alignItems="center" justifyContent="space-between">
+                        <Typography variant="h6">Customers</Typography>
+                        <Row gap="16px">
+                            <TableGridQuickFilter
+                                onSortByChange={handleQuickFilter}
+                                onOrderByChange={handleQuickFilter}
+                                disabled={isLoading}
+                                sortByData={sortData}
+                                values={filterSchema}
                             />
-                            <Table
-                                columns={columns}
-                                data={customersData?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={
-                                            customersData?.pagination
-                                        }
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={
-                                            handleChangeRowsPerPage
-                                        }
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
-        </>
+                            <HasPermission permission={permissions.CREATE_CUSTOMER}>
+                                <Button variant="contained" onClick={() => navigate(routePaths.customer.create)}>
+                                    Create Customer
+                                </Button>
+                            </HasPermission>
+                        </Row>
+                    </Row>
+                    <TanstackReactTable columns={columns} data={customersData?.data ?? []} loading={isLoading} />
+                </Paper>
+
+                <TablePagination
+                    paginationData={customersData?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+
+                <KycStat />
+            </Column>
+        </PageContent>
     );
 }
 

@@ -20,12 +20,8 @@ export const ChangeTheme = (mode = true) => {
     const theme = createTheme({
         typography: {
             fontFamily: '"Poppins", sans-serif',
-            button: {
-                textTransform: "none",
-            },
         },
         palette: mode ? LightPalette : DarkPalette,
-
         overrides: {
             MuiPaper: {
                 root: {
@@ -112,6 +108,7 @@ export const ChangeTheme = (mode = true) => {
             MuiButtonBase: {
                 styleOverrides: {
                     root: {
+                        textTransform: 'none',
                         "*": {
                             fontFamily: fonts.secondary,
                         },
@@ -120,7 +117,7 @@ export const ChangeTheme = (mode = true) => {
             },
             MuiButton: {
                 defaultProps: {
-                    // disableElevation: true,
+                    disableElevation: true,
                 },
                 variants: [
                     // {

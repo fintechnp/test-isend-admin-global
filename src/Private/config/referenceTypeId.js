@@ -5,6 +5,7 @@ const referenceTypeId = {
     remittancePurposes: 7,
     transactionStatus: 66,
     businessTypes: 146,
+    kycStatuses: 21,
     emailTemplateType: 150,
 };
 

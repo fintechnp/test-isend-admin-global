@@ -183,13 +183,14 @@ import {
     GetCustomerByPartnersReducer,
     BlockUnblockReducer,
     CustomersSaga,
+    GetAllCustomerKycCountByStatusReducer
 } from "./pages/Customers/Search/store";
 
 import {
     GetCustomersByIdReducer,
     CreateCustomersReducer,
     UpdateCustomersReducer,
-    CustomersCreateSaga,
+    CustomersCreateSaga
 } from "./pages/Customers/CreateCustomer/store";
 
 //Banks
@@ -731,6 +732,7 @@ export const privateReducer = {
     get_customer_byid: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
+    get_all_customer_kyc_count_by_status: GetAllCustomerKycCountByStatusReducer,
 
     //Customer Bank
 

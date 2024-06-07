@@ -1,0 +1,83 @@
+import React, { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
+import Grid from "@mui/material/Grid";
+
+import TotalCustomerIcon from "./Icon/TotalCustomerIcon";
+import KycVerifiedIcon from "./Icon/KycVerifiedIcon";
+import KycRejectedIcon from "./Icon/KycRejectedIcon";
+import KycExpiredIcon from "./Icon/KycExpiredIcon";
+import KycNotStartedIcon from "./Icon/KycNotStartedIcon";
+
+import actions from "../store/actions";
+
+const Wrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    background: theme.palette.common.white,
+    padding: "16px",
+    gap: "16px",
+    borderRadius: "8px",
+    minWidth: "203px",
+}));
+
+export default function KycStat() {
+    const dispatch = useDispatch();
+
+    const { loading: isLoading, response } = useSelector((state) => state.get_all_customer_kyc_count_by_status);
+
+    const data = response?.data;
+
+    useEffect(() => {
+        dispatch(actions.get_all_customer_kyc_count_by_status());
+    }, []);
+
+    const statsData = [
+        {
+            label: "Total Customers",
+            icon: <TotalCustomerIcon />,
+            count: data?.totalCustomer ?? 0,
+        },
+        {
+            label: "KYC Verified",
+            icon: <KycVerifiedIcon />,
+            count: data?.kycVerifiedCount ?? 0,
+        },
+        {
+            label: "KYC Rejected",
+            icon: <KycRejectedIcon />,
+            count: data?.kycRejectCount ?? 0,
+        },
+        {
+            label: "KYC Expired",
+            icon: <KycExpiredIcon />,
+            count: data?.kycExpiredCount ?? 0,
+        },
+        {
+            label: "KYC Not Started",
+            icon: <KycNotStartedIcon />,
+            count: data?.customerWithNoKycCount ?? 0,
+        },
+    ];
+
+    return (
+        <Box display="flex" gap="16px">
+            {statsData.map((stat) => (
+                <Wrapper>
+                    {stat.icon}
+                    <Box display="flex" flexDirection="column">
+                        <Typography fontSize="0.857rem" lineHeight="1rem" color="text.secondary">
+                            {stat.label}
+                        </Typography>
+                        <Typography fontSize="1.286rem" lineHeight="2rem" fontWeight={500}>
+                            {stat.count}
+                        </Typography>
+                    </Box>
+                </Wrapper>
+            ))}
+        </Box>
+    );
+}

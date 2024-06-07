@@ -3,9 +3,9 @@ import { alpha } from "@mui/material/styles";
 const light = {
     mode: "light",
     primary: {
-        light: "#addbd6",
+        light: "#4488d1",
         main: "#2D6FB5",
-        dark: "#1761AE",
+        dark: "#23568c",
         contrastText: "#ffffff",
     },
     secondary: {
@@ -16,13 +16,13 @@ const light = {
     },
     success: {
         light: "#28be76",
-        main: "#1f945c",
+        main: "#1F945C",
         dark: "#166a42",
         contrastText: "#ffffff",
     },
     error: {
         light: "#e4606d",
-        main: "#dc3545",
+        main: "#DC3545",
         dark: "#bd2130",
         contrastText: "#ffffff",
     },
@@ -33,12 +33,13 @@ const light = {
         contrastText: "#ffffff",
     },
     text: {
-        secondary: alpha("#000000", 0.60),
+        secondary: alpha("#000000", 0.6),
         primary: alpha("#000000", 0.87),
         light: "#f5f5f5",
         main: "#707070",
         dark: "#1c1c1c",
         baseMain: "#252525",
+        baseSecond: "#68727D",
     },
     border: {
         light: "#e6e6e6",
@@ -57,6 +58,7 @@ const light = {
     },
     surface: {
         1: "linear-gradient(116.82deg, #4980FF 0%, #00D4FF 100%)",
+        primarySecond: "#E7EFF8",
         successSecond: "#E9F8F1",
         dangerSecond: "#FAE2E5",
         warningSecond: "#FDF6EA",
