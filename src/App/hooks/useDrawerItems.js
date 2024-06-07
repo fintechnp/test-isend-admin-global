@@ -67,7 +67,7 @@ const useDrawerItems = () => {
         for (let menu of permissions) {
             const transformed = transform(menu);
             if (transformed.sub) {
-                transformed.children = [...menu?.children].filter(m => !isEmpty(m.url)).map((a) => transform(a));
+                transformed.children = [...menu?.children].filter((m) => !isEmpty(m.url)).map((a) => transform(a));
             }
 
             transformedData.push(transformed);

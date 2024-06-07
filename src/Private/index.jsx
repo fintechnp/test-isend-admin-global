@@ -555,6 +555,13 @@ import {
     GetUserProfileSetupByIdReducer,
     GetUserProfileSetupsForSelectReducer,
 } from "./pages/Users/ProfileSetups/store";
+import {
+    addEmailTemplateReducer,
+    getEmailTemplateReducer,
+    getEmailTemplateTagReducer,
+    updateEmailTemplateReducer,
+} from "./components/email-template/store/reducer/emailTemplateReducer";
+import EmailTemplateSaga from "./components/email-template/store/emailTemplateSaga";
 
 // region: Dashboard
 import {
@@ -858,6 +865,13 @@ export const privateReducer = {
     add_document_acceptance: addDocumentAcceptanceReducer,
     update_document_acceptance: updateDocumentAcceptanceReducer,
 
+    //emailTemplate
+
+    get_email_templates: getEmailTemplateReducer,
+    get_email_template_tags: getEmailTemplateTagReducer,
+    add_email_template: addEmailTemplateReducer,
+    update_email_template: updateEmailTemplateReducer,
+
     // funding sources
     get_funding_source_list: getFundingSourcesReducer,
     add_funding_source: addFundingSourceReducer,
@@ -1076,6 +1090,7 @@ export const privateSaga = [
     countrySaga(),
     documentAcceptanceSaga(),
     UserProfileSetupSaga(),
+    EmailTemplateSaga(),
     DashboardSaga(),
 ];
 

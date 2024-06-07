@@ -17,6 +17,13 @@ const apiEndpoints = {
         update: "/documentacceptance/:id",
     },
 
+    emailTemplate: {
+        list: "/email/template",
+        create: "/email/template",
+        update: "/email/template/update/:template_id",
+        tagList: "/email/template/tags",
+    },
+
     countries: {
         list: "/countries",
         create: "/country",

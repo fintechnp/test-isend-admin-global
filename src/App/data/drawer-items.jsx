@@ -119,6 +119,7 @@ export const drawerItems = [
                 text: "Banners",
                 sub: false,
             },
+
             {
                 path: routePaths.countries.index,
                 key: "countries",
@@ -166,6 +167,12 @@ export const drawerItems = [
                 key: "Street Type",
                 text: " Street Type",
                 sub: false,
+            },
+            {
+                path: "/setup/email-template",
+                key: "email-template",
+                text: "Email Template",
+                sub: true,
             },
         ],
     },

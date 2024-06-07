@@ -166,6 +166,7 @@ import ListCountries from "Private/pages/Setup/Countries/ListCountries";
 import ListDocumentAcceptance from "Private/pages/Setup/DocumentAcceptance/ListDocumentAcceptance";
 import ZaiAustraliaPayment from "Private/pages/PaymentProcess/ZaiAustraliaPayment/ZaiAustraliaPayment";
 import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
+import ListEmailTemplate from "Private/components/email-template/ListEmailTemplate";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -290,6 +291,10 @@ const privateRoutes = [
     {
         path: "/setup/banners",
         component: <ListBanner />,
+    },
+    {
+        path: "/setup/email-template",
+        component: <ListEmailTemplate />,
     },
 
     {

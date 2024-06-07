@@ -97,7 +97,7 @@ function Filter({ state, handleSearch, handleCountry, handleOrder, handlePayemnt
     return (
         <FilterWrapper>
             <SearchBox>
-               <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
