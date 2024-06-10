@@ -69,7 +69,7 @@ class dateUtils {
      * get local date from UTC
      */
     getLocalDateFromUTC(utcDateTime, dateFormat = "MM/DD/YYYY") {
-        utcDateTime = utcDateTime?.substring(0, 26);
+        utcDateTime = utcDateTime?.toString().substring(0, 26);
         if (!utcDateTime?.endsWith("Z")) utcDateTime = utcDateTime + "Z";
         return dayjs(utcDateTime).format(dateFormat);
     }
@@ -78,16 +78,16 @@ class dateUtils {
      * get local date from UTC
      */
     getLocalTimeFromUTC(utcDateTime, timeFormat = "hh:mm A") {
-        utcDateTime = utcDateTime?.substring(0, 26);
+        utcDateTime = utcDateTime?.toString().substring(0, 26);
         if (!utcDateTime.endsWith("Z")) utcDateTime = utcDateTime + "Z";
-        return dayjs(utcDateTime).format(dateFormat);
+        return dayjs(utcDateTime).format(timeFormat);
     }
 
     /**
      * get local date from UTC
      */
     getLocalDateTimeFromUTC(utcDateTime, dateFormat = "MM/DD/YYYY hh:mm A") {
-        utcDateTime = utcDateTime?.substring(0, 26);
+        utcDateTime = utcDateTime?.toString()?.substring(0, 26);
         if (!utcDateTime?.endsWith("Z")) utcDateTime = utcDateTime + "Z";
         return dayjs(utcDateTime).format(dateFormat);
     }
