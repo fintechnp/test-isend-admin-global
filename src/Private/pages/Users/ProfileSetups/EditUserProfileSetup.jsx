@@ -14,6 +14,7 @@ import PermissionUtils from "./utils/PermissionUtils";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
 import actions from "Common/store/actions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 function EditUserProfileSetup() {
     const dispatch = useDispatch();
@@ -95,24 +96,25 @@ function EditUserProfileSetup() {
                     label: "Create Role",
                 },
             ]}
-            disablePadding
         >
-            {isLoadingGetUserProfileSetupById || isLoadingUserMenuAndPermissions ? (
-                <ProfileSetupFormSkeleton />
-            ) : (
-                <ProfileSetupForm
-                    onSubmit={handleSubmit}
-                    defaultValues={{
-                        role_name: userProfileSetup?.role_name,
-                        description: userProfileSetup?.description,
-                        is_active: !!userProfileSetup?.is_active,
-                        remarks: userProfileSetup?.remarks,
-                        permission_ids: defaultSelectedPermissionIds,
-                        selected_menu_ids: defaultSelectedMenuIds,
-                    }}
-                    permissions={getUserMensAndPermissionsResponse?.data?.role_response?.menus ?? []}
-                />
-            )}
+            <PageContentContainer>
+                {isLoadingGetUserProfileSetupById || isLoadingUserMenuAndPermissions ? (
+                    <ProfileSetupFormSkeleton />
+                ) : (
+                    <ProfileSetupForm
+                        onSubmit={handleSubmit}
+                        defaultValues={{
+                            role_name: userProfileSetup?.role_name,
+                            description: userProfileSetup?.description,
+                            is_active: !!userProfileSetup?.is_active,
+                            remarks: userProfileSetup?.remarks,
+                            permission_ids: defaultSelectedPermissionIds,
+                            selected_menu_ids: defaultSelectedMenuIds,
+                        }}
+                        permissions={getUserMensAndPermissionsResponse?.data?.role_response?.menus ?? []}
+                    />
+                )}
+            </PageContentContainer>
         </PageContent>
     );
 }

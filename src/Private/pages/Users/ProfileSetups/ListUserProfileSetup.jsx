@@ -28,6 +28,7 @@ import withPermission from "Private/HOC/withPermission";
 import dateUtils from "App/utils/dateUtils";
 import ViewUserProfileSetupModal from "./components/ViewUserProfileSetupModal";
 import { Box } from "@mui/material";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 const initialQueryParams = {
     page_number: 1,
@@ -80,102 +81,113 @@ function ListUserProfileSetup() {
                     label: "Roles and Permissions",
                 },
             ]}
-            disablePadding
-        >
-            <Row p={2}>
-                <SearchTextField
-                    onChange={(value) => {
-                        setFilterSchema((prev) => ({ ...prev, search: value }));
-                    }}
-                    onClear={() => {
-                        setFilterSchema((prev) => ({ ...prev, search: null }));
-                    }}
-                />
-            </Row>
-            <TableContainer>
-                <Table>
-                    <TableHead sx={{ bgcolor: "primary.main", color: "white" }}>
-                        <TableRow>
-                            <TableCell>
-                                <Typography color="white">SN</Typography>
-                            </TableCell>
-                            <TableCell color="white">
-                                <Typography color="white">Name</Typography>
-                            </TableCell>
 
-                            <TableCell>
-                                <Typography align="center" color="white">
-                                    Status
-                                </Typography>
-                            </TableCell>
-                            <TableCell color="white">
-                                <Typography color="white">Created At</Typography>
-                            </TableCell>
-                            <TableCell color="white">
-                                <Typography color="white">Updated At</Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography color="white">Actions</Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {loading ? (
-                            <TableBodySkeleton columnCount={6} />
-                        ) : (
-                            <>
-                                {canUserProfileSetup && response?.pagination?.currentPage === 1 && (
-                                    <AddProfileSetupTableRowForm />
-                                )}
-                                {response?.data?.map((role) => (
-                                    <TableRow key={role.id}>
-                                        <TableCell>
-                                            <Typography>{role.f_serial_no + (canUserProfileSetup ? 1 : 0)}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography>{role.role_name}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography textAlign="center">
-                                                {role.is_active ? "Active" : "Inactive"}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Box>
-                                                <Typography> {dateUtils.getFormattedDate(role.created_ts)}</Typography>
-                                                <Typography>{role.created_by ?? ""}</Typography>
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Box>
+        >
+            <PageContentContainer>
+                <Row p={2}>
+                    <SearchTextField
+                        onChange={(value) => {
+                            setFilterSchema((prev) => ({ ...prev, search: value }));
+                        }}
+                        onClear={() => {
+                            setFilterSchema((prev) => ({ ...prev, search: null }));
+                        }}
+                    />
+                </Row>
+                <TableContainer>
+                    <Table>
+                        <TableHead sx={{ bgcolor: "primary.main", color: "white" }}>
+                            <TableRow>
+                                <TableCell>
+                                    <Typography color="white">SN</Typography>
+                                </TableCell>
+                                <TableCell color="white">
+                                    <Typography color="white">Name</Typography>
+                                </TableCell>
+
+                                <TableCell>
+                                    <Typography align="center" color="white">
+                                        Status
+                                    </Typography>
+                                </TableCell>
+                                <TableCell color="white">
+                                    <Typography color="white">Created At</Typography>
+                                </TableCell>
+                                <TableCell color="white">
+                                    <Typography color="white">Updated At</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography color="white">Actions</Typography>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {loading ? (
+                                <TableBodySkeleton columnCount={6} />
+                            ) : (
+                                <>
+                                    {canUserProfileSetup && response?.pagination?.currentPage === 1 && (
+                                        <AddProfileSetupTableRowForm />
+                                    )}
+                                    {response?.data?.map((role) => (
+                                        <TableRow key={role.id}>
+                                            <TableCell>
                                                 <Typography>
-                                                    {role.updated_ts ? dateUtils.getFormattedDate(role.updated_ts) : "-"}
+                                                    {role.f_serial_no + (canUserProfileSetup ? 1 : 0)}
                                                 </Typography>
-                                                <Typography>{role.updated_by}</Typography>
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell>
-                                            <ViewUserProfileSetupModal userProfileSetupId={role.id} />
-                                            {can(permissions.EDIT_USER_PROFILE_SETUP) && !!role?.is_editable && (
-                                                <EditIconButton
-                                                    onClick={() =>
-                                                        navigate(buildRoute(routePaths.users.editProfileSetup, role.id))
-                                                    }
-                                                />
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </>
-                        )}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    paginationData={response?.pagination}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
-                />
-            </TableContainer>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography>{role.role_name}</Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography textAlign="center">
+                                                    {role.is_active ? "Active" : "Inactive"}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Box>
+                                                    <Typography>
+                                                        {" "}
+                                                        {dateUtils.getFormattedDate(role.created_ts)}
+                                                    </Typography>
+                                                    <Typography>{role.created_by ?? ""}</Typography>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Box>
+                                                    <Typography>
+                                                        {role.updated_ts
+                                                            ? dateUtils.getFormattedDate(role.updated_ts)
+                                                            : "-"}
+                                                    </Typography>
+                                                    <Typography>{role.updated_by}</Typography>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>
+                                                <ViewUserProfileSetupModal userProfileSetupId={role.id} />
+                                                {can(permissions.EDIT_USER_PROFILE_SETUP) && !!role?.is_editable && (
+                                                    <EditIconButton
+                                                        onClick={() =>
+                                                            navigate(
+                                                                buildRoute(routePaths.users.editProfileSetup, role.id),
+                                                            )
+                                                        }
+                                                    />
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </>
+                            )}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        paginationData={response?.pagination}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+            </PageContentContainer>
         </PageContent>
     );
 }

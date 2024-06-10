@@ -6,6 +6,7 @@ import AccountTable from "./components/AccountTable";
 import PageContent from "App/components/Container/PageContent";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 function Accounts() {
     const dispatch = useDispatch();
@@ -31,9 +32,10 @@ function Accounts() {
                     label: "User Setups",
                 },
             ]}
-            disablePadding
         >
-            <AccountTable />
+            <PageContentContainer>
+                <AccountTable />
+            </PageContentContainer>
         </PageContent>
     );
 }

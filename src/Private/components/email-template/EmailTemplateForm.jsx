@@ -37,7 +37,7 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
                         name="template_for"
                         label="Template For"
                         options={[
-                            { label: "Customer", value: "customer" },
+                            { label: "User", value: "user" },
                             { label: "Admin", value: "admin" },
                         ]}
                     />

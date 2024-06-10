@@ -14,6 +14,10 @@ import { permissions } from "Private/data/permissions";
 import PageContent from "App/components/Container/PageContent";
 import EmailTemplateFilterForm from "./Filter/EmailTemplateFilterForm";
 import emailTemplateActions from "Private/components/email-template/store/emailTemplateActions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import HasPermission from "../shared/HasPermission";
+import { Box, Button } from "@mui/material";
+import Column from "App/components/Column/Column";
 
 const initialState = {
     PageNumber: 1,
@@ -57,27 +61,27 @@ const EmailTemplate = () => {
             {
                 header: "Is Active ?",
                 accessorKey: "is_active",
+                cell: ({ getValue }) => <Box>{getValue() ? "Yes" : "No"}</Box>,
             },
             {
-                header: "Created By",
-                accessorKey: "created_by",
+                header: "Created Status",
+                accessorKey: "created_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                        <Typography>By: {row.original.created_by}</Typography>
+                    </Column>
+                ),
             },
-
             {
-                header: "Created At",
-                cell: ({ row }) => {
-                    return <Typography>{dateUtils.getFormattedDate(row.original.created_ts)}</Typography>;
-                },
-            },
-            {
-                header: "Updated At",
-                cell: ({ row }) => {
-                    if (row?.original?.updated_ts) {
-                        return <Typography>{dateUtils.getFormattedDate(row.original.updated_ts)}</Typography>;
-                    } else {
-                        return <Typography>N/A</Typography>;
-                    }
-                },
+                header: "Updated Status",
+                accessorKey: "updated_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                        {row.original.updated_by && <Typography>By: {row.original.updated_by}</Typography>}
+                    </Column>
+                ),
             },
             ...(can(permissions.EDIT_EMAIL_TEMPLATE)
                 ? [
@@ -143,23 +147,38 @@ const EmailTemplate = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <EmailTemplateFilterForm onSubmit={handleSearch} onReset={handleReset} loading={isLoading} />
-
-            <TanstackReactTable
-                columns={columns}
-                title="Email Template"
-                data={response?.data ?? []}
-                loading={isLoading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={response?.data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
+            <PageContentContainer
+                title="Email Templates"
+                topRightContent={
+                    <HasPermission permission={permissions.CREATE_EMAIL_TEMPLATE}>
+                        <Button
+                            variant="contained"
+                            onClick={() =>
+                                dispatch({
+                                    type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
+                                })
+                            }
+                        >
+                            Create Email Template
+                        </Button>
+                    </HasPermission>
+                }
+            >
+                <TanstackReactTable
+                    columns={columns}
+                    title="Email Template"
+                    data={response?.data ?? []}
+                    loading={isLoading}
+                />
+            </PageContentContainer>
+            <TablePagination
+                paginationData={response?.pagination}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
-        </PageContent>
+        </>
     );
 };
 
