@@ -13,6 +13,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import app from "App/config/app";
 import routePaths from "Private/config/routePaths";
 import Row from "../Row/Row";
+import Column from "../Column/Column";
 
 const TitleContainer = styled("div")(({ theme }) => ({
     display: "flex",
@@ -130,7 +131,7 @@ export default function PageContent(props) {
                 </TitleContainer>
                 <Box>{breadcrumbs.length === 0 ? topRightEndContent : null}</Box>
             </Box>
-            <Box>{children}</Box>
+            <Column gap="16px">{children}</Column>
         </Container>
     );
 }
