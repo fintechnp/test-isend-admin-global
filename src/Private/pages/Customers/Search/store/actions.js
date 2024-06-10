@@ -51,8 +51,9 @@ const actions = {
         type: actions.CLOSE_FILTER,
     }),
 
-    get_all_customer_kyc_count_by_status: () => ({
+    get_all_customer_kyc_count_by_status: (query) => ({
         type: actions.GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS,
+        query
     }),
 };
 

@@ -4,7 +4,6 @@ import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
 
 import TotalCustomerIcon from "./Icon/TotalCustomerIcon";
 import KycVerifiedIcon from "./Icon/KycVerifiedIcon";
@@ -13,8 +12,10 @@ import KycExpiredIcon from "./Icon/KycExpiredIcon";
 import KycNotStartedIcon from "./Icon/KycNotStartedIcon";
 
 import actions from "../store/actions";
+import cleanObject from "App/helpers/cleanObject";
 
 const Wrapper = styled(Box)(({ theme }) => ({
+    flex: 1,
     display: "flex",
     flexDirection: "column",
     background: theme.palette.common.white,
@@ -22,9 +23,10 @@ const Wrapper = styled(Box)(({ theme }) => ({
     gap: "16px",
     borderRadius: "8px",
     minWidth: "203px",
+    flexWrap: "wrap",
 }));
 
-export default function KycStat() {
+export default function KycStat({ fromDate, toDate }) {
     const dispatch = useDispatch();
 
     const { loading: isLoading, response } = useSelector((state) => state.get_all_customer_kyc_count_by_status);
@@ -32,8 +34,13 @@ export default function KycStat() {
     const data = response?.data;
 
     useEffect(() => {
-        dispatch(actions.get_all_customer_kyc_count_by_status());
-    }, []);
+        const query = {
+            from_date: fromDate,
+            to_date: toDate,
+        };
+
+        dispatch(actions.get_all_customer_kyc_count_by_status(cleanObject(query)));
+    }, [fromDate, toDate]);
 
     const statsData = [
         {
@@ -72,9 +79,13 @@ export default function KycStat() {
                         <Typography fontSize="0.857rem" lineHeight="1rem" color="text.secondary">
                             {stat.label}
                         </Typography>
-                        <Typography fontSize="1.286rem" lineHeight="2rem" fontWeight={500}>
-                            {stat.count}
-                        </Typography>
+                        {isLoading ? (
+                            <Skeleton width="100px" />
+                        ) : (
+                            <Typography fontSize="1.286rem" lineHeight="2rem" fontWeight={500}>
+                                {stat.count}
+                            </Typography>
+                        )}
                     </Box>
                 </Wrapper>
             ))}
