@@ -26,6 +26,7 @@ import useDetectScreen from "App/hooks/useDetectScreen";
 import ISendLogo from "../Logo/ISendLogo";
 import NavMenu from "./NavMenu";
 import Row from "../Row/Row";
+import HamburgerMenu from "./HamburgerMenu";
 
 const drawerWidth = 280;
 
@@ -252,9 +253,9 @@ function Drawer({ children }) {
             <CustomizedDrawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerContainer className="drawer-content__container" isDrawerOpen={open}>
                     <DrawerHeader>
-                        <Row justifyContent={open ? "space-between" : "center"} alignItems="center">
-                            <Box flex={1}>
-                                {open && (
+                        <Row width="100%" justifyContent={open ? "space-between" : "center"} alignItems="center">
+                            {open && (
+                                <Box flex={1}>
                                     <ISendLogo
                                         onClick={handleDashboard}
                                         {...(open
@@ -264,21 +265,9 @@ function Drawer({ children }) {
                                               }
                                             : { variant: "short", color: "white" })}
                                     />
-                                )}
-                            </Box>
-                            <IconButton onClick={() => setOpen((value) => !open)}>
-                                <MenuOpenRoundedIcon
-                                    color="white"
-                                    sx={{
-                                        fill: "white",
-                                        ...(!open
-                                            ? {
-                                                  transform: "scale(-1)",
-                                              }
-                                            : undefined),
-                                    }}
-                                />
-                            </IconButton>
+                                </Box>
+                            )}
+                            <HamburgerMenu onClick={() => setOpen((value) => !value)} />
                         </Row>
                     </DrawerHeader>
                     <Divider />
