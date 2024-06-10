@@ -138,29 +138,32 @@ function Search() {
             {
                 header: "Customer Details",
                 accessorKey: "first_name",
-                cell: ({ row }) => (
-                    <Row gap="8px">
-                        <CustomerAvatar
-                            name={getCustomerName(row.original)}
-                            countryIso2Code={row.original.country_iso2}
-                        />
-                        <Column>
-                            <Typography fontWeight={500}>
-                                {getCustomerName(row.original)} ({row.original.customer_id})
-                            </Typography>
-                            <Row alignItems="center" gap="2px">
-                                <PhoneIcon />
-                                <Typography variant="caption">
-                                    {row.original.phone_number},{" "}
-                                    {calculateAge(row.original.date_of_birth)
-                                        ? `${calculateAge(row.original.date_of_birth)} y`
-                                        : "-"}
-                                    /{row.original.gender ?? "-"}
+                cell: ({ row }) => {
+                    const age = calculateAge(row.original.date_of_birth);
+
+                    const caption = [age ? `${age} y` : "", row.original.gender].filter((value) => !isEmpty(value));
+
+                    return (
+                        <Row gap="8px">
+                            <CustomerAvatar
+                                name={getCustomerName(row.original)}
+                                countryIso2Code={row.original.country_iso2}
+                            />
+                            <Column>
+                                <Typography fontWeight={500}>
+                                    {getCustomerName(row.original)} ({row.original.customer_id})
                                 </Typography>
-                            </Row>
-                        </Column>
-                    </Row>
-                ),
+                                <Row alignItems="center" gap="2px">
+                                    <PhoneIcon />
+                                    <Typography variant="caption">
+                                        {row.original.phone_number} {caption.length > 0 ? ", " : null}{" "}
+                                        {caption.join(" / ")}
+                                    </Typography>
+                                </Row>
+                            </Column>
+                        </Row>
+                    );
+                },
             },
             {
                 header: "Email",
@@ -184,11 +187,16 @@ function Search() {
             {
                 header: "KYC Status",
                 accessorKey: "kyc_status",
-                cell: ({ getValue }) => (
-                    <KycStatusBadge
-                        status={getValue()}
-                        label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : ""}
-                    />
+                cell: ({ getValue, row }) => (
+                    <Column alignItems="flex-start" gap="4px">
+                        <KycStatusBadge
+                            status={getValue()}
+                            label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : ""}
+                        />
+                        {row.original.kyc_updated_ts
+                            ? dateUtils.getLocalDateFromUTC(row.original.kyc_updated_ts)
+                            : null}
+                    </Column>
                 ),
             },
             {
@@ -200,26 +208,30 @@ function Search() {
                             <ListItemButton onClick={() => navigate(`/customer/details/${row.original.tid}`)}>
                                 View
                             </ListItemButton>
-                            <ListItemButton onClick={() => navigate(`/customer/update/${row.original.tid}`)}>
-                                Edit
-                            </ListItemButton>
-                            <Block
-                                enablePopoverAction
-                                id={row.original.tid}
-                                name="Customer"
-                                destroyOnUnmount
-                                enableReinitialize
-                                remark={true}
-                                initialValues={{
-                                    id: row.original.tid,
-                                    is_active: row.original.is_active,
-                                    remarks: "",
-                                }}
-                                onSubmit={handleBlock}
-                                loading={b_loading}
-                                form={`block_form_customer${row.original.tid}`}
-                                status={row?.original?.is_active}
-                            />
+                            <HasPermission permission={permissions.EDIT_CUSTOMER}>
+                                <ListItemButton onClick={() => navigate(`/customer/update/${row.original.tid}`)}>
+                                    Edit
+                                </ListItemButton>
+                            </HasPermission>
+                            <HasPermission permission={permissions.BLOCK_CUSTOMER}>
+                                <Block
+                                    enablePopoverAction
+                                    id={row.original.tid}
+                                    name="Customer"
+                                    destroyOnUnmount
+                                    enableReinitialize
+                                    remark={true}
+                                    initialValues={{
+                                        id: row.original.tid,
+                                        is_active: row.original.is_active,
+                                        remarks: "",
+                                    }}
+                                    onSubmit={handleBlock}
+                                    loading={b_loading}
+                                    form={`block_form_customer${row.original.tid}`}
+                                    status={row?.original?.is_active}
+                                />
+                            </HasPermission>
                         </PopoverButton>
                     );
                 },

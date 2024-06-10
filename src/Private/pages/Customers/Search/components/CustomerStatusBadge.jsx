@@ -1,35 +1,47 @@
 import PropTypes from "prop-types";
-import Chip from "@mui/material/Chip";
+import MuiChip from "@mui/material/Chip";
+import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
+
+const Chip = styled(MuiChip)(() => ({
+    height: "25px",
+    "& .MuiChip-label": {
+        fontSize: "1rem",
+        "& .MuiBox-root": {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "4px",
+        },
+    },
+}));
 
 export default function CustomerStatusBadge({ status }) {
     const theme = useTheme();
 
-    const data = {
-        active: {
-            label: "Active",
-            styles: {
-                backgroundColor: theme.palette.surface.successSecond,
-                color: theme.palette.success.main,
-            },
-        },
-        blocked: {
-            label: "Blocked",
-            styles: {
-                backgroundColor: theme.palette.surface.dangerSecond,
-                color: theme.palette.error.main,
-            },
-        },
+    const labels = {
+        active: "Active",
+        blocked: "Blocked",
+    };
+
+    const colors = {
+        active: theme.palette.success.main,
+        blocked: theme.palette.error.main,
+    };
+
+    const surfaceColors = {
+        active: theme.palette.surface.successSecond,
+        blocked: theme.palette.surface.dangerSecond,
     };
 
     return (
         <Chip
             size="small"
             sx={{
-                fontWeight: 500,
-                ...data[status].styles,
+                color: colors[status],
+                bgcolor: surfaceColors[status],
             }}
-            label={data[status].label}
+            label={labels[status]}
         />
     );
 }
