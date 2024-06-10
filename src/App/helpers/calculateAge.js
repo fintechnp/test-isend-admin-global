@@ -1,4 +1,6 @@
 const calculateAge = (dob) => {
+    if (dob.startsWith("0001-01-01")) return null;
+    
     const birthDate = new Date(dob);
     const today = new Date();
 
