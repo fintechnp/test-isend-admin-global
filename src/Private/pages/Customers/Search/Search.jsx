@@ -35,7 +35,7 @@ import KycStat from "./components/KycStat";
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 10,
     name: "",
     // customer_id: 0,
     id_number: "",
@@ -115,8 +115,11 @@ function Search() {
                             <Row alignItems="center" gap="2px">
                                 <PhoneIcon />
                                 <Typography variant="caption">
-                                    {row.original.phone_number}, {calculateAge(row.original.date_of_birth)}y /{" "}
-                                    {row.original.gender ?? "-"}
+                                    {row.original.phone_number},{" "}
+                                    {calculateAge(row.original.date_of_birth)
+                                        ? `${calculateAge(row.original.date_of_birth)} y`
+                                        : '-'}
+                                    /{row.original.gender ?? "-"}
                                 </Typography>
                             </Row>
                         </Column>
