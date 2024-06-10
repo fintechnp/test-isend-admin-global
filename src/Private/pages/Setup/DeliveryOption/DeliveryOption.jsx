@@ -33,7 +33,7 @@ const initialState = {
     order_by: "DESC",
 };
 
-const DeliveryOption = (props) => {
+const DeliveryOption = () => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -85,14 +85,16 @@ const DeliveryOption = (props) => {
             {
                 header: "Status",
                 accessorKey: "is_active",
-                cell: (data) => (
+                cell: ({ getValue, row }) => (
                     <>
                         {can(permissions.EDIT_DELIVERY_OPTION) ? (
-                            <TableSwitch
-                                value={data?.value ?? false}
-                                data={data.row.original}
-                                handleStatus={handleStatus}
-                            />
+                            <>
+                                <TableSwitch
+                                    value={getValue() ?? false}
+                                    data={row.original}
+                                    handleStatus={handleStatus}
+                                />
+                            </>
                         ) : (
                             <>{!!data.value ? "Active" : "Inactive"}</>
                         )}
