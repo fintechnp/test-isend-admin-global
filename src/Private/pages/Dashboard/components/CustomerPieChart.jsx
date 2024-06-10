@@ -8,10 +8,11 @@ import { styled, useTheme } from "@mui/material/styles";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 import Paper from "App/components/Paper/Paper";
+import useDetectScreen from "App/hooks/useDetectScreen";
+import Center from "App/components/Center/Center";
 
 const DATA_COLORS = ["#4DB6AC", "#7986CB", "#4FC3F7", "#eeeeee"];
 const NO_DATA_COLORS = ["#eeeeee"];
-
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -21,6 +22,8 @@ const Container = styled(Paper)(({ theme }) => ({
 }));
 
 export default function CustomerPieChart() {
+    const { isDesktop, isMobile, isTablet } = useDetectScreen();
+
     const theme = useTheme();
 
     const { response } = useSelector((state) => state.get_customer_count_by_device_type);
@@ -43,7 +46,7 @@ export default function CustomerPieChart() {
                 <Typography fontWeight={600} fontSize="1.286rem" lineHeight="1.786rem">
                     Customers
                 </Typography>
-                <Row justifyContent="flex-end" gap="16px">
+                <Row flex={1} justifyContent="flex-end" gap="16px">
                     {statsData.map((stat, index) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
                             <FiberManualRecordIcon sx={{ fill: DATA_COLORS[index] }} />
@@ -52,40 +55,36 @@ export default function CustomerPieChart() {
                     ))}
                 </Row>
             </Row>
-            <PieChart width={500} height={400}>
-                <Pie
-                    data={data?.totalUsers ? statsData : statsNoData}
-                    innerRadius={75}
-                    // outerRadius={150}
-                    // paddingAngle={1}
-                    dataKey="value"
-                >
-                    {statsData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                </Pie>
-                <text
-                    x="50%"
-                    y="48%"
-                    fontSize="0.857rem"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill={theme.palette.text.secondary}
-                >
-                    Total Customer
-                </text>
-                <text
-                    x="50%"
-                    y="53%"
-                    fontSize="1.286rem"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill={theme.palette.text.primary}
-                    fontWeight={600}
-                >
-                    {data?.totalUsers ?? 0}
-                </text>
-            </PieChart>
+            <Center>
+                <PieChart width={500} height={400}>
+                    <Pie data={data?.totalUsers ? statsData : statsNoData} innerRadius={75} dataKey="value">
+                        {statsData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                    </Pie>
+                    <text
+                        x="50%"
+                        y="48%"
+                        fontSize="0.857rem"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={theme.palette.text.secondary}
+                    >
+                        Total Customer
+                    </text>
+                    <text
+                        x="50%"
+                        y="53%"
+                        fontSize="1.286rem"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={theme.palette.text.primary}
+                        fontWeight={600}
+                    >
+                        {data?.totalUsers ?? 0}
+                    </text>
+                </PieChart>
+            </Center>
         </Container>
     );
 }
