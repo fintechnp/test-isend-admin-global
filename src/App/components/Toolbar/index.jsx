@@ -4,6 +4,7 @@ import { useContext } from "react";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
+import { useDispatch } from "react-redux";
 import MenuItem from "@mui/material/MenuItem";
 import MuiToolbar from "@mui/material/Toolbar";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,6 @@ import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
-import { useSelector, useDispatch } from "react-redux";
 
 import LogoutIcon from "../Icon/LogoutIcon";
 import MyAccountIcon from "../Icon/MyAccountIcon";
@@ -21,6 +21,7 @@ import isEmpty from "App/helpers/isEmpty";
 import { AuthContext } from "../../auth";
 import { useConfirm } from "App/core/mui-confirm";
 import getGreeting from "App/helpers/getGreeting";
+import Greeting from "./Greeting";
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     minHeight: "56px",
@@ -196,9 +197,7 @@ export default function Appbar({ handleDrawerToggle, open }) {
         <>
             <Toolbar disableGutters variant="dense">
                 <Box className="GreetingContainer--root" ml={1}>
-                    <Typography color="text.primary" lineHeight="20px" fontWeight={600}>
-                        {getGreeting()}
-                    </Typography>
+                    <Greeting />
                     <Typography color="text.secondary" fontSize="0.857rem">
                         {currentUser?.name}
                     </Typography>
