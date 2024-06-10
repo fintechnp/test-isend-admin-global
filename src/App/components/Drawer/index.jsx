@@ -199,7 +199,7 @@ function Drawer({ children }) {
         <Box
             className="SideBarItemContainer-root"
             sx={{
-                height: "calc(100svh - 100px)",
+                height: "calc(100svh - 160px)",
                 overflowY: "auto",
             }}
         >
