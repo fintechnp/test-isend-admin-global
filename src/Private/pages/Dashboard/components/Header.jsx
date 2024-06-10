@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import Grid from '@mui/material/Grid'
+import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Row from "App/components/Row/Row";
 import { styled } from "@mui/material/styles";
@@ -101,8 +101,8 @@ export default function Header() {
     };
 
     const handleChange = (query) => {
-        const current = { from_date: query.form_date, end_date: query.to_date };
-        const previous = { from_date: query.previous_from_date, end_date: query.previous_end_date };
+        const current = { from_date: query.form_date, to_date: query.to_date };
+        const previous = { from_date: query.previous_from_date, to_date: query.previous_end_date };
         dispatch(actions.get_customer_count_by_device_type(current));
         dispatch(actions.get_customer_kyc_count_by_status(current));
         dispatch(actions.get_transaction_count_by_status(current));
