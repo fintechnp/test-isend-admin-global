@@ -6,7 +6,8 @@ const referenceTypeId = {
     transactionStatus: 66,
     businessTypes: 146,
     kycStatuses: 21,
-    emailTemplateType: 150,
+    emailTemplateTypeForCustomer: 150,
+    emailTemplateTypeForAdmin: 151,
 };
 
 export default referenceTypeId;

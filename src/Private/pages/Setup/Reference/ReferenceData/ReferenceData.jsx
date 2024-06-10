@@ -77,7 +77,12 @@ const ReferenceData = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "Id",
+            Header: "SN",
+            accessor: "f_serial_no",
+            maxWidth: 60,
+        },
+        {
+            Header: "ID",
             accessor: "reference_id",
             maxWidth: 60,
         },
