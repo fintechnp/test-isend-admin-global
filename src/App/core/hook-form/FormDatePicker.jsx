@@ -76,7 +76,7 @@ function FormDatePicker({
                                 onChange?.(null);
                             }
                         }}
-                        value={field.value ?? ""}
+                        value={field.value ?? null}
                         inputFormat={dateFormat}
                         renderInput={(params) => (
                             <TextField
