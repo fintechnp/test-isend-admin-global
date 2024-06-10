@@ -1,5 +1,5 @@
+import * as Yup from "yup";
 import { reset } from "redux-form";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -9,8 +9,10 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import { Block } from "App/components";
 import Row from "App/components/Row/Row";
+import KycStat from "./components/KycStat";
 import Column from "App/components/Column/Column";
 import PhoneIcon from "App/components/Icon/PhoneIcon";
+import { TablePagination } from "App/components/Table";
 import KycStatusBadge from "./components/KycStatusBadge";
 import CustomerAvatar from "./components/CustomerAvatar";
 import FilterForm from "App/components/Filter/FilterForm";
@@ -18,20 +20,20 @@ import FilterButton from "App/components/Button/FilterButton";
 import PopoverButton from "App/components/Button/PopoverButton";
 import PageContent from "App/components/Container/PageContent";
 import CustomerStatusBadge from "./components/CustomerStatusBadge";
+import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./store/actions";
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import { ReferenceName } from "App/helpers";
 import routePaths from "Private/config/routePaths";
 import calculateAge from "App/helpers/calculateAge";
+import { permissions } from "Private/data/permissions";
 import getCustomerName from "App/helpers/getCustomerName";
 import referenceTypeId from "Private/config/referenceTypeId";
-import { TablePagination } from "App/components/Table";
-import HasPermission from "Private/components/shared/HasPermission";
-import { permissions } from "Private/data/permissions";
-import KycStat from "./components/KycStat";
 
 const initialState = {
     page_number: 1,
@@ -55,20 +57,54 @@ const filter = {
     order_by: "DESC",
 };
 
+const schema = Yup.object().shape({
+    from_date: Yup.string()
+        .nullable()
+        .test({
+            name: "required_when_to_date_is_not_empty",
+            message: "Form Date is required",
+            test: (value, context) => {
+                if (
+                    (isEmpty(context.parent.to_date) && isEmpty(value)) ||
+                    (!isEmpty(context.parent.to_date) && !isEmpty(value))
+                )
+                    return true;
+                return isEmpty(context.parent.to_date) && !isEmpty(value);
+            },
+        }),
+    to_date: Yup.string()
+        .nullable()
+        .test({
+            name: "required_when_from_date_is_not_empty",
+            message: "To Date is required",
+            test: (value, context) => {
+                if (
+                    (isEmpty(context.parent.from_date) && isEmpty(value)) ||
+                    (!isEmpty(context.parent.from_date) && !isEmpty(value))
+                )
+                    return true;
+                return isEmpty(context.parent.from_date) && !isEmpty(value);
+            },
+        }),
+});
+
 function Search() {
     const navigate = useNavigate();
+
     const dispatch = useDispatch();
+
     const isMounted = useRef(false);
+
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: customersData, loading: isLoading, isFilterOpen } = useSelector((state) => state.get_customers);
+
     const { success: b_success, loading: b_loading } = useSelector((state) => state.block_unblock_customer);
 
     const { response: SendPartner, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     useEffect(() => {
         dispatch(reset("block_customer_form"));
-        dispatch(reset("search_form_customer"));
         dispatch({ type: "GET_CUSTOMERS_RESET" });
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
         dispatch({ type: "CREATE_CUSTOMERS_RESET" });
@@ -118,7 +154,7 @@ function Search() {
                                     {row.original.phone_number},{" "}
                                     {calculateAge(row.original.date_of_birth)
                                         ? `${calculateAge(row.original.date_of_birth)} y`
-                                        : '-'}
+                                        : "-"}
                                     /{row.original.gender ?? "-"}
                                 </Typography>
                             </Row>
@@ -197,11 +233,17 @@ function Search() {
             type: "date",
             name: "from_date",
             label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
         },
         {
             type: "date",
             name: "to_date",
             label: "To Date",
+            props: {
+                withStartDayTimezone: true,
+            },
         },
         {
             type: "textfield",
@@ -261,7 +303,8 @@ function Search() {
     const handleOnReset = () => {
         isMounted.current = false;
         setFilterSchema(initialState);
-        dispatch({ type: "GET_CUSTOMERS_RESET" });
+        dispatch(actions.close_filter());
+        dispatch(actions.get_customers(initialState));
     };
 
     const handleChangePage = (e, newPage) => {
@@ -280,6 +323,12 @@ function Search() {
             page_size: +pageSize,
         };
         setFilterSchema(updatedFilterSchema);
+    };
+
+    const onDelete = (filterKey) => {
+        const schema = { ...filterSchema };
+        delete schema[filterKey];
+        setFilterSchema(schema);
     };
 
     useEffect(() => {
@@ -312,11 +361,13 @@ function Search() {
                     onReset={handleOnReset}
                     fields={filterFields}
                     values={filterSchema}
+                    onDelete={onDelete}
+                    schema={schema}
                 />
-                <Paper sx={{ p: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                    <Row alignItems="center" justifyContent="space-between">
-                        <Typography variant="h6">Customers</Typography>
-                        <Row gap="16px">
+                <PageContentContainer
+                    title="Customers"
+                    topRightContent={
+                        <>
                             <TableGridQuickFilter
                                 onSortByChange={handleQuickFilter}
                                 onOrderByChange={handleQuickFilter}
@@ -329,10 +380,11 @@ function Search() {
                                     Create Customer
                                 </Button>
                             </HasPermission>
-                        </Row>
-                    </Row>
+                        </>
+                    }
+                >
                     <TanstackReactTable columns={columns} data={customersData?.data ?? []} loading={isLoading} />
-                </Paper>
+                </PageContentContainer>
 
                 <TablePagination
                     paginationData={customersData?.pagination}
@@ -340,7 +392,7 @@ function Search() {
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
-                <KycStat />
+                <KycStat fromDate={filterSchema?.from_date} toDate={filterSchema?.to_date} />
             </Column>
         </PageContent>
     );
