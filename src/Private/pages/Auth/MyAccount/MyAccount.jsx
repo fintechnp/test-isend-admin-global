@@ -245,15 +245,12 @@ function MyAccount(props) {
                     <RenderField label="Phone Number" value={UserData?.data?.phone_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {UserData?.data?.last_login_ts}
                     <RenderField
                         label="Last Login"
                         value={dateUtils.getLocalDateTimeFromUTC(UserData?.data?.last_login_ts)}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {UserData?.data?.created_ts}
-
                     <RenderField
                         label="Created At"
                         value={dateUtils.getLocalDateTimeFromUTC(UserData?.data?.created_ts)}
