@@ -13,6 +13,8 @@ import TotalCustomerIcon from "App/components/Icon/TotalCustomerIcon";
 import TotalTransactionIcon from "App/components/Icon/TotalTransactionIcon";
 import TotalKycVerifiedCustomerIcon from "App/components/Icon/TotalKycVerifiedCustomerIcon";
 
+import numberUtils from "App/utils/numberUtils";
+
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
 }));
@@ -43,21 +45,21 @@ export default function SummaryStat() {
             isLoading: isLoadingTransactionStat,
             label: "Total Transaction",
             icon: <TotalTransactionIcon />,
-            count: transactionCountByStatusData?.totalTransactionsCount ?? 0,
+            count: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
             cardBgColor: "linear-gradient(94.93deg, #DCEDC8 0%, #F1F8E9 100.09%)",
         },
         {
             isLoading: isLoadingCustomerStatByDeviceType,
             label: "Total Customer",
             icon: <TotalCustomerIcon />,
-            count: customerCountByStatusData?.totalUsers ?? 0,
+            count: numberUtils.format(customerKycCountByStatusData?.totalCustomer),
             cardBgColor: "linear-gradient(94.93deg, #FFF9C4 0%, #FFFDE7 100.09%)",
         },
         {
             isLoading: isLoadingCustomerKycStatByStatus,
             label: "Total KYC Verified User",
             icon: <TotalKycVerifiedCustomerIcon />,
-            count: customerKycCountByStatusData?.kycVerifiedCount,
+            count: numberUtils.format(customerKycCountByStatusData?.kycVerifiedCount),
             cardBgColor: "linear-gradient(94.93deg, #E1BEE7 0%, #F3E5F5 100.09%)",
         },
     ];

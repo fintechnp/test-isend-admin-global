@@ -17,6 +17,8 @@ import KycNotStartedIcon from "App/components/Icon/KycNotStartedIcon";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 import IncreaseIcon from "App/components/Icon/IncreaseIcon";
 import StatBadge from "./StatBadge";
+import numberUtils from "App/utils/numberUtils";
+import { number } from "prop-types";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -45,8 +47,8 @@ export default function KycStat() {
         {
             label: "Total Verified",
             icon: <KycVerifiedIcon />,
-            currentCount: data?.kycVerifiedCount ?? 0,
-            previousCount: previousData?.kycVerifiedCount ?? 0,
+            currentCount: numberUtils.format(data?.kycVerifiedCount),
+            previousCount: numberUtils.format(previousData?.kycVerifiedCount),
             differenceInPercent: calculatePercentageDifference(
                 data?.kycVerifiedCount ?? 0,
                 previousData?.kycVerifiedCount ?? 0,
@@ -56,8 +58,8 @@ export default function KycStat() {
         {
             label: "Total Rejected",
             icon: <KycRejectedIcon />,
-            currentCount: data?.kycRejectCount ?? 0,
-            previousCount: previousData?.kycRejectCount ?? 0,
+            currentCount: numberUtils.format(data?.kycRejectCount),
+            previousCount: numberUtils.format(previousData?.kycRejectCount),
             differenceInPercent: calculatePercentageDifference(
                 data?.kycRejectCount ?? 0,
                 previousData?.kycRejectCount ?? 0,
@@ -67,8 +69,8 @@ export default function KycStat() {
         {
             label: "Total Expired",
             icon: <KycExpiredIcon />,
-            currentCount: data?.kycExpiredCount ?? 0,
-            previousCount: previousData?.kycExpiredCount ?? 0,
+            currentCount: numberUtils.format(data?.kycExpiredCount),
+            previousCount: numberUtils.format(previousData?.kycExpiredCount),
             differenceInPercent: calculatePercentageDifference(
                 data?.kycExpiredCount ?? 0,
                 previousData?.kycExpiredCount ?? 0,
@@ -78,8 +80,8 @@ export default function KycStat() {
         {
             label: "Total Not Stared",
             icon: <KycNotStartedIcon />,
-            currentCount: data?.customerWithNoKycCount ?? 0,
-            previousCount: previousData?.customerWithNoKycCount ?? 0,
+            currentCount: numberUtils.format(data?.customerWithNoKycCount),
+            previousCount: numberUtils.format(previousData?.customerWithNoKycCount),
             differenceInPercent: calculatePercentageDifference(
                 data?.customerWithNoKycCount ?? 0,
                 previousData?.customerWithNoKycCount ?? 0,
@@ -102,7 +104,7 @@ export default function KycStat() {
                 <Column>
                     <Row gap="4px" alignItems="flex-end">
                         <Typography fontWeight={600} variant="h4" color="text.primary">
-                            {data?.totalCustomer ?? 0}
+                            {numberUtils.format(data?.totalCustomer)}
                         </Typography>
                         <StatBadge
                             label={differenceInCustomer + "%"}
