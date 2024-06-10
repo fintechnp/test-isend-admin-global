@@ -14,6 +14,7 @@ import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 import actions from "Common/store/actions";
 import { FormatDate, FormatDateTime } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import dateUtils from "App/utils/dateUtils";
 
 const DetailWrapper = styled(Grid)(({ theme }) => ({
     padding: "8px 16px 16px 16px",
@@ -244,10 +245,19 @@ function MyAccount(props) {
                     <RenderField label="Phone Number" value={UserData?.data?.phone_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Last Login" value={FormatDateTime(UserData?.data?.last_login_ts)} />
+                    {UserData?.data?.last_login_ts}
+                    <RenderField
+                        label="Last Login"
+                        value={dateUtils.getLocalDateTimeFromUTC(UserData?.data?.last_login_ts)}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Created At" value={FormatDate(UserData?.data?.created_ts)} />
+                    {UserData?.data?.created_ts}
+
+                    <RenderField
+                        label="Created At"
+                        value={dateUtils.getLocalDateTimeFromUTC(UserData?.data?.created_ts)}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <InfoWrapper>

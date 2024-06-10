@@ -67,20 +67,30 @@ class dateUtils {
 
     /**
      * get local date from UTC
-    */
-    getLocalDateFromUTC(utcDateTime, dateFormat ='MM/DD/YYYY'){
-        if(!utcDateTime?.endsWith('Z')) utcDateTime = utcDateTime + 'Z'
-        return dayjs(utcDateTime).format(dateFormat)
+     */
+    getLocalDateFromUTC(utcDateTime, dateFormat = "MM/DD/YYYY") {
+        utcDateTime = utcDateTime?.substring(0, 26);
+        if (!utcDateTime?.endsWith("Z")) utcDateTime = utcDateTime + "Z";
+        return dayjs(utcDateTime).format(dateFormat);
     }
 
-       /**
+    /**
      * get local date from UTC
-    */
-       getLocalTimeFromUTC(utcDateTime, timeFormat ='hh:mm A'){
-        if(!utcDateTime.endsWith('Z')) utcDateTime = utcDateTime + 'Z'
-        return dayjs(utcDateTime).format(dateFormat)
+     */
+    getLocalTimeFromUTC(utcDateTime, timeFormat = "hh:mm A") {
+        utcDateTime = utcDateTime?.substring(0, 26);
+        if (!utcDateTime.endsWith("Z")) utcDateTime = utcDateTime + "Z";
+        return dayjs(utcDateTime).format(dateFormat);
     }
 
+    /**
+     * get local date from UTC
+     */
+    getLocalDateTimeFromUTC(utcDateTime, dateFormat = "MM/DD/YYYY hh:mm A") {
+        utcDateTime = utcDateTime?.substring(0, 26);
+        if (!utcDateTime?.endsWith("Z")) utcDateTime = utcDateTime + "Z";
+        return dayjs(utcDateTime).format(dateFormat);
+    }
 }
 
 export default new dateUtils();
