@@ -4,29 +4,23 @@ import { useContext } from "react";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
-import MuiBadge from "@mui/material/Badge";
-import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import MuiToolbar from "@mui/material/Toolbar";
 import { useNavigate } from "react-router-dom";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import MuiMenuOpenIcon from "@mui/icons-material/MenuOpen";
-import AccountBoxIcon from "@mui/icons-material/AccountBoxOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
+import LogoutIcon from "../Icon/LogoutIcon";
+import MyAccountIcon from "../Icon/MyAccountIcon";
+import ChangePasswordIcon from "../Icon/ChangePasswordIcon";
+
+import isEmpty from "App/helpers/isEmpty";
 import { AuthContext } from "../../auth";
 import { useConfirm } from "App/core/mui-confirm";
 import getGreeting from "App/helpers/getGreeting";
-import MyAccountIcon from "../Icon/MyAccountIcon";
-import ChangePasswordIcon from "../Icon/ChangePasswordIcon";
-import LogoutIcon from "../Icon/LogoutIcon";
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     minHeight: "56px",
@@ -73,30 +67,6 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-const MenuIconButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.appbar.icon,
-    [theme.breakpoints.down("md")]: {
-        display: "none",
-    },
-}));
-
-const MenuOpenIcon = styled(MuiMenuOpenIcon)(({ theme, open }) => ({
-    "&:hover": {
-        backgroundColor: "transparent",
-        cursor: "default",
-    },
-    ...(!open && {
-        transform: "rotate(-180deg)",
-    }),
-}));
-
-const MenuCloseIcon = styled(MenuIcon)(({ theme }) => ({
-    "&:hover": {
-        backgroundColor: "transparent",
-        cursor: "default",
-    },
-}));
-
 const ProfileIcon = styled(IconButton)(({ theme }) => ({
     marginLeft: "8px",
     "&:hover": {
@@ -108,14 +78,18 @@ export default function Appbar({ handleDrawerToggle, open }) {
     const theme = useTheme();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [imageError, setImageError] = React.useState(false);
+
     const { currentUser } = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [hover, setHover] = React.useState(false);
-    const mode = useSelector((state) => state.change_theme?.mode);
 
     const confirm = useConfirm();
 
     const isMenuOpen = Boolean(anchorEl);
+
+    const profilePicture = currentUser?.profile_picture;
+
+    const showProfilePicture = isEmpty(profilePicture) || imageError;
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -123,10 +97,6 @@ export default function Appbar({ handleDrawerToggle, open }) {
 
     const handleMenuClose = () => {
         setAnchorEl(null);
-    };
-
-    const handleTheme = () => {
-        dispatch({ type: "SET_THEME", mode: !mode });
     };
 
     const handleProfile = () => {
@@ -238,22 +208,38 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     size="small"
                     edge="end"
                     disableRipple
+                    aria-label="account of current user"
                     aria-controls={menuId}
                     aria-haspopup="true"
                     onClick={handleProfileMenuOpen}
                     color="inherit"
                 >
-                    <Avatar
-                        sx={{
-                            height: "36px",
-                            width: "36px",
-                            borderRadius: "50%",
-                            fontSize: "14px",
-                            textTransform: "capitalize",
-                            background: (theme) => theme.palette.primary.main,
-                        }}
-                        {...stringAvatar(currentUser?.name)}
-                    />
+                    {showProfilePicture ? (
+                        <Avatar
+                            variant="circular"
+                            sx={{
+                                height: "36px",
+                                width: "36px",
+                                fontSize: "14px",
+                                textTransform: "capitalize",
+                                background: (theme) => theme.palette.primary.main,
+                            }}
+                            {...stringAvatar(currentUser?.name)}
+                        />
+                    ) : (
+                        <Avatar
+                            variant="circular"
+                            sx={{
+                                height: "36px",
+                                width: "36px",
+                                fontSize: "14px",
+                                textTransform: "capitalize",
+                                background: (theme) => theme.palette.primary.main,
+                            }}
+                            src={profilePicture}
+                            {...stringAvatar(currentUser?.name)}
+                        />
+                    )}
                 </ProfileIcon>
             </Toolbar>
             {renderMenu}

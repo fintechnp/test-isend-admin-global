@@ -1,0 +1,13 @@
+const actions = {
+    UPLOAD_PROFILE_PICTURE: "UPLOAD_PROFILE_PICTURE",
+    UPLOAD_PROFILE_PICTURE_SUCCESS: "UPLOAD_PROFILE_PICTURE_SUCCESS",
+    UPLOAD_PROFILE_PICTURE_FAILURE: "UPLOAD_PROFILE_PICTURE_FAILURE",
+    UPLOAD_PROFILE_PICTURE_RESET: "UPLOAD_PROFILE_PICTURE_RESET",
+
+    upload_profile_picture: (data) => ({
+        type: actions.UPLOAD_PROFILE_PICTURE,
+        data,
+    }),
+};
+
+export default actions;

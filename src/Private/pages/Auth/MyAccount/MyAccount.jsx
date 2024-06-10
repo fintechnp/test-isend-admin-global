@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -10,8 +10,14 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
+import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
+import EditIcon from "@mui/icons-material/Edit";
 
 import actions from "Common/store/actions";
+import { UploadProfilePictureActions } from "Private/pages/Auth/MyAccount/store";
+import EditProfilePictureModal from "Private/pages/ImageCropperModal/EditProfilePictureModal";
+
+import isEmpty from "App/helpers/isEmpty";
 import { FormatDate, FormatDateTime } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
 import dateUtils from "App/utils/dateUtils";
@@ -181,9 +187,31 @@ const RenderTopField = ({ label, value }) => {
 };
 
 function MyAccount(props) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [imageError, setImageError] = useState(false);
+
     const dispatch = useDispatch();
 
+    const { success: upload_success, loading: upload_loading } = useSelector((state) => state.upload_profile_picture);
+
     const { response: UserData, loading: l_loading, success } = useSelector((state) => state.get_user);
+
+    const imageLink = UserData?.data?.profile_picture;
+
+    const showProfileImage = isEmpty(imageLink) || imageError;
+
+    const handleUploadImage = (data) => {
+        const formData = new FormData();
+        formData.append("Document", data);
+        dispatch(UploadProfilePictureActions.upload_profile_picture(formData));
+    };
+
+    useEffect(() => {
+        if (upload_success) {
+            dispatch(actions.get_user());
+            setIsOpen(false);
+        }
+    }, [upload_success, dispatch]);
 
     useEffect(() => {
         dispatch(actions.get_user());
@@ -201,12 +229,8 @@ function MyAccount(props) {
         <PageContent title="My Account">
             <DetailWrapper container>
                 <Grid item xs={12}>
-                    <Header>My Account</Header>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12}>
                     <NameBox>
-                        <Box sx={{ p: 1.5 }}>
+                        <Box sx={{ p: 1.5, position: "relative" }}>
                             <Badge
                                 overlap="circular"
                                 anchorOrigin={{
@@ -214,7 +238,36 @@ function MyAccount(props) {
                                     horizontal: "left",
                                 }}
                             >
-                                <Avatar {...stringAvatar(UserData?.data?.first_name, UserData?.data?.last_name)} />
+                                <EditIcon
+                                    onClick={() => setIsOpen(true)}
+                                    sx={{
+                                        position: "absolute",
+                                        top: "-20%",
+                                        left: "65%",
+                                        height: "35px",
+                                        width: "35px",
+                                        borderRadius: "50%",
+                                        bgcolor: (theme) => theme.palette.primary.main,
+                                        zIndex: 1,
+                                        cursor: "pointer",
+                                        color: "#fff",
+                                        padding: "0.5rem",
+                                        border: "2px solid #fff",
+                                        objectFit: "contain",
+                                    }}
+                                />
+                                {showProfileImage ? (
+                                    <Avatar
+                                        {...stringAvatar(UserData?.data?.first_name, UserData?.data?.last_name)}
+                                        sx={{ width: 80, height: 80 }}
+                                    />
+                                ) : (
+                                    <Avatar
+                                        src={imageLink}
+                                        onError={() => setImageError(true)}
+                                        sx={{ width: 80, height: 80 }}
+                                    />
+                                )}
                             </Badge>
                         </Box>
                         <NameField>
@@ -279,6 +332,13 @@ function MyAccount(props) {
                     </InfoWrapper>
                 </Grid>
             </DetailWrapper>
+
+            <EditProfilePictureModal
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+                handleUpload={handleUploadImage}
+                loading={upload_loading}
+            />
         </PageContent>
     );
 }

@@ -193,6 +193,8 @@ import {
     CustomersCreateSaga
 } from "./pages/Customers/CreateCustomer/store";
 
+import { UploadProfilePictureReducer, UploadProfilePictureSaga } from "./pages/Auth/MyAccount/store";
+
 //Banks
 
 import {
@@ -734,6 +736,10 @@ export const privateReducer = {
     update_customers: UpdateCustomersReducer,
     get_all_customer_kyc_count_by_status: GetAllCustomerKycCountByStatusReducer,
 
+    // Upload Image
+
+    upload_profile_picture: UploadProfilePictureReducer,
+
     //Customer Bank
 
     get_all_bank: GetBankListReducer,
@@ -1094,6 +1100,7 @@ export const privateSaga = [
     UserProfileSetupSaga(),
     EmailTemplateSaga(),
     DashboardSaga(),
+    UploadProfilePictureSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
