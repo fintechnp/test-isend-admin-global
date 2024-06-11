@@ -1,6 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Select from "@mui/material/Select";
+import MuiSelect from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
@@ -51,6 +51,16 @@ const List = styled("ul")(({ theme }) => ({
     },
 }));
 
+const Select = styled(MuiSelect)(({ theme }) => ({
+    background: theme.palette.common.white,
+    borderRadius: buttonBorderRadius.outer,
+    color: theme.palette.text.baseSecond,
+    border: 0,
+    "& fieldset.MuiOutlinedInput-notchedOutline": {
+        borderColor: theme.palette.stroke.base,
+    },
+}));
+
 const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPerPage }) => {
     const { items } = usePagination({
         page: +paginationData?.currentPage || 1,
@@ -64,22 +74,11 @@ const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPer
             <Row flex={1} justifyContent="flex-end">
                 <Box display="flex" justifyContent="flex-end" alignItems="center" gap={1}>
                     <Typography>Rows per page : </Typography>
-                    <FormControl size="small">
-                        <Select
-                            sx={{
-                                background: (theme) => theme.palette.common.white,
-                                overflow: "hidden",
-                                border: (theme) => `1px solid ${theme.palette.stroke.base}`,
-                            }}
-                            size="small"
-                            onChange={handleChangeRowsPerPage}
-                            value={+paginationData?.pageSize || 10}
-                        >
-                            {ROWS_PER_PAGE_OPTIONS.map((item) => (
-                                <MenuItem value={item}>{item}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <Select size="small" onChange={handleChangeRowsPerPage} value={+paginationData?.pageSize || 10}>
+                        {ROWS_PER_PAGE_OPTIONS.map((item) => (
+                            <MenuItem value={item}>{item}</MenuItem>
+                        ))}
+                    </Select>
                 </Box>
             </Row>
             <List>
