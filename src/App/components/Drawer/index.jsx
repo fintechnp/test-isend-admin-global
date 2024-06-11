@@ -70,10 +70,10 @@ const closedMixin = (theme) => ({
 
 const DrawerHeader = styled("div", {
     shouldForwardProp: (prop) => prop !== "open",
-})(() => ({
+})(({ theme }) => ({
     display: "flex",
     alignItems: "center",
-    height: "56px",
+    height: "30px",
 }));
 
 const AppBar = styled(MuiAppBar, {
@@ -252,7 +252,7 @@ function Drawer({ children }) {
             </AppBar>
             <CustomizedDrawer variant="permanent" open={open} className="isend__sidebar">
                 <DrawerContainer className="drawer-content__container" isDrawerOpen={open}>
-                    <DrawerHeader>
+                    <DrawerHeader sx={{ height: "56px" }}>
                         <Row width="100%" justifyContent={open ? "space-between" : "center"} alignItems="center">
                             {open && (
                                 <Box flex={1}>
