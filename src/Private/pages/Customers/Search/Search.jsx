@@ -261,7 +261,7 @@ function Search() {
             name: "to_date",
             label: "To Date",
             props: {
-                withStartDayTimezone: true,
+                withEndDayTimezone: true,
             },
         },
         {
