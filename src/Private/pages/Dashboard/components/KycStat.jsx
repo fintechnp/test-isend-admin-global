@@ -47,8 +47,8 @@ export default function KycStat() {
         {
             label: "Total Verified",
             icon: <KycVerifiedIcon />,
-            currentCount: numberUtils.format(data?.kycVerifiedCount),
-            previousCount: numberUtils.format(previousData?.kycVerifiedCount),
+            currentCount: data?.kycVerifiedCount ?? 0,
+            previousCount: previousData?.kycVerifiedCount ?? 0,
             differenceInPercent: calculatePercentageDifference(
                 data?.kycVerifiedCount ?? 0,
                 previousData?.kycVerifiedCount ?? 0,
@@ -58,8 +58,8 @@ export default function KycStat() {
         {
             label: "Total Rejected",
             icon: <KycRejectedIcon />,
-            currentCount: numberUtils.format(data?.kycRejectCount),
-            previousCount: numberUtils.format(previousData?.kycRejectCount),
+            currentCount: data?.kycRejectCount ?? 0,
+            previousCount: previousData?.kycRejectCount ?? 0,
             differenceInPercent: calculatePercentageDifference(
                 data?.kycRejectCount ?? 0,
                 previousData?.kycRejectCount ?? 0,
@@ -69,8 +69,8 @@ export default function KycStat() {
         {
             label: "Total Expired",
             icon: <KycExpiredIcon />,
-            currentCount: numberUtils.format(data?.kycExpiredCount),
-            previousCount: numberUtils.format(previousData?.kycExpiredCount),
+            currentCount: data?.kycExpiredCount ?? 0,
+            previousCount: previousData?.kycExpiredCount ?? 0,
             differenceInPercent: calculatePercentageDifference(
                 data?.kycExpiredCount ?? 0,
                 previousData?.kycExpiredCount ?? 0,
@@ -80,8 +80,8 @@ export default function KycStat() {
         {
             label: "Total Not Stared",
             icon: <KycNotStartedIcon />,
-            currentCount: numberUtils.format(data?.customerWithNoKycCount),
-            previousCount: numberUtils.format(previousData?.customerWithNoKycCount),
+            currentCount: data?.customerWithNoKycCount ?? 0,
+            previousCount: previousData?.customerWithNoKycCount ?? 0,
             differenceInPercent: calculatePercentageDifference(
                 data?.customerWithNoKycCount ?? 0,
                 previousData?.customerWithNoKycCount ?? 0,
