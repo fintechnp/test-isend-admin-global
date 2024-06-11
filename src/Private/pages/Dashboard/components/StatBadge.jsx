@@ -10,7 +10,7 @@ export default function StatBadge({ label, circuitType, sx }) {
 
     const bgColors = {
         positive: theme.palette.surface.successSecond,
-        negative: theme.palette.surface.successSecond,
+        negative: theme.palette.surface.dangerSecond,
         neutral: theme.palette.grey[200],
     };
 
