@@ -37,7 +37,9 @@ export default function PopoverButton({ children }) {
                     horizontal: "right",
                 }}
             >
-                <List disablePadding>{children}</List>
+                <List disablePadding>
+                    {typeof children === "function" ? children({ onClose: handleClose }) : children}
+                </List>
             </Popover>
         </div>
     );
