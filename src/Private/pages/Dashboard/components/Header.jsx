@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Row from "App/components/Row/Row";
 import { styled } from "@mui/material/styles";
@@ -10,7 +9,6 @@ import ToggleButton from "@mui/material/ToggleButton";
 import { useDispatch, useSelector } from "react-redux";
 import MuiToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-import Center from "App/components/Center/Center";
 import DateRangePicker from "App/components/Form/DateRangePicker";
 
 import actions from "../store/actions";
@@ -18,6 +16,7 @@ import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import { RangeType } from "App/data/RangeType";
 import { inputBorderRadius } from "App/theme/theme";
+import cleanObject from "App/helpers/cleanObject";
 
 const HeaderContainer = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -83,25 +82,22 @@ export default function Header() {
 
     const { params } = useSelector((state) => state.dashboard_filter_params);
 
-    const handleChangeDateRangeSelector = () => {
-        //
-    };
-
     const handleChangeRangeSelector = (e) => {
         const rangeType = e.target.getAttribute("value");
         const date = dateUtils.getDateRange(e.target.getAttribute("value"));
         const query = {
-            form_date: date.startDate,
+            from_date: date.startDate,
             to_date: date.endDate,
             previous_from_date: date.previousStartDate,
             previous_end_date: date.previousEndDate,
         };
         dispatch(actions.change_dashboard_filter_params({ ...query, rangeType }));
+        setDateRange({});
         handleChange(query);
     };
 
     const handleChange = (query) => {
-        const current = { from_date: query.form_date, to_date: query.to_date };
+        const current = { from_date: query.from_date, to_date: query.to_date };
         const previous = { from_date: query.previous_from_date, to_date: query.previous_end_date };
         dispatch(actions.get_customer_count_by_device_type(current));
         dispatch(actions.get_customer_kyc_count_by_status(current));
@@ -109,11 +105,24 @@ export default function Header() {
         dispatch(actions.get_customer_kyc_count_by_status_previous(previous));
     };
 
+    const handleDateRange = (value) => {
+        const previous = dateUtils.getPreviousDateRange(value.startDate, value.endDate);
+        const query = {
+            from_date: dateUtils.getFromDate(value.startDate),
+            to_date: dateUtils.getToDate(value.endDate),
+            previous_from_date: dateUtils.getFromDate(previous.startDate),
+            previous_end_date: dateUtils.getToDate(previous.endDate),
+        };
+        setDateRange(query);
+        dispatch(actions.change_dashboard_filter_params({ ...query, rangeType: null }));
+        handleChange(query);
+    };
+
     useEffect(() => {
-        if (isEmpty(params?.form_date) && isEmpty(params?.to_date)) {
+        if (isEmpty(params?.from_date) && isEmpty(params?.to_date)) {
             const date = dateUtils.getDateRange(RangeType.DAILY);
             const query = {
-                form_date: date.startDate,
+                from_date: date.startDate,
                 to_date: date.endDate,
                 previous_from_date: date.previousStartDate,
                 previous_end_date: date.previousEndDate,
@@ -122,8 +131,6 @@ export default function Header() {
             handleChange(query);
         }
     }, [params]);
-
-    const toggle = () => setOpen(!open);
 
     return (
         <HeaderContainer elevation={0}>
@@ -134,9 +141,15 @@ export default function Header() {
                         Dashboard / Dashboard
                     </Typography>
                 </Column>
-                {/* <Box className="DateRangeSelector-root" display="flex" flexDirection="row" gap={1}>
-                    <DateRangePicker />
-                </Box> */}
+                <Box className="DateRangeSelector-root" display="flex" flexDirection="row" gap={1}>
+                    <DateRangePicker
+                        onChange={handleDateRange}
+                        value={cleanObject({
+                            startDate: dateRange?.from_date,
+                            endDate: dateRange?.to_date,
+                        })}
+                    />
+                </Box>
                 <ToggleButtonGroup
                     className="RangeSelector-root"
                     value={params?.rangeType ? [params.rangeType] : []}

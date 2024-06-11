@@ -52,14 +52,14 @@ export default function SummaryStat() {
             isLoading: isLoadingCustomerStatByDeviceType,
             label: "Total Customer",
             icon: <TotalCustomerIcon />,
-            count: numberUtils.format(customerKycCountByStatusData?.totalCustomer),
+            count: customerKycCountByStatusData?.totalCustomer ?? 0,
             cardBgColor: "linear-gradient(94.93deg, #FFF9C4 0%, #FFFDE7 100.09%)",
         },
         {
             isLoading: isLoadingCustomerKycStatByStatus,
             label: "Total KYC Verified User",
             icon: <TotalKycVerifiedCustomerIcon />,
-            count: numberUtils.format(customerKycCountByStatusData?.kycVerifiedCount),
+            count: customerKycCountByStatusData?.kycVerifiedCount ?? 0,
             cardBgColor: "linear-gradient(94.93deg, #E1BEE7 0%, #F3E5F5 100.09%)",
         },
     ];

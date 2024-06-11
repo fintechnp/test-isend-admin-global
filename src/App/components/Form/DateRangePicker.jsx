@@ -1,15 +1,13 @@
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
-import Fade from "@mui/material/Fade";
-import Popper from "@mui/material/Popper";
+import Popover from "@mui/material/Popover";
 import TextField from "@mui/material/TextField";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Center from "../Center/Center";
 import { DateRangePicker as CustomerDateRangePicker } from "../DateRangePicker";
-import Paper from "../Paper/Paper";
 
-export default function DateRangePicker({ FromDateProps, ToDateProps, onChange, ...rest }) {
+export default function DateRangePicker({ FromDateProps, ToDateProps, onChange, value, ...rest }) {
     const [dateRange, setDateRange] = React.useState({});
 
     const [open, setOpen] = useState(false);
@@ -17,8 +15,6 @@ export default function DateRangePicker({ FromDateProps, ToDateProps, onChange, 
     const inputContainerRef = useRef();
 
     const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {};
 
     const canBeOpen = open && Boolean(anchorEl);
 
@@ -38,28 +34,25 @@ export default function DateRangePicker({ FromDateProps, ToDateProps, onChange, 
 
     const handleChange = (range) => {
         setOpen((previousOpen) => !previousOpen);
-        console.log(range);
         setDateRange(range);
+        onChange?.(range);
     };
 
-    const startDate = useMemo(() => {
-        return dateRange ? dayjs(dateRange.startDate).format("DD/MM/YYYY") : null;
-    }, [dateRange]);
+    useEffect(() => {
+        setDateRange(value);
+    }, [value]);
 
-    const endDate = useMemo(() => {
-        return dateRange ? dayjs(dateRange.endDate).format("DD/MM/YYYY") : null;
-    }, [dateRange]);
+    const handleClose = () => setOpen(false);
 
     return (
         <Box sx={{ position: "relative" }}>
             <Box ref={inputContainerRef} display="flex" aria-describedby={id} flexDirection="row" gap="8px" {...rest}>
-                {/* <DateRangePicker open={open} toggle={toggle} onChange={(range) => setDateRange(range)} /> */}
                 <TextField
                     sx={{ width: "140px" }}
                     name="fromDate"
                     placeholder="DD/MM/YYY"
                     {...FromDateProps}
-                    value={startDate}
+                    value={dateRange?.startDate ? dayjs(dateRange.startDate).format("DD/MM/YYYY") : ""}
                     onClick={handleFormDateClick}
                 />
                 <Center>-</Center>
@@ -68,22 +61,34 @@ export default function DateRangePicker({ FromDateProps, ToDateProps, onChange, 
                     name="fromDate"
                     placeholder="DD/MM/YYY"
                     {...ToDateProps}
-                    value={endDate}
+                    value={dateRange?.endDate ? dayjs(dateRange.endDate).format("DD/MM/YYYY") : ""}
                     onClick={handleToDateClick}
                 />
             </Box>
-
-            {/* <CustomerDateRangePicker open={open} onChange={handleChange} /> */}
-
-            <Popper id={id} open={open} anchorEl={anchorEl} transition sx={{ position: "relative" }}>
-                {({ TransitionProps }) => (
-                    <Fade {...TransitionProps} timeout={350}>
-                        <Paper>
-                            <CustomerDateRangePicker open={open} onChange={handleChange} />
-                        </Paper>
-                    </Fade>
-                )}
-            </Popper>
+            <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                }}
+            >
+                <CustomerDateRangePicker
+                    open
+                    toggle={handleClose}
+                    initialDateRange={{
+                        startDate: null,
+                        endDate: null,
+                    }}
+                    onChange={handleChange}
+                    closeOnClickOutside
+                />
+            </Popover>
         </Box>
     );
 }

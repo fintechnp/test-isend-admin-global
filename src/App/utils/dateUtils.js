@@ -95,6 +95,51 @@ class dateUtils {
         if (!utcDateTime?.endsWith("Z")) utcDateTime = utcDateTime + "Z";
         return dayjs(utcDateTime).format(dateFormat);
     }
+
+    /**
+     * get days difference
+     *
+     * @param {string} startDate
+     * @param {string} endDate
+     * @returns {number}
+     */
+    getDaysDifference(startDate, endDate) {
+        const date1 = dayjs(startDate);
+        const date2 = dayjs(endDate);
+        return date2.diff(date1, "day");
+    }
+
+    /**
+     * Subtracts a given number of days from a date.
+     *
+     * @param {string} date
+     * @param {number} days
+     * @param {string} dateFormat
+     * @returns {string}
+     */
+    subtractDaysFromDate(date, days, dateFormat = "YYYY-MM-DD") {
+        const originalDate = dayjs(date);
+        const newDate = originalDate.subtract(days, "day");
+        return newDate.format(dateFormat);
+    }
+
+    /**
+     * get previous date range
+     *
+     * @param {string} startDate
+     * @param {string} endDate
+     * @param {string} dateFormat
+     * @returns {object} - { startDate, endDate }
+     */
+    getPreviousDateRange(startDate, endDate, dateFormat = "YYYY-MM-DD") {
+        const difference = this.getDaysDifference(startDate, endDate);
+        startDate = dayjs(startDate).subtract(difference, "day").format(dateFormat);
+        endDate = dayjs(endDate).subtract(difference, "day").format(dateFormat);
+        return {
+            startDate,
+            endDate,
+        };
+    }
 }
 
 export default new dateUtils();
