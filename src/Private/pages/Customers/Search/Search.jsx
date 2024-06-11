@@ -179,7 +179,7 @@ function Search() {
                 accessorKey: "created_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                        <Typography>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</Typography>
                         <Typography>By: {row.original.created_by}</Typography>
                     </Column>
                 ),
@@ -194,7 +194,7 @@ function Search() {
                             label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : ""}
                         />
                         {row.original.kyc_updated_ts
-                            ? dateUtils.getLocalDateFromUTC(row.original.kyc_updated_ts)
+                            ? dateUtils.getLocalDateTimeFromUTC(row.original.kyc_updated_ts)
                             : null}
                     </Column>
                 ),
@@ -205,33 +205,40 @@ function Search() {
                 cell: ({ row }) => {
                     return (
                         <PopoverButton>
-                            <ListItemButton onClick={() => navigate(`/customer/details/${row.original.tid}`)}>
-                                View
-                            </ListItemButton>
-                            <HasPermission permission={permissions.EDIT_CUSTOMER}>
-                                <ListItemButton onClick={() => navigate(`/customer/update/${row.original.tid}`)}>
-                                    Edit
-                                </ListItemButton>
-                            </HasPermission>
-                            <HasPermission permission={permissions.BLOCK_CUSTOMER}>
-                                <Block
-                                    enablePopoverAction
-                                    id={row.original.tid}
-                                    name="Customer"
-                                    destroyOnUnmount
-                                    enableReinitialize
-                                    remark={true}
-                                    initialValues={{
-                                        id: row.original.tid,
-                                        is_active: row.original.is_active,
-                                        remarks: "",
-                                    }}
-                                    onSubmit={handleBlock}
-                                    loading={b_loading}
-                                    form={`block_form_customer${row.original.tid}`}
-                                    status={row?.original?.is_active}
-                                />
-                            </HasPermission>
+                            {({ onClose }) => (
+                                <>
+                                    <ListItemButton onClick={() => navigate(`/customer/details/${row.original.tid}`)}>
+                                        View
+                                    </ListItemButton>
+                                    <HasPermission permission={permissions.EDIT_CUSTOMER}>
+                                        <ListItemButton
+                                            onClick={() => navigate(`/customer/update/${row.original.tid}`)}
+                                        >
+                                            Edit
+                                        </ListItemButton>
+                                    </HasPermission>
+                                    <HasPermission permission={permissions.BLOCK_CUSTOMER}>
+                                        <Block
+                                            enablePopoverAction
+                                            id={row.original.tid}
+                                            name="Customer"
+                                            destroyOnUnmount
+                                            enableReinitialize
+                                            remark={true}
+                                            initialValues={{
+                                                id: row.original.tid,
+                                                is_active: row.original.is_active,
+                                                remarks: "",
+                                            }}
+                                            onSubmit={handleBlock}
+                                            loading={b_loading}
+                                            form={`block_form_customer${row.original.tid}`}
+                                            status={row?.original?.is_active}
+                                            onClosePopover={onClose}
+                                        />
+                                    </HasPermission>
+                                </>
+                            )}
                         </PopoverButton>
                     );
                 },
