@@ -1,19 +1,19 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Pagination from "@mui/material/Pagination";
-import MuiTablePagination from "@mui/material/TablePagination";
+import Select from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
 import usePagination from "@mui/material/usePagination";
-import { Height } from "@mui/icons-material";
+
 import Row from "../Row/Row";
 
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import Center from "../Center/Center";
 import { buttonBorderRadius, fonts } from "App/theme/theme";
 import ArrowLeftIcon from "../Icon/ArrowLeftIcon";
 import ArrowRightIcon from "../Icon/ArrowRightIcon";
+
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 25, 50, 100];
 
 const List = styled("ul")(({ theme }) => ({
     listStyle: "none",
@@ -51,8 +51,6 @@ const List = styled("ul")(({ theme }) => ({
     },
 }));
 
-const ROWS_PER_PAGE_OPTIONS = [10, 15, 25, 50, 100];
-
 const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPerPage }) => {
     const { items } = usePagination({
         page: +paginationData?.currentPage || 1,
@@ -61,8 +59,29 @@ const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPer
     });
 
     return (
-        <Row justifyContent="space-between" alignItems="center">
+        <Row justifyContent="space-between" alignItems="center" gap="16px">
             <Typography fontWeight={500}>Total Records: {paginationData?.totalCount || 0}</Typography>
+            <Row flex={1} justifyContent="flex-end">
+                <Box display="flex" justifyContent="flex-end" alignItems="center" gap={1}>
+                    <Typography>Rows per page : </Typography>
+                    <FormControl size="small">
+                        <Select
+                            sx={{
+                                background: (theme) => theme.palette.common.white,
+                                overflow: "hidden",
+                                border: (theme) => `1px solid ${theme.palette.stroke.base}`,
+                            }}
+                            size="small"
+                            onChange={handleChangeRowsPerPage}
+                            value={+paginationData?.pageSize || 10}
+                        >
+                            {ROWS_PER_PAGE_OPTIONS.map((item) => (
+                                <MenuItem value={item}>{item}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
+            </Row>
             <List>
                 {items.map(({ page, type, selected, ...item }, index) => {
                     let children = null;
@@ -111,21 +130,6 @@ const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPer
             </List>
         </Row>
     );
-
-    // return (
-    //     <>
-    //         <Pagination count={10} variant="outlined" shape="rounded" />
-    //         <MuiTablePagination
-    //             component="div"
-    //             count={+paginationData?.totalCount || 10}
-    //             page={+paginationData?.currentPage - 1 || 0}
-    //             onPageChange={handleChangePage}
-    //             rowsPerPage={+paginationData?.pageSize || 15}
-    //             rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
-    //             onRowsPerPageChange={handleChangeRowsPerPage}
-    //         />
-    //     </>
-    // );
 };
 
 export default TablePagination;
