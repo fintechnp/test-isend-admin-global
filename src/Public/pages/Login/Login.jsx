@@ -11,7 +11,6 @@ import { AuthContext } from "App/auth";
 import actions from "Common/store/actions";
 import AuthUtility from "App/utils/AuthUtility";
 
-
 function Login() {
     const dispatch = useDispatch();
 
@@ -69,7 +68,7 @@ function Login() {
 
     return (
         <PublicLayoutContainer>
-            <FormContainer title="Sign In to your account">
+            <FormContainer title="Login" subtitle="Welcome to iSend Admin Portal">
                 <LoginForm onSubmit={handleLogin} loading={loading || user_loading} />
             </FormContainer>
         </PublicLayoutContainer>

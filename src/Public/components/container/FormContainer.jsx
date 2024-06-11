@@ -25,7 +25,7 @@ const Badge = styled(Box)(({ theme }) => ({
     borderRadius: "0 16px 16px 0",
 }));
 
-export default function FormContainer({ children, title, disableBadge = false }) {
+export default function FormContainer({ children, title, subtitle, disableBadge = false }) {
     return (
         <Center height="100svh">
             <Paper elevation={0} sx={{ zIndex: 999 }}>
@@ -40,16 +40,23 @@ export default function FormContainer({ children, title, disableBadge = false })
                     <Center>
                         <ISendLogo />
                     </Center>
-                    {title && (
-                        <Typography
-                            fontSize="1.125rem"
-                            lineHeight="1.75rem"
-                            fontWeight={600}
-                            color={alpha("#000000", 0.87)}
-                        >
-                            {title}
-                        </Typography>
-                    )}
+                    <Column>
+                        {title && (
+                            <Typography
+                                fontSize="1.125rem"
+                                lineHeight="1.75rem"
+                                fontWeight={600}
+                                sx={{ color: (theme) => theme.palette.text.primary }}
+                            >
+                                {title}
+                            </Typography>
+                        )}
+                        {subtitle && (
+                            <Typography variant="body1" sx={{ color: (theme) => theme.palette.text.secondary }}>
+                                {subtitle}
+                            </Typography>
+                        )}
+                    </Column>
                     {children}
                 </Column>
             </Paper>

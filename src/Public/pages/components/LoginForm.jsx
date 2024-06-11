@@ -43,7 +43,7 @@ const LoginForm = ({ onSubmit, loading }) => {
     return (
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
-                <Grid container gap="24px">
+                <Grid container gap="12px">
                     <Grid item xs={12} mt={2}>
                         <FormSelect size="medium" name="identifier" label="Select Country" options={sendingCountries} />
                     </Grid>
