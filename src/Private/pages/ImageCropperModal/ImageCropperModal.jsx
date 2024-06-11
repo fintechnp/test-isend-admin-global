@@ -8,12 +8,11 @@ import Button from "App/components/Button/Button";
 
 export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, onSubmit, loading }) {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(2);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
     const handleCropComplete = (croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
-        console.log(croppedArea, croppedAreaPixels);
     };
 
     const handleSubmit = async () => {
@@ -41,7 +40,7 @@ export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, 
                                 image={imageSrc}
                                 crop={crop}
                                 zoom={zoom}
-                                aspect={4 / 3}
+                                aspect={1}
                                 cropShape="round"
                                 zoomWithScroll={true}
                                 showGrid={true}
@@ -53,7 +52,7 @@ export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, 
                         <Slider
                             value={zoom}
                             min={1}
-                            max={3}
+                            max={4}
                             step={0.1}
                             aria-labelledby="Zoom"
                             onChange={(e, zoom) => setZoom(Number(zoom))}
