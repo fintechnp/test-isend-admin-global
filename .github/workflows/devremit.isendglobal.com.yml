@@ -9,7 +9,10 @@ jobs:
     env:
       REACT_APP_NAME: "iSend Admin"
       REACT_APP_API_BASE_URL: https://devadminapi.isendglobal.com/api
-      REACT_APP_VERSION: v2.0.0 
+      REACT_APP_VERSION: v2.0.0
+      REACT_APP_COPYRIGHT_TEXT_SGP: "Copyright &copy; {{year}} iSend Pte Ltd. All Rights reserved"
+      REACT_APP_COPYRIGHT_TEXT_AUS: "Copyright &copy; {{year}} TransCash International Pty Ltd. All Rights reserved."
+      REACT_APP_COPYRIGHT_TEXT_USA: "Copyright &copy; {{year}} ISend Pte. Ltd. All Rights reserved."
 
     steps:
       - name: Checkout code
