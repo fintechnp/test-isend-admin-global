@@ -71,7 +71,17 @@ const BlockButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function BlockDialog({ loading, handleSubmit, status, id, name, remark, enablePopoverAction, ...rest }) {
+function BlockDialog({
+    loading,
+    handleSubmit,
+    status,
+    id,
+    name,
+    remark,
+    enablePopoverAction,
+    onClosePopover,
+    ...rest
+}) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
@@ -90,6 +100,7 @@ function BlockDialog({ loading, handleSubmit, status, id, name, remark, enablePo
     const handleClose = () => {
         dispatch(reset(`block_form_customer${id}`));
         setOpen(false);
+        onClosePopover?.();
     };
 
     const handleChange = (e) => {
