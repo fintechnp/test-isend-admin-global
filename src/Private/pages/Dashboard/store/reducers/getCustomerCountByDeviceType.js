@@ -20,6 +20,7 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null
             };
         case actions.GET_CUSTOMER_COUNT_BY_DEVICE_TYPE_FAILED:
             return {
@@ -27,6 +28,7 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
+                response: null
             };
         default:
             return state;
