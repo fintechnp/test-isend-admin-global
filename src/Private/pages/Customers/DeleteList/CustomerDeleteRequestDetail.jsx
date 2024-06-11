@@ -14,10 +14,13 @@ import CustomerDeleteApproveRejectModalForm from "Private/components/customers/C
 
 import { customerDeleteActions } from "./store";
 import { DeleteAccountStatus } from "./data/DeleteAccountStatus";
+import Row from "App/components/Row/Row";
 
 export default function CustomerDeleteRequestDetail() {
     const dispatch = useDispatch();
     const { id } = useParams();
+
+    const [status, setStatus] = useState("");
 
     const [open, setOpen] = useState(false);
 
@@ -80,28 +83,44 @@ export default function CustomerDeleteRequestDetail() {
                     <RenderField label="Remarks" value={deleteRequestDetails?.remarks} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {deleteRequestDetails?.status?.toLowerCase() !== DeleteAccountStatus.APPROVED && (
-                        <Button
-                            onClick={() => {
-                                setOpen(true);
-                            }}
-                            variant="contained"
-                            color="success"
-                        >
-                            Approve
-                        </Button>
+                    {![DeleteAccountStatus.APPROVED, DeleteAccountStatus.REJECTED].includes(
+                        deleteRequestDetails?.status?.toLowerCase(),
+                    ) && (
+                        <Row gap={2}>
+                            <Button
+                                onClick={() => {
+                                    setStatus(DeleteAccountStatus.APPROVED);
+                                    setOpen(true);
+                                }}
+                                variant="contained"
+                                color="success"
+                            >
+                                Approve
+                            </Button>
+
+                            <Button
+                                onClick={() => {
+                                    setStatus(DeleteAccountStatus.REJECTED);
+                                    setOpen(true);
+                                }}
+                                variant="contained"
+                                color="error"
+                            >
+                                Reject
+                            </Button>
+                        </Row>
                     )}
                 </Grid>
             </Grid>
             <Modal
-                title="Approve/Reject Delete Request"
+                title="Approve Delete Request"
                 open={open}
                 onClose={handleClose}
                 sx={{
                     width: "500px",
                 }}
             >
-                <CustomerDeleteApproveRejectModalForm setOpen={setOpen} />
+                <CustomerDeleteApproveRejectModalForm setOpen={setOpen} status={status} />
             </Modal>
         </PageContent>
     );

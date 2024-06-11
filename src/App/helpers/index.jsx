@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import NumberFormat from "react-number-format";
 import ucwords from "./ucwords";
+import dayjs from "dayjs";
 
 export const CountryName = (iso3) => {
     const country = JSON.parse(localStorage.getItem("country"));
@@ -122,6 +123,24 @@ export const FormatDateTime = (date) => {
     if (date) {
         const newDate = new Date(date);
         return format(newDate, "MMM dd, yyyy hh:mm a");
+    } else {
+        return "N/A";
+    }
+};
+
+export const getFormattedDate = (data, dateFormat = "MMM dd, yyyy") => {
+    if (data) {
+        const newDate = new Date(data);
+        return format(newDate, dateFormat);
+    } else {
+        return "N/A";
+    }
+};
+
+export const getFormattedTime = (data, timeFormat = "hh:mm a") => {
+    if (data) {
+        const newDate = new Date(data);
+        return format(newDate, timeFormat);
     } else {
         return "N/A";
     }

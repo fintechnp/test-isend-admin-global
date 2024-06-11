@@ -8,13 +8,16 @@ import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
+import { Release } from "App/components";
 import Filter from "./../components/Filter";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import HasPermission from "Private/components/shared/HasPermission";
 
 import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
-import { Release } from "App/components";
+import { permissions } from "Private/data/permissions";
 import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -238,15 +241,17 @@ const PendingPayment = (props) => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Release
-                            destroyOnUnmount
-                            enableReinitialize
-                            onSubmit={(data) => handleRelease(row.original.tid, data)}
-                            validatation={true}
-                            tooltext="Release Transaction"
-                            form={`pay_release_form_${row?.original?.tid}`}
-                            reduxGlobalStateKey="update_payment_pending"
-                        />
+                        <HasPermission permission={permissions.RELEASE_PAYMENT_PENDING_TRANSACTION}>
+                            <Release
+                                destroyOnUnmount
+                                enableReinitialize
+                                onSubmit={(data) => handleRelease(row.original.tid, data)}
+                                validatation={true}
+                                tooltext="Release Transaction"
+                                form={`pay_release_form_${row?.original?.tid}`}
+                                reduxGlobalStateKey="update_payment_pending"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -346,4 +351,4 @@ const PendingPayment = (props) => {
     );
 };
 
-export default PendingPayment;
+export default withPermission({ permission: [permissions.READ_PAYMENT_PENDING_TRANSACTION] })(PendingPayment);

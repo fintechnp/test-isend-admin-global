@@ -1,20 +1,19 @@
-import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
 import React from "react";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
 import AddAccount from "../AddAccount";
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
 }));
 
 function Header() {
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>User Accounts</Typography>
-            <AddAccount update={false}/>
         </HeaderWrapper>
     );
 }

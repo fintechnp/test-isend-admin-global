@@ -17,6 +17,10 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import actions from "./store/actions";
 import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const initialState = {
     page_number: 1,
@@ -29,9 +33,11 @@ const initialState = {
     order_by: "DESC",
 };
 
-const DeliveryOption = (props) => {
+const DeliveryOption = () => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const { can } = useAuthUser();
 
     const { response: deliveryoption_data, loading: g_loading } = useSelector((state) => state.get_all_delivery_option);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_delivery_option);
@@ -79,8 +85,20 @@ const DeliveryOption = (props) => {
             {
                 header: "Status",
                 accessorKey: "is_active",
-                cell: (data) => (
-                    <TableSwitch value={data?.value ?? false} data={data.row.original} handleStatus={handleStatus} />
+                cell: ({ getValue, row }) => (
+                    <>
+                        {can(permissions.EDIT_DELIVERY_OPTION) ? (
+                            <>
+                                <TableSwitch
+                                    value={getValue() ?? false}
+                                    data={row.original}
+                                    handleStatus={handleStatus}
+                                />
+                            </>
+                        ) : (
+                            <>{!!data.value ? "Active" : "Inactive"}</>
+                        )}
+                    </>
                 ),
             },
             {
@@ -117,13 +135,17 @@ const DeliveryOption = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddDeliveryOption update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Delivery Option"
-                        />
+                        <HasPermission permission={permissions.EDIT_DELIVERY_OPTION}>
+                            <AddDeliveryOption update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_DELIVERY_OPTION}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Delete Delivery Option"
+                            />
+                        </HasPermission>
                     </TableRowActionContainer>
                 ),
             },
@@ -212,7 +234,14 @@ const DeliveryOption = (props) => {
     }, []);
 
     return (
-        <PageContent title="Delivery Options" topRightEndContent={<AddDeliveryOption update={false} />}>
+        <PageContent
+            title="Delivery Options"
+            topRightEndContent={
+                <HasPermission permission={permissions.CREATE_DELIVERY_OPTION}>
+                    <AddDeliveryOption update={false} />
+                </HasPermission>
+            }
+        >
             <Filter
                 state={filterSchema}
                 handleSearch={handleSearch}
@@ -241,4 +270,4 @@ const DeliveryOption = (props) => {
     );
 };
 
-export default DeliveryOption;
+export default withPermission({ permission: [permissions.READ_DELIVERY_OPTION] })(DeliveryOption);

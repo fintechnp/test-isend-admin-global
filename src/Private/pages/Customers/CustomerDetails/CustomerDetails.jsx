@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Badge from "@mui/material/Badge";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
@@ -13,14 +13,13 @@ import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import UpdateKyc from "./UpdateKyc";
+import isEmpty from "App/helpers/isEmpty";
 import Button from "App/components/Button/Button";
 import actions from "./../CreateCustomer/store/actions";
 import NoResults from "./../Search/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
-import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
-
 import { CountryName, FormatDate, ReferenceName } from "App/helpers";
-import isEmpty from "App/helpers/isEmpty";
+import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
 const Header = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
@@ -257,7 +256,7 @@ function CustomerDetails(props) {
                                 />
                             </Badge>
                         </Box>
-                        <NameField>
+                        <NameField marginLeft={1}>
                             <RenderTopField
                                 label="Name"
                                 value={[

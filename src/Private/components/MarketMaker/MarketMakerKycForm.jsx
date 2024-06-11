@@ -19,9 +19,9 @@ import { localStorageGet } from "App/helpers/localStorage";
 import FormTextField from "App/core/hook-form/FormTextField";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
-import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 
-import { businessActions } from "Private/pages/Business/store";
+import { businessActions } from "Private/pages/Agent/Business/store";
 
 export default function MarketMakerKycForm({ formLoading, isAddMode = true, isUserKyc = false }) {
     const dispatch = useDispatch();

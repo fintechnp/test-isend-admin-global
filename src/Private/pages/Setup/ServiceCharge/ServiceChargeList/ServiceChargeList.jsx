@@ -12,16 +12,8 @@ import actions from "../store/actions";
 import Header from "../components/Header";
 import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
-import Table, {
-    TablePagination,
-    TableSwitch,
-} from "./../../../../../App/components/Table";
-import {
-    CountryName,
-    CurrencyName,
-    ReferenceName,
-    FormatNumber,
-} from "./../../../../../App/helpers";
+import Table, { TablePagination, TableSwitch } from "./../../../../../App/components/Table";
+import { CountryName, CurrencyName, ReferenceName, FormatNumber } from "./../../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -75,11 +67,9 @@ const ServiceChargeList = (props) => {
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: servicecharge_data, loading: g_loading } = useSelector(
-        (state) => state.get_service_charge_by_partner
+        (state) => state.get_service_charge_by_partner,
     );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_service_charge
-    );
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_service_charge);
     const { success: a_success } = useSelector((state) => state.add_partner);
     const { success: u_success } = useSelector((state) => state.update_partner);
 
@@ -108,9 +98,7 @@ const ServiceChargeList = (props) => {
                 accessor: "receiving_country",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {CountryName(data.value)}
-                        </StyledText>
+                        <StyledText component="p">{CountryName(data.value)}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -119,9 +107,7 @@ const ServiceChargeList = (props) => {
                             }}
                         >
                             {data?.row?.original?.receiving_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.receiving_currency
-                                  )
+                                ? CurrencyName(data?.row?.original?.receiving_currency)
                                 : ""}
                         </Typography>
                     </Box>
@@ -138,9 +124,7 @@ const ServiceChargeList = (props) => {
                 maxWidth: 180,
                 Cell: (data) => (
                     <Box sx={{ textAlign: "center" }}>
-                        <StyledText component="p">
-                            {data.value ? ReferenceName(37, data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? ReferenceName(37, data.value) : ""}</StyledText>
                         <Typography
                             component="p"
                             sx={{
@@ -150,10 +134,7 @@ const ServiceChargeList = (props) => {
                             }}
                         >
                             {data?.row?.original?.payment_type
-                                ? ReferenceName(
-                                      1,
-                                      data?.row?.original?.payment_type
-                                  )
+                                ? ReferenceName(1, data?.row?.original?.payment_type)
                                 : ""}
                         </Typography>
                     </Box>
@@ -168,10 +149,7 @@ const ServiceChargeList = (props) => {
                 accessor: "min_amount",
                 Cell: (data) => (
                     <Box>
-                        <StyledText
-                            component="p"
-                            sx={{ textAlign: "right", paddingRight: "4px" }}
-                        >
+                        <StyledText component="p" sx={{ textAlign: "right", paddingRight: "4px" }}>
                             {data.value ? FormatNumber(data.value) : "n/a"}
                         </StyledText>
                         <Typography
@@ -183,9 +161,7 @@ const ServiceChargeList = (props) => {
                                 textAlign: "right",
                             }}
                         >
-                            {data?.row?.original?.max_amount
-                                ? FormatNumber(data?.row?.original?.max_amount)
-                                : "n/a"}
+                            {data?.row?.original?.max_amount ? FormatNumber(data?.row?.original?.max_amount) : "n/a"}
                         </Typography>
                     </Box>
                 ),
@@ -199,10 +175,7 @@ const ServiceChargeList = (props) => {
                 accessor: "charge_flat",
                 Cell: (data) => (
                     <Box>
-                        <StyledText
-                            component="p"
-                            sx={{ textAlign: "right", paddingRight: "4px" }}
-                        >
+                        <StyledText component="p" sx={{ textAlign: "right", paddingRight: "4px" }}>
                             {data.value ? FormatNumber(data.value) : "n/a"}
                         </StyledText>
                         <Typography
@@ -214,9 +187,7 @@ const ServiceChargeList = (props) => {
                                 textAlign: "right",
                             }}
                         >
-                            {data?.row?.original?.charge_per
-                                ? data?.row?.original?.charge_per
-                                : "n/a"}
+                            {data?.row?.original?.charge_per ? data?.row?.original?.charge_per : "n/a"}
                         </Typography>
                     </Box>
                 ),
@@ -232,11 +203,7 @@ const ServiceChargeList = (props) => {
                 maxWidth: 180,
                 Cell: (data) => (
                     <SwitchWrapper textAlign="center" sx={{}}>
-                        <TableSwitch
-                            value={data?.value}
-                            data={data.row.original}
-                            handleStatus={handleStatus}
-                        />
+                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
                     </SwitchWrapper>
                 ),
             },
@@ -256,13 +223,7 @@ const ServiceChargeList = (props) => {
                         }}
                     >
                         <Tooltip title="Service Charge Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/setup/service-charge/details/${row.original.tid}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/setup/service-charge/details/${row.original.tid}`)}>
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -274,13 +235,7 @@ const ServiceChargeList = (props) => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Service Charge" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/setup/service-charge/update/${row?.original?.tid}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/setup/service-charge/update/${row?.original?.tid}`)}>
                                 <EditOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -301,7 +256,7 @@ const ServiceChargeList = (props) => {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -317,9 +272,7 @@ const ServiceChargeList = (props) => {
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(
-            actions.update_service_charge_status(id, { is_active: is_active })
-        );
+        dispatch(actions.update_service_charge_status(id, { is_active: is_active }));
     }, []);
 
     const handleSearch = useCallback(
@@ -331,7 +284,7 @@ const ServiceChargeList = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -377,15 +330,10 @@ const ServiceChargeList = (props) => {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MenuContainer>
-                <Header
-                    title="Service Charge List"
-                    buttonText="Add Service Charge"
-                    name={name}
-                    agent_id={id}
-                />
+                <Header title="Service Charge List" buttonText="Add Service Charge" name={name} agent_id={id} />
                 <Filter
                     state={filterSchema}
                     sortData={sortData}

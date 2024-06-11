@@ -1,53 +1,21 @@
-import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
-import MuiTextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import MuiSelect from "@mui/material/Select";
-
 import React from "react";
+import Box from "@mui/material/Box";
+import MuiSelect from "@mui/material/Select";
+import { styled } from "@mui/material/styles";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import SearchIcon from "@mui/icons-material/Search";
+import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@mui/material/InputAdornment";
 
-const FilterWrapper = styled(Box)(({ theme }) => ({
-    paddingTop: "8px",
-    paddingBottom: "2px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-}));
+import Row from "App/components/Row/Row";
 
-const SearchBox = styled(Box)(({ theme }) => ({
-    display: "flex",
-    flexGrow: 1,
-}));
-
-const TextField = styled(MuiTextField)(({ theme }) => ({
-    borderColor: theme.palette.border.light,
-    width: "60%",
-    "& .MuiOutlinedInput-input.MuiInputBase-input": {
-        padding: "8px 0px",
-        paddingRight: "8px",
-    },
-    "& .MuiInputBase-root.MuiOutlinedInput-root": {
-        paddingLeft: "10px",
-    },
-    "&: hover": {
-        "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: theme.palette.border.main,
-            borderWidth: "2px",
-        },
-    },
-    "& .MuiSvgIcon-root": {
-        fill: theme.palette.border.main,
-    },
-    [theme.breakpoints.down("md")]: {
-        width: "60%",
-    },
-}));
+import { KycDocumentStatusOptions } from "../../data/KycDocumentStatus";
+import useId from "@mui/material/utils/useId";
 
 const Select = styled(MuiSelect)(({ theme }) => ({
-    // minWidth: "max-content",
     "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
         padding: "8px 10px",
         paddingRight: "28px",
@@ -67,12 +35,6 @@ const Select = styled(MuiSelect)(({ theme }) => ({
     },
 }));
 
-const DropWrapper = styled(Box)(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-}));
-
 const sortData = [
     { key: "None", value: "" },
     { key: "Type", value: "type" },
@@ -85,11 +47,14 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, handleSort, handleOrder, state }) {
+function Filter({ handleSearch, handleSort, onStatusChange, handleOrder, state }) {
+    const statusId = useId();
+
     return (
-        <FilterWrapper>
-            <SearchBox sx={{ columnGap: 1 }}>
+        <Row mt={1}>
+            <Box>
                 <TextField
+                    size="small"
                     type="search"
                     variant="outlined"
                     placeholder="Search"
@@ -102,71 +67,86 @@ function Filter({ handleSearch, handleSort, handleOrder, state }) {
                         ),
                     }}
                 />
-            </SearchBox>
+            </Box>
 
-            <DropWrapper>
-                <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleSort}
-                            displayEmpty
-                            defaultValue={state.sort_by}
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Sort By
-                                        </Typography>
-                                    );
-                                }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
+            <Row flex={1} justifyContent="flex-end">
+                <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <InputLabel id={statusId}>Status</InputLabel>
+                    <Select
+                        labelId={statusId}
+                        onChange={onStatusChange}
+                        displayEmpty
+                        label="Status"
+                        defaultValue={state.status}
+                        renderValue={(selected) => {
+                            if (selected.length === 0) {
+                                return (
+                                    <Typography component="p" sx={{ opacity: 0.6 }}>
+                                        Status
+                                    </Typography>
                                 );
-                                return value[0]?.key;
-                            }}
-                        >
-                            {sortData.map((sort) => (
-                                <MenuItem value={sort.value} key={sort.value}>
-                                    {sort.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={handleOrder}
-                            displayEmpty
-                            defaultValue={state.order_by}
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            Order By
-                                        </Typography>
-                                    );
-                                }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
+                            }
+                            const option = KycDocumentStatusOptions.find((option) => option.value === selected);
+                            return option?.label;
+                        }}
+                    >
+                        {KycDocumentStatusOptions.map((option) => (
+                            <MenuItem value={option.value} key={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <Select
+                        onChange={handleSort}
+                        displayEmpty
+                        defaultValue={state.sort_by}
+                        renderValue={(selected) => {
+                            if (selected.length === 0) {
+                                return (
+                                    <Typography component="p" sx={{ opacity: 0.6 }}>
+                                        Sort By
+                                    </Typography>
                                 );
-                                return value[0]?.key;
-                            }}
-                        >
-                            {orderData.map((order) => (
-                                <MenuItem value={order.value} key={order.value}>
-                                    {order.key}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Box>
-            </DropWrapper>
-        </FilterWrapper>
+                            }
+                            const value = sortData.filter((type) => type.value === selected);
+                            return value[0]?.key;
+                        }}
+                    >
+                        {sortData.map((sort) => (
+                            <MenuItem value={sort.value} key={sort.value}>
+                                {sort.key}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <Select
+                        onChange={handleOrder}
+                        displayEmpty
+                        defaultValue={state.order_by}
+                        renderValue={(selected) => {
+                            if (selected.length === 0) {
+                                return (
+                                    <Typography component="p" sx={{ opacity: 0.6 }}>
+                                        Order By
+                                    </Typography>
+                                );
+                            }
+                            const value = orderData.filter((type) => type.value === selected);
+                            return value[0]?.key;
+                        }}
+                    >
+                        {orderData.map((order) => (
+                            <MenuItem value={order.value} key={order.value}>
+                                {order.key}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Row>
+        </Row>
     );
 }
 

@@ -4,7 +4,7 @@ import PreviewFile from "./PreviewData";
 import SubmitButton from "./SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
 
-import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 import Api from "App/services/api";
 import apiEndpoints from "Private/config/apiEndpoints";
 

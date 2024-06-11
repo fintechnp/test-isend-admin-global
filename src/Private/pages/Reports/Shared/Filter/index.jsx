@@ -277,9 +277,9 @@ function Filter({
                             <Select
                                 onChange={handleOrder}
                                 displayEmpty
-                                defaultValue={state.order_by}
+                                defaultValue={state?.order_by}
                                 renderValue={(selected) => {
-                                    if (selected.length === 0) {
+                                    if (selected?.length === 0) {
                                         return (
                                             <Typography component="p" sx={{ opacity: 0.6 }}>
                                                 Order By

@@ -20,11 +20,24 @@ export const ChangeTheme = (mode = true) => {
     const theme = createTheme({
         typography: {
             fontFamily: '"Poppins", sans-serif',
-            button: {
-                textTransform: "none",
+        },
+        palette: mode ? LightPalette : DarkPalette,
+        overrides: {
+            MuiPaper: {
+                root: {
+                    maxWidth: "100%",
+                },
+            },
+            MuiAppBar: {
+                root: {
+                    width: "none",
+                },
+                positionFixed: {
+                    right: "auto",
+                    maxWidth: "100%",
+                },
             },
         },
-
         components: {
             MuiCssBaseline: {
                 styleOverrides: `
@@ -33,14 +46,6 @@ export const ChangeTheme = (mode = true) => {
                                 margin: 0,
                                 padding: 0,
                                 boxSizing: "border-box",
-                            },
-                            html: {
-                                height: "100%",
-                            },
-                            body: {
-                                height: "100%",
-                                backgroundColor: "#fff",
-                                lineHeight: 1.42857,
                             },
                         },`,
             },
@@ -68,7 +73,12 @@ export const ChangeTheme = (mode = true) => {
                     },
                     {
                         props: { variant: "h6" },
-                        style: { fontFamily: fonts.primary },
+                        style: {
+                            fontFamily: fonts.primary,
+                            fontSize: "1.286rem",
+                            lineHeight: "1.786rem",
+                            fontWeight: 600,
+                        },
                     },
                     {
                         props: { variant: "subtitle1" },
@@ -98,6 +108,7 @@ export const ChangeTheme = (mode = true) => {
             MuiButtonBase: {
                 styleOverrides: {
                     root: {
+                        textTransform: 'none',
                         "*": {
                             fontFamily: fonts.secondary,
                         },
@@ -109,20 +120,21 @@ export const ChangeTheme = (mode = true) => {
                     disableElevation: true,
                 },
                 variants: [
-                    {
-                        props: {
-                            size: "large",
-                        },
-                        style: {
-                            padding: "14px 32px 14px 32px",
-                            fontSize: "1rem",
-                            lineHeight: "1.5rem",
-                        },
-                    },
+                    // {
+                    //     props: {
+                    //         size: "large",
+                    //     },
+                    //     style: {
+                    //         padding: "14px 32px 14px 32px",
+                    //         fontSize: "1rem",
+                    //         lineHeight: "1.5rem",
+                    //     },
+                    // },
                 ],
                 styleOverrides: {
                     root: ({ ownerState, theme }) => ({
                         borderRadius: buttonBorderRadius.outer,
+                        textTransform: "uppercase",
                     }),
                 },
             },
@@ -217,16 +229,19 @@ export const ChangeTheme = (mode = true) => {
             },
             MuiTableHead: {
                 styleOverrides: {
-                    root: {
-                        "& .MuiTableCell-root,.MuiTypography-root": {
+                    root: ({ theme }) => ({
+                        "& .MuiTableCell-root": {
+                            background: theme.palette.primary.main,
                             fontFamily: fonts.secondary,
                             lineHeight: "1.5rem",
+                            color: theme.palette.common.white,
                             "& .MuiTypography-root": {
+                                color: theme.palette.common.white,
                                 fontFamily: fonts.secondary,
                                 lineHeight: "1.5rem",
                             },
                         },
-                    },
+                    }),
                 },
             },
             MuiTableBody: {
@@ -256,38 +271,6 @@ export const ChangeTheme = (mode = true) => {
                         "& .MuiTypography-root": {
                             fontFamily: fonts.secondary,
                         },
-                    },
-                },
-            },
-        },
-        overrides: {
-            MuiPaper: {
-                root: {
-                    maxWidth: "100%",
-                },
-            },
-            MuiAppBar: {
-                root: {
-                    width: "none",
-                },
-                positionFixed: {
-                    right: "auto",
-                    maxWidth: "100%",
-                },
-            },
-        },
-        palette: mode ? LightPalette : DarkPalette,
-        typography: {
-            fontFamily: "'Poppins', sans-serif",
-        },
-        components: {
-            MuiButton: {
-                defaultProps: {
-                    disableElevation: true,
-                },
-                styleOverrides: {
-                    root: {
-                        textTransform: "inherit",
                     },
                 },
             },

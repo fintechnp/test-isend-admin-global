@@ -1,44 +1,32 @@
 import * as React from "react";
-import MuiListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
+import MuiListItem from "@mui/material/ListItem";
+import CircleIcon from "@mui/icons-material/Circle";
 import { Link, useLocation } from "react-router-dom";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
 
 const ListItem = styled(MuiListItem)(({ theme, open }) => ({
-    flex: 1,
-    margin: "3px 0px",
-    background: theme.palette.primary.dark,
-    "&:hover": {
-        borderRadius: "6px",
-        background: theme.palette.primary.main,
-        "& .MuiListItemText-root": {
-            color: theme.palette.primary.contrastText,
-        },
+    // maxWidth: "220px",
+    // overflow: 'auto',
+    "& .MuiListItemText-root": {
+        color: theme.palette.text.secondary,
     },
-    "&:focus": {
-        borderRadius: "6px",
-        background: theme.palette.primary.contrastText,
+    "& .MuiSvgIcon-root": {
+        fontSize: "6px",
+        fill: theme.palette.text.secondary,
+    },
+    "&:hover": {
         "& .MuiListItemText-root": {
-            color: theme.palette.primary.dark,
+            color: theme.palette.primary.main,
         },
-        "& .MuiListItemIcon-root": {
-            color: theme.palette.primary.dark,
+        "& .MuiSvgIcon-root": {
+            fill: theme.palette.primary.main,
         },
     },
     "& .MuiListItemButton-root.Mui-selected": {
-        borderRadius: "6px",
-        background: theme.palette.primary.main,
         "& .MuiListItemText-root": {
-            color: theme.palette.primary.contrastText,
-        },
-        "& .MuiListItemIcon-root": {
-            color: theme.palette.primary.dark,
-        },
-        "&:hover": {
-            opacity: 0.6,
-            color: theme.palette.primary.contrastText,
-            background: theme.palette.primary.dark,
+            color: theme.palette.primary.main,
         },
         [theme.breakpoints.down("sm")]: {
             display: "none",
@@ -47,35 +35,22 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
 }));
 
 const ListButton = styled(ListItemButton)(({ theme, open }) => ({
-    padding: "6px 6px !important",
+    height: "28px",
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    ...(!open && {
-        padding: "8px 8px !important",
-    }),
+    "&:hover": {
+        background: "transparent",
+    },
+    padding: "8px 28px",
+    margin: "4px 0",
 }));
 
-const ListText = styled(ListItemText)(({ theme, open }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
+const ListText = styled(ListItemText)(({ theme, open, isSearching }) => ({
     padding: theme.spacing(0, 1),
     textDecoration: "none",
-    color: theme.palette.primary.contrastText,
-    // ...(!open && {
-    //     display: "none",
-    // }),
+    lineHeight: "1rem",
 }));
 
-function SubHeader({
-    sub_item,
-    open,
-    handleListItemSelect,
-    selectedSub,
-    setSelectedIndex,
-    index,
-}) {
+function SubHeader({ sub_item, open, handleListItemSelect, selectedSub, setSelectedIndex, index, isSearching }) {
     const { pathname } = useLocation();
 
     const handleSubHeader = (item) => {
@@ -84,21 +59,16 @@ function SubHeader({
     };
 
     return (
-        <Link
-            to={sub_item.path}
-            color="inherit"
-            style={{ textDecoration: "none" }}
-        >
+        <Link to={sub_item.path} color="inherit" style={{ textDecoration: "none" }}>
             <ListItem dense disablePadding open={open}>
                 <ListButton
                     open={open}
-                    selected={
-                        selectedSub === sub_item.path ||
-                        pathname === sub_item.path
-                    }
+                    selected={selectedSub === sub_item?.path || pathname === sub_item?.path}
                     onClick={() => handleSubHeader(sub_item)}
+                    disableRipple
                 >
-                    <ListText primary={sub_item.text} open={open} />
+                    <CircleIcon />
+                    <ListText primary={sub_item.text} open={open} isSearching={isSearching} />
                 </ListButton>
             </ListItem>
         </Link>

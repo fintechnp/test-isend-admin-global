@@ -62,7 +62,13 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const ReferenceTypeForm = ({ handleSubmit, update, loading, buttonText, handleClose }) => {
+const ReferenceTypeForm = ({
+    handleSubmit,
+    update,
+    loading,
+    buttonText,
+    handleClose,
+}) => {
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
@@ -76,7 +82,10 @@ const ReferenceTypeForm = ({ handleSubmit, update, loading, buttonText, handleCl
                                     type="number"
                                     small={12}
                                     component={TextField}
-                                    validate={[Validator.emptyValidator, Validator.minValue1]}
+                                    validate={[
+                                        Validator.emptyValidator,
+                                        Validator.minValue1,
+                                    ]}
                                 />
                             </FieldWrapper>
                         )}
@@ -87,7 +96,10 @@ const ReferenceTypeForm = ({ handleSubmit, update, loading, buttonText, handleCl
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[Validator.emptyValidator, Validator.minValue1]}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12}>
@@ -100,7 +112,10 @@ const ReferenceTypeForm = ({ handleSubmit, update, loading, buttonText, handleCl
                                 maxRows={10}
                                 multiline={true}
                                 component={TextField}
-                                validate={[Validator.emptyValidator, Validator.minValue1]}
+                                validate={[
+                                    Validator.emptyValidator,
+                                    Validator.minValue1,
+                                ]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -117,7 +132,11 @@ const ReferenceTypeForm = ({ handleSubmit, update, loading, buttonText, handleCl
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton size="small" variant="contained" onClick={handleClose}>
+                            <CancelButton
+                                size="small"
+                                variant="contained"
+                                onClick={handleClose}
+                            >
                                 Cancel
                             </CancelButton>
                         </Grid>

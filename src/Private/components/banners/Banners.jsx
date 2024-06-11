@@ -165,7 +165,7 @@ const Banners = (props) => {
 
     return (
         <>
-            <Modal open={!!image.url} onClose={() => setImage(undefined)}>
+            <Modal open={!!image?.url} onClose={() => setImage(undefined)}>
                 <Box sx={{ padding: (theme) => theme.spacing(3, 2) }}>
                     {image?.type === "web" ? (
                         <img src={image?.url} style={{ width: "600px", height: "200px" }} />

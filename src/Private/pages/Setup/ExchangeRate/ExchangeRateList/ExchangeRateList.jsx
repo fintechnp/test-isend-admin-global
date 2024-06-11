@@ -14,6 +14,9 @@ import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
 import { CountryName, CurrencyName } from "./../../../../../App/helpers";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -66,15 +69,9 @@ const ExchangeRateList = (props) => {
     const navigate = useNavigate();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: rateList, loading: g_loading } = useSelector(
-        (state) => state.get_exchange_rate_by_partner
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_excahnge_rate
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.add_exchange_rate
-    );
+    const { response: rateList, loading: g_loading } = useSelector((state) => state.get_exchange_rate_by_partner);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_excahnge_rate);
+    const { success: a_success } = useSelector((state) => state.add_exchange_rate);
     const { success: u_success } = useSelector((state) => state.update_partner);
 
     useEffect(() => {
@@ -96,15 +93,13 @@ const ExchangeRateList = (props) => {
             {
                 Header: () => (
                     <Box>
-                        <Typography>Recieve Country/Currency</Typography>
+                        <Typography>Receive Country/Currency</Typography>
                     </Box>
                 ),
                 accessor: "receiving_country",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CountryName(data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CountryName(data.value) : ""}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -113,9 +108,7 @@ const ExchangeRateList = (props) => {
                             }}
                         >
                             {data?.row?.original?.receiving_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.receiving_currency
-                                  )
+                                ? CurrencyName(data?.row?.original?.receiving_currency)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -130,9 +123,7 @@ const ExchangeRateList = (props) => {
                 accessor: "sending_currency",
                 Cell: (data) => (
                     <Box>
-                        <StyledText component="p">
-                            {data.value ? CurrencyName(data.value) : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? CurrencyName(data.value) : ""}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -141,9 +132,7 @@ const ExchangeRateList = (props) => {
                             }}
                         >
                             {data?.row?.original?.base_currency
-                                ? CurrencyName(
-                                      data?.row?.original?.base_currency
-                                  )
+                                ? CurrencyName(data?.row?.original?.base_currency)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -158,9 +147,7 @@ const ExchangeRateList = (props) => {
                 accessor: "customer_rate",
                 Cell: (data) => (
                     <Box sx={{ textAlign: "center" }}>
-                        <StyledText component="p">
-                            {data.value ? data.value : ""}
-                        </StyledText>
+                        <StyledText component="p">{data.value ? data.value : ""}</StyledText>
                     </Box>
                 ),
             },
@@ -182,9 +169,7 @@ const ExchangeRateList = (props) => {
                         <Tooltip title="Exchange Rate Details" arrow>
                             <IconButton
                                 onClick={() =>
-                                    navigate(
-                                        `/setup/exchange-rate/details/${row?.original?.exchange_rate_id}`
-                                    )
+                                    navigate(`/setup/exchange-rate/details/${row?.original?.exchange_rate_id}`)
                                 }
                             >
                                 <RemoveRedEyeOutlinedIcon
@@ -197,35 +182,37 @@ const ExchangeRateList = (props) => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Edit Exchange Rate" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/setup/exchange-rate/update/${row.original.exchange_rate_id}`
-                                    )
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Exchange Rate"
-                        />
+                        <HasPermission permission={permissions.EDIT_EXCHANGE_RATE}>
+                            <Tooltip title="Edit Exchange Rate" arrow>
+                                <IconButton
+                                    onClick={() =>
+                                        navigate(`/setup/exchange-rate/update/${row.original.exchange_rate_id}`)
+                                    }
+                                >
+                                    <EditOutlinedIcon
+                                        sx={{
+                                            fontSize: "20px",
+                                            "&:hover": {
+                                                background: "transparent",
+                                            },
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_EXCHANGE_RATE}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Delete Exchange Rate"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     const sortData = [
@@ -249,7 +236,7 @@ const ExchangeRateList = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -292,10 +279,18 @@ const ExchangeRateList = (props) => {
         dispatch(actions.delete_exchange_rate(id));
     };
 
+    const handleOnRefreshExchangeRateSuccess = () => {
+        dispatch(actions.get_exchange_rate_by_partner(id, filterSchema));
+    };
+
+    const lastUpdatedAt = useMemo(() => {
+        return rateList?.data?.[0]?.updated_ts;
+    }, [rateList]);
+
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header
@@ -306,6 +301,8 @@ const ExchangeRateList = (props) => {
                     sending_currency={sending_currency}
                 />
                 <Filter
+                    onRefreshSuccess={handleOnRefreshExchangeRateSuccess}
+                    lastUpdatedAt={lastUpdatedAt}
                     state={filterSchema}
                     sortData={sortData}
                     orderData={orderData}
@@ -332,4 +329,4 @@ const ExchangeRateList = (props) => {
     );
 };
 
-export default ExchangeRateList;
+export default withPermission({ permission: [permissions.READ_EXCHANGE_RATE] })(ExchangeRateList);

@@ -11,8 +11,8 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 const ListItem = styled(MuiListItem)(({ theme, open }) => ({
     flex: 1,
     "&:hover": {
-        borderRadius: "6px",
-        background: theme.palette.background.main,
+        borderRadius: "4px",
+        background: theme.palette.common.white,
         "& .MuiListItemText-root": {
             color: theme.palette.primary.dark,
         },
@@ -21,7 +21,7 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
         },
     },
     "&:focus": {
-        borderRadius: "6px",
+        borderRadius: "4px",
         background: theme.palette.background.main,
         "& .MuiListItemText-root": {
             color: theme.palette.primary.dark,
@@ -31,7 +31,7 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
         },
     },
     "& .MuiListItemButton-root.Mui-selected": {
-        borderRadius: "6px",
+        borderRadius: "4px",
         background: theme.palette.primary.contrastText,
         "& .MuiListItemText-root": {
             color: theme.palette.primary.dark,
@@ -46,17 +46,36 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
         [theme.breakpoints.down("sm")]: {
             display: "none",
         },
+        svg: {
+            fill: theme.palette.primary.dark,
+        },
     },
 }));
 
 const ListButton = styled(ListItemButton)(({ theme, open }) => ({
-    padding: "6px 6px !important",
+    borderRadius: '4px',
+    width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    ...(!open && {
-        padding: "8px 8px !important",
-    }),
+    height: "36px",
+    svg: {
+        height: "20px",
+        fill: theme.palette.background.paper,
+    },
+    padding: "9px 11px",
+    "&:hover": {
+        background: theme.palette.common.white,
+        "& .MuiSvgIcon-root": {
+            color: theme.palette.primary.main,
+        },
+        "& .MuiListItemText-root": {
+            color: theme.palette.primary.main,
+        },
+        svg: {
+            fill: theme.palette.primary.main,
+        },
+    },
 }));
 
 const ListIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -85,33 +104,26 @@ const ListText = styled(ListItemText)(({ theme, open }) => ({
     }),
 }));
 
-const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-        color: theme.palette.common.white,
-        "&::before": {
+const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
+    ({ theme }) => ({
+        [`& .${tooltipClasses.arrow}`]: {
+            color: theme.palette.common.white,
+            "&::before": {
+                background: theme.palette.primary.main,
+                border: `1px solid ${theme.palette.primary.dark}`,
+            },
+        },
+        [`& .${tooltipClasses.tooltip}`]: {
+            padding: "8px",
             background: theme.palette.primary.main,
+            width: 250,
+            fontSize: "14px",
             border: `1px solid ${theme.palette.primary.dark}`,
         },
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-        padding: "8px",
-        background: theme.palette.primary.main,
-        width: 250,
-        fontSize: "16px",
-        border: `1px solid ${theme.palette.primary.dark}`,
-    },
-}));
+    }),
+);
 
-function MainHeader({
-    item,
-    index,
-    open,
-    handleListItemClick,
-    selectedkey,
-    setSelectedIndex,
-}) {
+function MainHeader({ item, index, open, handleListItemClick, selectedkey, setSelectedIndex }) {
     const { pathname } = useLocation();
 
     const handleMainHeader = (item) => {
@@ -121,21 +133,28 @@ function MainHeader({
 
     return (
         <Link to={item.path} color="inherit" style={{ textDecoration: "none" }}>
-            <HtmlTooltip
-                title={item.text}
-                disableHoverListener={open}
-                arrow
-                placement="right"
-            >
+            <HtmlTooltip title={item.text} disableHoverListener={open} arrow placement="right">
                 <ListItem dense disablePadding open={open}>
                     <ListButton
                         open={open}
-                        selected={
-                            selectedkey === item.key || pathname === item.path
-                        }
+                        selected={selectedkey === item.key || pathname === item?.path}
                         onClick={() => handleMainHeader(item)}
+                        sx={{
+                            svg: {
+                                fill: (theme) => theme.palette.background.paper,
+                            },
+                            "&:hover": {
+                                svg: {
+                                    fill: (theme) => theme.palette.primary.dark,
+                                },
+                            },
+                        }}
                     >
-                        <ListIcon>{item.icon}</ListIcon>
+                        {typeof item.icon === "string" ? (
+                            <div dangerouslySetInnerHTML={{ __html: item.icon }}></div>
+                        ) : (
+                            <ListIcon>{item.icon}</ListIcon>
+                        )}
                         <ListText primary={item.text} open={open} />
                     </ListButton>
                 </ListItem>

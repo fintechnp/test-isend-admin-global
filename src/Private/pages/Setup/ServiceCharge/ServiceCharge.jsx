@@ -11,6 +11,8 @@ import Header from "./components/Header";
 import Filter from "./components/Filter";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -226,4 +228,4 @@ const ServiceCharge = (props) => {
     );
 };
 
-export default ServiceCharge;
+export default withPermission({ permission: [permissions.READ_SERVICE_CHARGE] })(ServiceCharge);

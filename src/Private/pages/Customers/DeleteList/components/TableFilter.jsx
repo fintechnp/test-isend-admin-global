@@ -47,7 +47,9 @@ export default function TableFilter({ onSubmit }) {
                         onChange={handleChange}
                     >
                         {sortData.map((d) => (
-                            <MenuItem value={d.value}>{d.label}</MenuItem>
+                            <MenuItem key={d.value} value={d.value}>
+                                {d.label}
+                            </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -61,7 +63,9 @@ export default function TableFilter({ onSubmit }) {
                         onChange={handleChange}
                     >
                         {orderData.map((d) => (
-                            <MenuItem value={d.value}>{d.label}</MenuItem>
+                            <MenuItem key={d.value} value={d.value}>
+                                {d.label}
+                            </MenuItem>
                         ))}
                     </Select>
                 </FormControl>

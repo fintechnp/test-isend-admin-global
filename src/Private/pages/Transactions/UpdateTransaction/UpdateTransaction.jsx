@@ -48,9 +48,7 @@ function UpdateTransaction() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, loading } = useSelector(
-        (state) => state.get_customer_byid
-    );
+    const { response, loading } = useSelector((state) => state.get_customer_byid);
 
     // useEffect(() => {
     //     if (id) {
@@ -71,16 +69,10 @@ function UpdateTransaction() {
             <Grid item xs={12}>
                 <TitleWrapper>
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                        <PersonAddAltOutlinedIcon
-                            sx={{ color: "primary.main", fontSize: "28px" }}
-                        />
+                        <PersonAddAltOutlinedIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                         <Title>{id ? "Update" : "Create"} Transaction </Title>
                     </Box>
-                    <BackButton
-                        variant="outlined"
-                        size="small"
-                        onClick={handleBack}
-                    >
+                    <BackButton variant="outlined" size="small" onClick={handleBack}>
                         Back
                     </BackButton>
                 </TitleWrapper>
@@ -89,10 +81,7 @@ function UpdateTransaction() {
                 <Divider sx={{ mb: 1.2, pt: 0.5 }} />
             </Grid>
             <Grid item xs={12}>
-                <TransactionForm
-                    update_data={response?.data}
-                    loading={loading}
-                />
+                <TransactionForm update_data={response?.data} loading={loading} />
             </Grid>
         </Container>
     );

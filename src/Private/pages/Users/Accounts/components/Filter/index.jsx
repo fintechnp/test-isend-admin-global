@@ -7,6 +7,7 @@ import MuiTextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 
 import SearchTextField from "App/components/Fields/SearchTextField";
+import FilterButton from "App/components/Button/FilterButton";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingTop: "8px",
@@ -14,32 +15,12 @@ const FilterWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    width: "100%",
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
     display: "flex",
     flexGrow: 1,
-}));
-
-const TextField = styled(MuiTextField)(({ theme }) => ({
-    borderColor: theme.palette.border.light,
-    width: "65%",
-    "& .MuiOutlinedInput-input.MuiInputBase-input": {
-        padding: "8px 0px",
-        paddingRight: "8px",
-    },
-    "& .MuiInputBase-root.MuiOutlinedInput-root": {
-        paddingLeft: "10px",
-    },
-    "&: hover": {
-        "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: theme.palette.border.main,
-            borderWidth: "2px",
-        },
-    },
-    "& .MuiSvgIcon-root": {
-        fill: theme.palette.border.main,
-    },
 }));
 
 const Select = styled(MuiSelect)(({ theme }) => ({
@@ -72,59 +53,17 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
-    const reference = JSON.parse(localStorage.getItem("reference"));
+function Filter({ handleSearch, onClickFilter, isOpenFilterForm, handleSort, handleOrder }) {
 
     return (
         <FilterWrapper>
             <SearchBox>
-               <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
+                <FilterButton onClick={onClickFilter} isOpen={isOpenFilterForm} />
                 <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            onChange={filterUserType}
-                            displayEmpty
-                            defaultValue=""
-                            renderValue={(selected) => {
-                                if (selected.length === 0) {
-                                    return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
-                                            User Type
-                                        </Typography>
-                                    );
-                                }
-                                const value = reference
-                                    .filter(
-                                        (ref_data) =>
-                                            ref_data.reference_type === 55
-                                    )[0]
-                                    .reference_data.filter(
-                                        (type) => type.value === selected
-                                    );
-                                return value[0]?.value;
-                            }}
-                        >
-                            <MenuItem value="">All</MenuItem>
-                            {reference
-                                ?.filter(
-                                    (ref_data) => ref_data.reference_type === 55
-                                )[0]
-                                ?.reference_data.map((type) => (
-                                    <MenuItem
-                                        value={type.value}
-                                        key={type.value}
-                                    >
-                                        {type.value}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
                         <Select
                             onChange={handleSort}
@@ -133,17 +72,12 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = sortData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -162,17 +96,12 @@ function Filter({ handleSearch, filterUserType, handleSort, handleOrder }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

@@ -1,4 +1,4 @@
-   import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,11 +11,7 @@ import actions from "./../../Transactions/store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import Table, { TablePagination } from "./../../../../App/components/Table";
-import {
-    CurrencyName,
-    FormatDate,
-    FormatNumber,
-} from "./../../../../App/helpers";
+import { CurrencyName, FormatDate, FormatNumber } from "./../../../../App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -56,7 +52,7 @@ function Transactions(props) {
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: TransactionData, loading: l_loading } = useSelector(
-        (state) => state.get_transactions_by_customer
+        (state) => state.get_transactions_by_customer,
     );
 
     useEffect(() => {
@@ -87,10 +83,7 @@ function Transactions(props) {
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data.value}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             {data?.row?.original?.beneficiary_name}
                         </Typography>
                     </Box>
@@ -147,10 +140,7 @@ function Transactions(props) {
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {CurrencyName(data.value)}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             {CurrencyName(data?.row?.original?.payout_currency)}
                         </Typography>
                     </Box>
@@ -206,14 +196,9 @@ function Transactions(props) {
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {data.value ? FormatNumber(data.value) : "N/A"}
                         </StyledName>
-                        <Typography
-                            component="span"
-                            sx={{ fontSize: "12px", opacity: 0.8 }}
-                        >
+                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             {data?.row?.original?.payout_amount
-                                ? FormatNumber(
-                                      data?.row?.original?.payout_amount
-                                  )
+                                ? FormatNumber(data?.row?.original?.payout_amount)
                                 : "N/A"}
                         </Typography>
                     </Box>
@@ -235,13 +220,7 @@ function Transactions(props) {
                         }}
                     >
                         <Tooltip title="Transaction Details" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(
-                                        `/transactions/details/${row.original.tid}`
-                                    )
-                                }
-                            >
+                            <IconButton onClick={() => navigate(`/transactions/details/${row.original.tid}`)}>
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         fontSize: "20px",
@@ -256,7 +235,7 @@ function Transactions(props) {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleSearch = useCallback(
@@ -268,7 +247,7 @@ function Transactions(props) {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -310,15 +289,13 @@ function Transactions(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>
+                    {import.meta.env.REACT_APP_NAME} | {props.title}
+                </title>
             </Helmet>
             <CustomerWrapper>
                 <Header />
-                <Filter
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                />
+                <Filter handleSearch={handleSearch} handleSort={handleSort} handleOrder={handleOrder} />
                 <Table
                     columns={columns}
                     data={TransactionData?.data || []}

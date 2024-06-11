@@ -52,16 +52,10 @@ function AddBranch(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { response: BranchData, loading: get_loading } = useSelector(
-        (state) => state.get_branch_details
-    );
+    const { response: BranchData, loading: get_loading } = useSelector((state) => state.get_branch_details);
 
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_branch
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_branch
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_branch);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_branch);
 
     React.useEffect(() => {
         if (branch_id) {
@@ -91,30 +85,21 @@ function AddBranch(props) {
         return (
             <>
                 <Helmet>
-                    <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                    <title>BNB Admin | {props.title}</title>
                 </Helmet>
                 <Grid container>
                     <Grid item xs={12}>
                         <TitleWrapper>
-                            <Box
-                                sx={{ display: "flex", alignItems: "flex-end" }}
-                            >
+                            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                                 <PublishedWithChangesIcon
                                     sx={{
                                         color: "primary.main",
                                         fontSize: "28px",
                                     }}
                                 />
-                                <Title>
-                                    {branch_id ? "Update" : "Add"} Partner
-                                    Branch
-                                </Title>
+                                <Title>{branch_id ? "Update" : "Add"} Partner Branch</Title>
                             </Box>
-                            <BackButton
-                                variant="outlined"
-                                size="small"
-                                onClick={handleClose}
-                            >
+                            <BackButton variant="outlined" size="small" onClick={handleClose}>
                                 Back
                             </BackButton>
                         </TitleWrapper>
@@ -135,24 +120,16 @@ function AddBranch(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <PublishedWithChangesIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
-                            <Title>
-                                {branch_id ? "Update" : "Add"} Partner Branch{" "}
-                            </Title>
+                            <PublishedWithChangesIcon sx={{ color: "primary.main", fontSize: "28px" }} />
+                            <Title>{branch_id ? "Update" : "Add"} Partner Branch </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleClose}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleClose}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -169,8 +146,7 @@ function AddBranch(props) {
                             initialValues={{
                                 name: BranchData?.data?.name,
                                 short_code: BranchData?.data?.short_code,
-                                external_branch_code:
-                                    BranchData?.data?.external_branch_code,
+                                external_branch_code: BranchData?.data?.external_branch_code,
                                 branch_type: BranchData?.data?.branch_type,
                                 phone_number: BranchData?.data?.phone_number,
                                 email: BranchData?.data?.email,

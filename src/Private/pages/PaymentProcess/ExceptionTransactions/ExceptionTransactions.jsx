@@ -1,20 +1,23 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import { useSelector, useDispatch } from "react-redux";
 import MuiIconButton from "@mui/material/IconButton";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Release } from "App/components";
 import Filter from "./../components/Filter";
+import withPermission from "Private/HOC/withPermission";
+import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import HasPermission from "Private/components/shared/HasPermission";
 
 import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
-import Table, { TablePagination } from "App/components/Table";
+import { permissions } from "Private/data/permissions";
 import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -247,15 +250,17 @@ const ExceptionTransactions = (props) => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        <Release
-                            destroyOnUnmount
-                            enableReinitialize
-                            onSubmit={(data) => handleRelease(row.original.tid, data)}
-                            validatation={true}
-                            tooltext="Release Transaction"
-                            form={`ex_release_form_${row?.original?.tid}`}
-                            reduxGlobalStateKey="update_exception_transactions"
-                        />
+                        <HasPermission permission={permissions.RELEASE_EXCEPTION_TRANSACTION}>
+                            <Release
+                                destroyOnUnmount
+                                enableReinitialize
+                                onSubmit={(data) => handleRelease(row.original.tid, data)}
+                                validatation={true}
+                                tooltext="Release Transaction"
+                                form={`ex_release_form_${row?.original?.tid}`}
+                                reduxGlobalStateKey="update_exception_transactions"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -359,4 +364,4 @@ const ExceptionTransactions = (props) => {
     );
 };
 
-export default ExceptionTransactions;
+export default withPermission({ permission: [permissions.READ_EXCEPTION_TRANSACTION] })(ExceptionTransactions);

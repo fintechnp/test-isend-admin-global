@@ -12,9 +12,15 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterStreetType from "Private/components/StreetType/FilterStreetType";
 import StreetTypeModal from "Private/components/StreetType/AddStreetTypeModal";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const StreetType = ({ title }) => {
     const dispatch = useDispatch();
+
+    const { can } = useAuthUser();
 
     const [filterSchema, setFilterSchema] = useState({
         page_size: 15,
@@ -92,23 +98,31 @@ const StreetType = ({ title }) => {
                 header: "Street Name",
                 accessorKey: "street_name",
             },
-            {
-                header: "Actions",
-                accessorKey: "show",
-                cell: ({ row }) => {
-                    return (
-                        <TableRowActionContainer>
-                            <StreetTypeModal update={true} update_data={row?.original} />
-                            <Delete
-                                id={row.original.street_type_id}
-                                handleDelete={handleDelete}
-                                loading={deleteStreetTypeLoading}
-                                tooltext="Delete Street Type"
-                            />
-                        </TableRowActionContainer>
-                    );
-                },
-            },
+            ...(can([permissions.EDIT_STREET_TYPE, permissions.DELETE_STREET_TYPE])
+                ? [
+                      {
+                          header: "Actions",
+                          accessorKey: "show",
+                          cell: ({ row }) => {
+                              return (
+                                  <TableRowActionContainer>
+                                      <HasPermission permission={permissions.EDIT_STREET_TYPE}>
+                                          <StreetTypeModal update={true} update_data={row?.original} />
+                                      </HasPermission>
+                                      <HasPermission permission={permissions.DELETE_STREET_TYPE}>
+                                          <Delete
+                                              id={row.original.street_type_id}
+                                              handleDelete={handleDelete}
+                                              loading={deleteStreetTypeLoading}
+                                              tooltext="Delete Street Type"
+                                          />
+                                      </HasPermission>
+                                  </TableRowActionContainer>
+                              );
+                          },
+                      },
+                  ]
+                : []),
         ],
         [],
     );
@@ -120,7 +134,11 @@ const StreetType = ({ title }) => {
                     <Typography>{title}</Typography>
                 </>
             }
-            topRightEndContent={<StreetTypeModal update={false} />}
+            topRightEndContent={
+                <HasPermission permission={permissions.CREATE_STREET_TYPE}>
+                    <StreetTypeModal update={false} />
+                </HasPermission>
+            }
         >
             <FilterStreetType sortByOptions={sortByOptions} />
 
@@ -147,7 +165,7 @@ const StreetType = ({ title }) => {
     );
 };
 
-export default StreetType;
+export default withPermission({ permission: [permissions.READ_STREET_TYPE] })(StreetType);
 
 export const PageLimitSelect = ({ onChange }) => {
     return (

@@ -1,7 +1,7 @@
 import React from "react";
+import Box from '@mui/material/Box';
 import { styled } from "@mui/material/styles";
-import { Grid, Box, Typography } from "@mui/material";
-
+import Typography from "@mui/material/Typography";
 const Wrapper = styled(Box)(({ theme }) => ({
     padding: "8px",
     border: "1px solid gray",
@@ -11,7 +11,6 @@ const Wrapper = styled(Box)(({ theme }) => ({
 const NumberCard = ({ topic, number }) => {
     return (
         <Wrapper>
-            {/* <Typography>{topic}</Typography> */}
             <Typography>Total Transaction</Typography>
             <Typography>{number}</Typography>
             <Typography>{number}</Typography>

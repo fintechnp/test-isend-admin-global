@@ -14,6 +14,9 @@ import AddSanction from "./components/AddSanction";
 import Table, { TablePagination } from "App/components/Table";
 import { CountryName, FormatDate, ReferenceName } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -196,13 +199,17 @@ const SanctionList = () => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddSanction update={true} update_data={row?.original} />
-                        <Delete
-                            id={row?.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Sanction"
-                        />
+                        <HasPermission permission={permissions.EDIT_SANCTION}>
+                            <AddSanction update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_SANCTION}>
+                            <Delete
+                                id={row?.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Delete Sanction"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -299,4 +306,4 @@ const SanctionList = () => {
     );
 };
 
-export default SanctionList;
+export default withPermission({ permission: permissions.READ_SANCTION })(SanctionList);

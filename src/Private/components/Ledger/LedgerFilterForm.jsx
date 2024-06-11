@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { Box, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
-import EntryType from "Private/pages/Ledger/enum/EntryType";
+import EntryType from "Private/pages/Agent/Ledger/enum/EntryType";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import PageContent from "App/components/Container/PageContent";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
-import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
 import { relatedToEnum } from "../BusinessCharge/BusinessChargeForm";
@@ -156,7 +155,13 @@ export default function LedgerFilterForm({ setFilterSchema, loading }) {
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <Button color="error" size="small" variant="contained" onClick={handleReset} disabled={loading}>
+                                <Button
+                                    color="error"
+                                    size="small"
+                                    variant="contained"
+                                    onClick={handleReset}
+                                    disabled={loading}
+                                >
                                     Reset
                                 </Button>
                             </Grid>

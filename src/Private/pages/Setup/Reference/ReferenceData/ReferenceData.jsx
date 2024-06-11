@@ -14,6 +14,9 @@ import Filter from "./../components/Filter";
 import AddReferenceData from "./../components/AddReferenceData";
 import Table, { TablePagination } from "./../../../../../App/components/Table";
 import { Delete } from "../../../../../App/components";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -58,18 +61,10 @@ const ReferenceData = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: referenceData, loading: g_loading } = useSelector(
-        (state) => state.get_reference_data
-    );
-    const { loading: d_loading, success: d_success } = useSelector(
-        (state) => state.delete_reference_data
-    );
-    const { success: a_success } = useSelector(
-        (state) => state.add_reference_data
-    );
-    const { success: u_success } = useSelector(
-        (state) => state.update_reference_data
-    );
+    const { response: referenceData, loading: g_loading } = useSelector((state) => state.get_reference_data);
+    const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_reference_data);
+    const { success: a_success } = useSelector((state) => state.add_reference_data);
+    const { success: u_success } = useSelector((state) => state.update_reference_data);
 
     useEffect(() => {
         if (id) {
@@ -82,7 +77,12 @@ const ReferenceData = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "Id",
+            Header: "SN",
+            accessor: "f_serial_no",
+            maxWidth: 60,
+        },
+        {
+            Header: "ID",
             accessor: "reference_id",
             maxWidth: 60,
         },
@@ -112,9 +112,7 @@ const ReferenceData = (props) => {
             accessor: "value",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">
-                        {data.value ? data.value : "n/a"}
-                    </StyledText>
+                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                 </Box>
             ),
         },
@@ -127,9 +125,7 @@ const ReferenceData = (props) => {
             accessor: "description",
             Cell: (data) => (
                 <Box>
-                    <StyledText component="p">
-                        {data.value ? data.value : "n/a"}
-                    </StyledText>
+                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
                 </Box>
             ),
         },
@@ -177,16 +173,17 @@ const ReferenceData = (props) => {
                             </Tooltip>
                         )}
                     </span>
-                    <AddReferenceData
-                        update={true}
-                        update_data={row?.original}
-                    />
-                    <Delete
-                        handleDelete={handleDelete}
-                        d_loading={d_loading}
-                        id={row.original?.tid}
-                        tooltext="Delete Reference Data"
-                    />
+                    <HasPermission permission={permissions.EDIT_REFERENCE_DATA}>
+                        <AddReferenceData update={true} update_data={row?.original} />
+                    </HasPermission>
+                    <HasPermission permission={permissions.DELETE_REFERENCE_DATA}>
+                        <Delete
+                            handleDelete={handleDelete}
+                            d_loading={d_loading}
+                            id={row.original?.tid}
+                            tooltext="Delete Reference Data"
+                        />
+                    </HasPermission>
                 </Box>
             ),
         },
@@ -209,7 +206,7 @@ const ReferenceData = (props) => {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleOrder = (e) => {
@@ -255,15 +252,10 @@ const ReferenceData = (props) => {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <MenuContainer>
-                <Header
-                    title="Reference Data"
-                    type={false}
-                    id={id}
-                    name={name}
-                />
+                <Header title="Reference Data" type={false} id={id} name={name} />
                 <Filter
                     type={false}
                     state={filterSchema}
@@ -291,4 +283,4 @@ const ReferenceData = (props) => {
     );
 };
 
-export default ReferenceData;
+export default withPermission({ permission: [permissions.READ_REFERENCE_DATA] })(ReferenceData);

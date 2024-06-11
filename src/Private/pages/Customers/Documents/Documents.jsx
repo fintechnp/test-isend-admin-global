@@ -13,6 +13,7 @@ import Filter from "./components/Filter";
 import { FormatDate, ReferenceName } from "./../../../../App/helpers";
 import { Delete } from "./../../../../App/components";
 import Table, { TablePagination } from "./../../../../App/components/Table";
+import { KycDocumentStatus } from "./data/KycDocumentStatus";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -37,6 +38,7 @@ const initialState = {
     search: "",
     sort_by: "",
     order_by: "ASC",
+    status: KycDocumentStatus.ACTIVE
 };
 
 function Documents(props) {
@@ -44,14 +46,10 @@ function Documents(props) {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: Documents, loading } = useSelector(
-        (state) => state.get_documents
-    );
+    const { response: Documents, loading } = useSelector((state) => state.get_documents);
 
     const { success } = useSelector((state) => state.upload_documents);
-    const { success: del_success, loading: d_loading } = useSelector(
-        (state) => state.delete_documents
-    );
+    const { success: del_success, loading: d_loading } = useSelector((state) => state.delete_documents);
 
     useEffect(() => {
         if (id) {
@@ -65,8 +63,8 @@ function Documents(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
+                Header: "SN",
+                accessor: "f_serial_no",
                 maxWidth: 50,
             },
             {
@@ -76,10 +74,7 @@ function Documents(props) {
                 Cell: (data) => {
                     return (
                         <>
-                            <Typography
-                                component="p"
-                                sx={{ fontSize: "14px", lineHeight: 1.2 }}
-                            >
+                            <Typography component="p" sx={{ fontSize: "14px", lineHeight: 1.2 }}>
                                 {data?.value ? (
                                     <Image document={data?.value} />
                                 ) : (
@@ -104,13 +99,8 @@ function Documents(props) {
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
                             {data?.value ? ReferenceName(2, data?.value) : ""}
                         </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{ fontSize: "13px", opacity: 0.9 }}
-                        >
-                            {data?.row.original?.side
-                                ? ReferenceName(48, data?.row.original?.side)
-                                : ""}
+                        <StyledName component="p" sx={{ fontSize: "13px", opacity: 0.9 }}>
+                            {data?.row.original?.side ? ReferenceName(48, data?.row.original?.side) : ""}
                         </StyledName>
                     </Box>
                 ),
@@ -131,6 +121,12 @@ function Documents(props) {
                         </StyledName>
                     </Box>
                 ),
+            },
+            {
+                Header: "Status",
+                accessor: "status",
+                maxWidth: 50,
+                Cell: (data) => <>{data.value}</>,
             },
             {
                 Header: () => (
@@ -197,23 +193,19 @@ function Documents(props) {
                             justifyContent: "center",
                         }}
                     >
-                        <LargeImage
-                            side={row.original.side}
-                            title={row.original.type}
-                            image={row.original?.document}
-                        />
+                        <LargeImage side={row.original.side} title={row.original.type} image={row.original?.document} />
                         <Delete
                             fontSize="25px"
                             loading={d_loading}
                             id={row.original.tid}
-                            handleDelete={handleDelete}
+                            handleDelete={() => handleDelete(row.original.document_id)}
                             tooltext="Delete Documents"
                         />
                     </Box>
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleDelete = (doc_id) => {
@@ -229,7 +221,7 @@ function Documents(props) {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -268,14 +260,26 @@ function Documents(props) {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const handleStatusChange = (e) => {
+        const { value } = e.target;
+        const updatedFilterSchema = {
+            ...filterSchema,
+            status: value,
+        };
+        setFilterSchema(updatedFilterSchema);
+    };
+
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>
+                    {import.meta.env.REACT_APP_NAME} | {props.title}
+                </title>
             </Helmet>
             <CustomerWrapper>
                 <Header />
                 <Filter
+                    onStatusChange={handleStatusChange}
                     state={filterSchema}
                     handleSearch={handleSearch}
                     handleSort={handleSort}

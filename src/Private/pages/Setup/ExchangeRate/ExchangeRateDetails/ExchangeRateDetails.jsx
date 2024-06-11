@@ -46,9 +46,7 @@ function ExchangeRateDetails(props) {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { response, loading } = useSelector(
-        (state) => state.get_exchange_rate_details
-    );
+    const { response, loading } = useSelector((state) => state.get_exchange_rate_details);
 
     useEffect(() => {
         if (id) {
@@ -63,22 +61,16 @@ function ExchangeRateDetails(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <CurrencyExchangeIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <CurrencyExchangeIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title> Exchange Rate Details </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleBack}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleBack}>
                             Back
                         </BackButton>
                     </TitleWrapper>

@@ -14,6 +14,10 @@ import AddPayoutLocation from "./components/AddPayoutLocation";
 import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -66,6 +70,8 @@ const initialState = {
 const PayoutLocation = (props) => {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const { can } = useAuthUser();
 
     const { response: payoutloaction_data, loading: g_loading } = useSelector((state) => state.get_all_payout_location);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_payout_location);
@@ -160,9 +166,15 @@ const PayoutLocation = (props) => {
                 accessor: "is_active",
                 width: 120,
                 Cell: (data) => (
-                    <SwitchWrapper textAlign="right" sx={{}}>
-                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
-                    </SwitchWrapper>
+                    <>
+                        {can(permissions.EDIT_PAYOUT_LOCATION) ? (
+                            <SwitchWrapper textAlign="right" sx={{}}>
+                                <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
+                            </SwitchWrapper>
+                        ) : (
+                            <>{!!data?.value ? "Active" : "Inactive"}</>
+                        )}
+                    </>
                 ),
             },
             {
@@ -209,13 +221,17 @@ const PayoutLocation = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPayoutLocation update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={d_loading}
-                            tooltext="Delete Payout Location"
-                        />
+                        <HasPermission permission={permissions.EDIT_PAYOUT_LOCATION}>
+                            <AddPayoutLocation update={true} update_data={row?.original} />
+                        </HasPermission>
+                        <HasPermission permission={permissions.DELETE_PAYOUT_LOCATION}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={d_loading}
+                                tooltext="Delete Payout Location"
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -332,4 +348,4 @@ const PayoutLocation = (props) => {
     );
 };
 
-export default PayoutLocation;
+export default withPermission({ permission: [permissions.READ_PAYOUT_LOCATION] })(PayoutLocation);

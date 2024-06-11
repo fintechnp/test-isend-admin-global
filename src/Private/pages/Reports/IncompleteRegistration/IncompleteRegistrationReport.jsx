@@ -5,15 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
 import { TablePagination } from "App/components/Table";
+import ReportTitle from "App/components/Title/ReportTitle";
 import PageContent from "App/components/Container/PageContent";
 import ReportTable from "Private/components/reports/ReportTable";
 import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
 
 import actions from "../store/actions";
 import ucwords from "App/helpers/ucwords";
+import { permissions } from "Private/data/permissions";
 import apiEndpoints from "Private/config/apiEndpoints";
+import withPermission from "Private/HOC/withPermission";
 import { CountryName, FormatDateTime } from "App/helpers";
-import ReportTitle from "App/components/Title/ReportTitle";
 
 const initialState = {
     page_number: 1,
@@ -209,4 +211,4 @@ function IncompleteRegistrationReport() {
     );
 }
 
-export default IncompleteRegistrationReport;
+export default withPermission({permission: [permissions.GENERATE_INCOMPLETE_REGISTRATION_REPORT]})(IncompleteRegistrationReport);

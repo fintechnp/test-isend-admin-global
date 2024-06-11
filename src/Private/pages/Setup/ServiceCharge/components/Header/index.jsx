@@ -3,6 +3,8 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
+import HasPermission from "Private/components/shared/HasPermission";
+import { permissions } from "Private/data/permissions";
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -31,9 +33,7 @@ function Header({ title, buttonText, name, agent_id }) {
     return (
         <HeaderWrapper>
             <Box>
-                <Typography sx={{ fontSize: "22px", display: "inline-block" }}>
-                    {title}{" "}
-                </Typography>
+                <Typography sx={{ fontSize: "22px", display: "inline-block" }}>{title} </Typography>
                 {name && (
                     <Typography
                         sx={{
@@ -47,16 +47,13 @@ function Header({ title, buttonText, name, agent_id }) {
                     </Typography>
                 )}
             </Box>
-            {buttonText && (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleAdd}
-                    endIcon={<AddIcon />}
-                >
-                    {buttonText}
-                </AddButton>
-            )}
+            <HasPermission permission={permissions.CREATE_SERVICE_CHARGE}>
+                {buttonText && (
+                    <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
+                        {buttonText}
+                    </AddButton>
+                )}
+            </HasPermission>
         </HeaderWrapper>
     );
 }

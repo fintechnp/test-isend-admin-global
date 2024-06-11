@@ -13,13 +13,15 @@ import Filter from "../Shared/Filter";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 
 import actions from "../store/actions";
-import PartnerActions from "../../Setup/Partner/store/actions";
-import { CountryName, ReferenceName, FormatDate, FormatDateTime } from "App/helpers";
 import dateUtils from "App/utils/dateUtils";
+import { permissions } from "Private/data/permissions";
+import PartnerActions from "../../Setup/Partner/store/actions";
+import { CountryName, ReferenceName, FormatDateTime } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -509,4 +511,4 @@ function CustomerReports(props) {
     );
 }
 
-export default CustomerReports;
+export default withPermission({ permission: [permissions.GENERATE_CUSTOMER_REPORT] })(CustomerReports);

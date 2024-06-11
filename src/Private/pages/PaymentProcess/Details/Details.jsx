@@ -18,8 +18,8 @@ import actions from "../store/actions";
 import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
 
-import AddComment from "Private/pages/Comments/AddComment";
-import GetAttachment from "Private/pages/Attachments/GetAttachment";
+import AddComment from "Private/pages/Transactions/Comments/AddComment";
+import GetAttachment from "Private/pages/Transactions/Attachments/GetAttachment";
 import Modal from "App/components/Modal/Modal";
 import SendMail from "./SendMailModal";
 

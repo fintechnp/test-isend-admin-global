@@ -4,14 +4,7 @@ import ImagePreview from "./ImagePreview";
 import Placeholder from "./Placeholder";
 import { renderFromHelper } from "../helpers";
 
-const ImageUploadField = ({
-    dragText,
-    selectText,
-    handleOnDrop,
-    input,
-    imagefile,
-    meta: { error, touched },
-}) => {
+const ImageUploadField = ({ dragText, selectText, handleOnDrop, input, imagefile, meta: { error, touched } }) => {
     const onDrop = useCallback((acceptedFiles) => {
         handleOnDrop(acceptedFiles);
         input.onChange(acceptedFiles[0]);
@@ -30,11 +23,7 @@ const ImageUploadField = ({
             ) : imagefile && imagefile.length > 0 ? (
                 <ImagePreview imagefile={imagefile} />
             ) : (
-                <Placeholder
-                    error={error}
-                    touched={touched}
-                    text={selectText}
-                />
+                <Placeholder error={error} touched={touched} text={selectText} />
             )}
             {renderFromHelper({ touched, error })}
         </div>

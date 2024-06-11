@@ -21,22 +21,30 @@ const GlobalTable = styled(MuiTable)(({ theme }) => ({
     // head customization
     "& .MuiTableHead-root": {
         "& .MuiTableCell-root": {
-            color: theme.palette.background.paper,
+            background: theme.palette.background.primarySecond,
             whiteSpace: "nowrap",
+            color: theme.palette.text.primary,
+            fontSize: "1rem",
+            fontWeight: 500,
+            "& .MuiTypography-root": {
+                color: theme.palette.text.primary,
+            },
         },
-        // add border radius to first and last child
-        "& .MuiTableCell-root:first-of-type": {
-            borderRadius: "8px 0 0 8px",
-        },
-        "& .MuiTableCell-root:last-child": {
-            borderRadius: "0 8px 8px 0",
+        "& .MuiTableCell-root:not(:first-of-type):not(:last-of-type)": {
+            border: `1px solid ${theme.palette.stroke.base}`,
+            borderTop: 0,
         },
     },
-    // body customization
     "& .MuiTableBody-root": {
-        // "& .MuiTableCell-root:not([aria-expanded])": {
-        //     height: "80px",
-        // },
+        "& .MuiTableCell-root": {
+            whiteSpace: "nowrap",
+            color: theme.palette.text.primary,
+            fontSize: "1rem",
+        },
+        "& .MuiTableCell-root:not(:first-of-type):not(:last-of-type)": {
+            border: `1px solid ${theme.palette.stroke.base}`,
+            borderTop: 0,
+        },
         "& .MuiTableRow-root[aria-expanded]": {
             "& .MuiTableCell-root": {
                 border: "none",

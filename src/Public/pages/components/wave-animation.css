@@ -1,0 +1,40 @@
+.wave-animation-container {
+    position: fixed;
+    top: 80%;
+    left: 5svw;
+}
+
+.wave {
+    position: absolute;
+    opacity: 0.4;
+    width: 90svw;
+    height: 90svw;
+    border-radius: 43%;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(360deg);
+    }
+}
+
+.wave.-one {
+    animation: rotate 50s infinite linear;
+    opacity: 5%;
+    background: white;
+}
+
+.wave.-two {
+    animation: rotate 20s infinite linear;
+    opacity: 10%;
+    background: white;
+}
+
+.wave.-three {
+    animation: rotate 30s infinite linear;
+    opacity: 20%;
+    background: white;
+}

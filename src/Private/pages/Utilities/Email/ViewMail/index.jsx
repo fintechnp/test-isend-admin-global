@@ -100,9 +100,7 @@ function VeiwEmail({ id }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
-    const { response: EmailData, loading: get_loading } = useSelector(
-        (state) => state.get_email_byid
-    );
+    const { response: EmailData, loading: get_loading } = useSelector((state) => state.get_email_byid);
 
     React.useEffect(() => {
         if (id && open) {
@@ -138,11 +136,8 @@ function VeiwEmail({ id }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
-                    View Email
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+                    GET Email
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <View loading={get_loading} data={EmailData?.data || []} />

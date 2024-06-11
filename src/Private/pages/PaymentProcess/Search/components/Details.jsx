@@ -1,11 +1,14 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles";
 
-import { CurrencyName, CountryName, FormatDate, FormatNumber } from "./../../../../../App/helpers";
-import { Button } from "@mui/material";
+import HasPermission from "Private/components/shared/HasPermission";
+
+import { permissions } from "Private/data/permissions";
+import { CurrencyName, CountryName, FormatDate, FormatNumber } from "App/helpers";
 
 const Container = styled(Grid)(({ theme }) => ({
     padding: "6px 16px",
@@ -195,13 +198,17 @@ function Details({ data, handleBlockOrCancel }) {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <Box sx={{ pb: 1, pt: 0.5, ml: 0 }}>
-                    <RefundButton variant="outlined" onClick={() => handleBlockOrCancel("cancel")}>
-                        Refund this transaction
-                    </RefundButton>
-                    <BlockButton variant="outlined" onClick={() => handleBlockOrCancel("block")}>
-                        Block this transaction
-                    </BlockButton>
+                <Box display='flex' sx={{ pb: 1, pt: 0.5, ml: 0 }}>
+                    <HasPermission permission={permissions.REFUND_TRANSACTION}>
+                        <RefundButton variant="outlined" onClick={() => handleBlockOrCancel("cancel")}>
+                            Refund this transaction
+                        </RefundButton>
+                    </HasPermission>
+                    <HasPermission permission={permissions.BLOCK_TRANSACTION}>
+                        <BlockButton variant="outlined" onClick={() => handleBlockOrCancel("block")}>
+                            Block this transaction
+                        </BlockButton>
+                    </HasPermission>
                 </Box>
             </Grid>
         </Container>

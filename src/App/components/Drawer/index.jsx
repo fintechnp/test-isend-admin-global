@@ -1,36 +1,34 @@
-import React, { useState } from "react";
 import Box from "@mui/material/Box";
+import React, { useState } from "react";
 import MuiList from "@mui/material/List";
+import { useSelector } from "react-redux";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
+import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled, useTheme } from "@mui/material/styles";
 
 import MainButton from "../List/components/MainButton";
 import MainHeader from "../List/components/MainHeader";
-import { ReactComponent as Logo } from "assets/isend/isend-logo-default.svg";
 
 import Toolbar from "./../Toolbar";
+import range from "App/helpers/range";
 import isEmpty from "App/helpers/isEmpty";
 import useDrawerItems from "App/hooks/useDrawerItems";
-import Logo_short from "../../../assets/short-logo.svg";
 import SearchTextField from "../Fields/SearchTextField";
 import useDetectScreen from "App/hooks/useDetectScreen";
 
+import Row from "../Row/Row";
+import ISendLogo from "../Logo/ISendLogo";
+import HamburgerMenu from "./HamburgerMenu";
+import layoutUtils from "App/utils/layoutUtils";
+
 const drawerWidth = 280;
 
-const List = styled(MuiList)(({ theme, open }) => ({
-    ...(open && {
-        padding: "8px",
-    }),
-    ...(!open && {
-        margin: "0px",
-    }),
-}));
+const List = styled(MuiList)(({ theme, open }) => ({}));
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -42,14 +40,6 @@ const openedMixin = (theme) => ({
     overflowX: "hidden",
     overflow: "visible",
     border: "none",
-    "& .MuiBox-root": {
-        display: "none",
-    },
-    "&:hover .MuiBox-root": {
-        [theme.breakpoints.up("md")]: {
-            display: "block",
-        },
-    },
     [theme.breakpoints.down("md")]: {
         width: theme.spacing(8),
     },
@@ -68,14 +58,6 @@ const closedMixin = (theme) => ({
     overflow: "visible",
     width: 0,
     border: "none",
-    "& .MuiBox-root": {
-        display: "none",
-    },
-    "&:hover .MuiBox-root": {
-        [theme.breakpoints.up("md")]: {
-            display: "block",
-        },
-    },
     background: theme.palette.primary.main,
     [theme.breakpoints.up("sm")]: {
         padding: "8px",
@@ -88,28 +70,8 @@ const DrawerHeader = styled("div", {
     shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    minHeight: "48px",
-}));
-
-const LongLogoWrapper = styled(CardMedia)(({ theme }) => ({
-    padding: "6px",
-    maxHeight: "56px",
-    width: "100%",
-    objectFit: "contain",
-    display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-}));
-
-const ShortLogoWrapper = styled(CardMedia)(({ theme }) => ({
-    maxHeight: "56px",
-    width: "100%",
-    objectFit: "contain",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    height: "30px",
 }));
 
 const AppBar = styled(MuiAppBar, {
@@ -117,7 +79,6 @@ const AppBar = styled(MuiAppBar, {
 })(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer,
     boxShadow: "none",
-    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
     background: theme.palette.appbar.main,
     [theme.breakpoints.down("md")]: {
         marginLeft: `calc(${theme.spacing(8)} + 1px)`,
@@ -154,24 +115,57 @@ const AppBar = styled(MuiAppBar, {
 const CustomizedDrawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-    width: drawerWidth,
     flexShrink: 0,
     whiteSpace: "nowrap",
     boxSizing: "border-box",
-    ...(open && {
-        ...openedMixin(theme),
-        "& .MuiDrawer-paper": openedMixin(theme),
-    }),
-    ...(!open && {
-        ...closedMixin(theme),
-        "& .MuiDrawer-paper": closedMixin(theme),
-    }),
+    "& .MuiDrawer-paper": {
+        ...(open
+            ? openedMixin(theme)
+            : {
+                  ...closedMixin(theme),
+                  "& .search-menu__textfield": {
+                      width: "46px",
+                  },
+              }),
+        background: "transparent",
+    },
+    width: open ? "264px" : "70px",
     "& .no-search-result__container": {
         display: "block !important",
     },
     "& .MuiPaper-root": {
         padding: "0px",
     },
+    "& .SideBarItemContainer-root": {
+        "&::-webkit-scrollbar-thumb": {
+            background: "",
+        },
+    },
+}));
+
+const DrawerContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "isDrawerOpen",
+})(({ theme, isDrawerOpen }) => ({
+    height: "calc(100svh - 16px)",
+    margin: "8px",
+    borderRadius: "16px",
+    padding: isDrawerOpen ? "16px" : "8px",
+    background: theme.palette.surface[1],
+    minWidth: "60px",
+    overflow: "hidden",
+}));
+
+const Footer = styled(Box)(({ theme }) => ({
+    position: "fixed",
+    display: "flex",
+    justifyContent: "flex-end",
+    bottom: 0,
+    background: theme.palette.background.paper,
+    padding: "16px 24px",
+    flexGrow: 1,
+    width: "fill-available",
+    color: theme.palette.text.secondary,
+    zIndex: '9px'
 }));
 
 function Drawer({ children }) {
@@ -184,7 +178,9 @@ function Drawer({ children }) {
 
     const [menuSearchQuery, setMenuSearchQuery] = useState("");
 
-    const { drawerItems, filterItems } = useDrawerItems(menuSearchQuery);
+    const { drawerItems, filteredDrawerItems, filterItems } = useDrawerItems(menuSearchQuery);
+
+    const { loading: isLoading } = useSelector((state) => state.get_user_menus_and_permissions);
 
     const handleFilter = (searchQuery) => {
         setMenuSearchQuery(searchQuery);
@@ -211,18 +207,15 @@ function Drawer({ children }) {
     };
 
     const drawerMenu = (
-        <div
-            style={{
+        <Box
+            className="SideBarItemContainer-root"
+            sx={{
+                height: "calc(100svh - 160px)",
                 overflowY: "auto",
-                ...(!open
-                    ? {
-                          padding: theme.spacing(0, 1),
-                      }
-                    : undefined),
             }}
         >
             <List open={open}>
-                {drawerItems.map((item, index) =>
+                {filteredDrawerItems.map((item, index) =>
                     item.sub ? (
                         <MainButton
                             key={index}
@@ -247,16 +240,19 @@ function Drawer({ children }) {
                         />
                     ),
                 )}
-                <Divider
-                    sx={{
-                        margin: "8px 0px",
-                        borderColor: "#ffffff",
-                        opacity: 0.25,
-                    }}
-                />
             </List>
-        </div>
+        </Box>
     );
+
+    const renderSkeleton = () => {
+        return (
+            <Box display="flex" flexDirection="column" px={1} mt={1}>
+                {range(1, 9).map((i) => (
+                    <Skeleton key={i} height="50px" />
+                ))}
+            </Box>
+        );
+    };
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -266,49 +262,59 @@ function Drawer({ children }) {
                 </Box>
             </AppBar>
             <CustomizedDrawer variant="permanent" open={open} className="isend__sidebar">
-                <DrawerHeader>
-                    {open ? (
-                        <>
-                            <Logo onClick={handleDashboard}/>
-                        </>
-                    ) : (
-                        <ShortLogoWrapper
-                            component="img"
-                            image={Logo_short}
-                            alt="isend logo"
-                            onClick={handleDashboard}
+                <DrawerContainer className="drawer-content__container" isDrawerOpen={open}>
+                    <DrawerHeader sx={{ height: "56px" }}>
+                        <Row width="100%" justifyContent={open ? "space-between" : "center"} alignItems="center">
+                            {open && (
+                                <Box flex={1}>
+                                    <ISendLogo
+                                        onClick={handleDashboard}
+                                        {...(open
+                                            ? {
+                                                  variant: "default",
+                                                  color: "white",
+                                              }
+                                            : { variant: "short", color: "white" })}
+                                    />
+                                </Box>
+                            )}
+                            <HamburgerMenu onClick={() => setOpen((value) => !value)} />
+                        </Row>
+                    </DrawerHeader>
+                    <Divider />
+                    {isDesktop && (
+                        <SearchTextField
+                            className="search-menu__textfield"
+                            placeholder="Search Menu"
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    background: (theme) => theme.palette.background.paper,
+                                    marginTop: "8px",
+                                    transition: (theme) =>
+                                        theme.transitions.create("width", {
+                                            easing: theme.transitions.easing.sharp,
+                                            duration: theme.transitions.duration.leavingScreen,
+                                        }),
+                                },
+                            }}
+                            onChange={(value) => handleFilter(value)}
+                            debounceTime={0}
+                            onClear={() => handleFilter("")}
+                            onClick={() => setOpen(true)}
                         />
                     )}
-                </DrawerHeader>
-                <Divider
-                    sx={{
-                        borderColor: "#ffffff",
-                        opacity: 0.25,
-                        margin: "0px",
-                    }}
-                />
-                {isDesktop && (
-                    <SearchTextField
-                        placeholder="Search Menu"
-                        sx={{
-                            "& .MuiInputBase-root": {
-                                background: (theme) => theme.palette.background.paper,
-                                m: theme.spacing(1, 1, 0, 1),
-                            },
-                        }}
-                        onChange={(value) => handleFilter(value)}
-                        debounceTime={0}
-                        onClear={() => handleFilter("")}
-                        onClick={() => setOpen(true)}
-                    />
-                )}
-                {drawerItems.length > 0 ? (
-                    drawerMenu
-                ) : (
-                    <Box className="no-search-result__container" px={2} mt={2}>
-                        <Typography color="white">No Results !</Typography>
-                    </Box>
-                )}
+                    {(() => {
+                        if (isLoading) renderSkeleton();
+                        if (filteredDrawerItems.length > 0) return drawerMenu;
+                        if (!isEmpty(menuSearchQuery) && filteredDrawerItems.length === 0)
+                            return (
+                                <Box className="no-search-result__container" px={2} mt={2}>
+                                    <Typography color="white">No Results !</Typography>
+                                </Box>
+                            );
+                        return renderSkeleton();
+                    })()}
+                </DrawerContainer>
             </CustomizedDrawer>
             <Box
                 component="main"
@@ -319,7 +325,10 @@ function Drawer({ children }) {
                 }}
             >
                 <DrawerHeader />
-                {children}
+                <Box mb="30px">{children}</Box>
+                <Footer className="Footer-root">
+                    <div dangerouslySetInnerHTML={{ __html: layoutUtils.getCopyrightText() }}></div>
+                </Footer>
             </Box>
         </Box>
     );

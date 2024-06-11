@@ -13,6 +13,8 @@ import PageContent from "App/components/Container/PageContent";
 import ReportTable from "Private/components/reports/ReportTable";
 
 import apiEndpoints from "Private/config/apiEndpoints";
+import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
 import { CountryNameByIso2Code, FormatDateTime } from "App/helpers";
 
 const initialState = {
@@ -221,4 +223,4 @@ function ICNResponseReport() {
     );
 }
 
-export default ICNResponseReport;
+export default withPermission({permission: [permissions.GENERATE_ICN_RESPONSE_REPORT]})(ICNResponseReport);

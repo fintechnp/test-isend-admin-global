@@ -13,6 +13,9 @@ import Filter from "./components/Filter";
 import AddApiConfig from "./components/AddApiConfig";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const ConfigContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -191,7 +194,9 @@ const ApiConfiguration = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddApiConfig update={true} update_data={row?.original} />
+                        <HasPermission permission={[permissions.EDIT_API_CONFIGURATION]}>
+                            <AddApiConfig update={true} update_data={row?.original} />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -274,7 +279,9 @@ const ApiConfiguration = (props) => {
     return (
         <PageContent documentTitle="API Configuration">
             <Header title="API Configuration">
-                <AddApiConfig />
+                <HasPermission permission={[permissions.CREATE_API_CONFIGURATION]}>
+                    <AddApiConfig />
+                </HasPermission>
             </Header>
             <Filter
                 state={filterSchema}
@@ -304,4 +311,4 @@ const ApiConfiguration = (props) => {
     );
 };
 
-export default ApiConfiguration;
+export default withPermission({ permission: [permissions.READ_API_CONFIGURATION] })(ApiConfiguration);

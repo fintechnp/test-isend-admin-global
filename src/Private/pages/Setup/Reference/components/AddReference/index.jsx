@@ -205,6 +205,4 @@ function AddReference({ update_data, update }) {
     );
 }
 
-
-
 export default React.memo(AddReference);

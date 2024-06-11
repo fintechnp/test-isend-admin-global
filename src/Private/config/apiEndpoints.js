@@ -1,13 +1,35 @@
-import { de } from "date-fns/locale";
-import { updateAchTransactionStatus } from "Private/pages/Transactions/AchTransactions/store/saga";
-
 const apiEndpoints = {
+    forgotPassword: "/account/forgotpassword",
+    dashboard: {
+        getCustomerCountByDeviceType: "/dashboard/customer",
+        getCustomerKycCountByStatus: "/dashboard/customer-kyc",
+        getTransactionCountByStatus: "/dashboard/transaction-status",
+    },
     countryStates: {
         list: "common/:country/states",
         create: "common/states",
         update: "common/states/:stateId",
         delete: "common/states/:stateId",
     },
+    documentAcceptance: {
+        list: "/documentacceptancelist",
+        create: "/documentacceptance",
+        update: "/documentacceptance/:id",
+    },
+
+    emailTemplate: {
+        list: "/email/template",
+        create: "/email/template",
+        update: "/email/template/update/:template_id",
+        tagList: "/email/template/tags",
+    },
+
+    countries: {
+        list: "/countries",
+        create: "/country",
+        update: "/country/:countryId",
+    },
+
     fundingSources: {
         list: "fundingsource/getall",
         create: "fundingsource",
@@ -26,7 +48,7 @@ const apiEndpoints = {
         updateAccount: "customer/account/:customerId",
         deleteList: "customer/deleterequest",
         deleteRequestDetails: "customer/deleterequest/:deleteRequestId",
-        approveDeleteRequest: "customer/delete/:deleteRequestId/action"
+        approveDeleteRequest: "customer/delete/:deleteRequestId/action",
     },
     bulkEmailGroup: {
         create: "bulkemail/group",
@@ -148,7 +170,7 @@ const apiEndpoints = {
         getBatchTransactionById: "/b2b/batchtransaction/:batchTransactionId",
 
         downloadPdf: "/b2b/transaction/downloadtransactionpdf",
-        sendMail:"/b2b/transaction/mailtransactionreciptpdf",
+        sendMail: "/b2b/transaction/mailtransactionreciptpdf",
     },
 
     document: {
@@ -207,10 +229,29 @@ const apiEndpoints = {
     notification: {
         resend: "/notification/resend",
     },
-    transaction:{
-        achTransaction:"/AchTransactions",
-        updateAchTransactionStatus:"/AchTransactions/:id"
-    }
+    transaction: {
+        achTransaction: "/AchTransactions",
+        updateAchTransactionStatus: "/AchTransactions/:id",
+    },
+    userProfileSetups: {
+        list: "/Roles/GetRoles",
+        get: "/Roles/GetPermissionByRoleId",
+        create: "/Roles/AddRole",
+        update: "/Roles/ManageRole",
+    },
+    auth: {
+        getLoggedInUserMenusAndPermissions: "/Roles/GetUserRole",
+    },
+    transaction: {
+        achTransaction: "/AchTransactions",
+        updateAchTransactionStatus: "/AchTransactions/:id",
+        zaiGetTransactions: "/zai/transactions",
+        zaiCheckBalance: "/zai/:customerId/check-balance",
+        zaiMakePayment: "/zai/make-payment",
+        zaiLogs: "/zai/webhook-log",
+        zaiRefundPayment: "/zai/refund-payment",
+        zaiRefundLogs: "/zai/refund-log",
+    },
 };
 
 export default apiEndpoints;

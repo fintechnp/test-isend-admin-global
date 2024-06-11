@@ -12,6 +12,9 @@ import Table, { TablePagination } from "App/components/Table";
 
 import { CountryName } from "App/helpers";
 import countryStateActions from "Private/features/country-states/countryStateActions";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "../shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 
 const initialState = {
     page_number: 1,
@@ -20,6 +23,8 @@ const initialState = {
 
 const CountryStates = () => {
     const dispatch = useDispatch();
+
+    const { can } = useAuthUser();
 
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -36,8 +41,8 @@ const CountryStates = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "state_id",
+                Header: "S.N.",
+                accessor: "f_serial_no",
                 maxWidth: 80,
             },
             {
@@ -55,53 +60,63 @@ const CountryStates = () => {
                 accessor: "code",
                 Cell: (data) => <Typography component="p">{data.value ? data.value : "n/a"}</Typography>,
             },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Tooltip title="Edit State" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    dispatch({
-                                        type: "OPEN_UPDATE_COUNTRY_STATE_MODAL",
-                                        payload: row.original,
-                                    })
-                                }
-                            >
-                                <EditOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Delete
-                            id={row.original.state_id}
-                            handleDelete={handleDelete}
-                            loading={isDeleting}
-                            tooltext="Delete State"
-                        />
-                    </Box>
-                ),
-            },
+            ...(can([permissions.EDIT_COUNTRY_STATE, permissions.DELETE_COUNTRY_STATE])
+                ? [
+                      {
+                          Header: () => (
+                              <Box textAlign="center">
+                                  <Typography>Actions</Typography>
+                              </Box>
+                          ),
+                          accessor: "show",
+                          Cell: ({ row }) => (
+                              <Box
+                                  sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                  }}
+                              >
+                                  <HasPermission permission={permissions.EDIT_COUNTRY_STATE}>
+                                      <Tooltip title="Edit State" arrow>
+                                          <IconButton
+                                              onClick={() =>
+                                                  dispatch({
+                                                      type: "OPEN_UPDATE_COUNTRY_STATE_MODAL",
+                                                      payload: row.original,
+                                                  })
+                                              }
+                                          >
+                                              <EditOutlinedIcon
+                                                  sx={{
+                                                      fontSize: "20px",
+                                                      "&:hover": {
+                                                          background: "transparent",
+                                                      },
+                                                  }}
+                                              />
+                                          </IconButton>
+                                      </Tooltip>
+                                  </HasPermission>
+                                  <HasPermission permission={permissions.DELETE_COUNTRY_STATE}>
+                                      <Delete
+                                          id={row.original.state_id}
+                                          handleDelete={handleDelete}
+                                          loading={isDeleting}
+                                          tooltext="Delete State"
+                                      />
+                                  </HasPermission>
+                              </Box>
+                          ),
+                      },
+                  ]
+                : []),
         ],
         [],
     );
+
+    const countries = JSON.parse(localStorage.getItem("country"))?.map((c) => ({ label: c.country, value: c.iso3 }));
 
     const handleCountryChange = (e) => {
         setCountry(e.target.value ?? undefined);
@@ -139,7 +154,7 @@ const CountryStates = () => {
     return (
         <>
             <Spacer />
-            <CountryStateFilter onCountryChange={handleCountryChange} />
+            <CountryStateFilter onCountryChange={handleCountryChange} countries={countries} />
             <Table
                 columns={columns}
                 title="Country States"

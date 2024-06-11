@@ -16,6 +16,9 @@ import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import { CountryName, FormatDate, ReferenceName } from "App/helpers";
 import ResendIconButton from "App/components/Button/ResendIconButton";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -188,17 +191,21 @@ const Sms = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <Delete
-                            id={row.original.tid}
-                            handleDelete={handleDelete}
-                            loading={false}
-                            tooltext="Delete SMS"
-                        />
-                        {/* <ResendIconButton
-                            onClick={() => {
-                                handleOnResend(row?.original?.tid);
-                            }}
-                        /> */}
+                        <HasPermission permission={permissions.DELETE_SMS}>
+                            <Delete
+                                id={row.original.tid}
+                                handleDelete={handleDelete}
+                                loading={false}
+                                tooltext="Delete SMS"
+                            />
+                        </HasPermission>
+                        <HasPermission permission={permissions.RESEND_SMS}>
+                            <ResendIconButton
+                                onClick={() => {
+                                    handleOnResend(row?.original?.tid);
+                                }}
+                            />
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -291,7 +298,9 @@ const Sms = (props) => {
     return (
         <PageContent documentTitle="SMS">
             <Header title="SMS List">
-                <CreateSms />
+                <HasPermission permission={permissions.CREATE_SMS}>
+                    <CreateSms />
+                </HasPermission>
             </Header>
             <Filter
                 sortData={sortData}
@@ -319,4 +328,4 @@ const Sms = (props) => {
     );
 };
 
-export default Sms;
+export default withPermission({ permission: [permissions.READ_SMS] })(Sms);

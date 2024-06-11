@@ -2,9 +2,18 @@ const routePaths = {
     banners: {
         index: "/setup/banners",
     },
+    countries: {
+        index: "/setup/countries",
+    },
+
     countryStates: {
         index: "/setup/country-states",
     },
+
+    documentAcceptance: {
+        index: "/setup/documentacceptance",
+    },
+
     fundingSources: {
         index: "/setup/funding-sources",
     },
@@ -26,6 +35,7 @@ const routePaths = {
         streetType: "/setup/street-type",
     },
     customer: {
+        create: "/customer/create",
         banks: "/customer/banks/:customerId",
         allBank: "/customer/banks",
         deleteList: "/customer/delete-requests",
@@ -81,9 +91,23 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
-    transaction:{
-        achTransaction:"/transaction/ach-transaction",
-    }
+    transaction: {
+        achTransaction: "/transaction/ach-transaction",
+    },
+    users: {
+        listUserSetup: "/user/setups",
+        listProfileSetup: "/user/profile-setups",
+        showProfileSetup: "/user/profile-setups/:userProfileSetupId",
+        editProfileSetup: "/user/profile-setups/:userProfileSetupId/edit",
+    },
+    transaction: {
+        achTransaction: "/transaction/ach-transaction",
+        zaiTransaction: "/payment/zai-australia-payment",
+        ziaLogs: "/transaction/zia-logs",
+    },
+    dashboard: {
+        base: "/",
+    },
 };
 
 export default routePaths;

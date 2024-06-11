@@ -15,6 +15,10 @@ import { Delete, Loading } from "App/components";
 import AddLanguageCountry from "./Components/AddLanguageCountry";
 import actions from "./store/actions";
 import Pagination from "@mui/material/Pagination";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
+import useAuthUser from "Private/hooks/useAuthUser";
 // import AddDeliveryOption from "../DeliveryOption/components/AddDeliveryOption";
 // import AddLanguageOption from "./Components/AddLanguageOption";
 
@@ -32,6 +36,8 @@ const StyledName = styled(Typography)(({ theme }) => ({
 
 function LanguageCountry() {
     const dispatch = useDispatch();
+
+    const { can } = useAuthUser();
 
     const [filterSchema, setFilterSchema] = useState({
         page_size: 10,
@@ -145,32 +151,40 @@ function LanguageCountry() {
                     </Box>
                 ),
             },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        {/* <AddLanguageOption update={true} update_data={row?.original} /> */}
-                        <AddLanguageCountry update={true} update_data={row?.original} />
-                        <Delete
-                            id={row.original.language_country_id}
-                            handleDelete={handleDelete}
-                            loading={languageDataLoading}
-                            tooltext="Delete Delivery Option"
-                        />
-                    </Box>
-                ),
-            },
+            ...(can([permissions.EDIT_LANGUAGE_COUNTRY, permissions.DELETE_LANGUAGE_COUNTRY])
+                ? [
+                      {
+                          Header: () => (
+                              <Box textAlign="center">
+                                  <Typography>Actions</Typography>
+                              </Box>
+                          ),
+                          accessor: "show",
+                          Cell: ({ row }) => (
+                              <Box
+                                  sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      justifyContent: "center",
+                                  }}
+                              >
+                                  {/* <AddLanguageOption update={true} update_data={row?.original} /> */}
+                                  <HasPermission permission={permissions.EDIT_LANGUAGE_COUNTRY}>
+                                      <AddLanguageCountry update={true} update_data={row?.original} />
+                                  </HasPermission>
+                                  <HasPermission permission={permissions.DELETE_LANGUAGE_COUNTRY}>
+                                      <Delete
+                                          id={row.original.language_country_id}
+                                          handleDelete={handleDelete}
+                                          loading={languageDataLoading}
+                                          tooltext="Delete Delivery Option"
+                                      />
+                                  </HasPermission>
+                              </Box>
+                          ),
+                      },
+                  ]
+                : []),
         ],
         [],
     );
@@ -185,7 +199,9 @@ function LanguageCountry() {
             }
         >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginBottom: "1rem" }}>
-                <AddLanguageCountry update={false} />
+                <HasPermission permission={[permissions.CREATE_LANGUAGE_COUNTRY]}>
+                    <AddLanguageCountry update={false} />
+                </HasPermission>
             </div>
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 {/* {lang_loading && ( */}
@@ -225,4 +241,4 @@ function LanguageCountry() {
     );
 }
 
-export default LanguageCountry;
+export default withPermission({ permission: [permissions.READ_LANGUAGE_COUNTRY] })(LanguageCountry);

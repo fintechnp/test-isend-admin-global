@@ -13,11 +13,13 @@ import actions from "../store/actions";
 import SearchForm from "./SearchForm";
 import NoResults from "../Shared/NoResults";
 import Loading from "App/components/Loading";
-
-import { CountryName, CurrencyName, FormatNumber, FormatDate } from "App/helpers";
-import PartnerActions from "../../Setup/Partner/store/actions";
-import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import Table, { TablePagination } from "App/components/Table";
+
+import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import PartnerActions from "../../Setup/Partner/store/actions";
+import { CountryName, CurrencyName, FormatNumber, FormatDate } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -478,4 +480,4 @@ function TransactionsSuspiciousReports(props) {
     );
 }
 
-export default TransactionsSuspiciousReports;
+export default withPermission({permission: [permissions.GENERATE_SUSPICIOUS_TRANSACTION_REPORT]})(TransactionsSuspiciousReports);

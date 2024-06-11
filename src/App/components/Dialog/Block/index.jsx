@@ -1,16 +1,17 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import { Field, Form, reduxForm, change, reset } from "redux-form";
+import { Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import { styled } from "@mui/material/styles";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DialogTitle from "@mui/material/DialogTitle";
+import MuiIconButton from "@mui/material/IconButton";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Tooltip } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import MuiIconButton from "@mui/material/IconButton";
+import ListItemButton from "@mui/material/ListItemButton";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Field, Form, reduxForm, change, reset } from "redux-form";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 
 import Validator from "../../../utils/validators";
@@ -77,6 +78,8 @@ function BlockDialog({
     id,
     name,
     remark,
+    enablePopoverAction,
+    onClosePopover,
     ...rest
 }) {
     const dispatch = useDispatch();
@@ -97,6 +100,7 @@ function BlockDialog({
     const handleClose = () => {
         dispatch(reset(`block_form_customer${id}`));
         setOpen(false);
+        onClosePopover?.();
     };
 
     const handleChange = (e) => {
@@ -105,49 +109,46 @@ function BlockDialog({
 
     return (
         <div>
-            <ReleaseIcon
-                size="small"
-                color="primary"
-                component="span"
-                onClick={handleClickOpen}
-                sx={{ minWidth: "3px", borderRadius: "20px" }}
-            >
-                {!status ? (
-                    <Tooltip title={`Unblock ${name}`} arrow>
-                        <LockOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                color: "warning.main",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </Tooltip>
-                ) : (
-                    <Tooltip title={`Block ${name}`} arrow>
-                        <LockOpenOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                color: "success.main",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </Tooltip>
-                )}
-            </ReleaseIcon>
-            <BootstrapDialog
-                open={open}
-                value={remark}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle
-                    id="responsive-dialog-title"
-                    sx={{ fontSize: "24px" }}
+            {enablePopoverAction ? (
+                <ListItemButton onClick={handleClickOpen}>{!status ? "Unblock" : "Block"}</ListItemButton>
+            ) : (
+                <ReleaseIcon
+                    size="small"
+                    color="primary"
+                    component="span"
+                    onClick={handleClickOpen}
+                    sx={{ minWidth: "3px", borderRadius: "20px" }}
                 >
+                    {!status ? (
+                        <Tooltip title={`Unblock ${name}`} arrow>
+                            <LockOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    color: "warning.main",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </Tooltip>
+                    ) : (
+                        <Tooltip title={`Block ${name}`} arrow>
+                            <LockOpenOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    color: "success.main",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                </ReleaseIcon>
+            )}
+
+            <BootstrapDialog open={open} value={remark} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+                <DialogTitle id="responsive-dialog-title" sx={{ fontSize: "24px" }}>
                     {"Do you want to"} {status ? "Block?" : "Unblock?"}
                 </DialogTitle>
                 <Form onSubmit={handleSubmit}>
@@ -196,19 +197,10 @@ function BlockDialog({
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <CancelButton
-                            size="small"
-                            variant="contained"
-                            onClick={handleClose}
-                        >
+                        <CancelButton size="small" variant="contained" onClick={handleClose}>
                             Cancel
                         </CancelButton>
-                        <BlockButton
-                            size="small"
-                            variant="outlined"
-                            loading={loading}
-                            type="submit"
-                        >
+                        <BlockButton size="small" variant="outlined" loading={loading} type="submit">
                             {status ? "Block" : "UnBlock"}
                         </BlockButton>
                     </DialogActions>

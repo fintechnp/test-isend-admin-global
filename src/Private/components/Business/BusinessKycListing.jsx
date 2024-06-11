@@ -14,7 +14,7 @@ import NoResults from "Private/pages/Transactions/components/NoResults";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { businessActions as actions } from "Private/pages/Business/store";
+import { businessActions as actions } from "Private/pages/Agent/Business/store";
 
 export default function BusinessKycListing() {
     const { businessId } = useParams();

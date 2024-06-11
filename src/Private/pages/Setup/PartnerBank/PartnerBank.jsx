@@ -19,6 +19,9 @@ import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import Unmap from "App/components/Dialog/Unmap";
 import PartnerActions from "./../Partner/store/actions";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const PartnerBankContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -226,37 +229,41 @@ const PartnerBank = (props) => {
                                 </Tooltip>
                             )}
                         </span>
-                        <AddPartnerBank update={true} update_data={row?.original} />
-                        {row?.original?.is_mapped ? (
-                            <Unmap
-                                success={un_success}
-                                id={row.original.tid}
-                                handleMapUnmap={handleUnmap}
-                                loading={un_loading}
-                                title="Do you want to unmap this partner bank?"
-                                information="You have to remap after unmapping this. Make sure before
+                        <HasPermission permission={permissions.EDIT_PARTNER_BANK}>
+                            <>
+                                <AddPartnerBank update={true} update_data={row?.original} />
+                                {row?.original?.is_mapped ? (
+                                    <Unmap
+                                        success={un_success}
+                                        id={row.original.tid}
+                                        handleMapUnmap={handleUnmap}
+                                        loading={un_loading}
+                                        title="Do you want to unmap this partner bank?"
+                                        information="You have to remap after unmapping this. Make sure before
                                 unmapping."
-                            />
-                        ) : (
-                            <Tooltip title="Map Partner Bank" arrow>
-                                <IconButton
-                                    onClick={() =>
-                                        navigate(
-                                            `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}/${row?.original?.tid}`,
-                                        )
-                                    }
-                                >
-                                    <CableIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
                                     />
-                                </IconButton>
-                            </Tooltip>
-                        )}
+                                ) : (
+                                    <Tooltip title="Map Partner Bank" arrow>
+                                        <IconButton
+                                            onClick={() =>
+                                                navigate(
+                                                    `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}/${row?.original?.tid}`,
+                                                )
+                                            }
+                                        >
+                                            <CableIcon
+                                                sx={{
+                                                    fontSize: "20px",
+                                                    "&:hover": {
+                                                        background: "transparent",
+                                                    },
+                                                }}
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
+                            </>
+                        </HasPermission>
                     </Box>
                 ),
             },
@@ -380,4 +387,4 @@ const PartnerBank = (props) => {
     );
 };
 
-export default PartnerBank;
+export default withPermission({ permission: [permissions.READ_PARTNER_BANK] })(PartnerBank);

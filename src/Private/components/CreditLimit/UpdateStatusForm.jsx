@@ -8,7 +8,7 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
 
-import { creditLimitActions } from "Private/pages/CreditLimit/store";
+import { creditLimitActions } from "Private/pages/Agent/CreditLimit/store";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";

@@ -11,7 +11,7 @@ import MarketMakerKycForm from "Private/components/MarketMaker/MarketMakerKycFor
 
 import { AccountAction as actions } from "./store";
 import { Loading } from "App/components";
-import { businessActions } from "Private/pages/Business/store";
+import { businessActions } from "Private/pages/Agent/Business/store";
 
 export default function AddUserKyc() {
     const dispatch = useDispatch();

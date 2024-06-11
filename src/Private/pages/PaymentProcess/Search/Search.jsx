@@ -1,6 +1,5 @@
 import { reset } from "redux-form";
 import Grid from "@mui/material/Grid";
-import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,9 +9,12 @@ import RefundForm from "./Form/RefundForm";
 import Details from "./components/Details";
 import Loading from "App/components/Loading";
 import MessageBox from "./components/MessageBox";
+import withPermission from "Private/HOC/withPermission";
+import PageContent from "App/components/Container/PageContent";
+import HasPermission from "Private/components/shared/HasPermission";
 
 import actions from "./../store/actions";
-import PageContent from "App/components/Container/PageContent";
+import { permissions } from "Private/data/permissions";
 
 function Search(props) {
     const dispatch = useDispatch();
@@ -90,10 +92,14 @@ function Search(props) {
     };
 
     return (
-      <PageContent documentTitle="Search Transaction">
+        <PageContent documentTitle="Search Transaction">
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>
-                    <SearchForm onSubmit={handleSearch} initialValues={{ transaction_id: "", pin_number: "" }} loading={loading} />
+                    <SearchForm
+                        onSubmit={handleSearch}
+                        initialValues={{ transaction_id: "", pin_number: "" }}
+                        loading={loading}
+                    />
                 </Grid>
                 {loading && (
                     <Grid item xs={12}>
@@ -111,35 +117,39 @@ function Search(props) {
                             <Details data={response?.data} handleBlockOrCancel={setButton} />
                         </Grid>
                         <Grid item xs={12}>
-                            {button === "block" && (
-                                <BlockForm
-                                    onSubmit={handleBlock}
-                                    loading={b_loading}
-                                    initialValues={
-                                        response?.data?.tid && {
-                                            id: response?.data?.tid,
+                            <HasPermission permission={permissions.BLOCK_TRANSACTION}>
+                                {button === "block" && (
+                                    <BlockForm
+                                        onSubmit={handleBlock}
+                                        loading={b_loading}
+                                        initialValues={
+                                            response?.data?.tid && {
+                                                id: response?.data?.tid,
+                                            }
                                         }
-                                    }
-                                />
-                            )}
-                            {button === "cancel" && (
-                                <RefundForm
-                                    onSubmit={handleRefund}
-                                    loading={r_loading}
-                                    initialValues={
-                                        response?.data?.tid && {
-                                            id: response?.data?.tid,
-                                            refund_charge: false,
+                                    />
+                                )}
+                            </HasPermission>
+                            <HasPermission permission={permissions.REFUND_TRANSACTION}>
+                                {button === "cancel" && (
+                                    <RefundForm
+                                        onSubmit={handleRefund}
+                                        loading={r_loading}
+                                        initialValues={
+                                            response?.data?.tid && {
+                                                id: response?.data?.tid,
+                                                refund_charge: false,
+                                            }
                                         }
-                                    }
-                                />
-                            )}
+                                    />
+                                )}
+                            </HasPermission>
                         </Grid>
                     </>
                 )}
             </Grid>
-      </PageContent>
+        </PageContent>
     );
 }
 
-export default Search;
+export default withPermission({ permission: [permissions.READ_REFUND_TRANSACTION] })(Search);

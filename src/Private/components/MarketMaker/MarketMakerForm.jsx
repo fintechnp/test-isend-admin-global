@@ -22,7 +22,7 @@ import FormMultiSelect from "App/core/hook-form/FormMultiSelect";
 import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 import CircularProgress from "App/components/Loading/CircularProgress";
 
-import { MarketMakerActions as actions } from "Private/pages/MarketMaker/store";
+import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
 
 export default function MarketMakerForm({ isAddMode = true }) {

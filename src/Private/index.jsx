@@ -14,23 +14,6 @@ import {
     AccountSaga,
 } from "./pages/Users/Accounts/store";
 
-//permission
-import { GetAllPermissionReducer, UpdateUserPermissionRdcr, PermissionSaga } from "./pages/Users/UserPermission/store";
-import {
-    GetAllMenuReducer,
-    AddMenuReducer,
-    UpdateMenuReducer,
-    DeleteMenuReducer,
-    MenuSaga,
-} from "./pages/Users/Menu/store";
-import {
-    GetAllSubMenuReducer,
-    AddSubMenuReducer,
-    UpdateSubMenuReducer,
-    DeleteSubMenuReducer,
-    SubMenuSaga,
-} from "./pages/Users/SubMenu/store";
-
 //setup
 import {
     GetAllDeliveryOptionReducer,
@@ -135,6 +118,7 @@ import {
     AddExchangeRateReducer,
     UpdateExchangeRateReducer,
     DeleteExchangeRateReducer,
+    RefreshExchangeRateReducer,
     ExchangeRateSaga,
 } from "./pages/Setup/ExchangeRate/store";
 
@@ -199,14 +183,17 @@ import {
     GetCustomerByPartnersReducer,
     BlockUnblockReducer,
     CustomersSaga,
+    GetAllCustomerKycCountByStatusReducer
 } from "./pages/Customers/Search/store";
 
 import {
     GetCustomersByIdReducer,
     CreateCustomersReducer,
     UpdateCustomersReducer,
-    CustomersCreateSaga,
+    CustomersCreateSaga
 } from "./pages/Customers/CreateCustomer/store";
+
+import { UploadProfilePictureReducer, UploadProfilePictureSaga } from "./pages/Auth/MyAccount/store";
 
 //Banks
 
@@ -295,6 +282,12 @@ import {
     GetSanctionDetailsReducer,
     DownloadTransactionPdfReducer,
     SendMailTransactionReducer,
+    GetZaiAustraliaPaymentReducer,
+    GetBalanceDetailsReducers,
+    GetZaiLogsReducer,
+    GetRefundPaymentReducer,
+    GetMakePaymentReducer,
+    GetZaiRefundLogsReducer,
 } from "./pages/PaymentProcess/store";
 
 //Reports
@@ -386,7 +379,7 @@ import customerSaga from "./features/customers/customerSaga";
 import { updateCustomerAccountReducer } from "./features/customers/customerReducer";
 import getOnfidoReportReducer from "./pages/Reports/store/reducers/getOnfidoReportReducer";
 
-import { UpdateChangePasswordReducer, UpdateChangePasswordSaga } from "./pages/Settings/store";
+import { UpdateChangePasswordReducer, UpdateChangePasswordSaga } from "./pages/Auth/Settings/store";
 
 import {
     addBulkEmailGroupReducer,
@@ -445,7 +438,7 @@ import {
 
     //USERS
     GetMarketMakerUsersReducer,
-} from "../Private/pages/MarketMaker/store";
+} from "./pages/Agent/MarketMaker/store";
 
 //CREDIT LIMIT
 
@@ -457,7 +450,7 @@ import {
     EditCreditLimitByIdReducer,
     DeleteCreditLimitByIdReducer,
     creditLimitSaga,
-} from "../Private/pages/CreditLimit/store";
+} from "../Private/pages/Agent/CreditLimit/store";
 
 // BALANCE REQUEST
 
@@ -466,7 +459,7 @@ import {
     GetAllBalanceRequestValueReducer,
     GetBalanceRequestIdValueReducer,
     UpdateBalanceRequestStatusReducer,
-} from "../Private/pages/BalanceRequest/store";
+} from "../Private/pages/Agent/BalanceRequest/store";
 
 // Business
 
@@ -482,7 +475,7 @@ import {
     GetBusinessKybDetailsReducer,
     UpdateBusinessKybStatusReducer,
     businessSaga,
-} from "../Private/pages/Business/store";
+} from "../Private/pages/Agent/Business/store";
 import {
     getSingleTransactionReducer,
     getSingleTransactionsReducer,
@@ -500,10 +493,9 @@ import {
     GetAllB2BBeneficiaryReducer,
     GetB2BBeneficiaryByIdReducer,
     beneficiarySaga,
-} from "../Private/pages/Beneficiary/store";
+} from "./pages/Agent/Beneficiary/store";
 
-//Business Charge
-
+// region: Business Charge
 import {
     GetAllBusinessChargeByIdReducer,
     GetAllBusinessChargeReducer,
@@ -511,28 +503,78 @@ import {
     UpdateBusinessChargeStatusReducer,
     UpdateBusinessChargeReducer,
     businessChargeSaga,
-} from "Private/pages/BusinessServiceCharge/store";
+} from "Private/pages/Agent/BusinessServiceCharge/store";
 
 import {
     GetAllKycUserValueReducer,
     GetKycUserIdValueReducer,
     KycUserSaga,
     UpdateKycUserStatusReducer,
-} from "Private/pages/KycUser/store";
+} from "Private/pages/Agent/KycUser/store";
 
 //Ledger
 
-import { GetAllLedgerReducer, GetLedgerDetailsReducer, AddLedgerReducer, ledgerSaga } from "Private/pages/Ledger/store";
+import {
+    GetAllLedgerReducer,
+    GetLedgerDetailsReducer,
+    AddLedgerReducer,
+    ledgerSaga,
+} from "Private/pages/Agent/Ledger/store";
 
-import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/B2BAccount/store";
+import { GetAllB2bAccounts, b2bAccountSaga } from "Private/pages/Agent/B2BAccount/store";
 
-import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/AccountList/store";
+import { ListAccountReducer, accountListSaga, ListAccountDetailReducer } from "Private/pages/Agent/AccountList/store";
 
-import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/pages/Comments/store";
+import { AddCommentReducer, GetAllCommentsReducer, commentSaga } from "Private/pages/Transactions/Comments/store";
 
-import { GetAllAttachmentsReducer, UploadAttachmentReducer, attachmentSaga } from "Private/pages/Attachments/store";
+import {
+    GetAllAttachmentsReducer,
+    UploadAttachmentReducer,
+    attachmentSaga,
+} from "Private/pages/Transactions/Attachments/store";
 
-import {GetACHTransactionReducer,UpdateAchTransactionStatusReducer,achTransactionSaga} from "Private/pages/Transactions/AchTransactions/store"
+import {
+    GetACHTransactionReducer,
+    UpdateAchTransactionStatusReducer,
+    achTransactionSaga,
+} from "Private/pages/Transactions/AchTransactions/store";
+import { addCountryReducer, getCountryReducer, updateCountryReducer } from "./features/countries/countryReducer";
+import countrySaga from "./features/countries/countrySaga";
+import documentAcceptanceSaga, {
+    getDocumentAcceptanceList,
+} from "./features/documentAcceptance/documentAcceptanceSaga";
+import {
+    addDocumentAcceptanceReducer,
+    getDocumentAcceptanceReducer,
+    updateDocumentAcceptanceReducer,
+} from "./features/documentAcceptance/documentAcceptanceReducer";
+
+// region: User Profile Setup
+import {
+    UserProfileSetupSaga,
+    AddUserProfileSetupReducer,
+    UpdateUserProfileSetupReducer,
+    GetUserProfileSetupsReducer,
+    GetUserProfileSetupByIdReducer,
+    GetUserProfileSetupsForSelectReducer,
+} from "./pages/Users/ProfileSetups/store";
+import {
+    addEmailTemplateReducer,
+    getEmailTemplateReducer,
+    getEmailTemplateTagReducer,
+    updateEmailTemplateReducer,
+} from "./components/email-template/store/reducer/emailTemplateReducer";
+import EmailTemplateSaga from "./components/email-template/store/emailTemplateSaga";
+
+// region: Dashboard
+import {
+    DashboardSaga,
+    GetCustomerCountByDeviceTypeReducer,
+    GetCustomerKycCountByStatusReducer,
+    GetTransactionCountByStatusReducer,
+    DashboardFilterParamsReducer,
+    GetCustomerKycCountByStatusPreviousReducer,
+} from "./pages/Dashboard/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -550,22 +592,6 @@ export const privateReducer = {
     //Change Password
 
     change_password: UpdateChangePasswordReducer,
-
-    //permission
-    get_all_permission: GetAllPermissionReducer,
-    update_user_permission: UpdateUserPermissionRdcr,
-
-    //menu
-    get_all_menu: GetAllMenuReducer,
-    add_menu: AddMenuReducer,
-    update_menu: UpdateMenuReducer,
-    delete_menu: DeleteMenuReducer,
-
-    //sub-menu
-    get_all_sub_menu: GetAllSubMenuReducer,
-    add_sub_menu: AddSubMenuReducer,
-    update_sub_menu: UpdateSubMenuReducer,
-    delete_sub_menu: DeleteSubMenuReducer,
 
     //setup
     //delivery option
@@ -677,6 +703,7 @@ export const privateReducer = {
     add_exchange_rate: AddExchangeRateReducer,
     update_exchange_rate: UpdateExchangeRateReducer,
     delete_excahnge_rate: DeleteExchangeRateReducer,
+    refresh_exchange_rate: RefreshExchangeRateReducer,
 
     //reference type and data
     get_all_reference: GetAllReferenceReducer,
@@ -707,6 +734,11 @@ export const privateReducer = {
     get_customer_byid: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
+    get_all_customer_kyc_count_by_status: GetAllCustomerKycCountByStatusReducer,
+
+    // Upload Image
+
+    upload_profile_picture: UploadProfilePictureReducer,
 
     //Customer Bank
 
@@ -753,9 +785,19 @@ export const privateReducer = {
     get_pending_transactions: GetPendingTransactionsReducer,
     get_blocked_transactions: GetBlockedTransactionsReducer,
     get_aml_suspicious: GetAmlSuspiciousReducer,
+
     get_aml_suspicious_details: GetAmlSuspiciousDetailsReducer,
     get_exception_transactions: GetExceptionTransactionsReducer,
     get_transaction_refund_block: GetRefundBlockTransactionsReducer,
+    get_zai_australia_payment_details: GetZaiAustraliaPaymentReducer,
+    get_balance_details: GetBalanceDetailsReducers,
+    get_zai_logs: GetZaiLogsReducer,
+    make_payment: GetMakePaymentReducer,
+    refund_payment: GetRefundPaymentReducer,
+    get_zai_refund_logs: GetZaiRefundLogsReducer,
+
+    // GET_BALANCE_DETAILS
+
     block_transactions: BlockTransactionsReducer,
     refund_transactions: RefundTransactionsReducer,
     update_payment_pending: UpdatePaymentPendingReducer,
@@ -765,7 +807,7 @@ export const privateReducer = {
     get_transaction_documents: GetTransactionDocumentReducer,
     get_sanction_details: GetSanctionDetailsReducer,
     download_transaction_pdf: DownloadTransactionPdfReducer,
-    send_mail_transaction:SendMailTransactionReducer,
+    send_mail_transaction: SendMailTransactionReducer,
 
     //Reports
     get_customer_report: GetCustomerReportsReducer,
@@ -820,6 +862,23 @@ export const privateReducer = {
     add_country_state: addCountryStateReducer,
     update_country_state: updateCountryStateReducer,
     delete_country_state: deleteCountryStateReducer,
+
+    // countries
+    get_countries: getCountryReducer,
+    add_country: addCountryReducer,
+    update_country: updateCountryReducer,
+
+    //documentAcceptance
+    get_document_acceptance_list: getDocumentAcceptanceReducer,
+    add_document_acceptance: addDocumentAcceptanceReducer,
+    update_document_acceptance: updateDocumentAcceptanceReducer,
+
+    //emailTemplate
+
+    get_email_templates: getEmailTemplateReducer,
+    get_email_template_tags: getEmailTemplateTagReducer,
+    add_email_template: addEmailTemplateReducer,
+    update_email_template: updateEmailTemplateReducer,
 
     // funding sources
     get_funding_source_list: getFundingSourcesReducer,
@@ -962,15 +1021,26 @@ export const privateReducer = {
 
     //ACH Transactions
 
-    get_ach_transactions:GetACHTransactionReducer,
-    update_ach_transaction_status:UpdateAchTransactionStatusReducer,
+    get_ach_transactions: GetACHTransactionReducer,
+    update_ach_transaction_status: UpdateAchTransactionStatusReducer,
+
+    // region: User Profile Setup
+    list_user_profile_setup: GetUserProfileSetupsReducer,
+    get_user_profile_setup_by_id: GetUserProfileSetupByIdReducer,
+    add_user_profile_setup: AddUserProfileSetupReducer,
+    update_user_profile_setup: UpdateUserProfileSetupReducer,
+    list_user_profile_setup_for_select: GetUserProfileSetupsForSelectReducer,
+
+    // region: Dashboard
+    get_customer_count_by_device_type: GetCustomerCountByDeviceTypeReducer,
+    get_customer_kyc_count_by_status: GetCustomerKycCountByStatusReducer,
+    get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
+    get_transaction_count_by_status: GetTransactionCountByStatusReducer,
+    dashboard_filter_params: DashboardFilterParamsReducer,
 };
 
 export const privateSaga = [
     AccountSaga(),
-    PermissionSaga(),
-    MenuSaga(),
-    SubMenuSaga(),
     DeliveryOptionSaga(),
     DeliveryRouteSaga(),
     PartnerSaga(),
@@ -1024,7 +1094,13 @@ export const privateSaga = [
     customerDeleteSaga(),
     commentSaga(),
     attachmentSaga(),
-    achTransactionSaga()
+    achTransactionSaga(),
+    countrySaga(),
+    documentAcceptanceSaga(),
+    UserProfileSetupSaga(),
+    EmailTemplateSaga(),
+    DashboardSaga(),
+    UploadProfilePictureSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

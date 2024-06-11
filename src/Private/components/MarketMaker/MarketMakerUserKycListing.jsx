@@ -16,9 +16,9 @@ import BusinessKycDetail from "../Business/BusinessKycDetail";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { businessActions as actions } from "Private/pages/Business/store";
+import { businessActions as actions } from "Private/pages/Agent/Business/store";
 
-import { MarketMakerActions as mActions } from "Private/pages/MarketMaker/store";
+import { MarketMakerActions as mActions } from "Private/pages/Agent/MarketMaker/store";
 
 export default function MarketMakerUserKycListing() {
     const dispatch = useDispatch();

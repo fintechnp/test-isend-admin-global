@@ -5,14 +5,12 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { ResetButton, SearchButton } from "../AllButtons/Buttons";
 import PageContent from "App/components/Container/PageContent";
-import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import FormSelect from "App/core/hook-form/FormSelect";
 
-import { creditLimitActions } from "Private/pages/CreditLimit/store";
 import FormTextField from "App/core/hook-form/FormTextField";
 import ucwords from "App/helpers/ucwords";
 import { localStorageGet } from "App/helpers/localStorage";
-import { creditLimitStatusEnum } from "Private/pages/CreditLimit/constants/creditLimitStatus";
+import { creditLimitStatusEnum } from "Private/pages/Agent/CreditLimit/constants/creditLimitStatus";
 
 const orderByOptions = [
     { label: "Ascending", value: "ASC" },

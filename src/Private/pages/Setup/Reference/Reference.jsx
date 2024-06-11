@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Switch, Tooltip, Typography } from "@mui/material";
@@ -13,8 +12,12 @@ import actions from "./store/actions";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import AddReference from "./components/AddReference";
+import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+
+import { permissions } from "Private/data/permissions";
+import HasPermission from "Private/components/shared/HasPermission";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -82,7 +85,12 @@ const Reference = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "Id",
+            Header: "S.N.",
+            accessor: "f_serial_no",
+            maxWidth: 60,
+        },
+        {
+            Header: "Type ID",
             accessor: "reference_type_id",
             maxWidth: 60,
         },
@@ -160,25 +168,29 @@ const Reference = (props) => {
                             </Tooltip>
                         )}
                     </span>
-                    <AddReference update={true} update_data={row?.original} />
-                    <Tooltip title="Show Sub Data" arrow>
-                        <IconButton
-                            onClick={() =>
-                                navigate(
-                                    `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`,
-                                )
-                            }
-                        >
-                            <SubdirectoryArrowLeftIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
+                    <HasPermission permission={permissions.EDIT_REFERENCE_TYPE}>
+                        <AddReference update={true} update_data={row?.original} />
+                    </HasPermission>
+                    <HasPermission permission={permissions.READ_REFERENCE_DATA}>
+                        <Tooltip title="Show Sub Data" arrow>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(
+                                        `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`,
+                                    )
+                                }
+                            >
+                                <SubdirectoryArrowLeftIcon
+                                    sx={{
+                                        fontSize: "20px",
+                                        "&:hover": {
+                                            background: "transparent",
+                                        },
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </HasPermission>
                 </Box>
             ),
         },
@@ -267,4 +279,4 @@ const Reference = (props) => {
     );
 };
 
-export default Reference;
+export default withPermission({ permission: [permissions.READ_REFERENCE_TYPE] })(Reference);

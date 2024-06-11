@@ -12,6 +12,8 @@ import Header from "./components/Header";
 import Filter from "./components/Filter";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
+import withPermission from "Private/HOC/withPermission";
+import { permissions } from "Private/data/permissions";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -120,7 +122,7 @@ const ExchangeRate = (props) => {
                             <IconButton
                                 onClick={() =>
                                     navigate(
-                                        `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}`,
+                                        `/setup/exchange-rate/${row?.original?.agent_name}/${row?.original?.sending_currency}/${row?.original?.sending_agent_id}?sending_agent_id=${row.original.sending_agent_id}`,
                                     )
                                 }
                             >
@@ -227,4 +229,4 @@ const ExchangeRate = (props) => {
     );
 };
 
-export default ExchangeRate;
+export default withPermission({ permission: permissions.READ_EXCHANGE_RATE })(ExchangeRate);

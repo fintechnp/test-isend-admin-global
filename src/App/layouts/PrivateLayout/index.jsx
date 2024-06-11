@@ -1,15 +1,19 @@
-
+import { useSelector } from "react-redux";
 import React, { Suspense, useContext, useEffect } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 
 import Drawer from "../../components/Drawer";
-import Loading from "./../../../App/components/Loading";
+import Loading from "App/components/Loading";
+import CircularProgress from "App/components/Loading/CircularProgress";
 
 import { AuthContext } from "../../auth";
+import Center from "App/components/Center/Center";
 import { getIntendedPath, removeIntendedPath, preserveIntendedPath } from "App/routes";
 
 const PrivateLayout = () => {
     const navigate = useNavigate();
+
+    const { loading: isLoadingUserMensAndPermissions } = useSelector((state) => state.get_user_menus_and_permissions);
 
     useEffect(() => {
         const intendedPath = getIntendedPath();
@@ -29,7 +33,13 @@ const PrivateLayout = () => {
     return (
         <Drawer>
             <Suspense fallback={<Loading loading={true} />}>
-                <Outlet />
+                {isLoadingUserMensAndPermissions ? (
+                    <Center sx={{ height: "90svh" }}>
+                        <CircularProgress />
+                    </Center>
+                ) : (
+                    <Outlet />
+                )}
             </Suspense>
         </Drawer>
     );

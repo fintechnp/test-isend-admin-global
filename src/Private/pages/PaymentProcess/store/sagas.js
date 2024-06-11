@@ -303,6 +303,90 @@ export const sendMailTransaction = takeEvery(actions.SEND_MAIL_TRANSACTION, func
     }
 });
 
+export const getAllZaiAustraliaPayment = takeEvery(actions.GET_ZAI_AUSTRALIA_PAYMENT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.transaction.zaiGetTransactions, action.query);
+        yield put({
+            type: actions.GET_ZAI_AUSTRALIA_PAYMENT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_ZAI_AUSTRALIA_PAYMENT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getZaiLogs = takeEvery(actions.GET_ZAI_LOGS, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.transaction.zaiLogs, action.query);
+
+        yield put({
+            type: actions.GET_ZAI_LOGS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_ZAI_LOGS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const makePayment = takeEvery(actions.MAKE_PAYMENT, function* (action) {
+    try {
+        const res = yield call(api.put, apiEndpoints.transaction.zaiMakePayment, action.data);
+        yield put({ type: actions.MAKE_PAYMENT_SUCCESS, response: res });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({ type: actions.MAKE_PAYMENT_FAILED, error: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const refundPayment = takeEvery(actions.REFUND_PAYMENT, function* (action) {
+    try {
+        const res = yield call(api.put, apiEndpoints.transaction.zaiRefundPayment, action.data);
+        yield put({ type: actions.REFUND_PAYMENT_SUCCESS, response: res });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({ type: actions.REFUND_PAYMENT_FAILED, error: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const checkBalance = takeEvery(actions.CHECK_BALANCE_DETAILS, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.transaction.zaiCheckBalance.replace(":customerId", action.id));
+        yield put({
+            type: actions.CHECK_BALANCE_DETAILS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CHECK_BALANCE_DETAILS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getZaiRefundLogs = takeEvery(actions.GET_ZAI_REFUND_LOGS, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.transaction.zaiRefundLogs, action.query);
+
+        yield put({
+            type: actions.GET_ZAI_REFUND_LOGS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_ZAI_REFUND_LOGS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getTransactionDetails,
@@ -323,5 +407,11 @@ export default function* saga() {
         getSanctionDetails,
         downloadTransactionPdf,
         sendMailTransaction,
+        getAllZaiAustraliaPayment,
+        checkBalance,
+        makePayment,
+        refundPayment,
+        getZaiLogs,
+        getZaiRefundLogs,
     ]);
 }

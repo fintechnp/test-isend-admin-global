@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import dateUtils from "App/utils/dateUtils";
 import TextField from "@mui/material/TextField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dateUtils from "App/utils/dateUtils";
 
 function FormDatePicker({
     name,
@@ -76,7 +76,7 @@ function FormDatePicker({
                                 onChange?.(null);
                             }
                         }}
-                        value={field.value ?? ""}
+                        value={field.value ?? null}
                         inputFormat={dateFormat}
                         renderInput={(params) => (
                             <TextField

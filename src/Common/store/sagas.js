@@ -4,6 +4,7 @@ import { put, takeEvery, call, all } from "redux-saga/effects";
 import actions from "./actions";
 import Api from "../../App/services/api";
 import AuthUtility from "App/utils/AuthUtility";
+import apiEndpoints from "Private/config/apiEndpoints";
 import guestHttpService from "App/services/guestHttpService";
 
 const headers = {
@@ -125,6 +126,26 @@ export const logout = takeEvery(actions.LOG_OUT, function* () {
     }
 });
 
+export const getUserMenusAndPermissions = takeEvery(actions.GET_USER_MENUS_AND_PERMISSIONS, function* () {
+    const api = new Api();
+    try {
+        const res = yield call(api.get, apiEndpoints.auth.getLoggedInUserMenusAndPermissions);
+        yield put({ type: actions.GET_USER_MENUS_AND_PERMISSIONS_SUCCESS, response: res });
+    } catch (error) {
+        yield put({ type: actions.GET_USER_MENUS_AND_PERMISSIONS_FAILED, error: error });
+        yield put({ type: "SET_TOAST_DATA", data: error?.data });
+    }
+});
+
 export default function* saga() {
-    yield all([refreshToken, getUser, get_all_country, get_all_reference, resetPassword, logout, get_send_country]);
+    yield all([
+        refreshToken,
+        getUser,
+        get_all_country,
+        get_all_reference,
+        resetPassword,
+        logout,
+        get_send_country,
+        getUserMenusAndPermissions,
+    ]);
 }

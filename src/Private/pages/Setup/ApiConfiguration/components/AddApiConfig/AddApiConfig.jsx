@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 
-import PromoSetupForm from "./Form";
+import ApiConfigForm from "./Form";
 import actions from "./../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -106,12 +106,8 @@ function AddApiConfig({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
 
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_api_config
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_api_config
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_api_config);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_api_config);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -155,12 +151,7 @@ function AddApiConfig({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Api Config
                 </AddButton>
             )}
@@ -170,19 +161,15 @@ function AddApiConfig({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create"} Api Config
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     {update ? (
-                        <PromoSetupForm
+                        <ApiConfigForm
                             destroyOnUnmount
                             initialValues={{
-                                api_partner_code:
-                                    memoizedData?.api_partner_code,
+                                api_partner_code: memoizedData?.api_partner_code,
                                 api_url: memoizedData?.api_url,
                                 api_user_id: memoizedData?.api_user_id,
                                 api_user_secret: memoizedData?.api_user_secret,
@@ -199,7 +186,7 @@ function AddApiConfig({ update_data, update }) {
                             handleClose={handleClose}
                         />
                     ) : (
-                        <PromoSetupForm
+                        <ApiConfigForm
                             update={update}
                             enableReinitialize={true}
                             onSubmit={handleApiConfigSubmit}

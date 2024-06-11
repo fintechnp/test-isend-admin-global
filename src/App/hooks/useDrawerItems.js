@@ -1,15 +1,20 @@
 import isEmpty from "App/helpers/isEmpty";
 import { useState, useEffect } from "react";
-import cloneDeep from 'lodash/cloneDeep'
-import { drawerItems } from "App/data/drawer-items";
+import cloneDeep from "lodash/cloneDeep";
+import { useSelector } from "react-redux";
+import { PermissionType } from "Private/pages/Users/ProfileSetups/utils/PermissionUtils";
 
 const useDrawerItems = () => {
-    const [filteredDrawerItems, setFilteredDrawerItems] = useState([...drawerItems]);
+    const { response, loading: isLoading } = useSelector((state) => state.get_user_menus_and_permissions);
+
+    const [drawerItems, setDrawerItems] = useState([]);
+
+    const [filteredDrawerItems, setFilteredDrawerItems] = useState([]);
 
     const filterItems = (searchQuery) => {
         const searchText = searchQuery.toLowerCase();
 
-        const drawerItems1 =  cloneDeep(drawerItems);
+        const drawerItems1 = cloneDeep(drawerItems);
 
         const filteredItems = drawerItems1.filter((item) => {
             const itemText = item.text.toLowerCase();
@@ -36,7 +41,55 @@ const useDrawerItems = () => {
         }
     };
 
-    return { drawerItems: filteredDrawerItems, filterItems };
+    const transformMenuData = (permissions = []) => {
+        const transformedData = [];
+
+        function transform(permission) {
+            return {
+                key: permission.id,
+                text: permission.display_name,
+                sub: permission?.children?.length > 0,
+                icon: permission.icon,
+                sub: permission.type === PermissionType.MENU ? permission?.children?.length > 0 : false,
+                ...(permission.url
+                    ? {
+                          path: permission.url,
+                      }
+                    : {}),
+                ...(permission?.children?.length < 0
+                    ? {
+                          url: permission.path,
+                      }
+                    : {}),
+            };
+        }
+
+        for (let menu of permissions) {
+            const transformed = transform(menu);
+            if (transformed.sub) {
+                transformed.children = [...menu?.children].filter((m) => !isEmpty(m.url)).map((a) => transform(a));
+            }
+
+            transformedData.push(transformed);
+        }
+
+        return transformedData;
+    };
+
+    useEffect(() => {
+        const data = response?.data?.role_response?.menus ?? [];
+        if(data.length <= 0) return;
+        const menus = transformMenuData(data)
+        setDrawerItems(menus);
+        setFilteredDrawerItems(menus);
+    }, [response]);
+
+    return {
+        filteredDrawerItems,
+        drawerItems,
+        filterItems,
+        isLoading,
+    };
 };
 
 export default useDrawerItems;

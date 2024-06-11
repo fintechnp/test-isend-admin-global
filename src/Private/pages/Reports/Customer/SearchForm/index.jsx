@@ -44,8 +44,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
 const SEARCH_FORM_CUSTOMER_REPORTS = "search_form_customer_reports";
 
 function SearchForm({ handleSubmit, handleReset, handlePartner, partner, loading, initialValues }) {
-    console.log(initialValues);
-
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
     const [minDate, setMinDate] = React.useState(initialValues?.created_form_date);

@@ -13,7 +13,7 @@ import { relatedToEnum } from "../BusinessCharge/BusinessChargeForm";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
 import apiEndpoints from "Private/config/apiEndpoints";
-import { MarketMakerActions } from "Private/pages/MarketMaker/store";
+import { MarketMakerActions } from "Private/pages/Agent/MarketMaker/store";
 
 const relatedToOptions = [
     {

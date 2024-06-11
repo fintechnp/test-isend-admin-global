@@ -45,9 +45,7 @@ function AddUpdatePartner(props) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, loading } = useSelector(
-        (state) => state.get_partner_details
-    );
+    const { response, loading } = useSelector((state) => state.get_partner_details);
 
     useEffect(() => {
         if (id) {
@@ -66,22 +64,16 @@ function AddUpdatePartner(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>BNB Admin | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <PersonAddAltOutlinedIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <PersonAddAltOutlinedIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title>{id ? "Update" : "Add"} Partner </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleBack}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleBack}>
                             Back
                         </BackButton>
                     </TitleWrapper>
@@ -90,10 +82,7 @@ function AddUpdatePartner(props) {
                     <Divider sx={{ mb: 1.2, pt: 0.5 }} />
                 </Grid>
                 <Grid item xs={12}>
-                    <PartnerForm
-                        update_data={response?.data}
-                        loading={loading}
-                    />
+                    <PartnerForm update_data={response?.data} loading={loading} />
                 </Grid>
             </Grid>
         </>

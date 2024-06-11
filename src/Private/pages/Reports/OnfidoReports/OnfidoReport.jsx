@@ -4,13 +4,16 @@ import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import actions from "../store/actions";
 import { Loading } from "App/components";
 import NoResults from "../Shared/NoResults";
-import apiEndpoints from "Private/config/apiEndpoints";
+import withPermission from "Private/HOC/withPermission";
 import OnfidoReportFilterForm from "./OnfidoReportFilterForm";
 import PageContent from "App/components/Container/PageContent";
 import ReportTable from "Private/components/reports/ReportTable";
+
+import actions from "../store/actions";
+import apiEndpoints from "Private/config/apiEndpoints";
+import { permissions } from "Private/data/permissions";
 
 const initialState = {
     page_number: 1,
@@ -145,4 +148,4 @@ function OnfidoReport() {
     );
 }
 
-export default OnfidoReport;
+export default withPermission({permission: [permissions.GENERATE_ONFIDO_REPORT]})(OnfidoReport);
