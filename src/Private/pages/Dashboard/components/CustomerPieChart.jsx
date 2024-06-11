@@ -10,7 +10,7 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import Paper from "App/components/Paper/Paper";
 import Center from "App/components/Center/Center";
 
-const DATA_COLORS = ["#4DB6AC", "#7986CB", "#4FC3F7", "#eeeeee"];
+const DATA_COLORS = ["#4DB6AC", "#7986CB", "#4FC3F7", "#6aadd4"];
 const NO_DATA_COLORS = ["#eeeeee"];
 
 const Container = styled(Paper)(({ theme }) => ({
@@ -33,7 +33,7 @@ export default function CustomerPieChart() {
         { name: "iOS", value: data?.iosUsers ?? 0 },
         { name: "Android", value: data?.androidUsers ?? 0 },
         { name: "Web", value: data?.webUsers ?? 0 },
-        { name: "Others", value: data?.others ?? 0 },
+        { name: "Others", value: data?.otherUsers ?? 0 },
     ];
 
     const statsNoData = [{ name: NO_DATA_LABEL, value: 1 }];

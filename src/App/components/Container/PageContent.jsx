@@ -3,15 +3,12 @@ import isEmpty from "lodash/isEmpty";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import React, { useEffect } from "react";
-import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import MuiBreadcrumbs from "@mui/material/Breadcrumbs";
 import { Link as RouterLink } from "react-router-dom";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
 import app from "App/config/app";
-import routePaths from "Private/config/routePaths";
 import Row from "../Row/Row";
 import Column from "../Column/Column";
 
@@ -92,7 +89,6 @@ export default function PageContent(props) {
                                     <Typography
                                         key={breadcrumb.label}
                                         color="text.primary"
-                                        // fontWeight={breadcrumbs.length === index + 1 ? 500 : 400}
                                     >
                                         {breadcrumb.label}
                                     </Typography>
@@ -105,11 +101,6 @@ export default function PageContent(props) {
                                     underline="hover"
                                     color="inherit"
                                     to={breadcrumb.link}
-                                    sx={
-                                        {
-                                            // fontWeight: breadcrumbs.length === index + 1 ? 500 : 400,
-                                        }
-                                    }
                                 >
                                     {breadcrumb.label}
                                 </Link>

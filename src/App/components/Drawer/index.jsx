@@ -7,11 +7,9 @@ import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled, useTheme, alpha } from "@mui/material/styles";
-import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 
 import MainButton from "../List/components/MainButton";
 import MainHeader from "../List/components/MainHeader";
@@ -27,6 +25,8 @@ import ISendLogo from "../Logo/ISendLogo";
 import NavMenu from "./NavMenu";
 import Row from "../Row/Row";
 import HamburgerMenu from "./HamburgerMenu";
+import layoutUtils from "App/utils/layoutUtils";
+import Paper from "../Paper/Paper";
 
 const drawerWidth = 280;
 
@@ -155,6 +155,20 @@ const DrawerContainer = styled(Box, {
     background: theme.palette.surface[1],
     minWidth: "60px",
     overflow: "hidden",
+}));
+
+const Footer = styled(Box)(({ theme }) => ({
+    position: "fixed",
+    display: "flex",
+    justifyContent: "flex-end",
+    bottom: 0,
+    background: theme.palette.background.paper,
+    padding: "16px 24px",
+    flexGrow: 1,
+    width: "-moz-available",
+    width: "-webkit-fill-available",
+    width: "fill-available",
+    color: theme.palette.text.secondary
 }));
 
 function Drawer({ children }) {
@@ -314,7 +328,10 @@ function Drawer({ children }) {
                 }}
             >
                 <DrawerHeader />
-                {children}
+                <Box mb="30px">{children}</Box>
+                <Footer className="Footer-root">
+                    <div dangerouslySetInnerHTML={{ __html: layoutUtils.getCopyrightText() }}></div>
+                </Footer>
             </Box>
         </Box>
     );
