@@ -9,7 +9,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { styled, useTheme, alpha } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 
 import MainButton from "../List/components/MainButton";
 import MainHeader from "../List/components/MainHeader";
@@ -21,12 +21,10 @@ import useDrawerItems from "App/hooks/useDrawerItems";
 import SearchTextField from "../Fields/SearchTextField";
 import useDetectScreen from "App/hooks/useDetectScreen";
 
-import ISendLogo from "../Logo/ISendLogo";
-import NavMenu from "./NavMenu";
 import Row from "../Row/Row";
+import ISendLogo from "../Logo/ISendLogo";
 import HamburgerMenu from "./HamburgerMenu";
 import layoutUtils from "App/utils/layoutUtils";
-import Paper from "../Paper/Paper";
 
 const drawerWidth = 280;
 
@@ -165,8 +163,6 @@ const Footer = styled(Box)(({ theme }) => ({
     background: theme.palette.background.paper,
     padding: "16px 24px",
     flexGrow: 1,
-    width: "-moz-available",
-    width: "-webkit-fill-available",
     width: "fill-available",
     color: theme.palette.text.secondary
 }));
