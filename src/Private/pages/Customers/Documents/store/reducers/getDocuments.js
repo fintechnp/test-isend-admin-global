@@ -11,7 +11,7 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actions.GET_DOCUMENTS:
             return {
-                ...state,
+                ...initialState,
                 loading: true,
             };
         case actions.GET_DOCUMENTS_SUCCESS:
@@ -20,12 +20,14 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null
             };
         case actions.GET_DOCUMENTS_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
+                response: [],
                 error: action.error,
             };
         case actions.GET_DOCUMENTS_RESET:

@@ -6,6 +6,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_NAME: "iSend"
+      REACT_APP_API_BASE_URL: https://{country}remitadminapi.isendremit.com/api
+      REACT_APP_VERSION: v2.3.0
+      REACT_APP_COPYRIGHT_TEXT_SGP: "Copyright &copy; {{year}} iSend Pte Ltd. All Rights reserved"
+      REACT_APP_COPYRIGHT_TEXT_AUS: "Copyright &copy; {{year}} TransCash International Pty Ltd. All Rights reserved."
+      REACT_APP_COPYRIGHT_TEXT_USA: "Copyright &copy; {{year}} ISend Pte. Ltd. All Rights reserved."
 
     steps:
       - name: Checkout code
@@ -20,10 +27,7 @@ jobs:
         run: npm ci
 
       - name: Build app
-        run: 
-            REACT_APP_NAME="iSend Admin"
-            REACT_APP_API_BASE_URL=https://{country}remitadminapi.isendremit.com/api
-            REACT_APP_VERSION=v2.3.0
+        run:
             npm run build
 
       - name: Upload to S3
