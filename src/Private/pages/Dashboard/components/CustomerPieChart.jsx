@@ -2,13 +2,12 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Row from "App/components/Row/Row";
 import { useSelector } from "react-redux";
-import { PieChart, Pie, Cell } from "recharts";
 import Typography from "@mui/material/Typography";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { styled, useTheme } from "@mui/material/styles";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 import Paper from "App/components/Paper/Paper";
-import useDetectScreen from "App/hooks/useDetectScreen";
 import Center from "App/components/Center/Center";
 
 const DATA_COLORS = ["#4DB6AC", "#7986CB", "#4FC3F7", "#eeeeee"];
@@ -21,9 +20,9 @@ const Container = styled(Paper)(({ theme }) => ({
     },
 }));
 
-export default function CustomerPieChart() {
-    const { isDesktop, isMobile, isTablet } = useDetectScreen();
+const NO_DATA_LABEL = "NO_DATA_LABEL";
 
+export default function CustomerPieChart() {
     const theme = useTheme();
 
     const { response } = useSelector((state) => state.get_customer_count_by_device_type);
@@ -34,11 +33,24 @@ export default function CustomerPieChart() {
         { name: "iOS", value: data?.iosUsers ?? 0 },
         { name: "Android", value: data?.androidUsers ?? 0 },
         { name: "Web", value: data?.webUsers ?? 0 },
+        { name: "Others", value: data?.others ?? 0 },
     ];
 
-    const statsNoData = [{ name: "NoData", value: 360 }];
+    const statsNoData = [{ name: NO_DATA_LABEL, value: 1 }];
 
     const COLORS = data?.totalUsers ? DATA_COLORS : NO_DATA_COLORS;
+
+    const CustomTooltip = ({ payload }) => {
+        if (payload?.[0]?.payload?.name === NO_DATA_LABEL) return <></>;
+
+        return (
+            <Paper sx={{ padding: "16px" }}>
+                <Typography>
+                    {payload?.[0]?.payload?.name} : {payload?.[0]?.payload?.value}
+                </Typography>
+            </Paper>
+        );
+    };
 
     return (
         <Container>
@@ -62,6 +74,7 @@ export default function CustomerPieChart() {
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
+                    <Tooltip content={<CustomTooltip />} />
                     <text
                         x="50%"
                         y="48%"
