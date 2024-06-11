@@ -164,7 +164,8 @@ const Footer = styled(Box)(({ theme }) => ({
     padding: "16px 24px",
     flexGrow: 1,
     width: "fill-available",
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
+    zIndex: '9px'
 }));
 
 function Drawer({ children }) {
