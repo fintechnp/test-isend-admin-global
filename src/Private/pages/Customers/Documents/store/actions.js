@@ -24,6 +24,12 @@ const actions = {
     UPDATE_KYC_FAILED: "UPDATE_KYC_FAILED",
     UPDATE_KYC_RESET: "UPDATE_KYC_RESET",
 
+    RESET_KYC_VERIFICATION: "RESET_KYC_VERIFICATION",
+    RESET_KYC_VERIFICATION_SUCCESS: "RESET_KYC_VERIFICATION_SUCCESS",
+    RESET_KYC_VERIFICATION_FAILED: "RESET_KYC_VERIFICATION_FAILED",
+    OPEN_RESET_KYC_VERIFICATION_MODAL: "OPEN_RESET_KYC_VERIFICATION_MODAL",
+    CLOSE_RESET_KYC_VERIFICATION_MODAL: "CLOSE_RESET_KYC_VERIFICATION_MODAL",
+
     get_documents: (customer_id, query) => ({
         type: actions.GET_DOCUMENTS,
         customer_id,
@@ -51,6 +57,11 @@ const actions = {
         type: actions.UPDATE_KYC,
         customer_id,
         data,
+    }),
+
+    reset_kyc_verification: (customerId) => ({
+        type: actions.RESET_KYC_VERIFICATION,
+        data: { customer_id: customerId },
     }),
 };
 

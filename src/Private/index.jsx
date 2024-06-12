@@ -223,6 +223,7 @@ import {
     UpdateKycReducer,
     DeleteDocumentsReducer,
     DocumentsCustomerSaga,
+    ResetKycVerificationReducer,
 } from "./pages/Customers/Documents/store";
 
 //Remarks
@@ -754,6 +755,7 @@ export const privateReducer = {
     upload_documents: UploadDocumentsReducer,
     update_kyc: UpdateKycReducer,
     delete_documents: DeleteDocumentsReducer,
+    reset_kyc_verification: ResetKycVerificationReducer,
 
     //Remarks
     get_remarks: GetRemarksReducer,
