@@ -415,7 +415,7 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 style={{ padding: "4px 0px", paddingRight: "4px" }}
             >
                 <Grid item>
-                    <CancelButton size="small" variant="outlined" disabled={updating}>
+                    <CancelButton onClick={() => navigate(-1)} size="small" variant="outlined" disabled={updating}>
                         Cancel
                     </CancelButton>
                 </Grid>
