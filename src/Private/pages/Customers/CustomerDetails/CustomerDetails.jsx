@@ -25,7 +25,6 @@ import customerActions from "../../../../Private/pages/Customers/Documents/store
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
 import { CountryName, FormatDate, ReferenceName } from "App/helpers";
-import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
 const Header = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
