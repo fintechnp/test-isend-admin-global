@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 import { RangeType } from "App/data/RangeType";
+
+
 class dateUtils {
     today() {
         return new Date().toISOString().slice(0, 10);
@@ -10,8 +12,8 @@ class dateUtils {
         return dateArray;
     }
 
-    getFormattedDate(date, dateFormat = "MMM D, YYYY hh:mm A") {
-        return moment(date).format(dateFormat);
+    getFormattedDate(date, dateFormat = "MMM DD, YYYY hh:mm A") {
+        return dayjs(date).format(dateFormat);
     }
 
     getFromDate(date) {
