@@ -18,6 +18,12 @@ import Button from "App/components/Button/Button";
 import actions from "./../CreateCustomer/store/actions";
 import NoResults from "./../Search/components/NoResults";
 import PageContent from "App/components/Container/PageContent";
+import { useConfirm } from "App/core/mui-confirm";
+
+import customerActions from "../../../../Private/pages/Customers/Documents/store/actions";
+
+import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
+
 import { CountryName, FormatDate, ReferenceName } from "App/helpers";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
@@ -187,6 +193,7 @@ function CustomerDetails(props) {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const confirm = useConfirm();
 
     const { response: customersData, loading: l_loading, success } = useSelector((state) => state.get_customer_byid);
 
@@ -202,6 +209,15 @@ function CustomerDetails(props) {
             dispatch({ type: "UPDATE_KYC_RESET" });
         }
     }, [dispatch, id, update_success]);
+
+    const handleKycReset = () => {
+        confirm({
+            description: "Are You Sure You Want To Reset KYC?",
+            confirmationText: "Yes",
+        }).then(() => {
+            dispatch(customerActions.reset_kyc_verification(id));
+        });
+    };
 
     if (l_loading && !success) {
         return (
@@ -457,6 +473,8 @@ function CustomerDetails(props) {
                             Account
                         </Button>
                         <Button onClick={() => navigate(`/customer/banks/${id}`)}>Banks</Button>
+
+                        <Button onClick={handleKycReset}>Reset Kyc Verification</Button>
                     </Box>
                 </Grid>
             </Grid>
