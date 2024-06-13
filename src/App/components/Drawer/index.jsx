@@ -173,6 +173,7 @@ const Content = styled(Box, {
 })(({ isDrawerOpen }) => ({
     position: "relative",
     margin: '56px 24px 56px 24px',
+    width: '100%',
     maxWidth: `calc(100vw - ${isDrawerOpen ? drawerOpenWidth : drawerClosedWidth}px)`,
     overflowY: "auto",
 }));
