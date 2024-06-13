@@ -17,16 +17,15 @@ import LogoutIcon from "../Icon/LogoutIcon";
 import MyAccountIcon from "../Icon/MyAccountIcon";
 import ChangePasswordIcon from "../Icon/ChangePasswordIcon";
 
+import Greeting from "./Greeting";
 import isEmpty from "App/helpers/isEmpty";
 import { AuthContext } from "../../auth";
 import { useConfirm } from "App/core/mui-confirm";
-import getGreeting from "App/helpers/getGreeting";
-import Greeting from "./Greeting";
 
 const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     minHeight: "56px",
     paddingLeft: "16px",
-    paddingRight: "8px",
+    paddingRight: "24px",
     [theme.breakpoints.down("sm")]: {
         paddingRight: "16px",
     },
