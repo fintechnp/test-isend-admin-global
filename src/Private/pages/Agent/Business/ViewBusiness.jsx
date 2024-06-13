@@ -9,7 +9,7 @@ import PageContent from "App/components/Container/PageContent";
 import BusinessTab from "Private/components/Business/BusinessTabs";
 import BusinessKycListing from "Private/components/Business/BusinessKycListing";
 import BusinessKybListing from "Private/components/Business/BusinessKybListing";
-import { TitleWrapper, Title, RenderField } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { TitleWrapper, Title, RenderField } from "App/components/Container";
 
 import { businessActions } from "./store";
 

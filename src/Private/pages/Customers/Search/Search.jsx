@@ -32,7 +32,7 @@ import { ReferenceName } from "App/helpers";
 import routePaths from "Private/config/routePaths";
 import calculateAge from "App/helpers/calculateAge";
 import { permissions } from "Private/data/permissions";
-import getCustomerName from "App/helpers/getCustomerName";
+import { getCustomerName } from "App/helpers/getFullName";
 import referenceTypeId from "Private/config/referenceTypeId";
 
 const initialState = {
@@ -365,10 +365,7 @@ function Search() {
             }
             breadcrumbs={[
                 {
-                    label: "Dashboard",
-                },
-                {
-                    label: "Customer",
+                    label: "Customers",
                 },
             ]}
         >
@@ -382,6 +379,7 @@ function Search() {
                     values={filterSchema}
                     onDelete={onDelete}
                     schema={schema}
+                    title="Search Customers"
                 />
                 <PageContentContainer
                     title="Customers"

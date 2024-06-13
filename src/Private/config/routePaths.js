@@ -108,6 +108,21 @@ const routePaths = {
     dashboard: {
         base: "/",
     },
+
+    Dashboard: "/",
+
+    ListCustomer: "/customer/search",
+    CreateCustomer: "/customer/create",
+    ViewCustomer: "/customer/details/:id",
+    EditCustomer: "/customer/update/:id",
+    ListCustomerBeneficiary: "/customer/all-beneficiary/:id",
+    ListCustomerRemark: "/customer/remarks/:id",
+    ListCustomerTransaction: "/customer/all-transactions/:id",
+    ListCustomerDocument: "/customer/documents/:id",
+    ListCustomerBank: "/customer/banks/:id",
+    CreateCustomerBeneficiary: "/customer/beneficiary/add/:id",
+    ViewCustomerBeneficiary: "/customer/beneficiary/details/:id/:bene_id",
+    EditCustomerBeneficiary: "/customer/beneficiary/update/:id/:bene_id",
 };
 
 export default routePaths;

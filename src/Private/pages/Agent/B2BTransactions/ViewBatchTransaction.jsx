@@ -11,7 +11,7 @@ import { Loading } from "App/components";
 import { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { TitleWrapper, Title, RenderField } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { TitleWrapper, Title, RenderField } from "App/components/Container";
 
 import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";

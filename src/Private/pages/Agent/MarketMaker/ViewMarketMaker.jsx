@@ -9,7 +9,7 @@ import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerKybListing from "Private/components/MarketMaker/MarketMakerKybListing";
 import MarketMakerKycListing from "Private/components/MarketMaker/MarketMakerKycListing";
-import { RenderField, Title, TitleWrapper } from "../../Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import Tabs from "App/components/Tab/Tabs";
 import buildRoute from "App/helpers/buildRoute";

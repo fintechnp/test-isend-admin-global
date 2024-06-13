@@ -11,6 +11,7 @@ import { Link as RouterLink } from "react-router-dom";
 import app from "App/config/app";
 import Row from "../Row/Row";
 import Column from "../Column/Column";
+import routePaths from "Private/config/routePaths";
 
 const TitleContainer = styled("div")(({ theme }) => ({
     display: "flex",
@@ -54,7 +55,7 @@ const Breadcrumbs = styled(MuiBreadcrumbs)(({ theme }) => ({
         },
     },
     "& li:last-of-type": {
-        color: "red",
+        color: theme.palette.text.primary,
         p: {
             color: theme.palette.text.primary,
         },
@@ -83,13 +84,13 @@ export default function PageContent(props) {
             {!disableBreadcrumb && breadcrumbs.length > 0 && (
                 <Row sx={{ mb: "16px" }} alignItems="center" justifyContent="space-between">
                     <Breadcrumbs separator="/" aria-label="breadcrumb">
-                        {breadcrumbs.map((breadcrumb, index) => {
+                        <Link component={RouterLink} underline="hover" color="inherit" to={routePaths.Dashboard}>
+                            Dashboard
+                        </Link>
+                        {breadcrumbs.map((breadcrumb) => {
                             if (isEmpty(breadcrumb?.link)) {
                                 return (
-                                    <Typography
-                                        key={breadcrumb.label}
-                                        color="text.primary"
-                                    >
+                                    <Typography key={breadcrumb.label} color="text.primary">
                                         {breadcrumb.label}
                                     </Typography>
                                 );

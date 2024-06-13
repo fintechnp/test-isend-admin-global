@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { RangeType } from "App/data/RangeType";
 
-
 class dateUtils {
     today() {
         return new Date().toISOString().slice(0, 10);
@@ -17,11 +16,11 @@ class dateUtils {
     }
 
     getFromDate(date) {
-        return dayjs(date).startOf('day')
+        return dayjs(date).startOf("day");
     }
 
     getToDate(date) {
-        return dayjs(date).endOf('day')
+        return dayjs(date).endOf("day");
     }
 
     getDateRange(period) {
@@ -138,6 +137,10 @@ class dateUtils {
             startDate,
             endDate,
         };
+    }
+
+    getDate(date) {
+        return date?.startsWith("0001-01-01") ? null : date?.substring(0, 10);
     }
 }
 

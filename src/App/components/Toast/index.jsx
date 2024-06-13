@@ -4,6 +4,7 @@ const showToast = (data) => {
     if (data) {
         switch (data?.code) {
             case 200:
+            case "success":
                 return toast.success(data.message, {
                     position: "top-right",
                     style: {
@@ -17,6 +18,7 @@ const showToast = (data) => {
                     },
                 });
             case 400:
+            case "error":
                 return toast.error(data.message, {
                     position: "top-right",
                 });

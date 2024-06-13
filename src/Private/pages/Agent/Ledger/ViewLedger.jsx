@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "App/components";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { ledgerActions as actions } from "./store";
 

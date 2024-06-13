@@ -1,200 +1,67 @@
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Badge from "@mui/material/Badge";
-import React, { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
+import React, { useEffect } from "react";
 import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
 import { useParams, useNavigate } from "react-router-dom";
-import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import BusinessRoundedIcon from "@mui/icons-material/BusinessRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 
 import UpdateKyc from "./UpdateKyc";
-import isEmpty from "App/helpers/isEmpty";
-import Button from "App/components/Button/Button";
+import Row from "App/components/Row/Row";
+import Button from "@mui/material/Button";
+import Paper from "App/components/Paper/Paper";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "App/components/Tooltip/Tooltip";
 import actions from "./../CreateCustomer/store/actions";
-import NoResults from "./../Search/components/NoResults";
+import Clipboard from "App/components/Clipboard/Clipboard";
+import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
 import PageContent from "App/components/Container/PageContent";
-import { useConfirm } from "App/core/mui-confirm";
-
-import customerActions from "../../../../Private/pages/Customers/Documents/store/actions";
-
+import PopoverButton from "App/components/Button/PopoverButton";
+import KycStatusBadge from "../Search/components/KycStatusBadge";
+import RecentlyAddedBeneficiaries from "./RecentlyAddedBeneficiaries";
+import CustomerStatusBadge from "../Search/components/CustomerStatusBadge";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { CountryName, FormatDate, ReferenceName } from "App/helpers";
+import { ReferenceName } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
+import buildRoute from "App/helpers/buildRoute";
+import getFlagUrl from "App/helpers/getFlagUrl";
+import { useConfirm } from "App/core/mui-confirm";
+import Column from "App/components/Column/Column";
+import routePaths from "Private/config/routePaths";
+import { customerType } from "Private/data/customerType";
+import { getCustomerName } from "App/helpers/getFullName";
+import referenceTypeId from "Private/config/referenceTypeId";
+import SourceDetails from "App/core/source-detail/SourceDetails";
+import useSourceDetail from "App/core/source-detail/useSourceDetail";
+import customerActions from "Private/pages/Customers/Documents/store/actions";
 
-const Header = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    lineHeight: 1.5,
-    fontSize: "20px",
-    fontWeight: 600,
-    padding: "4px 0px",
-    color: theme.palette.primary.dark,
-}));
-
-const NameBox = styled(Box)(({ theme }) => ({
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-}));
-
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
-    width: 18,
-    height: 18,
-    border: `1px solid ${theme.palette.primary.contrastText}`,
-}));
-
-const NameField = styled(Box)(({ theme }) => ({
-    flexGrow: 1,
-}));
-
-const BottomButton = styled(Button)(({ theme }) => ({
-    minWidth: "120px",
-    padding: "4px 10px",
-    textTransform: "capitalize",
-}));
-
-export const TitleWrapper = styled(Box)(({ theme }) => ({
-    width: "100%",
-    paddingBottom: "2px",
-    paddingTop: "8px",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-}));
-
-export const Title = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    paddingRight: 2,
-    lineHeight: 1.4,
-    fontSize: "16px",
-    fontWeight: 600,
-    color: theme.palette.primary.dark,
-}));
-
-const Label = styled(Typography)(({ theme }) => ({
-    paddingRight: "3px",
-    lineHeight: 1.5,
-    fontSize: "15px",
-    fontWeight: 500,
-}));
-
-const Value = styled(Typography)(({ value }) => ({
-    opacity: 0.8,
-    lineHeight: 1.5,
-    fontSize: "15px",
-    fontWeight: 400,
-    // textTransform: value === "Email Address" ? "lowercase" : "capitalize",
-}));
-
-const InfoWrapper = styled(Box)(({ theme }) => ({
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-}));
-
-const LabelWrapper = styled(Box)(({ theme }) => ({
-    opacitLy: 0.9,
-    minWidth: "40%",
-    fontSize: "15px",
-    wordBreak: "break-all",
-    color: theme.palette.text.dark,
-}));
-
-const ValueWrapper = styled(Box)(({ theme }) => ({
-    opacitLy: 0.8,
-    fontSize: "15px",
-    wordBreak: "break-all",
-    color: theme.palette.text.main,
-}));
-
-export const Fetching = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.main,
-    fontSize: "16px",
-    fontWeight: 400,
-}));
-
-function stringToColor(string = "Avatar") {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-        const value = (hash >> (i * 8)) & 0xff;
-        color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-
-    return color;
-}
-
-function stringAvatar(first = "Customer", last) {
-    return {
-        sx: {
-            bgcolor: stringToColor(first),
-            height: "50px",
-            width: "50px",
-            textTransform: "uppercase",
+const CustomerTypeContainer = styled("div")(({ theme }) => ({
+    "& .MuiIconButton-root": {
+        backgroundColor: theme.palette.surface.primarySecond,
+        "&:hover": {
+            backgroundColor: theme.palette.surface.primarySecond,
         },
-        children: `${first.split(" ")[0][0]}${last ? last.split(" ")[0][0] : ""}`,
-    };
-}
+        "& .MuiSvgIcon-root": {
+            color: theme.palette.primary.main,
+        },
+    },
+}));
 
-export const RenderField = ({ label, value }) => {
-    return (
-        <Box
-            sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-            }}
-        >
-            <Box sx={{ width: "40%" }}>
-                <Label>{label}:</Label>
-            </Box>
-            <Box sx={{ width: "60%" }}>
-                <Value value={label}>{value ? value : "N/A"}</Value>
-            </Box>
-        </Box>
-    );
-};
-
-export const RenderTopField = ({ label, value }) => {
-    return (
-        <Box
-            sx={{
-                marginLeft: 1,
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-            }}
-        >
-            <Box sx={{ minWidth: "15%" }}>
-                <Label sx={{ fontWeight: 600, opacity: 0.8, lineHeight: 1.4 }}>{label}:</Label>
-            </Box>
-            <Box sx={{ flexGrow: 1 }}>
-                <Value>{value ? value : "N/A"}</Value>
-            </Box>
-        </Box>
-    );
-};
-
-function CustomerDetails(props) {
+function CustomerDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const confirm = useConfirm();
 
-    const { response: customersData, loading: l_loading, success } = useSelector((state) => state.get_customer_byid);
+    const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_byid);
+
+    const data = customersData?.data;
 
     const { success: update_success } = useSelector((state) => state.update_kyc);
 
@@ -211,272 +78,257 @@ function CustomerDetails(props) {
 
     const handleKycReset = () => {
         confirm({
-            description: "Are You Sure You Want To Reset KYC?",
+            description: "This action will a reset a KYC verification attempt limit for this customer?",
             confirmationText: "Yes",
         }).then(() => {
             dispatch(customerActions.reset_kyc_verification(id));
         });
     };
 
-    if (l_loading && !success) {
-        return (
-            <PageContent title="Customer Details">
-                <Box sx={{ display: "flex", justifyContent: "center", pt: 2 }}>
-                    <Fetching>Fetching...</Fetching>
-                </Box>
-            </PageContent>
-        );
-    } else if (
-        customersData?.data === undefined ||
-        customersData?.data === null ||
-        (customersData?.data != null && customersData?.data.length == 0)
-    ) {
-        return (
-            <PageContent title="Customer Details">
-                <Grid container rowGap={1}>
-                    <Grid item xs={12}>
-                        <NoResults text="Invalid Customer Id" />
-                    </Grid>
-                </Grid>
-            </PageContent>
-        );
-    }
+    const definition = useSourceDetail([
+        {
+            title: "Address Details",
+            items: [
+                {
+                    label: "Country",
+                    accessorKey: "country_data",
+                },
+                {
+                    label: "Postal Code",
+                    accessorKey: "postcode",
+                },
+                {
+                    label: "City",
+                    accessorKey: "city",
+                },
+                {
+                    label: "Unit",
+                    accessorKey: "unit",
+                },
+                {
+                    label: "Street ",
+                    accessorKey: "street",
+                },
+                {
+                    label: "Street Type",
+                    accessorKey: "street_type_data",
+                },
+                {
+                    label: "State",
+                    accessorKey: "state_data",
+                },
+                {
+                    label: "Birth Country",
+                    accessorKey: "birth_country_data",
+                },
+                {
+                    label: "Nationality",
+                    accessorKey: "citizenship_country_data",
+                },
+            ],
+        },
+        {
+            title: "Document Details",
+            items: [
+                {
+                    label: "Document Type",
+                    accessorKey: "id_type",
+                },
+                {
+                    label: "Document Number",
+                    accessorKey: "id_number",
+                },
+                {
+                    label: "Issued Country",
+                    accessorKey: "id_issued_country_data",
+                },
+                {
+                    label: "Issued Date",
+                    cell: (data) => (data?.id_issue_date ? dateUtils.getDate(data?.id_issue_date) : "-"),
+                },
+                {
+                    label: "Expiry Date",
+                    cell: (data) => (data?.id_expiry_date ? dateUtils.getDate(data?.id_expiry_date) : "-"),
+                },
+            ],
+        },
+        {
+            title: "Other Details",
+            items: [
+                {
+                    label: "Occupation",
+                    accessorKey: "occupation_data",
+                },
+                {
+                    label: "Source of Income",
+                    accessorKey: "source_of_income_data",
+                },
+                {
+                    label: "Finicity Customer ID",
+                    accessorKey: "finicity_customer_id",
+                },
+                {
+                    label: "SSN Number",
+                    accessorKey: "ssn_number",
+                },
+                {
+                    label: "Registered Agent Id",
+                    accessorKey: "register_agent_id",
+                },
+                {
+                    label: "Registered Agent",
+                    accessorKey: "register_agent_name",
+                },
+                {
+                    label: "Account Status",
+                    cell: (data) => <CustomerStatusBadge status={data?.is_active ? "active" : "blocked"} />,
+                },
+            ],
+        },
+    ]);
 
     return (
-        <PageContent title="Customer Details">
-            <Grid container rowSpacing={1}>
-                <Grid item xs={12}>
-                    <NameBox>
-                        <Box sx={{ p: 1.5 }}>
-                            <Badge
-                                overlap="circular"
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                badgeContent={
-                                    <SmallAvatar
-                                        alt="flag iso3"
-                                        src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${
-                                            customersData?.data?.country_iso2 || "US"
-                                        }.svg`}
+        <PageContent
+            documentTitle="Customer Details"
+            breadcrumbs={[
+                {
+                    label: "Customers",
+                    link: routePaths.ListCustomer,
+                },
+                {
+                    label: "View",
+                },
+            ]}
+        >
+            <Paper sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <Row gap="12px">
+                    <BadgeAvatar
+                        avatarUrl={data?.profile_picture}
+                        altAvatarText={getCustomerName(data)}
+                        smallAvatarUrl={getFlagUrl(data?.country_iso2)}
+                        enableSkeleton={isLoading}
+                    />
+                    <Column>
+                        {isLoading ? (
+                            <>
+                                <Skeleton width="250px" height="24px" />
+                                <Skeleton width="150px" />
+                                <Skeleton width="130px" />
+                                <Skeleton width="100px" />
+                            </>
+                        ) : (
+                            <>
+                                <Row alignItems="center" gap="4px">
+                                    <Row alignItems="center">
+                                        <Typography variant="subtitle0">{getCustomerName(data)} (</Typography>
+                                        <Clipboard
+                                            content={data?.customer_id}
+                                            label={<Typography variant="subtitle0">{data?.customer_id}</Typography>}
+                                        />
+                                        <Typography variant="subtitle0">)</Typography>
+                                    </Row>
+                                    <CustomerTypeContainer>
+                                        <Tooltip title={data?.customer_type_data} placement="top" arrow>
+                                            <IconButton size="small">
+                                                {(() => {
+                                                    if (customerType.isIndividual(data?.customer_type)) {
+                                                        return <PersonRoundedIcon />;
+                                                    }
+                                                    if (customerType.isOrganization(data?.customer_type)) {
+                                                        return <BusinessRoundedIcon />;
+                                                    }
+                                                })()}
+                                            </IconButton>
+                                        </Tooltip>
+                                    </CustomerTypeContainer>
+                                    <KycStatusBadge
+                                        status={data?.kyc_status}
+                                        label={
+                                            data?.kyc_status
+                                                ? ReferenceName(referenceTypeId.kycStatuses, data?.kyc_status)
+                                                : ""
+                                        }
                                     />
-                                }
-                            >
-                                <Avatar
-                                    {...stringAvatar(
-                                        customersData?.data?.first_name ?? "Customer",
-                                        customersData?.data?.last_name ?? "",
-                                    )}
-                                />
-                            </Badge>
-                        </Box>
-                        <NameField marginLeft={1}>
-                            <RenderTopField
-                                label="Name"
-                                value={[
-                                    customersData?.data?.first_name,
-                                    customersData?.data?.middle_name,
-                                    customersData?.data?.last_name,
-                                ]
-                                    .filter((v) => !isEmpty(v))
-                                    .join(" ")}
-                            />
+                                </Row>
+                                <Tooltip></Tooltip>
+                                <Typography variant="body1" color="text.secondary">
+                                    {data?.date_of_birth?.substring(0, 10)} / {data?.gender}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    {data?.email}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    +{data?.phone_country_code} - {data?.phone_number}
+                                </Typography>
+                            </>
+                        )}
+                    </Column>
+                    <PopoverButton variant="button" disabled={isLoading}>
+                        {({ onClose }) => (
+                            <>
+                                <ListItemButton
+                                    onClick={() => navigate(buildRoute(routePaths.ListCustomerTransaction, id))}
+                                >
+                                    Transactions
+                                </ListItemButton>
+                                <ListItemButton
+                                    onClick={() => navigate(buildRoute(routePaths.ListCustomerDocument, id))}
+                                >
+                                    Documents
+                                </ListItemButton>
+                                <ListItemButton
+                                    onClick={() => {
+                                        dispatch({
+                                            type: "OPEN_UPDATE_CUSTOMER_ACCOUNT_MODAL",
+                                            customer_id: id,
+                                            initial_form_state: {
+                                                country: customersData?.data?.country,
+                                                phone_country_code: customersData?.data?.phone_country_code,
+                                                mobile_number: customersData?.data?.mobile_number,
+                                                email: customersData?.data?.email,
+                                            },
+                                        });
+                                        onClose();
+                                    }}
+                                >
+                                    Edit Account
+                                </ListItemButton>
+                                <UpdateKyc onClose={onClose} />
+                                <ListItemButton onClick={() => navigate(buildRoute(routePaths.ListCustomerBank, id))}>
+                                    Banks
+                                </ListItemButton>
+                                <ListItemButton
+                                    onClick={() => navigate(buildRoute(routePaths.ListCustomerBeneficiary, id))}
+                                >
+                                    Beneficiaries
+                                </ListItemButton>
+                                <ListItemButton onClick={() => navigate(buildRoute(routePaths.ListCustomerRemark, id))}>
+                                    Remarks
+                                </ListItemButton>
+                                <ListItemButton onClick={handleKycReset}> Reset KYC Limit</ListItemButton>
+                            </>
+                        )}
+                    </PopoverButton>
+                </Row>
+                <Divider />
+                <SourceDetails definition={definition} data={data} isLoading={isLoading} />
+            </Paper>
 
-                            <RenderTopField label="Customer Id" value={customersData?.data?.customer_id} />
-                        </NameField>
-                    </NameBox>
-                </Grid>
-                <Grid item xs={12}>
-                    <TitleWrapper>
-                        <Title>Basic Information</Title>
-                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                    </TitleWrapper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Firstname" value={customersData?.data?.first_name} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Mid-name" value={customersData?.data?.middle_name} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Lastname" value={customersData?.data?.last_name} />
-                </Grid>{" "}
-                <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Gender"
-                        value={customersData?.data?.gender ? ReferenceName(42, customersData?.data?.gender) : ""}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Mobile Number" value={customersData?.data?.mobile_number} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Phone Number" value={customersData?.data?.phone_number} />
-                </Grid>
-                <Grid item xs={12}>
-                    <TitleWrapper>
-                        <Title>Identity Information</Title>
-                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                    </TitleWrapper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Id Type" value={customersData?.data?.id_type} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Id Number" value={customersData?.data?.id_number} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Phone Country Code" value={customersData?.data?.phone_country_code} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="SSN Number" value={customersData?.data?.ssn_number} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Finicity Customer ID" value={customersData?.data?.finicity_customer_id} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Id Issued State" value={customersData?.data?.id_issued_state} />
-                </Grid>{" "}
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Id Issued Country" value={customersData?.data?.id_issued_country_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Id Issued Date" value={FormatDate(customersData?.data?.id_issue_date)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Id Expiry Date" value={FormatDate(customersData?.data?.id_expiry_date)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="KYC Status"
-                        value={
-                            customersData?.data?.kyc_status ? ReferenceName(21, customersData?.data?.kyc_status) : ""
-                        }
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TitleWrapper>
-                        <Title>Other Details</Title>
-                        <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                    </TitleWrapper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField
-                        label="Customer Type"
-                        value={
-                            customersData?.data?.customer_type
-                                ? ReferenceName(37, customersData?.data?.customer_type)
-                                : ""
-                        }
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Email Address" value={customersData?.data?.email} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Title" value={customersData?.data?.title} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Post Code" value={customersData?.data?.postcode} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Address" value={customersData?.data?.address} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Country" value={customersData?.data?.country_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="City" value={customersData?.data?.city} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Unit" value={customersData?.data?.unit} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Street" value={customersData?.data?.street} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Street Type" value={customersData?.data?.street_type} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Street No" value={customersData?.data?.street_no} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="State" value={customersData?.data?.state} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="State Data" value={customersData?.data?.state_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Citizenship Country" value={customersData?.data?.citizenship_country} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Nationality" value={customersData?.data?.citizenship_country_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Date of Birth" value={customersData?.data?.date_of_birth?.substring(0, 10)} />
-                </Grid>{" "}
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Birth Country" value={CountryName(customersData?.data?.birth_country)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Occupation" value={customersData?.data?.occupation_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Source Of Income " value={customersData?.data?.source_of_income_data} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Register Agent ID" value={customersData?.data?.register_agent_id} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <RenderField label="Register Agent" value={customersData?.data?.register_agent_name} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <InfoWrapper>
-                        <LabelWrapper>Status:</LabelWrapper>
-                        <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                            {customersData?.data?.is_active ? (
-                                <Tooltip title="Active Customer" arrow>
-                                    <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Inactive Customer." arrow>
-                                    <DoNotDisturbOnIcon fontSize="small" sx={{ color: "warning.main" }} />
-                                </Tooltip>
-                            )}
-                        </ValueWrapper>
-                    </InfoWrapper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Box display="flex" gap={2}>
-                        <Button onClick={() => navigate(`/customer/all-beneficiary/${id}`)}>Beneficiaries</Button>
-                        <Button onClick={() => navigate(`/customer/remarks/${id}`)}>Remarks</Button>
-                        <Button onClick={() => navigate(`/customer/all-transactions/${id}`)}>Transactions</Button>
-                        <Button onClick={() => navigate(`/customer/documents/${id}`)}>Documents</Button>
-                        <UpdateKyc />
-                        <UpdateCustomerAccountModal />
-                        <Button
-                            onClick={() =>
-                                dispatch({
-                                    type: "OPEN_UPDATE_CUSTOMER_ACCOUNT_MODAL",
-                                    customer_id: id,
-                                    initial_form_state: {
-                                        country: customersData?.data?.country,
-                                        phone_country_code: customersData?.data?.phone_country_code,
-                                        mobile_number: customersData?.data?.mobile_number,
-                                        email: customersData?.data?.email,
-                                    },
-                                })
-                            }
-                        >
-                            Account
-                        </Button>
-                        <Button onClick={() => navigate(`/customer/banks/${id}`)}>Banks</Button>
-
-                        <Button onClick={handleKycReset}>Reset Kyc Verification</Button>
-                    </Box>
-                </Grid>
-            </Grid>
+            <PageContentContainer
+                title="Beneficiaries"
+                topRightContent={
+                    <Button
+                        onClick={() => navigate(buildRoute(routePaths.ListCustomerBeneficiary, id))}
+                        endIcon={<ArrowForwardRoundedIcon />}
+                        disabled={isLoading}
+                    >
+                        View all
+                    </Button>
+                }
+            >
+                <RecentlyAddedBeneficiaries />
+            </PageContentContainer>
+            <UpdateCustomerAccountModal />
         </PageContent>
     );
 }

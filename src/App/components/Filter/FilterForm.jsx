@@ -54,7 +54,7 @@ export default function FilterForm({
     onDelete,
     fields = [],
     values,
-    onClearAll,
+    title,
     schema,
 }) {
     const methods = useForm({
@@ -134,7 +134,7 @@ export default function FilterForm({
                             <Grid container spacing="16px">
                                 <Grid item xs={12}>
                                     <Row alignItems="center" justifyContent="space-between">
-                                        <Typography variant="h6">Search Customers</Typography>
+                                        <Typography variant="h6">{title}</Typography>
                                         <Button endIcon={<CachedRoundedIcon />} onClick={handleOnReset}>
                                             Reset
                                         </Button>
@@ -179,4 +179,5 @@ FilterForm.propTypes = {
     values: PropTypes.any,
     onDelete: PropTypes.func,
     schema: PropTypes.any,
+    title: PropTypes.string
 };

@@ -12,7 +12,7 @@ import Button from "App/components/Button/Button";
 import { convertDate } from "App/utils/convertDate";
 import PageContent from "App/components/Container/PageContent";
 import UpdateKycUserStatusForm from "Private/components/KycUser/UpdateKycUserStatusForm";
-import { RenderField, Title, TitleWrapper } from "../../Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { KycUserActions } from "./store";
 

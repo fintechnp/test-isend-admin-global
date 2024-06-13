@@ -9,7 +9,7 @@ import Modal from "App/components/Modal/Modal";
 import StatusBadge from "./components/StatusBadge";
 import Button from "App/components/Button/Button";
 import PageContent from "App/components/Container/PageContent";
-import { Fetching, RenderField, Title, TitleWrapper } from "../CustomerDetails/CustomerDetails";
+import { Fetching, RenderField, Title, TitleWrapper } from "App/components/Container";
 import CustomerDeleteApproveRejectModalForm from "Private/components/customers/CustomerDeleteApproveRejectModalForm";
 
 import { customerDeleteActions } from "./store";

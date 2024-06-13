@@ -13,7 +13,7 @@ import { AddButton } from "../AllButtons/Buttons";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { businessActions } from "Private/pages/Agent/Business/store";
 

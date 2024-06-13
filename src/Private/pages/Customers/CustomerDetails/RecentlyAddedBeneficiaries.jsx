@@ -1,73 +1,42 @@
 import Box from '@mui/material/Box'
-import Button from "@mui/material/Button";
+import React, { useEffect,useMemo } from "react";
 import Typography from "@mui/material/Typography";
-import React, { useEffect,  useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ListItemButton from "@mui/material/ListItemButton";
+import ListItemButton from '@mui/material/ListItemButton'
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Block } from "App/components";
 import Row from "App/components/Row/Row";
-import Column from "App/components/Column/Column";
-import PhoneIcon from "App/components/Icon/PhoneIcon";
-import { TablePagination } from "App/components/Table";
-import FilterForm from "App/components/Filter/FilterForm";
 import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
-import FilterButton from "App/components/Button/FilterButton";
-import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
-import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
-import PageContentContainer from "App/components/Container/PageContentContainer";
 import ActiveBlockedStatusBadge from "App/components/Badge/ActiveBlockedStatusBadge";
 
-import actions from "./store/actions";
 import {  ReferenceName } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
-import getFlagUrl from "App/helpers/getFlagUrl";
+import actions from "../Beneficiary/store/actions";
 import routePaths from "Private/config/routePaths";
-import { permissions } from "Private/data/permissions";
 import referenceTypeId from "Private/config/referenceTypeId";
 import useListFilterStore from "App/hooks/useListFilterStore";
-import { getBeneficiaryFullName } from "App/helpers/getFullName";
+import { getBeneficiaryFullName } from 'App/helpers/getFullName';
+import getFlagUrl from 'App/helpers/getFlagUrl';
+import PhoneIcon from 'App/components/Icon/PhoneIcon';
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 5,
     search: "",
     sort_by: "created_ts",
     order_by: "DESC",
 };
 
-const sortData = [
-    { key: "None", value: "" },
-    { key: "Name", value: "first_name" },
-    { key: "Country", value: "country" },
-    { key: "Payment Type", value: "payment_type" },
-];
 
-function Beneficiary() {
+function RecentlyAddedBeneficiaries() {
     const { id } = useParams();
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-
-    const methods = useListFilterStore({ initialState });
-
-    const {
-        isFilterOpen,
-        closeFilter,
-        openFilter,
-        filterSchema,
-        onDeleteFilterParams,
-        onFilterSubmit,
-        onPageChange,
-        onQuickFilter,
-        onRowsPerPageChange,
-        reset,
-    } = methods;
 
     const { response: customersData, loading: isLoading } = useSelector((state) => state.get_beneficiary_by_customer);
 
@@ -81,11 +50,11 @@ function Beneficiary() {
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(actions.get_beneficiary_by_customer(id, filterSchema));
+        dispatch(actions.get_beneficiary_by_customer(id, initialState));
         dispatch({ type: "BLOCK_UNBLOCK_BENEFICIARY_RESET" });
-    }, [dispatch, filterSchema, b_success]);
+    }, [dispatch, b_success]);
 
-
+    
     const columns = useMemo(
         () => [
             {
@@ -208,78 +177,7 @@ function Beneficiary() {
         );
     };
 
-    const filterFields = [
-        {
-            type: "textfield",
-            label: "Search",
-            name: "search",
-        },
-    ];
-
-    return (
-        <PageContent
-            documentTitle="Customer Beneficiaries"
-            breadcrumbs={[
-                {
-                    label: "Customers",
-                    link: routePaths.ListCustomer,
-                },
-                {
-                    label: id,
-                    link: buildRoute(routePaths.ViewCustomer, id),
-                },
-                {
-                    label: "Beneficiaries",
-                },
-            ]}
-            topRightEndContent={
-                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
-            }
-        >
-            <Column gap="16px">
-                <FilterForm
-                    title="Search Beneficiaries"
-                    open={isFilterOpen}
-                    onClose={closeFilter}
-                    onSubmit={onFilterSubmit}
-                    onReset={reset}
-                    fields={filterFields}
-                    values={filterSchema}
-                    onDelete={onDeleteFilterParams}
-                />
-                <PageContentContainer
-                    title="Beneficiaries"
-                    topRightContent={
-                        <>
-                            <TableGridQuickFilter
-                                onSortByChange={onQuickFilter}
-                                onOrderByChange={onQuickFilter}
-                                disabled={isLoading}
-                                sortByData={sortData}
-                                values={filterSchema}
-                            />
-                            <HasPermission permission={permissions.CREATE_CUSTOMER}>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => navigate(buildRoute(routePaths.CreateCustomerBeneficiary, id))}
-                                >
-                                    Create Beneficiary
-                                </Button>
-                            </HasPermission>
-                        </>
-                    }
-                >
-                    <TanstackReactTable columns={columns} data={customersData?.data ?? []} loading={isLoading} />
-                </PageContentContainer>
-
-                <TablePagination
-                    paginationData={customersData?.pagination}
-                    handleChangePage={onPageChange}
-                    handleChangeRowsPerPage={onRowsPerPageChange}
-                />
-            </Column>
-        </PageContent>
-    );
+    return <TanstackReactTable columns={columns} data={customersData?.data ?? []} loading={isLoading} />;
 }
 
-export default Beneficiary;
+export default RecentlyAddedBeneficiaries;

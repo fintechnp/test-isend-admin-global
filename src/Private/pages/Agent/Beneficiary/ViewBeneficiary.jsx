@@ -8,7 +8,7 @@ import { Loading } from "App/components";
 import { ReferenceName } from "App/helpers";
 import Spacer from "App/components/Spacer/Spacer";
 import PageContent from "App/components/Container/PageContent";
-import { RenderField, Title, TitleWrapper } from "../../Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { beneficiaryActions as actions } from "./store";
 

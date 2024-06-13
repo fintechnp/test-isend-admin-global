@@ -1,17 +1,18 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import { Box } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { useDispatch, useSelector } from "react-redux";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
+import DialogContent from "@mui/material/DialogContent";
 
 import KycUpdateForm from "./Form";
 import actions from "./../../Documents/store/actions";
@@ -33,7 +34,7 @@ const AddButton = styled(Button)(({ theme }) => ({
     minWidth: "120px",
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -94,7 +95,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function UpdateKyc() {
+function UpdateKyc({ onClose }) {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
@@ -113,6 +114,7 @@ function UpdateKyc() {
 
     const handleClose = () => {
         setOpen(false);
+        onClose?.();
     };
 
     const handleKycUpdate = (data) => {
@@ -120,10 +122,8 @@ function UpdateKyc() {
     };
 
     return (
-        <div>
-            <AddButton size="small" variant="outlined" onClick={handleClickOpen}>
-                Update Kyc
-            </AddButton>
+        <>
+            <ListItemButton onClick={handleClickOpen}>Update KYC</ListItemButton>
             <BootstrapDialog
                 onClose={handleClose}
                 TransitionComponent={Transition}
@@ -131,7 +131,7 @@ function UpdateKyc() {
                 open={open}
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    Update Kyc
+                    Update KYC
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <KycUpdateForm
@@ -142,7 +142,7 @@ function UpdateKyc() {
                     />
                 </DialogContent>
             </BootstrapDialog>
-        </div>
+        </>
     );
 }
 

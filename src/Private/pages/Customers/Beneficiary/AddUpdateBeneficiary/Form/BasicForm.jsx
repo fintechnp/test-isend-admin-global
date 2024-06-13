@@ -58,7 +58,6 @@ const NextButton = styled(Button)(({ theme }) => ({
 const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText, update, pcountry, phone_code }) => {
     const dispatch = useDispatch();
 
-
     const reference = JSON.parse(localStorage.getItem("reference"));
 
     const [filterSchema, setFilterSchema] = useState({
@@ -69,11 +68,11 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText, update
         order_by: "DESC",
     });
 
-    useEffect(() => {
-        if (phone_code) {
-            setCode(phone_code);
-        }
-    }, [phone_code]);
+    // useEffect(() => {
+    //     if (phone_code) {
+    //         setCode(phone_code);
+    //     }
+    // }, [phone_code]);
 
     useEffect(() => {
         if (pcountry) {
@@ -150,7 +149,6 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText, update
                                 validate={Validator.maxLength50}
                             />
                         </FieldWrapper>
-
                     </FormWrapper>
                 </Grid>
                 <Grid item>

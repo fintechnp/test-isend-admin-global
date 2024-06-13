@@ -1,10 +1,24 @@
 import * as React from "react";
+import PropTypes from "prop-types";
 import List from "@mui/material/List";
+import MuiButton from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
-export default function PopoverButton({ children }) {
+const Button = styled(MuiButton)(({ theme }) => ({
+    background: theme.palette.surface.primarySecond,
+    color: theme.palette.primary.main,
+    border: 0,
+    "&:hover": {
+        background: theme.palette.surface.primarySecond,
+    },
+}));
+
+export default function PopoverButton({ children, variant = "icon", ...rest }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -20,9 +34,19 @@ export default function PopoverButton({ children }) {
 
     return (
         <div>
-            <IconButton onClick={handleClick}>
-                <MoreHorizIcon />
-            </IconButton>
+            {variant === "icon" ? (
+                <IconButton onClick={handleClick} {...rest}>
+                    <MoreHorizIcon />
+                </IconButton>
+            ) : (
+                <Button
+                    onClick={handleClick}
+                    endIcon={open ? <KeyboardArrowUpRoundedIcon /> : <KeyboardArrowDownRoundedIcon />}
+                    {...rest}
+                >
+                    Actions
+                </Button>
+            )}
             <Popover
                 id={id}
                 open={open}
@@ -44,3 +68,7 @@ export default function PopoverButton({ children }) {
         </div>
     );
 }
+
+PopoverButton.propTypes = {
+    variant: PropTypes.oneOf(["icon", "button"]),
+};
