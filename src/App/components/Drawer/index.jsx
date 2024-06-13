@@ -118,6 +118,7 @@ const CustomizedDrawer = styled(MuiDrawer, {
     flexShrink: 0,
     whiteSpace: "nowrap",
     boxSizing: "border-box",
+    // border: "1px solid red",
     "& .MuiDrawer-paper": {
         ...(open
             ? openedMixin(theme)
@@ -129,7 +130,7 @@ const CustomizedDrawer = styled(MuiDrawer, {
               }),
         background: "transparent",
     },
-    width: open ? "264px" : "70px",
+    width: open ? drawerWidth : 80,
     "& .no-search-result__container": {
         display: "block !important",
     },
@@ -165,7 +166,17 @@ const Footer = styled(Box)(({ theme }) => ({
     flexGrow: 1,
     width: "fill-available",
     color: theme.palette.text.secondary,
-    zIndex: '9px'
+    zIndex: "9px",
+}));
+
+const Content = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "isDrawerOpen",
+})(({ isDrawerOpen }) => ({
+    flexGrow: 1,
+    p: 3,
+    position: "relative",
+    maxWidth: `calc(100vw - ${isDrawerOpen ? 300 : 64}px)`,
+    overflowY: "auto",
 }));
 
 function Drawer({ children }) {
@@ -316,20 +327,13 @@ function Drawer({ children }) {
                     })()}
                 </DrawerContainer>
             </CustomizedDrawer>
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    p: 3,
-                    position: "relative",
-                }}
-            >
+            <Content component="main">
                 <DrawerHeader />
                 <Box mb="30px">{children}</Box>
                 <Footer className="Footer-root">
                     <div dangerouslySetInnerHTML={{ __html: layoutUtils.getCopyrightText() }}></div>
                 </Footer>
-            </Box>
+            </Content>
         </Box>
     );
 }
