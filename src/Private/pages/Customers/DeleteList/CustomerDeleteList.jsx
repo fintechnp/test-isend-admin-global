@@ -146,7 +146,7 @@ export default function CustomerDeleteList() {
     };
 
     return (
-        <PageContent title="Account Delete Request">
+        <PageContent title="Account Closure Requests">
             <CustomerDeleteFilterForm
                 isProcessing={loading}
                 onSubmit={handleFilterSubmit}
