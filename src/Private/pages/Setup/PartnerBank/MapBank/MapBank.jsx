@@ -218,7 +218,7 @@ const MapBank = (props) => {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <MapContainer>
                 <Header title="Exchange Rate List" buttonText="Add Exchange Rate" />

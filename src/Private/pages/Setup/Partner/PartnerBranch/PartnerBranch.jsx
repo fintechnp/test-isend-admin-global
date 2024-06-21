@@ -366,7 +366,7 @@ const PartnerBranch = (props) => {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title={`Branch List of ${name}`}>

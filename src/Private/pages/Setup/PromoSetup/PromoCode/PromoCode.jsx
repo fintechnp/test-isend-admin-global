@@ -301,7 +301,7 @@ const PromoCode = (props) => {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title="Promo Code" id={id} name={name} loading={i_loading}>

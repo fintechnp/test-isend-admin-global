@@ -276,7 +276,7 @@ const Corridor = (props) => {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title={`Corridor List of ${name}`}>
