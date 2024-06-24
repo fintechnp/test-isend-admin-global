@@ -42,7 +42,7 @@ const routePaths = {
         deleteRequestDetails: "/customer/delete-request-details/:id",
     },
     agent: {
-        listMarketMaker: "/agent/market-maker",
+        listMarketMaker: "/agent/agents",
         addMarketMaker: "/agent/market-maker/add",
         viewMarketMaker: "/agent/market-maker/:marketMakerId/view",
         updateMarketMaker: "/agent/market-maker/:marketMakerId/update",
