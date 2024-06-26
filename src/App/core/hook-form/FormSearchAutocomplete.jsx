@@ -146,7 +146,7 @@ function FormSearchAutoComplete(props) {
             name={name}
             control={control}
             render={() => (
-                <FormControl fullWidth variant={variant} error={!!errors[name]} required={required}>
+                <FormControl fullWidth size={size} variant={variant} error={!!errors[name]} required={required}>
                     <InputLabel>{searchedText === "" && !selected ? label : ""}</InputLabel>
                     <Autocomplete
                         placeholder={label}

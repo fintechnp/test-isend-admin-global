@@ -100,7 +100,7 @@ function AddUpdateServiceCharge(props) {
         return (
             <>
                 <Helmet>
-                    <title>BNB Admin | {props.title}</title>
+                    <title>iSend | {props.title}</title>
                 </Helmet>
                 <Grid container>
                     <Grid item xs={12}>
@@ -135,7 +135,7 @@ function AddUpdateServiceCharge(props) {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <Grid container>
                 <Grid item xs={12}>

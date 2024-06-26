@@ -16,11 +16,11 @@ class dateUtils {
     }
 
     getFromDate(date) {
-        return dayjs(date).startOf("day");
+        return dayjs(date).startOf("day").toISOString();
     }
 
     getToDate(date) {
-        return dayjs(date).endOf("day");
+        return dayjs(date).endOf("day").toISOString();
     }
 
     getDateRange(period) {

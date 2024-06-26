@@ -253,6 +253,29 @@ const apiEndpoints = {
         zaiRefundLogs: "/zai/refund-log",
     },
 
+    // region: B2B - Business
+    UpdateBusiness: "/business/:businessId",
+    ChangeBusinessStatus: "/business/:businessId/status",
+    ToggleBusinessActiveStatus: "/business/:businessId/toggleactivestatus",
+
+    // region: B2B - Stakeholders
+    GetOrganizationStakeholders: "/kyb",
+    GetIndividualStakeholders: "/kyc",
+    AddOrganizationStakeholder: "/kyb",
+    UpdateOrganizationStakeholder: "/kyb/:kybId",
+    ChangeOrganizationStakeholderStatus: "/kyb/:kybId/status",
+    AddIndividualStakeholder: "/kyc",
+    UpdateIndividualStakeholder: "/kyc/:kycId",
+    ChangeIndividualStakeholderStatus: "/kyc/:kycId/status",
+    GetOrganizationStakeholderById: "/kyb/:kybId",
+    GetIndividualStakeholderById: "/kyc/:kycId",
+
+    // region B2B - Users
+    GetB2BUsers: "/users",
+    GetB2BUserKycById: "/kyc/:kycId",
+    ChangeB2BUserStatus: "/kyc/:kycId/status",
+
+    // region ACH Webhooks
     GetAchRdfiWebhooks: "/RDFITransactions",
     GetAchCirWebhooks: "/CIRTransactions",
     GetReturnWebhooks: "/ReturnTransactions",

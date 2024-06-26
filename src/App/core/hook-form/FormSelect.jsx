@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 
 function FormSelect(props) {
     const {
@@ -28,6 +28,7 @@ function FormSelect(props) {
         showChooseOption,
         chooseOptionLabel,
         error,
+        onChange,
         ...rest
     } = props;
 
@@ -42,12 +43,12 @@ function FormSelect(props) {
                     variant={variant}
                     fullWidth={fullWidth}
                     size={size}
-                    error={!!errors[name]}
+                    error={!!get(errors, name)}
                     required={required}
                 >
                     <InputLabel>{label}</InputLabel>
                     <Select
-                        error={!!errors[name]}
+                        error={!!get(errors, name)}
                         label={label}
                         variant={variant}
                         required={required}
@@ -71,7 +72,7 @@ function FormSelect(props) {
                                 </MenuItem>
                             ))}
                     </Select>
-                    <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
+                    <FormHelperText error={true}> {error ?? get(errors, name)?.message ?? ""}</FormHelperText>
                 </FormControl>
             )}
         />
@@ -104,6 +105,7 @@ FormSelect.propTypes = {
     chooseOptionLabel: PropTypes.string,
     error: PropTypes.string,
     variant: PropTypes.oneOf(["outlined", "standard", "filled"]),
+    onChange: PropTypes.func,
 };
 
 FormSelect.defaultProps = {

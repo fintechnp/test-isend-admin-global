@@ -1,29 +1,35 @@
 import { format } from "date-fns";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import Divider from "@mui/material/Divider";
-import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import ucwords from "App/helpers/ucwords";
+import Row from "App/components/Row/Row";
 import Center from "App/components/Center/Center";
-import routePaths from "Private/config/routePaths";
+import Column from "App/components/Column/Column";
 import UploadFile from "App/core/upload/uploadFile";
 import FormSelect from "App/core/hook-form/FormSelect";
-import { localStorageGet } from "App/helpers/localStorage";
 import FormTextField from "App/core/hook-form/FormTextField";
-import referenceTypeId from "Private/config/referenceTypeId";
+import SubmitButton from "App/components/Button/SubmitButton";
+import CancelButton from "App/components/Button/CancelButton";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
-import { AddButton, CancelButton } from "../AllButtons/Buttons";
+import FormPhoneNumber from "App/core/hook-form/FormPhoneNumber";
 import FormMultiSelect from "App/core/hook-form/FormMultiSelect";
 import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 import CircularProgress from "App/components/Loading/CircularProgress";
-
-import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import FormGroupContainer from "App/components/Container/FormGroupContainer";
 import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
+
+import isEmpty from "App/helpers/isEmpty";
+import ucwords from "App/helpers/ucwords";
+import routePaths from "Private/config/routePaths";
+import { localStorageGet } from "App/helpers/localStorage";
+import referenceTypeId from "Private/config/referenceTypeId";
+import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+import FormMobileNumber from "App/core/hook-form/FormMobileNumber";
 
 export default function MarketMakerForm({ isAddMode = true }) {
     const dispatch = useDispatch();
@@ -49,9 +55,11 @@ export default function MarketMakerForm({ isAddMode = true }) {
 
     const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_market_maker);
 
-    const { response: documentResponse, loading: documentLoading } = useSelector(
-        (state) => state.get_document_settings,
-    );
+    const {
+        response: documentResponse,
+        loading: documentLoading,
+        success: isGetDocumentSettingSuccess,
+    } = useSelector((state) => state.get_document_settings);
 
     const registeredCountyOptions =
         localStorageGet("sendCountry")?.map((item) => {
@@ -113,13 +121,27 @@ export default function MarketMakerForm({ isAddMode = true }) {
 
         const documentSettings = documentResponse?.data;
 
+        if (isAddMode && documentSettings?.length <= 0) {
+            setValue("documents", []);
+            return;
+        }
+
         documentSettings?.forEach((documentSetting) => {
-            append({
-                documentId: "",
-                documentName: documentSetting.documentName,
-                documentTypeId: documentSetting.requiredDocumentId,
-                isRequired: documentSetting.isRequired,
-            });
+            const index = documents.findIndex((d) => d.documentTypeId == documentSetting.requiredDocumentId);
+
+            if (index === -1) {
+                append({
+                    documentId: "",
+                    documentName: documentSetting.documentName,
+                    documentTypeId: documentSetting.requiredDocumentId,
+                    isRequired: documentSetting.isRequired,
+                });
+            } else {
+                update(index, {
+                    ...documents[index],
+                    isFieldRequired: documentSetting.isRequired,
+                });
+            }
         });
     }, [documentResponse]);
 
@@ -128,13 +150,12 @@ export default function MarketMakerForm({ isAddMode = true }) {
             const selectedCounty = countries?.find((item) => item?.country_id === registeredCountryId);
             setValue("currencyId", selectedCounty?.currency ?? "");
             setValue("countryId", registeredCountryId);
-            setValue("contactPersonExtension", selectedCounty?.phone_code ?? "");
         }
     }, [registeredCountryId]);
 
     useEffect(() => {
         if (success || updateSuccess) {
-            navigate(routePaths.agent.listMarketMaker);
+            navigate(routePaths.ListAgent);
         }
     }, [success, updateSuccess]);
 
@@ -170,23 +191,8 @@ export default function MarketMakerForm({ isAddMode = true }) {
     };
 
     return (
-        <>
-            <Box
-                sx={{
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Agent Details
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
+        <Column gap="16px">
+            <FormGroupContainer title="Agent Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="name" label="Name" />
@@ -242,170 +248,190 @@ export default function MarketMakerForm({ isAddMode = true }) {
                         />
                     </Grid>
                 </Grid>
-            </Box>
-            <Box
-                sx={{
-                    mt: 3,
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Address Details
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
+            </FormGroupContainer>
+            <FormGroupContainer title="Address Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormSelect name="countryId" label="Address Country" options={allowedCountries ?? []} />
+                        <FormSelect name="address.countryId" label="Address Country" options={allowedCountries ?? []} />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="postCode" label="PostCode" />
+                        <FormTextField name="address.state" label="State" />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="address.city" label="City" />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="address.postCode" label="PostCode" />
                     </Grid>
 
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="unit" label="Unit" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="state" label="State" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="street" label="Street" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="city" label="City" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="address" label="Address" />
-                    </Grid>
-                </Grid>
-            </Box>
-            <Box
-                sx={{
-                    mt: 3,
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Contact Person Details
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="contactPersonName" label="Name" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormSelect name="designationId" label="Designation" options={designationOptions ?? []} />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="contactPersonExtension" label="Phone Extension" />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="contactMobileNo" label="Mobile No" />
+                        <FormTextField name="address.unit" label="Unit" />
                     </Grid>
 
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="contactPhoneNo" label="Phone No" />
+                        <FormTextField name="address.street" label="Street" />
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="address.address" label="Address" />
                     </Grid>
                 </Grid>
-            </Box>
+            </FormGroupContainer>
+            <FormGroupContainer title="Contact Person Details">
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="contactPerson.name" label="Name" />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormSelect
+                            name="contactPerson.designationId"
+                            label="Designation"
+                            options={designationOptions ?? []}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormSelectCountry
+                            name="contactPerson.countryId"
+                            label="Country"
+                            valueKey="country_id"
+                            onSelected={(country) => {
+                                setValue("contactPerson.extension", country.phone_code);
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="contactPerson.email" label="Email" />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormPhoneNumber
+                            name="contactPerson.mobileNo"
+                            label="Mobile Number"
+                            dialingCodeName="contactPerson.extension"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormPhoneNumber
+                            name="contactPerson.phoneNo"
+                            label="Phone Number"
+                            dialingCodeName="contactPerson.extension"
+                        />
+                    </Grid>
+                </Grid>
+            </FormGroupContainer>
             {isAddMode && (
-                <Box
-                    sx={{
-                        mt: 3,
-                        px: 2,
-                        py: 1,
-                        border: "1px solid #ccc",
-                        borderRadius: "6px",
-                    }}
-                >
-                    <Typography fontSize={17} fontWeight={600}>
-                        Login Details
-                    </Typography>
-                    <Divider
-                        sx={{
-                            my: 2,
-                        }}
-                    />
+                <FormGroupContainer title="Login Details">
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={3}>
                             <FormTextField name="loginEmail" label="Email" />
                         </Grid>
                     </Grid>
-                </Box>
+                </FormGroupContainer>
             )}
 
-            <Box
-                sx={{
-                    mt: 3,
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Upload Documents
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
-
-                <Grid container spacing={3}>
-                    {documentLoading ? (
-                        <Center sx={{ width: "100%", py: 5 }}>
-                            <CircularProgress />
-                        </Center>
+            <FormGroupContainer title="Upload Documents">
+                <Grid container spacing={3} p="16px">
+                    {(() => {
+                        if (loading)
+                            return (
+                                <Grid item xs={12}>
+                                    <Center sx={{ width: "100%", py: 5 }}>
+                                        <CircularProgress />
+                                    </Center>
+                                </Grid>
+                            );
+                        else if (isEmpty(registeredCountryId))
+                            return (
+                                <Grid item xs={12}>
+                                    <Typography color="grey.700">Select Country of Registration</Typography>
+                                </Grid>
+                            );
+                        else if (isGetDocumentSettingSuccess && documents.length <= 0)
+                            return (
+                                <Grid item xs={12}>
+                                    <Row>
+                                        <Typography color="grey.700">
+                                            Document setting not found for selected country of registration. &nbsp;
+                                        </Typography>
+                                        <Link to="/">Click Here</Link> &nbsp;
+                                        <Typography color="grey.700"> to add document setting. </Typography>
+                                    </Row>{" "}
+                                </Grid>
+                            );
+                        else
+                            return (
+                                <>
+                                    {documents.map((document, i) => (
+                                        <Grid key={document.documentTypeId} item xs={12} md={6}>
+                                            <FormInputWrapper
+                                                label={document.documentName}
+                                                isOptional={!document.isRequired}
+                                                errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                            >
+                                                <UploadFile
+                                                    title={`Upload your ${document.documentName}`}
+                                                    supportedFileDescription="Supported file formats: PDF, JPG, PNG."
+                                                    allowedFileTypes={[
+                                                        "application/pdf",
+                                                        "image/jpeg",
+                                                        "image/png",
+                                                        "image/jpg",
+                                                    ]}
+                                                    onFileRemove={() => handleRemove(document)}
+                                                    onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
+                                                    error={!!errors?.documents?.[i]?.documentId?.message}
+                                                    onChange={(file) => handleChange(document, file)}
+                                                    file={document?.file ?? document?.documentLink}
+                                                    fileType={document?.fileType}
+                                                    documentName={document?.documentName}
+                                                />
+                                            </FormInputWrapper>
+                                        </Grid>
+                                    ))}
+                                </>
+                            );
+                    })()}
+                </Grid>
+                {/*                     )}
+                </Grid>
                     ) : (
                         <>
-                            {registeredCountryId &&
-                                documents.map((document, i) => (
-                                    <Grid key={i} item xs={12} md={6}>
-                                        <FormInputWrapper
-                                            label={document.documentName}
-                                            errorMessage={errors?.documents?.[i]?.documentId?.message}
-                                            isOptional={!document.isRequired}
+                        </>
+                        </Center>
+                                ))}
+                    {documentLoading ? (
                                         >
+                                    </Grid>
+                <Grid container spacing={3}>
+                                            />
+                            <CircularProgress />
+                                                ]}
+                                                }}
+                            {registeredCountryId &&
                                             <UploadFile
-                                                title={`Upload your ${document.documentName}`}
-                                                supportedFileDescription="Supported file formats: PDF, JPG, PNG."
-                                                allowedFileTypes={[
-                                                    "application/pdf",
-                                                    "image/jpeg",
+                                        <FormInputWrapper
+                                        </FormInputWrapper>
+                        <Center sx={{ width: "100%", py: 5 }}>
+                                documents.map((document, i) => (
                                                     "image/png",
                                                     "image/jpg",
-                                                ]}
-                                                onFileRemove={() => handleRemove(document)}
+                                                    "image/jpeg",
+                                                allowedFileTypes={[
+                                    <Grid key={i} item xs={12} md={6}>
+                                                    "application/pdf",
+                                            label={document.documentName}
                                                 onUploadSuccess={(id) => {
-                                                    handleFileUploadSuccess(document, id);
-                                                }}
-                                                error={!!errors?.documents?.[i]?.documentId?.message}
-                                                onChange={(file) => handleChange(document, file)}
-                                                file={document?.file ?? document?.documentLink}
+                                            isOptional={!document.isRequired}
                                                 fileType={document?.fileType}
                                                 documentName={document?.documentName}
-                                            />
-                                        </FormInputWrapper>
-                                    </Grid>
-                                ))}
-                        </>
-                    )}
-                </Grid>
-            </Box>
+                                                    handleFileUploadSuccess(document, id);
+                                                onFileRemove={() => handleRemove(document)}
+                                                title={`Upload your ${document.documentName}`}
+                                                file={document?.file ?? document?.documentLink}
+                                                onChange={(file) => handleChange(document, file)}
+                                                error={!!errors?.documents?.[i]?.documentId?.message}
+                                            errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                                supportedFileDescription="Supported file formats: PDF, JPG, PNG." */}
+            </FormGroupContainer>
             <Grid
                 container
                 direction="row"
@@ -415,22 +441,14 @@ export default function MarketMakerForm({ isAddMode = true }) {
                 style={{ padding: "4px 0px", paddingRight: "4px" }}
             >
                 <Grid item>
-                    <CancelButton onClick={() => navigate(-1)} size="small" variant="outlined" disabled={updating}>
+                    <CancelButton onClick={() => navigate(-1)} disabled={updating || loading}>
                         Cancel
                     </CancelButton>
                 </Grid>
                 <Grid item>
-                    <AddButton
-                        size="small"
-                        variant="outlined"
-                        type="submit"
-                        loading={updating || loading}
-                        disabled={updating || loading}
-                    >
-                        {isAddMode ? "Add" : "Update"}
-                    </AddButton>
+                    <SubmitButton isLoading={updating || loading} />
                 </Grid>
             </Grid>
-        </>
+        </Column>
     );
 }

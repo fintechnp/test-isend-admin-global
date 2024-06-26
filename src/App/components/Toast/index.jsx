@@ -26,6 +26,13 @@ const showToast = (data) => {
                 return toast.error(data.message, {
                     position: "top-right",
                 });
+            case 422:
+                const errors = Object.values(data.data);
+                const message = Object.values(errors)?.[0]?.[0];
+
+                return toast.error(message ?? data.message, {
+                    position: "top-right",
+                });
             case 500:
                 return toast.error(data.message, {
                     position: "top-right",

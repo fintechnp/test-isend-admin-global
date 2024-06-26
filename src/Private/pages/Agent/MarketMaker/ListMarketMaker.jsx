@@ -1,43 +1,53 @@
-import Grid from "@mui/material/Grid";
-import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router";
+import { useEffect, useMemo } from "react";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import ListItemButton from "@mui/material/ListItemButton";
 
 import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
-import Spacer from "App/components/Spacer/Spacer";
 import { TablePagination } from "App/components/Table";
-import { CountryNameById, CurrencyName } from "App/helpers";
+import FilterForm from "App/components/Filter/FilterForm";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import LoadingBackdrop from "App/components/Loading/LoadingBackdrop";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
-import MarketMakerFilterForm from "Private/components/MarketMaker/MarketMakerFilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import routePaths from "Private/config/routePaths";
+import { CountryNameById, CurrencyName } from "App/helpers";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import { MarketMakerActions as marketMakerActions } from "./store/index";
+import MarketMakerStatusBadge from "./components/MarketMakerStatusBade";
 
 const initialState = {
     Page: 1,
     PageSize: 10,
 };
 
-export default function ListMarketMaker({ title }) {
+export default function ListMarketMaker() {
     const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
-    const [filterSchema, setFilterSchema] = useState(initialState);
-
     const {
-        response: marketMakerDetails,
-        loading: m_maker_loading,
-        success,
-    } = useSelector((state) => state.get_all_market_maker);
+        closeFilter,
+        filterSchema,
+        isFilterOpen,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        openFilter,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        pageNumberKeyName: "Page",
+        pageSizeKeyName: "PageSize",
+    });
+
+    const { response: marketMakerDetails, loading: isLoading } = useSelector((state) => state.get_all_market_maker);
 
     const { loading: isTogglingStatus } = useSelector((state) => state.update_market_maker_status);
 
@@ -86,111 +96,93 @@ export default function ListMarketMaker({ title }) {
                 header: "Registered Date",
                 accessorKey: "registeredDate",
             },
-            // {
-            //     header: "Contact Person",
-            //     accessorKey: "contactPerson.name",
-            // },
+
             {
                 header: "Status",
-                accessorKey: "status_value",
+                accessorKey: "status",
+                cell: ({ getValue, row }) => (
+                    <MarketMakerStatusBadge statusId={getValue()} label={row.original.status_value} />
+                ),
             },
-
             {
                 header: "Actions",
                 accessorKey: "show",
                 cell: ({ row }) => (
-                    <TableRowActionContainer>
-                        <IconButton
-                            onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewMarketMaker, row?.original?.marketMakerId));
-                            }}
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            onClick={() => {
-                                navigate(buildRoute(routePaths.agent.updateMarketMaker, row?.original?.marketMakerId));
-                            }}
-                        >
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </IconButton>
-                    </TableRowActionContainer>
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                <ListItemButton
+                                    onClick={() =>
+                                        navigate(buildRoute(routePaths.ViewAgent, row.original.marketMakerId))
+                                    }
+                                >
+                                    View
+                                </ListItemButton>
+                                <ListItemButton
+                                    onClick={() =>
+                                        navigate(buildRoute(routePaths.EditAgent, row.original.marketMakerId))
+                                    }
+                                >
+                                    Edit
+                                </ListItemButton>
+                            </>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
         [],
     );
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            Page: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageSize: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleFilterSubmit = (data) => {
-        setFilterSchema({ ...filterSchema, ...data });
-    };
-
-    const handleFilterReset = () => {
-        setFilterSchema(initialState);
-    };
+    const filterFields = [
+        {
+            type: "textfield",
+            label: "Agent Name",
+            name: "name",
+        },
+    ];
 
     return (
         <PageContent
-            title="Agents"
+            documentTitle="Agents"
+            breadcrumbs={[
+                {
+                    label: "Agents",
+                },
+            ]}
             topRightEndContent={
-                <Button
-                    onClick={() => {
-                        navigate(routePaths.agent.addMarketMaker);
-                    }}
-                >
-                    Add Agent
-                </Button>
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
         >
-            <MarketMakerFilterForm
-                isProcessing={m_maker_loading}
-                onSubmit={handleFilterSubmit}
-                onReset={handleFilterReset}
+            <FilterForm
+                title="Search Agents"
+                open={isFilterOpen}
+                onClose={closeFilter}
+                onSubmit={onFilterSubmit}
+                onReset={reset}
+                fields={filterFields}
+                values={filterSchema}
+                onDelete={onDeleteFilterParams}
             />
-            <Spacer />
-            <TanstackReactTable
-                columns={columns}
-                title="Agent"
-                data={marketMakerDetails?.data ?? []}
-                loading={m_maker_loading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={marketMakerDetails?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
+            <PageContentContainer
+                title="Agents"
+                topRightContent={
+                    <Button variant="contained" onClick={() => navigate(routePaths.CreateAgent)}>
+                        Create Agent
+                    </Button>
+                }
+            >
+                <TanstackReactTable
+                    columns={columns}
+                    title="Agent"
+                    data={marketMakerDetails?.data ?? []}
+                    loading={isLoading}
+                />
+            </PageContentContainer>
+            <TablePagination
+                paginationData={marketMakerDetails?.pagination}
+                handleChangePage={onPageChange}
+                handleChangeRowsPerPage={onRowsPerPageChange}
             />
             <LoadingBackdrop open={isTogglingStatus} />
         </PageContent>

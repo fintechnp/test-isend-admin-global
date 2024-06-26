@@ -81,8 +81,8 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
 
     return (
         <>
-            {data?.status === 1 && relatedTo === "business" && (
-                <Box mt={2}>
+            {!loading && (
+                <Box>
                     <HookForm onSubmit={handleSubmit} {...methods}>
                         <Grid container item xs={12} spacing={2}>
                             <Grid item xs={12} sm={6}>
@@ -111,7 +111,6 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
                     </HookForm>
                 </Box>
             )}
-
             {loading ? (
                 <Grid item xs={12}>
                     <Loading loading={loading} />

@@ -1,218 +1,315 @@
-import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
 import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import Popover from "@mui/material/Popover";
+import ListItem from "@mui/material/ListItem";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Button from "App/components/Button/Button";
+import Row from "App/components/Row/Row";
+import Tabs from "App/components/Tab/Tabs";
+import Users from "../User/components/Users";
+import Spacer from "App/components/Spacer/Spacer";
 import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
-import MarketMakerKybListing from "Private/components/MarketMaker/MarketMakerKybListing";
-import MarketMakerKycListing from "Private/components/MarketMaker/MarketMakerKycListing";
-import { RenderField, Title, TitleWrapper } from "App/components/Container";
+import SourceDetails from "App/core/source-detail/SourceDetails";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import IndividualStakeholders from "../Stakeholder/components/IndividualStakeholders";
+import OrganizationStakeholders from "../Stakeholder/components/OrganizationStakeholders";
 
-import Tabs from "App/components/Tab/Tabs";
+import { relatedTo } from "Private/data/b2b";
+import { CountryNameById } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import { MarketMakerActions as actions } from "./store";
-import referenceTypeId from "Private/config/referenceTypeId";
-import { CountryNameById, ReferenceNameByDataId } from "App/helpers";
-import Spacer from "App/components/Spacer/Spacer";
-import { Loading } from "App/components";
-import { Box, Typography } from "@mui/material";
-import MarketMakerUserKycListing from "Private/components/MarketMaker/MarketMakerUserKycListing";
+import useSourceDetail from "App/core/source-detail/useSourceDetail";
+import MarketMakerStatusBadge from "./components/MarketMakerStatusBade";
 
 export default function ViewMarketMaker() {
     const dispatch = useDispatch();
-    const { marketMakerId } = useParams();
+
+    const { agentId } = useParams();
+
     const navigate = useNavigate();
 
-    const { response, loading } = useSelector((state) => state.get_market_maker_details);
+    const { response, loading, loading: isLoading } = useSelector((state) => state.get_market_maker_details);
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    const id = open ? "simple-popover" : undefined;
+
+    const definition = useSourceDetail([
+        {
+            title: "Basic Information",
+            items: [
+                {
+                    label: "Agent Name",
+                    accessorKey: "name",
+                },
+                {
+                    label: "Business Type",
+                    accessorKey: "businessType",
+                },
+                {
+                    label: "Brand Name",
+                    accessorKey: "brandName",
+                },
+                {
+                    label: "Registration Number",
+                    accessorKey: "registrationNo",
+                },
+                {
+                    label: "Registered Country",
+                    cell: (data) => CountryNameById(data.registeredCountryId),
+                },
+                {
+                    label: "Registered Date",
+                    accessorKey: "registeredDate",
+                },
+                {
+                    label: "Contact Number",
+                    contactNo: "contactNo",
+                },
+                {
+                    label: "Email",
+                    accessorKey: "email",
+                },
+                {
+                    label: "Website",
+                    accessorKey: "website",
+                },
+                {
+                    label: "Allowed Countries",
+                    cell: (data) => (
+                        <Row justifyContent="center">
+                            <Typography fontWeight="600" maxWidth="200px" textOverflow="ellipsis" overflow="hidden">
+                                {(data.allowedCountries ?? []).map((c) => c.countryName).join(", ")}
+                            </Typography>
+                            {data?.allowedCountries.length > 1 && (
+                                <div>
+                                    <Button size="small" aria-describedby={id} variant="outlined" onClick={handleClick}>
+                                        View All
+                                    </Button>
+                                    <Popover
+                                        id={id}
+                                        open={open}
+                                        anchorEl={anchorEl}
+                                        onClose={handleClose}
+                                        anchorOrigin={{
+                                            vertical: "bottom",
+                                            horizontal: "right",
+                                        }}
+                                        transformOrigin={{
+                                            vertical: "top",
+                                            horizontal: "right",
+                                        }}
+                                    >
+                                        <List>
+                                            {(data.allowedCountries ?? []).map((c) => (
+                                                <ListItem>{c.countryName}</ListItem>
+                                            ))}
+                                        </List>
+                                    </Popover>
+                                </div>
+                            )}
+                        </Row>
+                    ),
+                },
+                {
+                    label: "Status",
+                    cell: (data) => <MarketMakerStatusBadge statusId={data.status} label={data.status_value} />,
+                },
+            ],
+        },
+        {
+            title: "Address Information",
+            items: [
+                {
+                    label: "Country",
+                    cell: (data) => CountryNameById(data.address.countryId),
+                },
+                {
+                    label: "State",
+                    accessorKey: "address.state",
+                },
+                {
+                    label: "City",
+                    accessorKey: "address.city",
+                },
+                {
+                    label: "Postal Code",
+                    accessorKey: "address.postCode",
+                },
+                {
+                    label: "Unit",
+                    accessorKey: "address.unit",
+                },
+                {
+                    label: "Street",
+                    accessorKey: "address.street",
+                },
+                {
+                    label: "Street",
+                    accessorKey: "address.address",
+                },
+            ],
+        },
+        {
+            title: "Contact Person Information",
+            items: [
+                {
+                    label: "Name",
+                    accessorKey: "contactPerson.name",
+                },
+                {
+                    label: "Designation",
+                    accessorKey: "contactPerson.designation",
+                },
+                {
+                    label: "Email",
+                    accessorKey: "contactPerson.email",
+                },
+                {
+                    label: "Country",
+                    accessorKey: "contactPerson.country.country",
+                },
+                {
+                    label: "Phone Number",
+                    accessorKey: "contactPerson.phoneNo",
+                    cell: ({ contactPerson }) =>
+                        contactPerson.phoneNo ? `+${contactPerson.extension} - ${contactPerson.phoneNo}` : null,
+                },
+                {
+                    label: "Mobile Number",
+                    accessorKey: "contactPerson.mobileNo",
+                    cell: ({ contactPerson }) =>
+                        contactPerson.mobileNo ? `+${contactPerson.extension} - ${contactPerson.mobileNo}` : null,
+                },
+            ],
+        },
+    ]);
 
     useEffect(() => {
-        dispatch(actions.get_market_maker_details(marketMakerId));
+        dispatch(actions.get_market_maker_details(agentId));
     }, []);
 
     const tabs = [
         {
+            key: "organization-stakeholders",
+            tabName: "Organization Stakeholders",
+            tabContent: (
+                <OrganizationStakeholders
+                    relatedTo={relatedTo.AGENT}
+                    relatedId={agentId}
+                    onAddStakeholder={() =>
+                        navigate(buildRoute(routePaths.CreateAgentOrganizationStakeholder, agentId))
+                    }
+                    onEditStakeholder={(stakeholderId) =>
+                        navigate(
+                            buildRoute(routePaths.EditAgentOrganizationStakeholder, {
+                                agentId,
+                                stakeholderId,
+                            }),
+                        )
+                    }
+                />
+            ),
+        },
+        {
+            key: "individual-stakeholders",
+            tabName: "Individual Stakeholders",
+            tabContent: (
+                <IndividualStakeholders
+                    relatedTo={relatedTo.AGENT}
+                    relatedId={agentId}
+                    onAddStakeholder={() => navigate(buildRoute(routePaths.CreateAgentIndividualStakeholder, agentId))}
+                    onEditStakeholder={(stakeholderId) =>
+                        navigate(
+                            buildRoute(routePaths.EditAgentIndividualStakeholder, {
+                                agentId,
+                                stakeholderId,
+                            }),
+                        )
+                    }
+                />
+            ),
+        },
+        {
             key: "user",
             tabName: "Users",
-            tabContent: <MarketMakerUserKycListing  />,
-        },
-        {
-            key: "kyB",
-            tabName: "Business Stakeholder",
-            tabContent: <MarketMakerKybListing />,
-        },
-        {
-            key: "kyc",
-            tabName: "Individual Stakeholder",
-            tabContent: <MarketMakerKycListing />,
+            tabContent: <Users agentId={agentId} />,
         },
     ];
 
-    const marketMakerDetail = response && response?.data;
+    const data = response && response?.data;
+
     return (
         <PageContent
-            title="Agent Details"
+            documentTitle="Agents"
+            breadcrumbs={[
+                {
+                    label: "Agents",
+                    link: routePaths.ListAgent,
+                },
+                {
+                    label: "View",
+                },
+            ]}
             topRightEndContent={
                 <Button
+                    variant="contained"
+                    size="small"
                     onClick={() => {
-                        navigate(buildRoute(routePaths.agent.updateMarketMaker, marketMakerId));
+                        navigate(buildRoute(routePaths.EditAgent, agentId));
                     }}
                 >
                     Edit Agent
                 </Button>
             }
         >
-            {loading ? (
-                <Loading loading />
-            ) : (
-                <>
-                    <Grid item xs={12}>
-                        <TitleWrapper>
-                            <Title>Basic Information</Title>
-                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                        </TitleWrapper>
-                    </Grid>
-                    <Grid container spacing={1} mt={2}>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Name" value={marketMakerDetail?.name} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Business Type" value={marketMakerDetail?.businessType} />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Email" value={marketMakerDetail?.email} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Brand Name" value={marketMakerDetail?.brandName} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Registration No" value={marketMakerDetail?.registrationNo} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField
-                                label="Registration Country"
-                                value={CountryNameById(marketMakerDetail?.registeredCountryId)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Contact No" value={marketMakerDetail?.contactNo} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Website" value={marketMakerDetail?.website} />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Registered Date" value={marketMakerDetail?.registeredDate} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Currency" value={marketMakerDetail?.currencyId} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField
-                                label="Allowed Countries"
-                                value={marketMakerDetail?.allowedCountries
-                                    ?.map((item) => item?.countryName)
-                                    ?.join(", ")}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={12} mt={2}>
-                        <TitleWrapper>
-                            <Title>Address Information</Title>
-                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                        </TitleWrapper>
-                    </Grid>
-                    <Grid container spacing={1} mt={2}>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField
-                                label="Country"
-                                value={CountryNameById(marketMakerDetail?.address?.countryId)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Post Code" value={marketMakerDetail?.address?.postCode} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Unit" value={marketMakerDetail?.address?.unit} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Street" value={marketMakerDetail?.address?.street} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="City" value={marketMakerDetail?.address?.city} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="State" value={marketMakerDetail?.address?.state} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Address" value={marketMakerDetail?.address?.address} />
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={12} mt={3}>
-                        <TitleWrapper>
-                            <Title>Contact Person Information</Title>
-                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                        </TitleWrapper>
-                        <Grid container spacing={1} mt={2}>
-                            <Grid item xs={12} sm={6}>
-                                <RenderField label="name" value={marketMakerDetail?.contactPerson?.name} />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <RenderField
-                                    label="Designation"
-                                    value={ReferenceNameByDataId(
-                                        referenceTypeId.designations,
-                                        marketMakerDetail?.contactPerson?.designationId,
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <RenderField label="Extension" value={marketMakerDetail?.contactPerson?.extension} />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <RenderField label="Mobile No" value={marketMakerDetail?.contactPerson?.mobileNo} />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <RenderField label="Phone No" value={marketMakerDetail?.contactPerson?.phoneNo} />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TitleWrapper>
-                            <Title>Documents</Title>
-                            <Divider sx={{ flexGrow: 1, ml: 1 }} />
-                        </TitleWrapper>
-                    </Grid>
-                    <Spacer />
-                    <Grid container spacing={2}>
-                        {marketMakerDetail?.documents?.map((item, i) => {
-                            return (
-                                <Grid item xs={4} key={i}>
-                                    <Typography>{item?.documentName}</Typography>
-                                    <a href={item?.documentLink} target="_blank">
-                                        <img
-                                            src={item?.documentLink}
-                                            alt={item?.documentName}
-                                            style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                objectFit: "cover",
-                                            }}
-                                        />
-                                    </a>
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
-                </>
-            )}
+            <PageContentContainer title="Agent Details">
+                <SourceDetails definition={definition} data={data} isLoading={isLoading} />
+                <Divider />
+                <Typography variant="h6">Documents</Typography>
+                <Row gap={1}>
+                    {data?.documents?.map((item, i) => {
+                        return (
+                            <Box key={i}>
+                                <Typography variant="subtitle1" mb={1}>
+                                    {item?.documentName}
+                                </Typography>
+                                <a href={item?.documentLink} target="_blank">
+                                    <img
+                                        src={item?.documentLink}
+                                        alt={item?.documentName}
+                                        style={{
+                                            width: "200px",
+                                            height: "200px",
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </a>
+                            </Box>
+                        );
+                    })}
+                </Row>
+            </PageContentContainer>
             <Spacer />
-            <Box mt={2}>
+            <PageContentContainer>
                 <Tabs tabs={tabs} />
-            </Box>
+            </PageContentContainer>
         </PageContent>
     );
 }

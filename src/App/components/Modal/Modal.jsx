@@ -4,23 +4,7 @@ import MuiModal from "@mui/material/Modal";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-
-const CloseButton = styled("div")(({ theme }) => ({
-    cursor: "pointer",
-    position: "absolute",
-    top: "-12px",
-    right: "-12px",
-    width: "30px",
-    height: "30px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: theme.palette.error.main,
-    borderRadius: "50%",
-    "& .MuiSvgIcon-root": {
-        color: theme.palette.background.paper,
-    },
-}));
+import IconButton from "@mui/material/IconButton";
 
 const ModalHeader = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
@@ -28,6 +12,9 @@ const ModalHeader = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
     background: theme.palette.primary.main,
     color: theme.palette.background.paper,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
 }));
 
 const ModalBody = styled(Box)(({ theme }) => ({
@@ -46,18 +33,10 @@ export default function Modal({ title, open, onClose, sx, children }) {
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    // width: 400,
                     bgcolor: "background.paper",
                     boxShadow: 24,
-                    // p: 2,
-                    ...sx,
                 }}
             >
-                {typeof onClose === "function" && (
-                    <CloseButton onClick={onClose}>
-                        <CloseIcon />
-                    </CloseButton>
-                )}
                 {!!title && (
                     <ModalHeader>
                         {Object.prototype.toString.call(title) === "[object String]" ? (
@@ -65,9 +44,23 @@ export default function Modal({ title, open, onClose, sx, children }) {
                         ) : (
                             title
                         )}
+
+                        {typeof onClose === "function" && (
+                            <IconButton
+                                size="small"
+                                onClick={onClose}
+                                sx={{
+                                    "& .MuiSvgIcon-root": {
+                                        fill: "white",
+                                    },
+                                }}
+                            >
+                                <CloseIcon color="background.paper" />
+                            </IconButton>
+                        )}
                     </ModalHeader>
                 )}
-                <ModalBody>{children}</ModalBody>
+                <ModalBody sx={sx}>{children}</ModalBody>
             </Box>
         </MuiModal>
     );

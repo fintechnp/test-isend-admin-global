@@ -61,7 +61,7 @@ function PartnerDetails(props) {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <Grid container sx={{ pb: "24px" }}>
                 <Grid item xs={12}>

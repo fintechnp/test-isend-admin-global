@@ -172,10 +172,11 @@ const Content = styled(Box, {
     shouldForwardProp: (prop) => prop !== "isDrawerOpen",
 })(({ isDrawerOpen }) => ({
     position: "relative",
-    margin: '56px 24px 56px 24px',
-    width: '100%',
+    margin: "56px 24px 56px 24px",
+    width: "100%",
     maxWidth: `calc(100vw - ${isDrawerOpen ? drawerOpenWidth : drawerClosedWidth}px)`,
     overflowY: "auto",
+    height: "100%",
 }));
 
 function Drawer({ children }) {

@@ -475,7 +475,10 @@ import {
     UpdateBusinessKycStatusReducer,
     GetBusinessKybDetailsReducer,
     UpdateBusinessKybStatusReducer,
+    UpdateBusinessReducer,
     businessSaga,
+    ChangeBusinessStatusReducer,
+    ToggleBusinessActiveStatusReducer,
 } from "../Private/pages/Agent/Business/store";
 import {
     getSingleTransactionReducer,
@@ -576,6 +579,25 @@ import {
     DashboardFilterParamsReducer,
     GetCustomerKycCountByStatusPreviousReducer,
 } from "./pages/Dashboard/store";
+import {
+    GetOrganizationStakeholdersReducer,
+    GetIndividualStakeholdersReducer,
+    AddOrganizationStakeholderReducer,
+    AddIndividualStakeholderReducer,
+    UpdateOrganizationStakeholderReducer,
+    UpdateIndividualStakeholderReducer,
+    StakeholderSaga,
+    GetOrganizationStakeholderByIdReducer,
+    GetIndividualStakeholderByIdReducer,
+    UpdateOrganizationStakeholderStatusReducer,
+    UpdateIndividualStakeholderStatusReducer,
+} from "./pages/Agent/Stakeholder/store";
+import {
+    B2BUserSaga,
+    GetB2BUsersReducer,
+    ChangeB2BUserStatusReducer,
+    GetB2BUserKycByIdReducer,
+} from "./pages/Agent/User/store";
 
 // region: ach webhooks
 
@@ -968,8 +990,7 @@ export const privateReducer = {
     get_balance_request_details: GetBalanceRequestIdValueReducer,
     update_balance_request_status: UpdateBalanceRequestStatusReducer,
 
-    //Business
-
+    // region B2B - Business
     get_all_business: GetAllBusinessReducer,
     get_business_details: GetBusinessByIdReducer,
     get_business_kyc: GetBusinessKycListingReducer,
@@ -980,6 +1001,26 @@ export const privateReducer = {
     update_business_kyc_status: UpdateBusinessKycStatusReducer,
     get_business_kyb_details: GetBusinessKybDetailsReducer,
     update_business_kyb_status: UpdateBusinessKybStatusReducer,
+    update_business: UpdateBusinessReducer,
+    change_business_status: ChangeBusinessStatusReducer,
+    toggle_business_active_status: ToggleBusinessActiveStatusReducer,
+
+    // region B2B - Stakeholders
+    get_organization_stakeholders: GetOrganizationStakeholdersReducer,
+    get_individual_stakeholders: GetIndividualStakeholdersReducer,
+    add_organization_stakeholder: AddOrganizationStakeholderReducer,
+    update_organization_stakeholder: UpdateOrganizationStakeholderReducer,
+    add_individual_stakeholder: AddIndividualStakeholderReducer,
+    update_individual_stakeholder: UpdateIndividualStakeholderReducer,
+    get_organization_stakeholder_by_id: GetOrganizationStakeholderByIdReducer,
+    get_individual_stakeholder_by_id: GetIndividualStakeholderByIdReducer,
+    change_organization_stakeholder_status: UpdateOrganizationStakeholderStatusReducer,
+    change_individual_stakeholder_status: UpdateIndividualStakeholderStatusReducer,
+
+    // region B2B - Users
+    get_b2b_users: GetB2BUsersReducer,
+    get_b2b_user_kyc_by_id: GetB2BUserKycByIdReducer,
+    change_b2b_user_status: ChangeB2BUserStatusReducer,
 
     get_single_transaction_list: getSingleTransactionsReducer,
     get_single_transaction_by_id: getSingleTransactionReducer,
@@ -1120,6 +1161,8 @@ export const privateSaga = [
     EmailTemplateSaga(),
     DashboardSaga(),
     UploadProfilePictureSaga(),
+    StakeholderSaga(),
+    B2BUserSaga(),
     AchWebhooksSaga(),
 ];
 

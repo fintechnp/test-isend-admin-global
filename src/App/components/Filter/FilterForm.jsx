@@ -20,6 +20,7 @@ import FormDatePicker from "App/core/hook-form/FormDatePicker";
 
 import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
+import FormSearchAutocomplete from "App/core/hook-form/FormSearchAutocomplete";
 
 const CloseButton = styled(Button)(({ theme }) => ({
     background: theme.palette.surface.primarySecond,
@@ -35,28 +36,39 @@ const ClearAllButton = styled(Chip)(({ theme }) => ({
     },
 }));
 
+export const fieldTypes = {
+    TEXTFIELD: "textfield",
+    SELECT: "select",
+    DATE: "date",
+    SEARCH_AUTOCOMPLETE_API: "search-autocomplete-api",
+};
+
 const BuildFilterInput = ({ field }) => {
-    if (field.type === "textfield") return <FormTextField name={field.name} label={field.label} />;
+    if (field.type === fieldTypes.TEXTFIELD) return <FormTextField name={field.name} label={field.label} />;
 
-    if (field.type === "select") return <FormSelect name={field.name} label={field.label} options={field.options} />;
+    if (field.type === fieldTypes.SELECT)
+        return <FormSelect name={field.name} label={field.label} options={field.options} />;
 
-    if (field.type === "date")
+    if (field.type === fieldTypes.DATE)
         return <FormDatePicker name={field.name} label={field.label} options={field.options} {...field.props} />;
+
+    if (field.type === fieldTypes.SEARCH_AUTOCOMPLETE_API)
+        return (
+            <FormSearchAutocomplete
+                name={field.name}
+                label={field.label}
+                apiEndpoint={field.apiEndpoint}
+                paramkey={field.searchParamName}
+                valueKey={field.valueKey}
+                labelKey={field.labelKey}
+            />
+        );
+    return <FormDatePicker name={field.name} label={field.label} options={field.options} {...field.props} />;
 
     return <>Not implemented yet</>;
 };
 
-export default function FilterForm({
-    open,
-    onClose,
-    onSubmit,
-    onReset,
-    onDelete,
-    fields = [],
-    values,
-    title,
-    schema,
-}) {
+export default function FilterForm({ open, onClose, onSubmit, onReset, onDelete, fields = [], values, title, schema }) {
     const methods = useForm({
         ...(schema
             ? {
@@ -80,7 +92,21 @@ export default function FilterForm({
     const hasFiltered = useMemo(() => fields.some((field) => !isEmpty(values?.[field.name])), [values]);
 
     const getValue = (value) => {
+        if (!isNaN(value)) return value;
+
+        const regexPatterns = [
+            /\b(0[1-9]|1[0-2])[-/.](0[1-9]|[12][0-9]|3[01])[-/.]\d{4}\b/, // MM-DD-YYYY, MM/DD/YYYY, MM.DD.YYYY
+            /\b(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[0-2])[-/.]\d{4}\b/, // DD-MM-YYYY, DD/MM/YYYY, DD.MM.YYYY
+            /\b\d{4}[-/.](0[1-9]|1[0-2])[-/.](0[1-9]|[12][0-9]|3[01])\b/, // YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD
+            /\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\b/,
+        ];
+
+        const isDate = regexPatterns.some((pattern) => pattern.test(value));
+
+        if (!isDate) return value;
+
         const date = new Date(value);
+
         if (date instanceof Date && !isNaN(date)) {
             return dateUtils.getLocalDateFromUTC(value);
         }
@@ -93,9 +119,10 @@ export default function FilterForm({
             <Collapse in={!open} style={{ transformOrigin: "top center" }} {...(open ? { timeout: 300 } : {})}>
                 <Box display="flex" gap="8px">
                     {fields.map((field) => {
-                        if (isEmpty(values?.[field.name])) return <></>;
+                        if (isEmpty(values?.[field.name])) return <React.Fragment key={field.name}></React.Fragment>;
                         return (
                             <FilterValueChip
+                                key={field.name}
                                 label={
                                     <Row justifyContent="center" alignItems="center" gap="7px">
                                         {field.label}: {getValue(values[field.name])}
@@ -141,7 +168,7 @@ export default function FilterForm({
                                     </Row>
                                 </Grid>
                                 {fields.map((field) => (
-                                    <Grid item xs={12} md={6} lg={3}>
+                                    <Grid key={field.name} item xs={12} md={6} lg={3}>
                                         <BuildFilterInput key={field.name} field={field} />
                                     </Grid>
                                 ))}
@@ -179,5 +206,5 @@ FilterForm.propTypes = {
     values: PropTypes.any,
     onDelete: PropTypes.func,
     schema: PropTypes.any,
-    title: PropTypes.string
+    title: PropTypes.string,
 };

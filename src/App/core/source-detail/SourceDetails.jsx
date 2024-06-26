@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function SourceDetails({ definition, data, isLoading }) {
     const getNestedValue = (obj, keys) =>
@@ -11,10 +12,24 @@ export default function SourceDetails({ definition, data, isLoading }) {
 
     const renderItem = (item) => {
         if ("cell" in item) {
+            const value = !isEmpty(data) ? item?.cell(data) : "-";
+
             return (
                 <Box>
                     <Typography>{item.label}</Typography>
-                    {isLoading ? <Skeleton /> : <Box>{item.cell(data) || "-"}</Box>}
+                    {isLoading ? (
+                        <Skeleton />
+                    ) : (
+                        <Box>
+                            {typeof value === "string" ? (
+                                <Typography fontWeight={600} color="text.primary">
+                                    {value}
+                                </Typography>
+                            ) : (
+                                value
+                            )}
+                        </Box>
+                    )}
                 </Box>
             );
         }
@@ -55,7 +70,7 @@ export default function SourceDetails({ definition, data, isLoading }) {
                     return (
                         <Box key={i}>
                             <Box>
-                                <Typography variant="subtitle0">{def.title}</Typography>
+                                {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
                                 <Box display="flex" gap="40px" mt="8px" flexWrap="wrap">
                                     {def.items.map((item, ik) => (
                                         <Fragment key={ik}>{renderItem(item)}</Fragment>

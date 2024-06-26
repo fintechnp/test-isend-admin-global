@@ -330,7 +330,7 @@ const ServiceChargeList = (props) => {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title="Service Charge List" buttonText="Add Service Charge" name={name} agent_id={id} />

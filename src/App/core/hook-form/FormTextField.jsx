@@ -10,7 +10,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 function FormTextField(props) {
@@ -63,7 +63,7 @@ function FormTextField(props) {
                             color={color}
                             required={required}
                         >
-                            <InputLabel htmlFor={id}>{label}</InputLabel>
+                            <InputLabel htmlFor={id} required={required}>{label}</InputLabel>
                             {React.createElement(InputComponent, {
                                 ...field,
                                 ...rest,
@@ -86,7 +86,7 @@ function FormTextField(props) {
                                         </IconButton>
                                     </InputAdornment>
                                 ),
-                                error: !!error || !!errors[name],
+                                error: !!error || !!get(errors, name)?.message,
                                 required,
                                 size,
                                 onFocus: () => clearErrors(name),
@@ -95,7 +95,7 @@ function FormTextField(props) {
                                 label,
                             })}
 
-                            <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
+                            <FormHelperText error={true}> {error ?? get(errors, name)?.message ?? ""}</FormHelperText>
                         </FormControl>
                     );
                 }
@@ -106,8 +106,8 @@ function FormTextField(props) {
                             {...field}
                             {...rest}
                             type={type}
-                            error={!!error || !!errors[name]}
-                            helperText={error ?? errors[name]?.message ?? ""}
+                            error={!!error || !!get(errors, name)?.message}
+                            helperText={error ?? get(errors, name)?.message ?? ""}
                             label={label}
                             variant={variant}
                             fullWidth={fullWidth}

@@ -20,10 +20,10 @@ import { businessActions as actions } from "Private/pages/Agent/Business/store";
 
 import { MarketMakerActions as mActions } from "Private/pages/Agent/MarketMaker/store";
 
-export default function MarketMakerUserKycListing() {
+export default function MarketMakerUserKycListing({ agentId }) {
     const dispatch = useDispatch();
+
     const navigate = useNavigate();
-    const { marketMakerId } = useParams();
 
     const [open, setOpen] = useState(false);
 
@@ -33,8 +33,8 @@ export default function MarketMakerUserKycListing() {
     const { response: users, loading: userLoading } = useSelector((state) => state.get_market_maker_users);
 
     useEffect(() => {
-        dispatch(mActions.get_market_maker_users(marketMakerId));
-    }, [marketMakerId]);
+        dispatch(mActions.get_market_maker_users(agentId));
+    }, [agentId]);
 
     const columns = useMemo(
         () => [
@@ -52,7 +52,7 @@ export default function MarketMakerUserKycListing() {
             },
             {
                 header: "User Type",
-                cell: ({ row }) => <Typography>{row?.original?.isDefaultUser ? "Default" : "Business"}</Typography>,
+                cell: ({ row }) => <Typography>{row?.original?.isDefaultUser ? "Admin" : "User"}</Typography>,
             },
 
             {
@@ -145,7 +145,7 @@ export default function MarketMakerUserKycListing() {
     useEffect(() => {
         dispatch(
             actions.get_business_kyc({
-                marketMakerId,
+                marketMakerId: agentId,
             }),
         );
     }, []);
@@ -156,9 +156,6 @@ export default function MarketMakerUserKycListing() {
                 title="Kyc Detail"
                 open={open}
                 onClose={handleClose}
-                sx={{
-                    width: "60%",
-                }}
             >
                 <BusinessKycDetail data={kycDetailData?.data} loading={kycDetailLoading} relatedTo="market-maker" />
             </Modal>

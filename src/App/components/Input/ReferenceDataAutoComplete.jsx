@@ -44,6 +44,7 @@ export default function ReferenceDataAutoComplete(props) {
         onChange,
         labelKey = "name",
         valueKey = "reference_id",
+        required,
         ...rest
     } = props;
 
@@ -86,6 +87,7 @@ export default function ReferenceDataAutoComplete(props) {
                     {...params}
                     label={label}
                     placeholder={placeholder}
+                    required={required}
                     InputProps={{
                       disabled,
                       autoComplete: "new-password",

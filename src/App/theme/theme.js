@@ -144,7 +144,7 @@ export const ChangeTheme = (mode = true) => {
                 styleOverrides: {
                     root: ({ ownerState, theme }) => ({
                         borderRadius: buttonBorderRadius.outer,
-                        textTransform: "uppercase",
+                        textTransform: "capitalize",
                     }),
                 },
             },

@@ -44,5 +44,5 @@ export default function StatBadge({ label, circuitType, sx }) {
 
 StatBadge.propTypes = {
     label: PropTypes.string.isRequired,
-    circuitType: PropTypes.oneOfType(["positive", "negative", "neutral"]),
+    circuitType: PropTypes.oneOf(["positive", "negative", "neutral"]),
 };

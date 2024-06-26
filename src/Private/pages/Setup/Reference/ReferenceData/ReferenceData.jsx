@@ -252,7 +252,7 @@ const ReferenceData = (props) => {
     return (
         <>
             <Helmet>
-                <title>BNB Admin | {props.title}</title>
+                <title>iSend | {props.title}</title>
             </Helmet>
             <MenuContainer>
                 <Header title="Reference Data" type={false} id={id} name={name} />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useListFilterStore = ({ initialState }) => {
+const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", pageSizeKeyName = "page_size" }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const [filterSchema, setFilterSchema] = useState(initialState);
@@ -70,7 +70,7 @@ const useListFilterStore = ({ initialState }) => {
     const onPageChange = (e, newPage) => {
         setFilterSchema({
             ...filterSchema,
-            page_number: ++newPage,
+            [pageNumberKeyName]: ++newPage,
         });
     };
 
@@ -84,8 +84,8 @@ const useListFilterStore = ({ initialState }) => {
         const pageSize = e.target.value;
         setFilterSchema({
             ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
+            [pageNumberKeyName]: 1,
+            [pageSizeKeyName]: +pageSize,
         });
     };
 
