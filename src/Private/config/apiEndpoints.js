@@ -252,6 +252,11 @@ const apiEndpoints = {
         zaiRefundPayment: "/zai/refund-payment",
         zaiRefundLogs: "/zai/refund-log",
     },
+
+    GetAchRdfiWebhooks: "/RDFITransactions",
+    GetAchCirWebhooks: "/CIRTransactions",
+    GetReturnWebhooks: "/ReturnTransactions",
+    GetRejectWebhooks: "/RejectTransactions",
 };
 
 export default apiEndpoints;

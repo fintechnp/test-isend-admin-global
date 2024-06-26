@@ -123,6 +123,13 @@ const routePaths = {
     CreateCustomerBeneficiary: "/customer/beneficiary/add/:id",
     ViewCustomerBeneficiary: "/customer/beneficiary/details/:id/:bene_id",
     EditCustomerBeneficiary: "/customer/beneficiary/update/:id/:bene_id",
+
+    //ach webhooks
+
+    ListAchRdfiWebhook: "/ach-webhooks/rdfi",
+    ListCirWebhooks: "/ach-webhooks/cir",
+    ListReturnWebhooks: "/ach-webhooks/return",
+    ListRejctWebhooks: "/ach-webhooks/reject",
 };
 
 export default routePaths;

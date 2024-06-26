@@ -183,14 +183,14 @@ import {
     GetCustomerByPartnersReducer,
     BlockUnblockReducer,
     CustomersSaga,
-    GetAllCustomerKycCountByStatusReducer
+    GetAllCustomerKycCountByStatusReducer,
 } from "./pages/Customers/Search/store";
 
 import {
     GetCustomersByIdReducer,
     CreateCustomersReducer,
     UpdateCustomersReducer,
-    CustomersCreateSaga
+    CustomersCreateSaga,
 } from "./pages/Customers/CreateCustomer/store";
 
 import { UploadProfilePictureReducer, UploadProfilePictureSaga } from "./pages/Auth/MyAccount/store";
@@ -576,6 +576,16 @@ import {
     DashboardFilterParamsReducer,
     GetCustomerKycCountByStatusPreviousReducer,
 } from "./pages/Dashboard/store";
+
+// region: ach webhooks
+
+import {
+    AchWebhooksSaga,
+    GetAchCirWebhooksReducer,
+    GetAchRdfiWebhooksReducer,
+    GetAchRejectWebhooksReducer,
+    GetAchReturnWebhooksReducer,
+} from "./pages/AchWebhooks/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -1039,6 +1049,13 @@ export const privateReducer = {
     get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
+
+    // region; ach webhooks
+
+    get_ach_rdfi_webhooks: GetAchRdfiWebhooksReducer,
+    get_ach_cir_webhooks: GetAchCirWebhooksReducer,
+    get_ach_return_webhooks: GetAchReturnWebhooksReducer,
+    get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
 };
 
 export const privateSaga = [
@@ -1103,6 +1120,7 @@ export const privateSaga = [
     EmailTemplateSaga(),
     DashboardSaga(),
     UploadProfilePictureSaga(),
+    AchWebhooksSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

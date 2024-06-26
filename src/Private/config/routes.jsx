@@ -168,6 +168,12 @@ import ZaiAustraliaPayment from "Private/pages/PaymentProcess/ZaiAustraliaPaymen
 import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
 import ListEmailTemplate from "Private/components/email-template/ListEmailTemplate";
 
+//ACH Webhooks
+import ListRdfiWebhooks from "Private/pages/AchWebhooks/ListRdfiWebhooks";
+import ListCirWebhooks from "Private/pages/AchWebhooks/ListCirWebhooks";
+import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
+import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -629,6 +635,25 @@ const privateRoutes = [
     {
         path: routePaths.agent.listAccounts,
         component: <ListAccountList />,
+    },
+
+    // Ach Webhooks
+
+    {
+        path: routePaths.ListAchRdfiWebhook,
+        component: <ListRdfiWebhooks />,
+    },
+    {
+        path: routePaths.ListCirWebhooks,
+        component: <ListCirWebhooks />,
+    },
+    {
+        path: routePaths.ListReturnWebhooks,
+        component: <ListReturnWebhooks />,
+    },
+    {
+        path: routePaths.ListRejctWebhooks,
+        component: <ListRejectWebhooks />,
     },
 ];
 
