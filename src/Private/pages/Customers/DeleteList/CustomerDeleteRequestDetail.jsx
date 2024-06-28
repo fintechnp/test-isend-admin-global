@@ -62,7 +62,7 @@ export default function CustomerDeleteRequestDetail() {
                     <RenderField label="Email" value={deleteRequestDetails?.email} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Phone Number" value={deleteRequestDetails?.phone_number} />
+                    <RenderField label="Phone Number" value={deleteRequestDetails?.mobile_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Deletion Reason" value={deleteRequestDetails?.deletion_reason} />
