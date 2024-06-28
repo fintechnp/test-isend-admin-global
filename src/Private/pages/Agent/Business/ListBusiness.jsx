@@ -27,7 +27,6 @@ const initialState = {
 };
 
 export default function ListBusiness() {
-
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -67,6 +66,11 @@ export default function ListBusiness() {
             {
                 header: "Email",
                 accessorKey: "email",
+            },
+            {
+                header: "Is Self Registered ?",
+                accessorKey: "isSelfRegistered",
+                cell: ({ getValue }) => <>{getValue() ? "Yes" : "No"}</>,
             },
             {
                 header: "Status",
