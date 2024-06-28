@@ -58,6 +58,7 @@ export default function ListBusiness() {
             {
                 header: "Business Type",
                 accessorKey: "businessType",
+                cell: ({ getValue }) => <>{getValue() ?? "-"}</>,
             },
             {
                 header: "Country of Registration",
