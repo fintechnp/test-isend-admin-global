@@ -151,6 +151,9 @@ const routePaths = {
     ListCirWebhooks: "/ach-webhooks/cir",
     ListReturnWebhooks: "/ach-webhooks/return",
     ListRejctWebhooks: "/ach-webhooks/reject",
+
+    // Help center
+    ListHelpCenter: "/setup/help-center",
 };
 
 export default routePaths;

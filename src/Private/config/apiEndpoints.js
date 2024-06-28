@@ -280,6 +280,11 @@ const apiEndpoints = {
     GetAchCirWebhooks: "/CIRTransactions",
     GetReturnWebhooks: "/ReturnTransactions",
     GetRejectWebhooks: "/RejectTransactions",
+
+    // Help Center
+    GetHelpCenters: "/contactdetails",
+    CreateHelpCenter: "/contactDetail",
+    UpdateHelpCenter: "/contactdetail/:id",
 };
 
 export default apiEndpoints;

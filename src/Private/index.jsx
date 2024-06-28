@@ -608,6 +608,12 @@ import {
     GetAchRejectWebhooksReducer,
     GetAchReturnWebhooksReducer,
 } from "./pages/AchWebhooks/store";
+import {
+    CreateHelpCenterReducer,
+    GetHelpCenterReducer,
+    HelpCenterSaga,
+    UpdateHelpCenterReducer,
+} from "./pages/HelpCenter/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -1097,6 +1103,12 @@ export const privateReducer = {
     get_ach_cir_webhooks: GetAchCirWebhooksReducer,
     get_ach_return_webhooks: GetAchReturnWebhooksReducer,
     get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
+
+    //region; Help Center
+
+    list_help_center: GetHelpCenterReducer,
+    create_help_center: CreateHelpCenterReducer,
+    update_help_center: UpdateHelpCenterReducer,
 };
 
 export const privateSaga = [
@@ -1164,6 +1176,7 @@ export const privateSaga = [
     StakeholderSaga(),
     B2BUserSaga(),
     AchWebhooksSaga(),
+    HelpCenterSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

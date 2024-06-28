@@ -181,6 +181,7 @@ import ListRdfiWebhooks from "Private/pages/AchWebhooks/ListRdfiWebhooks";
 import ListCirWebhooks from "Private/pages/AchWebhooks/ListCirWebhooks";
 import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
 import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
+import ListHelpCenter from "Private/pages/HelpCenter/ListHelpCenter";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -684,6 +685,12 @@ const privateRoutes = [
     {
         path: routePaths.ListRejctWebhooks,
         component: <ListRejectWebhooks />,
+    },
+
+    // Help Center
+    {
+        path: routePaths.ListHelpCenter,
+        component: <ListHelpCenter />,
     },
 ];
 
