@@ -89,13 +89,6 @@ export default function ViewOrganizationStakeholderModal({ stakeholderId, onClos
                             <RenderField label="Registered Country" value={data?.registeredCountry?.country} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RenderField label="Registered Entity" value={data?.registeredEntity} />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <RenderField label="Parent" value={data?.parentId} />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
                             <RenderField label="Status" value={data?.status} />
                         </Grid>
                         <Grid item xs={12} sm={6}>

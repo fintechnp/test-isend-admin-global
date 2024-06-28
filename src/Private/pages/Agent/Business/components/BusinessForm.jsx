@@ -24,6 +24,7 @@ import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataA
 import ucwords from "App/helpers/ucwords";
 import isEmpty from "App/helpers/isEmpty";
 import useConstants from "App/hooks/useConstants";
+import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 import FormSelectRegistrationCountry from "App/core/hook-form/FormSelectRegistrationCountry";
@@ -273,7 +274,7 @@ export default function BusinessForm({ isAddMode = true, isProcessing }) {
                                         <Typography color="grey.700">
                                             Document setting not found for selected country of registration. &nbsp;
                                         </Typography>
-                                        <Link to="/">Click Here</Link> &nbsp;
+                                        <Link to={routePaths.documentAcceptance.index}>Click Here</Link> &nbsp;
                                         <Typography color="grey.700"> to add document setting. </Typography>
                                     </Row>
                                 </Grid>

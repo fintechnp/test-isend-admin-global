@@ -75,7 +75,7 @@ export default function EditOrganizationStakeholder({ relatedTo, relatedId, stak
         const data = getOrganizationStakeholderByIdResponse?.data;
         if (!data) return;
 
-        setValue("parentKybId", data.parentId ?? PARENT_ORGANIZATION_ID);
+        setValue("parentKybId", isEmpty(data.parentId) ? PARENT_ORGANIZATION_ID : data.parentId);
         setValue("name", data.name);
         setValue("registrationNo", data.registrationNo);
         setValue("registeredDate", data.registeredDate);
@@ -89,7 +89,7 @@ export default function EditOrganizationStakeholder({ relatedTo, relatedId, stak
                 documentTypeId: d.documentTypeId,
                 documentLink: d.documentLink,
                 fileType: d.fileType,
-                documentId: d.documentId
+                documentId: d.documentId,
             })),
         );
     }, [getOrganizationStakeholderByIdResponse]);

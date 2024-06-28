@@ -75,7 +75,7 @@ export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeh
     useEffect(() => {
         const data = getIndividualStakeholderByIdResponse?.data;
         if (!data) return;
-        setValue("relatedKybId", data.relatedKybId ?? PARENT_ORGANIZATION_ID);
+        setValue("relatedKybId", isEmpty(data.relatedKybId) ? PARENT_ORGANIZATION_ID : data.relatedKybId);
         setValue("firstName", data.firstName);
         setValue("middleName", data.middleName);
         setValue("lastName", data.lastName);

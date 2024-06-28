@@ -6,7 +6,6 @@ import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 
 import { relatedTo } from "Private/data/b2b";
-import AddOrganizationStakeholder from "../Stakeholder/components/AddOrganizationStakeholder";
 import AddIndividualStakeholder from "../Stakeholder/components/AddIndividualStakeholder";
 
 export default function AddBusinessIndividualStakeholder() {

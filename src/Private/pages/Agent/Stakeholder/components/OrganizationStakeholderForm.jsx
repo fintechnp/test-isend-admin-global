@@ -26,6 +26,7 @@ import ucwords from "App/helpers/ucwords";
 import isEmpty from "App/helpers/isEmpty";
 import { relatedTo } from "Private/data/b2b";
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import routePaths from "Private/config/routePaths";
 
 export default function OrganizationStakeholderForm({
     isAddMode = true,
@@ -238,7 +239,7 @@ export default function OrganizationStakeholderForm({
                                         <Typography color="grey.700">
                                             Document setting not found for selected country of registration. &nbsp;
                                         </Typography>
-                                        <Link to="/">Click Here</Link> &nbsp;
+                                        <Link to={routePaths.documentAcceptance.index}>Click Here</Link> &nbsp;
                                         <Typography color="grey.700"> to add document setting. </Typography>
                                     </Row>{" "}
                                 </Grid>
