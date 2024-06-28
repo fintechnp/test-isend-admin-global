@@ -67,10 +67,10 @@ export default function ListHelpCenter() {
             documentTitle="Help Center"
             breadcrumbs={[
                 {
-                    label: "List Help Center",
+                    label: "Setup",
                 },
                 {
-                    label: "Return",
+                    label: "Help Center",
                 },
             ]}
         >
@@ -78,9 +78,16 @@ export default function ListHelpCenter() {
                 <PageContentContainer
                     title="Help Center"
                     topRightContent={
-                        <Button onClick={() => dispatch(helpCenterActions.open_add_modal())} variant="contained">
-                            Add Help Center
-                        </Button>
+                        <>
+                            {!loading && data.length === 0 && (
+                                <Button
+                                    onClick={() => dispatch(helpCenterActions.open_add_modal())}
+                                    variant="contained"
+                                >
+                                    Add Help Center
+                                </Button>
+                            )}
+                        </>
                     }
                 >
                     <TanstackReactTable columns={columns} data={data} loading={loading} />
