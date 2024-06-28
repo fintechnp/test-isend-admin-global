@@ -1,22 +1,22 @@
-import { Link, useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
-import PageContent from "App/components/Container/PageContent";
-
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import routePaths from "Private/config/routePaths";
 import { TablePagination } from "App/components/Table";
+import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import LedgerFilterForm from "Private/components/Ledger/LedgerFilterForm";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
-import { ledgerActions as actions } from "./store";
-import LedgerFilterForm from "Private/components/Ledger/LedgerFilterForm";
 import EntryType from "./enum/EntryType";
-import { Typography } from "@mui/material";
+import dateUtils from "App/utils/dateUtils";
+import { ledgerActions as actions } from "./store";
 
 const initialState = {
     Page: 1,
@@ -98,7 +98,7 @@ export default function ListLedger() {
             },
             {
                 header: "Created At",
-                accessorKey: "created",
+                cell: ({ row }) => <>{dateUtils.getFormattedDate(row.original.createdDate)}</>,
             },
 
             {
