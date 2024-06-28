@@ -53,3 +53,21 @@ function FormPhoneNumber({
 }
 
 export default FormPhoneNumber;
+
+FormPhoneNumber.defaultProps = {
+    type: "text",
+    label: "",
+    error: false,
+    helperText: "",
+    required: false,
+    disabled: false,
+    fullWidth: true,
+    rules: {},
+    multiline: false,
+    size: "small",
+    variant: "outlined",
+    focused: false,
+    value: "",
+    dialingCodeName: "dialing_code",
+};
+

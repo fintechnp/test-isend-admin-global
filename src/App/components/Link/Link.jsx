@@ -9,7 +9,6 @@ const Typography = styled(MuiTypography)(({ theme }) => ({
     a: {
         color: theme.palette.primary.main,
         textDecoration: "none",
-        textTransform: "none",
         "&:hover": {
             textDecoration: "underline",
         },

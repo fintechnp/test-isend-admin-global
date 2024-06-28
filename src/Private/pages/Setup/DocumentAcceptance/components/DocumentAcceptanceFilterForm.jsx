@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
@@ -6,10 +7,13 @@ import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import PageContent from "App/components/Container/PageContent";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
-import { useEffect } from "react";
+
+import { documentForOptions } from "../data/documentFor";
 
 export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading, handleReset }) {
+   
     const methods = useForm();
+
     const { handleSubmit, reset, watch } = methods;
 
     const countriesList = JSON.parse(localStorage.getItem("country"));
@@ -20,11 +24,13 @@ export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading,
 
     const selectedCountry = watch("country");
 
+    const documentFor = watch("document_for");
+
     useEffect(() => {
         if (selectedCountry) {
-            setFilterSchema((prev) => ({ ...prev, country: selectedCountry }));
+            setFilterSchema((prev) => ({ ...prev, country: selectedCountry, document_for: documentFor }));
         }
-    }, [selectedCountry, setFilterSchema]);
+    }, [selectedCountry, documentFor, setFilterSchema]);
 
     const handleFormReset = () => {
         reset();
@@ -36,9 +42,11 @@ export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading,
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
                     <Grid item xs={12} sm={6}>
-                        <FormSelect name="country" label="Country Name" options={finalCountriesList} />
+                        <FormSelect name="country" label="Country" options={finalCountriesList} />
                     </Grid>
-
+                    <Grid item xs={12} sm={6}>
+                        <FormSelect name="document_for" label="Document For" options={documentForOptions} />
+                    </Grid>
                     <Grid item xs={12}>
                         <ButtonWrapper
                             container

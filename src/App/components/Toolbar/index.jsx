@@ -125,10 +125,10 @@ export default function Appbar({ handleDrawerToggle, open }) {
 
     const stringAvatar = (name) => {
         const data = name
-            .trim()
-            .split(" ")
-            .filter((v) => !!v)
-            .map((v) => v.toString().trim().toUpperCase());
+            ?.trim()
+            ?.split(" ")
+            ?.filter((v) => !!v)
+            ?.map((v) => v.toString().trim().toUpperCase());
 
         let avatar = "";
 

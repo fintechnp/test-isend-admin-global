@@ -56,7 +56,7 @@ export default function ReferenceDataAutoComplete(props) {
 
     useEffect(() => {
         const option = options?.find((d) => d[valueKey] === value);
-        if (option) setSelectedOption(option);
+        setSelectedOption(option ?? null);
     }, [value]);
 
     return (
@@ -89,9 +89,9 @@ export default function ReferenceDataAutoComplete(props) {
                     placeholder={placeholder}
                     required={required}
                     InputProps={{
-                      disabled,
-                      autoComplete: "new-password",
-                      ...params.InputProps,
+                        disabled,
+                        autoComplete: "new-password",
+                        ...params.InputProps,
                         endAdornment: (
                             <>
                                 {loading ? <CircularProgress color="inherit" size={20} /> : null}

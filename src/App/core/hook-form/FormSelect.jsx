@@ -11,6 +11,7 @@ function FormSelect(props) {
         control,
         clearErrors,
         formState: { errors },
+        setValue,
     } = useFormContext();
 
     const {
@@ -27,8 +28,8 @@ function FormSelect(props) {
         variant,
         showChooseOption,
         chooseOptionLabel,
-        error,
         onChange,
+        error,
         ...rest
     } = props;
 
@@ -48,6 +49,8 @@ function FormSelect(props) {
                 >
                     <InputLabel>{label}</InputLabel>
                     <Select
+                        {...field}
+                        {...rest}
                         error={!!get(errors, name)}
                         label={label}
                         variant={variant}
@@ -56,9 +59,11 @@ function FormSelect(props) {
                         disabled={disabled}
                         tabIndex={tabIndex}
                         multiple={multiple}
+                        onChange={(e) => {
+                            setValue(name, e.target.value);
+                            onChange?.(e);
+                        }}
                         fullWidth
-                        {...field}
-                        {...rest}
                     >
                         {showChooseOption && (
                             <MenuItem disabled>

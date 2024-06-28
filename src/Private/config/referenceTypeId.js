@@ -9,6 +9,8 @@ const referenceTypeId = {
     emailTemplateTypeForCustomer: 150,
     emailTemplateTypeForAdmin: 151,
     paymentType: 1,
+    kycDocuments: 2,
+    kybDocuments: 153,
     kybKycStatuses: 152,
     genders: 42,
 };

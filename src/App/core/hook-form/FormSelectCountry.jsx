@@ -43,10 +43,8 @@ export default function FormSelectCountry(props) {
             control={control}
             render={() => {
                 return (
-                    <FormControl fullWidth size={size}>
-                        <InputLabel id={labelId} required={required}>
-                            {label}
-                        </InputLabel>
+                    <FormControl fullWidth>
+                        <InputLabel id={labelId} size={size}>{label}</InputLabel>
                         <Select
                             labelId={labelId}
                             id={id}

@@ -41,6 +41,8 @@ export default function FormReferenceDataAutoComplete(props) {
             error={!!errorMessage}
             helperText={errorMessage}
             referenceTypeId={referenceTypeId}
+            labelKey={labelKey}
+            valueKey={valueKey}
             onChange={(_, value) => {
                 setValue(name, value?.[valueKey] ?? "");
             }}
