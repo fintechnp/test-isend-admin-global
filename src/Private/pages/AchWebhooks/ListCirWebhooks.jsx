@@ -141,7 +141,7 @@ const ListCirWebhooks = () => {
                     label: "ACH Webhooks",
                 },
                 {
-                    label: "Return",
+                    label: "CIR",
                 },
             ]}
         >

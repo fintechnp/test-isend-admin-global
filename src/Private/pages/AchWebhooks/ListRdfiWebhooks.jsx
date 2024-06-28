@@ -173,7 +173,7 @@ export default function ListRdfiWebhooks() {
                     label: "ACH Webhooks",
                 },
                 {
-                    label: "Return",
+                    label: "RDFI",
                 },
             ]}
         >

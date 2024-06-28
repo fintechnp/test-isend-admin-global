@@ -172,7 +172,7 @@ const ListRejectWebhooks = () => {
                     label: "ACH Webhooks",
                 },
                 {
-                    label: "Return",
+                    label: "Reject",
                 },
             ]}
         >
