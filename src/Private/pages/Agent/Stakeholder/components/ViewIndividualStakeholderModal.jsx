@@ -17,8 +17,14 @@ import { stakeholderActions } from "../store";
 import useModal from "Private/hooks/useModal";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 import IndividualStakeholderStatusBadge from "./IndividualStakeholderStatusBadge";
+import { individualStakeholderStatus } from "../data/stakeholderStatus";
 
-export default function ViewIndividualStakeholderModal({ stakeholderId, onClose, onChangeStatusSuccess }) {
+export default function ViewIndividualStakeholderModal({
+    stakeholderId,
+    onClose,
+    onChangeStatusSuccess,
+    onEditStakeholder,
+}) {
     const dispatch = useDispatch();
 
     const { isModalOpen, openModal, closeModal } = useModal("ChangeIndividualStakeholderStatus");
@@ -187,6 +193,11 @@ export default function ViewIndividualStakeholderModal({ stakeholderId, onClose,
                         {({ onClose }) => (
                             <>
                                 <ListItemButton onClick={() => (openModal(), onClose())}>Update Status</ListItemButton>
+                                {data?.status !== individualStakeholderStatus.APPROVED && (
+                                    <ListItemButton onClick={() => onEditStakeholder?.(data.kycId)}>
+                                        Edit
+                                    </ListItemButton>
+                                )}
                             </>
                         )}
                     </PopoverButton>
@@ -195,7 +206,7 @@ export default function ViewIndividualStakeholderModal({ stakeholderId, onClose,
             <SourceDetails definition={definition} data={data} isLoading={isLoading} />
             <Divider sx={{ my: "16px" }} />
             <Documents data={data?.documents ?? []} isLoading={isLoading} />
-            {data && (
+            {data && stakeholderId && (
                 <ChangeIndividualStakeholderStatusModal
                     open={isModalOpen}
                     onClose={closeModal}
@@ -215,4 +226,5 @@ ViewIndividualStakeholderModal.propTypes = {
     stakeholderId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onClose: PropTypes.func,
     onChangeStatusSuccess: PropTypes.func,
+    onEditStakeholder: PropTypes.func,
 };

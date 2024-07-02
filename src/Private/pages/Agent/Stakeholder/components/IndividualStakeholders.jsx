@@ -13,6 +13,7 @@ import ViewIndividualStakeholderModal from "./ViewIndividualStakeholderModal";
 import { stakeholderActions } from "../store";
 import { relatedTo as relatedToConstants } from "Private/data/b2b";
 import IndividualStakeholderStatusBadge from "./IndividualStakeholderStatusBadge";
+import { individualStakeholderStatus } from "../data/stakeholderStatus";
 export default function IndividualStakeholders({ relatedTo, relatedId, onAddStakeholder, onEditStakeholder }) {
     const dispatch = useDispatch();
 
@@ -58,9 +59,13 @@ export default function IndividualStakeholders({ relatedTo, relatedId, onAddStak
                                 <ListItemButton onClick={() => (setSelectedId(row.original.kycId), onClose())}>
                                     View
                                 </ListItemButton>
-                                <ListItemButton onClick={() => (onEditStakeholder?.(row.original.kycId), onClose())}>
-                                    Edit
-                                </ListItemButton>
+                                {row.original.status !== individualStakeholderStatus.APPROVED && (
+                                    <ListItemButton
+                                        onClick={() => (onEditStakeholder?.(row.original.kycId), onClose())}
+                                    >
+                                        Edit
+                                    </ListItemButton>
+                                )}
                             </>
                         )}
                     </PopoverButton>
@@ -109,6 +114,7 @@ export default function IndividualStakeholders({ relatedTo, relatedId, onAddStak
                 stakeholderId={selectedId}
                 onClose={() => setSelectedId(null)}
                 onChangeStatusSuccess={fetch}
+                onEditStakeholder={onEditStakeholder}
             />
         </Column>
     );

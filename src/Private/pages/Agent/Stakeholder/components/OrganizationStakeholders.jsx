@@ -124,6 +124,7 @@ export default function OrganizationStakeholders({
                 stakeholderId={selectedId}
                 onClose={() => setSelectedId(null)}
                 onChangeStatusSuccess={fetch}
+                onEditStakeholder={onEditStakeholder}
             />
         </Column>
     );

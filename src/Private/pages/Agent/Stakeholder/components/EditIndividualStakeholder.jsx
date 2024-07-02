@@ -18,7 +18,7 @@ import { updateIndividualStakeholderSchema } from "../schema/individualStakehold
 export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeholderId, onSuccess }) {
     const dispatch = useDispatch();
 
-    const { loading: isLoading, success: isSuccess } = useSelector((state) => state.update_organization_stakeholder);
+    const { loading: isLoading, success: isSuccess } = useSelector((state) => state.update_individual_stakeholder);
 
     const { response: getIndividualStakeholderByIdResponse, loading: isLoadingGetIndividualStakeholderById } =
         useSelector((state) => state.get_individual_stakeholder_by_id);
@@ -30,6 +30,9 @@ export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeh
     const { handleSubmit, setError, setValue } = methods;
 
     const onSubmitData = (data) => {
+
+        console.log(data)
+
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({
@@ -107,12 +110,11 @@ export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeh
         setValue(
             "documents",
             data.documents.map((d) => ({
-                documentType: d.documentType,
                 documentName: d.documentName,
                 documentTypeId: d.documentTypeId,
                 documentLink: d.documentLink,
-                fileUrl: d.documentLink,
                 fileType: d.fileType,
+                documentId: d.documentId,
             })),
         );
     }, [getIndividualStakeholderByIdResponse]);

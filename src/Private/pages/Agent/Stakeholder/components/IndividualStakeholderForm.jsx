@@ -25,9 +25,11 @@ import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataA
 
 import isEmpty from "App/helpers/isEmpty";
 import { relatedTo } from "Private/data/b2b";
+import { GenderOptions } from "App/data/Gender";
 import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import FormSelect from "App/core/hook-form/FormSelect";
 
 export default function IndividualStakeholderForm({ isAddMode = true, isProcessing, relatedTo, relatedId }) {
     const navigate = useNavigate();
@@ -188,12 +190,7 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                         <FormTextField name="mobileNumber" label="Mobile Number" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormReferenceDataAutoComplete
-                            name="gender"
-                            label="Gender"
-                            referenceTypeId={referenceTypeId.genders}
-                            required
-                        />
+                        <FormSelect name="gender" label="Gender" options={GenderOptions} />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormSelectCountry

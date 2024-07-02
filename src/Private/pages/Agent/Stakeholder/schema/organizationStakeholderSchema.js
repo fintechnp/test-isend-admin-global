@@ -17,7 +17,7 @@ const schema = yup.object().shape({
             .nullable()
             .required("Required"),
         postCode: yup.string().required().max(10, "Post code must be less than 15 characters"),
-        unit: yup.string().required("Required"),
+        unit: yup.string().nullable(),
         state: yup.string().required("Required"),
         street: yup.string().required("Required"),
         city: yup.string().required("Required"),

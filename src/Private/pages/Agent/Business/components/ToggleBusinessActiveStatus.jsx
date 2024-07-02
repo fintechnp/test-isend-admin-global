@@ -41,7 +41,7 @@ export default function ToggleBusinessActiveStatus({ businessId, statusId, onSuc
 }
 
 ToggleBusinessActiveStatus.propTypes = {
-    businessId: PropTypes.string.isRequired,
-    statusId: PropTypes.string.isRequired,
+    businessId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    statusId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     onSuccess: PropTypes.func.isRequired,
 };

@@ -51,7 +51,7 @@ const schema = yup.object().shape({
             .transform((value) => (Number.isNaN(value) ? null : value))
             .nullable()
             .required("Required"),
-        unit: yup.string(),
+        unit: yup.string().nullable(),
         street: yup.string().required("Street is required"),
         city: yup.string().required("City is required"),
         state: yup.string().required("State is required"),
