@@ -146,17 +146,18 @@ export default function BusinessForm({ isAddMode = true, isProcessing }) {
             <FormGroupContainer title="Organization Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="name" label="Name" />
+                        <FormTextField name="name" label="Name" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormSelectRegistrationCountry
                             name="registeredCountryId"
                             label="Registered Country"
                             valueKey="country_id"
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="registrationNo" label="Registration Number" />
+                        <FormTextField name="registrationNo" label="Registration Number" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormDatePicker
@@ -164,80 +165,89 @@ export default function BusinessForm({ isAddMode = true, isProcessing }) {
                             label="Registration Date"
                             dateFormat="yyyy-MM-dd"
                             disableFuture
+                            required
                         />
                     </Grid>
 
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="brandName" label="Brand Name" />
+                        <FormTextField name="brandName" label="Brand Name" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="phoneNo" label="Phone Number" />
+                        <FormTextField name="phoneNo" label="Phone Number" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="email" label="Email" />
+                        <FormTextField name="email" label="Email" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormReferenceDataAutoComplete
                             label="Business Type"
                             name="typeOfBusinessId"
                             referenceTypeId={referenceTypeId.businessTypes}
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="website" label="Website" />
+                        <FormTextField name="website" label="Website" isOptional />
                     </Grid>
                 </Grid>
             </FormGroupContainer>
             <FormGroupContainer title="Address Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormSelect name="addressCountry" label="Country" options={countryOptions ?? []} />
+                        <FormSelect name="addressCountry" label="Country" options={countryOptions ?? []} required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="addressState" label="State" />
+                        <FormTextField name="addressState" label="State/Province" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="addressCity" label="City" />
+                        <FormTextField name="addressCity" label="City" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="addressPostCode" label="PostCode" />
+                        <FormTextField name="addressPostCode" label="PostCode/Zip Code" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="addressUnit" label="Unit" />
-                    </Grid>
-
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="addressStreet" label="Street" />
+                        <FormTextField name="addressUnit" label="Unit" isOptional />
                     </Grid>
 
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="address" label="Address" />
+                        <FormTextField name="addressStreet" label="Street" required />
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="address" label="Address" required />
                     </Grid>
                 </Grid>
             </FormGroupContainer>
             <FormGroupContainer title="Contact Person Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="contactPersonName" label="Name" />
+                        <FormTextField name="contactPersonName" label="Name" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormReferenceDataAutoComplete
                             name="contactPersonDesignationId"
                             label="Designation"
                             referenceTypeId={referenceTypeId.designations}
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormSelect name="contactPersonCountryId" label="Country" options={countryOptions ?? []} />
+                        <FormSelect
+                            name="contactPersonCountryId"
+                            label="Country"
+                            options={countryOptions ?? []}
+                            required
+                        />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="contactPersonEmail" label="Email" />
+                        <FormTextField name="contactPersonEmail" label="Email" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormPhoneNumber
                             label="Mobile Number"
                             name="contactPersonMobileNumber"
                             dialingCodeName="contactPersonExtension"
+                            required
                         />
                     </Grid>
 
@@ -246,6 +256,7 @@ export default function BusinessForm({ isAddMode = true, isProcessing }) {
                             name="contactPersonPhoneNumber"
                             label="Phone Number"
                             dialingCodeName="contactPersonExtension"
+                            required
                         />
                     </Grid>
                 </Grid>

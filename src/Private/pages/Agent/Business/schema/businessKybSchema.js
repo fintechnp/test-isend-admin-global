@@ -7,7 +7,7 @@ export const createBusinessKybSchema = yup.object().shape({
     brandName: yup.string().required("Required"),
     phoneNo: yup.string().required("Required").max(15, "Phone number must be less than 15 characters"),
     email: yup.string().email().required("Required"),
-    website: yup.string().url().required("Required"),
+    website: yup.string().url().nullable(),
     registeredCountryId: yup
         .number()
         .transform((value) => (Number.isNaN(value) ? null : value))
@@ -18,8 +18,8 @@ export const createBusinessKybSchema = yup.object().shape({
         .transform((value) => (Number.isNaN(value) ? null : value))
         .nullable()
         .required("Required"),
-    addressPostCode: yup.string().required("Required").max(10, "Post code must be less than 15 characters"),
-    addressUnit: yup.string().required("Required"),
+    addressPostCode: yup.string().max(10, "Post code must be less than 10 characters").nullable(),
+    addressUnit: yup.string().nullable(),
     addressState: yup.string().required("Required"),
     addressStreet: yup.string().required("Required"),
     addressCity: yup.string().required("Required"),

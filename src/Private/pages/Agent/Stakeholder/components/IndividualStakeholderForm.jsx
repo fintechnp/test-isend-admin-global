@@ -13,6 +13,7 @@ import Row from "App/components/Row/Row";
 import Center from "App/components/Center/Center";
 import Column from "App/components/Column/Column";
 import UploadFile from "App/core/upload/uploadFile";
+import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import SubmitButton from "App/components/Button/SubmitButton";
 import CancelButton from "App/components/Button/CancelButton";
@@ -29,7 +30,6 @@ import { GenderOptions } from "App/data/Gender";
 import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
-import FormSelect from "App/core/hook-form/FormSelect";
 
 export default function IndividualStakeholderForm({ isAddMode = true, isProcessing, relatedTo, relatedId }) {
     const navigate = useNavigate();
@@ -162,7 +162,7 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                     </Grid>
 
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="middleName" label="Middle Name" />
+                        <FormTextField name="middleName" label="Middle Name" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="lastName" label="Last Name" required />
@@ -225,9 +225,10 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                     <Grid item xs={12} md={3}>
                         <FormDatePicker
                             name="identityExpiryDate"
-                            label="Identity Expiry Date (Optional)"
+                            label="Identity Expiry Date"
                             dateFormat="yyyy-MM-dd"
                             disablePast
+                            isOptional
                         />
                     </Grid>
                 </Grid>
@@ -249,10 +250,10 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                         <FormTextField name="permanentAddress.city" label="City" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="permanentAddress.postCode" label="Post Code" required />
+                        <FormTextField name="permanentAddress.postCode" label="Post Code/Zip Code" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="permanentAddress.unit" label="Unit ( Optional )" />
+                        <FormTextField name="permanentAddress.unit" label="Unit" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="permanentAddress.street" label="Street" required />
@@ -281,16 +282,16 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="temporaryAddress.state" label="State" required />
+                        <FormTextField name="temporaryAddress.state" label="State/Province" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="temporaryAddress.city" label="City" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="temporaryAddress.postCode" label="Post Code" required />
+                        <FormTextField name="temporaryAddress.postCode" label="Post Code/Zip Code" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="temporaryAddress.unit" label="Unit ( Optional )" />
+                        <FormTextField name="temporaryAddress.unit" label="Unit" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="temporaryAddress.street" label="Street" required />

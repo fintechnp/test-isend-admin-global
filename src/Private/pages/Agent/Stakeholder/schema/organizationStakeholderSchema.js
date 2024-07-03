@@ -16,7 +16,7 @@ const schema = yup.object().shape({
             .transform((value) => (Number.isNaN(value) ? null : value))
             .nullable()
             .required("Required"),
-        postCode: yup.string().required().max(10, "Post code must be less than 15 characters"),
+        postCode: yup.string().max(10, "Post code must be less than 10 characters").nullable(),
         unit: yup.string().nullable(),
         state: yup.string().required("Required"),
         street: yup.string().required("Required"),

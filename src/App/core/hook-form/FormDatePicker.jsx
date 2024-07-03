@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import dateUtils from "App/utils/dateUtils";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Controller, useFormContext, get } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -30,6 +31,7 @@ function FormDatePicker({
     onChange,
     withStartDayTimezone,
     withEndDayTimezone,
+    isOptional,
 }) {
     const [open, setOpen] = useState(false);
 
@@ -81,7 +83,16 @@ function FormDatePicker({
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label={label}
+                                label={
+                                    <>
+                                        {label}{" "}
+                                        {isOptional && (
+                                            <Typography component="span" variant="caption">
+                                                ( Optional )
+                                            </Typography>
+                                        )}
+                                    </>
+                                }
                                 error={!!errors[name]}
                                 helperText={errors[name]?.message ?? ""}
                                 color={color}
@@ -141,6 +152,7 @@ FormDatePicker.propTypes = {
     onChange: PropTypes.func,
     withStartDayTimezone: PropTypes.bool,
     withEndDayTimezone: PropTypes.bool,
+    isOptional: PropTypes.bool,
 };
 
 FormDatePicker.defaultProps = {
@@ -163,4 +175,5 @@ FormDatePicker.defaultProps = {
     dateFormat: "yyyy-MM-dd",
     dateMask: "____-__-__",
     placeholder: "YYYY-MM-DD",
+    isOptional: false,
 };

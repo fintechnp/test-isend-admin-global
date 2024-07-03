@@ -156,13 +156,14 @@ export default function OrganizationStakeholderForm({
                                 setValue("parentKybId", option?.kybId ?? "");
                             }}
                             ignoreValues={[stakeholderId]}
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="name" label="Name" />
+                        <FormTextField name="name" label="Name" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="registrationNo" label="Registration Number" />
+                        <FormTextField name="registrationNo" label="Registration Number" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormDatePicker
@@ -170,17 +171,19 @@ export default function OrganizationStakeholderForm({
                             label="Registration Date"
                             dateFormat="yyyy-MM-dd"
                             disableFuture
+                            required
                         />
                     </Grid>
 
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="brandName" label="Brand Name" />
+                        <FormTextField name="brandName" label="Brand Name" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormSelect
                             name="registeredCountryId"
                             label="Country of Registration"
                             options={registeredCountyOptions ?? []}
+                            required
                         />
                     </Grid>
                 </Grid>
@@ -192,26 +195,26 @@ export default function OrganizationStakeholderForm({
                             name="address.countryId"
                             label="Address Country"
                             options={registeredCountyOptions ?? []}
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="address.postCode" label="PostCode" />
-                    </Grid>
-
-                    <Grid item xs={12} md={3}>
-                        <FormTextField name="address.unit" label="Unit" />
+                        <FormTextField name="address.state" label="State/Province" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="address.state" label="State" />
+                        <FormTextField name="address.city" label="City" required />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="address.street" label="Street" />
+                        <FormTextField name="address.postCode" label="PostCode/Zip Code" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="address.city" label="City" />
+                        <FormTextField name="address.unit" label="Unit" isOptional />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormTextField name="address.address" label="Address" />
+                        <FormTextField name="address.street" label="Street" required />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormTextField name="address.address" label="Address" required />
                     </Grid>
                 </Grid>
             </FormGroupContainer>

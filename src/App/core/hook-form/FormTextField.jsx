@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
-import PropTypes, { object } from "prop-types";
+import PropTypes from "prop-types";
 import Input from "@mui/material/Input";
 import TextField from "@mui/material/TextField";
+import React, { useState, useRef } from "react";
 import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
 import FilledInput from "@mui/material/FilledInput";
@@ -40,6 +41,7 @@ function FormTextField(props) {
         focused,
         color,
         error,
+        isOptional,
         ...rest
     } = props;
 
@@ -63,7 +65,9 @@ function FormTextField(props) {
                             color={color}
                             required={required}
                         >
-                            <InputLabel htmlFor={id} required={required}>{label}</InputLabel>
+                            <InputLabel htmlFor={id} required={required}>
+                                {label} {isOptional && <Typography component="span" variant="caption">( Optional )</Typography>}
+                            </InputLabel>
                             {React.createElement(InputComponent, {
                                 ...field,
                                 ...rest,
@@ -108,7 +112,7 @@ function FormTextField(props) {
                             type={type}
                             error={!!error || !!get(errors, name)?.message}
                             helperText={error ?? get(errors, name)?.message ?? ""}
-                            label={label}
+                            label={<>{label} {isOptional && <Typography component="span" variant="caption">(Optional)</Typography>}</>}
                             variant={variant}
                             fullWidth={fullWidth}
                             required={required}
@@ -147,6 +151,7 @@ FormTextField.propTypes = {
     value: PropTypes.string,
     type: PropTypes.string,
     error: PropTypes.string,
+    isOptional: PropTypes.string,
 };
 
 FormTextField.defaultProps = {
@@ -161,4 +166,5 @@ FormTextField.defaultProps = {
     variant: "outlined",
     focused: false,
     value: "",
+    isOptional: false,
 };

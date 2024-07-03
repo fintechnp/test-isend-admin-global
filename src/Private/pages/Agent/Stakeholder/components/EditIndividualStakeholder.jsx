@@ -30,9 +30,7 @@ export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeh
     const { handleSubmit, setError, setValue } = methods;
 
     const onSubmitData = (data) => {
-
-        console.log(data)
-
+        
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({

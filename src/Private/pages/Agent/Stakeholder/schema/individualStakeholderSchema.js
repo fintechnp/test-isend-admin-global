@@ -55,7 +55,7 @@ const schema = yup.object().shape({
         street: yup.string().required("Street is required"),
         city: yup.string().required("City is required"),
         state: yup.string().required("State is required"),
-        postCode: yup.string().required("Post code is required").max(10, "Post code must be less than 15 characters"),
+        postCode: yup.string().max(10, "Post code must be less than 10 characters").nullable(),
         address: yup.string().required("Address is required"),
     }),
     permanentAddress: yup.object().shape({
@@ -68,10 +68,7 @@ const schema = yup.object().shape({
         street: yup.string().required("Street is required"),
         city: yup.string().required("City is required"),
         state: yup.string().required("State is required"),
-        postCode: yup
-            .string()
-            .required("Post code is required")
-            .max(10, "Post code must be less than 15 characters"),
+        postCode: yup.string().max(10, "Post code must be less than 10 characters").nullable(),
         address: yup.string().required("Address is required"),
     }),
     documents: yup.array().of(
