@@ -7,6 +7,9 @@ const actions = {
     GET_SMS_BYID_SUCCESS: "GET_SMS_BYID_SUCCESS",
     GET_SMS_BYID_FAILED: "GET_SMS_BYID_FAILED",
 
+    OPEN_VIEW_SMS_MODAL: "OPEN_VIEW_SMS_MODAL",
+    CLOSE_VIEW_SMS_MODAL: "CLOSE_VIEW_SMS_MODAL",
+
     CREATE_SMS: "CREATE_SMS",
     CREATE_SMS_SUCCESS: "CREATE_SMS_SUCCESS",
     CREATE_SMS_FAILED: "CREATE_SMS_FAILED",
@@ -67,14 +70,13 @@ const actions = {
     RESEND_NOTIFICATION_FAILED: "RESEND_NOTIFICATION_FAILED",
     RESEND_NOTIFICATION_RESET: "RESEND_NOTIFICATION_RESET",
 
-
     //sms
     get_sms: (query) => ({
         type: actions.GET_SMS,
         query,
     }),
 
-    get_sms_byid: (id) => ({
+    get_sms_by_id: (id) => ({
         type: actions.GET_SMS_BYID,
         id,
     }),
@@ -144,6 +146,15 @@ const actions = {
     resend_notification: (data) => ({
         type: actions.RESEND_NOTIFICATION,
         data,
+    }),
+
+    open_view_sms_modal: (payload) => ({
+        type: actions.OPEN_VIEW_SMS_MODAL,
+        payload,
+    }),
+
+    close_view_sms_modal: () => ({
+        type: actions.CLOSE_VIEW_SMS_MODAL,
     }),
 };
 

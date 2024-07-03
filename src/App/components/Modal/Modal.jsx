@@ -1,17 +1,18 @@
-import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 import MuiModal from "@mui/material/Modal";
+import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 const ModalHeader = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.background.paper,
     borderRadius: "8px 8px 0 0",
     padding: theme.spacing(1),
-    background: theme.palette.primary.main,
-    color: theme.palette.background.paper,
+    color: theme.palette.text.primary,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -51,15 +52,16 @@ export default function Modal({ title, open, onClose, sx, children }) {
                                 onClick={onClose}
                                 sx={{
                                     "& .MuiSvgIcon-root": {
-                                        fill: "white",
+                                        fill: "#68727D",
                                     },
                                 }}
                             >
-                                <CloseIcon color="background.paper" />
+                                <HighlightOffRoundedIcon fontSize="medium" color="background.paper" />
                             </IconButton>
                         )}
                     </ModalHeader>
                 )}
+                <Divider />
                 <ModalBody sx={sx}>{children}</ModalBody>
             </Box>
         </MuiModal>

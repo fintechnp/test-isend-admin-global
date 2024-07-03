@@ -321,6 +321,7 @@ import {
     DeleteFcmReducer,
     UtilitiesSaga,
     ResendNotification,
+    ViewSmsReducer,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -865,9 +866,10 @@ export const privateReducer = {
 
     //reference type and data
     get_sms: GetSmsReducer,
-    get_sms_byid: GetSmsByIdReducer,
+    get_sms_by_id: GetSmsByIdReducer,
     create_sms: CreateSmsReducer,
     delete_sms: DeleteSmsReducer,
+    view_sms: ViewSmsReducer,
 
     get_email: GetEmailReducer,
     get_email_byid: GetEmailByIdReducer,

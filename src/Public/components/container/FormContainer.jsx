@@ -31,7 +31,7 @@ export default function FormContainer({ children, title, subtitle, disableBadge 
             <Paper elevation={0} sx={{ zIndex: 999 }}>
                 {!disableBadge && (
                     <Badge>
-                        <Typography fontSize="0.75rem" lineHeight="1rem" fontWeight={600} font color="white">
+                        <Typography fontSize="0.75rem" lineHeight="1rem" fontWeight={600} color="white">
                             Admin
                         </Typography>
                     </Badge>

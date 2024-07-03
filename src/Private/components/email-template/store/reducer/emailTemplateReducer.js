@@ -100,7 +100,7 @@ const addEmailTemplateReducer = (state = addEmailTemplateInitialState, action) =
             };
         case emailTemplateActions.ADD_EMAIL_TEMPLATE_RESET:
             return {
-                ...addCEmailTemplateInitialState,
+                ...addEmailTemplateInitialState,
             };
         case emailTemplateActions.OPEN_ADD_EMAIL_TEMPLATE_MODAL:
             return {

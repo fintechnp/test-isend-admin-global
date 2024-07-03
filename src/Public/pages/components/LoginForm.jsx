@@ -53,7 +53,7 @@ const LoginForm = ({ onSubmit, loading }) => {
                     <Grid item xs={12}>
                         <FormTextField size="medium" type="password" name="password" label="Password" />
                         <Link to={publicRoutePaths.forgotPassword}>
-                            <Typography fontWeight={500} fontSize="0.813rem" lineHeight="1.875">
+                            <Typography component="span" fontWeight={500} fontSize="0.813rem" lineHeight="1.875">
                                 Forgot Password ?
                             </Typography>
                         </Link>
