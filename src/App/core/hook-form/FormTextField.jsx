@@ -151,7 +151,7 @@ FormTextField.propTypes = {
     value: PropTypes.string,
     type: PropTypes.string,
     error: PropTypes.string,
-    isOptional: PropTypes.string,
+    isOptional: PropTypes.bool,
 };
 
 FormTextField.defaultProps = {
