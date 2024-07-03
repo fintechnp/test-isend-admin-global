@@ -60,7 +60,13 @@ export const updateFundingSource = takeEvery(actions.UPDATE_FUNDING_SOURCE, func
 
 export const updateFundingSourceStatus = takeEvery(actions.UPDATE_FUNDING_SOURCE_STATUS, function* (action) {
     try {
-        const res = yield call(api.patch, buildRoute(apiEndpoints.fundingSources.updateStatus, action.id), action.data);
+        const res = yield call(
+            api.patch,
+            buildRoute(apiEndpoints.fundingSources.updateStatus, {
+                fundingSourceId: action.id,
+                ...action.data,
+            }),
+        );
 
         yield put({
             type: actions.UPDATE_FUNDING_SOURCE_STATUS_SUCCESS,
