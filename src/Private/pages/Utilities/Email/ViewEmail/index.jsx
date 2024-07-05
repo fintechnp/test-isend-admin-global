@@ -15,6 +15,8 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import View from "./View";
 import actions from "../../store/actions";
+import Button from "App/components/Button/Button";
+import { Typography } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -33,8 +35,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const ViewButton = styled(IconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
+    opacity: 1,
+    padding: "2px",
     color: theme.palette.border.main,
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
@@ -119,7 +121,7 @@ function VeiwEmail({ id }) {
     return (
         <div>
             <Tooltip title="View Email" arrow>
-                <ViewButton onClick={handleClickOpen}>
+                {/* <ViewButton onClick={handleClickOpen}>
                     <RemoveRedEyeOutlinedIcon
                         sx={{
                             fontSize: "20px",
@@ -128,7 +130,10 @@ function VeiwEmail({ id }) {
                             },
                         }}
                     />
-                </ViewButton>
+                    View Email
+                </ViewButton> */}
+
+                <Typography onClick={handleClickOpen}>View Email</Typography>
             </Tooltip>
             <BootstrapDialog
                 onClose={handleClose}

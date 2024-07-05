@@ -1,39 +1,30 @@
-import { styled } from "@mui/material/styles";
+import React, { useState, useEffect, useMemo } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import ListItemButton from "@mui/material/ListItemButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
-import ViewMail from "./ViewMail";
-import CreateEmail from "./CreateEmail";
-import { Delete } from "App/components";
-import Header from "./../components/Header";
-import Filter from "./../components/Filter";
+import Row from "App/components/Row/Row";
+import dateUtils from "App/utils/dateUtils";
 import { useConfirm } from "App/core/mui-confirm";
+import Column from "App/components/Column/Column";
+import FilterForm from "App/components/Filter/FilterForm";
 import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
-import ResendIconButton from "App/components/Button/ResendIconButton";
-
-import actions from "./../store/actions";
-import { FormatDate } from "App/helpers";
-import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
-const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "14px",
-    color: theme.palette.border.dark,
-}));
-
-const Text = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    width: "100%",
-    display: "block",
-    fontSize: "14px",
-    color: theme.palette.border.dark,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-}));
+import CreateEmail from "./CreateEmail";
+import actions from "./../store/actions";
+import { permissions } from "Private/data/permissions";
+import ViewEmailModal from "./ViewEmail/ViewEmailModal";
+import withPermission from "Private/HOC/withPermission";
+import EmailStatusBadge from "../Sms/components/EmailStatusBadge";
 
 const initialState = {
     page_number: 1,
@@ -46,8 +37,22 @@ const initialState = {
 const Email = () => {
     const dispatch = useDispatch();
 
+    const methods = useListFilterStore({ initialState });
+
+    const {
+        isFilterOpen,
+        closeFilter,
+        openFilter,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onQuickFilter,
+        filterSchema,
+        onPageChange,
+        onRowsPerPageChange,
+        reset,
+    } = methods;
+
     const confirm = useConfirm();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: EmailData, loading: l_loading } = useSelector((state) => state.get_email);
     const { success: c_success } = useSelector((state) => state.create_email);
@@ -59,135 +64,121 @@ const Email = () => {
         dispatch({ type: "DELETE_EMAIL_RESET" });
     }, [dispatch, filterSchema, d_success, c_success]);
 
-    const formatStatus = (status) => {
-        switch (status) {
-            case "I":
-                return "CREATED";
-            case "C":
-                return "SENT";
-            case "R":
-                return "REJECTED";
-            case "P":
-                return "PROCESSING";
-            case "E":
-                return "EXCEPTION";
-            default:
-                return "N/A";
-        }
-    };
-
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Sender",
-                accessor: "email_by",
-                Cell: (data) => (
-                    <Box>
-                        <Tooltip title={data.value ? data.value : "empty"} arrow>
-                            <Text component="span">{data.value ? data.value : "N/A"}</Text>
-                        </Tooltip>
-                    </Box>
-                ),
+                header: "Email Address",
+                cell: ({ row }) => {
+                    return (
+                        <Row gap="8px" alignItems="center">
+                            <Column>
+                                <Typography color="text.primary" fontWeight={500}>
+                                    {row.original.email_to}
+                                </Typography>
+                                <Row alignItems="center">
+                                    <Typography color="text.secondary" fontSize={12}>
+                                        {row.original.email_by}
+                                    </Typography>
+                                </Row>
+                            </Column>
+                        </Row>
+                    );
+                },
             },
             {
-                Header: "Receiver",
-                accessor: "email_to",
-                Cell: (data) => (
-                    <Box>
-                        <Tooltip title={data.value ? data.value : "empty"} arrow>
-                            <Text component="span">{data.value ? data.value : "N/A"}</Text>
-                        </Tooltip>
-                    </Box>
-                ),
+                header: "Email Date & Time",
+                accessorKey: "status",
+                cell: ({ row }) => {
+                    return (
+                        <Row gap="8px">
+                            <Column>
+                                <Typography color="text.primary">
+                                    {dateUtils.getLocalDateFromUTC(row.original.created_ts)}
+                                </Typography>
+                                <Typography color="text.primary">
+                                    {dateUtils.getLocalTimeFromUTC(row.original.created_ts)}
+                                </Typography>
+                            </Column>
+                        </Row>
+                    );
+                },
             },
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Subject</Typography>
-                    </Box>
-                ),
-                accessor: "email_subject",
-                Cell: (data) => (
-                    <Box>
-                        <Text component="span">{data?.value ? data?.value : "N/A"}</Text>
-                    </Box>
-                ),
+                header: "Message Status",
+                accessorKey: "status",
+                cell: ({ getValue }) => <EmailStatusBadge status={getValue()} />,
             },
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Status</Typography>
-                    </Box>
-                ),
-                accessor: "status",
-                maxWidth: 100,
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? formatStatus(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Created Date</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatDate(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                maxWidth: 120,
-                Cell: ({ row }) => (
-                    <Box
+                header: "Email Subject",
+                accessorKey: "email_subject",
+                cell: ({ getValue }) => (
+                    <Typography
                         sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxWidth: "400px",
                         }}
                     >
-                        <ViewMail id={row.original.tid} />
-                        <HasPermission permission={permissions.DELETE_FCM}>
-                            <Delete
-                                id={row.original.tid}
-                                handleDelete={handleDelete}
-                                loading={false}
-                                tooltext="Delete Email"
-                            />
-                        </HasPermission>
-                        <HasPermission permission={permissions.RESEND_EMAIL}>
-                            <ResendIconButton
-                                onClick={() => {
-                                    handleOnResend(row?.original?.tid);
-                                }}
-                            />
-                        </HasPermission>
-                    </Box>
+                        {getValue()}
+                    </Typography>
                 ),
+            },
+            {
+                header: "Action",
+                accessorKey: "action",
+                cell: ({ row }) => {
+                    return (
+                        <PopoverButton>
+                            {({ onClose }) => (
+                                <>
+                                    <ListItemButton
+                                        onClick={() => (
+                                            dispatch(actions.open_view_email_modal(row.original)), onClose()
+                                        )}
+                                    >
+                                        View Email
+                                    </ListItemButton>
+                                    <HasPermission permission={permissions.RESEND_EMAIL}>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                handleOnResend(row.original.tid), onClose();
+                                            }}
+                                        >
+                                            Resend
+                                        </ListItemButton>
+                                    </HasPermission>
+
+                                    <HasPermission permission={permissions.DELETE_FCM}>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                handleOnDelete(row.original.tid);
+                                                onClose();
+                                            }}
+                                        >
+                                            Delete
+                                        </ListItemButton>
+                                    </HasPermission>
+                                </>
+                            )}
+                        </PopoverButton>
+                    );
+                },
             },
         ],
         [],
     );
+
+    const filterFields = [
+        {
+            type: "textfield",
+            label: "search",
+            name: "Search",
+        },
+    ];
 
     const sortData = [
         { key: "None", value: "created_ts" },
@@ -195,57 +186,6 @@ const Email = () => {
         { key: "Receiver", value: "email_to" },
         { key: "Subject", value: "email_subject" },
     ];
-
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleDelete = (id) => {
-        dispatch(actions.delete_email(id));
-    };
 
     const handleOnResend = (id) => {
         confirm({
@@ -260,34 +200,71 @@ const Email = () => {
             );
         });
     };
+
+    const handleOnDelete = (id) => {
+        confirm({
+            description: "Are you sure you want to delete this SMS?",
+            confirmationText: "Yes",
+        }).then(() => {
+            dispatch(actions.delete_email(id));
+        });
+    };
+
     return (
-        <PageContent documentTitle="Email">
-            <Header title="Email List">
-                <HasPermission permission={permissions.CREATE_EMAIL}>
-                    <CreateEmail />
-                </HasPermission>
-            </Header>
-            <Filter
-                sortData={sortData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                filterSchema={filterSchema}
-            />
-            <Table
-                columns={columns}
-                data={EmailData?.data || []}
-                title="Email Details"
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={EmailData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Email"
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+            breadcrumbs={[
+                {
+                    label: "Utilities",
+                },
+                {
+                    label: "Email",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Email"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onDelete={onDeleteFilterParams}
+                />
+
+                <PageContentContainer
+                    title="Email List"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                disabled={l_loading}
+                                sortByData={sortData}
+                                values={filterSchema}
+                            />
+
+                            <HasPermission permission={permissions.CREATE_EMAIL}>
+                                <CreateEmail />
+                            </HasPermission>
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={EmailData?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={EmailData?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+
+                <ViewEmailModal />
+            </Column>
         </PageContent>
     );
 };

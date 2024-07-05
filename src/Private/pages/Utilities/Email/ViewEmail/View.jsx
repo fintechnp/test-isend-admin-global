@@ -2,9 +2,9 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
-import { FormatDate, ReferenceName } from "./../../../../../App/helpers";
-import { Typography } from "@mui/material";
+import { FormatDate, ReferenceName } from "../../../../../App/helpers";
 
 const Container = styled(Grid)(({ theme }) => ({
     backgroundColor: theme.palette.background.main,
@@ -112,9 +112,7 @@ function Details({ data, loading }) {
                 <InfoWrapper>
                     <LabelWrapper>Created:</LabelWrapper>
                     <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                        {data?.created_ts
-                            ? FormatDate(data?.created_ts)
-                            : "N/A"}
+                        {data?.created_ts ? FormatDate(data?.created_ts) : "N/A"}
                     </ValueWrapper>
                 </InfoWrapper>
             </Grid>
@@ -129,10 +127,7 @@ function Details({ data, loading }) {
             <Grid item xs={12}>
                 <InfoWrapper>
                     <LabelWrapper>Body:</LabelWrapper>
-                    <EmailBody
-                        sx={{ wordBreak: "break-all" }}
-                        dangerouslySetInnerHTML={{ __html: data?.email_body }}
-                    />
+                    <EmailBody sx={{ wordBreak: "break-all" }} dangerouslySetInnerHTML={{ __html: data?.email_body }} />
                 </InfoWrapper>
             </Grid>
         </Container>

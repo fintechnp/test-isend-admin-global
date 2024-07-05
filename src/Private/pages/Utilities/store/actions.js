@@ -28,6 +28,9 @@ const actions = {
     GET_EMAIL_BYID_SUCCESS: "GET_EMAIL_BYID_SUCCESS",
     GET_EMAIL_BYID_FAILED: "GET_EMAIL_BYID_FAILED",
 
+    OPEN_VIEW_EMAIL_MODAL: "OPEN_VIEW_EMAIL_MODAL",
+    CLOSE_VIEW_EMAIL_MODAL: "CLOSE_VIEW_EMAIL_MODAL",
+
     CREATE_EMAIL: "CREATE_EMAIL",
     CREATE_EMAIL_SUCCESS: "CREATE_EMAIL_SUCCESS",
     CREATE_EMAIL_FAILED: "CREATE_EMAIL_FAILED",
@@ -155,6 +158,15 @@ const actions = {
 
     close_view_sms_modal: () => ({
         type: actions.CLOSE_VIEW_SMS_MODAL,
+    }),
+
+    open_view_email_modal: (payload) => ({
+        type: actions.OPEN_VIEW_EMAIL_MODAL,
+        payload,
+    }),
+
+    close_view_email_modal: () => ({
+        type: actions.CLOSE_VIEW_EMAIL_MODAL,
     }),
 };
 

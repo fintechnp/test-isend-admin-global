@@ -322,6 +322,7 @@ import {
     UtilitiesSaga,
     ResendNotification,
     ViewSmsReducer,
+    ViewEmailReducer,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -875,6 +876,7 @@ export const privateReducer = {
     get_email_byid: GetEmailByIdReducer,
     create_email: CreateEmailReducer,
     delete_email: DeleteEmailReducer,
+    view_email: ViewEmailReducer,
 
     get_fcm: GetFcmReducer,
     get_fcm_byid: GetFcmByIdReducer,
