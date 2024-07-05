@@ -1,19 +1,17 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
-import { Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import DialogContent from "@mui/material/DialogContent";
+import ListItemButton from "@mui/material/ListItemButton";
 
 import FCMForm from "./Form";
 import actions from "../../store/actions";
@@ -29,20 +27,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogActions-root": {
         padding: theme.spacing(1),
     },
-}));
-
-const UpdateButton = styled(IconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const AddButton = styled(Button)(({ theme }) => ({
-    padding: "6px 12px",
-    textTransform: "capitalize",
-    
-    borderColor: theme.palette.border.main,
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -102,18 +86,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CreateFcm({ update, update_data }) {
+function CreateFcm({ update, update_data, onClose }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_fcm
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_fcm);
 
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_fcm
-    );
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_fcm);
 
     React.useEffect(() => {
         if (add_success || update_success) {
@@ -141,7 +121,7 @@ function CreateFcm({ update, update_data }) {
                     redirect_url: data?.redirect_url,
                     display_notification: data?.display_notification,
                     detail_content: data?.detail_content,
-                })
+                }),
             );
         } else {
             dispatch(
@@ -154,7 +134,7 @@ function CreateFcm({ update, update_data }) {
                     redirect_url: data?.redirect_url,
                     display_notification: data?.display_notification,
                     detail_content: data?.detail_content,
-                })
+                }),
             );
         }
     };
@@ -172,7 +152,7 @@ function CreateFcm({ update, update_data }) {
                     display_notification: data?.display_notification,
                     detail_content: data?.detail_content,
                     customer_id: 0,
-                })
+                }),
             );
         } else {
             dispatch(
@@ -185,7 +165,7 @@ function CreateFcm({ update, update_data }) {
                     redirect_url: data?.redirect_url,
                     display_notification: data?.display_notification,
                     detail_content: data?.detail_content,
-                })
+                }),
             );
         }
     };
@@ -193,27 +173,11 @@ function CreateFcm({ update, update_data }) {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit FCM Message" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                <ListItemButton onClick={() => (handleClickOpen(), onClose())}>Edit</ListItemButton>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <Button variant="contained" onClick={() => handleClickOpen()}>
                     Create FCM
-                </AddButton>
+                </Button>
             )}
             <BootstrapDialog
                 onClose={handleClose}
@@ -221,10 +185,7 @@ function CreateFcm({ update, update_data }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create"} FCM Message
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
@@ -242,8 +203,7 @@ function CreateFcm({ update, update_data }) {
                                 image_url: memoizedData?.image_url,
                                 redirect_url: memoizedData?.redirect_url,
                                 detail_content: memoizedData?.detail_content,
-                                display_notification:
-                                    memoizedData?.display_notification,
+                                display_notification: memoizedData?.display_notification,
                             }}
                             customer_id={memoizedData?.customer_id}
                             onSubmit={handleFCMUpdate}

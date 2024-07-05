@@ -321,6 +321,7 @@ import {
     DeleteFcmReducer,
     UtilitiesSaga,
     ResendNotification,
+    ViewFcmReducers,
     ViewSmsReducer,
     ViewEmailReducer,
 } from "./pages/Utilities/store";
@@ -885,6 +886,8 @@ export const privateReducer = {
     update_fcm: UpdateFcmReducer,
     delete_fcm: DeleteFcmReducer,
     resend_notification: ResendNotification,
+
+    view_fcm: ViewFcmReducers,
 
     //Sanction
     get_sanction_list: GetSanctionListReducer,

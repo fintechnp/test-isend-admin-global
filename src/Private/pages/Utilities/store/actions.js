@@ -49,6 +49,9 @@ const actions = {
     GET_FCM_BYID_SUCCESS: "GET_FCM_BYID_SUCCESS",
     GET_FCM_BYID_FAILED: "GET_FCM_BYID_FAILED",
 
+    OPEN_VIEW_FCM_MODAL: "OPEN_VIEW_FCM_MODAL",
+    CLOSE_VIEW_FCM_MODAL: "CLOSE_VIEW_FCM_MODAL",
+
     GET_FCM_BY_CUSTOMER_ID: "GET_FCM_BY_CUSTOMER_ID",
     GET_FCM_BY_CUSTOMER_ID_SUCCESS: "GET_FCM_BY_CUSTOMER_ID_SUCCESS",
     GET_FCM_BY_CUSTOMER_ID_FAILED: "GET_FCM_BY_CUSTOMER_ID_FAILED",
@@ -149,6 +152,15 @@ const actions = {
     resend_notification: (data) => ({
         type: actions.RESEND_NOTIFICATION,
         data,
+    }),
+
+    open_view_fcm_modal: (payload) => ({
+        type: actions.OPEN_VIEW_FCM_MODAL,
+        payload,
+    }),
+
+    close_view_fcm_modal: () => ({
+        type: actions.CLOSE_VIEW_FCM_MODAL,
     }),
 
     open_view_sms_modal: (payload) => ({

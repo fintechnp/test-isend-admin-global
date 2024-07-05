@@ -17,6 +17,7 @@ export { default as UpdateFcmReducer } from "./reducers/UpdateFcm";
 export { default as DeleteFcmReducer } from "./reducers/deleteFcm";
 export { default as UtilitiesAction } from "./actions";
 
+export { default as ViewFcmReducer } from "./reducers/viewFcm";
 export { default as ViewSmsReducer } from "./reducers/viewSms";
 export { default as ViewEmailReducer } from "./reducers/viewEmail";
 

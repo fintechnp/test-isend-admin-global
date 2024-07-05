@@ -10,9 +10,52 @@ import Modal from "App/components/Modal/Modal";
 import actions from "../../store/actions";
 import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
 import getFlagUrl from "App/helpers/getFlagUrl";
+import useSourceDetail from "App/core/source-detail/useSourceDetail";
 
 export default function ViewSmsModal() {
     const dispatch = useDispatch();
+
+    const defination = useSourceDetail([
+        {
+            title: "Fcm Details",
+            items: [
+                {
+                    label: "Title",
+                    accessorKey: "title",
+                },
+                {
+                    label: "FCM ID",
+                    accessorKey: "fcm_id",
+                },
+                {
+                    label: "Customer ID",
+                    accessorKey: "customer_id",
+                },
+                {
+                    label: "Message",
+                    accessorKey: "body",
+                },
+
+                {
+                    label: "Is Active ?",
+                    accessorKey: "is_active",
+                },
+
+                {
+                    label: "Type",
+                    contactNo: "inbox",
+                },
+                {
+                    label: "Created At",
+                    cell: (data) => <>{dateUtils(data?.created_ts)}</>,
+                },
+                {
+                    label: "Website",
+                    accessorKey: "website",
+                },
+            ],
+        },
+    ]);
 
     const { is_open: isOpen, data } = useSelector((state) => state.view_sms);
 
@@ -21,26 +64,7 @@ export default function ViewSmsModal() {
     }, [dispatch]);
 
     return (
-        <Modal
-            sx={{
-                minWidth: "400px",
-                maxWidth: "400px",
-            }}
-            open={isOpen}
-            onClose={handleClose}
-            title={
-                <Row display="flex" alignItems="center" gap="4px">
-                    <BadgeAvatar
-                        avatarUrl={getFlagUrl(data?.sms_country_iso2)}
-                        avatarDimension={20}
-                        smallAvatarDimension={0}
-                        style={{ margin: "auto" }}
-                    />
-
-                    <Typography type="body1">{data?.sms_to}</Typography>
-                </Row>
-            }
-        >
+        <Modal open={isOpen} onClose={handleClose} title="View FCM">
             <Stack
                 sx={{
                     backgroundColor: "#F7F7F8",
