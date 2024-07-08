@@ -616,7 +616,7 @@ import {
     GetHelpCenterReducer,
     HelpCenterSaga,
     UpdateHelpCenterReducer,
-} from "./pages/HelpCenter/store";
+} from "./pages/Agent/HelpCenter/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,

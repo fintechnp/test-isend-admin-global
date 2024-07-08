@@ -153,7 +153,7 @@ const routePaths = {
     ListRejctWebhooks: "/ach-webhooks/reject",
 
     // Help center
-    ListHelpCenter: "/setup/help-center",
+    ListHelpCenter: "/b2b/help-centers",
 };
 
 export default routePaths;

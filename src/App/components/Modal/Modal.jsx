@@ -41,7 +41,7 @@ export default function Modal({ title, open, onClose, sx, children }) {
                 {!!title && (
                     <ModalHeader>
                         {Object.prototype.toString.call(title) === "[object String]" ? (
-                            <Typography variant="subtitle">{title}</Typography>
+                            <Typography variant="subtitle" fontWeight={500}>{title}</Typography>
                         ) : (
                             title
                         )}

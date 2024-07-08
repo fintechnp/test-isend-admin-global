@@ -67,7 +67,7 @@ export default function ListHelpCenter() {
             documentTitle="Help Center"
             breadcrumbs={[
                 {
-                    label: "Setup",
+                    label: "B2B",
                 },
                 {
                     label: "Help Center",
