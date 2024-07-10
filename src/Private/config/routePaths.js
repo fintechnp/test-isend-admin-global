@@ -154,6 +154,18 @@ const routePaths = {
 
     // Help center
     ListHelpCenter: "/b2b/help-centers",
+
+    // region B2B - Beneficiary
+    ListB2bBeneficiary: "/b2b/beneficiary",
+    CreateB2bBeneficiary: "/b2b/beneficiary/create",
+    ViewB2bBeneficiary: "/b2b/beneficiary/:id",
+    EditB2bBeneficiary: "/b2b/beneficiary/:id/edit",
+
+    // region B2B - Account
+    ListB2bAccount: "/b2b/account",
+
+    // region B2B - Account Closure Requests
+    ListB2BAccountClosureRequest: "/b2b/account-closure-requests",
 };
 
 export default routePaths;

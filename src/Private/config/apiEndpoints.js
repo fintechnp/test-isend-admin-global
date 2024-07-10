@@ -285,6 +285,10 @@ const apiEndpoints = {
     GetHelpCenters: "/contactdetails",
     CreateHelpCenter: "/contactDetail",
     UpdateHelpCenter: "/contactdetail/:id",
+
+    // region B2B Account Closure Request
+    ListAccountClosureRequest: "/b2b/account-delete-request",
+    AcceptRejectAccountClosureRequest: "/b2b/account-delete-request/:id",
 };
 
 export default apiEndpoints;

@@ -88,7 +88,11 @@ export default function SourceDetails({ definition, data, isLoading }) {
                     );
                 }
 
-                return <Fragment key={i}>{renderItem(def)}</Fragment>;
+                return (
+                    <Box key={i} display="flex" gap="40px" mt="8px" flexWrap="wrap">
+                        {renderItem(def)}
+                    </Box>
+                );
             })}
         </Box>
     );

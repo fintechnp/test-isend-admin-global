@@ -325,7 +325,7 @@ import {
     ViewSmsReducer,
     ViewEmailReducer,
 } from "./pages/Utilities/store";
-                                                                                                                                                            
+
 //Manage Compliance payment rules
 import {
     GetPaymentRulesReducer,
@@ -617,6 +617,13 @@ import {
     HelpCenterSaga,
     UpdateHelpCenterReducer,
 } from "./pages/Agent/HelpCenter/store";
+
+import {
+    AcceptRejectB2BAccountClosureRequestReducer,
+    GetB2BAccountClosureRequestReducer,
+    B2BAccountClosureRequestSaga,
+    ViewB2BAccountClosureRequestReducer,
+} from "./pages/Agent/AccountClosureRequest/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -1035,6 +1042,11 @@ export const privateReducer = {
     get_b2b_user_kyc_by_id: GetB2BUserKycByIdReducer,
     change_b2b_user_status: ChangeB2BUserStatusReducer,
 
+    // region B2B - Account Closure Request
+    get_b2b_account_closure_request: GetB2BAccountClosureRequestReducer,
+    view_b2b_account_closure_request: ViewB2BAccountClosureRequestReducer,
+    accept_reject_b2b_account_closure_request: AcceptRejectB2BAccountClosureRequestReducer,
+
     get_single_transaction_list: getSingleTransactionsReducer,
     get_single_transaction_by_id: getSingleTransactionReducer,
 
@@ -1184,6 +1196,7 @@ export const privateSaga = [
     B2BUserSaga(),
     AchWebhooksSaga(),
     HelpCenterSaga(),
+    B2BAccountClosureRequestSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

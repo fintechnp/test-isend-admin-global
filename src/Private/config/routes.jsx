@@ -183,6 +183,8 @@ import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
 import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
 import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
 
+import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/components/ListAccountClosureRequest";
+
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
@@ -691,6 +693,12 @@ const privateRoutes = [
     {
         path: routePaths.ListHelpCenter,
         component: <ListHelpCenter />,
+    },
+
+    // region: Account Closure Request
+    {
+        path: routePaths.ListB2BAccountClosureRequest,
+        component: <ListAccountClosureRequest />,
     },
 ];
 

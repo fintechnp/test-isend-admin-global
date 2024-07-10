@@ -12,9 +12,6 @@ const actions = {
     UPDATE_CUSTOMER_DELETE_REQUEST_FAILED: "UPDATE_CUSTOMER_DELETE_REQUEST_FAILED",
     UPDATE_CUSTOMER_DELETE_REQUEST_RESET: " UPDATE_CUSTOMER_DELETE_REQUEST_RESET",
 
-
-
-
     get_all_customer_delete_list: (query) => ({
         type: actions.GET_CUSTOMER_DELETE_LIST,
         query,
@@ -30,8 +27,6 @@ const actions = {
         id,
         data,
     }),
-
-
 };
 
 export default actions;

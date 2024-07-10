@@ -66,7 +66,12 @@ function FormTextField(props) {
                             required={required}
                         >
                             <InputLabel htmlFor={id} required={required}>
-                                {label} {isOptional && <Typography component="span" variant="caption">( Optional )</Typography>}
+                                {label}{" "}
+                                {isOptional && (
+                                    <Typography component="span" variant="caption">
+                                        ( Optional )
+                                    </Typography>
+                                )}
                             </InputLabel>
                             {React.createElement(InputComponent, {
                                 ...field,
@@ -112,7 +117,16 @@ function FormTextField(props) {
                             type={type}
                             error={!!error || !!get(errors, name)?.message}
                             helperText={error ?? get(errors, name)?.message ?? ""}
-                            label={<>{label} {isOptional && <Typography component="span" variant="caption">(Optional)</Typography>}</>}
+                            label={
+                                <>
+                                    {label}{" "}
+                                    {isOptional && (
+                                        <Typography component="span" variant="caption">
+                                            (Optional)
+                                        </Typography>
+                                    )}
+                                </>
+                            }
                             variant={variant}
                             fullWidth={fullWidth}
                             required={required}
