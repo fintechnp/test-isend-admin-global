@@ -166,6 +166,9 @@ const routePaths = {
 
     // region B2B - Account Closure Requests
     ListB2BAccountClosureRequest: "/b2b/account-closure-requests",
+
+    // region B2B - Business Service Charge
+    ListBusinessServiceCharge: "/agent/business-service-charge",
 };
 
 export default routePaths;

@@ -289,6 +289,12 @@ const apiEndpoints = {
     // region B2B Account Closure Request
     ListAccountClosureRequest: "/b2b/account-delete-request",
     AcceptRejectAccountClosureRequest: "/b2b/account-delete-request/:id",
+
+    // region B2B Business
+    GetBusinesses: "/business",
+    GetBusinessById: "/business/:businessId",
+    ApproveBusiness: "/business/:businessId/approve",
+    ToggleBusinessStatus: "/business/:businessId/toggleactivestatus",
 };
 
 export default apiEndpoints;

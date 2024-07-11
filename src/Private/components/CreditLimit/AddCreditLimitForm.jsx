@@ -9,32 +9,26 @@ import routePaths from "Private/config/routePaths";
 import FormRadio from "App/core/hook-form/FormRadio";
 import FormTextField from "App/core/hook-form/FormTextField";
 import { AddButton, CancelButton } from "../AllButtons/Buttons";
-import { relatedToEnum } from "../BusinessCharge/BusinessChargeForm";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
 import apiEndpoints from "Private/config/apiEndpoints";
 import { MarketMakerActions } from "Private/pages/Agent/MarketMaker/store";
 
-const relatedToOptions = [
-    {
-        label: "Business",
-        value: "business",
-    },
-    {
-        label: "Agent",
-        value: "marketMaker",
-    },
-];
+import { relatedToOptions, relatedTo as relatedToConstant } from "Private/data/b2b";
 
 export default function AddCreditLimitForm({ isAddMode = true }) {
     const dispatch = useDispatch();
+
     const navigate = useNavigate();
+
     const { watch, setValue } = useFormContext();
 
     const relatedTo = watch("relatedTo");
+
     const relatedIdName = watch("relatedName");
 
     const { loading, success } = useSelector((state) => state.add_credit_limit);
+
     const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_credit_limit_data);
 
     useEffect(() => {
@@ -67,7 +61,7 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
             <Grid item xs={12} md={6}>
                 <Box
                     sx={{
-                        display: relatedTo === relatedToEnum.business ? "block" : "none",
+                        display: relatedTo === relatedToConstant.BUSINESS ? "block" : "none",
                     }}
                 >
                     <FormSearchAutoComplete
@@ -81,7 +75,7 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
                         defaultQueryParams={{
                             isSelfRegistered: true,
                         }}
-                        defaultValue={relatedTo === relatedToEnum.business ? relatedIdName : null}
+                        defaultValue={relatedTo === relatedToConstant.BUSINESS ? relatedIdName : null}
                         isAddMode={isAddMode}
                     />
                 </Box>
@@ -100,7 +94,7 @@ export default function AddCreditLimitForm({ isAddMode = true }) {
                         disabled={!isAddMode}
                         pageNumberQueryKey="Page"
                         isAddMode={isAddMode}
-                        defaultValue={relatedTo === "marketMaker" ? relatedIdName : null}
+                        defaultValue={relatedTo === relatedToConstant.AGENT ? relatedIdName : null}
                     />
                 </Box>
             </Grid>

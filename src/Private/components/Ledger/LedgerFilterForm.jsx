@@ -10,20 +10,10 @@ import PageContent from "App/components/Container/PageContent";
 import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
-import { relatedToEnum } from "../BusinessCharge/BusinessChargeForm";
-
 import apiEndpoints from "Private/config/apiEndpoints";
+import { relatedTo as relatedToConstant, relatedToOptions } from "Private/data/b2b";
 
-const relatedToOptions = [
-    {
-        label: "Business",
-        value: "business",
-    },
-    {
-        label: "MarketMaker",
-        value: "marketmaker",
-    },
-];
+
 const entityTypeOptions = [
     {
         label: EntryType.Single,
@@ -108,7 +98,7 @@ export default function LedgerFilterForm({ setFilterSchema, loading }) {
                     <Grid item xs={12} md={6}>
                         <Box
                             sx={{
-                                display: relatedTo === relatedToEnum.business ? "block" : "none",
+                                display: relatedTo === relatedToConstant.BUSINESS ? "block" : "none",
                             }}
                         >
                             <FormSearchAutoComplete
@@ -122,7 +112,7 @@ export default function LedgerFilterForm({ setFilterSchema, loading }) {
                         </Box>
                         <Box
                             sx={{
-                                display: relatedTo === relatedToEnum.marketmaker ? "block" : "none",
+                                display: relatedTo === relatedToConstant.AGENT ? "block" : "none",
                             }}
                         >
                             <FormSearchAutoComplete

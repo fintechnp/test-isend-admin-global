@@ -6,7 +6,8 @@ import Divider from "@mui/material/Divider";
 import Spacer from "App/components/Spacer/Spacer";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import { RenderField, Title, TitleWrapper } from "App/components/Container";
-import { relatedToEnum } from "./BusinessChargeForm";
+
+import { relatedTo } from "Private/data/b2b";
 
 export default function BusinessChargeModal({ data }) {
     const columns = useMemo(
@@ -44,13 +45,13 @@ export default function BusinessChargeModal({ data }) {
                     <RenderField label="Type" value={data?.relatedTo} />
                 </Grid>
                 {(() => {
-                    if (relatedToEnum.marketmaker === data?.relatedTo) {
+                    if (relatedTo.AGENT === data?.relatedTo) {
                         return (
                             <Grid item xs={12} sm={6}>
                                 <RenderField label="Market Maker" value={data?.relatedTo} />
                             </Grid>
                         );
-                    } else if (relatedToEnum.business === data?.relatedTo) {
+                    } else if (relatedTo.BUSINESS === data?.relatedTo) {
                         return (
                             <Grid item xs={12} sm={6}>
                                 <RenderField label="Business" value={data?.relatedTo} />

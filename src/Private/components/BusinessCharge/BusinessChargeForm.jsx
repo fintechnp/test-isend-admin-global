@@ -23,23 +23,11 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import apiEndpoints from "Private/config/apiEndpoints";
 import { localStorageGet } from "App/helpers/localStorage";
 import FormTextField from "App/core/hook-form/FormTextField";
-import { AddButton, CancelButton } from "../AllButtons/Buttons";
+import CancelButton from "App/components/Button/CancelButton";
+import SubmitButton from "App/components/Button/SubmitButton";
 import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 
-export const relatedToEnum = {
-    business: "business",
-    marketmaker: "marketmaker",
-};
-const relatedToOptions = [
-    {
-        label: "Business",
-        value: relatedToEnum.business,
-    },
-    {
-        label: "Market Maker",
-        value: relatedToEnum.marketmaker,
-    },
-];
+import { relatedTo as relatedToConstant, relatedToOptions } from "Private/data/b2b";
 
 export default function BusinessChargeForm({ isAddMode = true }) {
     const navigate = useNavigate();
@@ -55,6 +43,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
         setValue,
         formState: { errors },
         setError,
+        getValues,
     } = useFormContext();
 
     const countries = localStorageGet("sendCountry");
@@ -69,6 +58,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
     }, [sendingCountry]);
 
     const { loading: adding, success } = useSelector((state) => state.add_business_charge);
+
     const { loading: updating, success: updateSuccess } = useSelector((state) => state.update_business_charge);
 
     const { append, remove, fields } = useFieldArray({
@@ -85,10 +75,6 @@ export default function BusinessChargeForm({ isAddMode = true }) {
     const relatedTo = watch("relatedTo");
 
     const rules = watch("chargeDetailRules") ?? [];
-
-    useEffect(() => {
-        setValue("relatedId", null);
-    }, [relatedTo]);
 
     const registeredCountyOptions = countries?.map((c) => {
         return {
@@ -139,56 +125,73 @@ export default function BusinessChargeForm({ isAddMode = true }) {
         <>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <FormRadio name="relatedTo" options={relatedToOptions ?? []} disabled={!isAddMode} />
+                    <FormRadio
+                        name="relatedTo"
+                        options={relatedToOptions ?? []}
+                        disabled={!isAddMode}
+                        onChange={() => {
+                            setValue("relatedId", null);
+                        }}
+                    />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} lg={3}>
                     <FormSelect name="sendingCountry" label="Sending Country" options={registeredCountyOptions ?? []} />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} lg={3}>
                     <FormSelect
                         name="receivingCountry"
                         label="Recieving Country"
                         options={allRegisteredCountyOptions ?? []}
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <Box
-                        sx={{
-                            display: relatedTo === relatedToEnum.business ? "block" : "none",
-                        }}
-                    >
-                        <FormSearchAutoComplete
-                            name="relatedId"
-                            label="Business Id"
-                            apiEndpoint={apiEndpoints.business.getAll}
-                            paramkey="BusinessName"
-                            valueKey="businessId"
-                            labelKey="name"
-                            disabled={!isAddMode}
-                            defaultQueryParams={{
-                                IsSelfRegistered: true,
-                            }}
+                <Grid item xs={12} md={6} lg={3}>
+                    {isAddMode ? (
+                        <>
+                            <Box
+                                sx={{
+                                    display: relatedTo === relatedToConstant.BUSINESS ? "block" : "none",
+                                }}
+                            >
+                                <FormSearchAutoComplete
+                                    name="relatedId"
+                                    label="Business"
+                                    apiEndpoint={apiEndpoints.business.getAll}
+                                    paramkey="BusinessName"
+                                    valueKey="businessId"
+                                    labelKey="name"
+                                    disabled={!isAddMode}
+                                    defaultQueryParams={{
+                                        IsSelfRegistered: true,
+                                    }}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: relatedTo === relatedToConstant.AGENT ? "block" : "none",
+                                }}
+                            >
+                                <FormSearchAutoComplete
+                                    name="relatedId"
+                                    label="Agent"
+                                    apiEndpoint={apiEndpoints.marketMaker.getAll}
+                                    paramkey="Name"
+                                    valueKey="marketMakerId"
+                                    labelKey="name"
+                                    disabled={!isAddMode}
+                                    pageNumberQueryKey="Page"
+                                    defaultQueryParams={params}
+                                    shouldRenderPrevData={!!params.sendingCountry}
+                                />
+                            </Box>
+                        </>
+                    ) : (
+                        <FormTextField
+                            name="name"
+                            label={relatedTo === relatedToConstant.AGENT ? "Agent" : "Business"}
+                            disabled
                         />
-                    </Box>
-                    <Box
-                        sx={{
-                            display: relatedTo === relatedToEnum.marketmaker ? "block" : "none",
-                        }}
-                    >
-                        <FormSearchAutoComplete
-                            name="relatedId"
-                            label="Agent"
-                            apiEndpoint={apiEndpoints.marketMaker.getAll}
-                            paramkey="Name"
-                            valueKey="marketMakerId"
-                            labelKey="name"
-                            disabled={!isAddMode}
-                            pageNumberQueryKey="Page"
-                            defaultQueryParams={params}
-                            shouldRenderPrevData={!!params.sendingCountry}
-                        />
-                    </Box>
+                    )}
                 </Grid>
 
                 <Grid item xs={12}>
@@ -268,8 +271,6 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                 >
                     <Grid item>
                         <CancelButton
-                            size="small"
-                            variant="outlined"
                             onClick={() => {
                                 reset();
                             }}
@@ -278,15 +279,7 @@ export default function BusinessChargeForm({ isAddMode = true }) {
                         </CancelButton>
                     </Grid>
                     <Grid item>
-                        <AddButton
-                            size="small"
-                            variant="outlined"
-                            type="submit"
-                            loading={adding || updating}
-                            disabled={adding || updating}
-                        >
-                            {isAddMode ? "Add" : "Update"}
-                        </AddButton>
+                        <SubmitButton isAddMode={isAddMode} isLoading={adding || updating} />
                     </Grid>
                 </Grid>
             </Grid>

@@ -7,7 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Autocomplete from "@mui/material/Autocomplete";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 
 import Api from "App/services/api";
 
@@ -26,12 +26,10 @@ function FormSearchAutoComplete(props) {
         valueKey,
         paramkey,
         apiEndpoint,
-        variant,
         required,
         defaultQueryParams,
         disabled,
         refetchKey,
-        error,
         isAddMode = true,
         defaultValue,
         shouldRenderPrevData,
@@ -39,8 +37,11 @@ function FormSearchAutoComplete(props) {
     } = props;
 
     const [selected, setSelected] = useState(null);
+
     const [isLoading, setIsLoading] = useState(false);
+
     const [apiData, setApiData] = useState([]);
+
     const [searchedText, setSearchedText] = useState("");
 
     const [position, setPosition] = useState(0);
@@ -63,6 +64,8 @@ function FormSearchAutoComplete(props) {
     const listBox = useRef(null);
 
     const value = watch(name);
+
+    const errorMessage = get(errors, name)?.message;
 
     useEffect(() => {
         if (!isAddMode) return;
@@ -146,61 +149,61 @@ function FormSearchAutoComplete(props) {
             name={name}
             control={control}
             render={() => (
-                <FormControl fullWidth size={size} variant={variant} error={!!errors[name]} required={required}>
-                    <InputLabel>{searchedText === "" && !selected ? label : ""}</InputLabel>
-                    <Autocomplete
-                        placeholder={label}
-                        fullWidth={fullWidth}
-                        value={selected}
-                        options={options ?? []}
-                        onChange={(_e, option, reason) => {
-                            if (option === null) setValue(name, null);
-                            else setValue(name, option.value);
-                            clearErrors(name);
-                            if (reason === "clear") {
-                                setApiData([]);
-                                setSearchedText("");
-                                setParams({
-                                    ...params,
-                                    [pageNumberQueryKey]: 1,
-                                    PageSize: 20,
-                                });
-                            }
-                        }}
-                        getOptionLabel={(option) => option.label ?? ""}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                                            {params.InputProps.endAdornment}
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                size={size}
-                                error={!!errors[name]?.message}
-                                onChange={(e) => {
-                                    debounce(() => setSearchedText(e.target.value), 500);
-                                }}
-                            />
-                        )}
-                        getOptionDisabled={(option) => {
-                            return isLoading;
-                        }}
-                        disabled={disabled}
-                        isOptionEqualToValue={(option, value) => {
-                            if (value === undefined) return false;
-                            return option.value === value.value;
-                        }}
-                        ListboxProps={{
-                            onScroll: handleScroll,
-                        }}
-                    />
-                    <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
-                </FormControl>
+                <Autocomplete
+                    placeholder={label}
+                    fullWidth={fullWidth}
+                    value={selected}
+                    options={options ?? []}
+                    onChange={(_e, option, reason) => {
+                        if (option === null) setValue(name, null);
+                        else setValue(name, option.value);
+                        clearErrors(name);
+                        if (reason === "clear") {
+                            setApiData([]);
+                            setSearchedText("");
+                            setParams({
+                                ...params,
+                                [pageNumberQueryKey]: 1,
+                                PageSize: 20,
+                            });
+                        }
+                    }}
+                    getOptionLabel={(option) => option.label ?? ""}
+                    size={size}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label={label}
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {params.InputProps.endAdornment}
+                                    </InputAdornment>
+                                ),
+                            }}
+                            size={size}
+                            onChange={(e) => {
+                                debounce(() => setSearchedText(e.target.value), 500);
+                            }}
+                            error={!!errorMessage}
+                            helperText={errorMessage}
+                            required={required}
+                        />
+                    )}
+                    getOptionDisabled={(option) => {
+                        return isLoading;
+                    }}
+                    disabled={disabled}
+                    isOptionEqualToValue={(option, value) => {
+                        if (value === undefined) return false;
+                        return option.value === value.value;
+                    }}
+                    ListboxProps={{
+                        onScroll: handleScroll,
+                    }}
+                />
             )}
         />
     );
