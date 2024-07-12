@@ -24,6 +24,7 @@ import routePaths from "Private/config/routePaths";
 import { CountryNameById, CurrencyName } from "App/helpers";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import { MarketMakerActions as marketMakerActions } from "./store/index";
+import Column from "App/components/Column/Column";
 
 const initialState = {
     Page: 1,
@@ -95,8 +96,14 @@ export default function ListMarketMaker() {
                 accessorKey: "businessType",
             },
             {
-                header: "Registration Number",
+                header: "Registration Number/Date",
                 accessorKey: "registrationNo",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue()}</Typography>
+                        <Typography>{row.original.registeredDate}</Typography>
+                    </Column>
+                ),
             },
             {
                 header: "Currency",
@@ -157,8 +164,8 @@ export default function ListMarketMaker() {
             label: "Country",
             name: "countryId",
             props: {
-                valueKey: 'country_id'
-            }
+                valueKey: "country_id",
+            },
         },
     ];
 
