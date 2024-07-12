@@ -21,6 +21,7 @@ import FormDatePicker from "App/core/hook-form/FormDatePicker";
 import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import FormSearchAutocomplete from "App/core/hook-form/FormSearchAutocomplete";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
 
 const CloseButton = styled(Button)(({ theme }) => ({
     background: theme.palette.surface.primarySecond,
@@ -40,6 +41,7 @@ export const fieldTypes = {
     TEXTFIELD: "textfield",
     SELECT: "select",
     DATE: "date",
+    COUNTRY_SELECT: "country-select",
     SEARCH_AUTOCOMPLETE_API: "search-autocomplete-api",
 };
 
@@ -63,7 +65,9 @@ const BuildFilterInput = ({ field }) => {
                 labelKey={field.labelKey}
             />
         );
-    return <FormDatePicker name={field.name} label={field.label} options={field.options} {...field.props} />;
+
+    if (field.type === fieldTypes.COUNTRY_SELECT)
+        return <FormSelectCountry name={field.name} label={field.label} {...field.props} />;
 
     return <>Not implemented yet</>;
 };

@@ -2,8 +2,10 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
 import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
+
 import isEmpty from "App/helpers/isEmpty";
 
 const SmallAvatar = styled(Avatar, {
@@ -39,6 +41,7 @@ export default function BadgeAvatar({
     avatarSx,
     smallAvatarSx,
     disableCustomStyle = false,
+    TooltipProps,
 }) {
     const getAltText = (value) => {
         if (isEmpty(value)) return "";
@@ -47,60 +50,92 @@ export default function BadgeAvatar({
         return arr[0].toString().charAt(0) + arr[arr.length - 1].toString().charAt(0);
     };
 
+    const Wrapper = isEmpty(TooltipProps) ? "div" : Tooltip;
+
     return (
-        <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={
-                !enableSkeleton ? (
-                    <SmallAvatar
-                        src={smallAvatarUrl}
-                        altSmallAvatarText={altSmallAvatarText}
+        <Wrapper
+            {...(!isEmpty(TooltipProps) ? TooltipProps : undefined)}
+            sx={{
+                ...TooltipProps?.sx,
+                "&:hover": {
+                    cursor: "pointer",
+                },
+            }}
+        >
+            <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                badgeContent={
+                    !enableSkeleton ? (
+                        <SmallAvatar
+                            src={smallAvatarUrl}
+                            altSmallAvatarText={altSmallAvatarText}
+                            sx={{
+                                height: smallAvatarDimension,
+                                width: smallAvatarDimension,
+                                ...smallAvatarSx,
+                                ...(smallAvatarDimension === 0
+                                    ? {
+                                          display: "none",
+                                      }
+                                    : undefined),
+                            }}
+                            disableCustomStyle={disableCustomStyle}
+                        >
+                            {altSmallAvatarText}
+                        </SmallAvatar>
+                    ) : (
+                        <SmallAvatarSkeleton
+                            variant="circular"
+                            sx={{
+                                height: smallAvatarDimension,
+                                width: smallAvatarDimension,
+                                ...(smallAvatarDimension === 0
+                                    ? {
+                                          display: "none",
+                                      }
+                                    : undefined),
+                            }}
+                            disableCustomStyle={disableCustomStyle}
+                        />
+                    )
+                }
+            >
+                {!enableSkeleton ? (
+                    <Avatar
                         sx={{
-                            height: smallAvatarDimension,
-                            width: smallAvatarDimension,
-                            ...smallAvatarSx,
+                            height: avatarDimension,
+                            width: avatarDimension,
+                            bgcolor: (theme) => theme.palette.primary.main,
+                            fontWeight: 600,
+                            ...avatarSx,
+                            ...(avatarDimension === 0
+                                ? {
+                                      display: "none",
+                                  }
+                                : undefined),
                         }}
-                        disableCustomStyle={disableCustomStyle}
+                        src={avatarUrl}
+                        alt={altAvatarText}
                     >
-                        {altSmallAvatarText}
-                    </SmallAvatar>
+                        {getAltText(altAvatarText)}
+                    </Avatar>
                 ) : (
-                    <SmallAvatarSkeleton
+                    <Skeleton
                         variant="circular"
                         sx={{
-                            height: smallAvatarDimension,
-                            width: smallAvatarDimension,
+                            height: avatarDimension,
+                            width: avatarDimension,
+                            ...(avatarDimension === 0
+                                ? {
+                                      display: "none",
+                                  }
+                                : undefined),
                         }}
-                        disableCustomStyle={disableCustomStyle}
                     />
-                )
-            }
-        >
-            {!enableSkeleton ? (
-                <Avatar
-                    sx={{
-                        height: avatarDimension,
-                        width: avatarDimension,
-                        bgcolor: (theme) => theme.palette.primary.main,
-                        fontWeight: 600,
-                        ...avatarSx,
-                    }}
-                    src={avatarUrl}
-                    alt={altAvatarText}
-                >
-                    {getAltText(altAvatarText)}
-                </Avatar>
-            ) : (
-                <Skeleton
-                    variant="circular"
-                    sx={{
-                        height: avatarDimension,
-                        width: avatarDimension,
-                    }}
-                />
-            )}
-        </Badge>
+                )}
+            </Badge>
+        </Wrapper>
     );
 }
 
@@ -113,4 +148,5 @@ BadgeAvatar.propTypes = {
     avatarSx: PropTypes.object,
     badgeAvatarSx: PropTypes.object,
     disableCustomStyle: PropTypes.bool,
+    TooltipProps: PropTypes.object,
 };

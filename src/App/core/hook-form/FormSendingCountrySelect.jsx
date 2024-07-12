@@ -3,14 +3,13 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import { Controller, useFormContext, get } from "react-hook-form";
 
 import ucwords from "App/helpers/ucwords";
-import { localStorageGet } from "App/helpers/localStorage";
-import { FormHelperText } from "@mui/material";
-import useCountries from "App/hooks/useCountries";
+import useSendingCountries from "App/hooks/useSendingCountries";
 
-export default function FormSelectCountry(props) {
+export default function FormSendingCountrySelect(props) {
     const {
         id,
         name,
@@ -32,9 +31,7 @@ export default function FormSelectCountry(props) {
         formState: { errors },
     } = useFormContext();
 
-    // const countries = localStorageGet("country");
-
-    const { countries } = useCountries();
+    const { countries } = useSendingCountries();
 
     const value = watch(name);
 
@@ -86,7 +83,7 @@ export default function FormSelectCountry(props) {
     );
 }
 
-FormSelectCountry.propTypes = {
+FormSendingCountrySelect.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     label: PropTypes.string,
@@ -105,7 +102,7 @@ FormSelectCountry.propTypes = {
     valueKey: PropTypes.oneOf(["country_id", "country", "iso2", "iso3", "phone_code", "currency", "currency_name"]),
 };
 
-FormSelectCountry.defaultProps = {
+FormSendingCountrySelect.defaultProps = {
     label: "Select a country",
     error: false,
     helperText: "",

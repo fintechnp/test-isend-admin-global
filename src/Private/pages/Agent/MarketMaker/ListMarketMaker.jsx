@@ -4,22 +4,26 @@ import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 
-import buildRoute from "App/helpers/buildRoute";
+import Row from "App/components/Row/Row";
 import Button from "App/components/Button/Button";
 import { TablePagination } from "App/components/Table";
-import FilterForm from "App/components/Filter/FilterForm";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import LoadingBackdrop from "App/components/Loading/LoadingBackdrop";
+import MarketMakerStatusBadge from "./components/MarketMakerStatusBade";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import getFlagUrl from "App/helpers/getFlagUrl";
+import buildRoute from "App/helpers/buildRoute";
+import useCountries from "App/hooks/useCountries";
 import routePaths from "Private/config/routePaths";
 import { CountryNameById, CurrencyName } from "App/helpers";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import { MarketMakerActions as marketMakerActions } from "./store/index";
-import MarketMakerStatusBadge from "./components/MarketMakerStatusBade";
 
 const initialState = {
     Page: 1,
@@ -30,6 +34,8 @@ export default function ListMarketMaker() {
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
+
+    const { getCountryById, isLoading: isLoadingCountries } = useCountries();
 
     const {
         closeFilter,
@@ -64,6 +70,25 @@ export default function ListMarketMaker() {
             {
                 header: "Name",
                 accessorKey: "name",
+                cell: ({ row, getValue }) => {
+                    const country = getCountryById(row.original.registeredCountryId);
+
+                    return (
+                        <Row gap="8px">
+                            <BadgeAvatar
+                                avatarDimension={20}
+                                smallAvatarDimension={0}
+                                avatarUrl={getFlagUrl(country.iso2)}
+                                TooltipProps={{
+                                    title: country.country,
+                                    arrow: true,
+                                    placement: "top",
+                                }}
+                            />
+                            <Typography fontWeight={500}>{getValue()}</Typography>
+                        </Row>
+                    );
+                },
             },
             {
                 header: "Business Type",
@@ -73,14 +98,6 @@ export default function ListMarketMaker() {
                 header: "Registration Number",
                 accessorKey: "registrationNo",
             },
-            {
-                header: "Registered country",
-                accessorKey: "registeredCountryId",
-                cell: ({ getValue }) => {
-                    return <Typography>{CountryNameById(getValue())}</Typography>;
-                },
-            },
-
             {
                 header: "Currency",
                 accessorKey: "currencyId",
@@ -92,11 +109,6 @@ export default function ListMarketMaker() {
                 header: "Contact No",
                 accessorKey: "contactNo",
             },
-            {
-                header: "Registered Date",
-                accessorKey: "registeredDate",
-            },
-
             {
                 header: "Status",
                 accessorKey: "status",
@@ -136,9 +148,17 @@ export default function ListMarketMaker() {
 
     const filterFields = [
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             label: "Agent Name",
             name: "name",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            label: "Country",
+            name: "countryId",
+            props: {
+                valueKey: 'country_id'
+            }
         },
     ];
 
