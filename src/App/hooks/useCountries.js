@@ -12,14 +12,14 @@ import { useDispatch, useSelector } from "react-redux";
  * @property {string} iso2
  * @property {string} iso3
  * @property {string} phone_code
- * @property {null} phone_regex
- * @property {null} postcode_regex
+ * @property {string|null} phone_regex
+ * @property {string|null} postcode_regex
  * @property {boolean} has_state
  * @property {number} id
  * @property {string} created_ts
- * @property {null} created_by
+ * @property {string|null} created_by
  * @property {string} updated_ts
- * @property {null} updated_by
+ * @property {string|null} updated_by
  */
 
 class EmptyCountryListException extends Error {}
