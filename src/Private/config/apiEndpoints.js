@@ -253,6 +253,9 @@ const apiEndpoints = {
         zaiRefundLogs: "/zai/refund-log",
     },
 
+    // region: Common
+    GetCountryValidationRules: '/common/:countryIso3/countryvalidationrules',
+
     // region: B2B - Business
     UpdateBusiness: "/business/:businessId",
     ChangeBusinessStatus: "/business/:businessId/status",

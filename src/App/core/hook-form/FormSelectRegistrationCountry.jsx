@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -22,12 +23,14 @@ export default function FormSelectRegistrationCountry(props) {
         onSelected,
         labelKey = "country",
         valueKey = "iso3",
+        isOptional = false,
     } = props;
 
     const {
         control,
         setValue,
         watch,
+        clearErrors,
         formState: { errors },
     } = useFormContext();
 
@@ -58,13 +61,23 @@ export default function FormSelectRegistrationCountry(props) {
                                 const selectedIndex = countries.findIndex((c) => c?.[valueKey] === value);
                                 onSelected?.(countries[selectedIndex]);
                             }}
-                            label={label}
+                            label={
+                                <>
+                                    {label}{" "}
+                                    {isOptional && (
+                                        <Typography component="span" variant="caption">
+                                            (Optional)
+                                        </Typography>
+                                    )}
+                                </>
+                            }
                             variant={variant}
                             fullWidth={fullWidth}
                             required={required}
                             size={size}
                             disabled={disabled}
                             value={value ?? ""}
+                            onFocus={() => clearErrors(name)}
                         >
                             <MenuItem value="" disabled>
                                 Choose
@@ -100,6 +113,7 @@ FormSelectRegistrationCountry.propTypes = {
     value: PropTypes.string,
     labelKey: PropTypes.oneOf(["country_id", "country", "iso2", "iso3", "phone_code", "currency", "currency_name"]),
     valueKey: PropTypes.oneOf(["country_id", "country", "iso2", "iso3", "phone_code", "currency", "currency_name"]),
+    isOptional: PropTypes.bool,
 };
 
 FormSelectRegistrationCountry.defaultProps = {

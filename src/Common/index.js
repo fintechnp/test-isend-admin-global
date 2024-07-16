@@ -9,7 +9,8 @@ import {
     ResetPasswordReducer,
     LogOutReducer,
     SendCountryReducer,
-    getUserMenusAndPermissionsReducer,
+    GetUserMenusAndPermissionsReducer,
+    GetCountryValidationRulesReducer,
 } from "./store";
 
 export const commonReducer = {
@@ -22,7 +23,8 @@ export const commonReducer = {
     reset_password: ResetPasswordReducer,
     logout: LogOutReducer,
     get_send_country: SendCountryReducer,
-    get_user_menus_and_permissions: getUserMenusAndPermissionsReducer,
+    get_user_menus_and_permissions: GetUserMenusAndPermissionsReducer,
+    get_country_validation_rules: GetCountryValidationRulesReducer,
 };
 
 export const commonSaga = [RefreshTokenSaga()];

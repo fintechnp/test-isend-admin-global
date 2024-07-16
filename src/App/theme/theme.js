@@ -145,6 +145,15 @@ export const ChangeTheme = (mode = true) => {
                     root: ({ ownerState, theme }) => ({
                         borderRadius: buttonBorderRadius.outer,
                         textTransform: "capitalize",
+                        ...(ownerState.variant === "secondary"
+                            ? {
+                                  backgroundColor: theme.palette.surface.primarySecond,
+                                  color: theme.palette.primary.main,
+                                  "&:hover": {
+                                      backgroundColor: theme.palette.surface.primarySecond,
+                                  },
+                              }
+                            : undefined),
                     }),
                 },
             },

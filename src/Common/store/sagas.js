@@ -6,6 +6,7 @@ import Api from "../../App/services/api";
 import AuthUtility from "App/utils/AuthUtility";
 import apiEndpoints from "Private/config/apiEndpoints";
 import guestHttpService from "App/services/guestHttpService";
+import buildRoute from "App/helpers/buildRoute";
 
 const headers = {
     source: "web",
@@ -137,6 +138,17 @@ export const getUserMenusAndPermissions = takeEvery(actions.GET_USER_MENUS_AND_P
     }
 });
 
+export const getCountryValidationRules = takeEvery(actions.GET_COUNTRY_VALIDATION_RULES, function* (action) {
+    const api = new Api();
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCountryValidationRules, action.country));
+        yield put({ type: actions.GET_COUNTRY_VALIDATION_RULES_SUCCESS, response: res });
+    } catch (error) {
+        yield put({ type: actions.GET_COUNTRY_VALIDATION_RULES_FAILED, error: error });
+        yield put({ type: "SET_TOAST_DATA", data: error?.data });
+    }
+});
+
 export default function* saga() {
     yield all([
         refreshToken,
@@ -147,5 +159,6 @@ export default function* saga() {
         logout,
         get_send_country,
         getUserMenusAndPermissions,
+        getCountryValidationRules,
     ]);
 }

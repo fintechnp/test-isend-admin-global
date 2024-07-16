@@ -72,8 +72,8 @@ export default function KycStat({ fromDate, toDate }) {
 
     return (
         <Box display="flex" gap="16px">
-            {statsData.map((stat) => (
-                <Wrapper>
+            {statsData.map((stat, index) => (
+                <Wrapper key={index}>
                     {stat.icon}
                     <Box display="flex" flexDirection="column">
                         <Typography fontSize="0.857rem" lineHeight="1rem" color="text.secondary">

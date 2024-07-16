@@ -43,7 +43,7 @@ import StreetType from "../pages/Setup/StreetType/StreetType";
 
 //Customers
 import CustomerSearch from "../pages/Customers/Search";
-import CreateCustomer from "../pages/Customers/CreateCustomer";
+import CreateCustomer from "../pages/Customers/Customer";
 import CustomerDetails from "../pages/Customers/CustomerDetails";
 import AllBeneficiary from "../pages/Customers/Beneficiary";
 import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
@@ -182,6 +182,7 @@ import ListCirWebhooks from "Private/pages/AchWebhooks/ListCirWebhooks";
 import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
 import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
 import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
+import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
 
 import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/components/ListAccountClosureRequest";
 
@@ -359,11 +360,11 @@ const privateRoutes = [
     },
     {
         path: "/customer/create",
-        component: <CreateCustomer title="Create Customer" />,
+        component: <CreateCustomer />,
     },
     {
         path: "/customer/update/:id",
-        component: <CreateCustomer title="Update Customer" />,
+        component: <EditCustomer />,
     },
     {
         path: "/customer/details/:id",

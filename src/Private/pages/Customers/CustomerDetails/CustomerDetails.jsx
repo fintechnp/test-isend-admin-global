@@ -16,7 +16,7 @@ import Button from "@mui/material/Button";
 import Paper from "App/components/Paper/Paper";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "App/components/Tooltip/Tooltip";
-import actions from "./../CreateCustomer/store/actions";
+import actions from "../Customer/store/actions";
 import Clipboard from "App/components/Clipboard/Clipboard";
 import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
 import PageContent from "App/components/Container/PageContent";
@@ -40,6 +40,7 @@ import referenceTypeId from "Private/config/referenceTypeId";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 import customerActions from "Private/pages/Customers/Documents/store/actions";
+import { UNITED_STATES_ISO3 } from "App/data/SendingCountry";
 
 const CustomerTypeContainer = styled("div")(({ theme }) => ({
     "& .MuiIconButton-root": {
@@ -59,7 +60,7 @@ function CustomerDetails() {
     const dispatch = useDispatch();
     const confirm = useConfirm();
 
-    const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_byid);
+    const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_by_id);
 
     const data = customersData?.data;
 
@@ -71,7 +72,7 @@ function CustomerDetails() {
 
     useEffect(() => {
         if (id) {
-            dispatch(actions.get_customer_byid(id));
+            dispatch(actions.get_customer_by_id(id));
             dispatch({ type: "UPDATE_KYC_RESET" });
         }
     }, [dispatch, id, update_success]);
@@ -163,18 +164,19 @@ function CustomerDetails() {
                     label: "Source of Income",
                     accessorKey: "source_of_income_data",
                 },
-                {
-                    label: "Finicity Customer ID",
-                    accessorKey: "finicity_customer_id",
-                },
-                {
-                    label: "SSN Number",
-                    accessorKey: "ssn_number",
-                },
-                {
-                    label: "Registered Agent Id",
-                    accessorKey: "register_agent_id",
-                },
+                ...(data?.country?.toUpperCase() === UNITED_STATES_ISO3
+                    ? [
+                          {
+                              label: "Finicity Customer ID",
+                              accessorKey: "finicity_customer_id",
+                          },
+
+                          {
+                              label: "SSN Number",
+                              accessorKey: "ssn_number",
+                          },
+                      ]
+                    : []),
                 {
                     label: "Registered Agent",
                     accessorKey: "register_agent_name",

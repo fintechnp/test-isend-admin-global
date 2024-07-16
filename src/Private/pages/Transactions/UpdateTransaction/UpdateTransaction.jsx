@@ -48,11 +48,11 @@ function UpdateTransaction() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { response, loading } = useSelector((state) => state.get_customer_byid);
+    const { response, loading } = useSelector((state) => state.get_customer_by_id);
 
     // useEffect(() => {
     //     if (id) {
-    //         dispatch(actions.get_customer_byid(id));
+    //         dispatch(actions.get_customer_by_id(id));
     //     }
     // }, [id]);
 

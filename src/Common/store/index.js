@@ -12,4 +12,5 @@ export { default as SendCountryReducer } from "./reducers/sendCountry";
 
 export { default as CommonAction } from "./actions";
 
-export { default as getUserMenusAndPermissionsReducer } from "./reducers/getUserMenusAndPermissionsReducer";
+export { default as GetUserMenusAndPermissionsReducer } from "./reducers/getUserMenusAndPermissionsReducer";
+export { default as GetCountryValidationRulesReducer } from "./reducers/getCountryValidationRulesReducer";

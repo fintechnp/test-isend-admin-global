@@ -5,13 +5,15 @@ const getCountryStatesState = {
     loading: false,
     error: null,
     response: undefined,
+    country: null,
 };
 
 const getCountryStatesReducer = (state = getCountryStatesState, action) => {
     switch (action.type) {
         case countryStateActions.GET_COUNTRY_STATES:
             return {
-                ...state,
+                ...getCountryStatesState,
+                country: action.country,
                 loading: true,
             };
         case countryStateActions.GET_COUNTRY_STATES_SUCCESS:
@@ -20,6 +22,7 @@ const getCountryStatesReducer = (state = getCountryStatesState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null,
             };
         case countryStateActions.GET_COUNTRY_STATES_FAILED:
             return {
@@ -27,6 +30,7 @@ const getCountryStatesReducer = (state = getCountryStatesState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
+                response: null,
             };
         default:
             return state;

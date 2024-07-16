@@ -19,12 +19,14 @@ export default function FormReferenceDataAutoComplete(props) {
         labelKey = "name",
         valueKey = "reference_id",
         required,
+        isOptional = false,
         ...rest
     } = props;
 
     const {
         setValue,
         watch,
+        clearErrors,
         formState: { errors },
     } = useFormContext();
 
@@ -46,7 +48,9 @@ export default function FormReferenceDataAutoComplete(props) {
             onChange={(_, value) => {
                 setValue(name, value?.[valueKey] ?? "");
             }}
-            required
+            required={required}
+            isOptional={isOptional}
+            onFocus={() => clearErrors(name)}
         />
     );
 }
@@ -55,4 +59,5 @@ FormReferenceDataAutoComplete.propTypes = {
     referenceTypeId: PropTypes.number.isRequired,
     labelKey: PropTypes.oneOf(["reference_id", "name", "value"]),
     valueKey: PropTypes.oneOf(["reference_id", "name", "value"]),
+    isOptional: PropTypes.bool,
 };

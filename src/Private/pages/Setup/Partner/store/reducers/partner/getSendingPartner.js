@@ -12,6 +12,7 @@ const reducer = (state = initialState, action) => {
         case actions.GET_SENDING_PARTNER:
             return {
                 ...state,
+                query: action.query,
                 loading: true,
             };
         case actions.GET_SENDING_PARTNER_SUCCESS:
@@ -20,6 +21,7 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null,
             };
         case actions.GET_SENDING_PARTNER_FAILED:
             return {
@@ -27,14 +29,11 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
+                response: null,
+                query: null,
             };
         case actions.GET_SENDING_PARTNER_RESET:
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
-            };
+            return initialState;
         default:
             return state;
     }

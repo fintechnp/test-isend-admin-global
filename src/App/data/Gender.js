@@ -4,6 +4,12 @@ export const Gender = {
     OTHERS: 3,
 };
 
+export const GenderString = {
+    MALE: "M",
+    FEMALE: "F",
+    OTHERS: "O",
+};
+
 export const GenderOptions = [
     {
         label: "Male",
@@ -16,5 +22,20 @@ export const GenderOptions = [
     {
         label: "Others",
         value: Gender.OTHERS,
+    },
+];
+
+export const GenderStringOptions = [
+    {
+        label: "Male",
+        value: GenderString.MALE,
+    },
+    {
+        label: "Female",
+        value: GenderString.FEMALE,
+    },
+    {
+        label: "Others",
+        value: GenderString.OTHERS,
     },
 ];

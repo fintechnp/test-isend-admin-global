@@ -1,14 +1,15 @@
 import PropTypes from "prop-types";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+
 import { Controller, useFormContext, get } from "react-hook-form";
 
 import ucwords from "App/helpers/ucwords";
 import { localStorageGet } from "App/helpers/localStorage";
-import { FormHelperText } from "@mui/material";
-import useCountries from "App/hooks/useCountries";
 
 export default function FormSelectCountry(props) {
     const {
@@ -23,16 +24,16 @@ export default function FormSelectCountry(props) {
         onSelected,
         labelKey = "country",
         valueKey = "iso3",
+        isOptional,
     } = props;
 
     const {
         control,
         setValue,
         watch,
+        clearErrors,
         formState: { errors },
     } = useFormContext();
-
-    // const countries = localStorageGet("country");
 
     const { countries } = useCountries();
 
@@ -47,8 +48,9 @@ export default function FormSelectCountry(props) {
             render={() => {
                 return (
                     <FormControl fullWidth>
-                        <InputLabel id={labelId} size={size}>
+                        <InputLabel id={labelId} size={size} required={required}>
                             {label}
+                            {isOptional && <Typography variant="caption">(Optional)</Typography>}
                         </InputLabel>
                         <Select
                             labelId={labelId}
@@ -68,6 +70,7 @@ export default function FormSelectCountry(props) {
                             size={size}
                             disabled={disabled}
                             value={value ?? ""}
+                            onFocus={() => clearErrors(name)}
                         >
                             <MenuItem value="" disabled>
                                 Choose
@@ -78,7 +81,7 @@ export default function FormSelectCountry(props) {
                                 </MenuItem>
                             ))}
                         </Select>
-                        <FormHelperText error={true}>{!!get(errors, name)?.message}</FormHelperText>
+                        <FormHelperText error={true}>{get(errors, name)?.message}</FormHelperText>
                     </FormControl>
                 );
             }}

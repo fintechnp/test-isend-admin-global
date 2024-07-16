@@ -9,32 +9,29 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_CUSTOMER_BYID:
+        case actions.UPDATE_CUSTOMER:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_CUSTOMER_BYID_SUCCESS:
+        case actions.UPDATE_CUSTOMER_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null,
             };
-        case actions.GET_CUSTOMER_BYID_FAILED:
+        case actions.UPDATE_CUSTOMER_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
+                response: null,
             };
-        case actions.GET_CUSTOMER_BYID_RESET:
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
-            };
+        case actions.UPDATE_CUSTOMER_RESET:
+            return initialState;
         default:
             return state;
     }

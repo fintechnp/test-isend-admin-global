@@ -145,7 +145,7 @@ function stringAvatar(first = "A", last) {
             width: "50px",
             textTransform: "uppercase",
         },
-        children: `${first.split(" ")[0][0]}${last ? last.split(" ")[0][0] : ""}`,
+        children: `${first.split(" ")?.[0]?.[0]}${last ? last.split(" ")?.[0]?.[0] : ""}`,
     };
 }
 

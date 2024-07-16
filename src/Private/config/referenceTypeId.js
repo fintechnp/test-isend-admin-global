@@ -13,6 +13,9 @@ const referenceTypeId = {
     kybDocuments: 153,
     kybKycStatuses: 152,
     genders: 42,
+    occupations: 17,
+    sourceOfIncomes: 6,
+    partnerTypes: 3,
 };
 
 export default referenceTypeId;

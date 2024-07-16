@@ -1,5 +1,4 @@
 import Report from "@mui/icons-material/Report";
-import Receipt from "@mui/icons-material/Receipt";
 import Payment from "@mui/icons-material/Payment";
 import Settings from "@mui/icons-material/Settings";
 import GroupAdd from "@mui/icons-material/GroupAdd";

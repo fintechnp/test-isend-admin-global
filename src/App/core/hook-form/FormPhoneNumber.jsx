@@ -33,8 +33,8 @@ function FormPhoneNumber({
                     {...field}
                     {...rest}
                     type="text"
-                    error={!!error || !!get(errors, name)?.message}
-                    helperText={error ?? get(errors, name)?.message ?? ""}
+                    error={!!get(errors, name)?.message}
+                    helperText={get(errors, name)?.message ?? ""}
                     label={label}
                     variant={variant}
                     fullWidth={fullWidth}
@@ -70,4 +70,3 @@ FormPhoneNumber.defaultProps = {
     value: "",
     dialingCodeName: "dialing_code",
 };
-

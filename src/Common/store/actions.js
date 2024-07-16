@@ -42,6 +42,11 @@ const actions = {
     LOG_OUT_SUCCESS: "LOG_OUT_SUCCESS",
     LOG_OUT_FAILED: "LOG_OUT_FAILED",
 
+    GET_COUNTRY_VALIDATION_RULES: "GET_COUNTRY_VALIDATION_RULES",
+    GET_COUNTRY_VALIDATION_RULES_SUCCESS: "GET_COUNTRY_VALIDATION_RULES_SUCCESS",
+    GET_COUNTRY_VALIDATION_RULES_FAILED: "GET_COUNTRY_VALIDATION_RULES_FAILED",
+    GET_COUNTRY_VALIDATION_RULES_RESET: "GET_COUNTRY_VALIDATION_RULES_RESET",
+
     change_theme: (dark) => ({
         type: actions.SET_THEME,
         dark,
@@ -79,6 +84,11 @@ const actions = {
     }),
     log_out: () => ({
         type: actions.LOG_OUT,
+    }),
+
+    get_country_validation_rules: (country) => ({
+        type: actions.GET_COUNTRY_VALIDATION_RULES,
+        country
     }),
 };
 

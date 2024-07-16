@@ -191,7 +191,7 @@ import {
     CreateCustomersReducer,
     UpdateCustomersReducer,
     CustomersCreateSaga,
-} from "./pages/Customers/CreateCustomer/store";
+} from "./pages/Customers/Customer/store";
 
 import { UploadProfilePictureReducer, UploadProfilePictureSaga } from "./pages/Auth/MyAccount/store";
 
@@ -780,7 +780,7 @@ export const privateReducer = {
     get_customers: GetCustomersReducer,
     get_customers_by_partner: GetCustomerByPartnersReducer,
     block_unblock_customer: BlockUnblockReducer,
-    get_customer_byid: GetCustomersByIdReducer,
+    get_customer_by_id: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
     get_all_customer_kyc_count_by_status: GetAllCustomerKycCountByStatusReducer,
