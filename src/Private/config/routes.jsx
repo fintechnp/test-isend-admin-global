@@ -185,7 +185,7 @@ import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
 import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
 import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
 
-import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/components/ListAccountClosureRequest";
+import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -597,6 +597,12 @@ const privateRoutes = [
         component: <EditBusinessOrganizationStakeholder />,
     },
 
+    // region B2B Account Closure Request
+    {
+        path: routePaths.ListB2BAccountClosureRequest,
+        component: <ListAccountClosureRequest />,
+    },
+
     ///Credit Limit
     { path: routePaths.agent.creditLimit, component: <CreditLimit title="Credit Limit" /> },
     { path: routePaths.agent.addCreditLimit, component: <AddCreditLimit title="Add Credit Limit" /> },
@@ -695,12 +701,6 @@ const privateRoutes = [
     {
         path: routePaths.ListHelpCenter,
         component: <ListHelpCenter />,
-    },
-
-    // region: Account Closure Request
-    {
-        path: routePaths.ListB2BAccountClosureRequest,
-        component: <ListAccountClosureRequest />,
     },
 
     {

@@ -14,13 +14,15 @@ import HasPermission from "Private/components/shared/HasPermission";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 
 import { accountClosureRequestActions } from "../store";
-import AccountClosureStatusBadge from "../Status/AccountClosureStatusBadge";
+import AccountClosureStatusBadge from "./AccountClosureStatusBadge";
 import AcceptRejectAccountClosureRequestModal from "./AcceptRejectAccountClosureRequestModal";
 import { AccountClosureRequestFormValues, AccountClosureRequestStatus } from "../data/AccountClosureRequestStatus";
 
 export default function ViewAccountClosureRequestModal({ onAcceptRejectSuccess }) {
     const dispatch = useDispatch();
+
     const [status, setStatus] = useState("");
+
     const [open, setOpen] = useState(false);
 
     const { is_open: isOpen, data: response } = useSelector((state) => state.view_b2b_account_closure_request);
@@ -41,12 +43,11 @@ export default function ViewAccountClosureRequestModal({ onAcceptRejectSuccess }
 
     const handleSubmit = (data) => {
         dispatch(accountClosureRequestActions.accept_reject_account_closure_request(response?.id, data));
-        setOpen(false);
     };
 
     useEffect(() => {
         if (success) {
-            onAcceptRejectSuccess();
+            onAcceptRejectSuccess?.();
             dispatch(accountClosureRequestActions.accept_reject_account_closure_request_reset());
             setOpen(false);
         }
@@ -99,7 +100,7 @@ export default function ViewAccountClosureRequestModal({ onAcceptRejectSuccess }
 
             <ButtonWrapper>
                 {![AccountClosureRequestStatus.ACCEPTED, AccountClosureRequestStatus.REJECTED].includes(
-                    response?.status?.toLowerCase(),
+                    response?.status?.toUpperCase(),
                 ) && (
                     <Row gap={2}>
                         <HasPermission permission={permissions.ACCEPT_B2B_ACCOUNT_CLOSURE_REQUEST}>

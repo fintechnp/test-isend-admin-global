@@ -6,20 +6,20 @@ import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
 import { permissions } from "Private/data/permissions";
-import FilterForm from "App/components/Filter/FilterForm";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import AccountClosureStatusBadge from "./components/AccountClosureStatusBadge";
 import PageContentContainer from "App/components/Container/PageContentContainer";
+import ViewAccountClosureRequestModal from "./components/ViewAccountClosureRequestModal";
 
 import { relatedToOptions } from "Private/data/b2b";
-import { accountClosureRequestActions } from "../store";
-import AccountClosureStatusBadge from "../Status/AccountClosureStatusBadge";
-import ViewAccountClosureRequestModal from "./ViewAccountClosureRequestModal";
-import { AccountClosureRequestStatus } from "../data/AccountClosureRequestStatus";
+import { accountClosureRequestActions } from "./store";
+import { AccountClosureRequestStatus } from "./data/AccountClosureRequestStatus";
 
 const initialState = {
     Page: 1,
@@ -29,7 +29,7 @@ const initialState = {
 export default function ListAccountClosureRequest() {
     const dispatch = useDispatch();
 
-    const methods = useListFilterStore({ initialState });
+    const methods = useListFilterStore({ initialState, pageNumberKeyName: "Page", pageSizeKeyName: "PageSize" });
 
     const {
         isFilterOpen,
@@ -47,14 +47,13 @@ export default function ListAccountClosureRequest() {
 
     const { loading: isLoading } = useSelector((state) => state.accept_reject_b2b_account_closure_request);
 
-    const fetch = () =>
-        useCallback(() => {
-            dispatch(accountClosureRequestActions.get_account_closure_request(filterSchema));
-        }, [filterSchema]);
+    const fetch = useCallback(() => {
+        dispatch(accountClosureRequestActions.get_account_closure_request(filterSchema));
+    }, [filterSchema]);
 
     useEffect(() => {
         fetch();
-    }, [fetch]);
+    }, [fetch, filterSchema]);
 
     const columns = useMemo(() => [
         {
@@ -124,17 +123,17 @@ export default function ListAccountClosureRequest() {
 
     const filterFields = [
         {
-            type: "date",
+            type: fieldTypes.DATE,
             label: "From Date",
             name: "FromDate",
         },
         {
-            type: "date",
+            type: fieldTypes.DATE,
             label: "To Date",
             name: "ToDate",
         },
         {
-            type: "select",
+            type: fieldTypes.SELECT,
             label: "Agent/Business",
             name: "RelatedTo",
             options: relatedToOptions,
@@ -158,7 +157,7 @@ export default function ListAccountClosureRequest() {
         >
             <Column gap="16px">
                 <FilterForm
-                    title="Seach Account Closure Requests"
+                    title="Search Account Closure Requests"
                     open={isFilterOpen}
                     onClose={closeFilter}
                     onSubmit={onFilterSubmit}

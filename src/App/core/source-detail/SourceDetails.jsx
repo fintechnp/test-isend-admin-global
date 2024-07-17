@@ -58,6 +58,10 @@ export default function SourceDetails({ definition, data, isLoading }) {
 
     return (
         <Box
+            display="flex"
+            gap="40px"
+            mt="8px"
+            flexWrap="wrap"
             sx={{
                 "& .MuiTypography-root": {
                     lineHeight: "1.429rem",

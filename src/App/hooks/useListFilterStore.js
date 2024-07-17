@@ -15,11 +15,16 @@ import { useState } from "react";
  */
 
 /**
+ * @typedef {Object} FilterStoreProps
+ * @property {object} initialState - initialState
+ * @property {string} [pageNumberKeyName=page_number] - page number query params key name.
+ * @property {string} [pageSizeKeyName=page_size] - page size query params key name.
+ */
+
+/**
  * Custom hook for managing list filter state and actions.
  *
- * @param {Object} initialState - The initial state of the filter schema.
- * @param {string} [pageNumberKeyName="page_number"] - The key name for the page number in the filter schema.
- * @param {string} [pageSizeKeyName="page_size"] - The key name for the page size in the filter schema.
+ * @param {FilterStoreProps} props - The initial state of the filter schema.
  * @returns {FilterStore} The filter store with state and actions.
  */
 const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", pageSizeKeyName = "page_size" }) => {
