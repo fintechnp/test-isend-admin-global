@@ -624,6 +624,7 @@ import {
     B2BAccountClosureRequestSaga,
     ViewB2BAccountClosureRequestReducer,
 } from "./pages/Agent/AccountClosureRequest/store";
+import { CustomerKycLogsSaga, GetCustomerKycLogsReducer } from "./pages/Customers/KycLogs/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -1116,18 +1117,21 @@ export const privateReducer = {
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
 
-    // region; ach webhooks
+    // region: ach webhooks
 
     get_ach_rdfi_webhooks: GetAchRdfiWebhooksReducer,
     get_ach_cir_webhooks: GetAchCirWebhooksReducer,
     get_ach_return_webhooks: GetAchReturnWebhooksReducer,
     get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
 
-    //region; Help Center
+    //region: Help Center
 
     list_help_center: GetHelpCenterReducer,
     create_help_center: CreateHelpCenterReducer,
     update_help_center: UpdateHelpCenterReducer,
+
+    // region: Customer
+    get_customer_kyc_logs: GetCustomerKycLogsReducer,
 };
 
 export const privateSaga = [
@@ -1197,6 +1201,7 @@ export const privateSaga = [
     AchWebhooksSaga(),
     HelpCenterSaga(),
     B2BAccountClosureRequestSaga(),
+    CustomerKycLogsSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

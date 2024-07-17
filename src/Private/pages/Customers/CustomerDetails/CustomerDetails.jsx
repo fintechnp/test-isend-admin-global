@@ -307,6 +307,11 @@ function CustomerDetails() {
                                 <ListItemButton onClick={() => navigate(buildRoute(routePaths.ListCustomerRemark, id))}>
                                     Remarks
                                 </ListItemButton>
+
+                                <ListItemButton onClick={() => navigate(buildRoute(routePaths.ListCustomerKycLog, id))}>
+                                    KYC Logs
+                                </ListItemButton>
+
                                 <ListItemButton onClick={handleKycReset}> Reset KYC Limit</ListItemButton>
                             </>
                         )}

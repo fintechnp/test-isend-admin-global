@@ -52,6 +52,7 @@ import CustomerTransactions from "../pages/Customers/Transactions";
 import CustomerBanks from "../pages/Customers/Banks/Banks";
 import AllBanks from "../pages/Customers/AllBanks/BankList";
 import CustomerDeleteList from "Private/pages/Customers/DeleteList/CustomerDeleteList";
+import ListCustomerKycLog from "Private/pages/Customers/KycLogs/components/ListCustomerKycLog";
 
 //Documents
 import Documents from "../pages/Customers/Documents";
@@ -700,6 +701,11 @@ const privateRoutes = [
     {
         path: routePaths.ListB2BAccountClosureRequest,
         component: <ListAccountClosureRequest />,
+    },
+
+    {
+        path: routePaths.ListCustomerKycLog,
+        component: <ListCustomerKycLog />,
     },
 ];
 

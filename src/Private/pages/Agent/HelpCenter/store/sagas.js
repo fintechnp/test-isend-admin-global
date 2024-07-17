@@ -16,7 +16,7 @@ export const getHelpCenters = takeEvery(actions.GET_HELP_CENTERS, function* () {
         });
     } catch (error) {
         yield put({
-            type: actions.GET_HELP_CENTERS_SUCCESS,
+            type: actions.GET_HELP_CENTERS_FAILED,
             error: error?.data,
         });
     }

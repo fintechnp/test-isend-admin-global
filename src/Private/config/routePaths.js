@@ -124,6 +124,7 @@ const routePaths = {
     CreateCustomerBeneficiary: "/customer/beneficiary/add/:id",
     ViewCustomerBeneficiary: "/customer/beneficiary/details/:id/:bene_id",
     EditCustomerBeneficiary: "/customer/beneficiary/update/:id/:bene_id",
+    ListCustomerKycLog: "/customer/:customerId/kyc-logs",
 
     // region B2B - Agents
     ListAgent: "/agent/agents",

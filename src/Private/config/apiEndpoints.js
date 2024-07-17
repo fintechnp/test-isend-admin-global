@@ -298,6 +298,9 @@ const apiEndpoints = {
     GetBusinessById: "/business/:businessId",
     ApproveBusiness: "/business/:businessId/approve",
     ToggleBusinessStatus: "/business/:businessId/toggleactivestatus",
+
+    // Kyc Logs
+    GetCustomerKycLogs: "/kyc/logs",
 };
 
 export default apiEndpoints;

@@ -1,21 +1,51 @@
 import { useState } from "react";
 
+/**
+ * @typedef {Object} FilterStore
+ * @property {boolean} isFilterOpen - Whether the filter modal is open.
+ * @property {function} openFilter - Function to open the filter modal.
+ * @property {function} closeFilter - Function to close the filter modal.
+ * @property {function} onQuickFilter - Function to handle quick filter changes.
+ * @property {function} onDeleteFilterParams - Function to delete filter parameters.
+ * @property {function} onFilterSubmit - Function to submit the filter form.
+ * @property {function} onPageChange - Function to handle page changes.
+ * @property {function} onRowsPerPageChange - Function to handle rows per page changes.
+ * @property {function} reset - Function to reset the filter schema.
+ * @property {Object} filterSchema - The current filter schema.
+ */
+
+/**
+ * Custom hook for managing list filter state and actions.
+ *
+ * @param {Object} initialState - The initial state of the filter schema.
+ * @param {string} [pageNumberKeyName="page_number"] - The key name for the page number in the filter schema.
+ * @param {string} [pageSizeKeyName="page_size"] - The key name for the page size in the filter schema.
+ * @returns {FilterStore} The filter store with state and actions.
+ */
 const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", pageSizeKeyName = "page_size" }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-
     const [filterSchema, setFilterSchema] = useState(initialState);
 
+    /**
+     * Opens the filter modal.
+     *
+     * @returns {void}
+     */
     const openFilter = () => setIsFilterOpen(true);
 
+    /**
+     * Closes the filter modal.
+     *
+     * @returns {void}
+     */
     const closeFilter = () => setIsFilterOpen(false);
 
     /**
-     * handle quick filter
+     * Handles quick filter changes.
      *
-     * @param {string} name
-     * @param {string} value
+     * @param {string} name - The name of the filter field.
+     * @param {string} value - The value of the filter field.
      * @returns {void}
-     *
      */
     const onQuickFilter = (name, value) => {
         const updatedFilterSchema = {
@@ -25,12 +55,11 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
         setFilterSchema(updatedFilterSchema);
     };
 
-    /***
-     * delete filter params
+    /**
+     * Deletes filter parameters.
      *
-     * @param {string|array} filterKeys
+     * @param {...(string|string[])} filterKeys - The keys of the filters to be deleted.
      * @returns {void}
-     *
      */
     const onDeleteFilterParams = (...filterKeys) => {
         const schema = { ...filterSchema };
@@ -39,9 +68,9 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
     };
 
     /**
-     * on filter form submit
+     * Submits the filter form.
      *
-     * @param {object} data
+     * @param {Object} data - The data from the filter form.
      * @returns {void}
      */
     const onFilterSubmit = (data) =>
@@ -51,9 +80,9 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
         });
 
     /**
-     * reset filter schema
+     * Resets the filter schema to the initial state.
      *
-     * @param {object} filterSchema
+     * @returns {void}
      */
     const reset = () => {
         setFilterSchema(initialState);
@@ -61,11 +90,11 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
     };
 
     /**
-     * handle page change
+     * Handles page changes.
      *
-     * @param {Event} e
-     * @param {number} newPage
-     *  @returns {void}
+     * @param {Event} e - The event object.
+     * @param {number} newPage - The new page number.
+     * @returns {void}
      */
     const onPageChange = (e, newPage) => {
         setFilterSchema({
@@ -75,10 +104,10 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
     };
 
     /**
-     * handle page change
+     * Handles rows per page changes.
      *
-     * @param {Event} e
-     *  @returns {void}
+     * @param {Event} e - The event object.
+     * @returns {void}
      */
     const onRowsPerPageChange = (e) => {
         const pageSize = e.target.value;
