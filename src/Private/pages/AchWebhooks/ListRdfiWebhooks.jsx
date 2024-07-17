@@ -96,7 +96,7 @@ export default function ListRdfiWebhooks() {
         },
         {
             header: "RDFI Routing Number",
-            accessorKey: "rdfi_accountnumber",
+            accessorKey: "rdfi_routingnumber",
         },
         {
             header: "ODFI Routing Number",
