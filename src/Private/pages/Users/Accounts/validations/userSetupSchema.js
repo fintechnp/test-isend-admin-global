@@ -1,12 +1,14 @@
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 
+import { GenderString } from "App/data/Gender";
+
 YupPassword(Yup);
 
 export const createUserSetupSchema = Yup.object().shape({
     first_name: Yup.string().required("Required"),
     last_name: Yup.string().required("Required"),
-    gender: Yup.string().oneOf(["Male", "Female", "Others"]),
+    gender: Yup.string().oneOf(Object.values(GenderString)),
     phone_number: Yup.string()
         .required("Required")
         .max(15, "Max 15 digits")
@@ -35,7 +37,7 @@ export const createUserSetupSchema = Yup.object().shape({
 export const updateUserSetupSchema = Yup.object().shape({
     first_name: Yup.string().required("Required"),
     last_name: Yup.string().required("Required"),
-    gender: Yup.string().oneOf(["Male", "Female", "Others"]),
+    gender: Yup.string().oneOf(Object.values(GenderString)),
     phone_number: Yup.string()
         .required("Required")
         .max(15, "Max 15 digits")
