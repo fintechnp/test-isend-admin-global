@@ -1,11 +1,10 @@
 import * as Yup from "yup";
-import { reset } from "redux-form";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import { Block } from "App/components";
 import Row from "App/components/Row/Row";
@@ -15,13 +14,13 @@ import PhoneIcon from "App/components/Icon/PhoneIcon";
 import { TablePagination } from "App/components/Table";
 import KycStatusBadge from "./components/KycStatusBadge";
 import CustomerAvatar from "./components/CustomerAvatar";
-import FilterForm from "App/components/Filter/FilterForm";
 import FilterButton from "App/components/Button/FilterButton";
 import PopoverButton from "App/components/Button/PopoverButton";
 import PageContent from "App/components/Container/PageContent";
 import CustomerStatusBadge from "./components/CustomerStatusBadge";
 import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
@@ -34,6 +33,7 @@ import calculateAge from "App/helpers/calculateAge";
 import { permissions } from "Private/data/permissions";
 import { getCustomerName } from "App/helpers/getFullName";
 import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     page_number: 1,
@@ -95,7 +95,10 @@ function Search() {
 
     const isMounted = useRef(false);
 
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const { filterSchema, onQuickFilter, onRowsPerPageChange, onFilterSubmit, onPageChange, onDeleteFilterParams } =
+        useListFilterStore({
+            initialState,
+        });
 
     const { response: customersData, loading: isLoading, isFilterOpen } = useSelector((state) => state.get_customers);
 
@@ -104,11 +107,7 @@ function Search() {
     const { response: SendPartner, loading: p_loading } = useSelector((state) => state.get_sending_partner);
 
     useEffect(() => {
-        dispatch(reset("block_customer_form"));
         dispatch({ type: "GET_CUSTOMERS_RESET" });
-        dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
-        dispatch({ type: "CREATE_CUSTOMERS_RESET" });
-        dispatch({ type: "UPDATE_CUSTOMERS_RESET" });
         dispatch({ type: "GET_SENDING_PARTNER_RESET" });
     }, [dispatch]);
 
@@ -249,7 +248,7 @@ function Search() {
 
     const filterFields = [
         {
-            type: "date",
+            type: fieldTypes.DATE,
             name: "from_date",
             label: "From Date",
             props: {
@@ -257,7 +256,7 @@ function Search() {
             },
         },
         {
-            type: "date",
+            type: fieldTypes.DATE,
             name: "to_date",
             label: "To Date",
             props: {
@@ -265,32 +264,32 @@ function Search() {
             },
         },
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             name: "name",
             label: "Customer Name",
         },
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             name: "customer_id",
             label: "Customer ID",
         },
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             name: "id_number",
             label: "Identity Number",
         },
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             name: "mobile_number",
             label: "Mobile Number",
         },
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             name: "email",
             label: "Email",
         },
         {
-            type: "date",
+            type: fieldTypes.DATE,
             name: "date_of_birth",
             label: "Date of birth",
         },
@@ -302,53 +301,6 @@ function Search() {
         { key: "Name", value: "first_name" },
         { key: "Country", value: "country" },
     ];
-
-    const handleQuickFilter = (name, value) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            [name]: value,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOnSubmit = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            ...data,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOnReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch(actions.close_filter());
-        dispatch(actions.get_customers(initialState));
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const onDelete = (filterKey) => {
-        const schema = { ...filterSchema };
-        delete schema[filterKey];
-        setFilterSchema(schema);
-    };
 
     useEffect(() => {
         handleOnSubmit();
@@ -373,11 +325,10 @@ function Search() {
                 <FilterForm
                     open={isFilterOpen}
                     onClose={() => dispatch(actions.close_filter())}
-                    onSubmit={handleOnSubmit}
-                    onReset={handleOnReset}
+                    onSubmit={onFilterSubmit}
                     fields={filterFields}
                     values={filterSchema}
-                    onDelete={onDelete}
+                    onDelete={onDeleteFilterParams}
                     schema={schema}
                     title="Search Customers"
                 />
@@ -386,8 +337,8 @@ function Search() {
                     topRightContent={
                         <>
                             <TableGridQuickFilter
-                                onSortByChange={handleQuickFilter}
-                                onOrderByChange={handleQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
                                 disabled={isLoading}
                                 sortByData={sortData}
                                 values={filterSchema}
@@ -405,8 +356,8 @@ function Search() {
 
                 <TablePagination
                     paginationData={customersData?.pagination}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
                 />
 
                 <KycStat fromDate={filterSchema?.from_date} toDate={filterSchema?.to_date} />
