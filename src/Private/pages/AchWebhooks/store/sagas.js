@@ -70,6 +70,28 @@ export const getAchRejectWebhooks = takeEvery(actions.GET_ACH_REJECT_WEBHOOKS, f
     }
 });
 
+export const returnAchRdfiTransaction = takeEvery(actions.RETURN_ACH_RDFI_TRANSACTION, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.ReturnRdfiTransaction, action.id), action.data);
+
+        yield put({
+            type: actions.RETURN_ACH_RDFI_TRANSACTION_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.RETURN_ACH_RDFI_TRANSACTION_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
-    yield all([getAchRdfiWebhooks, getAchCirWebhooks, getAchReturnWebhooks, getAchRejectWebhooks]);
+    yield all([
+        getAchRdfiWebhooks,
+        getAchCirWebhooks,
+        getAchReturnWebhooks,
+        getAchRejectWebhooks,
+        returnAchRdfiTransaction,
+    ]);
 }

@@ -1,8 +1,11 @@
-import React, { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
 
+import Row from "App/components/Row/Row";
 import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import FilterForm from "App/components/Filter/FilterForm";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import FilterButton from "App/components/Button/FilterButton";
@@ -12,7 +15,8 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import { achWebhookActions } from "./store";
 import dateUtils from "App/utils/dateUtils";
-import { TablePagination } from "App/components/Table";
+import ReturnIcon from "App/components/Icon/ReturnIcon";
+import ReturnRdfiTransactionModal from "./components/ReturnRdfiTransactionModal";
 
 const initialState = {
     page_number: 1,
@@ -21,6 +25,8 @@ const initialState = {
 
 export default function ListRdfiWebhooks() {
     const dispatch = useDispatch();
+
+    const [selected, setSelected] = useState(null);
 
     const methods = useListFilterStore({ initialState });
 
@@ -38,8 +44,14 @@ export default function ListRdfiWebhooks() {
 
     const { response: rdfiWebhooks, loading: isLoading } = useSelector((state) => state.get_ach_rdfi_webhooks);
 
-    useEffect(() => {
+    const fetch = useCallback(() => {
         dispatch(achWebhookActions.get_ach_rdfi_webhooks(filterSchema));
+    }, [filterSchema]);
+
+    const handleClose = useCallback(() => setSelected(null), []);
+
+    useEffect(() => {
+        fetch();
     }, [dispatch, filterSchema]);
 
     const data = rdfiWebhooks?.data ?? [];
@@ -84,7 +96,7 @@ export default function ListRdfiWebhooks() {
         },
         {
             header: "RDFI Routing Number",
-            accessorKey: "rdfi_accountnumber",
+            accessorKey: "rdfi_routingnumber",
         },
         {
             header: "ODFI Routing Number",
@@ -105,6 +117,17 @@ export default function ListRdfiWebhooks() {
         {
             header: "CFSB Transaction ID",
             accessorKey: "ach_transaction_id",
+        },
+        {
+            header: "Actions",
+            accessorKey: "ach_transaction_id",
+            cell: ({ getValue }) => (
+                <Row>
+                    <IconButton onClick={() => setSelected(getValue())}>
+                        <ReturnIcon fontSize="12" />
+                    </IconButton>
+                </Row>
+            ),
         },
     ]);
 
@@ -198,6 +221,7 @@ export default function ListRdfiWebhooks() {
                     handleChangeRowsPerPage={onRowsPerPageChange}
                 />
             </Column>
+            <ReturnRdfiTransactionModal transactionId={selected} onReturnSuccess={fetch} onClose={handleClose} />
         </PageContent>
     );
 }

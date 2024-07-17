@@ -254,7 +254,7 @@ const apiEndpoints = {
     },
 
     // region: Common
-    GetCountryValidationRules: '/common/:countryIso3/countryvalidationrules',
+    GetCountryValidationRules: "/common/:countryIso3/countryvalidationrules",
 
     // region: B2B - Business
     UpdateBusiness: "/business/:businessId",
@@ -283,6 +283,7 @@ const apiEndpoints = {
     GetAchCirWebhooks: "/CIRTransactions",
     GetReturnWebhooks: "/ReturnTransactions",
     GetRejectWebhooks: "/RejectTransactions",
+    ReturnRdfiTransaction: "/rdfiTransactions/:transactionId/return",
 
     // Help Center
     GetHelpCenters: "/contactdetails",
