@@ -19,6 +19,7 @@ import { achWebhookActions } from "../store";
 import referenceTypeId from "Private/config/referenceTypeId";
 import useReactHookForm from "App/core/hook-form/useReactHookForm";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { dateOfDeathRequiredForReturnReasonCode } from "../data/returnReasonCode";
 
 const schema = Yup.object().shape({
     returnReasonCode: Yup.string().required("Required"),
@@ -37,7 +38,9 @@ export default function ReturnRdfiTransactionModal({ transactionId, onReturnSucc
         resolver: yupResolver(schema),
     });
 
-    const { reset, setValue } = methods;
+    const { reset, setValue, watch } = methods;
+
+    const returnReasonCode = watch("returnReasonCode");
 
     const handleSubmit = (data) => {
         dispatch(achWebhookActions.return_ach_rdfi_transaction(transactionId, data));
@@ -57,8 +60,18 @@ export default function ReturnRdfiTransactionModal({ transactionId, onReturnSucc
         }
     }, [isSuccess]);
 
+    useEffect(() => {
+        if (!dateOfDeathRequiredForReturnReasonCode.includes(returnReasonCode)) {
+            setValue("dateOfDeath", null);
+        }
+    }, [returnReasonCode]);
+
     return (
-        <Modal title="Return RDFI Transaction" open={!isEmpty(transactionId)} sx={{ maxWidth: "600px" }}>
+        <Modal
+            title="Return RDFI Transaction"
+            open={!isEmpty(transactionId)}
+            sx={{ maxWidth: "600px", minWidth: "600px" }}
+        >
             <HookForm {...methods} onSubmit={methods.handleSubmit(handleSubmit)}>
                 <Grid container spacing={2}>
                     {error && (
@@ -74,9 +87,11 @@ export default function ReturnRdfiTransactionModal({ transactionId, onReturnSucc
                             referenceTypeId={referenceTypeId.rdfiReturnCodes}
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <FormDatePicker name="dateOfDeath" label="Date of Death" disableFuture />
-                    </Grid>
+                    {dateOfDeathRequiredForReturnReasonCode.includes(returnReasonCode) && (
+                        <Grid item xs={12}>
+                            <FormDatePicker name="dateOfDeath" label="Date of Death" disableFuture />
+                        </Grid>
+                    )}
                     <Grid item xs={12}>
                         <Row gap={2} justifyContent="flex-end">
                             <CancelButton onClick={handleClose} disabled={isReturning} />
