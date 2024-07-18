@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import React, { useState, useEffect } from "react";
 import { Field, Form, reduxForm } from "redux-form";
 import TextField from "App/components/Fields/TextField";
@@ -67,12 +66,6 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText, update
         sort_by: "created_ts",
         order_by: "DESC",
     });
-
-    // useEffect(() => {
-    //     if (phone_code) {
-    //         setCode(phone_code);
-    //     }
-    // }, [phone_code]);
 
     useEffect(() => {
         if (pcountry) {

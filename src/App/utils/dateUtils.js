@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import moment from "moment";
 import { RangeType } from "App/data/RangeType";
 
 class dateUtils {
@@ -16,11 +17,11 @@ class dateUtils {
     }
 
     getFromDate(date) {
-        return dayjs(date).startOf("day").toISOString();
+        return dayjs(date).startOf('day').toISOString()
     }
 
     getToDate(date) {
-        return dayjs(date).endOf("day").toISOString();
+        return dayjs(date).endOf('day').toISOString()
     }
 
     getDateRange(period) {
