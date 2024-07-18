@@ -1,14 +1,39 @@
+import { Fragment, useRef } from "react";
 import PropTypes from "prop-types";
-import { Fragment } from "react";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Skeleton from "@mui/material/Skeleton";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+
 import isEmpty from "App/helpers/isEmpty";
 
-export default function SourceDetails({ definition, data, isLoading }) {
+const DefaultContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "disableSpacing",
+})(({ disableSpacing = true }) => ({
+    display: "flex",
+    flexWrap: "wrap",
+    ...(!disableSpacing
+        ? {
+              gap: "40px",
+              mt: "8px",
+          }
+        : undefined),
+}));
+
+const ColumnContainer = styled(Box)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    mt: "8px",
+    flexWrap: "wrap",
+}));
+
+export default function SourceDetails({ definition, data, isLoading, viewMode = "default" }) {
     const getNestedValue = (obj, keys) =>
         keys.reduce((nestedObj, key) => (nestedObj && typeof nestedObj === "object" ? nestedObj[key] : undefined), obj);
+
+    const dataDefinitionContainsSingleArray = !definition.some((def, i) => "title" in def);
 
     const renderItem = (item) => {
         if ("cell" in item) {
@@ -56,12 +81,13 @@ export default function SourceDetails({ definition, data, isLoading }) {
         return <> </>;
     };
 
+    let DataContainer = DefaultContainer;
+
+    if (viewMode === "column") DataContainer = ColumnContainer;
+
     return (
-        <Box
-            display="flex"
-            gap="40px"
-            mt="8px"
-            flexWrap="wrap"
+        <DataContainer
+            disableSpacing={!dataDefinitionContainsSingleArray}
             sx={{
                 "& .MuiTypography-root": {
                     lineHeight: "1.429rem",
@@ -72,14 +98,14 @@ export default function SourceDetails({ definition, data, isLoading }) {
             {definition.map((def, i) => {
                 if ("title" in def) {
                     return (
-                        <Box key={i}>
+                        <Box key={i} width="100%">
                             <Box>
                                 {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
-                                <Box display="flex" gap="40px" mt="8px" flexWrap="wrap">
+                                <DataContainer disableSpacing>
                                     {def.items.map((item, ik) => (
                                         <Fragment key={ik}>{renderItem(item)}</Fragment>
                                     ))}
-                                </Box>
+                                </DataContainer>
                             </Box>
                             {i < definition.length - 1 ? (
                                 <Box my="16px">
@@ -92,13 +118,9 @@ export default function SourceDetails({ definition, data, isLoading }) {
                     );
                 }
 
-                return (
-                    <Box key={i} display="flex" gap="40px" mt="8px" flexWrap="wrap">
-                        {renderItem(def)}
-                    </Box>
-                );
+                return <DataContainer key={i}>{renderItem(def)}</DataContainer>;
             })}
-        </Box>
+        </DataContainer>
     );
 }
 
@@ -106,4 +128,5 @@ SourceDetails.propTypes = {
     definition: PropTypes.array,
     data: PropTypes.object,
     isLoading: PropTypes.bool,
+    viewMode: PropTypes.oneOf(["default", "column"]),
 };
