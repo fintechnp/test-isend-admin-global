@@ -13,6 +13,7 @@ import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataA
 import FormSelectRegistrationCountry from "App/core/hook-form/FormSelectRegistrationCountry";
 
 import { UNITED_STATES_ISO3 } from "App/data/SendingCountry";
+import PartnerType from "App/data/PartnerType";
 
 export default function CustomerFormStep1({ isAddMode }) {
     const { setValue, watch } = useReactHookFormContext();
@@ -110,6 +111,8 @@ export default function CustomerFormStep1({ isAddMode }) {
                             setValue("registered_agent_name", value?.name ?? "");
                         }}
                         required
+                        partnerType={PartnerType.SEND}
+                        country={registrationCountry}
                     />
                 </Grid>
             )}

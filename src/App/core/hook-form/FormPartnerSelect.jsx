@@ -70,6 +70,8 @@ export default function FormPartnerSelect({
     queryParams,
     required = false,
     isOptional = false,
+    partnerType,
+    country,
     onChange,
     ...rest
 }) {
@@ -93,9 +95,10 @@ export default function FormPartnerSelect({
     const requestQueryParams = {
         page_number: 1,
         page_size: 100,
-        agent_type: PartnerType.SEND,
+        agent_type: partnerType,
         sort_by: "name",
         order_by: "DESC",
+        country,
         ...queryParams,
     };
 
@@ -112,7 +115,7 @@ export default function FormPartnerSelect({
         if (options.length > 0 && isEqual(requestQueryParams, query)) return;
 
         fetch(requestQueryParams);
-    }, [queryParams]);
+    }, [queryParams, country, partnerType]);
 
     useEffect(() => {
         const options = response?.data ?? [];
@@ -195,4 +198,6 @@ FormPartnerSelect.propTypes = {
     queryParams: PropTypes.object,
     required: PropTypes.bool,
     isOptional: PropTypes.bool,
+    partnerType: PropTypes.oneOf(Object.values(PartnerType)),
+    country: PropTypes.string,
 };
