@@ -28,6 +28,7 @@ import actions from "./store/actions";
 import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import { ReferenceName } from "App/helpers";
+import PartnerType from "App/data/PartnerType";
 import routePaths from "Private/config/routePaths";
 import calculateAge from "App/helpers/calculateAge";
 import { permissions } from "Private/data/permissions";
@@ -282,6 +283,9 @@ function Search() {
             type: fieldTypes.PARTNER_SELECT,
             name: "agent_id",
             label: "Partner",
+            props: {
+                partnerType: PartnerType.SEND,
+            },
         },
     ];
 
