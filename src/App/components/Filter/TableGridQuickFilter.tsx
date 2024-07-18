@@ -28,7 +28,7 @@ export default function TableGridQuickFilter({
                     onChange={(e) => onSortByChange(sortByFieldName, e.target.value)}
                     name={sortByFieldName}
                     displayEmpty
-                    defaultValue={values?.[sortByFieldName] ?? ""}
+                    value={values?.[sortByFieldName] ?? ""}
                     renderValue={(selected) => {
                         if (selected === "created_ts") {
                             return (
@@ -55,7 +55,7 @@ export default function TableGridQuickFilter({
                     onChange={(e) => onOrderByChange(orderByFieldName, e.target.value)}
                     name={orderByFieldName}
                     displayEmpty
-                    defaultValue={values?.[orderByFieldName] ?? ""}
+                    value={values?.[orderByFieldName] ?? ""}
                     renderValue={(selected) => {
                         if (!selected) {
                             return (
