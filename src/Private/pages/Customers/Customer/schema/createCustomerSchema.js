@@ -40,15 +40,13 @@ export const createCustomerFormStep1Schema = Yup.object().shape({
         .required("Source of income is required")
         .max(100)
         .matches(/^[A-Za-z0-9_ (@#,&/)-]{1,100}$/),
-    country: Yup.string().required('Select a country'),
-    ssn_number: Yup.string()
-        .when("country", {
-            is: (value) => value?.toUpperCase() === UNITED_STATES_ISO3,
-            then: (schema) =>
-                schema.length(9, "SSN Number must be exactly 9 digits").required("SSN Number is required"),
-            otherwise: (schema) => schema.nullable().optional(),
-        }),
-    register_agent_id: Yup.string().required('Select a agent'),
+    country: Yup.string().required("Select a country"),
+    ssn_number: Yup.string().when("country", {
+        is: (value) => value?.toUpperCase() === UNITED_STATES_ISO3,
+        then: (schema) => schema.length(9, "SSN Number must be exactly 9 digits").required("SSN Number is required"),
+        otherwise: (schema) => schema.nullable().optional(),
+    }),
+    register_agent_id: Yup.string().required("Select a agent"),
 });
 
 export const POSTAL_CODE_REGEX = "POSTAL_CODE_REGEX";
@@ -85,6 +83,7 @@ export const createCustomerFormStep2Schema = createCustomerFormStep1Schema.shape
     }),
     address: Yup.string().required("Address is required").max(50),
     [IS_STATE_REQUIRED]: Yup.bool(),
+    register_agent_id: Yup.string().required("Select a partner"),
 });
 
 export const createCustomerFormStep3Schema = createCustomerFormStep2Schema.shape({
