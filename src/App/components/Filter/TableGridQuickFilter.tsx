@@ -94,7 +94,7 @@ TableGridQuickFilter.propTypes = {
             value: PropTypes.string.isRequired,
         }),
     ).isRequired,
-    state: PropTypes.shape({
+    values: PropTypes.shape({
         sort_by: PropTypes.string.isRequired,
         order_by: PropTypes.string.isRequired,
     }).isRequired,

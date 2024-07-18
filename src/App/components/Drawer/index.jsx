@@ -26,12 +26,13 @@ import ISendLogo from "../Logo/ISendLogo";
 import HamburgerMenu from "./HamburgerMenu";
 import layoutUtils from "App/utils/layoutUtils";
 
-const drawerWidth = 280;
+const drawerOpenWidth = 280;
+const drawerClosedWidth = 80;
 
 const List = styled(MuiList)(({ theme, open }) => ({}));
 
 const openedMixin = (theme) => ({
-    width: drawerWidth,
+    width: drawerOpenWidth,
     background: theme.palette.primary.main,
     transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
@@ -71,7 +72,6 @@ const DrawerHeader = styled("div", {
 })(({ theme }) => ({
     display: "flex",
     alignItems: "center",
-    height: "30px",
 }));
 
 const AppBar = styled(MuiAppBar, {
@@ -93,8 +93,8 @@ const AppBar = styled(MuiAppBar, {
         duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerOpenWidth,
+        width: `calc(100% - ${drawerOpenWidth}px)`,
         transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -129,7 +129,7 @@ const CustomizedDrawer = styled(MuiDrawer, {
               }),
         background: "transparent",
     },
-    width: open ? "264px" : "70px",
+    width: open ? drawerOpenWidth : drawerClosedWidth,
     "& .no-search-result__container": {
         display: "block !important",
     },
@@ -165,7 +165,18 @@ const Footer = styled(Box)(({ theme }) => ({
     flexGrow: 1,
     width: "fill-available",
     color: theme.palette.text.secondary,
-    zIndex: '9px'
+    zIndex: "9px",
+}));
+
+const Content = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "isDrawerOpen",
+})(({ isDrawerOpen }) => ({
+    position: "relative",
+    margin: "56px 24px 56px 24px",
+    width: "100%",
+    maxWidth: `calc(100vw - ${isDrawerOpen ? drawerOpenWidth : drawerClosedWidth}px)`,
+    overflowY: "auto",
+    height: "100%",
 }));
 
 function Drawer({ children }) {
@@ -316,20 +327,12 @@ function Drawer({ children }) {
                     })()}
                 </DrawerContainer>
             </CustomizedDrawer>
-            <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    p: 3,
-                    position: "relative",
-                }}
-            >
-                <DrawerHeader />
-                <Box mb="30px">{children}</Box>
+            <Content component="main">
+                <Box>{children}</Box>
                 <Footer className="Footer-root">
                     <div dangerouslySetInnerHTML={{ __html: layoutUtils.getCopyrightText() }}></div>
                 </Footer>
-            </Box>
+            </Content>
         </Box>
     );
 }

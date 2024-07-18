@@ -1,11 +1,11 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import { useSelector } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 
+import StatBadge from "./StatBadge";
 import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
 import Column from "App/components/Column/Column";
@@ -14,11 +14,9 @@ import KycExpiredIcon from "App/components/Icon/KycExpiredIcon";
 import KycVerifiedIcon from "App/components/Icon/KycVerifiedIcon";
 import KycRejectedIcon from "App/components/Icon/KycRejectedIcon";
 import KycNotStartedIcon from "App/components/Icon/KycNotStartedIcon";
-import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
-import IncreaseIcon from "App/components/Icon/IncreaseIcon";
-import StatBadge from "./StatBadge";
+
 import numberUtils from "App/utils/numberUtils";
-import { number } from "prop-types";
+import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",

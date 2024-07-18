@@ -1,13 +1,13 @@
 import documentAcceptanceActions from "./documentAcceptanceActions";
 
-const getDocumentAcceptanceInitialState = () => ({
+const initialState = {
     success: false,
     loading: false,
     error: null,
     response: undefined,
-});
+};
 
-const getDocumentAcceptanceReducer = (state = getDocumentAcceptanceInitialState, action) => {
+const getDocumentAcceptanceReducer = (state = initialState, action) => {
     switch (action.type) {
         case documentAcceptanceActions.GET_DOCUMENT_ACCEPTANCE_LIST:
             return {
@@ -20,6 +20,7 @@ const getDocumentAcceptanceReducer = (state = getDocumentAcceptanceInitialState,
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null,
             };
         case documentAcceptanceActions.GET_DOCUMENT_ACCEPTANCE_LIST_FAILURE:
             return {
@@ -27,14 +28,10 @@ const getDocumentAcceptanceReducer = (state = getDocumentAcceptanceInitialState,
                 loading: false,
                 success: false,
                 error: action.error,
+                response: null,
             };
         case documentAcceptanceActions.GET_DOCUMENT_ACCEPTANCE_LIST_RESET: {
-            return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
-            };
+            return initialState;
         }
         default:
             return state;

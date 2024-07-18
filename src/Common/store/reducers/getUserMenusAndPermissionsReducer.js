@@ -20,6 +20,7 @@ const getUserMenusAndPermissionsReducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null
             };
         case actions.GET_USER_MENUS_AND_PERMISSIONS_FAILED:
             return {
@@ -27,6 +28,7 @@ const getUserMenusAndPermissionsReducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
+                response: null
             };
         case actions.GET_USER_MENUS_AND_PERMISSIONS_RESET:
             return {

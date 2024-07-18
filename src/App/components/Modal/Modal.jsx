@@ -1,33 +1,21 @@
-import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 import MuiModal from "@mui/material/Modal";
+import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-
-const CloseButton = styled("div")(({ theme }) => ({
-    cursor: "pointer",
-    position: "absolute",
-    top: "-12px",
-    right: "-12px",
-    width: "30px",
-    height: "30px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: theme.palette.error.main,
-    borderRadius: "50%",
-    "& .MuiSvgIcon-root": {
-        color: theme.palette.background.paper,
-    },
-}));
+import IconButton from "@mui/material/IconButton";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 const ModalHeader = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.background.paper,
     borderRadius: "8px 8px 0 0",
     padding: theme.spacing(1),
-    background: theme.palette.primary.main,
-    color: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
 }));
 
 const ModalBody = styled(Box)(({ theme }) => ({
@@ -46,28 +34,35 @@ export default function Modal({ title, open, onClose, sx, children }) {
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    // width: 400,
                     bgcolor: "background.paper",
                     boxShadow: 24,
-                    // p: 2,
-                    ...sx,
                 }}
             >
-                {typeof onClose === "function" && (
-                    <CloseButton onClick={onClose}>
-                        <CloseIcon />
-                    </CloseButton>
-                )}
                 {!!title && (
                     <ModalHeader>
                         {Object.prototype.toString.call(title) === "[object String]" ? (
-                            <Typography variant="subtitle">{title}</Typography>
+                            <Typography variant="subtitle" fontWeight={500}>{title}</Typography>
                         ) : (
                             title
                         )}
+
+                        {typeof onClose === "function" && (
+                            <IconButton
+                                size="small"
+                                onClick={onClose}
+                                sx={{
+                                    "& .MuiSvgIcon-root": {
+                                        fill: "#68727D",
+                                    },
+                                }}
+                            >
+                                <HighlightOffRoundedIcon fontSize="medium" color="background.paper" />
+                            </IconButton>
+                        )}
                     </ModalHeader>
                 )}
-                <ModalBody>{children}</ModalBody>
+                <Divider />
+                <ModalBody sx={sx}>{children}</ModalBody>
             </Box>
         </MuiModal>
     );

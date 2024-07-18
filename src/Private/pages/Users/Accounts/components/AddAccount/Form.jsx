@@ -2,6 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormRadio from "App/core/hook-form/FormRadio";
@@ -11,7 +12,7 @@ import CancelButton from "App/components/Button/CancelButton";
 import FormTextField from "App/core/hook-form/FormTextField";
 
 import Row from "App/components/Row/Row";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { GenderStringOptions } from "App/data/Gender";
 import FormUserProfileSelect from "App/core/hook-form/FormUserProfileSelect";
 import { createUserSetupSchema, updateUserSetupSchema } from "../../validations/userSetupSchema";
 
@@ -36,20 +37,7 @@ const AccountForm = ({ onSubmit, defaultValues, update, loading, handleClose }) 
                         <FormRadio
                             name="gender"
                             label="Gender"
-                            options={[
-                                {
-                                    label: "Male",
-                                    value: "Male",
-                                },
-                                {
-                                    label: "Female",
-                                    value: "Female",
-                                },
-                                {
-                                    label: "Others",
-                                    value: "Others",
-                                },
-                            ]}
+                            options={GenderStringOptions}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>

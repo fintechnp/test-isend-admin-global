@@ -82,7 +82,7 @@ const DropWrapper = styled(Box)(({ theme }) => ({
 const paymentTypeData = [
     { key: "None", value: "" },
     { key: "Bank Transfer", value: "B" },
-    { key: "Cash Payment", value: "C" },
+    { key: "Cash Pickup", value: "C" },
     { key: "Wallet", value: "W" },
 ];
 

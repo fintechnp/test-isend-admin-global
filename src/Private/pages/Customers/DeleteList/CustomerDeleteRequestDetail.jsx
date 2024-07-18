@@ -9,7 +9,7 @@ import Modal from "App/components/Modal/Modal";
 import StatusBadge from "./components/StatusBadge";
 import Button from "App/components/Button/Button";
 import PageContent from "App/components/Container/PageContent";
-import { Fetching, RenderField, Title, TitleWrapper } from "../CustomerDetails/CustomerDetails";
+import { Fetching, RenderField, Title, TitleWrapper } from "App/components/Container";
 import CustomerDeleteApproveRejectModalForm from "Private/components/customers/CustomerDeleteApproveRejectModalForm";
 
 import { customerDeleteActions } from "./store";
@@ -62,7 +62,7 @@ export default function CustomerDeleteRequestDetail() {
                     <RenderField label="Email" value={deleteRequestDetails?.email} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RenderField label="Phone Number" value={deleteRequestDetails?.phone_number} />
+                    <RenderField label="Phone Number" value={deleteRequestDetails?.mobile_number} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <RenderField label="Deletion Reason" value={deleteRequestDetails?.deletion_reason} />

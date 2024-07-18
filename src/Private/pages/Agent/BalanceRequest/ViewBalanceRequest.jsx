@@ -12,7 +12,7 @@ import Button from "App/components/Button/Button";
 import { convertDate } from "App/utils/convertDate";
 import PageContent from "App/components/Container/PageContent";
 import UpdateBalanceRequestStatusForm from "Private/components/BalanceRequest/UpdateStatusForm";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { BalanceRequestActions } from "./store";
 

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Spacer from "App/components/Spacer/Spacer";
 import UpdateStatusForm from "./UpdateStatusForm";
 import Button from "App/components/Button/Button";
-import { RenderField, Title } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title } from "App/components/Container";
 
 import { AchTransactionActions as actions } from "Private/pages/Transactions/AchTransactions/store";
 

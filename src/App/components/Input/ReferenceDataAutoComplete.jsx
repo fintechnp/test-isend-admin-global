@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import React, { useState, useEffect } from "react";
+import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -44,6 +45,8 @@ export default function ReferenceDataAutoComplete(props) {
         onChange,
         labelKey = "name",
         valueKey = "reference_id",
+        required,
+        isOptional,
         ...rest
     } = props;
 
@@ -55,13 +58,12 @@ export default function ReferenceDataAutoComplete(props) {
 
     useEffect(() => {
         const option = options?.find((d) => d[valueKey] === value);
-        if (option) setSelectedOption(option);
+        setSelectedOption(option ?? null);
     }, [value]);
 
     return (
         <Autocomplete
             {...rest}
-            disablePortal
             size={size}
             options={options}
             autoHighlight
@@ -84,12 +86,17 @@ export default function ReferenceDataAutoComplete(props) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label={label}
+                    label={
+                        <>
+                            {label} {isOptional && <Typography variant="caption">(Optional)</Typography>}
+                        </>
+                    }
                     placeholder={placeholder}
+                    required={required}
                     InputProps={{
-                      disabled,
-                      autoComplete: "new-password",
-                      ...params.InputProps,
+                        disabled,
+                        autoComplete: "new-password",
+                        ...params.InputProps,
                         endAdornment: (
                             <>
                                 {loading ? <CircularProgress color="inherit" size={20} /> : null}

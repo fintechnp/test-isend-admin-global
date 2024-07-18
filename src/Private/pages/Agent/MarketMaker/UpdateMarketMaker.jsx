@@ -9,14 +9,18 @@ import { Loading } from "App/components";
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import isEmpty from "App/helpers/isEmpty";
 import { MarketMakerActions as actions } from "./store";
-import { editMarketMakerValidationSchema, marketMakerValidationSchema } from "./validation/MarketMakerValidation";
+import { editMarketMakerValidationSchema } from "./validation/MarketMakerValidation";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
+import Loader from "App/components/Loader/Loader";
 
 export default function UpdateMarketMaker({ title }) {
     const dispatch = useDispatch();
-    const { marketMakerId } = useParams();
+    const { agentId } = useParams();
 
     const { response, loading } = useSelector((state) => state.get_market_maker_details);
 
@@ -27,10 +31,8 @@ export default function UpdateMarketMaker({ title }) {
 
     const marketMakerDetail = response?.data;
 
-    console.log(formState.errors)
-
     useEffect(() => {
-        dispatch(actions.get_market_maker_details(marketMakerId));
+        dispatch(actions.get_market_maker_details(agentId));
     }, []);
 
     const allowedCountries = marketMakerDetail?.allowedCountries?.map((item) => item?.countryId);
@@ -50,20 +52,22 @@ export default function UpdateMarketMaker({ title }) {
         setValue("allowedCountryIds", allowedCountries);
 
         //address
-        setValue("countryId", marketMakerDetail?.address?.countryId);
-        setValue("postCode", marketMakerDetail?.address?.postCode);
-        setValue("unit", marketMakerDetail?.address?.unit);
-        setValue("street", marketMakerDetail?.address?.street);
-        setValue("city", marketMakerDetail?.address?.city);
-        setValue("state", marketMakerDetail?.address?.state);
-        setValue("address", marketMakerDetail?.address?.address);
+        setValue("address.countryId", marketMakerDetail?.address?.countryId);
+        setValue("address.postCode", marketMakerDetail?.address?.postCode);
+        setValue("address.unit", marketMakerDetail?.address?.unit);
+        setValue("address.street", marketMakerDetail?.address?.street);
+        setValue("address.city", marketMakerDetail?.address?.city);
+        setValue("address.state", marketMakerDetail?.address?.state);
+        setValue("address.address", marketMakerDetail?.address?.address);
 
         //Contact Person
-        setValue("contactPersonName", marketMakerDetail?.contactPerson?.name);
-        setValue("designationId", marketMakerDetail?.contactPerson?.designationId);
-        setValue("contactMobileNo", marketMakerDetail?.contactPerson?.mobileNo);
-        setValue("contactPhoneNo", marketMakerDetail?.contactPerson?.phoneNo);
-        setValue("contactPersonExtension", marketMakerDetail?.contactPerson?.extension);
+        setValue("contactPerson.name", marketMakerDetail?.contactPerson?.name);
+        setValue("contactPerson.designationId", marketMakerDetail?.contactPerson?.designationId);
+        setValue("contactPerson.mobileNo", marketMakerDetail?.contactPerson?.mobileNo);
+        setValue("contactPerson.phoneNo", marketMakerDetail?.contactPerson?.phoneNo);
+        setValue("contactPerson.extension", marketMakerDetail?.contactPerson?.extension);
+        setValue("contactPerson.countryId", marketMakerDetail?.contactPerson?.countryId);
+        setValue("contactPerson.email", marketMakerDetail?.contactPerson?.email);
 
         setValue("documents", marketMakerDetail?.documents || []);
     }, [marketMakerDetail]);
@@ -88,60 +92,38 @@ export default function UpdateMarketMaker({ title }) {
 
         if (requiredEmptyDocuments.length > 0) return;
 
-        const {
-            countryId,
-            postCode,
-            unit,
-            street,
-            state,
-            city,
-            address,
-            contactPersonName,
-            designationId,
-            contactMobileNo,
-            contactPhoneNo,
-            contactPersonExtension,
-            ...rest
-        } = data;
-        const formattedDataToSend = {
-            ...rest,
-            address: {
-                countryId,
-                postCode,
-                unit,
-                street,
-                city,
-                state,
-                address,
-            },
-            contactPerson: {
-                name: contactPersonName,
-                designationId: designationId,
-                mobileNo: contactMobileNo,
+        const requestPayload = { ...data, documents: requiredDocuments };
 
-                phoneNo: contactPhoneNo,
-
-                extension: contactPersonExtension,
-            },
-        };
-        const requestData = { ...formattedDataToSend, documents: requiredDocuments };
-
-        dispatch(actions.update_market_maker(marketMakerId, requestData));
+        dispatch(actions.update_market_maker(agentId, requestPayload));
     };
 
-    if (loading) {
-        return (
-            <Grid item xs={12}>
-                <Loading loading={loading} />
-            </Grid>
-        );
-    }
-
     return (
-        <PageContent title={title} documentTitle="Edit Agent">
-            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
-                <MarketMakerForm isAddMode={false} />
-            </HookForm>
+        <PageContent
+            title={title}
+            documentTitle="Edit Agent"
+            breadcrumbs={[
+                {
+                    label: "Agents",
+                    link: routePaths.ListAgent,
+                },
+                {
+                    label: agentId,
+                    link: buildRoute(routePaths.ViewAgent, agentId),
+                },
+                {
+                    label: "Edit",
+                },
+            ]}
+        >
+            <PageContentContainer>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
+                        <MarketMakerForm isAddMode={false} />
+                    </HookForm>
+                )}
+            </PageContentContainer>
         </PageContent>
     );
 }

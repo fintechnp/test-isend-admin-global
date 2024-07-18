@@ -43,7 +43,7 @@ import StreetType from "../pages/Setup/StreetType/StreetType";
 
 //Customers
 import CustomerSearch from "../pages/Customers/Search";
-import CreateCustomer from "../pages/Customers/CreateCustomer";
+import CreateCustomer from "../pages/Customers/Customer";
 import CustomerDetails from "../pages/Customers/CustomerDetails";
 import AllBeneficiary from "../pages/Customers/Beneficiary";
 import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
@@ -52,6 +52,7 @@ import CustomerTransactions from "../pages/Customers/Transactions";
 import CustomerBanks from "../pages/Customers/Banks/Banks";
 import AllBanks from "../pages/Customers/AllBanks/BankList";
 import CustomerDeleteList from "Private/pages/Customers/DeleteList/CustomerDeleteList";
+import ListCustomerKycLog from "Private/pages/Customers/KycLogs/components/ListCustomerKycLog";
 
 //Documents
 import Documents from "../pages/Customers/Documents";
@@ -110,15 +111,17 @@ import ListFundingSource from "../pages/Setup/FundingSource/ListFundingSource";
 
 // region: B2B
 
+// business
+import AddBusinessIndividualStakeholder from "Private/pages/Agent/Business/AddBusinessIndividualStakeholder";
+import EditBusinessIndividualStakeholder from "Private/pages/Agent/Business/EditBusinessIndividualStakeholder";
+import AddBusinessOrganizationStakeholder from "Private/pages/Agent/Business/AddBusinessOrganizationStakeholder";
+import EditBusinessOrganizationStakeholder from "Private/pages/Agent/Business/EditBusinessOrganizationStakeholder";
+
 //Market Maker
 import ListMarketMaker from "../pages/Agent/MarketMaker/ListMarketMaker";
 import AddMarketMaker from "../pages/Agent/MarketMaker/AddMarketMaker";
 import ViewMarketMaker from "../pages/Agent/MarketMaker/ViewMarketMaker";
 import UpdateMarketMaker from "../pages/Agent/MarketMaker/UpdateMarketMaker";
-import AddMarketMakerKyb from "../pages/Agent/MarketMaker/AddMarketMakerKyb";
-import AddMarketMakerKyc from "../pages/Agent/MarketMaker/AddMarketMakerKyc";
-import UpdateMarketMakerKyb from "../pages/Agent/MarketMaker/UpdateMarketMakerKyb";
-import UpdateMarketMakerKyc from "../pages/Agent/MarketMaker/UpdateMarketMakerKyc";
 
 ///Credit Limit
 import CreditLimit from "../pages/Agent/CreditLimit/CreditLimit";
@@ -167,6 +170,22 @@ import ListDocumentAcceptance from "Private/pages/Setup/DocumentAcceptance/ListD
 import ZaiAustraliaPayment from "Private/pages/PaymentProcess/ZaiAustraliaPayment/ZaiAustraliaPayment";
 import CustomerDeleteRequestDetail from "Private/pages/Customers/DeleteList/CustomerDeleteRequestDetail";
 import ListEmailTemplate from "Private/components/email-template/ListEmailTemplate";
+import CompleteBusinessKyb from "Private/pages/Agent/Business/CompleteBusinessKyb";
+import EditBusiness from "Private/pages/Agent/Business/EditBusiness";
+import AddMarketMakerOrganizationStakeholder from "Private/pages/Agent/MarketMaker/AddMarketMakerOrganizationStakeholder";
+import AddMarketMakerIndividualStakeholder from "Private/pages/Agent/MarketMaker/AddMarketMakerIndividualStakeholder";
+import EditMarketMakerIndividualStakeholder from "Private/pages/Agent/MarketMaker/EditMarketMakerIndividualStakeholder";
+import EditMarketMakerOrganizationStakeholder from "Private/pages/Agent/MarketMaker/EditMarketMakerOrganizationStakeholder";
+
+//ACH Webhooks
+import ListRdfiWebhooks from "Private/pages/AchWebhooks/ListRdfiWebhooks";
+import ListCirWebhooks from "Private/pages/AchWebhooks/ListCirWebhooks";
+import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
+import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
+import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
+import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
+
+import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -342,11 +361,11 @@ const privateRoutes = [
     },
     {
         path: "/customer/create",
-        component: <CreateCustomer title="Create Customer" />,
+        component: <CreateCustomer />,
     },
     {
         path: "/customer/update/:id",
-        component: <CreateCustomer title="Update Customer" />,
+        component: <EditCustomer />,
     },
     {
         path: "/customer/details/:id",
@@ -531,27 +550,57 @@ const privateRoutes = [
     //MyAccount
     { path: "/account", component: <MyAccount title="My Account" /> },
 
-    //Agent
-    { path: routePaths.agent.listMarketMaker, component: <ListMarketMaker /> },
-    { path: routePaths.agent.addMarketMaker, component: <AddMarketMaker /> },
-    { path: routePaths.agent.viewMarketMaker, component: <ViewMarketMaker /> },
-    { path: routePaths.agent.updateMarketMaker, component: <UpdateMarketMaker /> },
+    // region B2B - Agents
+    { path: routePaths.ListAgent, component: <ListMarketMaker /> },
+    { path: routePaths.CreateAgent, component: <AddMarketMaker /> },
+    { path: routePaths.ViewAgent, component: <ViewMarketMaker /> },
+    { path: routePaths.EditAgent, component: <UpdateMarketMaker /> },
     {
-        path: routePaths.agent.addMarketMakerKyb,
-        component: <AddMarketMakerKyb title="Add Market Maker KYB" />,
+        path: routePaths.CreateAgentOrganizationStakeholder,
+        component: <AddMarketMakerOrganizationStakeholder />,
     },
     {
-        path: routePaths.agent.addMarketMakerKyc,
-        component: <AddMarketMakerKyc title="Add Market Maker KYC" />,
+        path: routePaths.CreateAgentIndividualStakeholder,
+        component: <AddMarketMakerIndividualStakeholder />,
+    },
+    {
+        path: routePaths.EditAgentOrganizationStakeholder,
+        component: <EditMarketMakerOrganizationStakeholder />,
+    },
+    {
+        path: routePaths.EditAgentIndividualStakeholder,
+        component: <EditMarketMakerIndividualStakeholder />,
     },
 
+    // region B2B - Business
+    { path: routePaths.ListBusiness, component: <ListBusiness /> },
+    { path: routePaths.ViewBusiness, component: <ViewBusiness /> },
+    { path: routePaths.EditBusiness, component: <EditBusiness /> },
     {
-        path: "/agent/market-maker/:marketMakerId/update-kyb/:kybId",
-        component: <UpdateMarketMakerKyb title="Update Market Maker KYB" />,
+        path: routePaths.CreateBusinessKYB,
+        component: <CompleteBusinessKyb />,
     },
     {
-        path: "/agent/market-maker/:marketMakerId/update-kyc/:kycId",
-        component: <UpdateMarketMakerKyc />,
+        path: routePaths.CreateBusinessIndividualStakeholder,
+        component: <AddBusinessIndividualStakeholder />,
+    },
+    {
+        path: routePaths.EditBusinessIndividualStakeholder,
+        component: <EditBusinessIndividualStakeholder />,
+    },
+    {
+        path: routePaths.CreateBusinessOrganizationStakeholder,
+        component: <AddBusinessOrganizationStakeholder />,
+    },
+    {
+        path: routePaths.EditBusinessOrganizationStakeholder,
+        component: <EditBusinessOrganizationStakeholder />,
+    },
+
+    // region B2B Account Closure Request
+    {
+        path: routePaths.ListB2BAccountClosureRequest,
+        component: <ListAccountClosureRequest />,
     },
 
     ///Credit Limit
@@ -568,8 +617,6 @@ const privateRoutes = [
     { path: routePaths.agent.viewBalanceRequest, component: <ViewBalanceRequest title="Balance Request Detail" /> },
 
     //Business
-    { path: routePaths.agent.listBusiness, component: <ListBusiness title="Businesses" /> },
-    { path: routePaths.agent.viewBusiness, component: <ViewBusiness title="View Business" /> },
 
     { path: routePaths.agent.listSingleTransactions, component: <ListSingeTransaction /> },
     { path: routePaths.agent.viewSingleTransaction, component: <ViewSingleTransaction /> },
@@ -629,6 +676,36 @@ const privateRoutes = [
     {
         path: routePaths.agent.listAccounts,
         component: <ListAccountList />,
+    },
+
+    // Ach Webhooks
+
+    {
+        path: routePaths.ListAchRdfiWebhook,
+        component: <ListRdfiWebhooks />,
+    },
+    {
+        path: routePaths.ListCirWebhooks,
+        component: <ListCirWebhooks />,
+    },
+    {
+        path: routePaths.ListReturnWebhooks,
+        component: <ListReturnWebhooks />,
+    },
+    {
+        path: routePaths.ListRejctWebhooks,
+        component: <ListRejectWebhooks />,
+    },
+
+    // Help Center
+    {
+        path: routePaths.ListHelpCenter,
+        component: <ListHelpCenter />,
+    },
+
+    {
+        path: routePaths.ListCustomerKycLog,
+        component: <ListCustomerKycLog />,
     },
 ];
 

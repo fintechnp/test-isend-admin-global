@@ -252,6 +252,55 @@ const apiEndpoints = {
         zaiRefundPayment: "/zai/refund-payment",
         zaiRefundLogs: "/zai/refund-log",
     },
+
+    // region: Common
+    GetCountryValidationRules: '/common/:countryIso3/countryvalidationrules',
+
+    // region: B2B - Business
+    UpdateBusiness: "/business/:businessId",
+    ChangeBusinessStatus: "/business/:businessId/status",
+    ToggleBusinessActiveStatus: "/business/:businessId/toggleactivestatus",
+
+    // region: B2B - Stakeholders
+    GetOrganizationStakeholders: "/kyb",
+    GetIndividualStakeholders: "/kyc",
+    AddOrganizationStakeholder: "/kyb",
+    UpdateOrganizationStakeholder: "/kyb/:kybId",
+    ChangeOrganizationStakeholderStatus: "/kyb/:kybId/status",
+    AddIndividualStakeholder: "/kyc",
+    UpdateIndividualStakeholder: "/kyc/:kycId",
+    ChangeIndividualStakeholderStatus: "/kyc/:kycId/status",
+    GetOrganizationStakeholderById: "/kyb/:kybId",
+    GetIndividualStakeholderById: "/kyc/:kycId",
+
+    // region B2B - Users
+    GetB2BUsers: "/users",
+    GetB2BUserKycById: "/kyc/:kycId",
+    ChangeB2BUserStatus: "/kyc/:kycId/status",
+
+    // region ACH Webhooks
+    GetAchRdfiWebhooks: "/RDFITransactions",
+    GetAchCirWebhooks: "/CIRTransactions",
+    GetReturnWebhooks: "/ReturnTransactions",
+    GetRejectWebhooks: "/RejectTransactions",
+
+    // Help Center
+    GetHelpCenters: "/contactdetails",
+    CreateHelpCenter: "/contactDetail",
+    UpdateHelpCenter: "/contactdetail/:id",
+
+    // region B2B Account Closure Request
+    ListAccountClosureRequest: "/b2b/account-delete-request",
+    AcceptRejectAccountClosureRequest: "/b2b/account-delete-request/:id",
+
+    // region B2B Business
+    GetBusinesses: "/business",
+    GetBusinessById: "/business/:businessId",
+    ApproveBusiness: "/business/:businessId/approve",
+    ToggleBusinessStatus: "/business/:businessId/toggleactivestatus",
+
+    // Kyc Logs
+    GetCustomerKycLogs: "/kyc/logs",
 };
 
 export default apiEndpoints;

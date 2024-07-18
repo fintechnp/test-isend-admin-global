@@ -18,7 +18,7 @@ export default function PageContentContainer({ title, children, topRightContent 
 }
 
 PageContentContainer.propTypes = {
-    title: PropTypes.string,
-    children: PropTypes.oneOfType(PropTypes.arrayOf(PropTypes.node), PropTypes.node),
-    topRightContent: PropTypes.oneOfType(PropTypes.arrayOf(PropTypes.node), PropTypes.node),
+    title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+    topRightContent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };

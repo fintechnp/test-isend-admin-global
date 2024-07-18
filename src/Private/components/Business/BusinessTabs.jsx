@@ -46,7 +46,7 @@ export default function BusinessTab({ tabsData }) {
     };
 
     return (
-        <Box sx={{ width: "100%", mt: 2 }}>
+        <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs value={value} onChange={handleChange} aria-label="tabs">
                     {tabsData?.map((tabData) => (

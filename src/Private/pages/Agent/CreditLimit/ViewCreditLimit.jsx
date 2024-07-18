@@ -13,7 +13,7 @@ import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 import { creditLimitStatusEnum } from "./constants/creditLimitStatus";
 import UpdateStatusForm from "Private/components/CreditLimit/UpdateStatusForm";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { creditLimitActions } from "./store";
 

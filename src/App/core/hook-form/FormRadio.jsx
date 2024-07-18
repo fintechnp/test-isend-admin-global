@@ -11,6 +11,7 @@ export default function FormRadio(props) {
         control,
         clearErrors,
         formState: { errors },
+        setValue,
     } = useFormContext();
 
     const {
@@ -27,6 +28,7 @@ export default function FormRadio(props) {
         row = true,
         ...rest
     } = props;
+
     return (
         <Controller
             name={name}
@@ -43,7 +45,17 @@ export default function FormRadio(props) {
                     size={size}
                 >
                     <FormLabel id="controlled-radio-buttons-group">{label}</FormLabel>
-                    <RadioGroup name={name} onFocus={() => clearErrors(name)} row={row} {...field} {...rest}>
+                    <RadioGroup
+                        name={name}
+                        onFocus={() => clearErrors(name)}
+                        row={row}
+                        {...field}
+                        {...rest}
+                        onChange={(e) => {
+                            setValue(name, e.target.value);
+                            rest?.onChange(e);
+                        }}
+                    >
                         {options &&
                             options.map((option, index) => (
                                 <FormControlLabel

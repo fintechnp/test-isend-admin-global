@@ -152,6 +152,7 @@ export const updateBusinessKycStatus = takeEvery(actions.UPDATE_BUSINESS_KYC_STA
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
+
 export const updateBusinessKybStatus = takeEvery(actions.UPDATE_BUSINESS_KYB_STATUS, function* (action) {
     try {
         const res = yield call(api.put, buildRoute(apiEndpoints.business.approveKyb, action.id), action.data);
@@ -172,6 +173,57 @@ export const updateBusinessKybStatus = takeEvery(actions.UPDATE_BUSINESS_KYB_STA
     }
 });
 
+export const updateBusiness = takeEvery(actions.UPDATE_BUSINESS, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.UpdateBusiness, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_BUSINESS_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.UPDATE_BUSINESS_FAILED,
+            error: error?.data?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const changeBusinessStatus = takeEvery(actions.CHANGE_BUSINESS_STATUS, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.ChangeBusinessStatus, action.id), action.data);
+        yield put({
+            type: actions.CHANGE_BUSINESS_STATUS_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.CHANGE_BUSINESS_STATUS_FAILED,
+            error: error?.data?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const toggleBusinessActiveStatus = takeEvery(actions.TOGGLE_BUSINESS_ACTIVE_STATUS, function* (action) {
+    try {
+        const res = yield call(api.patch, buildRoute(apiEndpoints.ToggleBusinessActiveStatus, action.id), action.data);
+        yield put({
+            type: actions.TOGGLE_BUSINESS_ACTIVE_STATUS_SUCCESS,
+            response: res,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({
+            type: actions.TOGGLE_BUSINESS_ACTIVE_STATUS_FAILED,
+            error: error?.data?.message,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
     yield all([
         getAllBusiness,
@@ -184,5 +236,8 @@ export default function* saga() {
         getBusinesKybDetails,
         updateBusinessKybStatus,
         updateBusinessKycStatus,
+        updateBusiness,
+        changeBusinessStatus,
+        toggleBusinessActiveStatus,
     ]);
 }

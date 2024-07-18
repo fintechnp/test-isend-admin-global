@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { useConfirm } from "App/core/mui-confirm";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
@@ -25,6 +26,7 @@ const initialState = {
 
 const FundingSources = () => {
     const dispatch = useDispatch();
+    const confirm = useConfirm();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: data, loading: isLoading } = useSelector((state) => state.get_funding_source_list);
@@ -186,7 +188,14 @@ const FundingSources = () => {
     };
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(fundingSourceActions.update_funding_source_status(id, { is_active: is_active }));
+        const status = is_active ? "Active" : "Inactive";
+
+        confirm({
+            description: `You want to change the status to ${status} ?`,
+            confirmText: "Yes",
+        }).then(() => {
+            dispatch(fundingSourceActions.update_funding_source_status(id, { is_active: is_active }));
+        });
     }, []);
 
     let timeout;

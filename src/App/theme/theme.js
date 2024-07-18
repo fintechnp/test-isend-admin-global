@@ -81,6 +81,15 @@ export const ChangeTheme = (mode = true) => {
                         },
                     },
                     {
+                        props: { variant: "subtitle0" },
+                        style: {
+                            fontFamily: fonts.secondary,
+                            fontWeight: 600,
+                            fontSize: "1.143rem",
+                            lineHeight: "1.714rem",
+                        },
+                    },
+                    {
                         props: { variant: "subtitle1" },
                         style: { fontFamily: fonts.secondary },
                     },
@@ -88,6 +97,7 @@ export const ChangeTheme = (mode = true) => {
                         props: { variant: "subtitle2" },
                         style: { fontFamily: fonts.secondary },
                     },
+
                     {
                         props: { variant: "body1" },
                         style: { fontFamily: fonts.secondary },
@@ -108,7 +118,7 @@ export const ChangeTheme = (mode = true) => {
             MuiButtonBase: {
                 styleOverrides: {
                     root: {
-                        textTransform: 'none',
+                        textTransform: "none",
                         "*": {
                             fontFamily: fonts.secondary,
                         },
@@ -134,7 +144,16 @@ export const ChangeTheme = (mode = true) => {
                 styleOverrides: {
                     root: ({ ownerState, theme }) => ({
                         borderRadius: buttonBorderRadius.outer,
-                        textTransform: "uppercase",
+                        textTransform: "capitalize",
+                        ...(ownerState.variant === "secondary"
+                            ? {
+                                  backgroundColor: theme.palette.surface.primarySecond,
+                                  color: theme.palette.primary.main,
+                                  "&:hover": {
+                                      backgroundColor: theme.palette.surface.primarySecond,
+                                  },
+                              }
+                            : undefined),
                     }),
                 },
             },

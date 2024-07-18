@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import moment from "moment";
 import { RangeType } from "App/data/RangeType";
+
 class dateUtils {
     today() {
         return new Date().toISOString().slice(0, 10);
@@ -11,8 +12,8 @@ class dateUtils {
         return dateArray;
     }
 
-    getFormattedDate(date, dateFormat = "MMM D, YYYY hh:mm A") {
-        return moment(date).format(dateFormat);
+    getFormattedDate(date, dateFormat = "MMM DD, YYYY hh:mm A") {
+        return dayjs(date).format(dateFormat);
     }
 
     getFromDate(date) {
@@ -137,6 +138,10 @@ class dateUtils {
             startDate,
             endDate,
         };
+    }
+
+    getDate(date) {
+        return date?.startsWith("0001-01-01") ? null : date?.substring(0, 10);
     }
 }
 

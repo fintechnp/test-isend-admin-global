@@ -43,6 +43,7 @@ export default function UpdateBusinessServiceCharge() {
         setValue("receivingCountry", businessChargeDetails?.data?.receivingCountryId);
         setValue("sendingCountry", businessChargeDetails?.data?.sendingCountryId);
         setValue("chargeDetailRules", newServiceChargeDetails);
+        setValue("name", businessChargeDetails?.data?.name);
     }, [businessChargeDetails]);
 
     const onSubmitData = (data) => {

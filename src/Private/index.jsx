@@ -183,15 +183,15 @@ import {
     GetCustomerByPartnersReducer,
     BlockUnblockReducer,
     CustomersSaga,
-    GetAllCustomerKycCountByStatusReducer
+    GetAllCustomerKycCountByStatusReducer,
 } from "./pages/Customers/Search/store";
 
 import {
     GetCustomersByIdReducer,
     CreateCustomersReducer,
     UpdateCustomersReducer,
-    CustomersCreateSaga
-} from "./pages/Customers/CreateCustomer/store";
+    CustomersCreateSaga,
+} from "./pages/Customers/Customer/store";
 
 import { UploadProfilePictureReducer, UploadProfilePictureSaga } from "./pages/Auth/MyAccount/store";
 
@@ -223,6 +223,7 @@ import {
     UpdateKycReducer,
     DeleteDocumentsReducer,
     DocumentsCustomerSaga,
+    ResetKycVerificationReducer,
 } from "./pages/Customers/Documents/store";
 
 //Remarks
@@ -320,6 +321,9 @@ import {
     DeleteFcmReducer,
     UtilitiesSaga,
     ResendNotification,
+    ViewFcmReducer,
+    ViewSmsReducer,
+    ViewEmailReducer,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -474,7 +478,10 @@ import {
     UpdateBusinessKycStatusReducer,
     GetBusinessKybDetailsReducer,
     UpdateBusinessKybStatusReducer,
+    UpdateBusinessReducer,
     businessSaga,
+    ChangeBusinessStatusReducer,
+    ToggleBusinessActiveStatusReducer,
 } from "../Private/pages/Agent/Business/store";
 import {
     getSingleTransactionReducer,
@@ -575,6 +582,49 @@ import {
     DashboardFilterParamsReducer,
     GetCustomerKycCountByStatusPreviousReducer,
 } from "./pages/Dashboard/store";
+import {
+    GetOrganizationStakeholdersReducer,
+    GetIndividualStakeholdersReducer,
+    AddOrganizationStakeholderReducer,
+    AddIndividualStakeholderReducer,
+    UpdateOrganizationStakeholderReducer,
+    UpdateIndividualStakeholderReducer,
+    StakeholderSaga,
+    GetOrganizationStakeholderByIdReducer,
+    GetIndividualStakeholderByIdReducer,
+    UpdateOrganizationStakeholderStatusReducer,
+    UpdateIndividualStakeholderStatusReducer,
+} from "./pages/Agent/Stakeholder/store";
+import {
+    B2BUserSaga,
+    GetB2BUsersReducer,
+    ChangeB2BUserStatusReducer,
+    GetB2BUserKycByIdReducer,
+} from "./pages/Agent/User/store";
+
+// region: ach webhooks
+
+import {
+    AchWebhooksSaga,
+    GetAchCirWebhooksReducer,
+    GetAchRdfiWebhooksReducer,
+    GetAchRejectWebhooksReducer,
+    GetAchReturnWebhooksReducer,
+} from "./pages/AchWebhooks/store";
+import {
+    CreateHelpCenterReducer,
+    GetHelpCenterReducer,
+    HelpCenterSaga,
+    UpdateHelpCenterReducer,
+} from "./pages/Agent/HelpCenter/store";
+
+import {
+    AcceptRejectB2BAccountClosureRequestReducer,
+    GetB2BAccountClosureRequestReducer,
+    B2BAccountClosureRequestSaga,
+    ViewB2BAccountClosureRequestReducer,
+} from "./pages/Agent/AccountClosureRequest/store";
+import { CustomerKycLogsSaga, GetCustomerKycLogsReducer } from "./pages/Customers/KycLogs/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -731,7 +781,7 @@ export const privateReducer = {
     get_customers: GetCustomersReducer,
     get_customers_by_partner: GetCustomerByPartnersReducer,
     block_unblock_customer: BlockUnblockReducer,
-    get_customer_byid: GetCustomersByIdReducer,
+    get_customer_by_id: GetCustomersByIdReducer,
     create_customers: CreateCustomersReducer,
     update_customers: UpdateCustomersReducer,
     get_all_customer_kyc_count_by_status: GetAllCustomerKycCountByStatusReducer,
@@ -754,6 +804,7 @@ export const privateReducer = {
     upload_documents: UploadDocumentsReducer,
     update_kyc: UpdateKycReducer,
     delete_documents: DeleteDocumentsReducer,
+    reset_kyc_verification: ResetKycVerificationReducer,
 
     //Remarks
     get_remarks: GetRemarksReducer,
@@ -825,14 +876,16 @@ export const privateReducer = {
 
     //reference type and data
     get_sms: GetSmsReducer,
-    get_sms_byid: GetSmsByIdReducer,
+    get_sms_by_id: GetSmsByIdReducer,
     create_sms: CreateSmsReducer,
     delete_sms: DeleteSmsReducer,
+    view_sms: ViewSmsReducer,
 
     get_email: GetEmailReducer,
     get_email_byid: GetEmailByIdReducer,
     create_email: CreateEmailReducer,
     delete_email: DeleteEmailReducer,
+    view_email: ViewEmailReducer,
 
     get_fcm: GetFcmReducer,
     get_fcm_byid: GetFcmByIdReducer,
@@ -841,6 +894,8 @@ export const privateReducer = {
     update_fcm: UpdateFcmReducer,
     delete_fcm: DeleteFcmReducer,
     resend_notification: ResendNotification,
+
+    view_fcm: ViewFcmReducer,
 
     //Sanction
     get_sanction_list: GetSanctionListReducer,
@@ -956,8 +1011,7 @@ export const privateReducer = {
     get_balance_request_details: GetBalanceRequestIdValueReducer,
     update_balance_request_status: UpdateBalanceRequestStatusReducer,
 
-    //Business
-
+    // region B2B - Business
     get_all_business: GetAllBusinessReducer,
     get_business_details: GetBusinessByIdReducer,
     get_business_kyc: GetBusinessKycListingReducer,
@@ -968,6 +1022,31 @@ export const privateReducer = {
     update_business_kyc_status: UpdateBusinessKycStatusReducer,
     get_business_kyb_details: GetBusinessKybDetailsReducer,
     update_business_kyb_status: UpdateBusinessKybStatusReducer,
+    update_business: UpdateBusinessReducer,
+    change_business_status: ChangeBusinessStatusReducer,
+    toggle_business_active_status: ToggleBusinessActiveStatusReducer,
+
+    // region B2B - Stakeholders
+    get_organization_stakeholders: GetOrganizationStakeholdersReducer,
+    get_individual_stakeholders: GetIndividualStakeholdersReducer,
+    add_organization_stakeholder: AddOrganizationStakeholderReducer,
+    update_organization_stakeholder: UpdateOrganizationStakeholderReducer,
+    add_individual_stakeholder: AddIndividualStakeholderReducer,
+    update_individual_stakeholder: UpdateIndividualStakeholderReducer,
+    get_organization_stakeholder_by_id: GetOrganizationStakeholderByIdReducer,
+    get_individual_stakeholder_by_id: GetIndividualStakeholderByIdReducer,
+    change_organization_stakeholder_status: UpdateOrganizationStakeholderStatusReducer,
+    change_individual_stakeholder_status: UpdateIndividualStakeholderStatusReducer,
+
+    // region B2B - Users
+    get_b2b_users: GetB2BUsersReducer,
+    get_b2b_user_kyc_by_id: GetB2BUserKycByIdReducer,
+    change_b2b_user_status: ChangeB2BUserStatusReducer,
+
+    // region B2B - Account Closure Request
+    get_b2b_account_closure_request: GetB2BAccountClosureRequestReducer,
+    view_b2b_account_closure_request: ViewB2BAccountClosureRequestReducer,
+    accept_reject_b2b_account_closure_request: AcceptRejectB2BAccountClosureRequestReducer,
 
     get_single_transaction_list: getSingleTransactionsReducer,
     get_single_transaction_by_id: getSingleTransactionReducer,
@@ -1037,6 +1116,22 @@ export const privateReducer = {
     get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
+
+    // region: ach webhooks
+
+    get_ach_rdfi_webhooks: GetAchRdfiWebhooksReducer,
+    get_ach_cir_webhooks: GetAchCirWebhooksReducer,
+    get_ach_return_webhooks: GetAchReturnWebhooksReducer,
+    get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
+
+    //region: Help Center
+
+    list_help_center: GetHelpCenterReducer,
+    create_help_center: CreateHelpCenterReducer,
+    update_help_center: UpdateHelpCenterReducer,
+
+    // region: Customer
+    get_customer_kyc_logs: GetCustomerKycLogsReducer,
 };
 
 export const privateSaga = [
@@ -1101,6 +1196,12 @@ export const privateSaga = [
     EmailTemplateSaga(),
     DashboardSaga(),
     UploadProfilePictureSaga(),
+    StakeholderSaga(),
+    B2BUserSaga(),
+    AchWebhooksSaga(),
+    HelpCenterSaga(),
+    B2BAccountClosureRequestSaga(),
+    CustomerKycLogsSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

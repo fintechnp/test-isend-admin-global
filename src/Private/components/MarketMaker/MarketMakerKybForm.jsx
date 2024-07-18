@@ -18,18 +18,23 @@ import { AddButton, CancelButton } from "../AllButtons/Buttons";
 import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import isEmpty from "App/helpers/isEmpty";
+import Row from "App/components/Row/Row";
+import FormGroupContainer from "App/components/Container/FormGroupContainer";
+import Column from "App/components/Column/Column";
 
 export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
     const dispatch = useDispatch();
 
-    const { response, loading } = useSelector((state) => state.get_document_settings);
+    const { response, loading, success: isSuccess } = useSelector((state) => state.get_document_settings);
+
+    const { response: kybData, loading: kybLoading } = useSelector((state) => state.get_business_kyb);
 
     const {
         watch,
         control,
         getValues,
         formState: { errors },
-        setError,
         setValue,
         clearErrors,
     } = useFormContext();
@@ -110,23 +115,8 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
     };
 
     return (
-        <>
-            <Box
-                sx={{
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Organization Details
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
+        <Column gap="16px">
+            <FormGroupContainer title="Organization Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
                         <FormTextField name="name" label="Name" />
@@ -155,24 +145,8 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                         />
                     </Grid>
                 </Grid>
-            </Box>
-            <Box
-                sx={{
-                    mt: 3,
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Address Details
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
+            </FormGroupContainer>
+            <FormGroupContainer title="Address Details">
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
                         <FormSelect name="countryId" label="Address Country" options={registeredCountyOptions ?? []} />
@@ -197,65 +171,66 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                         <FormTextField name="address" label="Address" />
                     </Grid>
                 </Grid>
-            </Box>
-
-            <Box
-                sx={{
-                    mt: 3,
-                    px: 2,
-                    py: 1,
-                    border: "1px solid #ccc",
-                    borderRadius: "6px",
-                }}
-            >
-                <Typography fontSize={17} fontWeight={600}>
-                    Upload Documents
-                </Typography>
-                <Divider
-                    sx={{
-                        my: 2,
-                    }}
-                />
-
-                <Grid container spacing={3}>
-                    {loading ? (
-                        <Center sx={{ width: "100%", py: 5 }}>
-                            <CircularProgress />
-                        </Center>
-                    ) : (
-                        <>
-                            {registeredCountryId &&
-                                documents.map((document, i) => (
-                                    <Grid key={document.documentTypeId} item xs={12} md={6}>
-                                        <FormInputWrapper
-                                            label={document.documentName}
-                                            isOptional={!document.isRequired}
-                                            errorMessage={errors?.documents?.[i]?.documentId?.message}
-                                        >
-                                            <UploadFile
-                                                title={`Upload your ${document.documentName}`}
-                                                supportedFileDescription="Supported file formats: PDF, JPG, PNG."
-                                                allowedFileTypes={[
-                                                    "application/pdf",
-                                                    "image/jpeg",
-                                                    "image/png",
-                                                    "image/jpg",
-                                                ]}
-                                                onFileRemove={() => handleRemove(document)}
-                                                onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
-                                                error={!!errors?.documents?.[i]?.documentId?.message}
-                                                onChange={(file) => handleChange(document, file)}
-                                                file={document?.file ?? document?.documentLink}
-                                                fileType={document?.fileType}
-                                                documentName={document?.documentName}
-                                            />
-                                        </FormInputWrapper>
-                                    </Grid>
-                                ))}
-                        </>
-                    )}
+            </FormGroupContainer>
+            <FormGroupContainer title="Upload Documents">
+                <Grid container spacing={3} p="16px">
+                    {(() => {
+                        if (loading)
+                            return (
+                                <Grid item xs={12}>
+                                    <Center sx={{ width: "100%", py: 5 }}>
+                                        <CircularProgress />
+                                    </Center>
+                                </Grid>
+                            );
+                        else if (isEmpty(registeredCountryId))
+                            return (
+                                <Grid item xs={12}>
+                                    <Typography color="grey.700">Select Country of Registration</Typography>
+                                </Grid>
+                            );
+                        else if (isSuccess && documents.length <= 0)
+                            return (
+                                <Grid item xs={12}>
+                                    {" "}
+                                    <Typography color="grey.700">Settings not found</Typography>
+                                </Grid>
+                            );
+                        else
+                            return (
+                                <>
+                                    {documents.map((document, i) => (
+                                        <Grid key={document.documentTypeId} item xs={12} md={6}>
+                                            <FormInputWrapper
+                                                label={document.documentName}
+                                                isOptional={!document.isRequired}
+                                                errorMessage={errors?.documents?.[i]?.documentId?.message}
+                                            >
+                                                <UploadFile
+                                                    title={`Upload your ${document.documentName}`}
+                                                    supportedFileDescription="Supported file formats: PDF, JPG, PNG."
+                                                    allowedFileTypes={[
+                                                        "application/pdf",
+                                                        "image/jpeg",
+                                                        "image/png",
+                                                        "image/jpg",
+                                                    ]}
+                                                    onFileRemove={() => handleRemove(document)}
+                                                    onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
+                                                    error={!!errors?.documents?.[i]?.documentId?.message}
+                                                    onChange={(file) => handleChange(document, file)}
+                                                    file={document?.file ?? document?.documentLink}
+                                                    fileType={document?.fileType}
+                                                    documentName={document?.documentName}
+                                                />
+                                            </FormInputWrapper>
+                                        </Grid>
+                                    ))}
+                                </>
+                            );
+                    })()}
                 </Grid>
-            </Box>
+            </FormGroupContainer>
 
             <Grid
                 container
@@ -280,6 +255,6 @@ export default function MarketMakerKybForm({ isAddMode = true, formLoading }) {
                     </AddButton>
                 </Grid>
             </Grid>
-        </>
+        </Column>
     );
 }

@@ -8,6 +8,14 @@ const referenceTypeId = {
     kycStatuses: 21,
     emailTemplateTypeForCustomer: 150,
     emailTemplateTypeForAdmin: 151,
+    paymentType: 1,
+    kycDocuments: 2,
+    kybDocuments: 153,
+    kybKycStatuses: 152,
+    genders: 42,
+    occupations: 17,
+    sourceOfIncomes: 6,
+    partnerTypes: 3,
 };
 
 export default referenceTypeId;

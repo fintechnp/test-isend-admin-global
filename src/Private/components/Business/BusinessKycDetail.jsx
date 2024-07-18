@@ -13,7 +13,7 @@ import { AddButton } from "../AllButtons/Buttons";
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
-import { RenderField, Title, TitleWrapper } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { RenderField, Title, TitleWrapper } from "App/components/Container";
 
 import { businessActions } from "Private/pages/Agent/Business/store";
 
@@ -81,8 +81,8 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
 
     return (
         <>
-            {data?.status === 1 && relatedTo === "business" && (
-                <Box mt={2}>
+            {!loading && (
+                <Box>
                     <HookForm onSubmit={handleSubmit} {...methods}>
                         <Grid container item xs={12} spacing={2}>
                             <Grid item xs={12} sm={6}>
@@ -111,7 +111,6 @@ export default function BusinessKycDetail({ data, loading, relatedTo = "business
                     </HookForm>
                 </Box>
             )}
-
             {loading ? (
                 <Grid item xs={12}>
                     <Loading loading={loading} />

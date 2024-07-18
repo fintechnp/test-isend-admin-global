@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Loading } from "App/components";
 import PageContent from "App/components/Container/PageContent";
-import { TitleWrapper, Title, RenderField } from "Private/pages/Customers/CustomerDetails/CustomerDetails";
+import { TitleWrapper, Title, RenderField } from "App/components/Container";
 
 import singleTransactionActions from "Private/features/b2b-transactions/singleTransactionActions";
 

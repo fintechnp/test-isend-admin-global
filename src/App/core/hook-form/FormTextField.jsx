@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
-import PropTypes, { object } from "prop-types";
+import PropTypes from "prop-types";
 import Input from "@mui/material/Input";
 import TextField from "@mui/material/TextField";
+import React, { useState, useRef } from "react";
 import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
 import FilledInput from "@mui/material/FilledInput";
@@ -10,7 +11,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Visibility from "@mui/icons-material/Visibility";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 function FormTextField(props) {
@@ -40,6 +41,7 @@ function FormTextField(props) {
         focused,
         color,
         error,
+        isOptional,
         ...rest
     } = props;
 
@@ -63,7 +65,14 @@ function FormTextField(props) {
                             color={color}
                             required={required}
                         >
-                            <InputLabel htmlFor={id}>{label}</InputLabel>
+                            <InputLabel htmlFor={id} required={required}>
+                                {label}{" "}
+                                {isOptional && (
+                                    <Typography component="span" variant="caption">
+                                        ( Optional )
+                                    </Typography>
+                                )}
+                            </InputLabel>
                             {React.createElement(InputComponent, {
                                 ...field,
                                 ...rest,
@@ -86,7 +95,7 @@ function FormTextField(props) {
                                         </IconButton>
                                     </InputAdornment>
                                 ),
-                                error: !!error || !!errors[name],
+                                error: !!error || !!get(errors, name)?.message,
                                 required,
                                 size,
                                 onFocus: () => clearErrors(name),
@@ -95,7 +104,7 @@ function FormTextField(props) {
                                 label,
                             })}
 
-                            <FormHelperText error={true}> {error ?? errors[name]?.message ?? ""}</FormHelperText>
+                            <FormHelperText error={true}> {error ?? get(errors, name)?.message ?? ""}</FormHelperText>
                         </FormControl>
                     );
                 }
@@ -106,9 +115,18 @@ function FormTextField(props) {
                             {...field}
                             {...rest}
                             type={type}
-                            error={!!error || !!errors[name]}
-                            helperText={error ?? errors[name]?.message ?? ""}
-                            label={label}
+                            error={!!error || !!get(errors, name)?.message}
+                            helperText={error ?? get(errors, name)?.message ?? ""}
+                            label={
+                                <>
+                                    {label}{" "}
+                                    {isOptional && (
+                                        <Typography component="span" variant="caption">
+                                            (Optional)
+                                        </Typography>
+                                    )}
+                                </>
+                            }
                             variant={variant}
                             fullWidth={fullWidth}
                             required={required}
@@ -147,6 +165,7 @@ FormTextField.propTypes = {
     value: PropTypes.string,
     type: PropTypes.string,
     error: PropTypes.string,
+    isOptional: PropTypes.bool,
 };
 
 FormTextField.defaultProps = {
@@ -161,4 +180,5 @@ FormTextField.defaultProps = {
     variant: "outlined",
     focused: false,
     value: "",
+    isOptional: false,
 };

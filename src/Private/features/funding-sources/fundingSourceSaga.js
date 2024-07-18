@@ -42,10 +42,12 @@ export const addFundingSource = takeEvery(actions.ADD_FUNDING_SOURCE, function* 
 export const updateFundingSource = takeEvery(actions.UPDATE_FUNDING_SOURCE, function* (action) {
     try {
         const res = yield call(api.put, buildRoute(apiEndpoints.fundingSources.update, action.id), action.data);
+
         yield put({
             type: actions.UPDATE_FUNDING_SOURCE_SUCCESS,
             response: res,
         });
+
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({
@@ -60,11 +62,12 @@ export const updateFundingSourceStatus = takeEvery(actions.UPDATE_FUNDING_SOURCE
     try {
         const res = yield call(
             api.patch,
-            buildRoute(apiEndpoints.fundingSources, {
+            buildRoute(apiEndpoints.fundingSources.updateStatus, {
                 fundingSourceId: action.id,
                 ...action.data,
             }),
         );
+
         yield put({
             type: actions.UPDATE_FUNDING_SOURCE_STATUS_SUCCESS,
             response: res,

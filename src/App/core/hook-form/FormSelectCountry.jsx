@@ -1,28 +1,43 @@
 import PropTypes from "prop-types";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import { Controller, useFormContext } from "react-hook-form";
+import FormHelperText from "@mui/material/FormHelperText";
 
-import isEmpty from "App/helpers/isEmpty";
+import { Controller, useFormContext, get } from "react-hook-form";
+
 import ucwords from "App/helpers/ucwords";
-import { localStorageGet } from "App/helpers/localStorage";
-import { FormHelperText } from "@mui/material";
+import useCountries from "App/hooks/useCountries";
 
 export default function FormSelectCountry(props) {
+    const {
+        id,
+        name,
+        label,
+        required,
+        size,
+        fullWidth,
+        disabled,
+        variant,
+        onSelected,
+        labelKey = "country",
+        valueKey = "iso3",
+        isOptional,
+    } = props;
+
     const {
         control,
         setValue,
         watch,
+        clearErrors,
         formState: { errors },
     } = useFormContext();
 
-    const countries = localStorageGet("country");
+    const { countries } = useCountries();
 
-    const { id, name, label, required, size, fullWidth, disabled, variant, onSelected } = props;
-
-    const value = watch("country");
+    const value = watch(name);
 
     const labelId = "labelId_" + Math.random();
 
@@ -33,17 +48,20 @@ export default function FormSelectCountry(props) {
             render={() => {
                 return (
                     <FormControl fullWidth>
-                        <InputLabel id={labelId}>{label}</InputLabel>
+                        <InputLabel id={labelId} size={size} required={required}>
+                            {label}
+                            {isOptional && <Typography variant="caption">(Optional)</Typography>}
+                        </InputLabel>
                         <Select
                             labelId={labelId}
                             id={id}
                             name={name}
-                            error={!!errors[name]}
+                            error={!!get(errors, name)?.message}
                             onChange={(e) => {
                                 const { value } = e.target;
                                 setValue(name, value);
-                                const selectedIndex = countries.findIndex((c) => c?.iso3 === value);
-                                onSelected?.(countries[selectedIndex]);
+                                const selectedIndex = countries.findIndex((c) => c?.[valueKey] === value);
+                                onSelected?.(countries?.[selectedIndex]);
                             }}
                             label={label}
                             variant={variant}
@@ -52,16 +70,18 @@ export default function FormSelectCountry(props) {
                             size={size}
                             disabled={disabled}
                             value={value ?? ""}
+                            onFocus={() => clearErrors(name)}
                         >
-                            <MenuItem value="">Choose</MenuItem>
+                            <MenuItem value="" disabled>
+                                Choose
+                            </MenuItem>
                             {countries?.map((c, i) => (
-                                <MenuItem value={c.iso3} key={i}>
-                                    {ucwords(c.country)}
+                                <MenuItem value={c[valueKey]} key={i}>
+                                    {ucwords(c[labelKey])}
                                 </MenuItem>
                             ))}
-                            <MenuItem value={30}>Thirty</MenuItem>
                         </Select>
-                        <FormHelperText error={true}>{errors[name]?.message ?? ""}</FormHelperText>
+                        <FormHelperText error={true}>{get(errors, name)?.message}</FormHelperText>
                     </FormControl>
                 );
             }}
@@ -84,6 +104,8 @@ FormSelectCountry.propTypes = {
     onSelected: PropTypes.func,
     onChange: PropTypes.func,
     value: PropTypes.string,
+    labelKey: PropTypes.oneOf(["country_id", "country", "iso2", "iso3", "phone_code", "currency", "currency_name"]),
+    valueKey: PropTypes.oneOf(["country_id", "country", "iso2", "iso3", "phone_code", "currency", "currency_name"]),
 };
 
 FormSelectCountry.defaultProps = {

@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
 import MarketMakerForm from "Private/components/MarketMaker/MarketMakerForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import isEmpty from "App/helpers/isEmpty";
+import routePaths from "Private/config/routePaths";
 import { MarketMakerActions as actions } from "./store";
 import { marketMakerValidationSchema } from "./validation/MarketMakerValidation";
 
@@ -18,12 +20,13 @@ export default function AddMarketMaker() {
         resolver: yupResolver(marketMakerValidationSchema),
     });
 
-    const { handleSubmit, setError, formState: {errors} } = methods;
-
-    console.log(errors)
+    const {
+        handleSubmit,
+        setError,
+        formState: { errors },
+    } = methods;
 
     const onSubmitData = (data) => {
-
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({
@@ -43,50 +46,29 @@ export default function AddMarketMaker() {
 
         if (requiredEmptyDocuments.length > 0) return;
 
-        const {
-            countryId,
-            postCode,
-            unit,
-            street,
-            state,
-            city,
-            address,
-            contactPersonName,
-            designationId,
-            contactMobileNo,
-            contactPhoneNo,
-            contactPersonExtension,
-            ...rest
-        } = data;
+        const requestPayload = { ...data, documents: requiredDocuments };
 
-        const formattedDataToSend = {
-            ...rest,
-            address: {
-                countryId,
-                postCode,
-                unit,
-                street,
-                city,
-                state,
-                address,
-            },
-            contactPerson: {
-                name: contactPersonName,
-                designationId: designationId,
-                mobileNo: contactMobileNo,
-                phoneNo: contactPhoneNo,
-                extension: contactPersonExtension,
-            },
-        };
-        const requestData = { ...formattedDataToSend, documents: requiredDocuments };
-        dispatch(actions.add_market_maker(requestData));
+        dispatch(actions.add_market_maker(requestPayload));
     };
 
     return (
-        <PageContent title="Add New Agent">
-            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
-                <MarketMakerForm />
-            </HookForm>
+        <PageContent
+            documentTitle="Add New Agent"
+            breadcrumbs={[
+                {
+                    label: "Agents",
+                    link: routePaths.ListAgent,
+                },
+                {
+                    label: "Create",
+                },
+            ]}
+        >
+            <PageContentContainer>
+                <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
+                    <MarketMakerForm />
+                </HookForm>
+            </PageContentContainer>
         </PageContent>
     );
 }

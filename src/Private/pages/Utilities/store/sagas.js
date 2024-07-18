@@ -72,23 +72,20 @@ export const getEmail = takeEvery(actions.GET_EMAIL, function* (action) {
     }
 });
 
-export const getEmailById = takeEvery(
-    actions.GET_EMAIL_BYID,
-    function* (action) {
-        try {
-            const res = yield call(api.get, `email/${action.id}`);
-            yield put({
-                type: actions.GET_EMAIL_BYID_SUCCESS,
-                response: res,
-            });
-        } catch (error) {
-            yield put({
-                type: actions.GET_EMAIL_BYID_FAILED,
-                error: error?.data,
-            });
-        }
+export const getEmailById = takeEvery(actions.GET_EMAIL_BYID, function* (action) {
+    try {
+        const res = yield call(api.get, `email/${action.id}`);
+        yield put({
+            type: actions.GET_EMAIL_BYID_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_EMAIL_BYID_FAILED,
+            error: error?.data,
+        });
     }
-);
+});
 
 export const createEmail = takeEvery(actions.CREATE_EMAIL, function* (action) {
     try {
@@ -142,23 +139,20 @@ export const getFcmById = takeEvery(actions.GET_FCM_BYID, function* (action) {
     }
 });
 
-export const getFcmByCustomerId = takeEvery(
-    actions.GET_FCM_BY_CUSTOMER_ID,
-    function* (action) {
-        try {
-            const res = yield call(api.get, `${action.id}/fcmmessage`);
-            yield put({
-                type: actions.GET_FCM_BY_CUSTOMER_ID_SUCCESS,
-                response: res,
-            });
-        } catch (error) {
-            yield put({
-                type: actions.GET_FCM_BY_CUSTOMER_ID_FAILED,
-                error: error?.data,
-            });
-        }
+export const getFcmByCustomerId = takeEvery(actions.GET_FCM_BY_CUSTOMER_ID, function* (action) {
+    try {
+        const res = yield call(api.get, `${action.id}/fcmmessage`);
+        yield put({
+            type: actions.GET_FCM_BY_CUSTOMER_ID_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_FCM_BY_CUSTOMER_ID_FAILED,
+            error: error?.data,
+        });
     }
-);
+});
 
 export const createFcm = takeEvery(actions.CREATE_FCM, function* (action) {
     try {

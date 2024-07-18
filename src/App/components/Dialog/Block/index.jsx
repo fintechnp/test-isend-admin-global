@@ -1,15 +1,16 @@
 import * as React from "react";
-import { Tooltip } from "@mui/material";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import MuiIconButton from "@mui/material/IconButton";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
 import ListItemButton from "@mui/material/ListItemButton";
+import DialogContent from "@mui/material/DialogContent";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Field, Form, reduxForm, change, reset } from "redux-form";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
@@ -211,3 +212,7 @@ function BlockDialog({
 }
 
 export default reduxForm({ form: ["form"] })(BlockDialog);
+
+BlockDialog.propTypes = {
+    enablePopoverAction: PropTypes.bool,
+};

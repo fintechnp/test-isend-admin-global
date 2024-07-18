@@ -40,8 +40,8 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
         templateFor === TemplateForConstant.ADMIN
             ? referenceTypeId.emailTemplateTypeForAdmin
             : templateFor === TemplateForConstant.CUSTOMER
-              ? referenceTypeId.emailTemplateTypeForCustomer
-              : null;
+            ? referenceTypeId.emailTemplateTypeForCustomer
+            : null;
 
     const referenceData = referenceTypeIdForTemplateType
         ? reference

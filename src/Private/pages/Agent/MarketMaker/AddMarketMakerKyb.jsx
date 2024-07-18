@@ -8,25 +8,32 @@ import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import HookForm from "App/core/hook-form/HookForm";
 import PageContent from "App/components/Container/PageContent";
-import MarketMakerKybForm from "Private/components/MarketMaker/MarketMakerKybForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import isEmpty from "App/helpers/isEmpty";
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 import { marketMakerKybValidationSchema } from "./validation/MarketMakerKybValidation";
-import isEmpty from "App/helpers/isEmpty";
+import OrganizationStakeholderForm from "../Stakeholder/components/OrganizationStakeholderForm";
+import AddOrganizationStakeholder from "../Stakeholder/components/AddOrganizationStakeholder";
+import { relatedTo } from "Private/data/b2b";
 
-export default function AddMarketMakerKyb({ title }) {
-    const { marketMakerId } = useParams();
+export default function AddMarketMakerKyb() {
+
+    const { agentId } = useParams();
+
     const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
     const { loading, response, success } = useSelector((state) => state.add_market_maker_kyb);
+
     const methods = useForm({
         resolver: yupResolver(marketMakerKybValidationSchema),
     });
 
     useEffect(() => {
         if (success) {
-            navigate(buildRoute(routePaths.agent.viewMarketMaker, marketMakerId));
+            navigate(buildRoute(routePaths.agent.viewMarketMaker, agentId));
         }
     }, [success]);
 
@@ -56,7 +63,7 @@ export default function AddMarketMakerKyb({ title }) {
         const { countryId, postCode, unit, street, state, city, address, ...rest } = data;
 
         const dataToSend = {
-            marketMakerId: marketMakerId,
+            marketMakerId: agentId,
             address: {
                 countryId,
                 postCode,
@@ -73,11 +80,32 @@ export default function AddMarketMakerKyb({ title }) {
 
         dispatch(actions.add_market_maker_kyb(requestData));
     };
+
     return (
-        <PageContent title="Add Agent KYB">
-            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
-                <MarketMakerKybForm formLoading={loading} />
-            </HookForm>
+        <PageContent
+            documentTitle="B2B - Add Organization Stakeholder"
+            breadcrumbs={[
+                {
+                    label: "Agents",
+                    link: routePaths.ListAgent,
+                },
+                {
+                    label: agentId,
+                    link: buildRoute(routePaths.ViewAgent, agentId)
+                },
+                {
+                    label: "Create Organization Stakeholder",
+                },
+                {
+                    label: "Create",
+                },
+            ]}
+        >
+            <AddOrganizationStakeholder
+                    relatedTo={relatedTo.AGENT}
+                    relatedId={agentId}
+                    onSuccess={() => navigate(-1)}
+                />
         </PageContent>
     );
 }

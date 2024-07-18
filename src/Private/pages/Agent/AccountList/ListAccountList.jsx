@@ -8,7 +8,7 @@ import Modal from "App/components/Modal/Modal";
 import { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { RenderField } from "../../Customers/CustomerDetails/CustomerDetails";
+import { RenderField } from "App/components/Container";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import { accountListActions as actions } from "./store";

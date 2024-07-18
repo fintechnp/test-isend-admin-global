@@ -10,6 +10,8 @@ import BusinessChargeForm from "Private/components/BusinessCharge/BusinessCharge
 import { businessChargeValidationSchema } from "./validations/AddBusinessServiceChargeValidation";
 
 import { businessChargeActions as actions } from "./store";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import routePaths from "Private/config/routePaths";
 
 export default function AddBusinessServiceCharge() {
     const dispatch = useDispatch();
@@ -83,10 +85,26 @@ export default function AddBusinessServiceCharge() {
     };
 
     return (
-        <PageContent title="Add Business Service Charge" documentTitle="Add Business Service Charge">
-            <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
-                <BusinessChargeForm />
-            </HookForm>
+        <PageContent
+            documentTitle="Add Business Service Charge"
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "Business Service Charges",
+                    link: routePaths.ListBusinessServiceCharge,
+                },
+                {
+                    label: "Create",
+                },
+            ]}
+        >
+            <PageContentContainer title="Add Business Service Charge">
+                <HookForm onSubmit={handleSubmit(onSubmitData)} {...methods}>
+                    <BusinessChargeForm isAddMode />
+                </HookForm>
+            </PageContentContainer>
         </PageContent>
     );
 }

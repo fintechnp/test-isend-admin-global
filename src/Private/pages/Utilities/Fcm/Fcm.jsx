@@ -1,32 +1,26 @@
 import { styled } from "@mui/material/styles";
-import MuiIconButton from "@mui/material/IconButton";
+import React, { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { Box, ListItemButton, Typography } from "@mui/material";
 
-import CreateFcm from "./CreateFcm";
-import { Delete } from "App/components";
-import Header from "./../components/Header";
-import Filter from "./../components/Filter";
+import { useConfirm } from "App/core/mui-confirm";
+import Column from "App/components/Column/Column";
+import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
-import ResendIconButton from "App/components/Button/ResendIconButton";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import CreateFcm from "./CreateFcm";
 import actions from "./../store/actions";
-import { useConfirm } from "App/core/mui-confirm";
-import { permissions } from "Private/data/permissions";
+import ViewFcmModal from "./ViewSms/ViewFcmModal";
 import { FormatDate, ReferenceName } from "App/helpers";
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
+import FilterForm from "App/components/Filter/FilterForm";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -56,7 +50,20 @@ const Fcm = () => {
     const dispatch = useDispatch();
     const confirm = useConfirm();
 
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const methods = useListFilterStore({ initialState });
+
+    const {
+        isFilterOpen,
+        closeFilter,
+        onQuickFilter,
+        filterSchema,
+        onPageChange,
+        onRowsPerPageChange,
+        openFilter,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        reset,
+    } = methods;
 
     const { response: FcmData, loading: l_loading } = useSelector((state) => state.get_fcm);
     const { success: c_success } = useSelector((state) => state.create_fcm);
@@ -176,63 +183,45 @@ const Fcm = () => {
                     </Box>
                 ),
                 accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
-                                <Tooltip title="Hide FCM Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
+                Cell: ({ row }) => {
+                    return (
+                        <PopoverButton>
+                            {({ onClose }) => (
+                                <>
+                                    <HasPermission permission={permissions.EDIT_FCM}>
+                                        <CreateFcm onClose={onClose} update={true} update_data={row?.original} />
+                                    </HasPermission>
+
+                                    <ListItemButton
+                                        onClick={() => dispatch(actions.open_view_fcm_modal(row.original), onClose())}
+                                    >
+                                        View Fcm
+                                    </ListItemButton>
+                                    <HasPermission permission={permissions.RESEND_EMAIL}>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                handleOnResend(row.original.tid), onClose();
                                             }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="FCM Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
+                                        >
+                                            Resend
+                                        </ListItemButton>
+                                    </HasPermission>
+
+                                    <HasPermission permission={permissions.DELETE_FCM}>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                handleOnDelete(row.original.tid);
+                                                onClose();
                                             }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
+                                        >
+                                            Delete
+                                        </ListItemButton>
+                                    </HasPermission>
+                                </>
                             )}
-                        </span>
-                        <HasPermission permission={permissions.EDIT_FCM}>
-                            <CreateFcm update={true} update_data={row?.original} />
-                        </HasPermission>
-                        <HasPermission permission={permissions.DELETE_FCM}>
-                            <Delete
-                                id={row.original.tid}
-                                handleDelete={handleDelete}
-                                loading={false}
-                                tooltext="Delete FCM Message"
-                            />
-                        </HasPermission>
-                        <HasPermission permission={permissions.RESEND_FCM}>
-                            <ResendIconButton
-                                onClick={() => {
-                                    handleOnResend(row?.original?.tid);
-                                }}
-                            />
-                        </HasPermission>
-                    </Box>
-                ),
+                        </PopoverButton>
+                    );
+                },
             },
         ],
         [],
@@ -264,55 +253,21 @@ const Fcm = () => {
         { key: "Body", value: "body" },
     ];
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
+    const filterFields = [
+        {
+            type: "textfield",
+            label: "Search",
+            name: "search",
         },
-        [filterSchema],
-    );
+    ];
 
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleDelete = (id) => {
-        dispatch(actions.delete_fcm(id));
+    const handleOnDelete = (id) => {
+        confirm({
+            description: "Do you want to delete this notification?",
+            confirmationText: "Yes ",
+        }).then(() => {
+            dispatch(actions.delete_fcm(id));
+        });
     };
 
     const handleOnResend = (id) => {
@@ -330,34 +285,67 @@ const Fcm = () => {
     };
 
     return (
-        <PageContent documentTitle="FCM">
-            <Header title="FCM Message List">
-                <HasPermission permission={permissions.CREATE_FCM}>
-                    <CreateFcm />
-                </HasPermission>
-            </Header>
-            <Filter
-                sortData={sortData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                filterSchema={filterSchema}
-            />
-            <Table
-                columns={columns}
-                data={FcmData?.data || []}
-                title="Fcm Message Details"
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={FcmData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        <PageContent
+            documentTitle="SMS List"
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+            breadcrumbs={[
+                {
+                    label: "Utilities",
+                },
+                {
+                    label: "FCM",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Sms"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onDelete={onDeleteFilterParams}
+                />
+
+                <PageContentContainer
+                    title="FCM List"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                disabled={l_loading}
+                                sortByData={sortData}
+                                values={filterSchema}
+                            />
+                            <HasPermission permission={permissions.CREATE_FCM}>
+                                <CreateFcm />
+                            </HasPermission>
+                        </>
+                    }
+                >
+                    <Table
+                        columns={columns}
+                        data={FcmData?.data || []}
+                        title="Fcm Message Details"
+                        sub_columns={sub_columns}
+                        loading={l_loading}
+                        rowsPerPage={8}
                     />
-                )}
-            />
+                </PageContentContainer>
+
+                <TablePagination
+                    paginationData={FcmData?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
+
+            <ViewFcmModal />
         </PageContent>
     );
 };

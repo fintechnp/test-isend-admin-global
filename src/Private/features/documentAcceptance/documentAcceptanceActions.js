@@ -20,8 +20,11 @@ const documentAcceptanceActions = {
 
     get_document_acceptance_list: (query) => ({
         type: documentAcceptanceActions.GET_DOCUMENT_ACCEPTANCE_LIST,
-
         query,
+    }),
+
+    get_document_acceptance_list_reset: () => ({
+        type: documentAcceptanceActions.GET_DOCUMENT_ACCEPTANCE_LIST_RESET,
     }),
 
     add_document_acceptance: (data) => ({
@@ -29,10 +32,35 @@ const documentAcceptanceActions = {
         data,
     }),
 
+    add_document_acceptance_reset: () => ({
+        type: documentAcceptanceActions.ADD_DOCUMENT_ACCEPTANCE_RESET,
+    }),
+
     update_document_acceptance: (id, data) => ({
         type: documentAcceptanceActions.UPDATE_DOCUMENT_ACCEPTANCE,
         data,
         id,
+    }),
+
+    update_document_acceptance_reset: () => ({
+        type: documentAcceptanceActions.UPDATE_DOCUMENT_ACCEPTANCE_RESET,
+    }),
+
+    open_add_modal: () => ({
+        type: documentAcceptanceActions.OPEN_ADD_DOCUMENT_ACCEPTANCE_MODAL,
+    }),
+
+    close_add_modal: () => ({
+        type: documentAcceptanceActions.CLOSE_ADD_DOCUMENT_ACCEPTANCE_MODAL,
+    }),
+
+    open_update_modal: (payload) => ({
+        type: documentAcceptanceActions.OPEN_UPDATE_DOCUMENT_ACCEPTANCE_MODAL,
+        payload,
+    }),
+
+    close_update_modal: () => ({
+        type: documentAcceptanceActions.CLOSE_UPDATE_DOCUMENT_ACCEPTANCE_MODAL,
     }),
 };
 export default documentAcceptanceActions;
