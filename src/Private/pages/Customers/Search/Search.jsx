@@ -105,10 +105,8 @@ function Search() {
     const { success: b_success, loading: b_loading } = useSelector((state) => state.block_unblock_customer);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_customers(filterSchema));
-            dispatch({ type: "BLOCK_UNBLOCK_CUSTOMER_RESET" });
-        }
+        dispatch(actions.get_customers(filterSchema));
+        dispatch({ type: "BLOCK_UNBLOCK_CUSTOMER_RESET" });
     }, [dispatch, filterSchema, b_success]);
 
     const handleBlock = (data) => {
