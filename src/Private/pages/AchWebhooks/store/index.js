@@ -4,5 +4,3 @@ export { default as GetAchRdfiWebhooksReducer } from "./reducers/getAchRdfiWebho
 export { default as GetAchCirWebhooksReducer } from "./reducers/getAchCirWebhooks";
 export { default as GetAchReturnWebhooksReducer } from "./reducers/getAchReturnWebhooks";
 export { default as GetAchRejectWebhooksReducer } from "./reducers/getAchRejectWebhooks";
-export { default as ReturnAchRdfiTransactionReducer } from "./reducers/returnAchRdfiTransaction";
-
