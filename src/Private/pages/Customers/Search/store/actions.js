@@ -14,9 +14,6 @@ const actions = {
     BLOCK_UNBLOCK_CUSTOMER_FAILED: "BLOCK_UNBLOCK_CUSTOMER_FAILED",
     BLOCK_UNBLOCK_CUSTOMER_RESET: "BLOCK_UNBLOCK_CUSTOMER_RESET",
 
-    OPEN_FILTER: "OPEN_FILTER",
-    CLOSE_FILTER: "CLOSE_FILTER",
-
     GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS: "GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS",
     GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS_SUCCESS: "GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS_SUCCESS",
     GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS_FAILED: "GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS_FAILED",
@@ -39,21 +36,9 @@ const actions = {
         data,
     }),
 
-    open_filter: () => ({
-        type: actions.OPEN_FILTER,
-    }),
-
-    close_filter: () => ({
-        type: actions.CLOSE_FILTER,
-    }),
-
-    close_filter: () => ({
-        type: actions.CLOSE_FILTER,
-    }),
-
     get_all_customer_kyc_count_by_status: (query) => ({
         type: actions.GET_ALL_CUSTOMER_KYC_COUNT_BY_STATUS,
-        query
+        query,
     }),
 };
 

@@ -47,15 +47,6 @@ const initialState = {
     order_by: "DESC",
 };
 
-const filter = {
-    page_number: 1,
-    page_size: 500,
-    agent_type: "SEND",
-    country: "",
-    sort_by: "",
-    order_by: "DESC",
-};
-
 const schema = Yup.object().shape({
     from_date: Yup.string()
         .nullable()
@@ -94,12 +85,22 @@ function Search() {
 
     const isMounted = useRef(false);
 
-    const { filterSchema, onQuickFilter, onRowsPerPageChange, onFilterSubmit, onPageChange, onDeleteFilterParams } =
-        useListFilterStore({
-            initialState,
-        });
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({
+        initialState,
+    });
 
-    const { response: customersData, loading: isLoading, isFilterOpen } = useSelector((state) => state.get_customers);
+    const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customers);
 
     const { success: b_success, loading: b_loading } = useSelector((state) => state.block_unblock_customer);
 
@@ -280,9 +281,9 @@ function Search() {
             label: "Date of birth",
         },
         {
-            type: fieldTypes.DATE,
-            name: "date_of_birth",
-            label: "Date of birth",
+            type: fieldTypes.PARTNER_SELECT,
+            name: "agent_id",
+            label: "Partner",
         },
     ];
 
@@ -301,10 +302,7 @@ function Search() {
         <PageContent
             documentTitle="Customers"
             topRightEndContent={
-                <FilterButton
-                    size="small"
-                    onClick={() => dispatch(isFilterOpen ? actions.close_filter() : actions.open_filter())}
-                />
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
             breadcrumbs={[
                 {
@@ -315,13 +313,14 @@ function Search() {
             <Column gap="16px">
                 <FilterForm
                     open={isFilterOpen}
-                    onClose={() => dispatch(actions.close_filter())}
+                    onClose={closeFilter}
                     onSubmit={onFilterSubmit}
                     fields={filterFields}
                     values={filterSchema}
                     onDelete={onDeleteFilterParams}
                     schema={schema}
                     title="Search Customers"
+                    onReset={reset}
                 />
                 <PageContentContainer
                     title="Customers"

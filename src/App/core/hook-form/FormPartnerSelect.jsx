@@ -94,7 +94,6 @@ export default function FormPartnerSelect({
         page_number: 1,
         page_size: 100,
         agent_type: PartnerType.SEND,
-        country: "AUS",
         sort_by: "name",
         order_by: "DESC",
         ...queryParams,
@@ -119,7 +118,7 @@ export default function FormPartnerSelect({
         const options = response?.data ?? [];
         const option = options?.find((d) => d[valueKey] === value);
         setSelectedOption(option ?? null);
-    }, [response]);
+    }, [response, value]);
 
     return (
         <Box display="flex" gap={1}>
