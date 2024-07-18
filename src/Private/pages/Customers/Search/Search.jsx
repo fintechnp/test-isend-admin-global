@@ -39,7 +39,6 @@ const initialState = {
     page_number: 1,
     page_size: 10,
     name: "",
-    // customer_id: 0,
     id_number: "",
     mobile_number: "",
     email: "",
@@ -104,23 +103,10 @@ function Search() {
 
     const { success: b_success, loading: b_loading } = useSelector((state) => state.block_unblock_customer);
 
-    const { response: SendPartner, loading: p_loading } = useSelector((state) => state.get_sending_partner);
-
-    useEffect(() => {
-        dispatch({ type: "GET_CUSTOMERS_RESET" });
-        dispatch({ type: "GET_SENDING_PARTNER_RESET" });
-    }, [dispatch]);
-
     useEffect(() => {
         if (isMounted.current) {
             dispatch(actions.get_customers(filterSchema));
             dispatch({ type: "BLOCK_UNBLOCK_CUSTOMER_RESET" });
-        } else {
-            isMounted.current = true;
-            dispatch({
-                type: "GET_SENDING_PARTNER",
-                query: filter,
-            });
         }
     }, [dispatch, filterSchema, b_success]);
 
@@ -293,6 +279,11 @@ function Search() {
             name: "date_of_birth",
             label: "Date of birth",
         },
+        {
+            type: fieldTypes.DATE,
+            name: "date_of_birth",
+            label: "Date of birth",
+        },
     ];
 
     const sortData = [
@@ -303,7 +294,7 @@ function Search() {
     ];
 
     useEffect(() => {
-        handleOnSubmit();
+        dispatch(actions.get_customers(filterSchema));
     }, []);
 
     return (
@@ -353,13 +344,11 @@ function Search() {
                 >
                     <TanstackReactTable columns={columns} data={customersData?.data ?? []} loading={isLoading} />
                 </PageContentContainer>
-
                 <TablePagination
                     paginationData={customersData?.pagination}
                     handleChangePage={onPageChange}
                     handleChangeRowsPerPage={onRowsPerPageChange}
                 />
-
                 <KycStat fromDate={filterSchema?.from_date} toDate={filterSchema?.to_date} />
             </Column>
         </PageContent>

@@ -12,7 +12,7 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actions.GET_CUSTOMERS:
             return {
-                ...state,
+                ...initialState,
                 loading: true,
             };
         case actions.GET_CUSTOMERS_SUCCESS:

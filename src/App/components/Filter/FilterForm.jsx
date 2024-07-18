@@ -22,6 +22,7 @@ import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import FormSearchAutocomplete from "App/core/hook-form/FormSearchAutocomplete";
 import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+import FormPartnerSelect from "App/core/hook-form/FormPartnerSelect";
 
 const CloseButton = styled(Button)(({ theme }) => ({
     background: theme.palette.surface.primarySecond,
@@ -43,6 +44,7 @@ export const fieldTypes = {
     DATE: "date",
     COUNTRY_SELECT: "country-select",
     SEARCH_AUTOCOMPLETE_API: "search-autocomplete-api",
+    PARTNER_SELECT: "partner-select",
 };
 
 const BuildFilterInput = ({ field }) => {
@@ -68,6 +70,9 @@ const BuildFilterInput = ({ field }) => {
 
     if (field.type === fieldTypes.COUNTRY_SELECT)
         return <FormSelectCountry name={field.name} label={field.label} {...field.props} />;
+
+    if (field.type === fieldTypes.PARTNER_SELECT)
+        return <FormPartnerSelect name={field.name} label={field.label} {...field.props} />;
 
     return <>Not implemented yet</>;
 };
