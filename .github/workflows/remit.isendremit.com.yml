@@ -1,4 +1,4 @@
-name: remit.isendremit.com
+name: PRODUCTION - iSend
 
 on:
   workflow_dispatch:

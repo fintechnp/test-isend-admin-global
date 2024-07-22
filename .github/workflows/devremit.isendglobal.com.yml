@@ -1,4 +1,4 @@
-name: devremit.isendglobal.com
+name: UAT - iSend
 
 on:
   workflow_dispatch:

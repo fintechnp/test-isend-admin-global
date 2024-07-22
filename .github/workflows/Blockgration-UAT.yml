@@ -1,4 +1,4 @@
-name: Blockgration - UAT
+name: UAT - Blockgration
 
 on: [workflow_dispatch]
 
