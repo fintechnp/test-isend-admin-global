@@ -1,18 +1,23 @@
-import React, { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useMemo } from "react";
 
+import Row from "App/components/Row/Row";
 import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import FilterForm from "App/components/Filter/FilterForm";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import ReturnRdfiTransactionModal from "./components/ReturnRdfiTransactionModal";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import { achWebhookActions } from "./store";
 import dateUtils from "App/utils/dateUtils";
-import { TablePagination } from "App/components/Table";
+import ReturnIcon from "App/components/Icon/ReturnIcon";
+import { RDFITransactionStatus } from "./data/rdfiTransactionStatus";
 
 const initialState = {
     page_number: 1,
@@ -38,8 +43,19 @@ export default function ListRdfiWebhooks() {
 
     const { response: rdfiWebhooks, loading: isLoading } = useSelector((state) => state.get_ach_rdfi_webhooks);
 
-    useEffect(() => {
+    const fetch = useCallback(() => {
         dispatch(achWebhookActions.get_ach_rdfi_webhooks(filterSchema));
+    }, [filterSchema]);
+
+    const handleOnReturnSuccess = useCallback(() => {
+        fetch();
+        dispatch(achWebhookActions.close_return_ach_rdfi_transaction_modal());
+    }, []);
+
+    const handleClose = useCallback(() => dispatch(achWebhookActions.close_return_ach_rdfi_transaction_modal()), []);
+
+    useEffect(() => {
+        fetch();
     }, [dispatch, filterSchema]);
 
     const data = rdfiWebhooks?.data ?? [];
@@ -84,7 +100,7 @@ export default function ListRdfiWebhooks() {
         },
         {
             header: "RDFI Routing Number",
-            accessorKey: "rdfi_accountnumber",
+            accessorKey: "rdfi_routingnumber",
         },
         {
             header: "ODFI Routing Number",
@@ -105,6 +121,36 @@ export default function ListRdfiWebhooks() {
         {
             header: "CFSB Transaction ID",
             accessorKey: "ach_transaction_id",
+        },
+        {
+            header: "Created DateTime",
+            accessorKey: "created_ts",
+            cell: ({ getValue }) => dateUtils.getFormattedDate(getValue()),
+        },
+        {
+            header: "Status",
+            accessorKey: "status",
+        },
+        {
+            header: "Actions",
+            cell: ({ row }) => (
+                <Row>
+                    {row.original.status !== RDFITransactionStatus.RETURNED && (
+                        <IconButton
+                            size="small"
+                            onClick={() => {
+                                dispatch(
+                                    achWebhookActions.open_return_ach_rdfi_transaction_modal(
+                                        row.original.ach_transaction_id,
+                                    ),
+                                );
+                            }}
+                        >
+                            <ReturnIcon />
+                        </IconButton>
+                    )}
+                </Row>
+            ),
         },
     ]);
 
@@ -198,6 +244,7 @@ export default function ListRdfiWebhooks() {
                     handleChangeRowsPerPage={onRowsPerPageChange}
                 />
             </Column>
+            <ReturnRdfiTransactionModal onReturnSuccess={handleOnReturnSuccess} onClose={handleClose} />
         </PageContent>
     );
 }

@@ -610,6 +610,7 @@ import {
     GetAchRdfiWebhooksReducer,
     GetAchRejectWebhooksReducer,
     GetAchReturnWebhooksReducer,
+    ReturnAchRdfiTransactionReducer,
 } from "./pages/AchWebhooks/store";
 import {
     CreateHelpCenterReducer,
@@ -1117,12 +1118,12 @@ export const privateReducer = {
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
 
-    // region: ach webhooks
-
+    // region ACH Webhooks
     get_ach_rdfi_webhooks: GetAchRdfiWebhooksReducer,
     get_ach_cir_webhooks: GetAchCirWebhooksReducer,
     get_ach_return_webhooks: GetAchReturnWebhooksReducer,
     get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
+    return_ach_rdfi_transaction: ReturnAchRdfiTransactionReducer,
 
     //region: Help Center
 
