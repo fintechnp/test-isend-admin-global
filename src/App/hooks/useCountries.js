@@ -29,11 +29,11 @@ import { useDispatch, useSelector } from "react-redux";
  * @property {(iso3: string) => Country|null} getCountryByIso3
  * @property {boolean} isLoading,
  * @property {(currency: string) => Country|null} getCurrencyName
-*/
+ */
 
 /**
  * @returns {UseCountriesReturn}
-*/
+ */
 const useCountries = () => {
     const { response, loading: isLoading } = useSelector((state) => state.all_country);
 
@@ -52,13 +52,23 @@ const useCountries = () => {
     };
 
     /**
-     * get country by id
+     * get country by ios3
      *
-     * @param {int} countryId
+     * @param {int} iso3
      * @returns {Country|null}
      */
     const getCountryByIso3 = (iso3) => {
-        return countries.find((c) => c.iso3.toUpperCase() === countryId?.toUpperCase()) ?? null;
+        return countries.find((c) => c.iso3.toUpperCase() === iso3?.toUpperCase()) ?? null;
+    };
+
+    /**
+     * get country by ios3
+     *
+     * @param {int} iso3
+     * @returns {string|null}
+     */
+    const getCountryNameByIso3 = (iso3) => {
+        return countries.find((c) => c.iso3.toUpperCase() === iso3?.toUpperCase())?.country ?? null;
     };
 
     /**
@@ -75,7 +85,7 @@ const useCountries = () => {
         if (countries.length <= 0) dispatch({ type: "GET_COUNTRIES" });
     }, []);
 
-    return { countries, getCountryById, getCountryByIso3, isLoading, getCurrencyName };
+    return { countries, getCountryById, getCountryByIso3, isLoading, getCurrencyName, getCountryNameByIso3 };
 };
 
 export default useCountries;

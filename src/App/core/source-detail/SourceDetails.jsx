@@ -10,7 +10,7 @@ import isEmpty from "App/helpers/isEmpty";
 
 const DefaultContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== "disableSpacing",
-})(({ disableSpacing = true }) => ({
+})(({ disableSpacing = false }) => ({
     display: "flex",
     flexWrap: "wrap",
     ...(!disableSpacing
@@ -101,7 +101,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                         <Box key={i} width="100%">
                             <Box>
                                 {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
-                                <DataContainer disableSpacing>
+                                <DataContainer>
                                     {def.items.map((item, ik) => (
                                         <Fragment key={ik}>{renderItem(item)}</Fragment>
                                     ))}

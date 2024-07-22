@@ -30,7 +30,7 @@ export default function CustomerFormStep4({ isAddMode }) {
 
     const form = getValues();
 
-    const { getCountryNameByISO3 } = useCountries();
+    const { getCountryNameByIso3 } = useCountries();
 
     const definitionPersonalInformation = useSourceDetail([
         {
@@ -64,11 +64,11 @@ export default function CustomerFormStep4({ isAddMode }) {
                     : []),
                 {
                     label: "Birth Country",
-                    cell: (data) => getCountryNameByISO3(data.birth_country),
+                    cell: (data) => getCountryNameByIso3(data.birth_country),
                 },
                 {
                     label: "Citizenship Country",
-                    cell: (data) => getCountryNameByISO3(data.citizenship_country),
+                    cell: (data) => getCountryNameByIso3(data.citizenship_country),
                 },
                 {
                     label: "Occupation",
@@ -104,7 +104,7 @@ export default function CustomerFormStep4({ isAddMode }) {
             items: [
                 {
                     label: "Country",
-                    cell: (data) => getCountryNameByISO3(data.country),
+                    cell: (data) => getCountryNameByIso3(data.country),
                 },
                 {
                     label: "Post Code",
@@ -156,7 +156,7 @@ export default function CustomerFormStep4({ isAddMode }) {
             items: [
                 {
                     label: "Issued Country",
-                    cell: (data) => getCountryNameByISO3(data.id_issued_country),
+                    cell: (data) => getCountryNameByIso3(data.id_issued_country),
                 },
                 {
                     label: "Document Type",
