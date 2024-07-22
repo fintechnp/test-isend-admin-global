@@ -15,9 +15,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 
 import AccountForm from "./Form";
 import Box from "@mui/material/Box";
-import actions from "./../../store/actions";
+import ListItemButton from "@mui/material/ListItemButton";
 import HasPermission from "Private/components/shared/HasPermission";
 
+import actions from "./../../store/actions";
 import { permissions } from "Private/data/permissions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -36,7 +37,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    //
     borderColor: theme.palette.border.main,
 }));
 
@@ -120,10 +120,12 @@ function AddAccount({ update_data, update, onClose }) {
 
     const handleClose = () => {
         setOpen(false);
+        onClose?.();
     };
 
     const handleNewUser = (data) => {
         dispatch(actions.add_user(data));
+        onClose?.();
     };
 
     const handleUpdateUser = (data) => {
@@ -135,7 +137,7 @@ function AddAccount({ update_data, update, onClose }) {
             {update ? (
                 <Tooltip title="Edit Account" arrow>
                     <HasPermission permission={permissions.EDIT_USER}>
-                        <ListItemButton onClick={() => (handleClickOpen(), onClose?.())}>Update User</ListItemButton>
+                        <ListItemButton onClick={() => handleClickOpen()}>Update User</ListItemButton>
                     </HasPermission>
                 </Tooltip>
             ) : (
