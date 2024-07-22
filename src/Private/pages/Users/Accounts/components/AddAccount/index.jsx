@@ -11,6 +11,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { useDispatch, useSelector } from "react-redux";
 import DialogContent from "@mui/material/DialogContent";
+import ListItemButton from "@mui/material/ListItemButton";
 
 import AccountForm from "./Form";
 import Box from "@mui/material/Box";
@@ -18,7 +19,6 @@ import actions from "./../../store/actions";
 import HasPermission from "Private/components/shared/HasPermission";
 
 import { permissions } from "Private/data/permissions";
-import ListItemButton from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
