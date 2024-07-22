@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -14,8 +15,6 @@ import DialogContent from "@mui/material/DialogContent";
 import ListItemButton from "@mui/material/ListItemButton";
 
 import AccountForm from "./Form";
-import Box from "@mui/material/Box";
-import ListItemButton from "@mui/material/ListItemButton";
 import HasPermission from "Private/components/shared/HasPermission";
 
 import actions from "./../../store/actions";
