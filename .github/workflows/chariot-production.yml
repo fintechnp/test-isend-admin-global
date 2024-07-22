@@ -1,4 +1,4 @@
-name: PRODUCTION - Chariot 🟢
+name: PRODUCTION - Chariot
 
 on:
     workflow_dispatch: # Manual

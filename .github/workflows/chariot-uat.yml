@@ -1,4 +1,4 @@
-name: UAT - Chariot 🟡
+name: UAT - Chariot
 
 on: [workflow_dispatch]
 
