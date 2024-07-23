@@ -12,6 +12,8 @@ import { useReactTable, flexRender, getCoreRowModel } from "@tanstack/react-tabl
 import SubComponent from "./SubComponet";
 
 import TableBodySkeleton from "./TableBodySkeleton";
+import { useHorizontalScroll } from "App/hooks/useHorizontalScroll";
+import useDragScroll from "App/hooks/useDragScroll";
 
 const TableContainer = styled(MuiTableContainer)(({ theme }) => ({
     overflowX: "auto",
@@ -180,8 +182,12 @@ const TanstackReactTable = ({
         });
     };
 
+    // const scrollRef = useHorizontalScroll();
+
+    const dragScrollRef = useDragScroll();
+
     return (
-        <TableContainer>
+        <TableContainer ref={dragScrollRef}>
             <GlobalTable>
                 <TableHead>
                     {table.getHeaderGroups().map((headerGroup) => (

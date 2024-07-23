@@ -39,8 +39,8 @@
         "react-redux": "^7.2.6",
         "react-router-dom": "^6.2.2",
         "react-table": "^7.8.0",
-        "recharts": "^2.12.7",
         "react-webcam": "^7.2.0",
+        "recharts": "^2.12.7",
         "redux": "^4.1.2",
         "redux-devtools-extension": "^2.13.9",
         "redux-form": "^8.3.8",
@@ -60,6 +60,7 @@
         "build:development": "vite build --mode development",
         "build:staging": "vite build --mode staging",
         "build:production": "vite build --mode production",
+        "prepare": "husky install",
         "test": "vitest --watch",
         "coverage": "vitest run --coverage",
         "style:check": "npm run lint:check && npm run prettier:check",
@@ -68,6 +69,20 @@
         "prettier:check": "prettier --check './src/**/*.{js,jsx,ts,tsx,css}' --config ./.prettierrc",
         "lint:fix": "eslint --fix  './src/**/*.{js,jsx,ts,tsx}'",
         "prettier:fix": "prettier --write './src/**/*.{js,jsx,ts,tsx,css}' --config ./.prettierrc"
+    },
+    "lint-staged": {
+        "src/**/*.{js,jsx,ts,tsx}": [
+            "eslint --fix",
+            "prettier --write --config ./.prettierrc"
+        ],
+        "src/**/*.{css}": [
+            "prettier --write --config ./.prettierrc"
+        ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     },
     "eslintConfig": {
         "extends": [
@@ -90,13 +105,20 @@
     "devDependencies": {
         "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
         "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+        "@eslint/compat": "^1.1.1",
         "@hookform/devtools": "^4.3.1",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^12.1.2",
         "@testing-library/react-hooks": "^8.0.1",
         "@testing-library/user-event": "^14.4.3",
         "@vitejs/plugin-react": "^3.0.1",
+        "eslint": "^9.7.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-react": "^7.35.0",
         "jsdom": "^21.1.0",
+        "lint-staged": "^15.2.7",
+        "prettier": "^3.3.3",
         "react-error-overlay": "^6.0.9",
         "vite": "^4.2.0",
         "vite-plugin-svgr": "^2.4.0",
