@@ -34,7 +34,7 @@ export default function AddEmailTemplateModal() {
                     flexDirection: "row",
                     gap: 4,
                     maxHeight: 500,
-                    minHeight: 800
+                    minHeight: 800,
                 }}
             >
                 <EmailTemplateForm

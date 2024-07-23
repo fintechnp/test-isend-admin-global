@@ -48,12 +48,7 @@ function BlockForm({ handleSubmit, loading }) {
                             component={TextAreaField}
                             validate={Validator.emptyValidator}
                         />
-                        <BlockButton
-                            size="small"
-                            variant="outlined"
-                            loading={loading}
-                            type="submit"
-                        >
+                        <BlockButton size="small" variant="outlined" loading={loading} type="submit">
                             Block
                         </BlockButton>
                     </BlockBox>

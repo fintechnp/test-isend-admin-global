@@ -1,7 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -92,15 +92,7 @@ const SearchButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function SearchForm({
-    handleSubmit,
-    handleReset,
-    s_loading,
-    p_loading,
-    PayPartner,
-    SendPartner,
-    loading
-}) {
+function SearchForm({ handleSubmit, handleReset, s_loading, p_loading, PayPartner, SendPartner, loading }) {
     const [minDate, setMinDate] = React.useState(null);
     const [maxDate, setMaxDate] = React.useState(null);
 
@@ -142,9 +134,7 @@ function SearchForm({
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {s_loading
-                                        ? "Loading..."
-                                        : "Select Send Partner"}
+                                    {s_loading ? "Loading..." : "Select Send Partner"}
                                 </option>
                                 {!s_loading && SendPartner?.length === 0 && (
                                     <option value="" disabled>
@@ -153,10 +143,7 @@ function SearchForm({
                                 )}
                                 {SendPartner &&
                                     SendPartner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -171,9 +158,7 @@ function SearchForm({
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {p_loading
-                                        ? "Loading..."
-                                        : "Select Payout Partner"}
+                                    {p_loading ? "Loading..." : "Select Payout Partner"}
                                 </option>
                                 {!p_loading && PayPartner?.length === 0 && (
                                     <option value="" disabled>
@@ -182,10 +167,7 @@ function SearchForm({
                                 )}
                                 {PayPartner &&
                                     PayPartner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -204,13 +186,9 @@ function SearchForm({
                                     shrink: true,
                                 }}
                                 inputProps={{
-                                    min: new Date("2021-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: maxDate
-                                        ? new Date(maxDate)
-                                              .toISOString()
-                                              .slice(0, 10)
+                                        ? new Date(maxDate).toISOString().slice(0, 10)
                                         : new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -229,12 +207,8 @@ function SearchForm({
                                 }}
                                 inputProps={{
                                     min: minDate
-                                        ? new Date(minDate)
-                                              .toISOString()
-                                              .slice(0, 10)
-                                        : new Date("2021-01-01")
-                                              .toISOString()
-                                              .slice(0, 10),
+                                        ? new Date(minDate).toISOString().slice(0, 10)
+                                        : new Date("2021-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -259,12 +233,7 @@ function SearchForm({
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={loading}
-                                    >
+                                    <Button size="small" variant="contained" type="submit" disabled={loading}>
                                         Filter
                                     </Button>
                                 </Grid>

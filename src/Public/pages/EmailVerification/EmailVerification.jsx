@@ -10,7 +10,9 @@ function EmailVerification(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>
+                    {import.meta.env.REACT_APP_NAME} | {props.title}
+                </title>
             </Helmet>
             <MessageBox message={message} />
         </>

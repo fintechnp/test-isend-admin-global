@@ -237,7 +237,9 @@ function BeneficiaryForm({ update_data, loading }) {
                                             branch_identifier_type: memoizedData?.branch_identifier_type,
                                             branch_identifier_value: memoizedData?.branch_identifier_value,
                                             is_active: memoizedData?.is_active,
-                                            date_of_birth: memoizedData?.date_of_birth ? memoizedData.date_of_birth.slice(0, 10) : ''
+                                            date_of_birth: memoizedData?.date_of_birth
+                                                ? memoizedData.date_of_birth.slice(0, 10)
+                                                : "",
                                         }
                                     }
                                     steps={steps}

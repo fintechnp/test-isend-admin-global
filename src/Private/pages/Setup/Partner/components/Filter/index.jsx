@@ -85,41 +85,24 @@ const agentType = [
     { key: "Send & Pay", value: "BOTH" },
 ];
 
-function Filter({
-    handleSearch,
-    handleCountry,
-    handleSort,
-    handleOrder,
-    handleAgentType,
-    sortData,
-    orderData,
-    state,
-}) {
+function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAgentType, sortData, orderData, state }) {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
         <FilterWrapper>
             <SearchBox>
-               <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
                 <Box>
                     {handleCountry && (
                         <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                            <Select
-                                native
-                                onChange={handleCountry}
-                                displayEmpty
-                                defaultValue=""
-                            >
+                            <Select native onChange={handleCountry} displayEmpty defaultValue="">
                                 <option value="">All Country</option>
                                 {country &&
                                     country.map((sort) => (
-                                        <option
-                                            value={sort.iso3}
-                                            key={sort.iso3}
-                                        >
+                                        <option value={sort.iso3} key={sort.iso3}>
                                             {sort.country}
                                         </option>
                                     ))}
@@ -135,25 +118,17 @@ function Filter({
                                 renderValue={(selected) => {
                                     if (selected.length === 0) {
                                         return (
-                                            <Typography
-                                                component="p"
-                                                sx={{ opacity: 0.6 }}
-                                            >
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
                                                 Agent Type
                                             </Typography>
                                         );
                                     }
-                                    const value = agentType.filter(
-                                        (type) => type.value === selected
-                                    );
+                                    const value = agentType.filter((type) => type.value === selected);
                                     return value[0]?.key;
                                 }}
                             >
                                 {agentType.map((order) => (
-                                    <MenuItem
-                                        value={order.value}
-                                        key={order.value}
-                                    >
+                                    <MenuItem value={order.value} key={order.value}>
                                         {order.key}
                                     </MenuItem>
                                 ))}
@@ -169,25 +144,17 @@ function Filter({
                                 renderValue={(selected) => {
                                     if (selected.length === 0) {
                                         return (
-                                            <Typography
-                                                component="p"
-                                                sx={{ opacity: 0.6 }}
-                                            >
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
                                                 Sort By
                                             </Typography>
                                         );
                                     }
-                                    const value = sortData.filter(
-                                        (type) => type.value === selected
-                                    );
+                                    const value = sortData.filter((type) => type.value === selected);
                                     return value[0]?.key;
                                 }}
                             >
                                 {sortData.map((order) => (
-                                    <MenuItem
-                                        value={order.value}
-                                        key={order.value}
-                                    >
+                                    <MenuItem value={order.value} key={order.value}>
                                         {order.key}
                                     </MenuItem>
                                 ))}
@@ -202,17 +169,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

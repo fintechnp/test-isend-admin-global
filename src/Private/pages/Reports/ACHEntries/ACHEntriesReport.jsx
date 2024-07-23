@@ -182,4 +182,4 @@ function ACHEntriesReport() {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_ACH_ENTRIES_REPORT]})(ACHEntriesReport);
+export default withPermission({ permission: [permissions.GENERATE_ACH_ENTRIES_REPORT] })(ACHEntriesReport);

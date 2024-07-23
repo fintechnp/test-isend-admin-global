@@ -18,7 +18,7 @@ import actions from "../store/actions";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -32,7 +32,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -97,9 +97,7 @@ function AddDocuments() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.upload_documents
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.upload_documents);
 
     React.useEffect(() => {
         if (add_success) {
@@ -128,12 +126,7 @@ function AddDocuments() {
 
     return (
         <div>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleClickOpen}
-                endIcon={<AddIcon />}
-            >
+            <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                 Add Document
             </AddButton>
             <BootstrapDialog
@@ -142,10 +135,7 @@ function AddDocuments() {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Add Document
                 </BootstrapDialogTitle>
                 <DialogContent dividers>

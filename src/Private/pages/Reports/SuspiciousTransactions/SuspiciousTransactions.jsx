@@ -480,4 +480,6 @@ function TransactionsSuspiciousReports(props) {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_SUSPICIOUS_TRANSACTION_REPORT]})(TransactionsSuspiciousReports);
+export default withPermission({ permission: [permissions.GENERATE_SUSPICIOUS_TRANSACTION_REPORT] })(
+    TransactionsSuspiciousReports,
+);

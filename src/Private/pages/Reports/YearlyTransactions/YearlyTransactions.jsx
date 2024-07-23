@@ -649,4 +649,4 @@ function YearlyTransactions(props) {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_YEARLY_TRANSACTION_REPORT]})(YearlyTransactions);
+export default withPermission({ permission: [permissions.GENERATE_YEARLY_TRANSACTION_REPORT] })(YearlyTransactions);

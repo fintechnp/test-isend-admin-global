@@ -15,8 +15,7 @@ const Paper = styled(MuiPaper)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background:
-        "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
+    background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
 }));
 
 const FormContainer = styled(Grid)(({ theme }) => ({
@@ -64,11 +63,7 @@ const MessageBox = ({ message }) => {
         <Paper square={true}>
             <FormContainer container rowSpacing={1} direction="column">
                 <Grid item>
-                    <LogoWrapper
-                        component="img"
-                        image={Logo}
-                        alt="isend logo"
-                    />
+                    <LogoWrapper component="img" image={Logo} alt="isend logo" />
                 </Grid>
                 <Grid item>
                     <Typography
@@ -82,12 +77,7 @@ const MessageBox = ({ message }) => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="space-between"
-                        alignItems="center"
-                    >
+                    <Grid container direction="row" justify="space-between" alignItems="center">
                         <Grid item xs={12}>
                             <Button
                                 disableRipple

@@ -66,7 +66,7 @@ export default function BulkEmailCredentialForm({ onSubmit, initialState, isProc
                 <Grid item xs={12} md={6}>
                     <FormTextField name="replyto_address" label="Reply To Address" />
                 </Grid>
-              
+
                 <Grid item xs={12} md={6}>
                     <FormCheckbox name="enable_ssl" label="Enable SSL" />
                 </Grid>

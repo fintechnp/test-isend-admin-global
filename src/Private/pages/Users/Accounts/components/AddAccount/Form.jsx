@@ -17,7 +17,6 @@ import FormUserProfileSelect from "App/core/hook-form/FormUserProfileSelect";
 import { createUserSetupSchema, updateUserSetupSchema } from "../../validations/userSetupSchema";
 
 const AccountForm = ({ onSubmit, defaultValues, update, loading, handleClose }) => {
-
     const methods = useForm({
         resolver: yupResolver(update ? updateUserSetupSchema : createUserSetupSchema),
         defaultValues,
@@ -34,11 +33,7 @@ const AccountForm = ({ onSubmit, defaultValues, update, loading, handleClose }) 
                         <FormTextField name="last_name" label="Last Name" />
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
-                        <FormRadio
-                            name="gender"
-                            label="Gender"
-                            options={GenderStringOptions}
-                        />
+                        <FormRadio name="gender" label="Gender" options={GenderStringOptions} />
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
                         <FormTextField name="phone_number" label="Mobile No" />

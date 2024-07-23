@@ -39,7 +39,6 @@ export default function ForgotPasswordForm({ onSubmit, isSubmitting }) {
 
     const loginCountry = watch("identifier");
 
-
     useEffect(() => {
         if (loginCountry) {
             BaseUrlConfiguration.saveCountry(loginCountry);

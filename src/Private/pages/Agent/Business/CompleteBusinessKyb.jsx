@@ -57,7 +57,6 @@ export default function CompleteBusinessKyb() {
         setValue("registeredCountryId", data.registeredCountryId);
         setValue("email", data.email);
         setValue("phoneNo", data.phoneNo);
-
     }, [getBusinessByIdResponse]);
 
     const { handleSubmit, setError } = methods;

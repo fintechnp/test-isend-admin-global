@@ -15,8 +15,7 @@ function ResetPassword() {
 
     const [searchParams] = useSearchParams();
 
-    const apiBaseUrl = atob(searchParams.get("base_url") ?? '')
-        .replace("http://", "https://");
+    const apiBaseUrl = atob(searchParams.get("base_url") ?? "").replace("http://", "https://");
 
     let { success, loading } = useSelector((state) => state.reset_password);
 

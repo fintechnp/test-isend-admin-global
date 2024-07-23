@@ -53,13 +53,7 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const BeneficiaryForm = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-    buttonText,
-}) => {
+const BeneficiaryForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
@@ -74,21 +68,14 @@ const BeneficiaryForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -101,34 +88,21 @@ const BeneficiaryForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Country Code
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="unit"
-                                label="Unit"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="unit" label="Unit" type="number" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -137,10 +111,7 @@ const BeneficiaryForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -150,38 +121,17 @@ const BeneficiaryForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="state"
-                                label="State"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="state" label="State" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="address"
-                                label="Address"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="address" label="Address" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="website"
-                                label="Website"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="website" label="Website" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -189,12 +139,7 @@ const BeneficiaryForm = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -208,11 +153,7 @@ const BeneficiaryForm = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

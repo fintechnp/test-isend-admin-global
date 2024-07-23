@@ -13,7 +13,6 @@ export default function PreviewSelectedPermissionModal({ isOpen = false, onClose
                     onMenuSelect={() => {}}
                     onPermissionSelect={() => {}}
                     permissions={permissions}
-                    
                 />
             </Box>
         </Modal>

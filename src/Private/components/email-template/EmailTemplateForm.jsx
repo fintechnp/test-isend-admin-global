@@ -40,16 +40,16 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
         templateFor === TemplateForConstant.ADMIN
             ? referenceTypeId.emailTemplateTypeForAdmin
             : templateFor === TemplateForConstant.CUSTOMER
-            ? referenceTypeId.emailTemplateTypeForCustomer
-            : null;
+              ? referenceTypeId.emailTemplateTypeForCustomer
+              : null;
 
     const referenceData = referenceTypeIdForTemplateType
-        ? reference
+        ? (reference
               ?.filter((ref_data) => ref_data.reference_type === referenceTypeIdForTemplateType)[0]
               .reference_data.map((ref) => ({
                   label: ref.name,
                   value: ref.value,
-              })) ?? []
+              })) ?? [])
         : [];
 
     return (

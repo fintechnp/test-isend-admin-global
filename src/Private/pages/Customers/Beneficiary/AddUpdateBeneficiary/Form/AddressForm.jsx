@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import React, { useState, useEffect } from "react";
 import { Field, Form, reduxForm, change } from "redux-form";
 
-
 import TextField from "App/components/Fields/TextField";
 import SelectField from "App/components/Fields/SelectField";
 

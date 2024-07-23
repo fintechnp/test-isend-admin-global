@@ -117,7 +117,7 @@ export default function CustomerDeleteList() {
         setFilterSchema({
             ...handleTableFilter,
             sortBy: filterSchema.sortBy,
-            orderBy: filterSchema.orderBy
+            orderBy: filterSchema.orderBy,
         });
     };
 

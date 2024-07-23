@@ -44,11 +44,7 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-const steps = [
-    "Basic Information",
-    "Contact Person Details",
-    "Business Information",
-];
+const steps = ["Basic Information", "Contact Person Details", "Business Information"];
 
 function PartnerForm({ update_data, loading }) {
     const { id } = useParams();
@@ -57,11 +53,7 @@ function PartnerForm({ update_data, loading }) {
     const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
-    const {
-        success: add_success,
-        loading: add_loading,
-        error: add_error,
-    } = useSelector((state) => state.add_partner);
+    const { success: add_success, loading: add_loading, error: add_error } = useSelector((state) => state.add_partner);
     const {
         success: update_success,
         loading: update_loading,
@@ -103,9 +95,7 @@ function PartnerForm({ update_data, loading }) {
 
     const handleNext = () => {
         const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
+            isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
         setActiveStep(newActiveStep);
     };
 
@@ -144,12 +134,7 @@ function PartnerForm({ update_data, loading }) {
     if (loading) {
         return (
             <Box sx={{ width: "100%", pt: "16px" }}>
-                <Stepper
-                    nonLinear
-                    activeStep={activeStep}
-                    alternativeLabel
-                    sx={{ width: "100%", padding: "16px 0px" }}
-                >
+                <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                     {steps.map((label, index) => (
                         <Step key={label} completed={completed[index]}>
                             <StepLabel color="inherit">{label}</StepLabel>
@@ -165,12 +150,7 @@ function PartnerForm({ update_data, loading }) {
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
-            <Stepper
-                nonLinear
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{ width: "100%", padding: "16px 0px" }}
-            >
+            <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
                         <StepLabel color="inherit">{label}</StepLabel>
@@ -188,12 +168,9 @@ function PartnerForm({ update_data, loading }) {
                                 fontSize: "18px",
                             }}
                         >
-                            All steps completed - Please submit to create
-                            Partner.
+                            All steps completed - Please submit to create Partner.
                         </Typography>
-                        <CheckCircleOutlineIcon
-                            sx={{ fontSize: "64px", color: "success.main" }}
-                        />
+                        <CheckCircleOutlineIcon sx={{ fontSize: "64px", color: "success.main" }} />
                         <LoadingButton
                             size="small"
                             variant="outlined"
@@ -206,7 +183,7 @@ function PartnerForm({ update_data, loading }) {
                                     borderWidth: "2px",
                                 },
                                 "& .MuiCircularProgress-root": {
-                                    color: 'primary.contrastText',
+                                    color: "primary.contrastText",
                                 },
                             }}
                             onClick={() => handleSubmitForm(id)}
@@ -228,12 +205,9 @@ function PartnerForm({ update_data, loading }) {
                                     initialValues={
                                         memoizedData && {
                                             name: memoizedData?.name,
-                                            short_code:
-                                                memoizedData?.short_code,
-                                            agent_type:
-                                                memoizedData?.agent_type,
-                                            phone_number:
-                                                memoizedData?.phone_number,
+                                            short_code: memoizedData?.short_code,
+                                            agent_type: memoizedData?.agent_type,
+                                            phone_number: memoizedData?.phone_number,
                                             email: memoizedData?.email,
                                             country: memoizedData?.country,
                                             postcode: memoizedData?.postcode,
@@ -243,46 +217,30 @@ function PartnerForm({ update_data, loading }) {
                                             state: memoizedData?.state,
                                             address: memoizedData?.address,
                                             website: memoizedData?.website,
-                                            contact_person_full_name:
-                                                memoizedData?.contact_person_full_name,
-                                            contact_person_post:
-                                                memoizedData?.contact_person_post,
-                                            contact_person_mobile:
-                                                memoizedData?.contact_person_mobile,
-                                            contact_person_email:
-                                                memoizedData?.contact_person_email,
-                                            date_of_incorporation: new Date(
-                                                memoizedData?.date_of_incorporation
+                                            contact_person_full_name: memoizedData?.contact_person_full_name,
+                                            contact_person_post: memoizedData?.contact_person_post,
+                                            contact_person_mobile: memoizedData?.contact_person_mobile,
+                                            contact_person_email: memoizedData?.contact_person_email,
+                                            date_of_incorporation: new Date(memoizedData?.date_of_incorporation)
+                                                .toISOString()
+                                                .slice(0, 10),
+                                            business_license_number: memoizedData?.business_license_number,
+                                            business_license_expiry_date: new Date(
+                                                memoizedData?.business_license_expiry_date,
                                             )
                                                 .toISOString()
                                                 .slice(0, 10),
-                                            business_license_number:
-                                                memoizedData?.business_license_number,
-                                            business_license_expiry_date:
-                                                new Date(
-                                                    memoizedData?.business_license_expiry_date
-                                                )
-                                                    .toISOString()
-                                                    .slice(0, 10),
                                             balance: memoizedData?.balance,
-                                            credit_limit:
-                                                memoizedData?.credit_limit,
-                                            transaction_currency:
-                                                memoizedData?.transaction_currency,
-                                            settlement_currency:
-                                                memoizedData?.settlement_currency,
+                                            credit_limit: memoizedData?.credit_limit,
+                                            transaction_currency: memoizedData?.transaction_currency,
+                                            settlement_currency: memoizedData?.settlement_currency,
                                             tax_type: memoizedData?.tax_type,
-                                            date_format:
-                                                memoizedData?.date_format,
+                                            date_format: memoizedData?.date_format,
                                             time_zone: memoizedData?.time_zone,
-                                            transaction_limit:
-                                                memoizedData?.transaction_limit,
-                                            commission_currency:
-                                                memoizedData?.commission_currency,
-                                            bank_charge_currency:
-                                                memoizedData?.bank_charge_currency,
-                                            is_prefunding:
-                                                memoizedData?.is_prefunding,
+                                            transaction_limit: memoizedData?.transaction_limit,
+                                            commission_currency: memoizedData?.commission_currency,
+                                            bank_charge_currency: memoizedData?.bank_charge_currency,
+                                            is_prefunding: memoizedData?.is_prefunding,
                                         }
                                     }
                                     steps={steps}

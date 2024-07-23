@@ -131,7 +131,7 @@ const ExceptionTransactions = (props) => {
                         <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
                             {data?.row?.original?.payout_country_data
                                 ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : data?.row?.original?.payout_country ?? "N/A"}{" "}
+                                : (data?.row?.original?.payout_country ?? "N/A")}{" "}
                         </StyledName>
                     </Box>
                 ),

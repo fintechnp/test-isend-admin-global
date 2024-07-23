@@ -9,7 +9,6 @@ import EditIndividualStakeholder from "../Stakeholder/components/EditIndividualS
 import { relatedTo } from "Private/data/b2b";
 
 export default function EditMarketMakerIndividualStakeholder() {
-
     const { agentId, stakeholderId } = useParams();
 
     const navigate = useNavigate();

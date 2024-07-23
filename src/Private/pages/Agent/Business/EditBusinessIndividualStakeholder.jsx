@@ -9,7 +9,6 @@ import EditIndividualStakeholder from "../Stakeholder/components/EditIndividualS
 import { relatedTo } from "Private/data/b2b";
 
 export default function EditBusinessIndividualStakeholder() {
-
     const { businessId, stakeholderId } = useParams();
 
     const navigate = useNavigate();

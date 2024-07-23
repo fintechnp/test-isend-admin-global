@@ -65,13 +65,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const DeliveryOptionForm = ({
-    handleSubmit,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
+const DeliveryOptionForm = ({ handleSubmit, update, loading, buttonText, handleClose }) => {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
@@ -85,21 +79,9 @@ const DeliveryOptionForm = ({
 
     const handleCurrency = (e) => {
         if (update) {
-            dispatch(
-                change(
-                    "update_payout_location_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("update_payout_location_form", "currency", convertCurrency(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_payout_location_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("add_payout_location_form", "currency", convertCurrency(e.target.value)));
         }
     };
 
@@ -115,10 +97,7 @@ const DeliveryOptionForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -128,10 +107,7 @@ const DeliveryOptionForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -141,25 +117,16 @@ const DeliveryOptionForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payment Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 1)[0]
                                         .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
+                                            <option value={data.value} key={index}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -173,20 +140,14 @@ const DeliveryOptionForm = ({
                                 small={12}
                                 onChange={handleCurrency}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -199,20 +160,14 @@ const DeliveryOptionForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.currency} key={data.tid}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -220,15 +175,9 @@ const DeliveryOptionForm = ({
                         </FieldWrapper>
                         {update && (
                             <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
+                                <Grid container alignItems="flex-end" justifyContent="flex-end">
                                     <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
+                                        <StatusText component="p">Status</StatusText>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Field
@@ -256,11 +205,7 @@ const DeliveryOptionForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

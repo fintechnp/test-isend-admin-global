@@ -60,22 +60,18 @@ function AddUpdateTransactions(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>
+                    {import.meta.env.REACT_APP_NAME} | {props.title}
+                </title>
             </Helmet>
             <Container container>
                 <Grid item xs={12}>
                     <TitleWrapper>
                         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <PersonAddAltOutlinedIcon
-                                sx={{ color: "primary.main", fontSize: "28px" }}
-                            />
+                            <PersonAddAltOutlinedIcon sx={{ color: "primary.main", fontSize: "28px" }} />
                             <Title>Create Transaction </Title>
                         </Box>
-                        <BackButton
-                            variant="outlined"
-                            size="small"
-                            onClick={handleBack}
-                        >
+                        <BackButton variant="outlined" size="small" onClick={handleBack}>
                             Back
                         </BackButton>
                     </TitleWrapper>

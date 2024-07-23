@@ -71,11 +71,7 @@ const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength20,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength20]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -85,11 +81,7 @@ const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength20,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength20]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -99,21 +91,14 @@ const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -126,11 +111,7 @@ const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength160,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength160]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -147,11 +128,7 @@ const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

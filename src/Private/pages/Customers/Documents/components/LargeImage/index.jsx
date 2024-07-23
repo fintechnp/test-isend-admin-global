@@ -155,9 +155,14 @@ function LargeImage({ image, side, title }) {
                         <Typography>
                             {ReferenceName(2, title)} [{ReferenceName(48, side)}
                         </Typography>
-                        <TextButton sx={{marginRight: '40px'}} onClick={() => {
-                            window.open(image, '_blank')
-                        }}>Open this document in new tab</TextButton>
+                        <TextButton
+                            sx={{ marginRight: "40px" }}
+                            onClick={() => {
+                                window.open(image, "_blank");
+                            }}
+                        >
+                            Open this document in new tab
+                        </TextButton>
                     </Row>
                 </BootstrapDialogTitle>
                 <DialogContent dividers>

@@ -23,7 +23,7 @@ export default function Documents({ data = [], isLoading = false }) {
                     <>
                         {data?.map((item, i) => {
                             return (
-                                <Box key={i}> 
+                                <Box key={i}>
                                     <Typography variant="subtitle1" mb={1}>
                                         {item?.documentName}
                                     </Typography>

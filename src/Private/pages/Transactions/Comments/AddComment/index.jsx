@@ -17,7 +17,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { format } from "date-fns";
 import { TablePagination } from "App/components/Table";
 
-
 const commentFormSchema = yup.object().shape({
     commentText: yup.string().required("Required"),
 });

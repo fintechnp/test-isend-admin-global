@@ -13,7 +13,7 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -27,12 +27,7 @@ function Header() {
     return (
         <HeaderWrapper>
             <Typography sx={{ fontSize: "22px" }}>Beneficiary List</Typography>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleAdd}
-                endIcon={<AddIcon />}
-            >
+            <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
                 Add Beneficiary
             </AddButton>
         </HeaderWrapper>

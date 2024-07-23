@@ -68,13 +68,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const FCMForm = ({
-    handleSubmit,
-    loading,
-    update,
-    customer_id,
-    handleClose,
-}) => {
+const FCMForm = ({ handleSubmit, loading, update, customer_id, handleClose }) => {
     const dispatch = useDispatch();
     const [id, setId] = React.useState("topic");
     const [name, setName] = React.useState("Topic");
@@ -110,11 +104,7 @@ const FCMForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength100,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -124,25 +114,16 @@ const FCMForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data?.reference_type === 89
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data?.reference_type === 89)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data?.value}
-                                                key={data?.reference_id}
-                                            >
+                                            <option value={data?.value} key={data?.reference_id}>
                                                 {data?.name}
                                             </option>
                                         ))}
@@ -202,19 +183,13 @@ const FCMForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength500,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength500]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Grid container sx={{ height: "100%" }}>
                                 <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Display Notification
-                                    </StatusText>
+                                    <StatusText component="p">Display Notification</StatusText>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Field
@@ -252,11 +227,7 @@ const FCMForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

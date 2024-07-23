@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -56,12 +56,18 @@ export default function FilterForm({ sortByOptions = [], setFilterSchema, loadin
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <Button color="error" size="small" variant="contained" onClick={handleReset} disabled={loading}>
+                                <Button
+                                    color="error"
+                                    size="small"
+                                    variant="contained"
+                                    onClick={handleReset}
+                                    disabled={loading}
+                                >
                                     Reset
                                 </Button>
                             </Grid>
                             <Grid item>
-                                <Button size="small" variant="contained" type="submit" disabled={loading}> 
+                                <Button size="small" variant="contained" type="submit" disabled={loading}>
                                     Search
                                 </Button>
                             </Grid>

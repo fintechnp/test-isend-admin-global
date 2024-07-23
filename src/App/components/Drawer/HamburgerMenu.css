@@ -1,41 +1,41 @@
 .burger__wrapper {
     display: inline-block;
-  }
-  
-  .burger__input {
+}
+
+.burger__input {
     display: none;
-  }
-  
-  .burger__label {
+}
+
+.burger__label {
     display: none;
     align-items: center;
     z-index: 11000;
     cursor: pointer;
-  }
-  
-  .burger__label {
+}
+
+.burger__label {
     display: flex;
-  }
-  
-  .burger__label > * {
+}
+
+.burger__label > * {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-  }
-  
-  .burger__input:checked ~ .burger__label i:before {
+}
+
+.burger__input:checked ~ .burger__label i:before {
     content: "\f00d";
-  }
-  
-  .burger__lines {
+}
+
+.burger__lines {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
     transition: transform 0.3s cubic-bezier(0.25, 0.01, 0.75, 1);
-  }
-  
-  .burger__line {
+}
+
+.burger__line {
     display: block;
     width: 1em;
     height: 0.15em;
@@ -44,29 +44,29 @@
     border-radius: 0.1em;
     background-color: #fff;
     transition: all 0.3s cubic-bezier(0.25, 0.01, 0.75, 1);
-  }
-  
-  .burger__label--arrowright .burger__line:nth-child(1) {
+}
+
+.burger__label--arrowright .burger__line:nth-child(1) {
     transform-origin: 100% calc(0.15em);
-  }
-  
-  .burger__label--arrowright .burger__line:nth-child(3) {
+}
+
+.burger__label--arrowright .burger__line:nth-child(3) {
     transform-origin: 100% 0;
-  }
-  
-  .burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(1) {
+}
+
+.burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(1) {
     transform: translateY(calc(0.15em * 1.2 + 0.16em)) rotate(45deg);
-  }
-  
-  .burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(3) {
+}
+
+.burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(3) {
     transform: translateY(calc((0.15em * 1.2 + 0.16em) * -1)) rotate(-45deg);
-  }
-  
-  .burger__label--arrowright .burger__lines {
+}
+
+.burger__label--arrowright .burger__lines {
     align-items: flex-end;
-  }
-  
-  .burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(1),
-  .burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(3) {
+}
+
+.burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(1),
+.burger__input:checked ~ .burger__label--arrowright .burger__line:nth-child(3) {
     width: calc(1em * 0.75);
-  }
+}

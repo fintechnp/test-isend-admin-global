@@ -88,21 +88,9 @@ const PaymentRulesForm = ({
     const handleCurrency = (e) => {
         handleSendPartner(e);
         if (update) {
-            dispatch(
-                change(
-                    "update_payment_rules_form",
-                    "send_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("update_payment_rules_form", "send_currency", convertCurrency(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_payment_rules_form",
-                    "send_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("add_payment_rules_form", "send_currency", convertCurrency(e.target.value)));
         }
     };
 
@@ -118,10 +106,7 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -132,20 +117,14 @@ const PaymentRulesForm = ({
                                 small={12}
                                 onChange={handleCurrency}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Sending Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -158,20 +137,14 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.currency} key={data.tid}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -184,24 +157,15 @@ const PaymentRulesForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                disabled={
-                                    partner_sending &&
-                                    (partner_sending.length > 0 ? false : true)
-                                }
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                disabled={partner_sending && (partner_sending.length > 0 ? false : true)}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Sending Agent
                                 </option>
                                 {partner_sending &&
                                     partner_sending.map((data, index) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -215,20 +179,14 @@ const PaymentRulesForm = ({
                                 small={12}
                                 component={SelectField}
                                 onChange={handlePayoutPartner}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payout Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -241,24 +199,15 @@ const PaymentRulesForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                disabled={
-                                    partner_payout &&
-                                    (partner_payout.length > 0 ? false : true)
-                                }
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                disabled={partner_payout && (partner_payout.length > 0 ? false : true)}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payout Agent
                                 </option>
                                 {partner_payout &&
                                     partner_payout.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -271,10 +220,7 @@ const PaymentRulesForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -284,10 +230,7 @@ const PaymentRulesForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -297,10 +240,7 @@ const PaymentRulesForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -310,23 +250,14 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         {update && (
                             <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
+                                <Grid container alignItems="flex-end" justifyContent="flex-end">
                                     <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
+                                        <StatusText component="p">Status</StatusText>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Field
@@ -354,11 +285,7 @@ const PaymentRulesForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

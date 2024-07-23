@@ -95,21 +95,9 @@ const PartnerBankForm = ({
     const handleCurrency = (e) => {
         handleAgent(e.target.value);
         if (update) {
-            dispatch(
-                change(
-                    "update_partner_bank_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("update_partner_bank_form", "currency", convertCurrency(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_partner_bank_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("add_partner_bank_form", "currency", convertCurrency(e.target.value)));
         }
     };
 
@@ -125,10 +113,7 @@ const PartnerBankForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -139,20 +124,14 @@ const PartnerBankForm = ({
                                 small={12}
                                 onChange={handleCurrency}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -165,20 +144,14 @@ const PartnerBankForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.currency} key={data.tid}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -191,23 +164,15 @@ const PartnerBankForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                disabled={
-                                    partner_payout.length > 0 ? false : true
-                                }
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                disabled={partner_payout.length > 0 ? false : true}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payout Agent
                                 </option>
                                 {partner_payout &&
                                     partner_payout.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -220,25 +185,16 @@ const PartnerBankForm = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payment Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 1)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -251,10 +207,7 @@ const PartnerBankForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -289,11 +242,7 @@ const PartnerBankForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

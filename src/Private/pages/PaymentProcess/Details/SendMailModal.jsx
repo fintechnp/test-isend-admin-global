@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import Grid  from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -27,8 +27,8 @@ export default function SendMail({ id, onClose }) {
     useEffect(() => {
         if (success) {
             dispatch({
-                type:"SEND_MAIL_TRANSACTION_RESET"
-            })
+                type: "SEND_MAIL_TRANSACTION_RESET",
+            });
             onClose();
         }
     }, [success]);
@@ -36,9 +36,8 @@ export default function SendMail({ id, onClose }) {
     const handleSubmit = (data) => {
         const requestPayload = {
             transactionId: id,
-            ...data
-            
-        }
+            ...data,
+        };
         dispatch(actions.send_mail_transaction(requestPayload));
     };
     return (

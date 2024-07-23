@@ -1,5 +1,5 @@
-import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip'
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -128,7 +128,7 @@ const AmlSuspicious = (props) => {
                         <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
                             {data?.row?.original?.payout_country_data
                                 ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : data?.row?.original?.payout_country ?? "N/A"}{" "}
+                                : (data?.row?.original?.payout_country ?? "N/A")}{" "}
                         </StyledName>
                     </Box>
                 ),

@@ -59,13 +59,7 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const SendAmountForm = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-    buttonText,
-}) => {
+const SendAmountForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -82,12 +76,8 @@ const SendAmountForm = ({
                                 small={12}
                                 component={TextField}
                                 inputProps={{
-                                    min: new Date("1920-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
-                                    max: `${moment()
-                                        .subtract(18, "years")
-                                        .format("YYYY-MM-DD")}`,
+                                    min: new Date("1920-01-01").toISOString().slice(0, 10),
+                                    max: `${moment().subtract(18, "years").format("YYYY-MM-DD")}`,
                                 }}
                                 validate={Validator.emptyValidator}
                             />
@@ -99,10 +89,7 @@ const SendAmountForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -142,15 +129,9 @@ const SendAmountForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                                 inputProps={{
-                                    min: new Date("1920-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    min: new Date("1920-01-01").toISOString().slice(0, 10),
                                     max: new Date().toISOString().slice(0, 10),
                                 }}
                             />
@@ -162,16 +143,10 @@ const SendAmountForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength3]}
                                 inputProps={{
                                     min: new Date().toISOString().slice(0, 10),
-                                    max: new Date("2050-01-01")
-                                        .toISOString()
-                                        .slice(0, 10),
+                                    max: new Date("2050-01-01").toISOString().slice(0, 10),
                                 }}
                             />
                         </FieldWrapper>
@@ -188,15 +163,9 @@ const SendAmountForm = ({
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 4
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 4)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -208,12 +177,7 @@ const SendAmountForm = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -227,11 +191,7 @@ const SendAmountForm = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

@@ -279,7 +279,9 @@ function BeneficiaryDetails(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>
+                    {import.meta.env.REACT_APP_NAME} | {props.title}
+                </title>
             </Helmet>
             <DetailWrapper container>
                 <Grid item xs={12}>

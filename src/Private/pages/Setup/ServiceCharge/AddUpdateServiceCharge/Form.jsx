@@ -64,24 +64,14 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const ServiceChargeForm = ({
-    handleSubmit,
-    update,
-    loading,
-    c_mode,
-    agent_id,
-    buttonText,
-    handleClose,
-}) => {
+const ServiceChargeForm = ({ handleSubmit, update, loading, c_mode, agent_id, buttonText, handleClose }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [mode, setMode] = useState("F");
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
-    const { response: SendPartner, loading: s_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: SendPartner, loading: s_loading } = useSelector((state) => state.get_sending_partner);
 
     useEffect(() => {
         if (c_mode) {
@@ -102,21 +92,9 @@ const ServiceChargeForm = ({
 
     const handleCurrency = (e) => {
         if (update) {
-            dispatch(
-                change(
-                    "update_service_charge_form",
-                    "receiving_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("update_service_charge_form", "receiving_currency", convertCurrency(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_service_charge_form",
-                    "receiving_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("add_service_charge_form", "receiving_currency", convertCurrency(e.target.value)));
         }
     };
 
@@ -139,22 +117,14 @@ const ServiceChargeForm = ({
                                     type="number"
                                     small={12}
                                     component={SelectField}
-                                    validate={[
-                                        Validator.emptyValidator,
-                                        Validator.minValue1,
-                                    ]}
+                                    validate={[Validator.emptyValidator, Validator.minValue1]}
                                 >
                                     <option value="" disabled>
-                                        {s_loading
-                                            ? "loading..."
-                                            : "Select Sending Agent"}
+                                        {s_loading ? "loading..." : "Select Sending Agent"}
                                     </option>
                                     {SendPartner?.data &&
                                         SendPartner?.data.map((data) => (
-                                            <option
-                                                value={data.agent_id}
-                                                key={data?.tid}
-                                            >
+                                            <option value={data.agent_id} key={data?.tid}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -170,26 +140,16 @@ const ServiceChargeForm = ({
                                         type="number"
                                         small={12}
                                         component={SelectField}
-                                        validate={[
-                                            Validator.emptyValidator,
-                                            Validator.minValue1,
-                                        ]}
+                                        validate={[Validator.emptyValidator, Validator.minValue1]}
                                     >
                                         <option value="" disabled>
                                             Select Payment Type
                                         </option>
                                         {reference &&
                                             reference
-                                                ?.filter(
-                                                    (ref_data) =>
-                                                        ref_data.reference_type ===
-                                                        1
-                                                )[0]
+                                                ?.filter((ref_data) => ref_data.reference_type === 1)[0]
                                                 .reference_data.map((data) => (
-                                                    <option
-                                                        value={data.value}
-                                                        key={data.reference_id}
-                                                    >
+                                                    <option value={data.value} key={data.reference_id}>
                                                         {data.name}
                                                     </option>
                                                 ))}
@@ -202,26 +162,16 @@ const ServiceChargeForm = ({
                                         type="number"
                                         small={12}
                                         component={SelectField}
-                                        validate={[
-                                            Validator.emptyValidator,
-                                            Validator.minValue1,
-                                        ]}
+                                        validate={[Validator.emptyValidator, Validator.minValue1]}
                                     >
                                         <option value="" disabled>
                                             Select Customer Type
                                         </option>
                                         {reference &&
                                             reference
-                                                ?.filter(
-                                                    (ref_data) =>
-                                                        ref_data.reference_type ===
-                                                        37
-                                                )[0]
+                                                ?.filter((ref_data) => ref_data.reference_type === 37)[0]
                                                 .reference_data.map((data) => (
-                                                    <option
-                                                        value={data.value}
-                                                        key={data.reference_id}
-                                                    >
+                                                    <option value={data.value} key={data.reference_id}>
                                                         {data.name}
                                                     </option>
                                                 ))}
@@ -235,20 +185,14 @@ const ServiceChargeForm = ({
                                         small={12}
                                         onChange={handleCurrency}
                                         component={SelectField}
-                                        validate={[
-                                            Validator.emptyValidator,
-                                            Validator.minValue1,
-                                        ]}
+                                        validate={[Validator.emptyValidator, Validator.minValue1]}
                                     >
                                         <option value="" disabled>
                                             Select Country
                                         </option>
                                         {country &&
                                             country.map((data) => (
-                                                <option
-                                                    value={data.iso3}
-                                                    key={data.country_id}
-                                                >
+                                                <option value={data.iso3} key={data.country_id}>
                                                     {data.country}
                                                 </option>
                                             ))}
@@ -261,20 +205,14 @@ const ServiceChargeForm = ({
                                         type="number"
                                         small={12}
                                         component={SelectField}
-                                        validate={[
-                                            Validator.emptyValidator,
-                                            Validator.minValue1,
-                                        ]}
+                                        validate={[Validator.emptyValidator, Validator.minValue1]}
                                     >
                                         <option value="" disabled>
                                             Select Currency
                                         </option>
                                         {country &&
                                             country.map((data) => (
-                                                <option
-                                                    value={data.currency}
-                                                    key={data.country_id}
-                                                >
+                                                <option value={data.currency} key={data.country_id}>
                                                     {data.currency_name}
                                                 </option>
                                             ))}
@@ -289,10 +227,7 @@ const ServiceChargeForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -302,10 +237,7 @@ const ServiceChargeForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -316,10 +248,7 @@ const ServiceChargeForm = ({
                                 small={12}
                                 component={SelectField}
                                 onChange={(e) => handleChargeMode(e)}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Charge Mode
@@ -336,10 +265,7 @@ const ServiceChargeForm = ({
                                     type="number"
                                     small={12}
                                     component={TextField}
-                                    validate={[
-                                        Validator.emptyValidator,
-                                        Validator.minValue1,
-                                    ]}
+                                    validate={[Validator.emptyValidator, Validator.minValue1]}
                                 />
                             </FieldWrapper>
                         )}
@@ -351,18 +277,13 @@ const ServiceChargeForm = ({
                                     type="number"
                                     small={12}
                                     component={TextField}
-                                    validate={[
-                                        Validator.emptyValidator,
-                                        Validator.minValue1,
-                                    ]}
+                                    validate={[Validator.emptyValidator, Validator.minValue1]}
                                 />
                             </FieldWrapper>
                         )}
                         <Grid item xs={12}>
                             <Box pt={2}>
-                                <Header>
-                                    Commission and Additional Information
-                                </Header>
+                                <Header>Commission and Additional Information</Header>
                                 <Divider sx={{ margin: "0px 12px" }} />
                             </Box>
                         </Grid>
@@ -373,10 +294,7 @@ const ServiceChargeForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Send Commission Type
@@ -392,10 +310,7 @@ const ServiceChargeForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -405,10 +320,7 @@ const ServiceChargeForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Pay Commission Type
@@ -424,10 +336,7 @@ const ServiceChargeForm = ({
                                 type="number"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -453,11 +362,7 @@ const ServiceChargeForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

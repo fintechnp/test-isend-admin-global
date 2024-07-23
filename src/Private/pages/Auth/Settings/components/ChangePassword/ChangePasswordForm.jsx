@@ -39,7 +39,7 @@ export const ChangePasswordForm = () => {
             dispatch(CommonAction.log_out());
             if (logoutSuccess) {
                 navigate("/login");
-               AuthUtility.logOut()
+                AuthUtility.logOut();
             }
         }
     }, [success, loading, logoutSuccess, logoutLoading]);

@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Field, Form, reduxForm } from "redux-form";
@@ -58,7 +58,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     padding: "4px 0px",
     paddingRight: "4px",
 }));
-
 
 function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
     return (
@@ -159,7 +158,13 @@ function SearchForm({ handleSubmit, handleReset, SendPartner, loading }) {
                                 columnSpacing={2}
                             >
                                 <Grid item>
-                                    <Button size="small" color="error" variant="contained" onClick={handleReset} disabled={loading}>
+                                    <Button
+                                        size="small"
+                                        color="error"
+                                        variant="contained"
+                                        onClick={handleReset}
+                                        disabled={loading}
+                                    >
                                         Reset
                                     </Button>
                                 </Grid>

@@ -99,8 +99,8 @@ function SubComponent({
                                                 {col.type === "boolean"
                                                     ? RenderData(sub_data, col)
                                                     : sub_data[col.key]
-                                                    ? RenderData(sub_data, col)
-                                                    : "N/A"}
+                                                      ? RenderData(sub_data, col)
+                                                      : "N/A"}
                                             </Typography>
                                         </EachRenderValue>
                                     </Grid>

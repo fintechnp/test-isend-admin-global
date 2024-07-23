@@ -20,7 +20,7 @@ import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -42,7 +42,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -114,15 +114,9 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
         sort_by: "name",
         order_by: "DESC",
     });
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
-    );
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_partner_bank
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_partner_bank
-    );
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_partner_bank);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_partner_bank);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -175,7 +169,7 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
             };
             setFilterSchema(updatedFilter);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     return (
@@ -194,12 +188,7 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Partner Bank
                 </AddButton>
             )}
@@ -209,10 +198,7 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Partner Bank
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
@@ -226,12 +212,9 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
                                 currency: memoizedData?.currency,
                                 agent_id: memoizedData?.agent_id,
                                 payment_type: memoizedData?.payment_type,
-                                external_bank_code:
-                                    memoizedData?.external_bank_code,
-                                external_bank_code1:
-                                    memoizedData?.external_bank_code1,
-                                external_bank_code2:
-                                    memoizedData?.external_bank_code2,
+                                external_bank_code: memoizedData?.external_bank_code,
+                                external_bank_code1: memoizedData?.external_bank_code1,
+                                external_bank_code2: memoizedData?.external_bank_code2,
                             }}
                             onSubmit={handlePartnerBankUpdate}
                             buttonText="Update"

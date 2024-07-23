@@ -6,13 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
 
-import {
-    Mode,
-    CurrencyName,
-    CountryName,
-    FormatNumber,
-    ReferenceName,
-} from "./../../../../../App/helpers";
+import { Mode, CurrencyName, CountryName, FormatNumber, ReferenceName } from "./../../../../../App/helpers";
 
 const InfoWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -48,12 +42,7 @@ function ServiceDetails({ data }) {
             }}
         >
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Sending Partner:</LabelWrapper>
@@ -66,9 +55,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Receiving Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.receiving_country
-                                    ? CountryName(data?.receiving_country)
-                                    : "N/A"}
+                                {data?.receiving_country ? CountryName(data?.receiving_country) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -76,9 +63,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Receiving Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.receiving_currency
-                                    ? CurrencyName(data?.receiving_currency)
-                                    : "N/A"}
+                                {data?.receiving_currency ? CurrencyName(data?.receiving_currency) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -86,9 +71,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Payment Type:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.payment_type
-                                    ? ReferenceName(1, data?.payment_type)
-                                    : "N/A"}
+                                {data?.payment_type ? ReferenceName(1, data?.payment_type) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -96,9 +79,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Minimum Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.min_amount
-                                    ? FormatNumber(data?.min_amount)
-                                    : "N/A"}
+                                {data?.min_amount ? FormatNumber(data?.min_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -106,9 +87,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Maximum Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.max_amount
-                                    ? FormatNumber(data?.max_amount)
-                                    : "N/A"}
+                                {data?.max_amount ? FormatNumber(data?.max_amount) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -116,9 +95,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Customer Type:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.customer_type
-                                    ? ReferenceName(37, data?.customer_type)
-                                    : "N/A"}
+                                {data?.customer_type ? ReferenceName(37, data?.customer_type) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -126,9 +103,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Charge Mode:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.charge_mode
-                                    ? Mode(data?.charge_mode)
-                                    : "0"}
+                                {data?.charge_mode ? Mode(data?.charge_mode) : "0"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -152,9 +127,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Additional Fee:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.additional_fee
-                                    ? data?.additional_fee
-                                    : "0.00"}
+                                {data?.additional_fee ? data?.additional_fee : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -162,9 +135,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Send Commission Type:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.send_commission_type
-                                    ? Mode(data?.send_commission_type)
-                                    : "N/A"}
+                                {data?.send_commission_type ? Mode(data?.send_commission_type) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -172,9 +143,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Send Commission Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.send_commission_amount
-                                    ? data?.send_commission_amount
-                                    : "0.00"}
+                                {data?.send_commission_amount ? data?.send_commission_amount : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -182,9 +151,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Pay Commission Type:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.pay_commission_type
-                                    ? Mode(data?.pay_commission_type)
-                                    : "N/A"}
+                                {data?.pay_commission_type ? Mode(data?.pay_commission_type) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -192,9 +159,7 @@ function ServiceDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Pay Commission Amount:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.pay_commission_amount
-                                    ? data?.pay_commission_amount
-                                    : "0.00"}
+                                {data?.pay_commission_amount ? data?.pay_commission_amount : "0.00"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -203,24 +168,12 @@ function ServiceDetails({ data }) {
                             <LabelWrapper>Is enabled?:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.is_active ? (
-                                    <Tooltip
-                                        title="Service charge enabled."
-                                        arrow
-                                    >
-                                        <CheckCircleOutlineIcon
-                                            fontSize="small"
-                                            sx={{ color: "success.main" }}
-                                        />
+                                    <Tooltip title="Service charge enabled." arrow>
+                                        <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
                                     </Tooltip>
                                 ) : (
-                                    <Tooltip
-                                        title="Service charge disabled."
-                                        arrow
-                                    >
-                                        <DoNotDisturbOnIcon
-                                            fontSize="small"
-                                            sx={{ color: "warning.main" }}
-                                        />
+                                    <Tooltip title="Service charge disabled." arrow>
+                                        <DoNotDisturbOnIcon fontSize="small" sx={{ color: "warning.main" }} />
                                     </Tooltip>
                                 )}
                             </ValueWrapper>

@@ -70,11 +70,7 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
                                 minRows={5}
                                 small={12}
                                 component={TextAreaField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength500,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength500, Validator.minValue1]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -91,11 +87,7 @@ const RemarksForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

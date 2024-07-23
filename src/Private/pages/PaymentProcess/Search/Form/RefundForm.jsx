@@ -57,26 +57,16 @@ function RefundForm({ handleSubmit, loading }) {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength50,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
                             >
                                 <option value="" disabled>
                                     Select Reason
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 54
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 54)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -90,12 +80,7 @@ function RefundForm({ handleSubmit, loading }) {
                                 validate={Validator.emptyValidator}
                             />
                         </Box>
-                        <RefundButton
-                            size="small"
-                            variant="outlined"
-                            loading={loading}
-                            type="submit"
-                        >
+                        <RefundButton size="small" variant="outlined" loading={loading} type="submit">
                             Refund
                         </RefundButton>
                     </BlockBox>

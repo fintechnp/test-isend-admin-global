@@ -198,7 +198,7 @@ function Details({ data, handleBlockOrCancel }) {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <Box display='flex' sx={{ pb: 1, pt: 0.5, ml: 0 }}>
+                <Box display="flex" sx={{ pb: 1, pt: 0.5, ml: 0 }}>
                     <HasPermission permission={permissions.REFUND_TRANSACTION}>
                         <RefundButton variant="outlined" onClick={() => handleBlockOrCancel("cancel")}>
                             Refund this transaction

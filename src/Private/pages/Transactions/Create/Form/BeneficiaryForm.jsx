@@ -53,12 +53,7 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const BeneficiaryForm = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-}) => {
+const BeneficiaryForm = ({ handleSubmit, handleBack, activeStep, steps }) => {
     const country = JSON.parse(localStorage.getItem("country"));
 
     return (
@@ -80,10 +75,7 @@ const BeneficiaryForm = ({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -103,10 +95,7 @@ const BeneficiaryForm = ({
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -118,12 +107,7 @@ const BeneficiaryForm = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -137,11 +121,7 @@ const BeneficiaryForm = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     Next
                                 </NextButton>
                             )}

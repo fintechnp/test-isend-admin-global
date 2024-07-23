@@ -19,8 +19,7 @@ const Paper = styled(MuiPaper)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background:
-        "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
+    background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
 }));
 
 const FormContainer = styled(Grid)(({ theme }) => ({
@@ -67,11 +66,7 @@ const ResetForm = ({ handleSubmit, loading }) => {
             <Form onSubmit={handleSubmit} data-testid="login_form">
                 <FormContainer container rowSpacing={1} direction="column">
                     <Grid item>
-                        <LogoWrapper
-                            component="img"
-                            image={Logo}
-                            alt="isend logo"
-                        />
+                        <LogoWrapper component="img" image={Logo} alt="isend logo" />
                     </Grid>
                     <Grid item>
                         <Typography
@@ -92,10 +87,7 @@ const ResetForm = ({ handleSubmit, loading }) => {
                             small={12}
                             component={TextField}
                             inputProps={{ "data-testid": "password" }}
-                            validate={[
-                                Validator.maxLength20,
-                                Validator.minValue8,
-                            ]}
+                            validate={[Validator.maxLength20, Validator.minValue8]}
                         />
                     </Grid>
                     <Grid item>
@@ -106,19 +98,11 @@ const ResetForm = ({ handleSubmit, loading }) => {
                             small={12}
                             component={TextField}
                             inputProps={{ "data-testid": "confirm_password" }}
-                            validate={[
-                                Validator.confirmValidator,
-                                Validator.minValue1,
-                            ]}
+                            validate={[Validator.confirmValidator, Validator.minValue1]}
                         />
                     </Grid>
                     <Grid item>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center"
-                        >
+                        <Grid container direction="row" justify="space-between" alignItems="center">
                             <Grid item>
                                 <Button variant="contained" type="submit">
                                     Submit

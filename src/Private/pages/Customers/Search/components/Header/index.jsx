@@ -45,14 +45,7 @@ const Select = styled(MuiSelect)(({ theme }) => ({
     },
 }));
 
-function Filter({
-    handleSort,
-    handleOrder,
-    title,
-    state,
-    sortData,
-    orderData,
-}) {
+function Filter({ handleSort, handleOrder, title, state, sortData, orderData }) {
     return (
         <FilterWrapper>
             <HeaderWrapper>
@@ -69,17 +62,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected === "created_ts") {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = sortData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -98,17 +86,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

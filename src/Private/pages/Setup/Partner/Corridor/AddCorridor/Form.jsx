@@ -65,13 +65,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const AddCorridor = ({
-    handleSubmit,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
+const AddCorridor = ({ handleSubmit, update, loading, buttonText, handleClose }) => {
     const dispatch = useDispatch();
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -84,21 +78,9 @@ const AddCorridor = ({
 
     const handleCurrency = (e) => {
         if (update) {
-            dispatch(
-                change(
-                    "update_corridor_form",
-                    "transaction_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("update_corridor_form", "transaction_currency", convertCurrency(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_corridor_form",
-                    "transaction_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("add_corridor_form", "transaction_currency", convertCurrency(e.target.value)));
         }
     };
 
@@ -114,10 +96,7 @@ const AddCorridor = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -127,10 +106,7 @@ const AddCorridor = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -141,20 +117,14 @@ const AddCorridor = ({
                                 small={12}
                                 onChange={handleCurrency}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -167,20 +137,14 @@ const AddCorridor = ({
                                 type="number"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.currency} key={data.tid}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -188,15 +152,9 @@ const AddCorridor = ({
                         </FieldWrapper>
                         {update && (
                             <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
+                                <Grid container alignItems="flex-end" justifyContent="flex-end">
                                     <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
+                                        <StatusText component="p">Status</StatusText>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Field
@@ -224,11 +182,7 @@ const AddCorridor = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

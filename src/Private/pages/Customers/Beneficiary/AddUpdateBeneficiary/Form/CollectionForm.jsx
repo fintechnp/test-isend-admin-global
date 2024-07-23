@@ -136,10 +136,10 @@ const CollectionForm = ({
         formValues?.payment_type === "B"
             ? "Bank"
             : formValues?.payment_type === "W"
-                ? "Choose Wallet"
-                : formValues?.payment_type === "C"
-                    ? "Choose cash pickup location"
-                    : "Payout Location";
+              ? "Choose Wallet"
+              : formValues?.payment_type === "C"
+                ? "Choose cash pickup location"
+                : "Payout Location";
 
     useEffect(() => {
         if (formValues?.payment_type && formValues?.country) {
@@ -173,7 +173,6 @@ const CollectionForm = ({
             }
         }
     };
-
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -245,12 +244,11 @@ const CollectionForm = ({
                                             component={TextField}
                                             validate={
                                                 (Validator.emptyValidator,
-                                                    Validator.beneficiaryFormBranchIdentifierValueValidate)
+                                                Validator.beneficiaryFormBranchIdentifierValueValidate)
                                             }
                                         />
                                     </FieldWrapper>
                                 )}
-
                             </>
                         ) : (
                             <FieldWrapper item xs={12} sm={6}>

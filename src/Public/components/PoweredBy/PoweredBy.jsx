@@ -12,7 +12,7 @@ export default function PoweredBy() {
             sx={{
                 position: "absolute",
                 bottom: 0,
-                py: 2
+                py: 2,
             }}
         >
             <Typography color="#000000">Powered By</Typography>

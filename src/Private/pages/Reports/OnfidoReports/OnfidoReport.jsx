@@ -148,4 +148,4 @@ function OnfidoReport() {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_ONFIDO_REPORT]})(OnfidoReport);
+export default withPermission({ permission: [permissions.GENERATE_ONFIDO_REPORT] })(OnfidoReport);

@@ -18,7 +18,7 @@ import actions from "./../store/actions";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -32,7 +32,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -97,9 +97,7 @@ function AddRemarks() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_remarks
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_remarks);
 
     React.useEffect(() => {
         if (add_success) {
@@ -122,12 +120,7 @@ function AddRemarks() {
 
     return (
         <div>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleClickOpen}
-                endIcon={<AddIcon />}
-            >
+            <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                 Add Remarks
             </AddButton>
             <BootstrapDialog
@@ -136,10 +129,7 @@ function AddRemarks() {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Add Remarks
                 </BootstrapDialogTitle>
                 <DialogContent dividers>

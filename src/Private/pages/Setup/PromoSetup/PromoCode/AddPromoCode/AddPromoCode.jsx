@@ -17,7 +17,7 @@ import PromoCodeForm from "./Form";
 import actions from "./../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -32,7 +32,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -96,9 +96,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AddCode({ promo_id }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_promo_code
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_promo_code);
 
     React.useEffect(() => {
         if (add_success) {
@@ -121,12 +119,7 @@ function AddCode({ promo_id }) {
 
     return (
         <div>
-            <AddButton
-                size="small"
-                variant="outlined"
-                onClick={handleClickOpen}
-                endIcon={<AddIcon />}
-            >
+            <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                 Add Promo Code
             </AddButton>
             <BootstrapDialog
@@ -135,10 +128,7 @@ function AddCode({ promo_id }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Create Promo Code
                 </BootstrapDialogTitle>
                 <DialogContent dividers>

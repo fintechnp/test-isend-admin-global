@@ -44,11 +44,7 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-const steps = [
-    "Customer Information",
-    "Beneficiary Information",
-    "Sending Amount",
-];
+const steps = ["Customer Information", "Beneficiary Information", "Sending Amount"];
 
 function TransactionForm({ update_data, loading }) {
     const { id } = useParams();
@@ -57,25 +53,15 @@ function TransactionForm({ update_data, loading }) {
     const [data, setData] = React.useState({});
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
-    const {
-        success: add_success,
-        loading: add_loading,
-        error: add_error,
-    } = useSelector((state) => state.add_partner);
+    const { success: add_success, loading: add_loading, error: add_error } = useSelector((state) => state.add_partner);
     const {
         success: update_success,
         loading: update_loading,
         error: update_error,
     } = useSelector((state) => state.update_partner);
-    const { response: customer_list, loading: customer_loading } = useSelector(
-        (state) => state.get_customers
-    );
-    const { response: sending_partner, loading: sending_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: payout_partner, loading: payout_loading } = useSelector(
-        (state) => state.get_payout_partner
-    );
+    const { response: customer_list, loading: customer_loading } = useSelector((state) => state.get_customers);
+    const { response: sending_partner, loading: sending_loading } = useSelector((state) => state.get_sending_partner);
+    const { response: payout_partner, loading: payout_loading } = useSelector((state) => state.get_payout_partner);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -112,9 +98,7 @@ function TransactionForm({ update_data, loading }) {
 
     const handleNext = () => {
         const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
+            isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
         setActiveStep(newActiveStep);
     };
 
@@ -153,12 +137,7 @@ function TransactionForm({ update_data, loading }) {
     if (loading) {
         return (
             <Box sx={{ width: "100%", pt: "16px" }}>
-                <Stepper
-                    nonLinear
-                    activeStep={activeStep}
-                    alternativeLabel
-                    sx={{ width: "100%", padding: "16px 0px" }}
-                >
+                <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                     {steps.map((label, index) => (
                         <Step key={label} completed={completed[index]}>
                             <StepLabel color="inherit">{label}</StepLabel>
@@ -174,12 +153,7 @@ function TransactionForm({ update_data, loading }) {
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
-            <Stepper
-                nonLinear
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{ width: "100%", padding: "16px 0px" }}
-            >
+            <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
                         <StepLabel color="inherit">{label}</StepLabel>
@@ -197,12 +171,9 @@ function TransactionForm({ update_data, loading }) {
                                 fontSize: "18px",
                             }}
                         >
-                            All steps completed - Please submit to create
-                            Customer.
+                            All steps completed - Please submit to create Customer.
                         </Typography>
-                        <CheckCircleOutlineIcon
-                            sx={{ fontSize: "64px", color: "success.main" }}
-                        />
+                        <CheckCircleOutlineIcon sx={{ fontSize: "64px", color: "success.main" }} />
                         <LoadingButton
                             size="small"
                             variant="outlined"
@@ -237,12 +208,9 @@ function TransactionForm({ update_data, loading }) {
                                     initialValues={
                                         memoizedData && {
                                             name: memoizedData?.name,
-                                            short_code:
-                                                memoizedData?.short_code,
-                                            agent_type:
-                                                memoizedData?.agent_type,
-                                            phone_number:
-                                                memoizedData?.phone_number,
+                                            short_code: memoizedData?.short_code,
+                                            agent_type: memoizedData?.agent_type,
+                                            phone_number: memoizedData?.phone_number,
                                             email: memoizedData?.email,
                                             country: memoizedData?.country,
                                             postcode: memoizedData?.postcode,
@@ -252,33 +220,21 @@ function TransactionForm({ update_data, loading }) {
                                             state: memoizedData?.state,
                                             address: memoizedData?.address,
                                             website: memoizedData?.website,
-                                            contact_person_full_name:
-                                                memoizedData?.contact_person_full_name,
-                                            contact_person_post:
-                                                memoizedData?.contact_person_post,
-                                            contact_person_mobile:
-                                                memoizedData?.contact_person_mobile,
-                                            contact_person_email:
-                                                memoizedData?.contact_person_email,
-                                            business_license_number:
-                                                memoizedData?.business_license_number,
+                                            contact_person_full_name: memoizedData?.contact_person_full_name,
+                                            contact_person_post: memoizedData?.contact_person_post,
+                                            contact_person_mobile: memoizedData?.contact_person_mobile,
+                                            contact_person_email: memoizedData?.contact_person_email,
+                                            business_license_number: memoizedData?.business_license_number,
                                             balance: memoizedData?.balance,
-                                            credit_limit:
-                                                memoizedData?.credit_limit,
-                                            transaction_currency:
-                                                memoizedData?.transaction_currency,
-                                            settlement_currency:
-                                                memoizedData?.settlement_currency,
+                                            credit_limit: memoizedData?.credit_limit,
+                                            transaction_currency: memoizedData?.transaction_currency,
+                                            settlement_currency: memoizedData?.settlement_currency,
                                             tax_type: memoizedData?.tax_type,
                                             time_zone: memoizedData?.time_zone,
-                                            transaction_limit:
-                                                memoizedData?.transaction_limit,
-                                            commission_currency:
-                                                memoizedData?.commission_currency,
-                                            bank_charge_currency:
-                                                memoizedData?.bank_charge_currency,
-                                            is_prefunding:
-                                                memoizedData?.is_prefunding,
+                                            transaction_limit: memoizedData?.transaction_limit,
+                                            commission_currency: memoizedData?.commission_currency,
+                                            bank_charge_currency: memoizedData?.bank_charge_currency,
+                                            is_prefunding: memoizedData?.is_prefunding,
                                         }
                                     }
                                     steps={steps}

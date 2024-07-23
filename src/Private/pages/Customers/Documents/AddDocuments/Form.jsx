@@ -154,7 +154,8 @@ const DocumentsForm = ({ handleSubmit, loading, handleClose }) => {
                         </FieldWrapper>
                         <FieldWrapper item xs={12} mt={1}>
                             <Alert variant="filled" severity="info">
-                                Supported file formats .png, .jpeg. File size must be greater than 50Kb and less or equal to 4Mb. 
+                                Supported file formats .png, .jpeg. File size must be greater than 50Kb and less or
+                                equal to 4Mb.
                             </Alert>
                         </FieldWrapper>
                     </FormWrapper>

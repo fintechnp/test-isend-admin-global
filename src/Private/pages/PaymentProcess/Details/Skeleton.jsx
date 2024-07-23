@@ -17,12 +17,7 @@ function PartnerSkeleton() {
                 <Skeleton />
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <Skeleton />
                     </Grid>
@@ -50,12 +45,7 @@ function PartnerSkeleton() {
                 <Skeleton />
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <Skeleton />
                     </Grid>
@@ -83,12 +73,7 @@ function PartnerSkeleton() {
                 <Skeleton />
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <Skeleton />
                     </Grid>

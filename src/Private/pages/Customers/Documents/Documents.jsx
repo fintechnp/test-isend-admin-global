@@ -38,7 +38,7 @@ const initialState = {
     search: "",
     sort_by: "",
     order_by: "ASC",
-    status: KycDocumentStatus.ACTIVE
+    status: KycDocumentStatus.ACTIVE,
 };
 
 function Documents(props) {

@@ -12,7 +12,7 @@ import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 import CableIcon from "@mui/icons-material/Cable";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -79,16 +79,7 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function Unmap({
-    loading,
-    id,
-    handleMapUnmap,
-    success,
-    information,
-    title,
-    map,
-    map_id,
-}) {
+function Unmap({ loading, id, handleMapUnmap, success, information, title, map, map_id }) {
     const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
@@ -141,11 +132,7 @@ function Unmap({
                     </UnmapIcon>
                 </Tooltip>
             )}
-            <BootstrapDialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
+            <BootstrapDialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
                 <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
                 <DialogContent
                     sx={{
@@ -173,19 +160,10 @@ function Unmap({
                     <DialogContentText>{information}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <CancelButton
-                        size="small"
-                        variant="contained"
-                        onClick={handleClose}
-                    >
+                    <CancelButton size="small" variant="contained" onClick={handleClose}>
                         Cancel
                     </CancelButton>
-                    <YesButton
-                        size="small"
-                        variant="outlined"
-                        loading={loading}
-                        onClick={handleYes}
-                    >
+                    <YesButton size="small" variant="outlined" loading={loading} onClick={handleYes}>
                         Yes
                     </YesButton>
                 </DialogActions>

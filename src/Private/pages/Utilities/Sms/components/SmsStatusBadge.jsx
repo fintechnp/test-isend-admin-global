@@ -23,13 +23,13 @@ export default function SmsStatusBadge({ status }) {
     const labels = {
         [smsStatus.CREATED]: "Created",
         [smsStatus.SENT]: "Sent",
-        [smsStatus.FAILED]: 'Failed'
+        [smsStatus.FAILED]: "Failed",
     };
 
     const colors = {
         [smsStatus.CREATED]: theme.palette.primary.main,
         [smsStatus.SENT]: theme.palette.success.main,
-        [smsStatus.FAILED]: theme.palette.error.main
+        [smsStatus.FAILED]: theme.palette.error.main,
     };
 
     const surfaceColors = {

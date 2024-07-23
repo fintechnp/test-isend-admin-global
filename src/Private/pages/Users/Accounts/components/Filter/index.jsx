@@ -54,7 +54,6 @@ const orderData = [
 ];
 
 function Filter({ handleSearch, onClickFilter, isOpenFilterForm, handleSort, handleOrder }) {
-
     return (
         <FilterWrapper>
             <SearchBox>

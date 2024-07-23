@@ -57,8 +57,12 @@ const OnfidoReportFilterForm = ({ onSubmit, onReset, loading }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <FormButtonContainer>
-                        <CancelButton onClick={handleReset} disabled={loading}>Reset</CancelButton>
-                        <SubmitButton type="submit" disabled={loading}>Filter</SubmitButton>
+                        <CancelButton onClick={handleReset} disabled={loading}>
+                            Reset
+                        </CancelButton>
+                        <SubmitButton type="submit" disabled={loading}>
+                            Filter
+                        </SubmitButton>
                     </FormButtonContainer>
                 </Grid>
             </Grid>

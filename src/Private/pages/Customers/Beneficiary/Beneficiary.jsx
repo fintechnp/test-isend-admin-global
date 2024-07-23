@@ -1,7 +1,7 @@
-import Box from '@mui/material/Box'
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import React, { useEffect,  useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,7 +23,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 import ActiveBlockedStatusBadge from "App/components/Badge/ActiveBlockedStatusBadge";
 
 import actions from "./store/actions";
-import {  ReferenceName } from "App/helpers";
+import { ReferenceName } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import getFlagUrl from "App/helpers/getFlagUrl";
 import routePaths from "Private/config/routePaths";
@@ -84,7 +84,6 @@ function Beneficiary() {
         dispatch(actions.get_beneficiary_by_customer(id, filterSchema));
         dispatch({ type: "BLOCK_UNBLOCK_BENEFICIARY_RESET" });
     }, [dispatch, filterSchema, b_success]);
-
 
     const columns = useMemo(
         () => [

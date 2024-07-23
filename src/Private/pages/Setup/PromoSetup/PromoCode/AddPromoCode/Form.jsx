@@ -75,21 +75,11 @@ const PromoSetupForm = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength20,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength20, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="customer_id"
-                                label="Customer"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="customer_id" label="Customer" type="number" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -105,15 +95,9 @@ const PromoSetupForm = ({ handleSubmit, loading, handleClose }) => {
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
+                            <Grid container alignItems="flex-end" justifyContent="flex-end">
                                 <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Multiple Use
-                                    </StatusText>
+                                    <StatusText component="p">Multiple Use</StatusText>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Field
@@ -141,11 +125,7 @@ const PromoSetupForm = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

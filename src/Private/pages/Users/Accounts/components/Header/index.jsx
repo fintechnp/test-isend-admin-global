@@ -12,10 +12,7 @@ const HeaderWrapper = styled(Box)(({ theme }) => ({
 }));
 
 function Header() {
-    return (
-        <HeaderWrapper>
-        </HeaderWrapper>
-    );
+    return <HeaderWrapper></HeaderWrapper>;
 }
 
 export default Header;

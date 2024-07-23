@@ -14,7 +14,6 @@ const Label = styled(Typography)(({ theme }) => ({
     paddingTop: "2px",
     paddingBottom: "2px",
     textAlign: "left",
-    
 }));
 
 const FormControl = styled(MuiFormControl)(({ theme }) => ({
@@ -35,7 +34,7 @@ const Input = styled(MuiTextField)(({ theme }) => ({
     },
     "& .MuiInputBase-input": {
         padding: "9px 10px",
-        
+
         fontSize: "14px",
     },
     " & .MuiInputBase-root.MuiOutlinedInput-root": {

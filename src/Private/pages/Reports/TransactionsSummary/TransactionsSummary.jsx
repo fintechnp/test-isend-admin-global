@@ -496,4 +496,4 @@ function TransactionsSummaryReports(props) {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_TRANSACTION_REPORT]})(TransactionsSummaryReports);
+export default withPermission({ permission: [permissions.GENERATE_TRANSACTION_REPORT] })(TransactionsSummaryReports);
