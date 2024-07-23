@@ -48,10 +48,6 @@ const useAuthUser = () => {
      * check a user can perform action
      */
     const can = (permissions) => {
-        // TODO: remove in prod
-
-        return true;
-
         return (
             (typeof permissions === "string" && hasPermission(permissions)) ||
             !!(Array.isArray(permissions) && !!permissions.filter((p) => hasPermission(p)).length)
