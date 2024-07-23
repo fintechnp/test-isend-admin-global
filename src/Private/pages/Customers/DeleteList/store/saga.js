@@ -39,7 +39,11 @@ export const getCustomerDeleteDetails = takeEvery(actions.GET_CUSTOMER_DELETE_DE
 
 export const updateCustomerDeleteRequest = takeEvery(actions.UPDATE_CUSTOMER_DELETE_REQUEST, function* (action) {
     try {
-        const res = yield call(api.post, buildRoute(apiEndpoints.customers.approveDeleteRequest, action.id), action.data);
+        const res = yield call(
+            api.post,
+            buildRoute(apiEndpoints.customers.approveDeleteRequest, action.id),
+            action.data,
+        );
         yield put({
             type: actions.UPDATE_CUSTOMER_DELETE_REQUEST_SUCCESS,
             response: res,
@@ -55,12 +59,6 @@ export const updateCustomerDeleteRequest = takeEvery(actions.UPDATE_CUSTOMER_DEL
     }
 });
 
-
 export default function* saga() {
-    yield all([
-        getAllCustomerDeleteList,
-        getCustomerDeleteDetails,
-        updateCustomerDeleteRequest
-
-    ]);
+    yield all([getAllCustomerDeleteList, getCustomerDeleteDetails, updateCustomerDeleteRequest]);
 }

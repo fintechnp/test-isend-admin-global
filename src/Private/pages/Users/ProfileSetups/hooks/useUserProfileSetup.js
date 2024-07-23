@@ -36,7 +36,7 @@ const useUserProfileSetup = (props) => {
         resolver: yupResolver(schema),
     });
 
-    const { watch, setValue, getValues } = methods;
+    const { watch, setValue } = methods;
 
     const selectedPermissionIds = watch("permission_ids");
 

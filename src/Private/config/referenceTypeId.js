@@ -14,7 +14,6 @@ const referenceTypeId = {
     kybKycStatuses: 152,
     genders: 42,
     occupations: 17,
-    sourceOfIncomes: 6,
     partnerTypes: 3,
     rdfiReturnCodes: 270,
 };

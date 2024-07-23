@@ -1,5 +1,3 @@
-import { id } from "date-fns/locale";
-
 const actions = {
     GET_LEDGER: "GET_LEDGER",
     GET_LEDGER_SUCCESS: "GET_LEDGER_SUCCESS",

@@ -20,7 +20,7 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
-                error: null
+                error: null,
             };
         case actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS_FAILED:
             return {
@@ -28,11 +28,11 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
-                response: null
+                response: null,
             };
         case actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS_RESET:
             return initialState;
-            
+
         default:
             return state;
     }

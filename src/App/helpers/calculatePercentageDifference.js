@@ -12,10 +12,10 @@ export default function calculatePercentageDifference(currentCount, previousCoun
         }
         return 100;
     }
-    
+
     const difference = currentCount - previousCount;
     const percentageDifference = (difference / previousCount) * 100;
-    
+
     // Cap the percentage difference at 100%
     const cappedPercentageDifference = Math.min(percentageDifference, 100);
 

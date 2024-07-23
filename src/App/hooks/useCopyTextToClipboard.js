@@ -19,8 +19,7 @@ const useCopyTextToClipboard = () => {
                     response: { message: "Copied to clipboard", code: "success" },
                 });
             })
-            .catch((err) => {
-                Notify.error(err);
+            .catch(() => {
                 dispatch({
                     type: "SET_TOAST_DATA",
                     response: { message: "Error", code: "error" },

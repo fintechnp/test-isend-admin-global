@@ -29,13 +29,11 @@ export const updateCustomerFormStep1Schema = Yup.object().shape({
         .required("Source of income is required")
         .max(100)
         .matches(/^[A-Za-z0-9_ (@#,&/)-]{1,100}$/),
-    ssn_number: Yup.string()
-        .when("country", {
-            is: (value) => value?.toUpperCase() === UNITED_STATES_ISO3,
-            then: (schema) =>
-                schema.length(9, "SSN Number must be exactly 9 digits").required("SSN Number is required"),
-            otherwise: (schema) => schema.nullable().optional(),
-        })
+    ssn_number: Yup.string().when("country", {
+        is: (value) => value?.toUpperCase() === UNITED_STATES_ISO3,
+        then: (schema) => schema.length(9, "SSN Number must be exactly 9 digits").required("SSN Number is required"),
+        otherwise: (schema) => schema.nullable().optional(),
+    }),
 });
 
 export const POSTAL_CODE_REGEX = "POSTAL_CODE_REGEX";

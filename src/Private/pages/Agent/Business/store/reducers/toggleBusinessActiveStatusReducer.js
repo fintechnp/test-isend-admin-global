@@ -30,7 +30,7 @@ const reducer = (state = initialState, action) => {
             };
         case actions.TOGGLE_BUSINESS_ACTIVE_STATUS_RESET:
             return initialState;
-            
+
         default:
             return state;
     }

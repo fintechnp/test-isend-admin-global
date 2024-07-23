@@ -23,14 +23,12 @@ export const getEmailTemplates = takeEvery(actions.GET_EMAIL_TEMPLATE, function*
 });
 
 export const getEmailTagTemplates = takeEvery(actions.GET_EMAIL_TEMPLATE_TAG, function* (action) {
-    const res = yield call(api.get, buildRoute(apiEndpoints.emailTemplate.tagList), action.query);
-
-    yield put({
-        type: actions.GET_EMAIL_TEMPLATE_TAG_SUCCESS,
-        response: res,
-    });
-
     try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.emailTemplate.tagList), action.query);
+        yield put({
+            type: actions.GET_EMAIL_TEMPLATE_TAG_SUCCESS,
+            response: res,
+        });
     } catch (error) {
         yield put({
             type: actions.GET_EMAIL_TEMPLATE_TAG_FAILURE,
@@ -61,19 +59,18 @@ export const addEmailTemplate = takeEvery(actions.ADD_EMAIL_TEMPLATE, function* 
 });
 
 export const updateEmailTemplate = takeEvery(actions.UPDATE_EMAIL_TEMPLATE, function* (action) {
-    const res = yield call(api.put, buildRoute(apiEndpoints.emailTemplate.update, action.id), action.data);
-
-    yield put({
-        type: actions.UPDATE_EMAIL_TEMPLATE_SUCCESS,
-        response: res,
-    });
-
-    yield put({
-        type: "SET_TOAST_DATA",
-        response: res,
-    });
-
     try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.emailTemplate.update, action.id), action.data);
+
+        yield put({
+            type: actions.UPDATE_EMAIL_TEMPLATE_SUCCESS,
+            response: res,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
     } catch (error) {
         yield put({
             type: actions.UPDATE_EMAIL_TEMPLATE_FAILURE,

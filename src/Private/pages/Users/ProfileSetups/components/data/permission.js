@@ -48,7 +48,7 @@ export const permissions = [
                 display_name: "User Profile Setups",
                 name: "USER_PROFILE_SETUPS",
                 parent_id: 2,
-                type: 'SUBMENU',
+                type: "SUBMENU",
                 children: [
                     {
                         id: 221,

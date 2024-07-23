@@ -37,8 +37,6 @@ export const getAccountDetail = takeEvery(actions.GET_Account_Balance_By_ID, fun
     }
 });
 
-
-
 export default function* saga() {
     yield all([getAllAccountList, getAccountDetail]);
 }

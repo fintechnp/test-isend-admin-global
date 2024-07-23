@@ -91,9 +91,6 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
-    transaction: {
-        achTransaction: "/transaction/ach-transaction",
-    },
     users: {
         listUserSetup: "/user/setups",
         listProfileSetup: "/user/profile-setups",

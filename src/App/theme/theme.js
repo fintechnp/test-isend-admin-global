@@ -39,16 +39,6 @@ export const ChangeTheme = (mode = true) => {
             },
         },
         components: {
-            MuiCssBaseline: {
-                styleOverrides: `
-                    "@global": {
-                            "*": {
-                                margin: 0,
-                                padding: 0,
-                                boxSizing: "border-box",
-                            },
-                        },`,
-            },
             MuiTypography: {
                 variants: [
                     {
@@ -158,7 +148,7 @@ export const ChangeTheme = (mode = true) => {
                 },
             },
             MuiCssBaseline: {
-                styleOverrides: (theme) => ({
+                styleOverrides: () => ({
                     "& .Mui-disabled": {
                         cursor: "not-allowed",
                         "& *": {

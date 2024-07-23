@@ -32,7 +32,7 @@ const actions = {
     update_customer: (id, data) => ({
         type: actions.UPDATE_CUSTOMER,
         id,
-        data
+        data,
     }),
 
     update_customer_reset: () => ({

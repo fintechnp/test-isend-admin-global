@@ -1,4 +1,4 @@
-import actions from '../actions';
+import actions from "../actions";
 
 const initialState = {
     success: false,
@@ -8,25 +8,25 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-    switch ((action).type) {
+    switch (action.type) {
         case actions.GET_PARTNER_BANK_AGENT_ID:
             return {
                 ...state,
-                loading: true
+                loading: true,
             };
         case actions.GET_PARTNER_BANK_AGENT_ID_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
-                response: action.response
+                response: action.response,
             };
         case actions.GET_PARTNER_BANK_AGENT_ID_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
-                error: action.error
+                error: action.error,
             };
         case actions.GET_PARTNER_BANK_AGENT_ID_RESET:
             return {
@@ -38,6 +38,6 @@ const reducer = (state = initialState, action) => {
         default:
             return state;
     }
-}
+};
 
 export default reducer;

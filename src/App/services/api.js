@@ -37,7 +37,7 @@ export default class Api {
     setToken = () => {
         this.axiosFunction.interceptors.request.use(
             (config) => {
-                config['baseURL'] = BaseUrlConfiguration.getApiBaseUrl();
+                config["baseURL"] = BaseUrlConfiguration.getApiBaseUrl();
                 config.headers["Authorization"] = "Bearer " + AuthUtility.getAccessToken();
                 config.headers["source"] = "web";
                 config.headers["Accept"] = "application/json";
@@ -108,7 +108,7 @@ export default class Api {
             }
         }
         return this.axiosFunction
-            .get(url, { params: data,responseType: "blob"})
+            .get(url, { params: data, responseType: "blob" })
             .then((response) => response)
             .catch((err) => {
                 throw err?.response;

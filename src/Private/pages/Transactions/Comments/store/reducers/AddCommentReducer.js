@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: false,
-                response :[]
+                response: [],
             };
         default:
             return state;

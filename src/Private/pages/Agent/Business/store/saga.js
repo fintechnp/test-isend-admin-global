@@ -45,7 +45,7 @@ export const addBusinessApproval = takeEvery(actions.ADD_BUSINESS_APPROVAL, func
             type: actions.ADD_BUSINESS_APPROVAL_SUCCESS,
             response,
         });
-        yield put({ type: "SET_TOAST_DATA", response: res });
+        yield put({ type: "SET_TOAST_DATA", response: response });
     } catch (error) {
         yield put({
             type: actions.ADD_BUSINESS_APPROVAL_FAILED,

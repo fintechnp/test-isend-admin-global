@@ -1,5 +1,5 @@
 export const smsStatus = {
-    CREATED: 'I',
-    SENT: 'C',
-    FAILED: 'F'
-}
+    CREATED: "I",
+    SENT: "C",
+    FAILED: "F",
+};

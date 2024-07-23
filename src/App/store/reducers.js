@@ -9,7 +9,7 @@ const createRootReducer = () =>
         form: formReducer,
         ...commonReducer,
         ...privateReducer,
-        ...publicReducer
+        ...publicReducer,
     });
 
 export default createRootReducer;

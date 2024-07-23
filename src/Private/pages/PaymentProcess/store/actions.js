@@ -193,7 +193,7 @@ const actions = {
         data,
     }),
 
-    refund_payment_reset: (data) => ({
+    refund_payment_reset: () => ({
         type: actions.REFUND_PAYMENT_RESET,
     }),
 

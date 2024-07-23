@@ -38,7 +38,7 @@ const useAuthUser = () => {
      * check if a user has role
      */
     const hasRole = (role) => {
-        if (typeof role === "array") {
+        if (Array.isArray(role)) {
             return role.some((r) => user.roles.includes(r));
         }
         return user.roles.includes(role);
@@ -48,10 +48,6 @@ const useAuthUser = () => {
      * check a user can perform action
      */
     const can = (permissions) => {
-        // TODO: remove in prod
-
-        return true;
-
         return (
             (typeof permissions === "string" && hasPermission(permissions)) ||
             !!(Array.isArray(permissions) && !!permissions.filter((p) => hasPermission(p)).length)

@@ -207,16 +207,6 @@ const apiEndpoints = {
         getAll: "/b2b/account",
     },
 
-    ledger: {
-        getAll: "/ledger",
-        getById: "/ledger/:ledgerId",
-        add: "/ledger",
-    },
-
-    account: {
-        getAll: "/b2b/account",
-    },
-
     accountList: {
         getAll: "/b2b/accountlist",
         getBalance: "/b2b/AccountBalance/:id",
@@ -229,10 +219,7 @@ const apiEndpoints = {
     notification: {
         resend: "/notification/resend",
     },
-    transaction: {
-        achTransaction: "/AchTransactions",
-        updateAchTransactionStatus: "/AchTransactions/:id",
-    },
+
     userProfileSetups: {
         list: "/Roles/GetRoles",
         get: "/Roles/GetPermissionByRoleId",
@@ -254,7 +241,7 @@ const apiEndpoints = {
     },
 
     // region: Common
-    GetCountryValidationRules: '/common/:countryIso3/countryvalidationrules',
+    GetCountryValidationRules: "/common/:countryIso3/countryvalidationrules",
 
     // region: B2B - Business
     UpdateBusiness: "/business/:businessId",

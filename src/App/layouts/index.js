@@ -1,5 +1,5 @@
 import PrivateLayout from "./PrivateLayout";
 import PublicLayout from "./PublicLayout";
-import GuestLayout from './GuestLayout'
+import GuestLayout from "./GuestLayout";
 
-export { PrivateLayout, PublicLayout };
+export { PrivateLayout, PublicLayout, GuestLayout };

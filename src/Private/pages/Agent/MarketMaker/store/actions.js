@@ -82,7 +82,7 @@ const actions = {
         data,
         id,
     }),
-    update_market_maker_status: (id, data) => ({
+    update_market_maker_status: (id) => ({
         type: actions.UPDATE_MARKET_MAKER_STATUS,
         id,
     }),

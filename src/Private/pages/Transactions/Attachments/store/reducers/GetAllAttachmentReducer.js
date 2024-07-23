@@ -21,7 +21,6 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 response: action.response,
             };
-        
         }
         case actions.GET_ATTACHMENT_FAILURE:
             return {
@@ -29,7 +28,7 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
-            }
+            };
         default:
             return state;
     }

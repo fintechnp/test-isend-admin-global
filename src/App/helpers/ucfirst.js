@@ -5,6 +5,6 @@
  */
 
 export default function ucfirst(str) {
-  var firstLetter = str?.charAt(0).toUpperCase();
-  return firstLetter + str?.substring(1)
+    var firstLetter = str?.charAt(0).toUpperCase();
+    return firstLetter + str?.substring(1);
 }

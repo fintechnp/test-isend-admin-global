@@ -1,10 +1,10 @@
 export const customerType = {
-    INDIVIDUAL: 'I',
+    INDIVIDUAL: "I",
     ORGANIZATION: 0,
     isIndividual: function (value) {
-        return this.INDIVIDUAL === value?.trim()?.toUpperCase()
+        return this.INDIVIDUAL === value?.trim()?.toUpperCase();
     },
     isOrganization: function (value) {
-        return this.ORGANIZATION === value?.trim()?.toUpperCase()
-    }
-}
+        return this.ORGANIZATION === value?.trim()?.toUpperCase();
+    },
+};

@@ -7,7 +7,7 @@ const useModal = (modalName) => {
     const [open, setOpen] = useState(false);
 
     const storageKeyName = modalName + "Modal";
-    
+
     useEffect(() => {
         const localState = localStorageGet(storageKeyName);
 

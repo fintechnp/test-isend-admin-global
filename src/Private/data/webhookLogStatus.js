@@ -1,4 +1,4 @@
 export const webhookLogStatus = {
-    REFUNDABLE: 'refundable',
+    REFUNDABLE: "refundable",
     PENDING: "pending",
 };

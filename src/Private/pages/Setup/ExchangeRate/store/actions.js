@@ -60,14 +60,13 @@ const actions = {
 
     delete_exchange_rate: (id) => ({
         type: actions.DELETE_EXCHANGE_RATE,
-        id
+        id,
     }),
 
     refresh_exchange_rate: (query) => ({
         type: actions.REFRESH_EXCHANGE_RATE,
-        query
+        query,
     }),
-
 
     reset_refresh_exchange_rate: () => ({
         type: actions.REFRESH_EXCHANGE_RATE_RESET,

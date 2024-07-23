@@ -1,6 +1,4 @@
 function t(e) {
-  return e;
+    return e;
 }
-export {
-  t as default
-};
+export { t as default };
