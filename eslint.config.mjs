@@ -27,6 +27,7 @@ export default [
             "**/.prettierrc.js",
             "**/.eslintrc.js",
             "**/env.d.ts",
+            "**/ccommitlint.config.js",
         ],
     },
     ...fixupConfigRules(
