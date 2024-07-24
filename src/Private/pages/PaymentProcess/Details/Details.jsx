@@ -66,6 +66,18 @@ const Wrapper = styled(Box)(({ theme }) => ({
     borderRadius: "8px",
 }));
 
+const StyleImageWrapper = styled(Grid)(({ theme }) => ({
+    maxHeight: "100%",
+    overflowY: "auto",
+    textAlign: "left",
+    [theme.breakpoints.up("md")]: {
+        marginLeft: theme.spacing(2),
+    },
+    [theme.breakpoints.down("sm")]: {
+        marginLeft: 0,
+    },
+}));
+
 export default function Details({ data, isAML = false }) {
     const [openCommentDrawer, setOpenCommentDrawer] = useState(false);
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
@@ -98,7 +110,9 @@ export default function Details({ data, isAML = false }) {
         }
     }, [dispatch, customerId]);
 
-    const DocumentsUrl = Documents?.data?.map((doc) => doc?.document).filter((url) => url) || [];
+    const DocumentsUrl = Array.isArray(Documents?.data)
+        ? Documents.data.map((doc) => doc?.document).filter((url) => url)
+        : [];
 
     const sanctionMessage = sanctionDetails?.response?.data
         ? JSON.parse(sanctionDetails?.response?.data?.sanction_message)
@@ -322,7 +336,16 @@ export default function Details({ data, isAML = false }) {
     const documentStatusDefinition = documents
         .filter((item) => item.urls && item.urls.length > 0)
         .map((item, i) => (
-            <Grid mb={2} mt={2} item key={i}>
+            <Grid
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+                mb={2}
+                mt={2}
+                item
+                key={i}
+            >
                 <Typography variant="body1">{item?.label}</Typography>
                 {item.urls.map((url, index) => (
                     <a key={index} href={url} target="_blank" rel="noopener noreferrer">
@@ -333,7 +356,6 @@ export default function Details({ data, isAML = false }) {
                                 width: "100px",
                                 height: "100px",
                                 objectFit: "cover",
-                                display: "block",
                                 margin: "auto",
                                 marginBottom: "10px",
                             }}
@@ -456,23 +478,23 @@ export default function Details({ data, isAML = false }) {
                         </Grid>
 
                         {/* Transaction Table */}
-                        <Grid item xs={12}>
+                        <Grid mb={2} item xs={12}>
                             <TanstackReactTable columns={columns} data={amountData} />
                         </Grid>
                     </Grid>
-                    <Grid marginLeft={2} item xs={12} md={3}>
+                    <StyleImageWrapper>
                         <Wrapper
                             sx={{
                                 maxHeight: "100%",
                                 overflowY: "auto",
-                                textAlign: "center",
+                                textAlign: "left",
                             }}
                         >
                             <Typography variant="h6">Documents</Typography>
 
                             {documentStatusDefinition}
                         </Wrapper>
-                    </Grid>
+                    </StyleImageWrapper>
                 </ResponsiveBox>
 
                 <Grid item xs={12} gap={"10px"} display={"flex"}>
