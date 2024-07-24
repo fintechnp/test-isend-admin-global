@@ -53,6 +53,8 @@ export default function EditDocumentAcceptanceModal({ onEditSuccess }) {
                     status: initial_form_data?.status ?? "",
                     document_for: initial_form_data?.document_for,
                     is_required: initial_form_data?.is_required ?? false,
+                    reference_data_id: initial_form_data?.reference_data_id,
+                    has_two_side: initial_form_data?.has_two_side ?? false,
                 }}
             />
         </Modal>

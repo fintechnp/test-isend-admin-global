@@ -47,6 +47,7 @@ export default function FormReferenceDataAutoComplete(props) {
             valueKey={valueKey}
             onChange={(_, value) => {
                 setValue(name, value?.[valueKey] ?? "");
+                onChange?.(value);
             }}
             required={required}
             isOptional={isOptional}

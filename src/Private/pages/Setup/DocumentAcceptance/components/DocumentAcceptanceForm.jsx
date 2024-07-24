@@ -37,6 +37,8 @@ const DocumentAcceptanceForm = ({
             ? {
                   document_for: documentForConstant.KYC,
                   status: documentStatus.ACTIVE,
+                  is_required: false,
+                  has_two_side: false,
               }
             : initialValues,
     });
@@ -93,6 +95,9 @@ const DocumentAcceptanceForm = ({
                                     ? referenceTypeId.kycDocuments
                                     : referenceTypeId.kybDocuments
                             }
+                            onChange={(referenceData) => {
+                                setValue("reference_data_id", referenceData?.reference_id ?? null);
+                            }}
                         />
                         {addDocumentLink && (
                             <Row
@@ -114,10 +119,14 @@ const DocumentAcceptanceForm = ({
                 <Grid item xs={12}>
                     <FormSelect name="status" label="Status" options={documentStatusOptions} />
                 </Grid>
-                <Grid item xs={12}>
-                    <FormCheckbox name="is_required" label="Is Required ?" />
-                    <Alert severity="info">The required flag is used in B2B</Alert>
+                <Grid item xs={12} sx={{ "& .MuiCheckbox-root": { pt: 0, pb: 0 } }}>
+                    <FormCheckbox name="has_two_side" label="Has Two Side (Front, Back) ?" />
                 </Grid>
+                {documentForValue === documentForConstant.KYB && (
+                    <Grid item xs={12} sx={{ "& .MuiCheckbox-root": { pt: 0, pb: 0 } }}>
+                        <FormCheckbox name="is_required" label="Is Required ?" />
+                    </Grid>
+                )}
                 <Grid marginY={2} item xs={12}>
                     <ButtonWrapper>
                         <CancelButton onClick={handleClose} disabled={loading}>
