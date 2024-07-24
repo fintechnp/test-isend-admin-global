@@ -11,36 +11,14 @@ import Divider from "@mui/material/Divider";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 
 import actions from "./../store/actions";
-import TransactionSkeleton from "./Skeleton";
 import Details from "./Details";
-import transaction from "App/config/transaction";
-
-const TitleWrapper = styled(Box)(({ theme }) => ({
-    paddingBottom: "8px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-}));
+import Loader from "App/components/Loader/Loader";
 
 const Title = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
     fontSize: "18px",
     fontWeight: 600,
     paddingLeft: "8px",
-}));
-
-const BackButton = styled(Button)(({ theme }) => ({
-    fontSize: "12px",
-    textTransform: "capitalize",
-    color: theme.palette.border.main,
-    borderColor: theme.palette.border.main,
-    "&:hover": {
-        color: theme.palette.border.dark,
-        borderColor: theme.palette.border.dark,
-    },
-    "& .MuiButton-startIcon>*:nth-of-type(1)": {
-        fontSize: "15px",
-    },
 }));
 
 function TransactionDetails(props) {
@@ -79,29 +57,15 @@ function TransactionDetails(props) {
                     {import.meta.env.REACT_APP_NAME} | {props.title}
                 </title>
             </Helmet>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <TitleWrapper>
-                        <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                            <ReceiptLongIcon sx={{ color: "primary.main", fontSize: "28px" }} />
-                            <Title> Transaction Details </Title>
-                        </Box>
-                        <BackButton variant="outlined" size="small" onClick={handleBack}>
-                            Back
-                        </BackButton>
-                    </TitleWrapper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider sx={{ mb: 1.2 }} />
-                </Grid>
+            <Box sx={{ pb: "24px" }}>
                 {loading || aml_loading ? (
-                    <TransactionSkeleton />
+                    <Loader />
                 ) : id ? (
                     <Details data={response?.data || []} />
                 ) : (
                     <Details isAML={true} data={aml_response?.data || []} />
                 )}
-            </Grid>
+            </Box>
         </>
     );
 }

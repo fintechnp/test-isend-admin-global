@@ -1,27 +1,34 @@
 import moment from "moment";
 import { reset } from "redux-form";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 
-import SearchForm from "../components/SearchForm";
-
-import ucfirst from "App/helpers/ucfirst";
-import actions from "../store/actions";
-import Filter from "../../Reports/Shared/Filter";
-import NoResults from "../components/NoResults";
-import downloadActions from "../../Reports/store/actions";
+import Row from "App/components/Row/Row";
+import dateUtils from "App/utils/dateUtils";
+import { ReferenceName } from "App/helpers";
 import Loading from "App/components/Loading";
-import Table, { TablePagination } from "App/components/Table";
-import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-import PageContent from "App/components/Container/PageContent";
+import getFlagUrl from "App/helpers/getFlagUrl";
 import Column from "App/components/Column/Column";
-import withPermission from "Private/HOC/withPermission";
+import { TablePagination } from "App/components/Table";
+import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import actions from "../store/actions";
+import NoResults from "../components/NoResults";
+import Filter from "../../Reports/Shared/Filter";
+import SearchForm from "../components/SearchForm";
 import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import downloadActions from "../../Reports/store/actions";
+import StatusBadge from "Private/pages/PaymentProcess/data/StatusBadge";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -91,10 +98,14 @@ function Search(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 100,
-                Cell: ({ value, row }) => (
+                header: "S.N.",
+                accessorKey: "f_serial_no",
+            },
+
+            {
+                header: "Transaction ID",
+                accessorKey: "tid",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -103,229 +114,148 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/transactions/details/${value}`} style={{ textDecoration: "none" }}>
-                                {value ? value : "N/A"}
+                            <Link to={`/transactions/details/${row?.original?.tid}`} style={{ textDecoration: "none" }}>
+                                {row?.original?.tid ? row?.original?.tid : "N/A"}
                             </Link>
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Name",
-                accessor: "customer_name",
-                maxWidth: 140,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "n/a"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Phone Number/Email",
-                accessor: "customer_email",
-                maxWidth: 850,
-                Cell: (data) => (
-                    <Column sx={{ wordBreak: "break-all" }}>
-                        <Typography variant="body2">{data?.row?.original?.customer_phone}</Typography>
-                        <Typography variant="caption" fontSize="12px">
-                            {data.value ? data.value : "N/A"}
-                        </Typography>
-                    </Column>
-                ),
-            },
-            {
-                Header: "C/B Id",
-                accessor: "customer_id",
-                maxWidth: 100,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            <Link to={`/customer/details/${data.value}`} style={{ textDecoration: "none" }}>
-                                {data.value ? data.value : "N/A"}
-                            </Link>
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            <Link
-                                to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
-                                style={{ textDecoration: "none" }}
-                            >
-                                {data?.row?.original?.beneficiary_id ? data?.row?.original?.beneficiary_id : "n/a"}
-                            </Link>
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Partner/Payout Country",
-                accessor: "agent_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data?.row?.original?.payout_country_data
-                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : (data?.row?.original?.payout_country ?? "N/A")}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Date</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Rate</Typography>
-                    </Box>
-                ),
-                accessor: "payout_cost_rate",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Amount</Typography>
-                    </Box>
-                ),
-                accessor: "transfer_amount",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data?.row?.original?.collected_amount
-                                ? FormatNumber(data?.row?.original?.collected_amount)
-                                : "N/A"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {CurrencyName(data?.row?.original?.payout_currency)}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>S/T Status</Typography>
-                    </Box>
-                ),
-                accessor: "send_status",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            textAlign: "right",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
+                header: "Sender & Receiver Details",
+                cell: ({ row }) => (
+                    <Box>
+                        <Row
+                            gap={2}
                             sx={{
-                                paddingLeft: "2px",
-                                fontSize: "12px",
-                                lineHeight: 1.2,
+                                marginBottom: "3px",
                             }}
                         >
-                            {data.value ? ReferenceName(66, data.value) : "N/A"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.transaction_status
-                                ? ReferenceName(66, data?.row?.original?.transaction_status)
-                                : "N/A"}
-                        </Typography>
+                            <Typography variant="body1">CN :</Typography>
+                            <BadgeAvatar
+                                avatarUrl={getFlagUrl(row.original.send_country_iso2)}
+                                avatarDimension={20}
+                                smallAvatarDimension={0}
+                            />
+                            <Typography variant="body2">
+                                {row.original.customer_name}&nbsp;({row.original.customer_id_number})
+                            </Typography>
+                        </Row>
+                        <Divider
+                            sx={{
+                                width: "100%",
+                            }}
+                        />
+                        <Row
+                            gap={2}
+                            sx={{
+                                marginTop: "5px",
+                            }}
+                        >
+                            <Typography>BN :</Typography>
+                            <BadgeAvatar
+                                avatarUrl={getFlagUrl(row.original.payout_country_iso2)}
+                                avatarDimension={20}
+                                smallAvatarDimension={0}
+                            />
+                            <Typography>
+                                {row.original.beneficiary_name}&nbsp;({row?.original?.customer_id})
+                            </Typography>
+                        </Row>
                     </Box>
                 ),
+            },
+
+            {
+                header: "Contact Details",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">{row?.original?.customer_phone}</Typography>
+                        <Typography variant="body1">{row?.original?.customer_email}</Typography>
+                    </Column>
+                ),
+            },
+
+            {
+                header: "Created Date & Time",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">
+                            {dateUtils.getLocalDateFromUTC(row?.original?.created_ts)}
+                        </Typography>
+                        <Typography variant="body2">
+                            {dateUtils.getLocalTimeFromUTC(row?.original?.created_ts)}
+                        </Typography>
+                    </Column>
+                ),
+            },
+
+            {
+                header: "FX Rate",
+                accessorKey: "payout_cost_rate",
+            },
+
+            {
+                header: "Transfer Amount",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.payout_currency}&nbsp;
+                        {row?.original?.payout_amount}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Service Charge",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.payout_currency}&nbsp;
+                        {row?.original?.service_charge}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Colleted Amount",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.collected_currency}&nbsp;
+                        {row?.original?.collected_amount}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Deposite Type",
+                cell: ({ row }) => <Typography variant="body1">{row?.original?.deposit_type}</Typography>,
+            },
+
+            {
+                header: "Payment Type",
+                cell: ({ row }) => (
+                    <Typography variant="body1">{ReferenceName(1, row?.original?.payment_type)}</Typography>
+                ),
+            },
+
+            {
+                header: "Payout Amount",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.payout_currency}&nbsp;
+                        {row?.original?.payout_amount}
+                    </Typography>
+                ),
+            },
+            {
+                header: "Transaction Status",
+                accessorKey: "transaction_status",
+                cell: ({ getValue }) => <StatusBadge status={getValue() ?? "N/A"} />,
+            },
+            {
+                header: "Send Status",
+                accessorKey: "send_status",
+                cell: ({ getValue }) => <StatusBadge status={getValue() ?? "N/A"} />,
             },
         ],
         [],
@@ -480,20 +410,21 @@ function Search(props) {
                                 handleSort={handleSort}
                                 downloadData={downloadData}
                             />
-                            <Table
-                                columns={columns}
-                                data={transactionsData?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={transactionsData?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
+
+                            <PageContentContainer>
+                                <TanstackReactTable
+                                    columns={columns}
+                                    data={transactionsData?.data || []}
+                                    loading={l_loading}
+                                    rowsPerPage={8}
+                                />
+                            </PageContentContainer>
                         </CustomerWrapper>
+                        <TablePagination
+                            paginationData={transactionsData?.pagination}
+                            handleChangePage={handleChangePage}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
                     </Grid>
                 )}
             </Grid>

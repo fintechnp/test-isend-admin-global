@@ -288,6 +288,9 @@ const apiEndpoints = {
 
     // Kyc Logs
     GetCustomerKycLogs: "/kyc/logs",
+
+    // Get Transactions
+    GetTransactions: "/transaction",
 };
 
 export default apiEndpoints;

@@ -29,7 +29,25 @@ const ColumnContainer = styled(Box)(({ theme }) => ({
     flexWrap: "wrap",
 }));
 
-export default function SourceDetails({ definition, data, isLoading, viewMode = "default" }) {
+const LabelValueContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "rowMode",
+})(({ theme, mode }) => ({
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    ...(mode === "row"
+        ? {
+              flexDirection: "row",
+              alignItems: "center",
+          }
+        : undefined),
+
+    "& .MuiLabel-root:after": {
+        content: '" :"',
+    },
+}));
+
+export default function SourceDetails({ definition, data, isLoading, viewMode = "default", rowMode = "column" }) {
     const getNestedValue = (obj, keys) =>
         keys.reduce((nestedObj, key) => (nestedObj && typeof nestedObj === "object" ? nestedObj[key] : undefined), obj);
 
@@ -40,8 +58,8 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
             const value = !isEmpty(data) ? item?.cell(data) : "-";
 
             return (
-                <Box>
-                    <Typography>{item.label}</Typography>
+                <LabelValueContainer mode={rowMode}>
+                    <Typography className="MuiLabel-root">{item.label}</Typography>
                     {isLoading ? (
                         <Skeleton />
                     ) : (
@@ -55,7 +73,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                             )}
                         </Box>
                     )}
-                </Box>
+                </LabelValueContainer>
             );
         }
 
@@ -65,8 +83,10 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
             const value = getNestedValue(data, accessorKeys);
 
             return (
-                <Box>
-                    <Typography color="text.secondary">{item.label}</Typography>
+                <LabelValueContainer mode={rowMode}>
+                    <Typography className="MuiLabel-root" color="text.secondary">
+                        {item.label}
+                    </Typography>
                     {isLoading ? (
                         <Skeleton />
                     ) : (
@@ -74,7 +94,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                             {value?.toString()?.trim() ? value : "-"}
                         </Typography>
                     )}
-                </Box>
+                </LabelValueContainer>
             );
         }
 
@@ -100,8 +120,10 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                     return (
                         <Box key={i} width="100%">
                             <Box>
-                                {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
-                                <DataContainer>
+                                <Box mb="8px">
+                                    {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
+                                </Box>
+                                <DataContainer disableSpacing>
                                     {def.items.map((item, ik) => (
                                         <Fragment key={ik}>{renderItem(item)}</Fragment>
                                     ))}
