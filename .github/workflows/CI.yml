@@ -4,7 +4,6 @@ on:
     push:
         branches:
             - main
-            - dev-isend
     pull_request:
         branches:
             - main
