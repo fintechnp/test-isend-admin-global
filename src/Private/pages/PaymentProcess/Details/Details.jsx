@@ -441,6 +441,7 @@ export default function Details({ data, isAML = false }) {
                                     rowMode="row"
                                     definition={transactionDefinition}
                                     data={data}
+                                    disableLabelColon={false}
                                 />
                             </Wrapper>
                         </Grid>
@@ -461,6 +462,7 @@ export default function Details({ data, isAML = false }) {
                                     rowMode="row"
                                     definition={CustomerDefinition}
                                     data={data}
+                                    disableLabelColon={false}
                                 />
                             </Wrapper>
                         </Grid>
@@ -473,6 +475,7 @@ export default function Details({ data, isAML = false }) {
                                     rowMode="row"
                                     definition={BeneficiaryDefinition}
                                     data={data}
+                                    disableLabelColon={false}
                                 />
                             </Wrapper>
                         </Grid>

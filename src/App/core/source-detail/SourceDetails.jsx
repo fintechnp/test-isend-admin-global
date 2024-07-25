@@ -30,8 +30,8 @@ const ColumnContainer = styled(Box)(({ theme }) => ({
 }));
 
 const LabelValueContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== "rowMode",
-})(({ theme, mode }) => ({
+    shouldForwardProp: (prop) => prop !== "rowMode" && prop !== "disableLabelColon",
+})(({ theme, mode, disableLabelColon = true }) => ({
     display: "flex",
     flexDirection: "column",
     gap: "8px",
@@ -41,13 +41,23 @@ const LabelValueContainer = styled(Box, {
               alignItems: "center",
           }
         : undefined),
-
-    "& .MuiLabel-root:after": {
-        content: '" :"',
-    },
+    ...(!disableLabelColon
+        ? {
+              "& .MuiLabel-root:after": {
+                  content: '" :"',
+              },
+          }
+        : undefined),
 }));
 
-export default function SourceDetails({ definition, data, isLoading, viewMode = "default", rowMode = "column" }) {
+export default function SourceDetails({
+    definition,
+    data,
+    isLoading,
+    viewMode = "default",
+    rowMode = "column",
+    disableLabelColon = true,
+}) {
     const getNestedValue = (obj, keys) =>
         keys.reduce((nestedObj, key) => (nestedObj && typeof nestedObj === "object" ? nestedObj[key] : undefined), obj);
 
@@ -58,8 +68,10 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
             const value = !isEmpty(data) ? item?.cell(data) : "-";
 
             return (
-                <LabelValueContainer mode={rowMode}>
-                    <Typography className="MuiLabel-root">{item.label}</Typography>
+                <LabelValueContainer mode={rowMode} disableLabelColon={disableLabelColon}>
+                    <Typography className="MuiLabel-root" color="text.secondary">
+                        {item.label}
+                    </Typography>
                     {isLoading ? (
                         <Skeleton />
                     ) : (
@@ -83,7 +95,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
             const value = getNestedValue(data, accessorKeys);
 
             return (
-                <LabelValueContainer mode={rowMode}>
+                <LabelValueContainer mode={rowMode} disableLabelColon={disableLabelColon}>
                     <Typography className="MuiLabel-root" color="text.secondary">
                         {item.label}
                     </Typography>
@@ -123,7 +135,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                                 <Box mb="8px">
                                     {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
                                 </Box>
-                                <DataContainer disableSpacing>
+                                <DataContainer>
                                     {def.items.map((item, ik) => (
                                         <Fragment key={ik}>{renderItem(item)}</Fragment>
                                     ))}
@@ -151,4 +163,6 @@ SourceDetails.propTypes = {
     data: PropTypes.object,
     isLoading: PropTypes.bool,
     viewMode: PropTypes.oneOf(["default", "column"]),
+    disableLabelColon: PropTypes.bool,
+    rowMode: PropTypes.oneOf(["column", "row"]),
 };
