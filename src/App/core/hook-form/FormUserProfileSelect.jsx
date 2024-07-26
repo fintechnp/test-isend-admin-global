@@ -46,6 +46,7 @@ function FormUserProfileSelect(props) {
             userProfileSetupActions.list_user_profile_setup_for_select({
                 page_number: 1,
                 page_size: 1000,
+                is_active: true,
             }),
         );
     }, []);
