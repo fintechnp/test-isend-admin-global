@@ -4,19 +4,21 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Block } from "App/components";
 import Row from "App/components/Row/Row";
 import KycStat from "./components/KycStat";
+import Checkbox from "@mui/material/Checkbox";
 import Column from "App/components/Column/Column";
 import PhoneIcon from "App/components/Icon/PhoneIcon";
 import { TablePagination } from "App/components/Table";
 import KycStatusBadge from "./components/KycStatusBadge";
 import CustomerAvatar from "./components/CustomerAvatar";
 import FilterButton from "App/components/Button/FilterButton";
-import PopoverButton from "App/components/Button/PopoverButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import CustomerStatusBadge from "./components/CustomerStatusBadge";
 import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
@@ -46,6 +48,7 @@ const initialState = {
     date_of_birth: "",
     sort_by: "created_ts",
     order_by: "DESC",
+    is_deleted: false,
 };
 
 const schema = Yup.object().shape({
@@ -84,8 +87,6 @@ function Search() {
 
     const dispatch = useDispatch();
 
-    const isMounted = useRef(false);
-
     const {
         isFilterOpen,
         openFilter,
@@ -112,6 +113,13 @@ function Search() {
 
     const handleBlock = (data) => {
         dispatch(actions.block_unblock_customer(data?.id, { is_active: !data?.is_active }, { remarks: data?.remarks }));
+    };
+
+    const handleChangeIsDeleted = (e) => {
+        onFilterSubmit({
+            ...filterSchema,
+            is_deleted: e.target.checked,
+        });
     };
 
     const columns = useMemo(
@@ -328,6 +336,16 @@ function Search() {
                     title="Customers"
                     topRightContent={
                         <>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="isDeleted"
+                                        checked={!!filterSchema.is_deleted}
+                                        onChange={handleChangeIsDeleted}
+                                    />
+                                }
+                                label="All Deleted"
+                            ></FormControlLabel>
                             <TableGridQuickFilter
                                 onSortByChange={onQuickFilter}
                                 onOrderByChange={onQuickFilter}
