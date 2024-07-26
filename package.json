@@ -76,7 +76,7 @@
       "eslint --fix",
       "prettier --write --config ./.prettierrc"
     ],
-    "src/**/*.{css}": [
+    "src/**/*.{css,scss}": [
       "prettier --write --config ./.prettierrc"
     ]
   },
