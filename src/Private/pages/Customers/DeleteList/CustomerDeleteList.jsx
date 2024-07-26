@@ -1,35 +1,145 @@
+import * as Yup from "yup";
 import { useNavigate } from "react-router";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useMemo, useState } from "react";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import buildRoute from "App/helpers/buildRoute";
-import Spacer from "App/components/Spacer/Spacer";
+import Column from "App/components/Column/Column";
 import StatusBadge from "./components/StatusBadge";
-import routePaths from "Private/config/routePaths";
-import TableFilter from "./components/TableFilter";
 import { TablePagination } from "App/components/Table";
+import ListItemButton from "@mui/material/ListItemButton";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
-import CustomerDeleteFilterForm from "Private/components/customers/CustomerDeleteFilterForm";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 import { customerDeleteActions as actions } from "./store";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import { DeleteAccountStatus } from "./data/DeleteAccountStatus";
+
+const schema = Yup.object().shape({
+    fromDate: Yup.string().test({
+        name: "required_when_to_date_is_not_empty",
+        message: "Form Date is required",
+        test: (value, context) => {
+            if (
+                (isEmpty(context.parent.toDate) && isEmpty(value)) ||
+                (!isEmpty(context.parent.toDate) && !isEmpty(value))
+            )
+                return true;
+            return isEmpty(context.parent.toDate) && !isEmpty(value);
+        },
+    }),
+    toDate: Yup.string().test({
+        name: "required_when_to_date_is_not_empty",
+        message: "To Date is required",
+        test: (value, context) => {
+            if (
+                (isEmpty(context.parent.fromDate) && isEmpty(value)) ||
+                (!isEmpty(context.parent.fromDate) && !isEmpty(value))
+            )
+                return true;
+            return isEmpty(context.parent.fromDate) && !isEmpty(value);
+        },
+    }),
+});
 
 const initialState = {
     pageNumber: 1,
     pageSize: 10,
+    sortBy: "created_ts",
+    orderBy: "DESC",
 };
+
 export default function CustomerDeleteList() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { loading, response } = useSelector((state) => state.get_all_customer_delete_list);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        pageNumberKeyName: "pageNumber",
+        pageSizeKeyName: "pageSize",
+    });
+
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "name",
+            label: "Name",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "phoneNumber",
+            label: "Phone Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "emailAddress",
+            label: "Email",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customerId",
+            label: "Customer Id",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "fromDate",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "toDate",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "status",
+            label: "Status",
+            options: [
+                {
+                    label: "Pending",
+                    value: DeleteAccountStatus.PENDING,
+                },
+                {
+                    label: "Approved",
+                    value: DeleteAccountStatus.APPROVED,
+                },
+            ],
+        },
+    ];
+
+    const sortData = [
+        { key: "None", value: "created_ts" },
+        { key: "Full Name", value: "name" },
+        { key: "Email", value: "email" },
+        { key: "Phone Number", value: "phoneNumber" },
+    ];
 
     useEffect(() => {
         dispatch(actions.get_all_customer_delete_list(filterSchema));
@@ -52,22 +162,19 @@ export default function CustomerDeleteList() {
             {
                 header: "Email",
                 accessorKey: "email",
-                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
             },
             {
                 header: "Phone Number",
                 accessorKey: "mobile_number",
-                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
             },
             {
                 header: "Deletion Reason",
                 accessorKey: "deletion_reason",
-                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
             },
             {
                 header: "Remarks",
                 accessorKey: "remarks",
-                cell: ({ getValue }) => <Typography>{getValue() || "N/A"}</Typography>,
+                cell: ({ getValue }) => <>{getValue() || "-"}</>,
             },
 
             {
@@ -78,95 +185,86 @@ export default function CustomerDeleteList() {
             {
                 header: "Requested Date",
                 accessorKey: "created_ts",
-                cell: ({ getValue }) => <Typography>{dateUtils.getFormattedDate(getValue())}</Typography>,
+                cell: ({ getValue }) => dateUtils.getFormattedDate(getValue()),
             },
 
             {
                 header: "Actions",
                 accessorKey: "show",
                 cell: ({ row }) => (
-                    <TableRowActionContainer>
-                        <IconButton
-                            onClick={() => {
-                                navigate(
-                                    buildRoute(routePaths.customer.deleteRequestDetails, row?.original?.delete_id),
-                                );
-                            }}
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
+                    <PopoverButton>
+                        {({ close }) => (
+                            <ListItemButton
+                                onClick={() => {
+                                    navigate(
+                                        buildRoute(routePaths.customer.deleteRequestDetails, row.original.delete_id),
+                                    );
                                 }}
-                            />
-                        </IconButton>
-                    </TableRowActionContainer>
+                            >
+                                View
+                            </ListItemButton>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
         [],
     );
 
-    const handleFilterSubmit = (data) => {
-        setFilterSchema({ ...filterSchema, ...data });
-    };
-
-    const handleFilterReset = () => {
-        setFilterSchema({
-            ...handleTableFilter,
-            sortBy: filterSchema.sortBy,
-            orderBy: filterSchema.orderBy,
-        });
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            pageNumber: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleTableFilter = (data) => {
-        setFilterSchema({
-            ...filterSchema,
-            ...data,
-        });
-    };
-
     return (
-        <PageContent title="Account Closure Requests">
-            <CustomerDeleteFilterForm
-                isProcessing={loading}
-                onSubmit={handleFilterSubmit}
-                onReset={handleFilterReset}
-            />
-            <Spacer />
-            <TableFilter onSubmit={handleTableFilter} />
-            <TanstackReactTable
-                columns={columns}
-                title="Delete List"
-                data={response?.data ?? []}
-                loading={loading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={response?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        <PageContent
+            documentTitle="Account Closure Requests"
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+            breadcrumbs={[
+                {
+                    label: "Customers",
+                },
+                {
+                    label: "Account Closure Requests",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <FilterForm
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onDelete={onDeleteFilterParams}
+                    schema={schema}
+                    title="Search Customers"
+                    onReset={reset}
+                />
+                <PageContentContainer
+                    title="Customer Delete Request"
+                    topRightContent={
+                        <TableGridQuickFilter
+                            onSortByChange={onQuickFilter}
+                            onOrderByChange={onQuickFilter}
+                            disabled={loading}
+                            sortByData={sortData}
+                            values={filterSchema}
+                            sortByFieldName="sortBy"
+                            orderByFieldName="orderBy"
+                        />
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        title="Delete List"
+                        data={response?.data ?? []}
+                        loading={loading}
                     />
-                )}
-            />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={response?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

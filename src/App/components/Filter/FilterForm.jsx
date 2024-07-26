@@ -147,8 +147,8 @@ export default function FilterForm({ open, onClose, onSubmit, onReset, onDelete,
                                             <path
                                                 d="M7 1L1 7M7 7.00001L1 1.00001"
                                                 stroke="#105BB7"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
                                             />
                                         </svg>
                                     </Row>
