@@ -6,6 +6,36 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 
+const DEFAULT_SORT_BY_FIELD_NAME = "sort_by";
+const DEFAULT_ORDER_BY_FIELD_NAME = "order_by";
+
+function valuesValidator(props, propName, componentName) {
+    const sortByFieldName = props.sortByFieldName || DEFAULT_SORT_BY_FIELD_NAME;
+    const orderByFieldName = props.orderByFieldName || DEFAULT_ORDER_BY_FIELD_NAME;
+
+    if (typeof props.values !== "object") {
+        return new Error(`${componentName} requires 'values' prop to be an object`);
+    }
+
+    if (!props.values.hasOwnProperty(sortByFieldName)) {
+        return new Error(`${componentName} requires 'values' prop to have a key '${sortByFieldName}'`);
+    }
+
+    if (!props.values.hasOwnProperty(orderByFieldName)) {
+        return new Error(`${componentName} requires 'values' prop to have a key '${orderByFieldName}'`);
+    }
+
+    if (typeof props.values[sortByFieldName] !== "string") {
+        return new Error(`${componentName} requires 'values.${sortByFieldName}' to be a string`);
+    }
+
+    if (typeof props.values[orderByFieldName] !== "string") {
+        return new Error(`${componentName} requires 'values.${orderByFieldName}' to be a string`);
+    }
+
+    return null;
+}
+
 const orderData = [
     { key: "Ascending", value: "ASC" },
     { key: "Descending", value: "DESC" },
@@ -15,8 +45,8 @@ export default function TableGridQuickFilter({
     onSortByChange,
     onOrderByChange,
     sortByData = [],
-    sortByFieldName = "sort_by",
-    orderByFieldName = "order_by",
+    sortByFieldName = DEFAULT_SORT_BY_FIELD_NAME,
+    orderByFieldName = DEFAULT_ORDER_BY_FIELD_NAME,
     values,
     disabled,
 }) {
@@ -94,9 +124,6 @@ TableGridQuickFilter.propTypes = {
             value: PropTypes.string.isRequired,
         }),
     ).isRequired,
-    values: PropTypes.shape({
-        sort_by: PropTypes.string.isRequired,
-        order_by: PropTypes.string.isRequired,
-    }).isRequired,
+    values: valuesValidator,
     disabled: PropTypes.bool,
 };
