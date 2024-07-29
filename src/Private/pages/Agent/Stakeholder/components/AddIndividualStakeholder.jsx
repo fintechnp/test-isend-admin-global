@@ -39,6 +39,7 @@ export default function AddIndividualStakeholder({ relatedTo, relatedId, onSucce
                 documentTypeId: document.documentTypeId,
                 documentName: document.documentName,
                 documentId: document.documentId,
+                documentSide: document.documentSide,
             }));
 
         const requiredEmptyDocuments = data.documents.filter((document, index) => {

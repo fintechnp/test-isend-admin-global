@@ -26,6 +26,7 @@ export default function Documents({ data = [], isLoading = false }) {
                                 <Box key={i}>
                                     <Typography variant="subtitle1" mb={1}>
                                         {item?.documentName}
+                                        {item.hasTwoSide ? `(${item.documentSide})` : ""}
                                     </Typography>
                                     <a href={item?.documentLink} target="_blank">
                                         <img

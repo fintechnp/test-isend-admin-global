@@ -79,6 +79,7 @@ const schema = yup.object().shape({
             isRequired: yup.boolean().optional().nullable(),
         }),
     ),
+    userProfileId: yup.string().required("Required"),
 });
 
 export const createIndividualStakeholderSchema = schema;
