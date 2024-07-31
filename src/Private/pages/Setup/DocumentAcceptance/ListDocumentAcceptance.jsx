@@ -81,10 +81,11 @@ const ListDocumentAcceptance = () => {
                 header: "Document Type Name",
                 accessorKey: "document_type_name",
             },
-            // {
-            //     header: "Document Type",
-            //     accessorKey: "document_type",
-            // },
+            {
+                header: "Sides",
+                accessorKey: "has_two_side",
+                cell: ({ getValue }) => <>{getValue() ? "Front, Back" : "Front"}</>,
+            },
             {
                 header: "Shufti Document Type",
                 accessorKey: "shufti_document_type",
