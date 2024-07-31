@@ -43,7 +43,7 @@ const DocumentAcceptanceForm = ({
             : initialValues,
     });
 
-    const { watch, setValue } = methods;
+    const { watch, setValue, getValues } = methods;
 
     const documentForValue = watch("document_for");
 
@@ -54,6 +54,10 @@ const DocumentAcceptanceForm = ({
     useEffect(() => {
         if (documentFor) setValue("document_for", documentFor);
     }, [documentFor]);
+
+    useEffect(() => {
+        if (documentForValue === documentForConstant.KYB) setValue("has_two_side", false);
+    }, [documentForValue]);
 
     const addDocumentLink = useMemo(() => {
         if (documentForValue === documentForConstant.KYC) {
@@ -119,9 +123,11 @@ const DocumentAcceptanceForm = ({
                 <Grid item xs={12}>
                     <FormSelect name="status" label="Status" options={documentStatusOptions} />
                 </Grid>
-                <Grid item xs={12} sx={{ "& .MuiCheckbox-root": { pt: 0, pb: 0 } }}>
-                    <FormCheckbox name="has_two_side" label="Has Two Side (Front, Back) ?" />
-                </Grid>
+                {documentForValue === documentForConstant.KYC && (
+                    <Grid item xs={12} sx={{ "& .MuiCheckbox-root": { pt: 0, pb: 0 } }}>
+                        <FormCheckbox name="has_two_side" label="Has Two Side (Front, Back) ?" />
+                    </Grid>
+                )}
                 {documentForValue === documentForConstant.KYB && (
                     <Grid item xs={12} sx={{ "& .MuiCheckbox-root": { pt: 0, pb: 0 } }}>
                         <FormCheckbox name="is_required" label="Is Required ?" />
