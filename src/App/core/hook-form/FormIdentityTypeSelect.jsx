@@ -72,7 +72,7 @@ export default function FormIdentityTypeSelect({
     useEffect(() => {
         const option = options?.find((d) => d[valueKey] === value);
         setSelectedOption(option ?? null);
-    }, [value]);
+    }, [value, options]);
 
     return (
         <Autocomplete

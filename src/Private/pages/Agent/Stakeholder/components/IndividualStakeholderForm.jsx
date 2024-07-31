@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -35,6 +35,8 @@ import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/s
 import { documentFor } from "Private/pages/Setup/DocumentAcceptance/data/documentFor";
 
 export default function IndividualStakeholderForm({ isAddMode = true, isProcessing, relatedTo, relatedId }) {
+    const isDocumentSettingMounted = useRef(false);
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -54,7 +56,7 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
         clearErrors,
     } = useFormContext();
 
-    const { append, update } = useFieldArray({
+    const { append, update, remove } = useFieldArray({
         control,
         name: "documents",
     });
@@ -79,18 +81,29 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
         );
     }, [dispatch, identityIssuedCountryId, identityTypeId]);
 
-    const documents = watch("documents") ?? [];
+    useEffect(() => {
+        if (isDocumentSettingMounted.current) {
+            setValue("documents", []);
+        }
+    }, [identityTypeId, identityIssuedCountryId]);
 
     useEffect(() => {
-        if (documents.length < 0 || isLoading || isEmpty(identityTypeId)) {
-            setValue("documents", []);
-            return;
-        }
+        // if (isAddMode && (isLoading || isEmpty(identityTypeId))) {
+        //     setValue("documents", []);
+        //     return;
+        // }
 
         const documentSettings = response?.data;
 
         documentSettings?.forEach((documentSetting) => {
-            const index = documents.findIndex((d) => d.documentTypeId === documentSetting.requiredDocumentId);
+            const documents = getValues("documents") ?? [];
+
+            const index = documents.findIndex(
+                (d) =>
+                    d.documentTypeId === documentSetting.requiredDocumentId &&
+                    d.documentSide === documentSetting.docSideName,
+            );
+
             if (index === -1) {
                 append({
                     documentId: "",
@@ -108,6 +121,8 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                     documentSide: documentSetting.docSideName,
                 });
             }
+
+            isDocumentSettingMounted.current = true;
         });
     }, [response, isLoading, identityTypeId]);
 
@@ -122,7 +137,9 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
     };
 
     const handleFileUploadSuccess = (document, documentId) => {
-        const index = getValues("documents").findIndex(
+        const documents = getValues("documents") ?? [];
+
+        const index = documents.findIndex(
             (d) => d.documentTypeId === document.documentTypeId && d.documentSide === document.documentSide,
         );
 
@@ -135,7 +152,11 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
     };
 
     const handleRemove = (document) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const documents = getValues("documents") ?? [];
+
+        const index = documents.findIndex(
+            (d) => d.documentTypeId === document.documentTypeId && d.documentSide === document.documentSide,
+        );
 
         update(index, {
             ...documents[index],
@@ -145,7 +166,11 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
     };
 
     const handleChange = (document, file) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const documents = getValues("documents") ?? [];
+
+        const index = documents.findIndex(
+            (d) => d.documentTypeId === document.documentTypeId && d.documentSide === document.documentSide,
+        );
 
         update(index, {
             ...documents[index],
@@ -334,20 +359,31 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                                     <Typography color="grey.700">Select a Identity Issued Country</Typography>
                                 </Grid>
                             );
+                        if (isEmpty(identityTypeId))
+                            return (
+                                <Grid item xs={12}>
+                                    <Typography color="grey.700">Select a Identity Type</Typography>
+                                </Grid>
+                            );
                         else if (isEmpty(identityIssuedCountryId))
                             return (
                                 <Grid item xs={12}>
                                     <Typography color="grey.700">Select a Identity Type</Typography>
                                 </Grid>
                             );
-                        else if (isSuccess && documents.length <= 0)
+                        else if (isSuccess && getValues("documents").length <= 0)
                             return (
                                 <Grid item xs={12}>
                                     <Row>
                                         <Typography color="grey.700">
                                             Document setting not found for selected identity issued country. &nbsp;
                                         </Typography>
-                                        <Link to={routePaths.documentAcceptance.index}>Click Here</Link> &nbsp;
+                                        <Link
+                                            to={`${routePaths.documentAcceptance.index}?countryId=${getCountryById(identityIssuedCountryId).iso3}&documentFor=${documentFor.KYC}`}
+                                        >
+                                            Click Here
+                                        </Link>{" "}
+                                        &nbsp;
                                         <Typography color="grey.700"> to add document setting. </Typography>
                                     </Row>{" "}
                                 </Grid>
@@ -355,7 +391,7 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                         else
                             return (
                                 <>
-                                    {documents.map((document, i) => (
+                                    {getValues("documents").map((document, i) => (
                                         <Grid
                                             key={`${document.documentTypeId}-${document.documentName}-${i}`}
                                             item
@@ -403,8 +439,8 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                                                 onFileRemove={() => handleRemove(document)}
                                                 onUploadSuccess={(id) => setValue("userProfileId", id)}
                                                 error={!!get(errors, "userProfileId")?.message}
-                                                file={document?.documentLink}
-                                                documentName={document?.documentName}
+                                                file={getValues("userProfileLink")}
+                                                fileType={getValues("userProfileFormat")}
                                             />
                                         </FormInputWrapper>
                                     </Grid>

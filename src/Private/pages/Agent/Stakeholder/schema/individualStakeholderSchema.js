@@ -30,6 +30,7 @@ const schema = yup.object().shape({
     identityIssuedDate: yup.string().required("Identity issued date is required"),
     identityExpiryDate: yup
         .string()
+        .nullable()
         .test("is-expiry-greater-than-issued", "Expiry date must be greater than issued date", function (expiryDate) {
             if (!expiryDate) {
                 return true; // If expiry date is not provided, skip this validation

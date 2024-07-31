@@ -185,12 +185,6 @@ export default function ListBusiness() {
         },
         {
             type: fieldTypes.SELECT,
-            label: "Status",
-            name: "Status",
-            options: businessStatusOptions,
-        },
-        {
-            type: fieldTypes.SELECT,
             label: "Is Self Registered ?",
             name: "IsSelfRegistered",
             options: booleanOptions,

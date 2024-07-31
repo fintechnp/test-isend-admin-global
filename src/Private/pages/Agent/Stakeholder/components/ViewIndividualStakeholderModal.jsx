@@ -33,19 +33,21 @@ export default function ViewIndividualStakeholderModal({
 
     const data = response?.data;
 
-    const documents = [
-        ...(data?.documents ?? []),
-        {
-            documentTypeId: null,
-            documentId: data?.userprofileId,
-            documentName: "Selfie Photo",
-            documentLink: data?.userProfileLink,
-            fileName: null,
-            fileType: data?.userProfileFormat,
-            documentSide: "front",
-            hasTwoSide: false,
-        },
-    ];
+    const documents = data
+        ? [
+              ...(data?.documents ?? []),
+              {
+                  documentTypeId: null,
+                  documentId: data?.userprofileId,
+                  documentName: "Selfie Photo",
+                  documentLink: data?.userProfileLink,
+                  fileName: null,
+                  fileType: data?.userProfileFormat,
+                  documentSide: "front",
+                  hasTwoSide: false,
+              },
+          ]
+        : [];
 
     const definition = useSourceDetail([
         {
