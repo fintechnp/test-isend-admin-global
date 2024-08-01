@@ -167,6 +167,9 @@ const routePaths = {
 
     // region B2B - Business Service Charge
     ListBusinessServiceCharge: "/agent/business-service-charge",
+
+    // region setup
+    ListCampaignAttribute: "/setup/campaigns/attributes",
 };
 
 export default routePaths;

@@ -40,6 +40,7 @@ import LanguageCountry from "../pages/Setup/LanguageCountry/LanguageCountry";
 import AddLanguage from "../pages/Setup/AddLanguage/AddLanguage";
 import LocalizationDetails from "../pages/Setup/LocalizationDetails/LocalizationDetails";
 import StreetType from "../pages/Setup/StreetType/StreetType";
+import ListCampaignAttribute from "../pages/Setup/CampaignAttribute/ListCampaignAttribute";
 
 //Customers
 import CustomerSearch from "../pages/Customers/Search";
@@ -707,6 +708,12 @@ const privateRoutes = [
     {
         path: routePaths.ListCustomerKycLog,
         component: <ListCustomerKycLog />,
+    },
+
+    // Setup
+    {
+        path: routePaths.ListCampaignAttribute,
+        component: <ListCampaignAttribute />,
     },
 ];
 

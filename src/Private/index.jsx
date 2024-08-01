@@ -556,6 +556,14 @@ import {
     updateDocumentAcceptanceReducer,
 } from "./features/documentAcceptance/documentAcceptanceReducer";
 
+import attributeFamilySaga from "./features/attributeFamily/attributeFamilySaga";
+import {
+    addAttributeFamilyReducer,
+    getAttributeFamilyReducer,
+    updateAttributeFamilyReducer,
+    deleteAttributeFamilyReducer,
+} from "./features/attributeFamily/attributeFamilyReducer";
+
 // region: User Profile Setup
 import {
     UserProfileSetupSaga,
@@ -1133,6 +1141,12 @@ export const privateReducer = {
 
     // region: Customer
     get_customer_kyc_logs: GetCustomerKycLogsReducer,
+
+    // campaign Attribute
+    get_attribute_family_list: getAttributeFamilyReducer,
+    delete_attribute_family: deleteAttributeFamilyReducer,
+    add_attribute_family: addAttributeFamilyReducer,
+    update_attribute_family: updateAttributeFamilyReducer,
 };
 
 export const privateSaga = [
@@ -1203,6 +1217,7 @@ export const privateSaga = [
     HelpCenterSaga(),
     B2BAccountClosureRequestSaga(),
     CustomerKycLogsSaga(),
+    attributeFamilySaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";
