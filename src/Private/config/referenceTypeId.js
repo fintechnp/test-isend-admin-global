@@ -16,6 +16,7 @@ const referenceTypeId = {
     occupations: 17,
     partnerTypes: 3,
     rdfiReturnCodes: 270,
+    relations: 18,
 };
 
 export default referenceTypeId;

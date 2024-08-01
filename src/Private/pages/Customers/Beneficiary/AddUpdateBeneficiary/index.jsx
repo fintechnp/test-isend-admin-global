@@ -1,3 +1,3 @@
-import AddUpdateBeneficiary from "./AddUpdateBeneficiary";
+import CreateBeneficiary from "./CreateBeneficiary";
 
-export default AddUpdateBeneficiary;
+export default CreateBeneficiary;

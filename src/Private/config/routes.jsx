@@ -46,13 +46,14 @@ import CustomerSearch from "../pages/Customers/Search";
 import CreateCustomer from "../pages/Customers/Customer";
 import CustomerDetails from "../pages/Customers/CustomerDetails";
 import AllBeneficiary from "../pages/Customers/Beneficiary";
-import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
 import BeneficiaryDetails from "../pages/Customers/Beneficiary/Details";
 import CustomerTransactions from "../pages/Customers/Transactions";
 import CustomerBanks from "../pages/Customers/Banks/Banks";
 import AllBanks from "../pages/Customers/AllBanks/BankList";
+import CreateBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
 import CustomerDeleteList from "Private/pages/Customers/DeleteList/CustomerDeleteList";
 import ListCustomerKycLog from "Private/pages/Customers/KycLogs/components/ListCustomerKycLog";
+import EditBeneficiary from "Private/pages/Customers/Beneficiary/AddUpdateBeneficiary/EditBeneficiary";
 
 //Documents
 import Documents from "../pages/Customers/Documents";
@@ -377,11 +378,11 @@ const privateRoutes = [
     },
     {
         path: "/customer/beneficiary/add/:id",
-        component: <AddBeneficiary title="Create Beneficiary" />,
+        component: <CreateBeneficiary title="Create Beneficiary" />,
     },
     {
         path: "/customer/beneficiary/update/:id/:bene_id",
-        component: <AddBeneficiary title="Update Beneficiary" />,
+        component: <EditBeneficiary title="Update Beneficiary" />,
     },
     {
         path: "/customer/beneficiary/details/:id/:bene_id",
