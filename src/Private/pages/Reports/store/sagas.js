@@ -3,6 +3,7 @@ import { put, takeEvery, call, all } from "redux-saga/effects";
 import actions from "./actions";
 import Api from "App/services/api";
 import apiEndpoints from "Private/config/apiEndpoints";
+import buildRoute from "App/helpers/buildRoute";
 
 const api = new Api();
 
@@ -198,6 +199,37 @@ export const getOnfidoReports = takeEvery(actions.ONFIDO_REPORT, function* (acti
     }
 });
 
+export const getReferralReport = takeEvery(actions.REFERRAL_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetReferralReports), action.query);
+        yield put({
+            type: actions.REFERRAL_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.REFERRAL_REPORT_SUCCESS,
+            error: error?.data,
+        });
+    }
+});
+
+export const getReferralReportById = takeEvery(actions.REFERRAL_REPORT_BY_ID, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetReferralReportById, action.id));
+
+        yield put({
+            type: actions.REFERRAL_REPORT_BY_ID_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.REFERRAL_REPORT_BY_ID_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerReport,
@@ -212,5 +244,7 @@ export default function* saga() {
         getAchEntriesReport,
         getIncompleteRegistrationReport,
         getOnfidoReports,
+        getReferralReport,
+        getReferralReportById,
     ]);
 }

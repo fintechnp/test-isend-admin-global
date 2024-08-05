@@ -301,6 +301,8 @@ import {
     GetSuspiciousTransactionsReportsReducer,
     GetCancelledTransactionsReportsReducer,
     ReportsSaga,
+    getReferralReportsReducer,
+    getReferralReportByIdReducer,
 } from "./pages/Reports/store";
 
 //Utilities
@@ -882,6 +884,8 @@ export const privateReducer = {
     get_ach_entries_report: getAchResponseReducer,
     get_incomplete_registration_report: getIncompleteRegistrationReducer,
     get_onfido_report: getOnfidoReportReducer,
+    get_referral_reports: getReferralReportsReducer,
+    get_referral_report_by_id: getReferralReportByIdReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

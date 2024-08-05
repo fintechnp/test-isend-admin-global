@@ -168,6 +168,11 @@ const routePaths = {
     // region B2B - Business Service Charge
     ListBusinessServiceCharge: "/agent/business-service-charge",
 
+    // region - Referral Reports
+
+    ListReferralReport: "/report/referral",
+    ViewReferralReport: "/report/referral/:id",
+
     // region setup
     ListCampaignAttribute: "/setup/campaigns/attributes",
 };

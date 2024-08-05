@@ -291,6 +291,11 @@ const apiEndpoints = {
 
     // Get Transactions
     GetTransactions: "/transaction",
+
+    // Referral Reports
+
+    GetReferralReports: "/referral-code-report",
+    GetReferralReportById: "/referral-code-detail/:id",
 };
 
 export default apiEndpoints;

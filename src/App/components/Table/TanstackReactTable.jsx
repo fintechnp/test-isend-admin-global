@@ -1,4 +1,4 @@
-import React, { useMemo, memo, useLayoutEffect, Fragment } from "react";
+import React, { useMemo, memo, useLayoutEffect, Fragment, useCallback } from "react";
 import PropTypes from "prop-types";
 import MuiTable from "@mui/material/Table";
 import { styled } from "@mui/material/styles";
@@ -10,9 +10,8 @@ import MuiTableContainer from "@mui/material/TableContainer";
 import { useReactTable, flexRender, getCoreRowModel } from "@tanstack/react-table";
 
 import SubComponent from "./SubComponet";
-
 import TableBodySkeleton from "./TableBodySkeleton";
-import { useHorizontalScroll } from "App/hooks/useHorizontalScroll";
+
 import useDragScroll from "App/hooks/useDragScroll";
 
 const TableContainer = styled(MuiTableContainer)(({ theme }) => ({
@@ -182,8 +181,6 @@ const TanstackReactTable = ({
         });
     };
 
-    // const scrollRef = useHorizontalScroll();
-
     const dragScrollRef = useDragScroll();
 
     return (
@@ -235,7 +232,7 @@ const TanstackReactTable = ({
                                 }
 
                                 return (
-                                    <TableCell key={header.id}>
+                                    <TableCell key={header.id} colSpan={header.colSpan}>
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(header.column.columnDef.header, header.getContext())}
@@ -247,12 +244,7 @@ const TanstackReactTable = ({
                 </TableHead>
                 <TableBody>{renderTableBody()}</TableBody>
             </GlobalTable>
-
             {!loading && memoizedData.length > 0 && renderPagination ? renderPagination() : null}
-
-            {/* {Array.isArray(selectedFlatRows) && selectedFlatRows.length && enableRowSelect && renderTableFooter
-                ? renderTableFooter(selectedFlatRows, toggleAllRowsSelected)
-                : null} */}
         </TableContainer>
     );
 };

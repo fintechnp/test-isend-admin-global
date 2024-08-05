@@ -6,5 +6,8 @@ export { default as GetTransactionsSummaryReportsReducer } from "./reducers/Tran
 export { default as GetYearlyTransactionsReportsReducer } from "./reducers/yearlyTransactionsReports";
 export { default as GetSuspiciousTransactionsReportsReducer } from "./reducers/suspiciousTransactionsReports";
 export { default as GetCancelledTransactionsReportsReducer } from "./reducers/CancelledTransactionsReports";
+export { default as getReferralReportsReducer } from "./reducers/getReferralReportsReducer";
+
+export { default as getReferralReportByIdReducer } from "./reducers/getReferralReportByIdReducer";
 
 export { default as ReportsAction } from "./actions";

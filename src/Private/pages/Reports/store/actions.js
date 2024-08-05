@@ -59,7 +59,28 @@ const actions = {
     ONFIDO_REPORT_FAILED: "ONFIDO_REPORT_FAILED",
     ONFIDO_REPORT_RESET: "ONFIDO_REPORT_RESET",
 
+    REFERRAL_REPORT: "REFERRAL_REPORT",
+    REFERRAL_REPORT_SUCCESS: "REFERRAL_REPORT_SUCCESS",
+    REFERRAL_REPORT_FAILED: "REFERRAL_REPORT_FAILED",
+    REFERRAL_REPORT_RESET: "REFERRAL_REPORT_RESET",
+
+    REFERRAL_REPORT_BY_ID: "REFERRAL_REPORT_BY_ID",
+    REFERRAL_REPORT_BY_ID_SUCCESS: "REFERRAL_REPORT_BY_ID_SUCCESS",
+    REFERRAL_REPORT_BY_ID_FAILED: "REFERRAL_REPORT_BY_ID_FAILED",
+    REFERRAL_REPORT_BY_ID_RESET: "REFERRAL_REPORT_BY_ID_RESET",
+
     //FETCH
+
+    get_referral_reports: (query) => ({
+        type: actions.REFERRAL_REPORT,
+        query,
+    }),
+
+    get_referral_report_by_id: (id) => ({
+        type: actions.REFERRAL_REPORT_BY_ID,
+        id,
+    }),
+
     get_customer_report: (query) => ({
         type: actions.CUSTOMER_REPORT,
         query,
