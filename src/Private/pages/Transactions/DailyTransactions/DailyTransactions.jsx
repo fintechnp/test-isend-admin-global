@@ -1,16 +1,17 @@
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 
-import Filter from "./../components/Filter";
+import ucfirst from "App/helpers/ucfirst";
+import isEmpty from "App/helpers/isEmpty";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 
 import actions from "./../store/actions";
-import ucfirst from "App/helpers/ucfirst";
+import Filter from "./../components/Filter";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
@@ -255,12 +256,14 @@ const DailyTransactions = (props) => {
                                 lineHeight: 1.2,
                             }}
                         >
-                            {data.value ? ReferenceName(66, data.value) : "N/A"}
+                            {!isEmpty(data.value)
+                                ? ReferenceName(66, data.row.value)
+                                : ReferenceName(66, data.row.original.status)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.transaction_status
-                                ? ReferenceName(66, data?.row?.original?.transaction_status)
-                                : "N/A"}
+                            {!isEmpty(data.row.original.transaction_status)
+                                ? ReferenceName(66, data.row.original.transaction_status)
+                                : " "}
                         </Typography>
                     </Box>
                 ),

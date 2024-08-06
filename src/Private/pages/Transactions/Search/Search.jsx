@@ -29,6 +29,7 @@ import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import downloadActions from "../../Reports/store/actions";
 import StatusBadge from "Private/pages/PaymentProcess/data/StatusBadge";
+import isEmpty from "App/helpers/isEmpty";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -249,8 +250,17 @@ function Search(props) {
             },
             {
                 header: "Transaction Status",
-                accessorKey: "transaction_status",
-                cell: ({ getValue }) => <StatusBadge status={getValue() ?? "N/A"} />,
+                cell: ({ getValue, row }) => (
+                    <>
+                        <StatusBadge
+                            status={
+                                !isEmpty(row.original.transaction_status)
+                                    ? row.original.transaction_status
+                                    : ReferenceName(66, row.original.status)
+                            }
+                        />
+                    </>
+                ),
             },
             {
                 header: "Send Status",
