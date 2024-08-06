@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 import { useParams, useNavigate } from "react-router-dom";
@@ -10,37 +12,36 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import BusinessRoundedIcon from "@mui/icons-material/BusinessRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 
-import UpdateKyc from "./UpdateKyc";
 import Row from "App/components/Row/Row";
-import Button from "@mui/material/Button";
-import Paper from "App/components/Paper/Paper";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "App/components/Tooltip/Tooltip";
-import actions from "../Customer/store/actions";
-import Clipboard from "App/components/Clipboard/Clipboard";
-import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
-import PageContent from "App/components/Container/PageContent";
-import PopoverButton from "App/components/Button/PopoverButton";
-import KycStatusBadge from "../Search/components/KycStatusBadge";
-import RecentlyAddedBeneficiaries from "./RecentlyAddedBeneficiaries";
-import CustomerStatusBadge from "../Search/components/CustomerStatusBadge";
-import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
-import PageContentContainer from "App/components/Container/PageContentContainer";
-
+import isEmpty from "App/helpers/isEmpty";
 import { ReferenceName } from "App/helpers";
 import dateUtils from "App/utils/dateUtils";
+import Paper from "App/components/Paper/Paper";
 import buildRoute from "App/helpers/buildRoute";
 import getFlagUrl from "App/helpers/getFlagUrl";
 import { useConfirm } from "App/core/mui-confirm";
 import Column from "App/components/Column/Column";
-import routePaths from "Private/config/routePaths";
-import { customerType } from "Private/data/customerType";
+import Tooltip from "App/components/Tooltip/Tooltip";
 import { getCustomerName } from "App/helpers/getFullName";
-import referenceTypeId from "Private/config/referenceTypeId";
+import Clipboard from "App/components/Clipboard/Clipboard";
+import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
+import { UNITED_STATES_ISO3 } from "App/data/SendingCountry";
+import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import UpdateKyc from "./UpdateKyc";
+import actions from "../Customer/store/actions";
+import routePaths from "Private/config/routePaths";
+import { customerType } from "Private/data/customerType";
+import referenceTypeId from "Private/config/referenceTypeId";
+import KycStatusBadge from "../Search/components/KycStatusBadge";
+import RecentlyAddedBeneficiaries from "./RecentlyAddedBeneficiaries";
+import CustomerStatusBadge from "../Search/components/CustomerStatusBadge";
 import customerActions from "Private/pages/Customers/Documents/store/actions";
-import { UNITED_STATES_ISO3 } from "App/data/SendingCountry";
+import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 
 const CustomerTypeContainer = styled("div")(({ theme }) => ({
     "& .MuiIconButton-root": {
@@ -260,7 +261,8 @@ function CustomerDetails() {
                                     {data?.email}
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary">
-                                    +{data?.phone_country_code} - {data?.phone_number}
+                                    +{data?.phone_country_code} -{" "}
+                                    {!isEmpty(data?.phone_number) ? data?.phone_number : data?.mobile_number}
                                 </Typography>
                             </>
                         )}
