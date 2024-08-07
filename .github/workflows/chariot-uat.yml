@@ -23,9 +23,6 @@ jobs:
                   REACT_APP_VERSION=v1.0.0
                   REACT_APP_POWERED_BY_COMPANY_LABEL=www.isendremit.com
                   REACT_APP_POWERED_BY_COMPANY_URL=https://isendremit.com
-                  REACT_APP_CHARIOT_BASE_URL=https://chariotremit.com
-                  REACT_APP_CHARIOT_TERMS_AND_CONDITIONS_URL="${REACT_APP_CHARIOT_BASE_URL}/terms-and-conditions"
-                  REACT_APP_CHARIOT_PRIVACY_POLICY_URL="${REACT_APP_CHARIOT_BASE_URL}/privacy-policy"
                   npm run build
 
             - name: Transfer files to Charoit Server
