@@ -36,7 +36,7 @@ export default function ListKycUser() {
 
     useEffect(() => {
         dispatch(actions.get_all_kyc_user(filterSchema));
-    }, []);
+    }, [filterSchema]);
 
     const handleChangePage = (e, newPage) => {
         const updatedFilter = {
@@ -121,11 +121,6 @@ export default function ListKycUser() {
 
     return (
         <PageContent title="Kyc Users">
-            {loading && (
-                <Grid item xs={12}>
-                    <Loading loading={loading} />
-                </Grid>
-            )}
             <FilterForm setFilterSchema={setFilterSchema} loading={loading} />
             {!loading && response?.data && response?.data?.length === 0 ? (
                 <Grid item xs={12}>

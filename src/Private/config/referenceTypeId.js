@@ -17,6 +17,7 @@ const referenceTypeId = {
     partnerTypes: 3,
     rdfiReturnCodes: 270,
     relations: 18,
+    balanceRequestStatus: 67,
 };
 
 export default referenceTypeId;
