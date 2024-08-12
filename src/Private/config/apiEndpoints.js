@@ -292,6 +292,14 @@ const apiEndpoints = {
     // Get Transactions
     GetTransactions: "/transaction",
 
+    // Promo Code
+
+    ListPromoCode: "/campaign/promocodeList",
+    CreatePromoCode: "/campaign/promocode",
+    ListValidatePromoCode: "/campaign/validatePromoCode",
+    ListCampaignReport: "/campaign/campaignReport",
+    UpdatePromoCodeStatus: "/campaign/promocodeEnableDisable",
+    ViewPromoCode: "/campaign/promocodeList/:id",
     // Referral Reports
 
     GetReferralReports: "/referral-code-report",

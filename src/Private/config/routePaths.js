@@ -168,6 +168,13 @@ const routePaths = {
     // region B2B - Business Service Charge
     ListBusinessServiceCharge: "/agent/business-service-charge",
 
+    // region B2B - Promo Code
+
+    ListPromoCode: "/setup/campaigns",
+    CreatePromoCode: "/setup/campaigns/create",
+    ViewPromoCode: "/setup/campaigns/:id",
+    EditPromoCode: "/setup/campaigns/:id/edit",
+    RedeemedPromoCode: "/setup/campaigns/:id/redeemed",
     // region - Referral Reports
 
     ListReferralReport: "/report/referral",

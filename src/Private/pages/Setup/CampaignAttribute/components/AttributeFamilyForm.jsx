@@ -5,10 +5,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import SubmitButton from "App/components/Button/SubmitButton";
 import CancelButton from "App/components/Button/CancelButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
+
+import { campaignEventTypesOptions } from "Private/pages/PromoCode/data/campaignEventTypesEnums";
 
 const schema = Yup.object().shape({
     attributeName: Yup.string().required("Attribute name is required"),
@@ -28,7 +31,11 @@ const AttributeFamilyForm = ({ handleClose, loading, isAddMode = true, initialVa
                     <FormTextField label="Attribute Name" name="attributeName" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <FormTextField label="Attribute Type Value" type="number" name="attributeTypeValue" />
+                    <FormSelect
+                        label="Attribute Type Value"
+                        name="attributeTypeValue"
+                        options={campaignEventTypesOptions}
+                    />
                 </Grid>
                 <Grid marginY={2} item xs={12}>
                     <ButtonWrapper>

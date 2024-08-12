@@ -12,6 +12,7 @@ function FormSelect(props) {
         clearErrors,
         formState: { errors },
         setValue,
+        watch,
     } = useFormContext();
 
     const {
@@ -30,6 +31,7 @@ function FormSelect(props) {
         chooseOptionLabel,
         onChange,
         error,
+        placeholder,
         ...rest
     } = props;
 
@@ -39,6 +41,7 @@ function FormSelect(props) {
             control={control}
             defaultValue=""
             rules={rules}
+            placeholder={placeholder}
             render={({ field }) => (
                 <FormControl
                     variant={variant}
@@ -46,6 +49,7 @@ function FormSelect(props) {
                     size={size}
                     error={!!get(errors, name)}
                     required={required}
+                    placeholder={placeholder}
                 >
                     <InputLabel>{label}</InputLabel>
                     <Select
@@ -59,6 +63,7 @@ function FormSelect(props) {
                         disabled={disabled}
                         tabIndex={tabIndex}
                         multiple={multiple}
+                        placeholder={placeholder}
                         onChange={(e) => {
                             setValue(name, e.target.value);
                             onChange?.(e);
@@ -111,6 +116,7 @@ FormSelect.propTypes = {
     error: PropTypes.string,
     variant: PropTypes.oneOf(["outlined", "standard", "filled"]),
     onChange: PropTypes.func,
+    placeholder: PropTypes.string,
 };
 
 FormSelect.defaultProps = {
@@ -127,4 +133,5 @@ FormSelect.defaultProps = {
     variant: "outlined",
     fullWidth: true,
     chooseOptionLabel: "Choose",
+    placeholder: "",
 };

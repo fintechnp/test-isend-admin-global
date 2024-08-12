@@ -173,6 +173,12 @@ export const drawerItems = [
                 text: "Email Template",
                 sub: true,
             },
+            {
+                path: routePaths.promoCode.create,
+                key: "promo-code",
+                text: "Promo Code",
+                sub: true,
+            },
         ],
     },
 

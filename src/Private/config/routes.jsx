@@ -187,9 +187,12 @@ import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
 import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
 import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
 
-import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
+import AddPromoCode from "Private/pages/PromoCode/AddPromoCode";
+import ListPromoCode from "Private/pages/PromoCode/ListPromoCode";
+import ViewPromoCode from "Private/pages/PromoCode/ViewPromoCode";
 import ListReferralReport from "Private/pages/Reports/Referral/ListReferralReport";
 import ViewReferralReport from "Private/pages/Reports/Referral/ViewReferralReport";
+import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -724,6 +727,19 @@ const privateRoutes = [
     {
         path: routePaths.ListCampaignAttribute,
         component: <ListCampaignAttribute />,
+    },
+    // Promo Code
+    {
+        path: routePaths.ListPromoCode,
+        component: <ListPromoCode />,
+    },
+    {
+        path: routePaths.CreatePromoCode,
+        component: <AddPromoCode />,
+    },
+    {
+        path: routePaths.ViewPromoCode,
+        component: <ViewPromoCode />,
     },
 ];
 

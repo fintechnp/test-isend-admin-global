@@ -208,6 +208,7 @@ function CustomerReports(props) {
     const {
         response: ReportsDownload,
         loading: pd_loading,
+
         success: pd_success,
     } = useSelector((state) => state.download_report);
 

@@ -91,19 +91,6 @@ import {
 } from "./pages/Setup/ServiceCharge/store";
 
 import {
-    GetPromoSetupReducer,
-    GetPromoSetupDetailsReducer,
-    AddPromoSetupReducer,
-    UpdatePromoSetupReducer,
-    DeletePromoSetupReducer,
-    GetPromoCodeReducer,
-    DeletePromoCodeReducer,
-    AddPromoCodeReducer,
-    ImportPromoCodeReducer,
-    PromoSetupSaga,
-} from "./pages/Setup/PromoSetup/store";
-
-import {
     GetApiConfigReducer,
     GetApiConfigDetailsReducer,
     AddApiConfigReducer,
@@ -636,6 +623,13 @@ import {
     ViewB2BAccountClosureRequestReducer,
 } from "./pages/Agent/AccountClosureRequest/store";
 import { CustomerKycLogsSaga, GetCustomerKycLogsReducer } from "./pages/Customers/KycLogs/store";
+import {
+    GetPromoCodeReducer,
+    AddPromoCodeReducer,
+    GetPromoCodeByIdReducer,
+    PromoCodeSagas,
+    UpdatePromoCodeStatusReducer,
+} from "./pages/PromoCode/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -743,19 +737,6 @@ export const privateReducer = {
     add_service_charge: AddServiceChargeReducer,
     update_service_charge: UpdateServiceChargeReducer,
     delete_service_charge: DeleteServiceChargeReducer,
-
-    //setup promo
-    get_promo_setup: GetPromoSetupReducer,
-    get_promo_setup_details: GetPromoSetupDetailsReducer,
-    add_promo_setup: AddPromoSetupReducer,
-    update_promo_setup: UpdatePromoSetupReducer,
-    delete_promo_setup: DeletePromoSetupReducer,
-
-    //promo code
-    get_promo_code: GetPromoCodeReducer,
-    delete_promo_code: DeletePromoCodeReducer,
-    add_promo_code: AddPromoCodeReducer,
-    import_promo_code: ImportPromoCodeReducer,
 
     //exchange charge
     get_all_exchange_rate: GetAllExchangeRateReducer,
@@ -1146,6 +1127,11 @@ export const privateReducer = {
     // region: Customer
     get_customer_kyc_logs: GetCustomerKycLogsReducer,
 
+    //region: Promo Codes
+    get_promo_codes: GetPromoCodeReducer,
+    get_promo_code_by_id: GetPromoCodeByIdReducer,
+    add_promo_code: AddPromoCodeReducer,
+    update_promo_code_status: UpdatePromoCodeStatusReducer,
     // campaign Attribute
     get_attribute_family_list: getAttributeFamilyReducer,
     delete_attribute_family: deleteAttributeFamilyReducer,
@@ -1161,7 +1147,6 @@ export const privateSaga = [
     PartnerBankSaga(),
     PayoutLocationSaga(),
     ServiceChargeSaga(),
-    PromoSetupSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
     ApiConfigSaga(),
@@ -1221,6 +1206,7 @@ export const privateSaga = [
     HelpCenterSaga(),
     B2BAccountClosureRequestSaga(),
     CustomerKycLogsSaga(),
+    PromoCodeSagas(),
     attributeFamilySaga(),
 ];
 
