@@ -170,6 +170,7 @@ export default function CustomerDeleteList() {
             {
                 header: "Deletion Reason",
                 accessorKey: "deletion_reason",
+                cell: ({ getValue }) => <>{getValue() || "Others"}</>,
             },
             {
                 header: "Remarks",
