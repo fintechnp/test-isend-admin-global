@@ -72,14 +72,42 @@ export default class Api {
                     return response;
                 }
             },
-            function (error) {
+            async function (error) {
                 if (error?.response?.status === 401) {
-                    preserveIntendedPath();
+                    try {
+                        preserveIntendedPath();
+                        // Attempt to refresh the token
+                        const response = await axios.post(
+                            "https://devadminapi.isendglobal.com/api/account/refreshtoken",
+                            {
+                                access_token: AuthUtility.getAccessToken(),
+                                refresh_token: AuthUtility.getRefreshToken(),
+                            },
+                        );
+                        // Update tokens
+                        AuthUtility.setAccessToken(response.data?.token);
+                        AuthUtility.setRefreshToken(response.data?.refresh_token);
+
+                        // Retry the original request with the new token
+                        error.config.headers["Authorization"] = "Bearer " + response?.data?.token;
+                        error.config.headers["source"] = "web";
+                        error.config.headers["Accept"] = "application/json";
+                        error.config.headers["Content-Type"] = "application/json";
+                        return axios(error.config);
+                    } catch (refreshError) {
+                        // If the refresh fails, dispatch an INVALID_TOKEN action
+                        store.dispatch({
+                            type: "INVALID_TOKEN",
+                        });
+                        return Promise.reject(refreshError);
+                    }
+                } else {
+                    // Handle other errors
                     store.dispatch({
                         type: "INVALID_TOKEN",
                     });
+                    return Promise.reject(error);
                 }
-                return Promise.reject(error);
             },
         );
     };
