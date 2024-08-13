@@ -304,6 +304,11 @@ const apiEndpoints = {
 
     GetReferralReports: "/referral-code-report",
     GetReferralReportById: "/referral-code-detail/:id",
+
+    // Campaign Reports
+    GetCampaignReports: "/campaign/campaignReport",
+    GetCampaignReportDetails: "/campaign/campaignReportDetails",
+    GetCampaignLedgerReport: "/campaign/campaignLegerReport",
 };
 
 export default apiEndpoints;

@@ -182,6 +182,11 @@ const routePaths = {
 
     // region setup
     ListCampaignAttribute: "/setup/campaigns/attributes",
+
+    // region - Campaign Reports
+
+    ListCampaignReportTab: "/report/campaign",
+    ListCampaignLedgerReport: "/report/campaign/ledger/:id",
 };
 
 export default routePaths;

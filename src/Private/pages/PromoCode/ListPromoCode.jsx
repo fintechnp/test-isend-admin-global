@@ -21,6 +21,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 import { promoCodeActions } from "./store";
 import routePaths from "Private/config/routePaths";
 import { campaignStatus } from "./data/campaignStatus";
+import CampaignCodeBadge from "../../../App/components/Badge/CampaignCodeBadge";
 
 const initialState = {
     Page: 1,
@@ -91,11 +92,9 @@ const ListPromoCode = () => {
         {
             header: "Campaign Type",
             accessorKey: "campaignType",
+            cell: ({ getValue }) => <CampaignCodeBadge code={getValue()} />,
         },
-        {
-            header: "Campaign Type ID",
-            accessorKey: "campaignTypeId",
-        },
+
         {
             header: "Campaign Start Date",
             accessorKey: "startDate",
@@ -128,6 +127,13 @@ const ListPromoCode = () => {
                     <PopoverButton>
                         {({ onClose }) => (
                             <>
+                                <ListItemButton
+                                    onClick={() =>
+                                        navigate(buildRoute(routePaths.ListCampaignLedgerReport, row?.original?.id))
+                                    }
+                                >
+                                    View Ledger Report
+                                </ListItemButton>
                                 <ListItemButton
                                     onClick={() => navigate(buildRoute(routePaths.ViewPromoCode, row?.original?.id))}
                                 >
@@ -206,7 +212,7 @@ const ListPromoCode = () => {
                                 color="primary"
                                 onClick={() => navigate(buildRoute(routePaths.CreatePromoCode))}
                             >
-                                Add Promo Code
+                                Add Campaign
                             </Button>
                         </>
                     }

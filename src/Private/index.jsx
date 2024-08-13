@@ -290,6 +290,9 @@ import {
     ReportsSaga,
     getReferralReportsReducer,
     getReferralReportByIdReducer,
+    getCampaignReportsReducer,
+    getCampaignReportDetailsReducer,
+    getCampaignLedgerReportsReducer,
 } from "./pages/Reports/store";
 
 //Utilities
@@ -867,6 +870,9 @@ export const privateReducer = {
     get_onfido_report: getOnfidoReportReducer,
     get_referral_reports: getReferralReportsReducer,
     get_referral_report_by_id: getReferralReportByIdReducer,
+    get_campaign_reports: getCampaignReportsReducer,
+    get_campaign_report_details: getCampaignReportDetailsReducer,
+    get_campaign_ledger_report: getCampaignLedgerReportsReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

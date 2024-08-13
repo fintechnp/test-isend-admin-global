@@ -214,6 +214,51 @@ export const getReferralReport = takeEvery(actions.REFERRAL_REPORT, function* (a
     }
 });
 
+export const getCampaignReport = takeEvery(actions.CAMPAIGN_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignReports), action.query);
+        yield put({
+            type: actions.CAMPAIGN_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignReportDetails = takeEvery(actions.CAMPAIGN_REPORT_DETAILS, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignReportDetails), action.query);
+        yield put({
+            type: actions.CAMPAIGN_REPORT_DETAILS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_REPORT_DETAILS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignLedgerReport = takeEvery(actions.CAMPAIGN_LEDGER_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignLedgerReport), action.query);
+        yield put({
+            type: actions.CAMPAIGN_LEDGER_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_LEDGER_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export const getReferralReportById = takeEvery(actions.REFERRAL_REPORT_BY_ID, function* (action) {
     try {
         const res = yield call(api.get, buildRoute(apiEndpoints.GetReferralReportById, action.id));
@@ -246,5 +291,8 @@ export default function* saga() {
         getOnfidoReports,
         getReferralReport,
         getReferralReportById,
+        getCampaignReport,
+        getCampaignReportDetails,
+        getCampaignLedgerReport,
     ]);
 }

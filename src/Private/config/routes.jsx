@@ -193,6 +193,8 @@ import ViewPromoCode from "Private/pages/PromoCode/ViewPromoCode";
 import ListReferralReport from "Private/pages/Reports/Referral/ListReferralReport";
 import ViewReferralReport from "Private/pages/Reports/Referral/ViewReferralReport";
 import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
+import ListCampaignReportTab from "Private/pages/Reports/CampaignReport/ListCampaignReportTab";
+import ListCampaignLedgerReport from "Private/pages/Reports/CampaignReport/ListCampaignLedgerReport";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -502,6 +504,14 @@ const privateRoutes = [
     {
         path: routePaths.ViewReferralReport,
         component: <ViewReferralReport />,
+    },
+    {
+        path: routePaths.ListCampaignReportTab,
+        component: <ListCampaignReportTab />,
+    },
+    {
+        path: routePaths.ListCampaignLedgerReport,
+        component: <ListCampaignLedgerReport />,
     },
 
     //PaymentProcess
