@@ -49,6 +49,7 @@ const useDrawerItems = () => {
                 key: permission.id,
                 text: permission.display_name,
                 icon: permission.icon,
+                is_active: permission.is_active,
                 sub: permission.type === PermissionType.MENU ? (permission?.children?.length ?? 0) > 0 : false,
                 ...(permission.url
                     ? {
@@ -68,6 +69,7 @@ const useDrawerItems = () => {
             if (transformed.sub) {
                 transformed.children = [...(menu?.children ?? [])]
                     .filter((m) => !isEmpty(m.url))
+                    ?.filter((item) => item?.is_active)
                     .map((a) => transform(a));
             }
 
@@ -78,7 +80,7 @@ const useDrawerItems = () => {
     };
 
     useEffect(() => {
-        const data = response?.data?.role_response?.menus ?? [];
+        const data = response?.data?.role_response?.menus?.filter((item) => item?.is_active) ?? [];
         if (data.length <= 0) return;
         const menus = transformMenuData(data);
         setDrawerItems(menus);
