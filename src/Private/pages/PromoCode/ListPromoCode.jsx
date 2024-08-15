@@ -106,6 +106,10 @@ const ListPromoCode = () => {
             cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
         },
         {
+            header: "Available Budge",
+            accessorKey: "budget",
+        },
+        {
             header: "Status",
             accessorKey: "statusName",
         },

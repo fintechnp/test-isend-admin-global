@@ -40,6 +40,22 @@ const addPromoCode = takeEvery(actions.ADD_PROMO_CODE, function* (action) {
     }
 });
 
+const addPromoCodeBudget = takeEvery(actions.ADD_PROMO_CODE_BUDGET, function* (action) {
+    try {
+        const res = yield call(api.post, buildRoute(apiEndpoints.AddPromoCodeBudget), action.data);
+
+        yield put({
+            type: actions.ADD_PROMO_CODE_BUDGET_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.ADD_PROMO_CODE_BUDGET_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export const getPromoCodeById = takeEvery(actions.GET_PROMO_CODE_BY_ID, function* (action) {
     try {
         const res = yield call(api.get, buildRoute(apiEndpoints.ViewPromoCode, action.id));
@@ -83,5 +99,5 @@ export const updatePromoCodeStatus = takeEvery(actions.UPDATE_PROMO_CODE_STATUS,
 });
 
 export default function* Saga() {
-    yield all([getPromoCodeList, addPromoCode, getPromoCodeById, updatePromoCodeStatus]);
+    yield all([getPromoCodeList, addPromoCode, addPromoCodeBudget, getPromoCodeById, updatePromoCodeStatus]);
 }

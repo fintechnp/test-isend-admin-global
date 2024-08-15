@@ -1,6 +1,6 @@
 export const campaignCodes = {
-    PROMO: 0,
-    REFERRAL: 1,
+    REFERRAL: 0,
+    PROMO: 1,
 };
 
 export const campaignCodesOptions = [

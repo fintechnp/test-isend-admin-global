@@ -632,6 +632,7 @@ import {
     GetPromoCodeByIdReducer,
     PromoCodeSagas,
     UpdatePromoCodeStatusReducer,
+    AddPromoCodeBudgetReducer,
 } from "./pages/PromoCode/store";
 
 export const privateReducer = {
@@ -1137,6 +1138,7 @@ export const privateReducer = {
     get_promo_codes: GetPromoCodeReducer,
     get_promo_code_by_id: GetPromoCodeByIdReducer,
     add_promo_code: AddPromoCodeReducer,
+    add_promo_code_budget: AddPromoCodeBudgetReducer,
     update_promo_code_status: UpdatePromoCodeStatusReducer,
     // campaign Attribute
     get_attribute_family_list: getAttributeFamilyReducer,

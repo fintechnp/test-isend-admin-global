@@ -29,6 +29,13 @@ const actions = {
     UPDATE_PROMO_CODE_STATUS_FAILED: "UPDATE_PROMO_CODE_STATUS_FAILED",
     UPDATE_PROMO_CODE_STATUS_RESET: "UPDATE_PROMO_CODE_STATUS_RESET",
 
+    ADD_PROMO_CODE_BUDGET: "ADD_PROMO_CODE_BUDGET",
+    ADD_PROMO_CODE_BUDGET_SUCCESS: "ADD_PROMO_CODE_BUDGET_SUCCESS",
+    ADD_PROMO_CODE_BUDGET_FAILED: "ADD_PROMO_CODE_BUDGET_FAILED",
+    ADD_PROMO_CODE_BUDGET_RESET: "ADD_PROMO_CODE_BUDGET_RESET",
+    OPEN_PROMO_CODE_BUDGET_MODAL: "OPEN_PROMO_CODE_BUDGET_MODAL",
+    CLOSE_PROMO_CODE_BUDGET_MODAL: "CLOSE_PROMO_CODE_BUDGET_MODAL",
+
     get_promo_codes: (query) => ({
         type: actions.GET_PROMO_CODE,
         query,
@@ -47,6 +54,28 @@ const actions = {
     add_promo_code_reset: (data) => ({
         type: actions.ADD_PROMO_CODE_RESET,
         data,
+    }),
+
+    add_promo_code_budget: (data) => ({
+        type: actions.ADD_PROMO_CODE_BUDGET,
+        data,
+    }),
+
+    open_add_promo_code_budget_modal: () => ({
+        type: actions.OPEN_PROMO_CODE_BUDGET_MODAL,
+    }),
+
+    close_add_promo_code_budget_modal: () => ({
+        type: actions.CLOSE_PROMO_CODE_BUDGET_MODAL,
+    }),
+
+    open_update_promo_code_budget_modal: (payload) => ({
+        type: actions.OPEN_PROMO_CODE_BUDGET_MODAL,
+        payload,
+    }),
+
+    close_update_promo_code_budget_modal: () => ({
+        type: actions.CLOSE_PROMO_CODE_BUDGET_MODAL,
     }),
 
     delete_promo_code: (promo_code_id) => ({
