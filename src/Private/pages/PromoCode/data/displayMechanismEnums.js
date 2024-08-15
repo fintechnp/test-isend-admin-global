@@ -11,7 +11,7 @@ export const displayMechanismsOptions = [
         value: DisplayMechanismEnums.ALWAYS_ON_DISPLAY,
     },
     {
-        label: "User Activated",
+        label: "Schedular",
         value: DisplayMechanismEnums.Schedular,
     },
     // {

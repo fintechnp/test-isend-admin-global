@@ -32,9 +32,14 @@ import countryActions from "Private/features/countries/countryActions";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
-import { triggerAttributeTypesOptions } from "./data/triggerAttributeTypesEnums";
+import {
+    triggerAttributeTypes,
+    triggerAttributeTypesOptions,
+    triggerAttributeTypesOptionsDisabled,
+} from "./data/triggerAttributeTypesEnums";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
+import { marked } from "marked";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -105,7 +110,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
             setValue("trigger", [
                 {
                     attribute: initialTriggerValue,
-                    criteria: 0,
+                    criteria: 0 ? 0 : 1,
                     currency: "",
                     amount: 0,
                 },
@@ -182,7 +187,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
             displayMechanism: data.displayMechanism,
             limitPerUser: data.limitPerUser,
             limitPerPromo: data.limitPerPromo,
-            termsAndCondition: data.termsAndCondition,
+            termsAndCondition: marked(data.termsAndCondition),
             triggerCriteria: data.triggerCriteria,
             webImage: data.webImage,
             mobileImage: data.mobileImage,
@@ -273,10 +278,25 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
 
                     {/* TRIGGER FIELDS */}
                     {campaign.campaignType === campaignCodes.PROMO ? (
-                        <Grid container spacing={2}>
-                            <Grid marginTop={3} marginBottom={2} item xs={12}>
+                        <Grid item xs={12}>
+                            {/* <Grid marginTop={3} marginBottom={2} item xs={12}>
                                 <Typography variant="h6">Trigger</Typography>
+                            </Grid> */}
+
+                            <Grid marginTop={3} marginBottom={2} display="flex">
+                                <Grid item xs={12}>
+                                    <Typography variant="h6">Trigger</Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6} lg={3}>
+                                    <FormSelect
+                                        options={campaignTriggerCriteriaOptions}
+                                        name="triggerCriteria"
+                                        label="Trigger Criteria"
+                                        required
+                                    />
+                                </Grid>
                             </Grid>
+
                             {triggerFields.map((field, index) => {
                                 const attributeType = watch(`trigger.${index}.attribute`);
 
@@ -315,7 +335,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                                                 <Grid item xs={12} md={6} lg={3}>
                                                     <FormSelect
                                                         name={`trigger.${index}.criteria`}
-                                                        options={triggerAttributeTypesOptions}
+                                                        options={triggerAttributeTypesOptionsDisabled}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} md={6} lg={3}>
@@ -494,14 +514,6 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                             <Grid item xs={12}>
                                 <Typography variant="h6">Reward Configuration </Typography>
                             </Grid>
-                            <Grid item xs={12} md={6} lg={3}>
-                                <FormSelect
-                                    options={campaignTriggerCriteriaOptions}
-                                    name="triggerCriteria"
-                                    label="Trigger Criteria"
-                                    required
-                                />
-                            </Grid>
                         </Grid>
                         <Table>
                             <TableHead>
@@ -638,7 +650,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                         </Grid>
 
                         <Grid item xs={12} md={4} lg={4}>
-                            <FormTextField type="number" name="limitPerUser" label="Limit Per Use" />
+                            <FormTextField type="number" name="limitPerUser" label="Limit Per User" />
                         </Grid>
 
                         <Grid item xs={12} md={4} lg={4}>

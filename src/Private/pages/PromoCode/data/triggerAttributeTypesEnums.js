@@ -15,3 +15,11 @@ export const triggerAttributeTypesOptions = [
     { label: "Less Than", value: triggerAttributeTypes.LESS_THAN },
     { label: "Between", value: triggerAttributeTypes.BETWEEN },
 ];
+
+export const triggerAttributeTypesOptionsDisabled = [
+    { label: "Greater Than", value: triggerAttributeTypes.GREATER_THAN },
+    { label: "Greater Than Equal To", value: triggerAttributeTypes.GREATER_THAN_EQUAL_TO },
+    { label: "Less Than Equal To", value: triggerAttributeTypes.LESS_THAN_EQUAL_TO },
+    { label: "Less Than", value: triggerAttributeTypes.LESS_THAN },
+    { label: "Between", value: triggerAttributeTypes.BETWEEN },
+];
