@@ -1,3 +1,4 @@
+import { marked } from "marked";
 import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -6,16 +7,19 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import TableBody from "@mui/material/TableBody";
+import { useNavigate } from "react-router-dom";
 import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 
 import isEmpty from "App/helpers/isEmpty";
+import routePaths from "Private/config/routePaths";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextArea from "App/core/hook-form/FormTextArea";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -24,6 +28,7 @@ import CancelButton from "App/components/Button/CancelButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import { rewardOnEnums, rewardOnOptions } from "./data/rewardOnEnums";
 import FormDateTimePicker from "App/core/hook-form/FormDateTimePicker";
+import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
 
 import { rewardTypeOptions } from "./data/rewardTypeEnums";
 import { campaignStatusOptions } from "./data/campaignStatus";
@@ -37,9 +42,6 @@ import {
     triggerAttributeTypesOptions,
     triggerAttributeTypesOptionsDisabled,
 } from "./data/triggerAttributeTypesEnums";
-import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
-import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
-import { marked } from "marked";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -52,6 +54,8 @@ const CellContainer = styled(Box)(() => ({
 
 export default function PromoCodeForm({ isLoading, handleSubmit }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { response } = useSelector((state) => state.get_countries);
 
     const { response: getAttributeFamilyList } = useSelector((state) => state.get_attribute_family_list);
@@ -73,6 +77,8 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
     }, [dispatch]);
 
     const countryData = response?.data?.map((c) => ({ value: c.iso3, label: c.country }));
+
+    const countryCurrency = response?.data?.map((c) => ({ value: c.currency, label: c.country }));
 
     const methods = useForm({
         defaultValues: {
@@ -340,7 +346,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                                                 </Grid>
                                                 <Grid item xs={12} md={6} lg={3}>
                                                     <FormTextField
-                                                        label="Amount"
+                                                        label="Count"
                                                         type="number"
                                                         name={`trigger.${index}.amount`}
                                                     />
@@ -355,13 +361,14 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                                                 <Grid item xs={12} md={6} lg={3}>
                                                     <FormSelect
                                                         name={`trigger.${index}.criteria`}
-                                                        options={triggerAttributeTypesOptions}
+                                                        options={triggerAttributeTypesOptionsDisabled}
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} md={6} lg={3}>
-                                                    <FormTextField
+                                                    <FormSelect
                                                         label="Currency"
                                                         placeholder="Currency"
+                                                        options={countryCurrency}
                                                         name={`trigger.${index}.currency`}
                                                     />
                                                 </Grid>
@@ -659,28 +666,40 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                     </Grid>
 
                     <Grid container spacing={2} marginY={2}>
-                        <Grid item xs={12} md={12} lg={8}>
-                            <FormTextArea name="termsAndCondition" label="Terms and Conditions" required />
+                        <Grid item xs={12} md={6} lg={6}>
+                            <FormTextArea name="description" label="Description" />
                         </Grid>
 
-                        <Grid item xs={12} md={12} lg={4}>
+                        <Grid
+                            sx={{
+                                display: "flex",
+                                textAlign: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                            item
+                            xs={12}
+                            md={6}
+                            lg={6}
+                        >
                             <Grid container spacing={2} direction="column">
                                 <Grid item>
-                                    <FormTextField name="webImage" label="Web Image" type="Web Image" />
+                                    <FormTextField name="webImage" label="Web Image" type="text" />
                                 </Grid>
                                 <Grid item>
-                                    <FormTextField name="mobileImage" label="Mobile Image" type="Mobile Image" />
-                                </Grid>
-                                <Grid item>
-                                    <FormTextField name="description" label="Description" />
+                                    <FormTextField name="mobileImage" label="Mobile Image" type="text" />
                                 </Grid>
                             </Grid>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <FormTextArea name="termsAndCondition" label="Terms and Conditions" required />
                         </Grid>
                     </Grid>
 
                     <Grid item xs={12}>
                         <ButtonWrapper>
-                            <CancelButton>Cancel</CancelButton>
+                            <CancelButton onClick={() => navigate(routePaths.ListPromoCode)}>Cancel</CancelButton>
                             <SubmitButton type="submit" disabled={isLoading}>
                                 Submit
                             </SubmitButton>

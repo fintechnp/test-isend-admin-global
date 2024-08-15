@@ -28,8 +28,23 @@ const AddPromoCode = () => {
     }, [isSuccess]);
 
     return (
-        <PageContent>
-            <PageContentContainer title="Add Promo Code">
+        <PageContent
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "List Campaign",
+                    link: routePaths.ListPromoCode,
+                },
+
+                {
+                    label: "Add Campaign",
+                },
+            ]}
+            documentTitle="Add Campaign"
+        >
+            <PageContentContainer title="Add Campaign">
                 <PromoCodeForm isLoading={isLoading} handleSubmit={handleSubmit} />
             </PageContentContainer>
         </PageContent>
