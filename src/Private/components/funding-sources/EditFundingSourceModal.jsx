@@ -27,9 +27,10 @@ export default function EditFundingSourceModal() {
     return (
         <Modal open={isOpen} onClose={handleClose} title="Edit Funding Source">
             <FundingSourceForm
-                initialValues={{
+                defaultValues={{
                     payment_name: initialFormState?.payment_name,
                     payment_value: initialFormState?.payment_value,
+                    funding_source_type: initialFormState?.funding_source_type,
                     country: initialFormState?.country,
                     currency: initialFormState?.currency,
                     description: initialFormState?.description,

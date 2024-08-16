@@ -1,117 +1,115 @@
-import React from "react";
+import * as Yup from "yup";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
-import { useDispatch } from "react-redux";
-import { Field, Form, reduxForm, change } from "redux-form";
+import React, { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import TextField from "App/components/Fields/TextField";
-import SelectField from "App/components/Fields/SelectField";
-
-import Validator from "App/utils/validators";
+import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
+import FormCheckbox from "App/core/hook-form/FormCheckbox";
+import FormTextField from "App/core/hook-form/FormTextField";
 import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
-import ModalGridFormContainer from "App/components/Container/ModalGridFormContainer";
-import CheckboxField from "App/components/Fields/CheckboxField";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
 
-const FundingSourceForm = ({ handleSubmit, isAddMode, isProcessing, onCancel }) => {
-    const country = JSON.parse(localStorage.getItem("country"));
+const schema = Yup.object().shape({
+    payment_name: Yup.string().required("Payment name is required").max(100, "Must be 100 characters or less"),
+    payment_value: Yup.string().required("Payment Value is required").max(50, "Must be 50 characters or less"),
+    funding_source_type: Yup.string().required("Funding Source Type is required"),
+    country: Yup.string().required("Country is required"),
+    currency: Yup.string(),
+    description: Yup.string().required("Description is required").max(50, "Must be 50 characters or less"),
+});
 
-    const dispatch = useDispatch();
+const FundingSourceType = [
+    {
+        label: "Individual",
+        value: "individual",
+    },
+    {
+        label: "Business",
+        value: "business",
+    },
+    {
+        label: "Both",
+        value: "both",
+    },
+];
 
-    const handleChangeCountry = (e) => {
-        const value = e.target.value;
-        const selectedCountry = country?.filter((c) => c?.iso3 === value)?.[0];
-        const currency = selectedCountry ? selectedCountry?.currency : "";
-        dispatch(change(isAddMode ? "add_funding_source_form" : "edit_funding_source_form", "currency", currency));
+const FundingSourceForm = ({ onSubmit, isAddMode, isProcessing, onCancel, defaultValues }) => {
+    const methods = useForm({
+        defaultValues,
+        resolver: yupResolver(schema),
+    });
+
+    const { setValue, control } = methods;
+    const [isDisabled, setIsDisabled] = useState(true);
+    const watchedValues = useWatch({ control });
+
+    const handleChangeCountry = (selectedCountry) => {
+        setValue("currency", selectedCountry.currency);
     };
 
+    useEffect(() => {
+        // Check if any field other than "funding_source_type" has changed
+        const isChanged = Object.keys(watchedValues).some(
+            (key) => key !== "funding_source_type" && watchedValues[key] !== defaultValues[key],
+        );
+        setIsDisabled(!isChanged);
+    }, [watchedValues, defaultValues]);
+
     return (
-        <Form onSubmit={handleSubmit}>
-            <ModalGridFormContainer>
+        <HookForm onSubmit={methods.handleSubmit(onSubmit)} {...methods}>
+            <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                    <Field
-                        name="payment_name"
-                        label="Payment Name"
-                        type="text"
-                        small={12}
-                        component={TextField}
-                        validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength100]}
+                    <FormTextField name="payment_name" label="Payment Name" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormTextField name="payment_value" label="Payment Value" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormSelect
+                        name="funding_source_type"
+                        options={FundingSourceType}
+                        label="Funding Source Type"
+                        disabled={isDisabled}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Field
-                        name="payment_value"
-                        label="Payment Value"
-                        type="text"
-                        small={12}
-                        component={TextField}
-                        validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
-                    />
+                    <FormSelectCountry name="country" label="Country" onSelected={handleChangeCountry} />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Field
-                        name="country"
-                        label="Country"
-                        type="number"
-                        small={12}
-                        component={SelectField}
-                        validate={[Validator.emptyValidator, Validator.minValue1]}
-                        disabled={!isAddMode}
-                        onChange={handleChangeCountry}
-                    >
-                        <option value="" disabled>
-                            Select Country
-                        </option>
-                        {country &&
-                            country.map((data) => (
-                                <option value={data.iso3} key={data.tid}>
-                                    {data.country}
-                                </option>
-                            ))}
-                    </Field>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Field name="currency" label="Currency" type="text" small={12} component={TextField} disabled />
+                    <FormTextField name="currency" label="Currency" disabled />
                 </Grid>
                 <Grid item xs={12}>
-                    <Field
-                        name="description"
-                        label="Description"
-                        type="text"
-                        small={12}
-                        component={TextField}
-                        validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
-                    />
+                    <FormTextField name="description" label="Description" />
                 </Grid>
-                {!isAddMode && (
-                    <Grid item xs={12}>
-                        <Field
-                            name="is_active"
-                            label="Active"
-                            small={12}
-                            reverse="row-reverse"
-                            component={CheckboxField}
-                        />
-                    </Grid>
-                )}
                 <Grid item xs={12}>
                     <ButtonWrapper>
                         <CancelButton onClick={onCancel} disabled={isProcessing}>
                             Cancel
                         </CancelButton>
-                        <SubmitButton isLoading={isProcessing} isAddMode={isAddMode} />
+                        <SubmitButton
+                            type="submit"
+                            isLoading={isProcessing}
+                            isAddMode={isAddMode}
+                            disabled={isDisabled}
+                        />
                     </ButtonWrapper>
                 </Grid>
-            </ModalGridFormContainer>
-        </Form>
+            </Grid>
+        </HookForm>
     );
 };
 
-export default React.memo(reduxForm({ form: ["form"] })(FundingSourceForm));
+export default FundingSourceForm;
 
 FundingSourceForm.propTypes = {
+    onSubmit: PropTypes.func,
     isAddMode: PropTypes.bool,
     onCancel: PropTypes.func,
     isProcessing: PropTypes.bool,
+    defaultValues: PropTypes.object,
 };
