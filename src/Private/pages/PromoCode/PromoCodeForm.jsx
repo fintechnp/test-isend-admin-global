@@ -30,6 +30,11 @@ import { rewardOnEnums, rewardOnOptions } from "./data/rewardOnEnums";
 import FormDateTimePicker from "App/core/hook-form/FormDateTimePicker";
 import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
 
+import {
+    triggerAttributeTypes,
+    triggerAttributeTypesOptions,
+    triggerAttributeTypesOptionsDisabled,
+} from "./data/triggerAttributeTypesEnums";
 import { rewardTypeOptions } from "./data/rewardTypeEnums";
 import { campaignStatusOptions } from "./data/campaignStatus";
 import { campaignEventTypes } from "./data/campaignEventTypesEnums";
@@ -37,11 +42,6 @@ import countryActions from "Private/features/countries/countryActions";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
-import {
-    triggerAttributeTypes,
-    triggerAttributeTypesOptions,
-    triggerAttributeTypesOptionsDisabled,
-} from "./data/triggerAttributeTypesEnums";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -78,7 +78,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
 
     const countryData = response?.data?.map((c) => ({ value: c.iso3, label: c.country }));
 
-    const countryCurrency = response?.data?.map((c) => ({ value: c.currency, label: c.country }));
+    const countryCurrency = response?.data?.map((c) => ({ value: c.currency, label: c.currency }));
 
     const methods = useForm({
         defaultValues: {

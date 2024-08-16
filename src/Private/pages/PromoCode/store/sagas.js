@@ -42,8 +42,6 @@ const addPromoCode = takeEvery(actions.ADD_PROMO_CODE, function* (action) {
     try {
         const res = yield call(api.post, buildRoute(apiEndpoints.CreatePromoCode), action.data);
 
-        console.log("The response is", res);
-
         yield put({
             type: actions.ADD_PROMO_CODE_SUCCESS,
             response: res,

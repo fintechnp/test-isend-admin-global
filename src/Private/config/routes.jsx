@@ -189,7 +189,6 @@ import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
 import ListOdfiWebhooks from "Private/pages/AchWebhooks/ListOdfiWebhooks";
 import ListNocWebhooks from "Private/pages/AchWebhooks/ListNocWebhooks";
 
-
 import AddPromoCode from "Private/pages/PromoCode/AddPromoCode";
 import ListPromoCode from "Private/pages/PromoCode/ListPromoCode";
 import ViewPromoCode from "Private/pages/PromoCode/ViewPromoCode";
@@ -198,6 +197,7 @@ import ViewReferralReport from "Private/pages/Reports/Referral/ViewReferralRepor
 import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
 import ListCampaignReportTab from "Private/pages/Reports/CampaignReport/ListCampaignReportTab";
 import ListCampaignLedgerReport from "Private/pages/Reports/CampaignReport/ListCampaignLedgerReport";
+import ListCampaignUsageReport from "Private/pages/Reports/CampaignReport/ListCampaignUsageReport";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -515,6 +515,10 @@ const privateRoutes = [
     {
         path: routePaths.ListCampaignLedgerReport,
         component: <ListCampaignLedgerReport />,
+    },
+    {
+        path: routePaths.ListCampaignUsageReport,
+        component: <ListCampaignUsageReport />,
     },
 
     //PaymentProcess

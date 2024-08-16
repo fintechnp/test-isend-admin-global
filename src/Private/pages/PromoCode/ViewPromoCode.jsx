@@ -3,15 +3,18 @@ import { styled } from "@mui/styles";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-import { useParams } from "react-router-dom";
 import { CardActionArea } from "@mui/material";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import Modal from "App/components/Modal/Modal";
+import buildRoute from "App/helpers/buildRoute";
+import Clipboard from "App/components/Clipboard/Clipboard";
 import PageContent from "App/components/Container/PageContent";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
@@ -37,25 +40,31 @@ const ResponsiveBox = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyleImageWrapper = styled(Grid)(({ theme }) => ({
+    maxHeight: "100%",
+    minWidth: "20rem",
+    overflowY: "auto",
+    textAlign: "left",
+    [theme.breakpoints.up("md")]: {
+        marginLeft: theme.spacing(2),
+    },
+    [theme.breakpoints.down("sm")]: {
+        marginLeft: 0,
+    },
+}));
+
 export default function ViewPromoCode() {
     const dispatch = useDispatch();
     const { id } = useParams();
 
+    const navigate = useNavigate();
+
     const [open, setOpen] = useState(false);
-
-    const [imageOpen, setImageOpen] = useState(false);
-
     const toggleButton = () => !setOpen(true);
-
-    const toggleImageButton = () => !setImageOpen(true);
-
-    const handleImageClose = () => setImageOpen(false);
 
     const handleClose = () => setOpen(false);
 
     const { response, loading } = useSelector((state) => state.get_promo_code_by_id);
-
-    const { response: PromoCodeUsage } = useSelector((state) => state.get_promo_code_Usage);
 
     const termsAndConditionInformation = response?.data?.termsAndCondition;
 
@@ -73,14 +82,13 @@ export default function ViewPromoCode() {
         dispatch(promoCodeActions.get_promo_code_by_id(id));
     }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(promoCodeActions.get_promo_code_usage(id));
-    }, [dispatch]);
-
     const data = response?.data;
 
-    const promoCodeData = response?.data?.promoCodeThresholds;
-    const attributeFamilyCampaignsData = response?.data?.attributeFamilyCampaigns;
+    const promoCodeData = data?.promoCodeThresholds || [];
+
+    const attributeFamilyData = data?.attributeFamilyCampaigns || [];
+
+    const promoCodeId = data?.id;
 
     const onSubmit = (data) => {
         dispatch(promoCodeActions.add_promo_code_budget(data));
@@ -96,6 +104,26 @@ export default function ViewPromoCode() {
         }
     }, [dispatch, isSuccess]);
 
+    const PromoImages = [
+        {
+            label: "Mobile Image",
+            src: mobileImage,
+            height: 200,
+        },
+        {
+            label: "Web Image",
+            src: webImage,
+            height: 100,
+        },
+        {
+            label: "",
+            src: null,
+            height: 100,
+        },
+    ];
+
+    const filteredPromoImages = PromoImages.filter((image) => !isEmpty(image.src) && !isEmpty(image.label));
+
     const CampaignDefinition = useSourceDetail([
         {
             title: "Campaign Information",
@@ -103,10 +131,26 @@ export default function ViewPromoCode() {
                 {
                     label: "Campaign Name",
                     accessorKey: "campaignName",
+                    cell: (data) => (
+                        <>
+                            <Clipboard
+                                label={<Typography fontWeight={600}>{data.campaignName}</Typography>}
+                                content={data?.campaignName}
+                            />
+                        </>
+                    ),
                 },
                 {
                     label: "Campaign Code",
                     accessorKey: "campaignCode",
+                    cell: (data) => (
+                        <>
+                            <Clipboard
+                                label={<Typography fontWeight={600}>{data.campaignCode}</Typography>}
+                                content={data?.campaignCode}
+                            />
+                        </>
+                    ),
                 },
                 {
                     label: "Campaign Type",
@@ -116,24 +160,24 @@ export default function ViewPromoCode() {
                     label: "Status",
                     accessorKey: "statusName",
                 },
+                {
+                    label: "Campaign Start Date",
+                    accessorKey: "startDate",
+                    cell: (data) => (data.startDate ? dateUtils.getLocalDateTimeFromUTC(data.startDate) : "-"),
+                },
+                {
+                    label: "Campaign End Date",
+                    accessorKey: "endDate",
+                    cell: (data) => (data.endDate ? dateUtils.getLocalDateTimeFromUTC(data.endDate) : "-"),
+                },
             ],
         },
     ]);
 
     const CampaignBudgetDefinition = useSourceDetail([
         {
-            title: "Campaign Budget",
+            title: "Budget and Limits",
             items: [
-                {
-                    label: "Start Date and Time",
-                    accessorKey: "startDate",
-                    cell: (data) => (data.startDate ? dateUtils.getLocalDateTimeFromUTC(data.startDate) : "-"),
-                },
-                {
-                    label: "End Date and Time",
-                    accessorKey: "endDate",
-                    cell: (data) => (data.endDate ? dateUtils.getLocalDateTimeFromUTC(data.endDate) : "-"),
-                },
                 {
                     label: "Budget",
                     accessorKey: "budget",
@@ -148,89 +192,58 @@ export default function ViewPromoCode() {
 
     const columns = useMemo(() => [
         {
-            label: "ID",
-            accessorKey: "id",
+            header: "SN",
+            accessorKey: "f_serial_no",
+            cell: (info) => info.row.index + 1,
         },
         {
-            label: "Minimum Amount",
+            header: "Minimum Amount",
             accessorKey: "minimumAmount",
         },
         {
-            label: "Maximum Amount",
+            header: "Maximum Amount",
             accessorKey: "maximumAmount",
         },
         {
-            label: "Reward Type",
-            accessorKey: "rewardType",
+            header: "Reward Type",
+            accessorKey: "rewardTypeName",
         },
         {
-            label: "Reward On",
-            accessorKey: "rewardOn",
-        },
-        {
-            label: "Reward On Name",
+            header: "Reward On",
             accessorKey: "rewardOnName",
         },
         {
-            label: "Reward Value",
+            header: "Reward Value",
             accessorKey: "rewardValue",
         },
         {
-            label: "Limit",
+            header: "Limit",
             accessorKey: "limit",
         },
     ]);
 
-    const PromoCodeDefinition = useSourceDetail([
+    const Attributecolumns = useMemo(() => [
         {
-            title: "Campaign Information",
-            items: [
-                {
-                    label: "ID",
-                    accessorKey: "id",
-                },
-                {
-                    label: "Minimum Amount",
-                    accessorKey: "minimumAmount",
-                },
-                {
-                    label: "Maximum Amount",
-                    accessorKey: "maximumAmount",
-                },
-                {
-                    label: "Reward Type",
-                    accessorKey: "rewardType",
-                },
-                {
-                    label: "Reward On",
-                    accessorKey: "rewardOn",
-                },
-                {
-                    label: "Reward On Name",
-                    accessorKey: "rewardOnName",
-                },
-                {
-                    label: "Reward Value",
-                    accessorKey: "rewardValue",
-                },
-                {
-                    label: "Limit",
-                    accessorKey: "limit",
-                },
-            ],
+            header: "SN",
+            accessorKey: "f_serial_no",
+            cell: (info) => info.row.index + 1,
         },
-    ]);
-
-    const AttributeFamilyCampaignsDefinition = useSourceDetail([
         {
-            title: "Attribute Family Campaigns",
-            items: [
-                { label: "Attribute Family Name", accessorKey: "attributeFamilyName" },
-                { label: "Criteria", accessorKey: "criteria" },
-                { label: "Criteria Name", accessorKey: "criteriaName" },
-                { label: "Currency", accessorKey: "currency" },
-                { label: "Amount", accessorKey: "amount" },
-            ],
+            header: "Attribute",
+            accessorKey: "attributeFamilyName",
+        },
+        {
+            header: "Criteria",
+            accessorKey: "criteriaName",
+        },
+        {
+            header: "Currency",
+            accessorKey: "currency",
+            cell: (data) => (data.currency ? data.currency : "N/A"),
+        },
+        {
+            header: "Amount",
+            accessorKey: "amount",
         },
     ]);
 
@@ -238,15 +251,21 @@ export default function ViewPromoCode() {
         {
             title: "Additional Campaign Information",
             items: [
-                { label: "Attribute Family", accessorKey: "attributeFamily" },
                 { label: "Limit Per User", accessorKey: "limitPerUser" },
                 { label: "Limit Per Campaign", accessorKey: "limitPerCampaign" },
                 ,
-                { label: "Display Mechanism", accessorKey: "displayMechanism" },
-                { label: "Display Mechanism Name", accessorKey: "displayMechanismName" },
-                { label: "Promo Code Criteria", accessorKey: "promoCodeCriteria" },
-                { label: "Created Timestamp", accessorKey: "createdTs" },
-                { label: "Updated Timestamp", accessorKey: "updatedTs" },
+                { label: "Display Mechanism", accessorKey: "displayMechanismName" },
+                { label: "Promo Code Criteria", accessorKey: "promoCodeCriteriaName" },
+                {
+                    label: "Created Time",
+                    accessorKey: "createdTs",
+                    cell: (data) => (data.createdTs ? dateUtils.getLocalDateTimeFromUTC(data.createdTs) : "-"),
+                },
+                {
+                    label: "Updated Time",
+                    accessorKey: "updatedTs",
+                    cell: (data) => (data.updatedTs ? dateUtils.getLocalDateTimeFromUTC(data.updatedTs) : "-"),
+                },
             ],
         },
     ]);
@@ -264,20 +283,7 @@ export default function ViewPromoCode() {
                 },
             ]}
         >
-            <PageContentContainer
-                topRightContent={
-                    <Button
-                        onClick={() => {
-                            dispatch(promoCodeActions.open_update_promo_code_budget_modal(data));
-                        }}
-                        variant="contained"
-                        color="primary"
-                    >
-                        Add Budget
-                    </Button>
-                }
-                title="View Promo Code"
-            >
+            <PageContentContainer title="View Promo Code">
                 <ResponsiveBox
                     sx={{
                         display: "flex",
@@ -297,31 +303,35 @@ export default function ViewPromoCode() {
                         </Grid>
 
                         <Grid item xs={12} md={6}>
-                            <Wrapper>
+                            <Wrapper
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                }}
+                            >
                                 <SourceDetails
                                     viewMode="column"
                                     rowMode="row"
                                     definition={CampaignBudgetDefinition}
                                     data={data}
                                 />
+
+                                <Box alignItems="flex-end">
+                                    <Button
+                                        onClick={() => {
+                                            dispatch(promoCodeActions.open_update_promo_code_budget_modal(data));
+                                        }}
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        Add Budget
+                                    </Button>
+                                </Box>
                             </Wrapper>
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
-                            <Wrapper>
-                                {attributeFamilyCampaignsData?.map((campaign) => (
-                                    <SourceDetails
-                                        viewMode="column"
-                                        rowMode="row"
-                                        key={campaign?.id}
-                                        definition={AttributeFamilyCampaignsDefinition}
-                                        data={campaign}
-                                    />
-                                ))}
-                            </Wrapper>
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={12}>
                             <Wrapper>
                                 <SourceDetails
                                     viewMode="column"
@@ -344,13 +354,69 @@ export default function ViewPromoCode() {
                         />
 
                         <Grid item>
-                            {promoCodeData?.map((threshold) => (
-                                // <SourceDetails key={threshold?.id} definition={PromoCodeDefinition} data={threshold} />
+                            <Typography marginBottom={2} variant="h6">
+                                Criteria for Eligibility
+                            </Typography>
 
-                                <TanstackReactTable key={threshold?.id} columns={columns} data={threshold} />
-                            ))}
+                            {attributeFamilyData.length > 0 &&
+                                attributeFamilyData.map((attribute, index) => (
+                                    <TanstackReactTable
+                                        key={attribute.id || index}
+                                        id={`attribute-family-table-${attribute.id || index}`}
+                                        columns={Attributecolumns}
+                                        data={[attribute]}
+                                    />
+                                ))}
+                        </Grid>
+
+                        <Grid item>
+                            <Typography marginBottom={2} variant="h6">
+                                Discount Details
+                            </Typography>
+                            {promoCodeData.length > 0 &&
+                                promoCodeData.map((promo, index) => (
+                                    <TanstackReactTable
+                                        key={promo.id || index}
+                                        id={`promo-code-table-${promo.id || index}`}
+                                        columns={columns}
+                                        data={[promo]}
+                                    />
+                                ))}
                         </Grid>
                     </Grid>
+
+                    <StyleImageWrapper>
+                        <Wrapper>
+                            <Typography variant="h6">Campaign Images</Typography>
+
+                            <Box display="flex" flexDirection="column" gap={1}>
+                                {filteredPromoImages.length > 0 ? (
+                                    filteredPromoImages.map((image, index) => (
+                                        <Card key={index}>
+                                            <CardActionArea>
+                                                <Typography variant="body2" sx={{ p: 1 }}>
+                                                    {image.label}
+                                                </Typography>
+                                                <CardMedia
+                                                    sx={{
+                                                        objectFit: "contain",
+                                                        height: image.height,
+                                                    }}
+                                                    component="img"
+                                                    image={image.src}
+                                                    alt={image.label}
+                                                />
+                                            </CardActionArea>
+                                        </Card>
+                                    ))
+                                ) : (
+                                    <Typography alignItems="center" textAlign="center">
+                                        No images available
+                                    </Typography>
+                                )}
+                            </Box>
+                        </Wrapper>
+                    </StyleImageWrapper>
                 </ResponsiveBox>
 
                 <Grid item xs={12} gap={"10px"} display={"flex"}>
@@ -358,64 +424,19 @@ export default function ViewPromoCode() {
                         Terms & Conditions
                     </Button>
 
-                    <Button onClick={toggleImageButton} size="medium" variant="outlined" disableElevation disableRipple>
-                        View Promo Images
+                    <Button
+                        onClick={() => navigate(buildRoute(routePaths.ListCampaignUsageReport, promoCodeId))}
+                        size="medium"
+                        variant="outlined"
+                        disableElevation
+                        disableRipple
+                    >
+                        View Usage Report
                     </Button>
                 </Grid>
 
                 <Modal title=" " open={open} onClose={handleClose}>
                     <Box component="span" dangerouslySetInnerHTML={{ __html: termsAndConditionInformation }} />
-                </Modal>
-
-                <Modal
-                    sx={{
-                        width: "400px",
-                    }}
-                    open={imageOpen}
-                    title="Promo Images"
-                    onClose={handleImageClose}
-                >
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap={2} // Gap between Card items
-                    >
-                        <Card>
-                            <CardActionArea>
-                                <Typography>Mobile Image</Typography>
-                                <CardMedia
-                                    sx={{
-                                        objectFit: "contain",
-                                    }}
-                                    component="img"
-                                    height="450"
-                                    image={mobileImage}
-                                    alt="Mobile Image"
-                                />
-                            </CardActionArea>
-                        </Card>
-
-                        <Card>
-                            <CardActionArea>
-                                <Typography>Web Image</Typography>
-                                <CardMedia
-                                    sx={{
-                                        objectFit: "contain",
-                                    }}
-                                    component="img"
-                                    height="140"
-                                    image={webImage}
-                                    alt="Web Image"
-                                />
-                            </CardActionArea>
-                        </Card>
-
-                        <Box display="flex" justifyContent="flex-end">
-                            <Button variant="outlined" color="primary" onClick={handleImageClose}>
-                                Close
-                            </Button>
-                        </Box>
-                    </Box>
                 </Modal>
             </PageContentContainer>
         </PageContent>

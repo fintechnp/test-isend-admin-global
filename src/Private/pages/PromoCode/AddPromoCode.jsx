@@ -14,7 +14,6 @@ const AddPromoCode = () => {
     const navigate = useNavigate();
 
     const handleSubmit = (data) => {
-        console.log(data);
         dispatch(promoCodeActions.add_promo_code(data));
     };
 

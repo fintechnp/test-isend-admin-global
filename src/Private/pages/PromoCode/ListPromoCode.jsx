@@ -32,20 +32,22 @@ const ListPromoCode = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const confirm = useConfirm();
-    const methods = useListFilterStore({ initialState });
+    // const methods = useListFilterStore({ initialState });
 
     const {
         isFilterOpen,
-        closeFilter,
         openFilter,
+        closeFilter,
         filterSchema,
-        onDeleteFilterParams,
+        onQuickFilter,
+        onRowsPerPageChange,
         onFilterSubmit,
         onPageChange,
-        onRowsPerPageChange,
+        onDeleteFilterParams,
         reset,
-    } = methods;
-
+    } = useListFilterStore({
+        initialState,
+    });
     const { response: promoCodes, loading: isLoading } = useSelector((state) => state.get_promo_codes);
 
     const { success: isStatusSuccess, loading } = useSelector((state) => state.update_promo_code_status);
@@ -144,8 +146,6 @@ const ListPromoCode = () => {
                                     View Campaign
                                 </ListItemButton>
 
-                                <ListItemButton>Edit Campaign</ListItemButton>
-
                                 <ListItemButton
                                     onClick={() => hangleToggleStatus(row.original.id, row.original.status, onClose())}
                                 >
@@ -221,7 +221,7 @@ const ListPromoCode = () => {
                         </>
                     }
                 >
-                    <TanstackReactTable columns={columns} data={data} />
+                    <TanstackReactTable columns={columns} data={data} loading={isLoading} />
                 </PageContentContainer>
             </Column>
 

@@ -11,5 +11,6 @@ export { default as getReferralReportByIdReducer } from "./reducers/getReferralR
 export { default as getCampaignReportsReducer } from "./reducers/getCampaignReportsReducer";
 export { default as getCampaignReportDetailsReducer } from "./reducers/getCampaignReportDetailsReducer";
 export { default as getCampaignLedgerReportsReducer } from "./reducers/getCampaignLedgerReportsReducer";
+export { default as getCampaignUsageReportReducer } from "./reducers/getCampaignUsageReportReducer";
 
 export { default as ReportsAction } from "./actions";

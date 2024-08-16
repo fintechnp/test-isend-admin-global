@@ -189,6 +189,7 @@ const routePaths = {
 
     ListCampaignReportTab: "/report/campaign",
     ListCampaignLedgerReport: "/report/campaign/ledger/:id",
+    ListCampaignUsageReport: "/report/campaign/usage/:id",
 };
 
 export default routePaths;

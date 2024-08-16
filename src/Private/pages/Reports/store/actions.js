@@ -84,6 +84,11 @@ const actions = {
     CAMPAIGN_REPORT_DETAILS_FAILED: "CAMPAIGN_REPORT_DETAILS_FAILED",
     CAMPAIGN_REPORT_DETAILS_RESET: "CAMPAIGN_REPORT_DETAILS_RESET",
 
+    GET_PROMO_CODE_USAGE_REPORT: "GET_PROMO_CODE_USAGE_REPORT",
+    GET_PROMO_CODE_USAGE_REPORT_SUCCESS: "GET_PROMO_CODE_USAGE_REPORT_SUCCESS",
+    GET_PROMO_CODE_USAGE_REPORT_FAILED: "GET_PROMO_CODE_USAGE_REPORT_FAILED",
+    GET_PROMO_CODE_USAGE_REPORT_RESET: "GET_PROMO_CODE_USAGE_REPORT_RESET",
+
     //FETCH
 
     // ListCampaignReportDetails
@@ -95,6 +100,11 @@ const actions = {
 
     get_campaign_ledger_report: (query) => ({
         type: actions.CAMPAIGN_LEDGER_REPORT,
+        query,
+    }),
+
+    get_promo_code_usage_report: (query) => ({
+        type: actions.GET_PROMO_CODE_USAGE_REPORT,
         query,
     }),
 

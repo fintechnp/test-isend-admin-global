@@ -293,6 +293,7 @@ import {
     getCampaignReportsReducer,
     getCampaignReportDetailsReducer,
     getCampaignLedgerReportsReducer,
+    getCampaignUsageReportReducer,
 } from "./pages/Reports/store";
 
 //Utilities
@@ -612,7 +613,7 @@ import {
     GetAchReturnWebhooksReducer,
     ReturnAchRdfiTransactionReducer,
     GetAchOdfiWebhooksReducer,
-    GetAchNocWebhooksReducer
+    GetAchNocWebhooksReducer,
 } from "./pages/AchWebhooks/store";
 import {
     CreateHelpCenterReducer,
@@ -877,6 +878,7 @@ export const privateReducer = {
     get_campaign_reports: getCampaignReportsReducer,
     get_campaign_report_details: getCampaignReportDetailsReducer,
     get_campaign_ledger_report: getCampaignLedgerReportsReducer,
+    get_campaign_code_report_usage: getCampaignUsageReportReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

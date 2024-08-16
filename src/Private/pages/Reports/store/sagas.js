@@ -259,6 +259,21 @@ export const getCampaignLedgerReport = takeEvery(actions.CAMPAIGN_LEDGER_REPORT,
     }
 });
 
+export const getCampaignCodeUsageReport = takeEvery(actions.GET_PROMO_CODE_USAGE_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.ListPromoCodeUsage), action.query);
+        yield put({
+            type: actions.GET_PROMO_CODE_USAGE_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_PROMO_CODE_USAGE_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export const getReferralReportById = takeEvery(actions.REFERRAL_REPORT_BY_ID, function* (action) {
     try {
         const res = yield call(api.get, buildRoute(apiEndpoints.GetReferralReportById, action.id));
@@ -294,5 +309,6 @@ export default function* saga() {
         getCampaignReport,
         getCampaignReportDetails,
         getCampaignLedgerReport,
+        getCampaignCodeUsageReport,
     ]);
 }

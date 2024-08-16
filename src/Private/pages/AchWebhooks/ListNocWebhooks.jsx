@@ -1,4 +1,4 @@
-import * as Yup from 'yup'
+import * as Yup from "yup";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,15 +11,16 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { isAfter } from 'date-fns';
-import isEmpty from 'App/helpers/isEmpty';
+import { isAfter } from "date-fns";
+import isEmpty from "App/helpers/isEmpty";
 import { achWebhookActions } from "./store";
-import dateUtils from 'App/utils/dateUtils';
+import dateUtils from "App/utils/dateUtils";
 
 const schema = Yup.object().shape({
     received_date_from: Yup.string().nullable().optional(),
     received_date_to: Yup.string()
-        .nullable().optional()
+        .nullable()
+        .optional()
         .when("received_date_from", {
             is: (value) => !isEmpty(value),
             then: (schema) =>
@@ -37,13 +38,13 @@ const schema = Yup.object().shape({
 
 const initialState = {
     page_number: 1,
-    page_size: 10
-}
+    page_size: 10,
+};
 
 export default function ListNocWebhooks() {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    const { response: nocWebhooks, loading } = useSelector((state) => state.get_ach_noc_webhooks)
+    const { response: nocWebhooks, loading } = useSelector((state) => state.get_ach_noc_webhooks);
 
     const {
         isFilterOpen,
@@ -55,40 +56,40 @@ export default function ListNocWebhooks() {
         onPageChange,
         onRowsPerPageChange,
         reset,
-    } = useListFilterStore({ initialState })
+    } = useListFilterStore({ initialState });
 
-    const columns = useMemo(() => [{
-        header: "S.N",
-        accessorKey: "f_serial_no"
-    },
-    {
-        header: "Transaction Id",
-        accessorKey: "transaction_id"
-    },
-    {
-        header: "Trace Number",
-        accessorKey: "trace_number"
-    },
-    {
-        header: "Received Date From",
-        accessorKey: "created_ts",
-        cell: ({ getValue, row }) => getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"
-    },
-    {
-        header: "Received Date To",
-        accessorKey: "created_ts",
-        cell: ({ getValue, row }) => getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"
-    },
-    {
-        header: "Change Code",
-        accessorKey: "change_code"
-    },
-    {
-        header: "Corrected Data",
-        accessorKey: "corrected_data"
-    },
-
-    ])
+    const columns = useMemo(() => [
+        {
+            header: "S.N",
+            accessorKey: "f_serial_no",
+        },
+        {
+            header: "Transaction Id",
+            accessorKey: "transaction_id",
+        },
+        {
+            header: "Trace Number",
+            accessorKey: "trace_number",
+        },
+        {
+            header: "Received Date From",
+            accessorKey: "created_ts",
+            cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
+        },
+        {
+            header: "Received Date To",
+            accessorKey: "created_ts",
+            cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
+        },
+        {
+            header: "Change Code",
+            accessorKey: "change_code",
+        },
+        {
+            header: "Corrected Data",
+            accessorKey: "corrected_data",
+        },
+    ]);
 
     const filterFields = [
         {
@@ -96,37 +97,37 @@ export default function ListNocWebhooks() {
             name: "received_date_from",
             label: "Received Date From",
             props: {
-                withStartDayTimezone: true
-            }
+                withStartDayTimezone: true,
+            },
         },
         {
             type: fieldTypes.DATE,
             name: "received_date_to",
             label: "Received Date To",
             props: {
-                withEndDayTimezone: true
-            }
+                withEndDayTimezone: true,
+            },
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'transaction_id',
-            label: 'Transaction Id'
+            name: "transaction_id",
+            label: "Transaction Id",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'trace_number',
-            label: 'Trace Number'
+            name: "trace_number",
+            label: "Trace Number",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'change_code',
-            label: 'Change Code'
+            name: "change_code",
+            label: "Change Code",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'corrected_data',
-            label: 'Corrected Data'
-        }
+            name: "corrected_data",
+            label: "Corrected Data",
+        },
     ];
 
     useEffect(() => {
@@ -170,5 +171,5 @@ export default function ListNocWebhooks() {
                 />
             </Column>
         </PageContent>
-    )
+    );
 }

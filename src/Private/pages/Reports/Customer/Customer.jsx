@@ -31,7 +31,8 @@ import referenceTypeId from "Private/config/referenceTypeId";
 const schema = Yup.object().shape({
     created_from_date: Yup.string().nullable().optional(),
     created_to_date: Yup.string()
-        .nullable().optional()
+        .nullable()
+        .optional()
         .when("created_from_date", {
             is: (value) => !isEmpty(value),
             then: (schema) =>
@@ -47,7 +48,8 @@ const schema = Yup.object().shape({
         }),
     kyc_from_date: Yup.string().nullable().optional(),
     kyc_to_date: Yup.string()
-        .nullable().optional()
+        .nullable()
+        .optional()
         .when("kyc_from_date", {
             is: (value) => !isEmpty(value),
             then: (schema) =>

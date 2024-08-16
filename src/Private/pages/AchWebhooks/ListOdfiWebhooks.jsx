@@ -1,5 +1,5 @@
-import * as Yup from 'yup'
-import { isAfter } from 'date-fns';
+import * as Yup from "yup";
+import { isAfter } from "date-fns";
 import { useEffect, useMemo } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,14 +14,15 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import isEmpty from 'App/helpers/isEmpty';
+import isEmpty from "App/helpers/isEmpty";
 import { achWebhookActions } from "./store";
 import dateUtils from "App/utils/dateUtils";
 
 const schema = Yup.object().shape({
     received_date_from: Yup.string().nullable().optional(),
     received_date_to: Yup.string()
-        .nullable().optional()
+        .nullable()
+        .optional()
         .when("received_date_from", {
             is: (value) => !isEmpty(value),
             then: (schema) =>
@@ -40,11 +41,11 @@ const schema = Yup.object().shape({
 const initialState = {
     page_number: 1,
     page_size: 10,
-}
+};
 
 export default function ListOdfiWebhooks() {
-    const dispatch = useDispatch()
-    const { response: odfiWebhooks, loading } = useSelector((state) => state.get_ach_odfi_webhooks)
+    const dispatch = useDispatch();
+    const { response: odfiWebhooks, loading } = useSelector((state) => state.get_ach_odfi_webhooks);
 
     const {
         isFilterOpen,
@@ -56,51 +57,51 @@ export default function ListOdfiWebhooks() {
         onPageChange,
         onRowsPerPageChange,
         reset,
-    } = useListFilterStore({ initialState })
+    } = useListFilterStore({ initialState });
 
-
-    const columns = useMemo(() => [{
-        header: "S.N",
-        accessorKey: "f_serial_no"
-    },
-    {
-        header: "Company Id",
-        accessorKey: "company_id"
-    },
-    {
-        header: "Service Account Id",
-        accessorKey: "service_account_id"
-    },
-    {
-        header: "Transaction Group Id",
-        accessorKey: "transaction_group_id"
-    },
-    {
-        header: "Transaction Type",
-        accessorKey: "transaction_type"
-    },
-    {
-        header: "Received Date",
-        accessorKey: "created_ts",
-        cell: ({ getValue, row }) => getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"
-    },
-    {
-        header: "Is International",
-        accessorKey: "is_international"
-    },
-    {
-        header: "Is Same Day ACH",
-        accessorKey: "is_same_day_ach"
-    },
-    {
-        header: "Offset Reference",
-        accessorKey: "offset_reference"
-    },
-    {
-        header: "Number Transactions",
-        accessorKey: "number_transactions"
-    }
-    ])
+    const columns = useMemo(() => [
+        {
+            header: "S.N",
+            accessorKey: "f_serial_no",
+        },
+        {
+            header: "Company Id",
+            accessorKey: "company_id",
+        },
+        {
+            header: "Service Account Id",
+            accessorKey: "service_account_id",
+        },
+        {
+            header: "Transaction Group Id",
+            accessorKey: "transaction_group_id",
+        },
+        {
+            header: "Transaction Type",
+            accessorKey: "transaction_type",
+        },
+        {
+            header: "Received Date",
+            accessorKey: "created_ts",
+            cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
+        },
+        {
+            header: "Is International",
+            accessorKey: "is_international",
+        },
+        {
+            header: "Is Same Day ACH",
+            accessorKey: "is_same_day_ach",
+        },
+        {
+            header: "Offset Reference",
+            accessorKey: "offset_reference",
+        },
+        {
+            header: "Number Transactions",
+            accessorKey: "number_transactions",
+        },
+    ]);
 
     const filterFields = [
         {
@@ -108,47 +109,47 @@ export default function ListOdfiWebhooks() {
             name: "received_date_from",
             label: "Received Date From",
             props: {
-                withStartDayTimezone: true
-            }
+                withStartDayTimezone: true,
+            },
         },
         {
             type: fieldTypes.DATE,
             name: "received_date_to",
             label: "Received Date To",
             props: {
-                withEndDayTimezone: true
-            }
+                withEndDayTimezone: true,
+            },
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'company_id',
-            label: 'Company Id'
+            name: "company_id",
+            label: "Company Id",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'service_account_id',
-            label: 'Service Account Id'
+            name: "service_account_id",
+            label: "Service Account Id",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'transaction_group_id',
-            label: 'Transaction Group Id'
+            name: "transaction_group_id",
+            label: "Transaction Group Id",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'transaction_type',
-            label: 'Transaction Type'
+            name: "transaction_type",
+            label: "Transaction Type",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'offset_reference',
-            label: 'Offset Reference'
+            name: "offset_reference",
+            label: "Offset Reference",
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: 'number_transactions',
-            label: 'Number Transactions'
-        }
+            name: "number_transactions",
+            label: "Number Transactions",
+        },
     ];
 
     useEffect(() => {
@@ -191,10 +192,12 @@ export default function ListOdfiWebhooks() {
                                     <Checkbox
                                         name="is_international"
                                         checked={!!filterSchema.is_international}
-                                        onChange={(e) => onFilterSubmit({
-                                            ...filterSchema,
-                                            is_international: e.target.checked ? e.target.checked : null,
-                                        })}
+                                        onChange={(e) =>
+                                            onFilterSubmit({
+                                                ...filterSchema,
+                                                is_international: e.target.checked ? e.target.checked : null,
+                                            })
+                                        }
                                     />
                                 }
                                 label="Is International"
@@ -204,16 +207,19 @@ export default function ListOdfiWebhooks() {
                                     <Checkbox
                                         name="is_same_day_ach"
                                         checked={!!filterSchema.is_same_day_ach}
-                                        onChange={(e) => onFilterSubmit({
-                                            ...filterSchema,
-                                            is_same_day_ach: e.target.checked ? e.target.checked : null,
-                                        })}
+                                        onChange={(e) =>
+                                            onFilterSubmit({
+                                                ...filterSchema,
+                                                is_same_day_ach: e.target.checked ? e.target.checked : null,
+                                            })
+                                        }
                                     />
                                 }
                                 label="Is Same Day ACH"
                             />
                         </>
-                    }>
+                    }
+                >
                     <TanstackReactTable columns={columns} data={odfiWebhooks?.data ?? []} loading={loading} />
                 </PageContentContainer>
                 <TablePagination
@@ -222,7 +228,6 @@ export default function ListOdfiWebhooks() {
                     handleChangeRowsPerPage={onRowsPerPageChange}
                 />
             </Column>
-
         </PageContent>
-    )
+    );
 }
