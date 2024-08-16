@@ -5,3 +5,4 @@ export { default as GetPromoCodeReducer } from "./reducers/getPromoCodeReducers"
 export { default as GetPromoCodeByIdReducer } from "./reducers/getPromoCodeByIdReducers";
 export { default as UpdatePromoCodeStatusReducer } from "./reducers/updatePromoCodeStatusReducer";
 export { default as AddPromoCodeBudgetReducer } from "./reducers/addPromoCodeBudgetReducer";
+export { default as GetPromoCodeUsageReducers } from "./reducers/updatePromoCodeStatusReducer";

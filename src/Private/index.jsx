@@ -633,6 +633,7 @@ import {
     PromoCodeSagas,
     UpdatePromoCodeStatusReducer,
     AddPromoCodeBudgetReducer,
+    GetPromoCodeUsageReducers,
 } from "./pages/PromoCode/store";
 
 export const privateReducer = {
@@ -1136,6 +1137,7 @@ export const privateReducer = {
 
     //region: Promo Codes
     get_promo_codes: GetPromoCodeReducer,
+    get_promo_code_Usage: GetPromoCodeUsageReducers,
     get_promo_code_by_id: GetPromoCodeByIdReducer,
     add_promo_code: AddPromoCodeReducer,
     add_promo_code_budget: AddPromoCodeBudgetReducer,

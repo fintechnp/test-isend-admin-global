@@ -36,8 +36,18 @@ const actions = {
     OPEN_PROMO_CODE_BUDGET_MODAL: "OPEN_PROMO_CODE_BUDGET_MODAL",
     CLOSE_PROMO_CODE_BUDGET_MODAL: "CLOSE_PROMO_CODE_BUDGET_MODAL",
 
+    GET_PROMO_CODE_USAGE: "GET_PROMO_CODE_USAGE",
+    GET_PROMO_CODE_USAGE_SUCCESS: "GET_PROMO_CODE_USAGE_SUCCESS",
+    GET_PROMO_CODE_USAGE_FAILED: "GET_PROMO_CODE_USAGE_FAILED",
+    GET_PROMO_CODE_USAGE_RESET: "GET_PROMO_CODE_USAGE_RESET",
+
     get_promo_codes: (query) => ({
         type: actions.GET_PROMO_CODE,
+        query,
+    }),
+
+    get_promo_code_usage: (query) => ({
+        type: actions.GET_PROMO_CODE_USAGE,
         query,
     }),
 

@@ -22,6 +22,22 @@ export const getPromoCodeList = takeEvery(actions.GET_PROMO_CODE, function* (act
     }
 });
 
+export const getPromoCodeUsageList = takeEvery(actions.GET_PROMO_CODE_USAGE, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.ListPromoCodeUsage), action.query);
+
+        yield put({
+            type: actions.GET_PROMO_CODE_USAGE_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_PROMO_CODE_USAGE_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 const addPromoCode = takeEvery(actions.ADD_PROMO_CODE, function* (action) {
     try {
         const res = yield call(api.post, buildRoute(apiEndpoints.CreatePromoCode), action.data);
@@ -99,5 +115,12 @@ export const updatePromoCodeStatus = takeEvery(actions.UPDATE_PROMO_CODE_STATUS,
 });
 
 export default function* Saga() {
-    yield all([getPromoCodeList, addPromoCode, addPromoCodeBudget, getPromoCodeById, updatePromoCodeStatus]);
+    yield all([
+        getPromoCodeList,
+        addPromoCode,
+        addPromoCodeBudget,
+        getPromoCodeById,
+        updatePromoCodeStatus,
+        getPromoCodeUsageList,
+    ]);
 }

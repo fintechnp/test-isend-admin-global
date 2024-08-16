@@ -301,6 +301,7 @@ const apiEndpoints = {
     UpdatePromoCodeStatus: "/campaign/promocodeEnableDisable",
     ViewPromoCode: "/campaign/:id",
     AddPromoCodeBudget: "/campaign/addBudget",
+    ListPromoCodeUsage: "/campaign/promoCodeUsage",
     // Referral Reports
 
     GetReferralReports: "/referral-code-report",
