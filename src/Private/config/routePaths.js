@@ -149,6 +149,8 @@ const routePaths = {
     ListCirWebhooks: "/ach-webhooks/cir",
     ListReturnWebhooks: "/ach-webhooks/return",
     ListRejctWebhooks: "/ach-webhooks/reject",
+    ListOdfiWebhooks: "/ach-webhooks/odfi",
+    ListNocWebhooks: "/ach-webhooks/noc",
 
     // Help center
     ListHelpCenter: "/b2b/help-centers",

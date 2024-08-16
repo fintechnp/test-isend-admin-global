@@ -270,6 +270,8 @@ const apiEndpoints = {
     GetAchCirWebhooks: "/CIRTransactions",
     GetReturnWebhooks: "/ReturnTransactions",
     GetRejectWebhooks: "/RejectTransactions",
+    GetAchOdfiWebhooks: "/webhooks/ODFI/Log",
+    GetAchNocWebhooks: "/webhooks/NOC/Log",
 
     // Help Center
     GetHelpCenters: "/contactdetails",

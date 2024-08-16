@@ -611,6 +611,8 @@ import {
     GetAchRejectWebhooksReducer,
     GetAchReturnWebhooksReducer,
     ReturnAchRdfiTransactionReducer,
+    GetAchOdfiWebhooksReducer,
+    GetAchNocWebhooksReducer
 } from "./pages/AchWebhooks/store";
 import {
     CreateHelpCenterReducer,
@@ -1125,6 +1127,8 @@ export const privateReducer = {
     get_ach_return_webhooks: GetAchReturnWebhooksReducer,
     get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
     return_ach_rdfi_transaction: ReturnAchRdfiTransactionReducer,
+    get_ach_odfi_webhooks: GetAchOdfiWebhooksReducer,
+    get_ach_noc_webhooks: GetAchNocWebhooksReducer,
 
     //region: Help Center
 

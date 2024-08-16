@@ -31,7 +31,7 @@ import referenceTypeId from "Private/config/referenceTypeId";
 const schema = Yup.object().shape({
     created_from_date: Yup.string().nullable().optional(),
     created_to_date: Yup.string()
-        .nullable()
+        .nullable().optional()
         .when("created_from_date", {
             is: (value) => !isEmpty(value),
             then: (schema) =>
@@ -40,14 +40,14 @@ const schema = Yup.object().shape({
                     message: "Member To must be after Member From",
                     test: function (value) {
                         const { created_from_date } = this.parent;
-                        return isAfter(new Date(value), new Date(created_from_date));
+                        return value ? isAfter(new Date(value), new Date(created_from_date)) : true;
                     },
                 }),
             otherwise: (schema) => Yup.string().nullable().optional(),
         }),
-    kyc_from_date: Yup.string().optional(),
+    kyc_from_date: Yup.string().nullable().optional(),
     kyc_to_date: Yup.string()
-        .nullable()
+        .nullable().optional()
         .when("kyc_from_date", {
             is: (value) => !isEmpty(value),
             then: (schema) =>
@@ -56,7 +56,7 @@ const schema = Yup.object().shape({
                     message: "KYC To date must be after KYC From date",
                     test: function (value) {
                         const { kyc_from_date } = this.parent;
-                        return isAfter(new Date(value), new Date(kyc_from_date));
+                        return value ? isAfter(new Date(value), new Date(kyc_from_date)) : true;
                     },
                 }),
             otherwise: (schema) => Yup.string().nullable().optional(),

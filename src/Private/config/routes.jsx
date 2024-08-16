@@ -186,6 +186,9 @@ import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
 import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
 import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
 import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
+import ListOdfiWebhooks from "Private/pages/AchWebhooks/ListOdfiWebhooks";
+import ListNocWebhooks from "Private/pages/AchWebhooks/ListNocWebhooks";
+
 
 import AddPromoCode from "Private/pages/PromoCode/AddPromoCode";
 import ListPromoCode from "Private/pages/PromoCode/ListPromoCode";
@@ -720,6 +723,14 @@ const privateRoutes = [
     {
         path: routePaths.ListRejctWebhooks,
         component: <ListRejectWebhooks />,
+    },
+    {
+        path: routePaths.ListOdfiWebhooks,
+        component: <ListOdfiWebhooks />,
+    },
+    {
+        path: routePaths.ListNocWebhooks,
+        component: <ListNocWebhooks />,
     },
 
     // Help Center
