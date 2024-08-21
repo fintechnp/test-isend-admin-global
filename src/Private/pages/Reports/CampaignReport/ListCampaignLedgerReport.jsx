@@ -48,14 +48,7 @@ const ListCampaignLedgerReport = () => {
                 accessorKey: "f_serial_no",
                 cell: (info) => info.row.index + 1,
             },
-            {
-                header: "Usage ID",
-                accessorKey: "UsageId",
-            },
-            {
-                header: "Campaign ID",
-                accessorKey: "CampaignId",
-            },
+
             {
                 header: "Campaign Name",
                 accessorKey: "CampaignName",
@@ -91,20 +84,11 @@ const ListCampaignLedgerReport = () => {
                 accessorKey: "created_ts",
                 cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
             },
-            {
-                header: "Created By",
-                accessorKey: "created_by",
-                cell: ({ getValue }) => <>{getValue() ? getValue() : "-"}</>,
-            },
+
             {
                 header: "Updated At",
                 accessorKey: "updated_ts",
                 cell: ({ getValue }) => <>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>,
-            },
-            {
-                header: "Updated By",
-                accessorKey: "updated_by",
-                cell: ({ getValue }) => <>{getValue() ? getValue() : "-"}</>,
             },
         ],
         [],

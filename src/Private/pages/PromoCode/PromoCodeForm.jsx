@@ -18,7 +18,6 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 
-import isEmpty from "App/helpers/isEmpty";
 import routePaths from "Private/config/routePaths";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextArea from "App/core/hook-form/FormTextArea";
@@ -30,11 +29,7 @@ import { rewardOnEnums, rewardOnOptions } from "./data/rewardOnEnums";
 import FormDateTimePicker from "App/core/hook-form/FormDateTimePicker";
 import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
 
-import {
-    triggerAttributeTypes,
-    triggerAttributeTypesOptions,
-    triggerAttributeTypesOptionsDisabled,
-} from "./data/triggerAttributeTypesEnums";
+import TriggerForm from "./TriggerForm";
 import { rewardTypeOptions } from "./data/rewardTypeEnums";
 import { campaignStatusOptions } from "./data/campaignStatus";
 import { campaignEventTypes } from "./data/campaignEventTypesEnums";
@@ -42,6 +37,7 @@ import countryActions from "Private/features/countries/countryActions";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
+import { triggerAttributeTypes, triggerAttributeTypesOptionsDisabled } from "./data/triggerAttributeTypesEnums";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -111,12 +107,22 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
     const campaignType = watch("campaign.campaignType");
     const campaign = watch("campaign");
 
+    const getDefaultCriteria = (attributeFamilyTypeId) => {
+        switch (attributeFamilyTypeId) {
+            case campaignEventTypes.DATE:
+                return triggerAttributeTypes.GREATER_THAN;
+            case campaignEventTypes.DATE_RANGE:
+                return triggerAttributeTypes.BETWEEN;
+            default:
+                return triggerAttributeTypes.ON_SAME_DAY;
+        }
+    };
+
     useEffect(() => {
         if (campaignType === campaignCodes.PROMO) {
             setValue("trigger", [
                 {
-                    attribute: initialTriggerValue,
-                    criteria: 0 ? 0 : 1,
+                    attribute: campaignEventTypes.DATE,
                     currency: "",
                     amount: 0,
                 },
@@ -169,7 +175,6 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
     const onSubmit = (data) => {
         const { campaignType } = data.campaign;
 
-        // Create a base formattedData object
         const formattedData = {
             campaign: {
                 campaignName: data.campaign.campaignName,
@@ -200,14 +205,15 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
             description: data.description,
         };
 
-        // Conditionally add trigger or triggerReferrer based on campaignType
         if (campaignType === campaignCodes.PROMO) {
-            formattedData.trigger = data.trigger.map((field) => ({
-                attribute: field.attribute,
-                criteria: field.criteria,
-                currency: field.currency,
-                amount: field.amount,
-            }));
+            formattedData.trigger = data.trigger.map((field) => {
+                return {
+                    attribute: field.attribute,
+                    criteria: field.criteria,
+                    currency: field.currency,
+                    amount: field.amount,
+                };
+            });
         }
 
         if (campaignType === campaignCodes.REFERRAL) {
@@ -219,7 +225,6 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
             }));
         }
 
-        // Submit the formatted data
         handleSubmit(formattedData);
     };
 
@@ -304,83 +309,15 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                             </Grid>
 
                             {triggerFields.map((field, index) => {
-                                const attributeType = watch(`trigger.${index}.attribute`);
-
-                                const attributeFamilyTypeId = getAttributeFamilyList?.data?.data?.find(
-                                    (item) => item?.attributeFamilyId === attributeType,
-                                ).attributeTypeValue;
-
                                 return (
-                                    <Grid container spacing={2} item key={`${field.id}_field`}>
-                                        <Grid item xs={12} md={6} lg={3}>
-                                            <FormSelect
-                                                placeholder="Attribute"
-                                                name={`trigger.${index}.attribute`}
-                                                options={mappedAttributeList}
-                                            />
-                                        </Grid>
-
-                                        {attributeFamilyTypeId === campaignEventTypes.DATE && (
-                                            <Grid item xs={12} md={6} lg={3}>
-                                                <FormSelect
-                                                    name={`trigger.${index}.criteria`}
-                                                    options={triggerAttributeTypesOptions}
-                                                    disabled
-                                                />
-                                            </Grid>
-                                        )}
-
-                                        {isEmpty(attributeFamilyTypeId) && (
-                                            <Typography textAlign="center">
-                                                There are no attributes available
-                                            </Typography>
-                                        )}
-
-                                        {attributeFamilyTypeId === campaignEventTypes.COUNT && (
-                                            <>
-                                                <Grid item xs={12} md={6} lg={3}>
-                                                    <FormSelect
-                                                        name={`trigger.${index}.criteria`}
-                                                        options={triggerAttributeTypesOptionsDisabled}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} md={6} lg={3}>
-                                                    <FormTextField
-                                                        label="Count"
-                                                        type="number"
-                                                        name={`trigger.${index}.amount`}
-                                                    />
-                                                </Grid>
-                                            </>
-                                        )}
-
-                                        {attributeFamilyTypeId === campaignEventTypes.DATE_RANGE && <></>}
-
-                                        {attributeFamilyTypeId === campaignEventTypes.AMOUNT && (
-                                            <>
-                                                <Grid item xs={12} md={6} lg={3}>
-                                                    <FormSelect
-                                                        name={`trigger.${index}.criteria`}
-                                                        options={triggerAttributeTypesOptionsDisabled}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} md={6} lg={3}>
-                                                    <FormSelect
-                                                        label="Currency"
-                                                        placeholder="Currency"
-                                                        options={countryCurrency}
-                                                        name={`trigger.${index}.currency`}
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} md={6} lg={3}>
-                                                    <FormTextField
-                                                        label="Amount"
-                                                        type="number"
-                                                        name={`trigger.${index}.amount`}
-                                                    />
-                                                </Grid>
-                                            </>
-                                        )}
+                                    <Grid container key={field.id}>
+                                        <TriggerForm
+                                            index={index}
+                                            mappedAttributeList={mappedAttributeList}
+                                            triggerAttributeTypesOptionsDisabled={triggerAttributeTypesOptionsDisabled}
+                                            countryCurrency={countryCurrency}
+                                            allAttributeList={getAttributeFamilyList?.data?.data}
+                                        />
 
                                         <Grid item xs={12}>
                                             <ButtonWrapper>
@@ -390,10 +327,10 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                                                     color="primary"
                                                     onClick={() =>
                                                         addTriggerFields({
-                                                            attribute: initialTriggerValue,
-                                                            criteria: 0,
-                                                            currency: "",
-                                                            amount: 0,
+                                                            attribute: field.attribute,
+                                                            criteria: field.criteria,
+                                                            currency: field.currency,
+                                                            amount: field.amount,
                                                         })
                                                     }
                                                 >

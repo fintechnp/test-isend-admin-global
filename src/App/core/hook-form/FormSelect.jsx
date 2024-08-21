@@ -26,6 +26,7 @@ function FormSelect(props) {
         multiple,
         fullWidth,
         options,
+        defaultValue,
         variant,
         showChooseOption,
         chooseOptionLabel,
@@ -39,7 +40,7 @@ function FormSelect(props) {
         <Controller
             name={name}
             control={control}
-            defaultValue=""
+            defaultValue={defaultValue}
             rules={rules}
             placeholder={placeholder}
             render={({ field }) => (
@@ -68,6 +69,7 @@ function FormSelect(props) {
                             setValue(name, e.target.value);
                             onChange?.(e);
                         }}
+                        value={field.value}
                         fullWidth
                     >
                         {showChooseOption && (
@@ -117,6 +119,7 @@ FormSelect.propTypes = {
     variant: PropTypes.oneOf(["outlined", "standard", "filled"]),
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
+    defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 FormSelect.defaultProps = {
@@ -134,4 +137,5 @@ FormSelect.defaultProps = {
     fullWidth: true,
     chooseOptionLabel: "Choose",
     placeholder: "",
+    defaultValue: "",
 };
