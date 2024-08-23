@@ -1,5 +1,6 @@
+import * as Yup from "yup";
+import { isAfter } from "date-fns";
 import styled from "@emotion/styled";
-import Row from "App/components/Row/Row";
 import { useEffect, useMemo } from "react";
 import dateUtils from "App/utils/dateUtils";
 import ReportActions from "../store/actions";
@@ -13,17 +14,38 @@ import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
 import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
-import FilterForm from "App/components/Filter/FilterForm";
 import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
 import FilterButton from "App/components/Button/FilterButton";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import isEmpty from "App/helpers/isEmpty";
 import routePaths from "Private/config/routePaths";
 import ReferralCode from "./components/ReferralCodeBadge";
 import KycStatusBadge from "Private/pages/Customers/Search/components/KycStatusBadge";
+
+const schema = Yup.object().shape({
+    from_date: Yup.string().nullable().optional(),
+    to_date: Yup.string()
+        .nullable()
+        .optional()
+        .when("from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                Yup.string().test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(from_date)) : true;
+                    },
+                }),
+            otherwise: (schema) => Yup.string().nullable().optional(),
+        }),
+});
 
 const initialState = {
     page_size: 10,
@@ -167,37 +189,43 @@ export default function ListReferralReport() {
 
     const filterFields = [
         {
-            type: "date",
+            type: fieldTypes.DATE,
             label: "From Date",
             name: "from_date",
+            props: {
+                withStartDayTimezone: true,
+            },
         },
         {
-            type: "date",
+            type: fieldTypes.DATE,
             label: "To Date",
             name: "to_date",
+            props: {
+                withEndDayTimezone: true,
+            },
         },
         {
-            type: "text",
+            type: fieldTypes.TEXTFIELD,
             label: "Customer ID",
             name: "customer_id",
         },
         {
-            type: "text",
+            type: fieldTypes.TEXTFIELD,
             label: "Customer Name",
             name: "customer_name",
         },
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             label: "Mobile Number",
-            name: "mobile_number",
+            name: "mobilenumber",
         },
         {
-            type: "text",
+            type: fieldTypes.TEXTFIELD,
             label: "Email",
             name: "email",
         },
         {
-            type: "text",
+            type: fieldTypes.TEXTFIELD,
             label: "Referral Code",
             name: "referral_code",
         },
@@ -205,7 +233,7 @@ export default function ListReferralReport() {
 
     return (
         <PageContent
-            title="Referral Report"
+            documentTitle="Referral Report"
             topRightEndContent={
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
@@ -225,12 +253,13 @@ export default function ListReferralReport() {
                     onClose={closeFilter}
                     onSubmit={onFilterSubmit}
                     onReset={reset}
+                    values={filterSchema}
                     fields={filterFields}
-                    schema={filterSchema}
+                    schema={schema}
                     onDelete={onDeleteFilterParams}
                 />
 
-                <PageContentContainer>
+                <PageContentContainer title="Referral Report">
                     <TanstackReactTable columns={columns} data={referralReportData} loading={isLoading} />
                 </PageContentContainer>
 
