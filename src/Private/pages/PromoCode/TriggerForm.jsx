@@ -39,10 +39,11 @@ export default function TriggerForm({
             case campaignEventTypes.COUNT:
                 setValue(`trigger.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
                 break;
+            case campaignEventTypes.COUNTRY:
+                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
+                break;
             default:
                 setValue(`trigger.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
-
-                break;
         }
     }, [attributeFamilyTypeId]);
 
@@ -61,7 +62,8 @@ export default function TriggerForm({
                     }
                     disabled={
                         attributeFamilyTypeId === campaignEventTypes.DATE ||
-                        attributeFamilyTypeId === campaignEventTypes.DATE_RANGE
+                        attributeFamilyTypeId === campaignEventTypes.DATE_RANGE ||
+                        attributeFamilyTypeId === campaignEventTypes.COUNTRY
                     }
                 />
             </Grid>
