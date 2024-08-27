@@ -149,8 +149,10 @@ function Search() {
                                 <Row alignItems="center" gap="2px">
                                     <PhoneIcon />
                                     <Typography variant="caption">
-                                        {row.original.phone_number} {caption.length > 0 ? ", " : null}{" "}
-                                        {caption.join(" / ")}
+                                        {!isEmpty(row.original.phone_number)
+                                            ? row.original.phone_number
+                                            : row.original.mobile_number}
+                                        {caption.length > 0 ? ", " : null} {caption.join(" / ")}
                                     </Typography>
                                 </Row>
                             </Column>
