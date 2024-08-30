@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import emailTemplateActions from "Private/components/email-template/store/emailTemplateActions";
 import range from "App/helpers/range";
 
-export default function ListEmailTemplateTags() {
+export default function ListEmailTemplateTags({ onTagClick }) {
     const dispatch = useDispatch();
 
     const { response, loading, error } = useSelector((state) => state.get_email_template_tags);
@@ -30,7 +30,7 @@ export default function ListEmailTemplateTags() {
                 border: "1px solid #ccc",
                 borderRadius: "4px",
                 background: "#f9f9f9",
-                minWidth: 500,
+                maxWidth: 500,
             }}
         >
             <Typography
@@ -69,10 +69,17 @@ export default function ListEmailTemplateTags() {
                               padding: "0.4rem",
                               color: "#fff",
                               borderRadius: "4px",
+                              "&:hover": {
+                                  cursor: "pointer",
+                              },
                           }}
                           key={item?.tag_id}
                       >
-                          <Typography variant="body2" sx={{ fontWeight: 800 }}>
+                          <Typography
+                              variant="body2"
+                              sx={{ fontWeight: 800 }}
+                              onClick={() => onTagClick(item.tag_name)}
+                          >
                               {item?.tag_name}
                           </Typography>
                           <Typography variant="body2" sx={{ fontWeight: 400 }}>

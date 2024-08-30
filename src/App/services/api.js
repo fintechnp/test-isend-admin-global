@@ -103,9 +103,9 @@ export default class Api {
                     }
                 } else {
                     // Handle other errors
-                    store.dispatch({
-                        type: "INVALID_TOKEN",
-                    });
+                    // store.dispatch({
+                    //     type: "INVALID_TOKEN",
+                    // });
                     return Promise.reject(error);
                 }
             },

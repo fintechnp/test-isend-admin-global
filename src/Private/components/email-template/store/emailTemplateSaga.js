@@ -52,8 +52,15 @@ export const addEmailTemplate = takeEvery(actions.ADD_EMAIL_TEMPLATE, function* 
         });
     } catch (error) {
         yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+        yield put({
             type: actions.ADD_EMAIL_TEMPLATE_FAILURE,
             error: error?.data,
+        });
+        yield put({
+            type: actions.ADD_EMAIL_TEMPLATE_RESET,
         });
     }
 });

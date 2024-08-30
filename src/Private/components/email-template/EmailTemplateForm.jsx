@@ -1,14 +1,17 @@
-import React from "react";
 import * as Yup from "yup";
+import PropTypes from "prop-types";
+import ReactQuill from "react-quill";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import "react-quill/dist/quill.snow.css";
 import { useForm } from "react-hook-form";
+import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
+import FormHelperText from "@mui/material/FormHelperText";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
-import FormTextArea from "App/core/hook-form/FormTextArea";
 import FormTextField from "App/core/hook-form/FormTextField";
 import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
@@ -19,12 +22,14 @@ import referenceTypeId from "Private/config/referenceTypeId";
 import { templateFor as TemplateForConstant } from "./data/template-for";
 
 const schema = Yup.object().shape({
-    email_subject: Yup.string().required("TEmail subject is required"),
+    email_subject: Yup.string().required("Email subject is required"),
     email_format: Yup.string().required("Email format is required"),
     template_type: Yup.string().required("Email template type  is required"),
+    email_header: Yup.string().required("Email header is required"),
+    email_footer: Yup.string().required("Email footer is required"),
 });
 
-const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, loading }) => {
+const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, loading, insertTag }) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
 
     const methods = useForm({
@@ -32,16 +37,26 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
         defaultValues: initialValues,
     });
 
-    const { watch } = methods;
+    const {
+        watch,
+        setValue,
+        formState: { errors },
+    } = methods;
 
+    const editorRef = useRef(null);
     const templateFor = watch("template_for");
+    const emailFormat = watch("email_format");
+    const emailHeader = watch("email_header");
+    const emailFooter = watch("email_footer");
 
     const referenceTypeIdForTemplateType =
         templateFor === TemplateForConstant.ADMIN
             ? referenceTypeId.emailTemplateTypeForAdmin
             : templateFor === TemplateForConstant.CUSTOMER
               ? referenceTypeId.emailTemplateTypeForCustomer
-              : null;
+              : templateFor === TemplateForConstant.ADMINTOCUSTOMER
+                ? referenceTypeId.emailTemplateTypeForAdminToCustomer
+                : null;
 
     const referenceData = referenceTypeIdForTemplateType
         ? (reference
@@ -51,6 +66,27 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
                   value: ref.value,
               })) ?? [])
         : [];
+
+    const insertTagAtCursor = useCallback((insertTag) => {
+        if (insertTag && editorRef.current) {
+            // Get the Quill editor instance
+            const editor = editorRef.current.editor;
+            // Get current selection (cursor position)
+            const range = editor.selection;
+            if (range) {
+                // Insert tag at cursor position
+                editor.insertText(range.savedRange.index, insertTag, { bold: true });
+                // Set cursor position after the inserted tag
+                editor.setSelection(range.savedRange.index + insertTag.length);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (insertTag) {
+            insertTagAtCursor(insertTag);
+        }
+    }, [insertTag]);
 
     return (
         <HookForm onSubmit={onSubmit} {...methods}>
@@ -65,7 +101,24 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
                     <FormTextField name="email_subject" label="Email Subject" />
                 </Stack>
                 <Stack item xs={12} md={6}>
-                    <FormTextArea name="email_format" label="Email Format" />
+                    <Typography>Email Header</Typography>
+                    <ReactQuill theme="snow" value={emailHeader} onChange={(v) => setValue("email_header", v)} />
+                    <FormHelperText error={true}>{errors?.email_header?.message}</FormHelperText>
+                </Stack>
+                <Stack item xs={12} md={6}>
+                    <Typography>Email Format</Typography>
+                    <ReactQuill
+                        theme="snow"
+                        value={emailFormat}
+                        onChange={(v) => setValue("email_format", v)}
+                        ref={editorRef}
+                    />
+                    <FormHelperText error={true}>{errors?.email_format?.message}</FormHelperText>
+                </Stack>
+                <Stack item xs={12} md={6}>
+                    <Typography>Email Footer</Typography>
+                    <ReactQuill theme="snow" value={emailFooter} onChange={(v) => setValue("email_footer", v)} />
+                    <FormHelperText error={true}>{errors?.email_footer?.message}</FormHelperText>
                 </Stack>
 
                 <Grid item xs={12}>
@@ -83,4 +136,16 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
 
 export default EmailTemplateForm;
 
-//
+EmailTemplateForm.propTypes = {
+    initialValues: PropTypes.shape({
+        email_subject: PropTypes.string,
+        email_format: PropTypes.string,
+        template_for: PropTypes.string,
+        template_type: PropTypes.string,
+    }),
+    onSubmit: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    isAddMode: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    insertTag: PropTypes.string,
+};

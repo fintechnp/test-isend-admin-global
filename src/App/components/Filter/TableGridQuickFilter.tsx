@@ -36,7 +36,7 @@ function valuesValidator(props, propName, componentName) {
     return null;
 }
 
-const orderData = [
+const DEFAULT_ORDER_BY_DATA = [
     { key: "Ascending", value: "ASC" },
     { key: "Descending", value: "DESC" },
 ];
@@ -49,6 +49,7 @@ export default function TableGridQuickFilter({
     orderByFieldName = DEFAULT_ORDER_BY_FIELD_NAME,
     values,
     disabled,
+    orderData = DEFAULT_ORDER_BY_DATA,
 }) {
     return (
         <Box display="flex" gap="16px">
