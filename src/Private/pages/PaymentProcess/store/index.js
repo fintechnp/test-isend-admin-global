@@ -11,6 +11,7 @@ export { default as GetRefundBlockTransactionsReducer } from "./reducers/getRefu
 export { default as GetZaiAustraliaPaymentReducer } from "./reducers/getZaiAustraliaPayment";
 
 export { default as GetZaiLogsReducer } from "./reducers/getZaiLogs";
+export { default as GetZaiPaymentModalReducers } from "./reducers/getZaiPaymentModal";
 
 export { default as GetRefundPaymentReducer } from "./reducers/refundPayment";
 

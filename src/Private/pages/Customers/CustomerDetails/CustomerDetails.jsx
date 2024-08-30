@@ -42,6 +42,8 @@ import RecentlyAddedBeneficiaries from "./RecentlyAddedBeneficiaries";
 import CustomerStatusBadge from "../Search/components/CustomerStatusBadge";
 import customerActions from "Private/pages/Customers/Documents/store/actions";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
+import Cookies from "js-cookie";
+import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
 const CustomerTypeContainer = styled("div")(({ theme }) => ({
     "& .MuiIconButton-root": {
@@ -154,9 +156,28 @@ function CustomerDetails() {
                 },
             ],
         },
+
+        {
+            title: "BSB Details",
+            items: [
+                {
+                    label: "Zai Account Number",
+                    accessorKey: "zai_account_number",
+                },
+                {
+                    label: "Zai Routing Number",
+                    accessorKey: "zai_routing_number",
+                },
+            ],
+        },
+
         {
             title: "Other Details",
             items: [
+                {
+                    label: "Zai pay ID",
+                    accessorKey: "zai_pay_id",
+                },
                 {
                     label: "Occupation",
                     accessorKey: "occupation_data",

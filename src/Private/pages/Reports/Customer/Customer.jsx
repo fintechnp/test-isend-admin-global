@@ -27,6 +27,7 @@ import CustomerStatusBadge from "Private/pages/Customers/Search/components/Custo
 import isEmpty from "App/helpers/isEmpty";
 import PartnerType from "App/data/PartnerType";
 import referenceTypeId from "Private/config/referenceTypeId";
+import Cookies from "js-cookie";
 
 const schema = Yup.object().shape({
     created_from_date: Yup.string().nullable().optional(),

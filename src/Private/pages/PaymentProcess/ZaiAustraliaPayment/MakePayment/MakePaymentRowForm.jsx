@@ -8,6 +8,7 @@ import SubmitButton from "App/components/Button/SubmitButton";
 
 import actions from "../../store/actions";
 import { makePaymentSchema } from "../schema/makePaymentSchema";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transactionId }) {
     const dispatch = useDispatch();
@@ -58,6 +59,7 @@ export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transact
             <TableCell>{row.webhook_id}</TableCell>
             <TableCell align="right">{row.transaction_amount.toLocaleString()} </TableCell>
             <TableCell>{row.transaction_currency}</TableCell>
+            <TableCell>{!isEmpty(row.debtor_name) ? row.debtor_name : "N/A"}</TableCell>
             <TableCell>
                 <TextField
                     type="text"

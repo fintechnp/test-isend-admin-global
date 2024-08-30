@@ -80,6 +80,7 @@ function ListRefundPaymentWebhookLog({ customerId }) {
                             <TableCell>Transaction ID</TableCell>
                             <TableCell align="right">Transaction Amount </TableCell>
                             <TableCell>Currency</TableCell>
+                            <TableCell>Debtor Name</TableCell>
                             <TableCell>Amount to refund</TableCell>
                             <TableCell>Remarks</TableCell>
                             <TableCell>Actions</TableCell>
@@ -87,7 +88,7 @@ function ListRefundPaymentWebhookLog({ customerId }) {
                     </TableHead>
                     <TableBody>
                         {loading ? (
-                            <TableBodySkeleton rowCount={10} columnCount={7} />
+                            <TableBodySkeleton rowCount={10} columnCount={8} />
                         ) : logData.data?.length <= 0 ? (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">

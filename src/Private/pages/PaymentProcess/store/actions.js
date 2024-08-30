@@ -93,6 +93,9 @@ const actions = {
     GET_ZAI_REFUND_LOGS_FAILED: "GET_ZAI_REFUND_LOGS_FAILED",
     GET_ZAI_REFUND_LOGS_RESET: "GET_ZAI_REFUND_LOGS_RESET",
 
+    OPEN_ZAI_PAYMENT_MODAL: "OPEN_ZAI_PAYMENT_MODAL",
+    CLOSE_PAYMENT_MODAL_SUCCESS: "CLOSE_ZAI_PAYMENT_MODAL_SUCCESS",
+
     /////////////////////////  TRANSACTION DOCUMENTS  /////////////////////////
 
     GET_TRANSACTION_DOCUMENTS: "GET_TRANSACTION_DOCUMENTS",
@@ -164,6 +167,15 @@ const actions = {
     get_zai_logs: (query) => ({
         type: actions.GET_ZAI_LOGS,
         query,
+    }),
+
+    open_zai_payment_modal: (payload) => ({
+        type: actions.OPEN_ZAI_PAYMENT_MODAL,
+        payload,
+    }),
+
+    close_zai_payment_modal: () => ({
+        type: actions.CLOSE_PAYMENT_MODAL_SUCCESS,
     }),
 
     get_balance_details: (id) => ({

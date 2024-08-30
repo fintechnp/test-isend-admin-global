@@ -198,6 +198,8 @@ import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest
 import ListCampaignReportTab from "Private/pages/Reports/CampaignReport/ListCampaignReportTab";
 import ListCampaignLedgerReport from "Private/pages/Reports/CampaignReport/ListCampaignLedgerReport";
 import ListCampaignUsageReport from "Private/pages/Reports/CampaignReport/ListCampaignUsageReport";
+import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZaiComponent";
+import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -557,7 +559,11 @@ const privateRoutes = [
     },
     {
         path: routePaths.transaction.zaiTransaction,
-        component: <ZaiAustraliaPayment />,
+        component: <ProtectedZaiComponent />,
+    },
+    {
+        path: routePaths.ListZaiLogs,
+        component: <ZaiLogsTab />,
     },
 
     //Utilities

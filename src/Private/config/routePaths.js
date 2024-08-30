@@ -100,7 +100,6 @@ const routePaths = {
     transaction: {
         achTransaction: "/transaction/ach-transaction",
         zaiTransaction: "/payment/zai-australia-payment",
-        ziaLogs: "/transaction/zia-logs",
     },
     dashboard: {
         base: "/",
@@ -190,6 +189,10 @@ const routePaths = {
     ListCampaignReportTab: "/report/campaign",
     ListCampaignLedgerReport: "/report/campaign/ledger/:id",
     ListCampaignUsageReport: "/report/campaign/usage/:id",
+
+    // region - zaiLogs
+
+    ListZaiLogs: "zai-logs",
 };
 
 export default routePaths;
