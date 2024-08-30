@@ -8,6 +8,7 @@ const SELECTED_COUNTRY_KEY = "iSendRemit.166e95bafdc0bb30c1daea3a47afc91b.csk";
 export default class BaseUrlConfiguration {
     static saveCountry(countryISO3Code) {
         Cookies.set(SELECTED_COUNTRY_KEY, countryISO3Code);
+        localStorage.setItem(SELECTED_COUNTRY_KEY, countryISO3Code);
     }
 
     static removeCountry() {

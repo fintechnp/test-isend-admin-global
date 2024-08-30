@@ -186,6 +186,8 @@ import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
 import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
 
 import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
+import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZaiComponent";
+import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -525,7 +527,11 @@ const privateRoutes = [
     },
     {
         path: routePaths.transaction.zaiTransaction,
-        component: <ZaiAustraliaPayment />,
+        component: <ProtectedZaiComponent />,
+    },
+    {
+        path: routePaths.ListZaiLogs,
+        component: <ZaiLogsTab />,
     },
 
     //Utilities

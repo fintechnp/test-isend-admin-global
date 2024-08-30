@@ -153,9 +153,28 @@ function CustomerDetails() {
                 },
             ],
         },
+
+        {
+            title: "BSB Details",
+            items: [
+                {
+                    label: "Zai Account Number",
+                    accessorKey: "zai_account_number",
+                },
+                {
+                    label: "Zai Routing Number",
+                    accessorKey: "zai_routing_number",
+                },
+            ],
+        },
+
         {
             title: "Other Details",
             items: [
+                {
+                    label: "Zai pay ID",
+                    accessorKey: "zai_pay_id",
+                },
                 {
                     label: "Occupation",
                     accessorKey: "occupation_data",

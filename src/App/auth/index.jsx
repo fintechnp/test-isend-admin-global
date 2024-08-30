@@ -97,8 +97,11 @@ export default class AuthProvider extends Component {
                     type: "GET_SEND_COUNTRY",
                 });
                 store.dispatch({
-                    type: actions.GET_USER_MENUS_AND_PERMISSIONS,
-                });
+                    type: "USER_DETAILS",
+                }),
+                    store.dispatch({
+                        type: actions.GET_USER_MENUS_AND_PERMISSIONS,
+                    });
                 store.dispatch({
                     type: "GET_ALL_REFERENCE",
                     query: {

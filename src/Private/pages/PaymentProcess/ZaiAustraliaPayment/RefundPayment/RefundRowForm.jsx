@@ -8,6 +8,7 @@ import SubmitButton from "App/components/Button/SubmitButton";
 
 import actions from "../../store/actions";
 import { refundPaymentSchema } from "../schema/refundPaymentSchema";
+import isEmpty from "App/helpers/isEmpty";
 
 export default function RefundRowForm({ row, onRefundSuccess }) {
     const dispatch = useDispatch();
@@ -57,6 +58,7 @@ export default function RefundRowForm({ row, onRefundSuccess }) {
             <TableCell>{row.transaction_id}</TableCell>
             <TableCell align="right">{row.transaction_amount.toLocaleString()} </TableCell>
             <TableCell>{row.transaction_currency}</TableCell>
+            <TableCell>{!isEmpty(row.debtor_name) ? row.debtor_name : "N/A"}</TableCell>
             <TableCell>
                 <TextField
                     type="text"
