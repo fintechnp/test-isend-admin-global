@@ -48,7 +48,7 @@ function FormSearchAutoComplete(props) {
 
     const [totalRecordCount, setTotalRecordCount] = useState();
 
-    const [params, setParams] = useState({
+    const params = useRef({
         [pageNumberQueryKey]: 1,
         PageSize: 20,
     });
@@ -67,31 +67,52 @@ function FormSearchAutoComplete(props) {
 
     const errorMessage = get(errors, name)?.message;
 
+    // Use ref to keep track of previous endpoint
+    const prevApiEndpoint = useRef(apiEndpoint);
+
+    useEffect(() => {
+        if (apiEndpoint !== prevApiEndpoint.current) {
+            // Clear API data when the endpoint changes
+            setApiData([]);
+            setSearchedText("");
+            setSelected(null);
+            params.current = { [pageNumberQueryKey]: 1, PageSize: 20 };
+            prevApiEndpoint.current = apiEndpoint; // Update ref
+        }
+    }, [apiEndpoint]);
+
+    const fetchData = async () => {
+        if (searchedText) {
+            setApiData([]);
+            params.current = { [pageNumberQueryKey]: 1, PageSize: 20 };
+        }
+        try {
+            setIsLoading(true);
+            const response = await api.get(
+                `${apiEndpoint}?${qs.stringify({
+                    ...defaultQueryParams,
+                    ...params.current,
+                    [paramkey]: searchedText,
+                })}`,
+            );
+            if (shouldRenderPrevData && response.data.length !== 0) {
+                setApiData((prev) => [...prev, ...response?.data]);
+            }
+            if (!shouldRenderPrevData && response.data.length !== 0) {
+                setApiData(response?.data);
+            }
+
+            setTotalRecordCount(response?.pagination?.totalCount);
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (!isAddMode) return;
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-                const response = await api.get(
-                    `${apiEndpoint}?${qs.stringify({
-                        ...defaultQueryParams,
-                        ...params,
-                        [paramkey]: searchedText,
-                    })}`,
-                );
-                if (shouldRenderPrevData) {
-                    setApiData((prev) => [...prev, ...response?.data]);
-                }
-                setApiData(response?.data);
-                setTotalRecordCount(response?.pagination?.totalCount);
-                setIsLoading(false);
-            } catch (error) {
-                setIsLoading(false);
-            }
-        };
-
         fetchData();
-    }, [searchedText, apiEndpoint, refetchKey, params, defaultQueryParams]);
+    }, [searchedText, apiEndpoint, refetchKey, defaultQueryParams]);
 
     useEffect(() => {
         if (isAddMode) return;
@@ -120,7 +141,10 @@ function FormSearchAutoComplete(props) {
 
     const loadMoreResults = () => {
         if (!totalRecordCount || apiData.length < totalRecordCount) {
-            setParams({ ...params, ...defaultQueryParams, [pageNumberQueryKey]: (params[pageNumberQueryKey] += 1) });
+            const currentParams = params.current || {};
+            const updatedPageNumber = (currentParams[pageNumberQueryKey] || 0) + 1;
+            params.current = { ...params.current, ...defaultQueryParams, [pageNumberQueryKey]: updatedPageNumber };
+            fetchData();
         }
     };
 
@@ -140,9 +164,9 @@ function FormSearchAutoComplete(props) {
 
     useEffect(() => {
         const selected = options?.find((o) => o.value === value);
-
         setSelected(selected ?? "");
-    }, [value, apiData]);
+        setSearchedText("");
+    }, [value]);
 
     return (
         <Controller
@@ -159,13 +183,12 @@ function FormSearchAutoComplete(props) {
                         else setValue(name, option.value);
                         clearErrors(name);
                         if (reason === "clear") {
-                            setApiData([]);
                             setSearchedText("");
-                            setParams({
-                                ...params,
+                            params.current = {
+                                ...params.current,
                                 [pageNumberQueryKey]: 1,
                                 PageSize: 20,
-                            });
+                            };
                         }
                     }}
                     getOptionLabel={(option) => option.label ?? ""}
@@ -186,6 +209,7 @@ function FormSearchAutoComplete(props) {
                             size={size}
                             onChange={(e) => {
                                 debounce(() => setSearchedText(e.target.value), 500);
+                                setApiData([]);
                             }}
                             error={!!errorMessage}
                             helperText={errorMessage}

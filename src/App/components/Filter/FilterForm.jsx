@@ -51,7 +51,15 @@ const BuildFilterInput = ({ field }) => {
     if (field.type === fieldTypes.TEXTFIELD) return <FormTextField name={field.name} label={field.label} />;
 
     if (field.type === fieldTypes.SELECT)
-        return <FormSelect name={field.name} label={field.label} options={field.options} />;
+        return (
+            <FormSelect
+                name={field.name}
+                label={field.label}
+                options={field.options}
+                defaultValue={field?.defaultValue}
+                onChange={field?.onChange}
+            />
+        );
 
     if (field.type === fieldTypes.DATE)
         return <FormDatePicker name={field.name} label={field.label} options={field.options} {...field.props} />;
@@ -65,6 +73,8 @@ const BuildFilterInput = ({ field }) => {
                 paramkey={field.searchParamName}
                 valueKey={field.valueKey}
                 labelKey={field.labelKey}
+                shouldRenderPrevData={field?.shouldRenderPrevData}
+                pageNumberQueryKey={field?.pageNumberQueryKey}
             />
         );
 

@@ -82,6 +82,7 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
         setFilterSchema({
             ...filterSchema,
             ...data,
+            [pageNumberKeyName]: 1,
         });
 
     /**
