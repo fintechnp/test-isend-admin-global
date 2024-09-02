@@ -81,7 +81,7 @@ const EditPromoCode = () => {
             <PageContentContainer title="Edit Campaign">
                 <PromoCodeForm
                     isAddMode={false}
-                    isLoading={isLoading}
+                    isSubmitting={isLoading}
                     handleSubmit={handleSubmit}
                     initialValues={initialValues}
                 />

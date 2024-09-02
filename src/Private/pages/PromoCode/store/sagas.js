@@ -58,8 +58,6 @@ const updatePromoCode = takeEvery(actions.UPDATE_PROMO_CODE, function* (action) 
     try {
         const res = yield call(api.put, buildRoute(apiEndpoints.UpdatePromoCode, action.id), action.data);
 
-        console.log("The updated Response is", res);
-
         yield put({
             type: actions.UPDATE_PROMO_CODE_SUCCESS,
             response: res,

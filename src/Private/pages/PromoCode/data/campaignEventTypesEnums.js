@@ -1,15 +1,17 @@
 export const campaignEventTypes = {
-    DATE: 1,
+    BIRTH_DATE: 1,
     DATE_RANGE: 2,
     AMOUNT: 3,
     COUNT: 4,
-    COUNTRY: 5,
+    BENEFICIARY_COUNTRY: 5,
+    BENEFICIARY_RELATION: 6,
 };
 
 export const campaignEventTypesOptions = [
-    { label: "Date", value: campaignEventTypes.DATE },
+    { label: "BIRTH_DATE", value: campaignEventTypes.BIRTH_DATE },
     { label: "Date Range", value: campaignEventTypes.DATE_RANGE },
     { label: "Amount", value: campaignEventTypes.AMOUNT },
     { label: "Count", value: campaignEventTypes.COUNT },
-    { label: "Country", value: campaignEventTypes.COUNTRY },
+    { label: "Beneficiary Country", value: campaignEventTypes.BENEFICIARY_COUNTRY },
+    { label: "Beneficiary Relation", value: campaignEventTypes.BENEFICIARY_RELATION },
 ];

@@ -44,7 +44,7 @@ const AddPromoCode = () => {
             documentTitle="Add Campaign"
         >
             <PageContentContainer title="Add Campaign">
-                <PromoCodeForm isAddMode={true} isLoading={isLoading} handleSubmit={handleSubmit} />
+                <PromoCodeForm isSubmitting={isLoading} isAddMode={true} handleSubmit={handleSubmit} />
             </PageContentContainer>
         </PageContent>
     );

@@ -32,27 +32,26 @@ const ListPromoCode = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const confirm = useConfirm();
-    // const methods = useListFilterStore({ initialState });
+    const methods = useListFilterStore({ initialState, pageNumberKeyName: "Page", pageSizeKeyName: "PageSize" });
 
     const {
         isFilterOpen,
         openFilter,
         closeFilter,
         filterSchema,
-        onQuickFilter,
         onRowsPerPageChange,
         onFilterSubmit,
         onPageChange,
         onDeleteFilterParams,
         reset,
-    } = useListFilterStore({
-        initialState,
-    });
+    } = methods;
     const { response: promoCodes, loading: isLoading } = useSelector((state) => state.get_promo_codes);
 
     const { success: isStatusSuccess, loading } = useSelector((state) => state.update_promo_code_status);
 
     const data = promoCodes?.data ?? [];
+
+    console.log("The response is ", promoCodes?.pagination);
 
     useEffect(() => {
         dispatch(promoCodeActions.get_promo_codes(filterSchema));
@@ -60,9 +59,9 @@ const ListPromoCode = () => {
 
     useEffect(() => {
         if (isStatusSuccess) {
-            dispatch(promoCodeActions.get_promo_codes());
+            dispatch(promoCodeActions.get_promo_codes(filterSchema));
         } else if (!isStatusSuccess) {
-            dispatch(promoCodeActions.get_promo_codes());
+            dispatch(promoCodeActions.get_promo_codes(filterSchema));
         }
     }, [dispatch, isStatusSuccess]);
 
@@ -229,13 +228,13 @@ const ListPromoCode = () => {
                 >
                     <TanstackReactTable columns={columns} data={data} loading={isLoading} />
                 </PageContentContainer>
-            </Column>
 
-            <TablePagination
-                paginationData={promoCodes?.pagination}
-                handleChangePage={onPageChange}
-                handleChangeRowsPerPage={onRowsPerPageChange}
-            />
+                <TablePagination
+                    paginationData={promoCodes?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 };

@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -11,10 +11,15 @@ import {
     triggerAttributeTypes,
     triggerAttributeTypesOptions,
     triggerAttributeTypesOptionsDisabled,
+    triggerAttributeTypesOptionsCount,
 } from "./data/triggerAttributeTypesEnums";
+import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
+import referenceTypeId from "Private/config/referenceTypeId";
 
 export default function TriggerForm({ index, mappedAttributeList, countryCurrency, allAttributeList }) {
     const { watch, setValue } = useFormContext();
+
+    const { methods } = useForm();
 
     const attributeFamily = watch(`trigger.${index}.attribute`);
 
@@ -38,7 +43,10 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
             case campaignEventTypes.COUNT:
                 setValue(`trigger.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
                 break;
-            case campaignEventTypes.COUNTRY:
+            case campaignEventTypes.BENEFICIARY_COUNTRY:
+                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
+                break;
+            case campaignEventTypes.BENEFICIARY_RELATION:
                 setValue(`trigger.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
                 break;
             default:
@@ -48,10 +56,13 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
 
     const triggerFormOptions = (() => {
         switch (true) {
-            case attributeFamilyTypeId === campaignEventTypes.DATE:
+            case attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE:
             case attributeFamilyTypeId === campaignEventTypes.DATE_RANGE:
-            case attributeFamilyTypeId === campaignEventTypes.COUNTRY:
+            case attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY:
+            case attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION:
                 return triggerAttributeTypesOptions;
+            case attributeFamilyTypeId === campaignEventTypes.COUNT:
+                return triggerAttributeTypesOptionsCount;
             default:
                 return triggerAttributeTypesOptionsDisabled;
         }
@@ -62,14 +73,28 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
             <Grid item xs={12} md={6} lg={3}>
                 <FormSelect placeholder="Attribute" name={`trigger.${index}.attribute`} options={mappedAttributeList} />
             </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid
+                display={
+                    attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE ||
+                    attributeFamilyTypeId === campaignEventTypes.DATE_RANGE ||
+                    attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY ||
+                    attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION
+                        ? "none"
+                        : "block"
+                }
+                item
+                xs={12}
+                md={6}
+                lg={3}
+            >
                 <FormSelect
                     name={`trigger.${index}.criteria`}
                     options={triggerFormOptions}
                     disabled={
-                        attributeFamilyTypeId === campaignEventTypes.DATE ||
+                        attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE ||
                         attributeFamilyTypeId === campaignEventTypes.DATE_RANGE ||
-                        attributeFamilyTypeId === campaignEventTypes.COUNTRY
+                        attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY ||
+                        attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION
                     }
                 />
             </Grid>
@@ -87,6 +112,18 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
                 attributeFamilyTypeId === campaignEventTypes.COUNT) && (
                 <Grid item xs={12} md={6} lg={3}>
                     <FormTextField label={amountLabel} type="number" name={`trigger.${index}.amount`} />
+                </Grid>
+            )}
+
+            {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION && (
+                <Grid item xs={12} md={6} lg={3}>
+                    <FormReferenceDataAutoComplete
+                        name={`trigger.${index}.amount`}
+                        label="Relation"
+                        labelKey="name"
+                        valueKey="value"
+                        referenceTypeId={referenceTypeId.relations}
+                    />
                 </Grid>
             )}
         </Grid>

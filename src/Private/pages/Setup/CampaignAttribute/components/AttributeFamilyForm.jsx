@@ -39,9 +39,7 @@ const AttributeFamilyForm = ({ handleClose, loading, isAddMode = true, initialVa
                 </Grid>
                 <Grid marginY={2} item xs={12}>
                     <ButtonWrapper>
-                        <CancelButton onClick={handleClose} disable={loading}>
-                            Cancel
-                        </CancelButton>
+                        <CancelButton onClick={handleClose}>Cancel</CancelButton>
                         <SubmitButton isloading={loading} isAddMode={isAddMode} />
                     </ButtonWrapper>
                 </Grid>

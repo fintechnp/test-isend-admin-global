@@ -30,14 +30,16 @@ import FormDateTimePicker from "App/core/hook-form/FormDateTimePicker";
 import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
 
 import TriggerForm from "./TriggerForm";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { rewardTypeOptions } from "./data/rewardTypeEnums";
 import { campaignStatusOptions } from "./data/campaignStatus";
 import { campaignEventTypes } from "./data/campaignEventTypesEnums";
 import countryActions from "Private/features/countries/countryActions";
+import { createPromoCodeSchema } from "./schema/createPromoCodeSchema";
+import { updatePromoCodeSchema } from "./schema/updatePromoCodeSchema";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
-import { triggerAttributeTypesOptionsDisabled } from "./data/triggerAttributeTypesEnums";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -48,7 +50,7 @@ const CellContainer = styled(Box)(() => ({
     },
 }));
 
-export default function PromoCodeForm({ isLoading, handleSubmit, initialValues, isAddMode }) {
+export default function PromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -121,9 +123,33 @@ export default function PromoCodeForm({ isLoading, handleSubmit, initialValues, 
                       },
                   ],
               },
+        resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
+        mode: "onSubmit",
     });
 
-    const { watch, setValue } = methods;
+    const {
+        watch,
+        setValue,
+        formState: { errors },
+    } = methods;
+
+    useEffect(() => {
+        if (!isAddMode) {
+            setValue("campaign.campaignName", initialValues?.campaignName || "");
+            setValue("campaign.campaignType", initialValues?.campaignType || campaignCodes.PROMO);
+            setValue("campaign.validCountry", initialValues?.validCountry || "");
+            setValue("campaign.startDate", initialValues?.startDate || "");
+            setValue("campaign.endDate", initialValues?.endDate || "");
+            setValue("campaign.status", initialValues?.status || "");
+            setValue("campaign.budget", initialValues?.budget || "");
+            setValue("limitPerUser", initialValues?.limitPerUser || "");
+            setValue("limitPerPromo", initialValues?.limitPerPromo || "");
+            setValue("termsAndCondition", initialValues?.termsAndCondition || "");
+            setValue("webImage", initialValues?.webImage || "");
+            setValue("mobileImage", initialValues?.mobileImage || "");
+            setValue("description", initialValues?.description || "");
+        }
+    }, [initialValues]);
 
     useEffect(() => {
         if (!isAddMode) {
@@ -150,7 +176,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit, initialValues, 
         if (campaignType === campaignCodes.PROMO) {
             setValue("trigger", [
                 {
-                    attribute: campaignEventTypes.DATE,
+                    attribute: campaignEventTypes.BIRTH_DATE,
                     currency: "",
                     amount: 0,
                 },
@@ -199,6 +225,11 @@ export default function PromoCodeForm({ isLoading, handleSubmit, initialValues, 
         control,
         name: "triggerReferrer",
     });
+
+    useEffect(() => {
+        if (Object.keys(errors).length > 0) {
+        }
+    }, [errors]);
 
     const onSubmit = (data) => {
         const { campaignType } = data.campaign;
@@ -679,7 +710,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit, initialValues, 
                     <Grid item xs={12}>
                         <ButtonWrapper>
                             <CancelButton onClick={() => navigate(routePaths.ListPromoCode)}>Cancel</CancelButton>
-                            <SubmitButton disabled={isLoading} type="submit">
+                            <SubmitButton disabled={isSubmitting} type="submit">
                                 {isAddMode ? "Add Campaign" : "Update Campaign"}
                             </SubmitButton>
                         </ButtonWrapper>
