@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { promoCodeActions } from "./store";
-import PromoCodeForm from "./PromoCodeForm";
-import routePaths from "Private/config/routePaths";
+import { promoCodeActions } from "../store";
+import PromoCodeForm from "../PromoCodeForm";
 
 const AddPromoCode = () => {
     const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const AddPromoCode = () => {
             documentTitle="Add Campaign"
         >
             <PageContentContainer title="Add Campaign">
-                <PromoCodeForm isLoading={isLoading} handleSubmit={handleSubmit} />
+                <PromoCodeForm isAddMode={true} isLoading={isLoading} handleSubmit={handleSubmit} />
             </PageContentContainer>
         </PageContent>
     );

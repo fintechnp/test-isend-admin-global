@@ -6,3 +6,4 @@ export { default as GetPromoCodeByIdReducer } from "./reducers/getPromoCodeByIdR
 export { default as UpdatePromoCodeStatusReducer } from "./reducers/updatePromoCodeStatusReducer";
 export { default as AddPromoCodeBudgetReducer } from "./reducers/addPromoCodeBudgetReducer";
 export { default as GetPromoCodeUsageReducers } from "./reducers/updatePromoCodeStatusReducer";
+export { default as UpdatePromoCodeReducer } from "./reducers/updatePromoCodeReducer";

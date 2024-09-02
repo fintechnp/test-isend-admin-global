@@ -189,9 +189,10 @@ import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
 import ListOdfiWebhooks from "Private/pages/AchWebhooks/ListOdfiWebhooks";
 import ListNocWebhooks from "Private/pages/AchWebhooks/ListNocWebhooks";
 
-import AddPromoCode from "Private/pages/PromoCode/AddPromoCode";
-import ListPromoCode from "Private/pages/PromoCode/ListPromoCode";
-import ViewPromoCode from "Private/pages/PromoCode/ViewPromoCode";
+import AddPromoCode from "Private/pages/PromoCode/components/AddPromoCode";
+import ListPromoCode from "Private/pages/PromoCode/components/ListPromoCode";
+import ViewPromoCode from "Private/pages/PromoCode/components/ViewPromoCode";
+import EditPromoCode from "Private/pages/PromoCode/components/EditPromoCode";
 import ListReferralReport from "Private/pages/Reports/Referral/ListReferralReport";
 import ViewReferralReport from "Private/pages/Reports/Referral/ViewReferralReport";
 import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
@@ -771,6 +772,10 @@ const privateRoutes = [
     {
         path: routePaths.ViewPromoCode,
         component: <ViewPromoCode />,
+    },
+    {
+        path: routePaths.EditPromoCode,
+        component: <EditPromoCode />,
     },
 ];
 

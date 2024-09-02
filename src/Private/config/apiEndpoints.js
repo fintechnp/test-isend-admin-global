@@ -297,6 +297,7 @@ const apiEndpoints = {
     // Promo Code
 
     ListPromoCode: "/campaign/promocodeList",
+    UpdatePromoCode: "/campaign/:campaignId",
     CreatePromoCode: "/campaign/promocode",
     ListValidatePromoCode: "/campaign/validatePromoCode",
     ListCampaignReport: "/campaign/campaignReport",

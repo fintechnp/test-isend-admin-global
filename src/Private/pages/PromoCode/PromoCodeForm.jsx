@@ -37,7 +37,7 @@ import countryActions from "Private/features/countries/countryActions";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
-import { triggerAttributeTypes, triggerAttributeTypesOptionsDisabled } from "./data/triggerAttributeTypesEnums";
+import { triggerAttributeTypesOptionsDisabled } from "./data/triggerAttributeTypesEnums";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -48,7 +48,7 @@ const CellContainer = styled(Box)(() => ({
     },
 }));
 
-export default function PromoCodeForm({ isLoading, handleSubmit }) {
+export default function PromoCodeForm({ isLoading, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -77,46 +77,74 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
     const countryCurrency = response?.data?.map((c) => ({ value: c.currency, label: c.currency }));
 
     const methods = useForm({
-        defaultValues: {
-            campaign: {
-                campaignName: "",
-                campaignType: campaignCodes.PROMO,
-                validCountry: "",
-                startDate: "",
-                endDate: "",
-                status: 0,
-                budget: 0,
-            },
-            trigger: [],
-            triggerReferrer: [],
-            reward: [
-                {
-                    minimumAmount: 0,
-                    maximumAmount: 0,
-                    rewardOn: rewardOnEnums.SERVICE_CHARGE,
-                    rewardType: 0,
-                    rewardValue: 0,
-                    rewardLimit: 0,
-                },
-            ],
-        },
+        defaultValues: isAddMode
+            ? {
+                  campaign: {
+                      campaignName: "",
+                      campaignType: campaignCodes.PROMO,
+                      validCountry: "",
+                      startDate: "",
+                      endDate: "",
+                      status: 0,
+                      budget: 0,
+                  },
+                  trigger: [],
+                  triggerReferrer: [],
+                  reward: [
+                      {
+                          minimumAmount: 0,
+                          maximumAmount: 0,
+                          rewardOn: rewardOnEnums.SERVICE_CHARGE,
+                          rewardType: 0,
+                          rewardValue: 0,
+                          rewardLimit: 0,
+                      },
+                  ],
+                  limitPerUser: 0,
+                  limitPerPromo: 0,
+                  termsAndCondition: "",
+                  webImage: "",
+                  mobileImage: "",
+                  description: "",
+              }
+            : {
+                  trigger: initialValues?.trigger || [],
+                  triggerReferrer: initialValues?.triggerReferrer || [],
+                  reward: initialValues?.reward || [
+                      {
+                          minimumAmount: initialValues?.minimumAmount || 0,
+                          maximumAmount: initialValues?.maximumAmount || 0,
+                          rewardOn: initialValues?.rewardOnEnums?.SERVICE_CHARGE || rewardOnEnums?.SERVICE_CHARGE,
+                          rewardType: initialValues?.rewardType || 0,
+                          rewardValue: initialValues?.rewardValue || 0,
+                          rewardLimit: initialValues?.rewardLimit || 0,
+                      },
+                  ],
+              },
     });
 
     const { watch, setValue } = methods;
 
+    useEffect(() => {
+        if (!isAddMode) {
+            setValue("campaign.campaignName", initialValues?.campaignName || "");
+            setValue("campaign.campaignType", initialValues?.campaignType || campaignCodes.PROMO);
+            setValue("campaign.validCountry", initialValues?.validCountry || "");
+            setValue("campaign.startDate", initialValues?.startDate || "");
+            setValue("campaign.endDate", initialValues?.endDate || "");
+            setValue("campaign.status", initialValues?.status || "");
+            setValue("campaign.budget", initialValues?.budget || "");
+            setValue("limitPerUser", initialValues?.limitPerUser || "");
+            setValue("limitPerPromo", initialValues?.limitPerPromo || "");
+            setValue("termsAndCondition", initialValues?.termsAndCondition || "");
+            setValue("webImage", initialValues?.webImage || "");
+            setValue("mobileImage", initialValues?.mobileImage || "");
+            setValue("description", initialValues?.description || "");
+        }
+    }, [initialValues]);
+
     const campaignType = watch("campaign.campaignType");
     const campaign = watch("campaign");
-
-    const getDefaultCriteria = (attributeFamilyTypeId) => {
-        switch (attributeFamilyTypeId) {
-            case campaignEventTypes.DATE:
-                return triggerAttributeTypes.GREATER_THAN;
-            case campaignEventTypes.DATE_RANGE:
-                return triggerAttributeTypes.BETWEEN;
-            default:
-                return triggerAttributeTypes.ON_SAME_DAY;
-        }
-    };
 
     useEffect(() => {
         if (campaignType === campaignCodes.PROMO) {
@@ -141,7 +169,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
             ]);
             setValue("trigger", []);
         }
-    }, [campaign.campaignType, campaignCodes, initialTriggerValue, setValue]);
+    }, [campaign?.campaignType, campaignCodes, initialTriggerValue, setValue]);
 
     const { control } = methods;
 
@@ -183,7 +211,7 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                 startDate: data.campaign.startDate,
                 endDate: data.campaign.endDate,
                 status: data.campaign.status,
-                budget: +data.campaign.budget,
+                budget: data.campaign.budget,
             },
 
             reward: data.reward.map((field) => ({
@@ -235,18 +263,43 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                     {/* CAMPAIGN FIELDS */}
 
                     <Grid container spacing="16px">
+                        {isAddMode && (
+                            <>
+                                <Grid item xs={12} md={6} lg={3}>
+                                    <FormTextField name="campaign.campaignName" label="Campaign Name" required />
+                                </Grid>
+
+                                <Grid item xs={12} md={6} lg={3}>
+                                    <FormSelect
+                                        type="number"
+                                        name="campaign.campaignType"
+                                        label="Campaign Type"
+                                        options={campaignCodesOptions}
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} md={6} lg={3}>
+                                    <FormSelect
+                                        name="campaign.validCountry"
+                                        label="Valid Country"
+                                        options={countryData}
+                                        required
+                                    />
+                                </Grid>
+                            </>
+                        )}
+
                         <Grid item xs={12} md={6} lg={3}>
-                            <FormTextField name="campaign.campaignName" label="Campaign Name" required />
+                            <FormDateTimePicker name="campaign.startDate" label="Start Date Time" />
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>
-                            <FormSelect
-                                type="number"
-                                name="campaign.campaignType"
-                                label="Campaign Type"
-                                options={campaignCodesOptions}
-                                required
-                            />
+                            <FormDateTimePicker name="campaign.endDate" label="End Date Time" />
+                        </Grid>
+
+                        <Grid item xs={12} md={6} lg={3}>
+                            <FormTextField type="number" name="campaign.budget" label="Budget in" />
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>
@@ -258,340 +311,329 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                                 required
                             />
                         </Grid>
-
-                        <Grid item xs={12} md={6} lg={3}>
-                            <FormSelect
-                                name="campaign.validCountry"
-                                label="Valid Country"
-                                options={countryData}
-                                required
-                            />
-                        </Grid>
-
-                        <Grid item xs={12} md={6} lg={3}>
-                            <FormDateTimePicker name="campaign.startDate" label="Start Date Time" />
-
-                            {/* <FormTextField name="campaign.startDate" label="Start Date Time" /> */}
-                        </Grid>
-
-                        <Grid item xs={12} md={6} lg={3}>
-                            <FormDateTimePicker name="campaign.endDate" label="End Date Time" />
-
-                            {/* <FormTextField name="campaign.endDate" label="End Date Time" /> */}
-                        </Grid>
-
-                        <Grid item xs={12} md={6} lg={3}>
-                            <FormTextField type="number" name="campaign.budget" label="Budget in" />
-                        </Grid>
                     </Grid>
 
                     <Divider />
 
                     {/* TRIGGER FIELDS */}
-                    {campaign.campaignType === campaignCodes.PROMO ? (
-                        <Grid item xs={12}>
-                            {/* <Grid marginTop={3} marginBottom={2} item xs={12}>
-                                <Typography variant="h6">Trigger</Typography>
-                            </Grid> */}
-
-                            <Grid marginTop={3} marginBottom={2} display="flex">
+                    {isAddMode && (
+                        <>
+                            {campaign.campaignType === campaignCodes.PROMO ? (
                                 <Grid item xs={12}>
-                                    <Typography variant="h6">Trigger</Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={3}>
-                                    <FormSelect
-                                        options={campaignTriggerCriteriaOptions}
-                                        name="triggerCriteria"
-                                        label="Trigger Criteria"
-                                        required
-                                    />
-                                </Grid>
-                            </Grid>
-
-                            {triggerFields.map((field, index) => {
-                                return (
-                                    <Grid container key={field.id}>
-                                        <TriggerForm
-                                            index={index}
-                                            mappedAttributeList={mappedAttributeList}
-                                            triggerAttributeTypesOptionsDisabled={triggerAttributeTypesOptionsDisabled}
-                                            countryCurrency={countryCurrency}
-                                            allAttributeList={getAttributeFamilyList?.data?.data}
-                                        />
-
+                                    <Grid marginTop={3} marginBottom={2} display="flex">
                                         <Grid item xs={12}>
-                                            <ButtonWrapper>
-                                                <Button
-                                                    variant="contained"
-                                                    size="small"
-                                                    color="primary"
-                                                    onClick={() =>
-                                                        addTriggerFields({
-                                                            attribute: field.attribute,
-                                                            criteria: field.criteria,
-                                                            currency: field.currency,
-                                                            amount: field.amount,
-                                                        })
-                                                    }
-                                                >
-                                                    Add
-                                                </Button>
-
-                                                {index > 0 ? (
-                                                    <Button
-                                                        onClick={() => removeTriggerFields(index)}
-                                                        variant="outlined"
-                                                        size="small"
-                                                        color="error"
-                                                    >
-                                                        Remove
-                                                    </Button>
-                                                ) : (
-                                                    <Button variant="outlined" size="small" color="error" disabled>
-                                                        Remove
-                                                    </Button>
-                                                )}
-                                            </ButtonWrapper>
+                                            <Typography variant="h6">Trigger</Typography>
+                                        </Grid>
+                                        <Grid item xs={12} md={6} lg={3}>
+                                            <FormSelect
+                                                options={campaignTriggerCriteriaOptions}
+                                                name="triggerCriteria"
+                                                label="Trigger Criteria"
+                                                required
+                                            />
                                         </Grid>
                                     </Grid>
-                                );
-                            })}
-                        </Grid>
-                    ) : campaign.campaignType === campaignCodes.REFERRAL ? (
-                        <Grid container spacing={2}>
-                            <Grid marginTop={3} marginBottom={2} item xs={12}>
-                                <Typography variant="h6">Trigger Configuration</Typography>
-                            </Grid>
-                            {triggerReferrerFields.map((field, index) => (
-                                <Grid container spacing={2} item key={`${field.id}_field`}>
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormSelect
-                                            label="Referrer Need KYC?"
-                                            name={`triggerReferrer.${index}.referrerneedkyc`}
-                                            options={[
-                                                { value: true, label: "True" },
-                                                { value: false, label: "False" }, // Fix typo
-                                            ]}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormTextField
-                                            type="number"
-                                            label="Referrer Least Transactions"
-                                            name={`triggerReferrer.${index}.referrerleasttransactions`}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormSelect
-                                            label="Referee Need KYC?"
-                                            name={`triggerReferrer.${index}.refereeneedkyc`}
-                                            options={[
-                                                { value: true, label: "True" },
-                                                { value: false, label: "False" }, // Fix typo
-                                            ]}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormTextField
-                                            type="number"
-                                            label="Referee Least Transactions"
-                                            name={`triggerReferrer.${index}.refereeleasttransactions`}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormTextField
-                                            type="number"
-                                            label="Minimum Referrer"
-                                            name={`triggerReferrer.${index}.minimumreferrer`}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormTextField
-                                            type="number"
-                                            label="KYC Verifying Days"
-                                            name={`triggerReferrer.${index}.kycverifyingdays`}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <ButtonWrapper>
-                                            <Button
-                                                variant="contained"
-                                                size="small"
-                                                onClick={() => {
-                                                    addtriggerReferrerFields({
-                                                        referrerneedkyc: "",
-                                                        referrerleasttransactions: 0,
-                                                        refereeneedkyc: "",
-                                                        refereeleasttransactions: 0,
-                                                        minimumreferrer: 0,
-                                                        kycverifyingdays: 0,
-                                                    });
-                                                }}
-                                            >
-                                                Add Condition
-                                            </Button>
-                                            {index > 0 ? (
-                                                <Button
-                                                    variant="contained"
-                                                    size="small"
-                                                    color="error"
-                                                    onClick={() => removetriggerReferrerFields(index)}
-                                                >
-                                                    <ClearOutlinedIcon />
-                                                </Button>
-                                            ) : (
-                                                <Button variant="contained" size="small" color="error" disabled>
-                                                    <ClearOutlinedIcon />
-                                                </Button>
-                                            )}
-                                        </ButtonWrapper>
-                                    </Grid>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    ) : null}
 
+                                    {triggerFields.map((field, index) => {
+                                        return (
+                                            <Grid container key={field.id}>
+                                                <TriggerForm
+                                                    index={index}
+                                                    mappedAttributeList={mappedAttributeList}
+                                                    countryCurrency={countryCurrency}
+                                                    allAttributeList={getAttributeFamilyList?.data?.data}
+                                                />
+
+                                                <Grid item xs={12}>
+                                                    <ButtonWrapper>
+                                                        <Button
+                                                            variant="contained"
+                                                            size="small"
+                                                            color="primary"
+                                                            onClick={() =>
+                                                                addTriggerFields({
+                                                                    attribute: field.attribute,
+                                                                    criteria: field.criteria,
+                                                                    currency: field.currency,
+                                                                    amount: field.amount,
+                                                                })
+                                                            }
+                                                        >
+                                                            Add
+                                                        </Button>
+
+                                                        {index > 0 ? (
+                                                            <Button
+                                                                onClick={() => removeTriggerFields(index)}
+                                                                variant="outlined"
+                                                                size="small"
+                                                                color="error"
+                                                            >
+                                                                Remove
+                                                            </Button>
+                                                        ) : (
+                                                            <Button
+                                                                variant="outlined"
+                                                                size="small"
+                                                                color="error"
+                                                                disabled
+                                                            >
+                                                                Remove
+                                                            </Button>
+                                                        )}
+                                                    </ButtonWrapper>
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    })}
+                                </Grid>
+                            ) : campaign.campaignType === campaignCodes.REFERRAL ? (
+                                <Grid container spacing={2}>
+                                    <Grid marginTop={3} marginBottom={2} item xs={12}>
+                                        <Typography variant="h6">Trigger Configuration</Typography>
+                                    </Grid>
+                                    {triggerReferrerFields.map((field, index) => (
+                                        <Grid container spacing={2} item key={`${field.id}_field`}>
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormSelect
+                                                    label="Referrer Need KYC?"
+                                                    name={`triggerReferrer.${index}.referrerneedkyc`}
+                                                    options={[
+                                                        { value: true, label: "True" },
+                                                        { value: false, label: "False" }, // Fix typo
+                                                    ]}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormTextField
+                                                    type="number"
+                                                    label="Referrer Least Transactions"
+                                                    name={`triggerReferrer.${index}.referrerleasttransactions`}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormSelect
+                                                    label="Referee Need KYC?"
+                                                    name={`triggerReferrer.${index}.refereeneedkyc`}
+                                                    options={[
+                                                        { value: true, label: "True" },
+                                                        { value: false, label: "False" }, // Fix typo
+                                                    ]}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormTextField
+                                                    type="number"
+                                                    label="Referee Least Transactions"
+                                                    name={`triggerReferrer.${index}.refereeleasttransactions`}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormTextField
+                                                    type="number"
+                                                    label="Minimum Referrer"
+                                                    name={`triggerReferrer.${index}.minimumreferrer`}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormTextField
+                                                    type="number"
+                                                    label="KYC Verifying Days"
+                                                    name={`triggerReferrer.${index}.kycverifyingdays`}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <ButtonWrapper>
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        onClick={() => {
+                                                            addtriggerReferrerFields({
+                                                                referrerneedkyc: "",
+                                                                referrerleasttransactions: 0,
+                                                                refereeneedkyc: "",
+                                                                refereeleasttransactions: 0,
+                                                                minimumreferrer: 0,
+                                                                kycverifyingdays: 0,
+                                                            });
+                                                        }}
+                                                    >
+                                                        Add Condition
+                                                    </Button>
+                                                    {index > 0 ? (
+                                                        <Button
+                                                            variant="contained"
+                                                            size="small"
+                                                            color="error"
+                                                            onClick={() => removetriggerReferrerFields(index)}
+                                                        >
+                                                            <ClearOutlinedIcon />
+                                                        </Button>
+                                                    ) : (
+                                                        <Button variant="contained" size="small" color="error" disabled>
+                                                            <ClearOutlinedIcon />
+                                                        </Button>
+                                                    )}
+                                                </ButtonWrapper>
+                                            </Grid>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            ) : null}
+                        </>
+                    )}
                     {/* Reward Configuration */}
 
-                    <Grid item xs={12}>
-                        <Grid marginTop={3} marginBottom={2} display="flex">
+                    {isAddMode && (
+                        <>
                             <Grid item xs={12}>
-                                <Typography variant="h6">Reward Configuration </Typography>
-                            </Grid>
-                        </Grid>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell width={450}>Minimum Amount</TableCell>
-                                    <TableCell width={450}>Maximum Amount</TableCell>
-                                    <TableCell width={450}>Reward On</TableCell>
-                                    <TableCell width={450}>Reward Type</TableCell>
-                                    <TableCell width={450}>Value</TableCell>
-                                    <TableCell width={450}>Limit</TableCell>
-                                    <TableCell width={200}>Action</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rewardFields.map((field, index) => (
-                                    <TableRow key={`${field.id}_field`}>
-                                        <TableCell>
-                                            <CellContainer>
-                                                <FormTextField
-                                                    label="Minimum Amount"
-                                                    type="number"
-                                                    name={`reward.${index}.minimumAmount`}
-                                                    required
-                                                />
-                                            </CellContainer>
-                                        </TableCell>
+                                <Grid marginTop={3} marginBottom={2} display="flex">
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6">Reward Configuration </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell width={450}>Minimum Amount</TableCell>
+                                            <TableCell width={450}>Maximum Amount</TableCell>
+                                            <TableCell width={450}>Reward On</TableCell>
+                                            <TableCell width={450}>Reward Type</TableCell>
+                                            <TableCell width={450}>Value</TableCell>
+                                            <TableCell width={450}>Limit</TableCell>
+                                            <TableCell width={200}>Action</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {rewardFields.map((field, index) => (
+                                            <TableRow key={`${field.id}_field`}>
+                                                <TableCell>
+                                                    <CellContainer>
+                                                        <FormTextField
+                                                            label="Minimum Amount"
+                                                            type="number"
+                                                            name={`reward.${index}.minimumAmount`}
+                                                            required
+                                                        />
+                                                    </CellContainer>
+                                                </TableCell>
 
-                                        <TableCell>
-                                            <CellContainer>
-                                                <FormTextField
-                                                    label="Maximum Amount"
-                                                    type="number"
-                                                    name={`reward.${index}.maximumAmount`}
-                                                    required
-                                                />
-                                            </CellContainer>
-                                        </TableCell>
+                                                <TableCell>
+                                                    <CellContainer>
+                                                        <FormTextField
+                                                            label="Maximum Amount"
+                                                            type="number"
+                                                            name={`reward.${index}.maximumAmount`}
+                                                            required
+                                                        />
+                                                    </CellContainer>
+                                                </TableCell>
 
-                                        <TableCell>
-                                            <CellContainer>
-                                                <FormSelect
-                                                    name={`reward.${index}.rewardOn`}
-                                                    options={rewardOnOptions}
-                                                />
-                                            </CellContainer>
-                                        </TableCell>
+                                                <TableCell>
+                                                    <CellContainer>
+                                                        <FormSelect
+                                                            name={`reward.${index}.rewardOn`}
+                                                            options={rewardOnOptions}
+                                                        />
+                                                    </CellContainer>
+                                                </TableCell>
 
-                                        <TableCell>
-                                            <CellContainer>
-                                                <FormSelect
-                                                    name={`reward.${index}.rewardType`}
-                                                    options={rewardTypeOptions}
-                                                />
-                                            </CellContainer>
-                                        </TableCell>
+                                                <TableCell>
+                                                    <CellContainer>
+                                                        <FormSelect
+                                                            name={`reward.${index}.rewardType`}
+                                                            options={rewardTypeOptions}
+                                                        />
+                                                    </CellContainer>
+                                                </TableCell>
 
-                                        <TableCell>
-                                            <CellContainer>
-                                                <FormTextField
-                                                    label="Value"
-                                                    type="number"
-                                                    name={`reward.${index}.rewardValue`}
-                                                />
-                                            </CellContainer>
-                                        </TableCell>
+                                                <TableCell>
+                                                    <CellContainer>
+                                                        <FormTextField
+                                                            label="Value"
+                                                            type="number"
+                                                            name={`reward.${index}.rewardValue`}
+                                                        />
+                                                    </CellContainer>
+                                                </TableCell>
 
-                                        <TableCell>
-                                            <CellContainer>
-                                                <FormTextField
-                                                    label="Limit"
-                                                    type="number"
-                                                    name={`reward.${index}.rewardLimit`}
-                                                />
-                                            </CellContainer>
-                                        </TableCell>
+                                                <TableCell>
+                                                    <CellContainer>
+                                                        <FormTextField
+                                                            label="Limit"
+                                                            type="number"
+                                                            name={`reward.${index}.rewardLimit`}
+                                                        />
+                                                    </CellContainer>
+                                                </TableCell>
 
-                                        <TableCell>
-                                            <CellContainer
-                                                sx={{
-                                                    gap: 2,
-                                                }}
-                                            >
-                                                {index > 0 ? (
-                                                    <Button
-                                                        size="small"
-                                                        color="error"
-                                                        variant="contained"
-                                                        onClick={() => removeRewardFields(index)}
+                                                <TableCell>
+                                                    <CellContainer
+                                                        sx={{
+                                                            gap: 2,
+                                                        }}
                                                     >
-                                                        <CloseOutlinedIcon />
-                                                    </Button>
-                                                ) : (
-                                                    <Button size="small" color="error" variant="contained" disabled>
-                                                        <CloseOutlinedIcon />
-                                                    </Button>
-                                                )}
-                                            </CellContainer>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                            <Button
-                                onClick={() =>
-                                    addRewardFields({
-                                        minimumAmount: 0,
-                                        maximumAmount: 0,
-                                        rewardOn: 0,
-                                        rewardType: 0,
-                                        rewardValue: 0,
-                                        rewardLimit: 0,
-                                    })
-                                }
-                                sx={{
-                                    marginTop: 2,
-                                }}
-                                variant="contained"
-                                size="large"
-                            >
-                                <AddOutlinedIcon fontSize="medium" />
-                            </Button>
-                        </Table>
-                    </Grid>
+                                                        {index > 0 ? (
+                                                            <Button
+                                                                size="small"
+                                                                color="error"
+                                                                variant="contained"
+                                                                onClick={() => removeRewardFields(index)}
+                                                            >
+                                                                <CloseOutlinedIcon />
+                                                            </Button>
+                                                        ) : (
+                                                            <Button
+                                                                size="small"
+                                                                color="error"
+                                                                variant="contained"
+                                                                disabled
+                                                            >
+                                                                <CloseOutlinedIcon />
+                                                            </Button>
+                                                        )}
+                                                    </CellContainer>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                    <Button
+                                        onClick={() =>
+                                            addRewardFields({
+                                                minimumAmount: 0,
+                                                maximumAmount: 0,
+                                                rewardOn: 0,
+                                                rewardType: 0,
+                                                rewardValue: 0,
+                                                rewardLimit: 0,
+                                            })
+                                        }
+                                        sx={{
+                                            marginTop: 2,
+                                        }}
+                                        variant="contained"
+                                        size="large"
+                                    >
+                                        <AddOutlinedIcon fontSize="medium" />
+                                    </Button>
+                                </Table>
+                            </Grid>
+                        </>
+                    )}
 
                     {/* Last Part */}
 
                     <Grid container spacing={2} marginY={2}>
-                        <Grid item xs={12} md={4} lg={3}>
-                            <FormSelect
-                                name="displayMechanism"
-                                label="Display Mechanism"
-                                options={displayMechanismsOptions}
-                                required
-                            />
-                        </Grid>
+                        {isAddMode && (
+                            <Grid item xs={12} md={4} lg={3}>
+                                <FormSelect
+                                    name="displayMechanism"
+                                    label="Display Mechanism"
+                                    options={displayMechanismsOptions}
+                                    required
+                                />
+                            </Grid>
+                        )}
 
                         <Grid item xs={12} md={4} lg={4}>
                             <FormTextField type="number" name="limitPerUser" label="Limit Per User" />
@@ -637,8 +679,8 @@ export default function PromoCodeForm({ isLoading, handleSubmit }) {
                     <Grid item xs={12}>
                         <ButtonWrapper>
                             <CancelButton onClick={() => navigate(routePaths.ListPromoCode)}>Cancel</CancelButton>
-                            <SubmitButton type="submit" disabled={isLoading}>
-                                Submit
+                            <SubmitButton disabled={isLoading} type="submit">
+                                {isAddMode ? "Add Campaign" : "Update Campaign"}
                             </SubmitButton>
                         </ButtonWrapper>
                     </Grid>

@@ -10,18 +10,18 @@ import buildRoute from "App/helpers/buildRoute";
 import Column from "App/components/Column/Column";
 import Button from "App/components/Button/Button";
 import { useConfirm } from "App/core/mui-confirm";
+import routePaths from "Private/config/routePaths";
 import FilterForm from "App/components/Filter/FilterForm";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
+import CampaignCodeBadge from "App/components/Badge/CampaignCodeBadge";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { promoCodeActions } from "./store";
-import routePaths from "Private/config/routePaths";
-import { campaignStatus } from "./data/campaignStatus";
-import CampaignCodeBadge from "../../../App/components/Badge/CampaignCodeBadge";
+import { promoCodeActions } from "../store";
+import { campaignStatus } from "../data/campaignStatus";
 
 const initialState = {
     Page: 1,
@@ -144,6 +144,12 @@ const ListPromoCode = () => {
                                     onClick={() => navigate(buildRoute(routePaths.ViewPromoCode, row?.original?.id))}
                                 >
                                     View Campaign
+                                </ListItemButton>
+
+                                <ListItemButton
+                                    onClick={() => navigate(buildRoute(routePaths.EditPromoCode, row?.original?.id))}
+                                >
+                                    Edit Campaign
                                 </ListItemButton>
 
                                 <ListItemButton

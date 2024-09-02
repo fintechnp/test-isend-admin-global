@@ -61,9 +61,19 @@ const actions = {
         data,
     }),
 
+    update_promo_code: (id, data) => ({
+        type: actions.UPDATE_PROMO_CODE,
+        data,
+        id,
+    }),
+
     add_promo_code_reset: (data) => ({
         type: actions.ADD_PROMO_CODE_RESET,
         data,
+    }),
+
+    update_promo_code_reset: () => ({
+        type: actions.UPDATE_PROMO_CODE_RESET,
     }),
 
     add_promo_code_budget: (data) => ({

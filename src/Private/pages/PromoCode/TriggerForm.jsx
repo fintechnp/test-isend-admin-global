@@ -6,15 +6,14 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 
 import { campaignEventTypes } from "./data/campaignEventTypesEnums";
-import { triggerAttributeTypes, triggerAttributeTypesOptions } from "./data/triggerAttributeTypesEnums";
 
-export default function TriggerForm({
-    index,
-    mappedAttributeList,
-    countryCurrency,
+import {
+    triggerAttributeTypes,
+    triggerAttributeTypesOptions,
     triggerAttributeTypesOptionsDisabled,
-    allAttributeList,
-}) {
+} from "./data/triggerAttributeTypesEnums";
+
+export default function TriggerForm({ index, mappedAttributeList, countryCurrency, allAttributeList }) {
     const { watch, setValue } = useFormContext();
 
     const attributeFamily = watch(`trigger.${index}.attribute`);
@@ -47,6 +46,17 @@ export default function TriggerForm({
         }
     }, [attributeFamilyTypeId]);
 
+    const triggerFormOptions = (() => {
+        switch (true) {
+            case attributeFamilyTypeId === campaignEventTypes.DATE:
+            case attributeFamilyTypeId === campaignEventTypes.DATE_RANGE:
+            case attributeFamilyTypeId === campaignEventTypes.COUNTRY:
+                return triggerAttributeTypesOptions;
+            default:
+                return triggerAttributeTypesOptionsDisabled;
+        }
+    })();
+
     return (
         <Grid container mb={1} spacing={2}>
             <Grid item xs={12} md={6} lg={3}>
@@ -55,11 +65,7 @@ export default function TriggerForm({
             <Grid item xs={12} md={6} lg={3}>
                 <FormSelect
                     name={`trigger.${index}.criteria`}
-                    options={
-                        attributeFamilyTypeId === campaignEventTypes.DATE || campaignEventTypes.DATE_RANGE
-                            ? triggerAttributeTypesOptions
-                            : triggerAttributeTypesOptionsDisabled
-                    }
+                    options={triggerFormOptions}
                     disabled={
                         attributeFamilyTypeId === campaignEventTypes.DATE ||
                         attributeFamilyTypeId === campaignEventTypes.DATE_RANGE ||

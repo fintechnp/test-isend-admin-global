@@ -20,9 +20,9 @@ import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-
-import { promoCodeActions } from "./store";
 import routePaths from "Private/config/routePaths";
+
+import { promoCodeActions } from "../store";
 import AddCampaignBudgetModal from "./AddCampaignBudgetModal";
 
 const Wrapper = styled(Box)(({ theme }) => ({
