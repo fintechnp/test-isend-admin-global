@@ -6,7 +6,6 @@ export const createPromoCodeSchema = Yup.object().shape({
         campaignType: Yup.number().required("Campaign type is required").integer(),
         validCountry: Yup.string().required("Valid country is required"),
         startDate: Yup.date().required("Start date is required"),
-
         endDate: Yup.date().required("End date is required"),
         status: Yup.number().required("Status is required").integer(),
         budget: Yup.number().required("Budget is required").min(0),
@@ -27,14 +26,14 @@ export const createPromoCodeSchema = Yup.object().shape({
             minimumAmount: Yup.number().required("Minimum amount is required").min(0),
             maximumAmount: Yup.number()
                 .required("Maximum amount is required")
-                .when("minimumAmount", {
-                    is: (min) => min != null,
-                    then: Yup.number().moreThan(
-                        Yup.ref("minimumAmount"),
-                        "Maximum amount must be greater than minimum amount",
-                    ),
-                }),
-
+                .test(
+                    "is-greater-than-minimumAmount",
+                    "Maximum amount must be greater than minimum amount",
+                    function (value) {
+                        const { minimumAmount } = this.parent;
+                        return value > minimumAmount;
+                    },
+                ),
             rewardOn: Yup.number().required("Reward on is required").integer(),
             rewardType: Yup.number().required("Reward type is required").integer(),
             rewardValue: Yup.number().required("Reward value is required").min(0),

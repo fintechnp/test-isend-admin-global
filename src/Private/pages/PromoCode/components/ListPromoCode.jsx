@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useMemo } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
-import TablePagination from "@mui/material/TablePagination";
 
 import dateUtils from "App/utils/dateUtils";
 import buildRoute from "App/helpers/buildRoute";
@@ -11,6 +10,7 @@ import Column from "App/components/Column/Column";
 import Button from "App/components/Button/Button";
 import { useConfirm } from "App/core/mui-confirm";
 import routePaths from "Private/config/routePaths";
+import { TablePagination } from "App/components/Table";
 import FilterForm from "App/components/Filter/FilterForm";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import FilterButton from "App/components/Button/FilterButton";

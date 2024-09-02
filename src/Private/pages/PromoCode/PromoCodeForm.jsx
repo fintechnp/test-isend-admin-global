@@ -40,6 +40,7 @@ import { updatePromoCodeSchema } from "./schema/updatePromoCodeSchema";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
+import { FormHelperText } from "@mui/material";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -132,24 +133,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
         setValue,
         formState: { errors },
     } = methods;
-
-    useEffect(() => {
-        if (!isAddMode) {
-            setValue("campaign.campaignName", initialValues?.campaignName || "");
-            setValue("campaign.campaignType", initialValues?.campaignType || campaignCodes.PROMO);
-            setValue("campaign.validCountry", initialValues?.validCountry || "");
-            setValue("campaign.startDate", initialValues?.startDate || "");
-            setValue("campaign.endDate", initialValues?.endDate || "");
-            setValue("campaign.status", initialValues?.status || "");
-            setValue("campaign.budget", initialValues?.budget || "");
-            setValue("limitPerUser", initialValues?.limitPerUser || "");
-            setValue("limitPerPromo", initialValues?.limitPerPromo || "");
-            setValue("termsAndCondition", initialValues?.termsAndCondition || "");
-            setValue("webImage", initialValues?.webImage || "");
-            setValue("mobileImage", initialValues?.mobileImage || "");
-            setValue("description", initialValues?.description || "");
-        }
-    }, [initialValues]);
 
     useEffect(() => {
         if (!isAddMode) {
@@ -298,6 +281,8 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                             <>
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormTextField name="campaign.campaignName" label="Campaign Name" required />
+
+                                    <FormHelperText error={true}>{errors?.campaign?.campaignName}</FormHelperText>
                                 </Grid>
 
                                 <Grid item xs={12} md={6} lg={3}>
@@ -330,7 +315,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>
-                            <FormTextField type="number" name="campaign.budget" label="Budget in" />
+                            <FormTextField type="number" name="campaign.budget" label="Budget" />
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>

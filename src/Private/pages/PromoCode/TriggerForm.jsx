@@ -121,7 +121,7 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
                         name={`trigger.${index}.amount`}
                         label="Relation"
                         labelKey="name"
-                        valueKey="value"
+                        valueKey="reference_id"
                         referenceTypeId={referenceTypeId.relations}
                     />
                 </Grid>
