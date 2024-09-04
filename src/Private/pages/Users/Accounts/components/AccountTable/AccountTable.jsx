@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import AddAccount from "./../AddAccount";
 import Modal from "App/components/Modal/Modal";
+import { useConfirm } from "App/core/mui-confirm";
 import PopoverButton from "App/components/Button/PopoverButton";
 import { TablePagination, TableSwitch } from "App/components/Table";
 import HasPermission from "Private/components/shared/HasPermission";
@@ -31,6 +32,7 @@ const SwitchWrapper = styled(Box)(({ theme }) => ({
 }));
 function AccountTable({ onPageChange, onRowsPerPageChange, filterSchema }) {
     const dispatch = useDispatch();
+    const confirm = useConfirm();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const { response: user_list, loading: loading } = useSelector((state) => state.get_all_user);
@@ -67,6 +69,19 @@ function AccountTable({ onPageChange, onRowsPerPageChange, filterSchema }) {
         dispatch({ type: "DELETE_ACCOUNT_USER_RESET" });
         dispatch({ type: "UPDATE_ACCOUNT_STATUS_RESET" });
     }, [d_success, u_success, a_success]);
+
+    const handleResetPassword = (id, email) => {
+        confirm({
+            title: "Reset Password",
+            message: "Are you sure you want to reset the password for this user?",
+        }).then(() => {
+            dispatch(
+                actions.forgot_password({
+                    email,
+                }),
+            );
+        });
+    };
 
     const columns = useMemo(
         () => [
@@ -153,6 +168,21 @@ function AccountTable({ onPageChange, onRowsPerPageChange, filterSchema }) {
                                                     Show KYC
                                                 </ListItemButton>
                                             </HasPermission>
+
+                                            <HasPermission permission={permissions.RESET_USER_PASSWORD}>
+                                                <ListItemButton
+                                                    onClick={() =>
+                                                        handleResetPassword(
+                                                            row?.original,
+                                                            row?.original?.email,
+                                                            onClose(),
+                                                        )
+                                                    }
+                                                >
+                                                    Reset Password
+                                                </ListItemButton>
+                                            </HasPermission>
+
                                             <HasPermission permission={permissions.EDIT_USER_KYC}>
                                                 <ListItemButton
                                                     onClick={() => {

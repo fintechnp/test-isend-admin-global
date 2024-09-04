@@ -16,6 +16,7 @@ import actions from "./store/actions";
 import apiEndpoints from "Private/config/apiEndpoints";
 import { permissions } from "Private/data/permissions";
 import useListFilterStore from "App/hooks/useListFilterStore";
+import { useConfirm } from "App/core/mui-confirm";
 
 const initialState = {
     page_number: 1,
@@ -34,6 +35,8 @@ const schema = Yup.object().shape({
 function Accounts() {
     const dispatch = useDispatch();
     const { response: user_list, loading: loading } = useSelector((state) => state.get_all_user);
+
+    const confirm = useConfirm();
 
     const {
         isFilterOpen,
