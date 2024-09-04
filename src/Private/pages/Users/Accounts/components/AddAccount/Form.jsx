@@ -12,23 +12,9 @@ import CancelButton from "App/components/Button/CancelButton";
 import FormTextField from "App/core/hook-form/FormTextField";
 
 import Row from "App/components/Row/Row";
+import { GenderStringOptions } from "App/data/Gender";
 import FormUserProfileSelect from "App/core/hook-form/FormUserProfileSelect";
 import { createUserSetupSchema, updateUserSetupSchema } from "../../validations/userSetupSchema";
-
-export const GenderStringOptions = [
-    {
-        label: "Male",
-        value: "Male",
-    },
-    {
-        label: "Female",
-        value: "Female",
-    },
-    {
-        label: "Others",
-        value: "Other",
-    },
-];
 
 const AccountForm = ({ onSubmit, defaultValues, update, loading, handleClose }) => {
     const methods = useForm({
