@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 
 import Row from "App/components/Row/Row";
-import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
 import ViewSmsModal from "./ViewSms/ViewSmsModal";
 import withPermission from "Private/HOC/withPermission";
@@ -22,6 +21,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import CreateSms from "./CreateSms";
 import actions from "./../store/actions";
+import { format, parseISO } from "date-fns";
 import getFlagUrl from "App/helpers/getFlagUrl";
 import { useConfirm } from "App/core/mui-confirm";
 import { permissions } from "Private/data/permissions";
@@ -105,10 +105,10 @@ const Sms = () => {
                         <Row gap="8px">
                             <Column>
                                 <Typography color="text.primary" fontSize={14} fontWeight={400}>
-                                    {dateUtils.getDate(row.original.created_ts)}
+                                    {format(parseISO(row.original.created_ts), "yyyy-MM-dd")}
                                 </Typography>
                                 <Typography color="text.primary" fontSize={14} fontWeight={400}>
-                                    {dateUtils.getLocalTimeFromUTC(row.original.created_ts)}
+                                    {format(parseISO(row.original.created_ts), "hh:mm a")}
                                 </Typography>
                             </Column>
                         </Row>

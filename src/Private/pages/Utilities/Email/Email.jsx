@@ -21,6 +21,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import CreateEmail from "./CreateEmail";
 import actions from "./../store/actions";
+import { format, parseISO } from "date-fns";
 import { permissions } from "Private/data/permissions";
 import ViewEmailModal from "./ViewEmail/ViewEmailModal";
 import withPermission from "Private/HOC/withPermission";
@@ -97,10 +98,10 @@ const Email = () => {
                         <Row gap="8px">
                             <Column>
                                 <Typography color="text.primary">
-                                    {dateUtils.getLocalDateFromUTC(row.original.created_ts)}
+                                    {format(parseISO(row.original.created_ts), "yyyy-MM-dd")}
                                 </Typography>
                                 <Typography color="text.primary">
-                                    {dateUtils.getLocalTimeFromUTC(row.original.created_ts)}
+                                    {format(parseISO(row.original.created_ts), "hh:mm a")}
                                 </Typography>
                             </Column>
                         </Row>
