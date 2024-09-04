@@ -547,7 +547,7 @@ const privateRoutes = [
         component: <ExceptionTransactions title="Exception Transactions" />,
     },
     {
-        path: "/transactions/details/:id",
+        path: routePaths.viewTransaction,
         component: <TransactionsDetails title="Transaction Details" />,
     },
     {

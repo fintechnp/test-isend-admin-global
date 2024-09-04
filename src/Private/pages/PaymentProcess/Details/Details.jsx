@@ -13,22 +13,25 @@ import { useNavigate, useParams } from "react-router-dom";
 import actions from "../store/actions";
 import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
-import { ReferenceName } from "App/helpers";
+import Modal from "App/components/Modal/Modal";
+import Clipboard from "App/components/Clipboard/Clipboard";
 import PageContent from "App/components/Container/PageContent";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
+import AddComment from "Private/pages/Transactions/Comments/AddComment";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import GetAttachment from "Private/pages/Transactions/Attachments/GetAttachment";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import SendMail from "./SendMailModal";
 import SuspiciosModal from "./SuspiciosModal";
 import PaymentType from "../data/PaymentType";
-import Modal from "App/components/Modal/Modal";
+import isValidURL from "App/helpers/isValidURL";
 import useCountries from "App/hooks/useCountries";
-import Clipboard from "App/components/Clipboard/Clipboard";
-import AddComment from "Private/pages/Transactions/Comments/AddComment";
+import routePaths from "Private/config/routePaths";
+import FileViewer from "App/components/FileViewer/FileViewer";
+import { TransactionsAction } from "Private/pages/Transactions/store";
 import documentActions from "Private/pages/Customers/Documents/store/actions";
-import GetAttachment from "Private/pages/Transactions/Attachments/GetAttachment";
 
 const StyledStatusStepper = styled(Stack)(({ theme }) => ({
     direction: "column",
@@ -70,6 +73,7 @@ const StyleImageWrapper = styled(Grid)(({ theme }) => ({
     maxHeight: "100%",
     overflowY: "auto",
     textAlign: "left",
+    minWidth: "12rem",
     [theme.breakpoints.up("md")]: {
         marginLeft: theme.spacing(2),
     },
@@ -78,15 +82,13 @@ const StyleImageWrapper = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export default function Details({ data, isAML = false }) {
+export default function Details({ isAML = false }) {
     const [openCommentDrawer, setOpenCommentDrawer] = useState(false);
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
     const [openAttachmentDrawer, setOpenAttachmentDrawer] = useState(false);
     const [openModal, setOpenModal] = useState(false);
 
-    const { tid } = useParams();
-
-    const transactionId = tid;
+    const { tid: transactionId, customerId } = useParams();
 
     const navigate = useNavigate();
 
@@ -94,11 +96,10 @@ export default function Details({ data, isAML = false }) {
 
     const sanctionDetails = useSelector((state) => state.get_sanction_details);
 
-    const customerId = data?.customer_id;
-
     const { loading: downloadPdfLoading } = useSelector((state) => state.download_transaction_pdf);
-
     const { response: Documents, loading } = useSelector((state) => state.get_documents);
+    const { response: data, loading: transactionLoading } = useSelector((state) => state.get_transactions_byid);
+    const transactionData = data.data;
 
     useEffect(() => {
         if (customerId) {
@@ -108,7 +109,11 @@ export default function Details({ data, isAML = false }) {
                 }),
             );
         }
-    }, [dispatch, customerId]);
+    }, [customerId]);
+
+    useEffect(() => {
+        dispatch(TransactionsAction.get_transactions_byid(transactionId));
+    }, [transactionId]);
 
     const DocumentsUrl = Array.isArray(Documents?.data)
         ? Documents.data.map((doc) => doc?.document).filter((url) => url)
@@ -144,30 +149,26 @@ export default function Details({ data, isAML = false }) {
 
     const transactionDefinition = useSourceDetail([
         {
-            title: data?.agent_name,
+            title: transactionData?.agent_name,
             items: [
                 {
                     label: "Transaction ID",
                     accessorKey: "transaction_id",
                     cell: (data) => (
-                        <>
-                            <Clipboard
-                                label={<Typography fontWeight={600}>{data.transaction_id}</Typography>}
-                                content={data?.transaction_id}
-                            />
-                        </>
+                        <Clipboard
+                            label={<Typography fontWeight={600}>{data.transaction_id}</Typography>}
+                            content={data?.transaction_id}
+                        />
                     ),
                 },
                 {
                     label: "IPAY PIN",
                     accessorKey: "pin_number",
                     cell: (data) => (
-                        <>
-                            <Clipboard
-                                label={<Typography fontWeight={600}>{data.pin_number}</Typography>}
-                                content={data?.pin_number}
-                            />
-                        </>
+                        <Clipboard
+                            label={<Typography fontWeight={600}>{data.pin_number}</Typography>}
+                            content={data?.pin_number}
+                        />
                     ),
                 },
                 {
@@ -306,8 +307,8 @@ export default function Details({ data, isAML = false }) {
 
     const transactionStatus = [
         {
-            label: `${data?.transaction_status}`,
-            date: `${dateUtils.getLocalDateTimeFromUTC(data?.created_ts)}`,
+            label: `${transactionData?.transaction_status}`,
+            date: `${dateUtils.getLocalDateTimeFromUTC(transactionData?.created_ts)}`,
         },
     ];
 
@@ -347,32 +348,29 @@ export default function Details({ data, isAML = false }) {
                 key={i}
             >
                 <Typography variant="body1">{item?.label}</Typography>
-                {item.urls.map((url, index) => (
-                    <a key={index} href={url} target="_blank" rel="noopener noreferrer">
-                        <img
-                            src={url}
-                            alt={`${item?.label} ${index + 1}`}
-                            style={{
-                                width: "100px",
-                                height: "100px",
-                                objectFit: "cover",
-                                margin: "auto",
-                                marginBottom: "10px",
-                            }}
-                        />
-                    </a>
-                ))}
+                {item.urls.map(
+                    (url, index) =>
+                        isValidURL(url) &&
+                        (url.toLowerCase().includes(".pdf") ? (
+                            <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+                                {" "}
+                                Verification File{" "}
+                            </a>
+                        ) : (
+                            <FileViewer fileUrl={url} />
+                        )),
+                )}
             </Grid>
         ));
 
     const amountData = [
         {
-            transfer_amount: `${data?.collected_currency} ${Number(data?.transfer_amount ?? 0).toLocaleString()}`,
-            customer_rate: `${data?.payout_currency} ${Number(data?.customer_rate ?? 0).toLocaleString()}`,
-            service_charge: `${data?.collected_currency} ${Number(data?.service_charge ?? 0).toLocaleString()}`,
-            discount_amount: `${data?.collected_currency} ${Number(data?.discount_amount ?? 0).toLocaleString() ?? 0}`,
-            collected_amount: `${data?.collected_currency} ${Number(data?.collected_amount ?? 0).toLocaleString()}`,
-            payout_amount: `${data?.payout_currency} ${Number(data?.payout_amount ?? 0).toLocaleString()}`,
+            transfer_amount: `${transactionData?.collected_currency} ${Number(transactionData?.transfer_amount ?? 0).toLocaleString()}`,
+            customer_rate: `${transactionData?.payout_currency} ${Number(transactionData?.customer_rate ?? 0).toLocaleString()}`,
+            service_charge: `${transactionData?.collected_currency} ${Number(transactionData?.service_charge ?? 0).toLocaleString()}`,
+            discount_amount: `${transactionData?.collected_currency} ${Number(transactionData?.discount_amount ?? 0).toLocaleString() ?? 0}`,
+            collected_amount: `${transactionData?.collected_currency} ${Number(transactionData?.collected_amount ?? 0).toLocaleString()}`,
+            payout_amount: `${transactionData?.payout_currency} ${Number(transactionData?.payout_amount ?? 0).toLocaleString()}`,
         },
     ];
 
@@ -417,12 +415,14 @@ export default function Details({ data, isAML = false }) {
             breadcrumbs={[
                 {
                     label: "Transactions",
+                    link: routePaths.transaction.list,
                 },
                 {
                     label: "Details",
                 },
             ]}
         >
+            {transactionLoading && <p>Loading</p>}
             <PageContentContainer title="Transaction Details">
                 <ResponsiveBox
                     sx={{
@@ -440,7 +440,7 @@ export default function Details({ data, isAML = false }) {
                                     viewMode="column"
                                     rowMode="row"
                                     definition={transactionDefinition}
-                                    data={data}
+                                    data={transactionData}
                                     disableLabelColon={false}
                                 />
                             </Wrapper>
@@ -461,7 +461,7 @@ export default function Details({ data, isAML = false }) {
                                     viewMode="column"
                                     rowMode="row"
                                     definition={CustomerDefinition}
-                                    data={data}
+                                    data={transactionData}
                                     disableLabelColon={false}
                                 />
                             </Wrapper>
@@ -474,7 +474,7 @@ export default function Details({ data, isAML = false }) {
                                     viewMode="column"
                                     rowMode="row"
                                     definition={BeneficiaryDefinition}
-                                    data={data}
+                                    data={transactionData}
                                     disableLabelColon={false}
                                 />
                             </Wrapper>
@@ -494,7 +494,6 @@ export default function Details({ data, isAML = false }) {
                             }}
                         >
                             <Typography variant="h6">Documents</Typography>
-
                             {documentStatusDefinition}
                         </Wrapper>
                     </StyleImageWrapper>

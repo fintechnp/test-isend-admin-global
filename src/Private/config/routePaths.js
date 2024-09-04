@@ -98,6 +98,7 @@ const routePaths = {
         editProfileSetup: "/user/profile-setups/:userProfileSetupId/edit",
     },
     transaction: {
+        list: "/transaction/search",
         achTransaction: "/transaction/ach-transaction",
         zaiTransaction: "/payment/zai-australia-payment",
     },
@@ -189,6 +190,9 @@ const routePaths = {
     ListCampaignReportTab: "/report/campaign",
     ListCampaignLedgerReport: "/report/campaign/ledger/:id",
     ListCampaignUsageReport: "/report/campaign/usage/:id",
+
+    // region - Transactions
+    viewTransaction: "/transactions/details/:tid/:customerId",
 
     // region - zaiLogs
 

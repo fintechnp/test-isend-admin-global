@@ -1,5 +1,5 @@
 import moment from "moment";
-import { reset } from "redux-form";
+import * as Yup from "yup";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
@@ -12,7 +12,6 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import Row from "App/components/Row/Row";
 import dateUtils from "App/utils/dateUtils";
 import { ReferenceName } from "App/helpers";
-import Loading from "App/components/Loading";
 import getFlagUrl from "App/helpers/getFlagUrl";
 import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
@@ -21,27 +20,22 @@ import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import { isAfter } from "date-fns";
 import actions from "../store/actions";
-import NoResults from "../components/NoResults";
+import isEmpty from "App/helpers/isEmpty";
+import PartnerType from "App/data/PartnerType";
+import buildRoute from "App/helpers/buildRoute";
 import Filter from "../../Reports/Shared/Filter";
-import SearchForm from "../components/SearchForm";
+import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import downloadActions from "../../Reports/store/actions";
+import referenceTypeId from "Private/config/referenceTypeId";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import StatusBadge from "Private/pages/PaymentProcess/data/StatusBadge";
-import isEmpty from "App/helpers/isEmpty";
-
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -52,29 +46,57 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    transaction_id: null,
-    pin_number: "",
-    customer_id: 0,
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    payout_country: "",
-    payment_type: "",
-    status: "",
-    from_date: "",
-    to_date: "",
-    full_name: "",
-    email: "",
-    mobile: "",
+    status: null,
     sort_by: "created_ts",
     order_by: "DESC",
 };
 
+const headers = [
+    { label: "Customer Name", key: "customer_name" },
+    { label: "Txn Id", key: "tid" },
+    { label: "S. Currency", key: "collected_currency" },
+    { label: "Rate", key: "customer_rate" },
+    { label: "Charge", key: "service_charge" },
+    { label: "Collected", key: "collected_amount" },
+    { label: "Payout", key: "payout_amount" },
+    { label: "Status", key: "transaction_status" },
+    { label: "Created", key: "created_ts" },
+];
+
+const schema = Yup.object().shape({
+    from_date: Yup.string().nullable().optional(),
+    to_date: Yup.string()
+        .nullable()
+        .optional()
+        .when("from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                schema.test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(from_date)) : true;
+                    },
+                }),
+            otherwise: (schema) => schema.nullable().optional(),
+        }),
+});
+
 function Search(props) {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
-
+    const reference = JSON.parse(localStorage.getItem("reference"));
     const { response: transactionsData, loading: l_loading } = useSelector((state) => state.get_transactions);
+
+    const paymentTypeOptions =
+        reference
+            ?.filter((ref) => ref.reference_type === referenceTypeId.paymentType)[0]
+            .reference_data.map((data) => ({ label: data.name, value: data.value })) ?? [];
+
+    const statusOptions =
+        reference
+            ?.filter((ref) => ref.reference_type === referenceTypeId.transactionStatus)[0]
+            .reference_data.map((data) => ({ label: data.name, value: data.value })) ?? [];
 
     const {
         response: ReportsDownload,
@@ -84,16 +106,24 @@ function Search(props) {
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_transaction"));
         dispatch({ type: "GET_TRANSACTIONS_RESET" });
     }, [dispatch]);
 
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        onRowsPerPageChange,
+        onPageChange,
+        onQuickFilter,
+        onFilterSubmit,
+        reset,
+    } = useListFilterStore({ initialState });
+
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_transactions(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_transactions(filterSchema));
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
@@ -115,7 +145,13 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/transactions/details/${row?.original?.tid}`} style={{ textDecoration: "none" }}>
+                            <Link
+                                to={buildRoute(routePaths.viewTransaction, {
+                                    tid: row.original.tid,
+                                    customerId: row.original.customer_id,
+                                })}
+                                style={{ textDecoration: "none" }}
+                            >
                                 {row?.original?.tid ? row?.original?.tid : "N/A"}
                             </Link>
                         </StyledName>
@@ -250,17 +286,8 @@ function Search(props) {
             },
             {
                 header: "Transaction Status",
-                cell: ({ getValue, row }) => (
-                    <>
-                        <StatusBadge
-                            status={
-                                !isEmpty(row.original.transaction_status)
-                                    ? row.original.transaction_status
-                                    : ReferenceName(66, row.original.status)
-                            }
-                        />
-                    </>
-                ),
+                accessorKey: "transaction_status",
+                cell: ({ getValue, row }) => <StatusBadge status={getValue() ?? "N/A"} />,
             },
             {
                 header: "Send Status",
@@ -271,7 +298,88 @@ function Search(props) {
         [],
     );
 
-    //Filter
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Full Name",
+            name: "full_name",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Transaction Id",
+            name: "transaction_id",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Pin Number",
+            name: "pin_number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Customer Id",
+            name: "customer_id",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Email",
+            name: "email",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Mobile Number",
+            name: "mobile",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            label: "Payout Country",
+            name: "payout_country",
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            label: "Sending Agent",
+            name: "sending_agent_id",
+            props: {
+                partnerType: PartnerType.SEND,
+            },
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            label: "Payout Agent",
+            name: "payout_agent_id",
+            props: {
+                partnerType: PartnerType.PAY,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            label: "Payment Type",
+            name: "payment_type",
+            options: paymentTypeOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            label: "Status",
+            name: "status",
+            options: statusOptions,
+        },
+        {
+            type: fieldTypes.DATE,
+            label: "From Date",
+            name: "from_date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            label: "To Date",
+            name: "to_date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+    ];
+
     const sortData = [
         { key: "None", value: "created_ts" },
         { key: "Name", value: "first_name" },
@@ -279,90 +387,7 @@ function Search(props) {
         { key: "Country", value: "country" },
     ];
 
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            customer_id: data?.customer_id,
-            pin_number: data?.pin_number,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payment_type: data?.payment_type,
-            payout_country: data?.payout_country,
-            status: data?.status,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-            full_name: data?.full_name,
-            mobile: data?.mobile,
-            email: data?.email,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    //reset search form
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch(reset("search_form_transaction"));
-        dispatch({ type: "GET_TRANSACTIONS_RESET" });
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    //Pagination
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     //Downloads
-    const headers = [
-        { label: "Customer Name", key: "customer_name" },
-        { label: "Txn Id", key: "tid" },
-        { label: "S. Currency", key: "collected_currency" },
-        { label: "Rate", key: "customer_rate" },
-        { label: "Charge", key: "service_charge" },
-        { label: "Collected", key: "collected_amount" },
-        { label: "Payout", key: "payout_amount" },
-        { label: "Status", key: "transaction_status" },
-        { label: "Created", key: "created_ts" },
-    ];
-
     const csvReport = {
         title: "Report on Transactions",
         start: filterSchema?.from_date,
@@ -372,72 +397,65 @@ function Search(props) {
     };
 
     const downloadData = () => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_size: 10000,
-        };
-        dispatch(downloadActions.download_report(updatedFilterSchema, "transaction"));
+        dispatch(downloadActions.download_report(filterSchema, "transaction"));
     };
 
     return (
-        <PageContent documentTitle="Search Transactions" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        enableReinitialize
-                        initialValues={{
-                            from_date: moment().format("YYYY-MM-DD"),
-                            to_date: moment().format("YYYY-MM-DD"),
-                        }}
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        loading={l_loading}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && transactionsData?.data && transactionsData?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Transaction Found" />
-                    </Grid>
-                )}
-                {!l_loading && transactionsData?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
+        <PageContent
+            documentTitle="Search Transactions"
+            breadcrumbs={[
+                {
+                    label: "Transactions",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <FilterForm
+                title="Search Transactions"
+                open={isFilterOpen}
+                fields={filterFields}
+                onClose={closeFilter}
+                onReset={reset}
+                onDelete={onDeleteFilterParams}
+                onSubmit={onFilterSubmit}
+                values={filterSchema}
+                schema={schema}
+            />
+
+            <Column gap="16px">
+                <PageContentContainer
+                    title="Transaction List"
+                    topRightContent={
+                        <>
                             <Filter
                                 fileName="TransactionReport"
                                 success={pd_success}
                                 loading={pd_loading}
                                 csvReport={csvReport}
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Transaction List"
                                 state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
                                 downloadData={downloadData}
                             />
+                            <TableGridQuickFilter
+                                sortByData={sortData}
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                disabled={l_loading}
+                                values={filterSchema}
+                            />
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={transactionsData?.data || []} loading={l_loading} />
+                </PageContentContainer>
 
-                            <PageContentContainer>
-                                <TanstackReactTable
-                                    columns={columns}
-                                    data={transactionsData?.data || []}
-                                    loading={l_loading}
-                                    rowsPerPage={8}
-                                />
-                            </PageContentContainer>
-                        </CustomerWrapper>
-                        <TablePagination
-                            paginationData={transactionsData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    </Grid>
-                )}
-            </Grid>
+                <TablePagination
+                    paginationData={transactionsData?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

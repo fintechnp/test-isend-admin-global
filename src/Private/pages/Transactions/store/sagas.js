@@ -21,7 +21,7 @@ export const getTransactions = takeEvery(actions.GET_TRANSACTIONS, function* (ac
 
 export const getTransactionById = takeEvery(actions.GET_TRANSACTIONS_BYID, function* (action) {
     try {
-        const res = yield call(api.get, `transaction//${action.id}`, action.query);
+        const res = yield call(api.get, `transaction/${action.id}`, action.query);
         yield put({
             type: actions.GET_TRANSACTIONS_BYID_SUCCESS,
             response: res,
