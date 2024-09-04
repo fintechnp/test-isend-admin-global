@@ -8,11 +8,9 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { ReferenceName, getFormattedDate, getFormattedTime } from "App/helpers";
 
 import actions from "../store/actions";
 import ViewBalance from "./ViewBalance";
-import ZaiFilterForm from "./SearchForm";
 import PopoverAction from "./ViewBalance/PopoverAction";
 import RefundPaymentModal from "./RefundPayment/RefundPaymentModal";
 import MakePaymentModal from "./MakePayment/MakePaymentModal";
@@ -21,17 +19,14 @@ import FilterButton from "App/components/Button/FilterButton";
 import FilterForm from "App/components/Filter/FilterForm";
 import Column from "App/components/Column/Column";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import { TablePagination } from "App/components/Table";
 import referenceTypeId from "Private/config/referenceTypeId";
+
+import StatusBadge from "./components/ZaiStatusBadge";
 
 const initialState = {
     page_number: 1,
     page_size: 15,
-    from_date: "",
-    to_date: "",
-    order_by: "DESC",
-    sort_by: "created_ts",
 };
 
 const ZaiAustraliaPayment = () => {
@@ -46,7 +41,6 @@ const ZaiAustraliaPayment = () => {
         openFilter,
         closeFilter,
         filterSchema,
-        onQuickFilter,
         onRowsPerPageChange,
         onFilterSubmit,
         onPageChange,
@@ -54,6 +48,8 @@ const ZaiAustraliaPayment = () => {
         onDeleteFilterParams,
     } = useListFilterStore({
         initialState,
+        pageNumberKeyName: "page_number",
+        pageSizeKeyName: "page_size",
     });
 
     const { reset: formReset } = useForm();
@@ -160,16 +156,16 @@ const ZaiAustraliaPayment = () => {
         {
             header: "S/T Status",
             cell: ({ row }) => (
-                <Box>
-                    <Typography>
-                        {row?.original?.send_status ? ReferenceName(66, row?.original?.send_status) : "N/A"}
-                    </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                    }}
+                >
+                    <StatusBadge status={row?.original?.send_status ?? "N/A"} />
 
-                    <Typography>
-                        {row?.original?.transaction_status
-                            ? ReferenceName(66, row?.original?.transaction_status)
-                            : "N/A"}
-                    </Typography>
+                    <StatusBadge status={row?.original?.transaction_status ?? "N/A"} />
                 </Box>
             ),
         },
@@ -234,13 +230,6 @@ const ZaiAustraliaPayment = () => {
         },
     ];
 
-    const sortData = [
-        { key: "SN", value: "f_serial_no" },
-        { key: "Transaction ID", value: "transaction_id" },
-        { key: "Customer Details", value: "customer_name" },
-        { key: "Partner/Payout Country", value: "payout_agent_name" },
-    ];
-
     return (
         <PageContent
             documentTitle="Zai Australia Payment"
@@ -260,20 +249,7 @@ const ZaiAustraliaPayment = () => {
                     onReset={reset}
                 />
 
-                <PageContentContainer
-                    title="Zai Australia Payment List"
-                    topRightContent={
-                        <>
-                            <TableGridQuickFilter
-                                onSortByChange={onQuickFilter}
-                                onOrderByChange={onQuickFilter}
-                                disabled={l_loading}
-                                sortByData={sortData}
-                                values={filterSchema}
-                            />
-                        </>
-                    }
-                >
+                <PageContentContainer title="Zai Australia Payment List">
                     <TanstackReactTable
                         columns={columns}
                         title="Zai Australia Payment"

@@ -2,13 +2,14 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TextField from "@mui/material/TextField";
 import React, { useEffect, useState } from "react";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
+import isEmpty from "App/helpers/isEmpty";
 import SubmitButton from "App/components/Button/SubmitButton";
 
 import actions from "../../store/actions";
 import { makePaymentSchema } from "../schema/makePaymentSchema";
-import isEmpty from "App/helpers/isEmpty";
 
 export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transactionId }) {
     const dispatch = useDispatch();
@@ -56,10 +57,25 @@ export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transact
     return (
         <TableRow key={row.f_serial_no}>
             <TableCell>{row.f_serial_no}</TableCell>
+            <TableCell width={300}>
+                <Typography>Name: &nbsp; {!isEmpty(row.debtor_name) ? row.debtor_name : "N/A"} </Typography>
+                <Typography fontWeight={500}>Account Details </Typography>
+                <Typography>
+                    BSB: &nbsp; {!isEmpty(row.zai_routing_number) ? row.zai_routing_number : "N/A"}{" "}
+                </Typography>
+                <Typography>
+                    Account Number: &nbsp;
+                    {!isEmpty(row.zai_account_number) ? row.zai_account_number : "N/A"}
+                </Typography>
+                <Typography>
+                    Amount: &nbsp; {row.transaction_currency} &nbsp;
+                    {!isEmpty(row.transaction_amount) ? row.transaction_amount : "N/A"}
+                </Typography>
+            </TableCell>
             <TableCell>{row.webhook_id}</TableCell>
+            <TableCell>{row.transaction_id}</TableCell>
             <TableCell align="right">{row.transaction_amount.toLocaleString()} </TableCell>
             <TableCell>{row.transaction_currency}</TableCell>
-            <TableCell>{!isEmpty(row.debtor_name) ? row.debtor_name : "N/A"}</TableCell>
             <TableCell>
                 <TextField
                     type="text"
@@ -92,7 +108,7 @@ export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transact
                     onClick={handleMakePaymentClick}
                     isLoading={loading && webhookId === row.webhook_id}
                     disabled={loading && webhookId !== row.webhook_id}
-                    submitText="Submit"
+                    submitText="Pay"
                     submittingText="Processing"
                 />
             </TableCell>

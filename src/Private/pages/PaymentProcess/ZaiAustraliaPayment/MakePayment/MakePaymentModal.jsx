@@ -8,7 +8,7 @@ import ListMakePaymentWebhookLog from "./ListMakePaymentWebhookLog";
 
 function MakePaymentModal({ isOpen, customerId, customerName, transactionId, onClose }) {
     return (
-        <Modal onClose={onClose} open={isOpen} title="Make Payment">
+        <Modal onClose={onClose} open={isOpen} title={<Typography fontWeight={600}>Make Payment</Typography>}>
             <Box minWidth="80svw">
                 <Grid padding={2} container item xs={12}>
                     <Grid item xs={12} sm={4} display="flex">
@@ -16,9 +16,6 @@ function MakePaymentModal({ isOpen, customerId, customerName, transactionId, onC
                     </Grid>
                     <Grid item xs={12} sm={4} display="flex">
                         <Typography fontWeight={600}>Customer ID: &nbsp;</Typography> {customerId}
-                    </Grid>
-                    <Grid item xs={12} sm={4} display="flex">
-                        <Typography fontWeight={600}>Transaction ID:</Typography> &nbsp;{transactionId}
                     </Grid>
                 </Grid>
                 <ListMakePaymentWebhookLog transactionId={transactionId} customerId={customerId} />
