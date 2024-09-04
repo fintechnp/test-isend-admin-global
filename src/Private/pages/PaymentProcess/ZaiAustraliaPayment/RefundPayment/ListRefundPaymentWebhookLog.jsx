@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
 import Box from "@mui/material/Box";
+import { styled } from "@mui/styles";
 import Table from "@mui/material/Table";
 import Paper from "@mui/material/Paper";
+import React, { useEffect } from "react";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
+import { useDispatch, useSelector } from "react-redux";
 import TableContainer from "@mui/material/TableContainer";
 
 import TablePagination from "App/components/Table/TablePagination";
@@ -16,7 +16,13 @@ import TableBodySkeleton from "App/components/Table/TableBodySkeleton";
 import actions from "../../store/actions";
 import RefundRowForm from "./RefundRowForm";
 import { webhookLogStatus } from "Private/data/webhookLogStatus";
-import { Typography } from "@mui/material";
+
+const StyledTableCell = styled(TableHead)(({ theme }) => ({
+    "& .MuiTableCell-root": {
+        backgroundColor: "#F1F7FE",
+        color: "#000",
+    },
+}));
 
 function ListRefundPaymentWebhookLog({ customerId }) {
     const dispatch = useDispatch();
@@ -74,8 +80,10 @@ function ListRefundPaymentWebhookLog({ customerId }) {
         <Box>
             <TableContainer component={Paper}>
                 <Table>
-                    <TableHead>
-                        <TableRow>
+                    <StyledTableCell>
+                        <TableRow
+                            sx={{ "&:last-child td, &:last-child th": { borderLeft: 1, borderColor: "#EAEBF0" } }}
+                        >
                             <TableCell>SN</TableCell>
                             <TableCell>Transaction ID</TableCell>
                             <TableCell align="right">Transaction Amount </TableCell>
@@ -84,7 +92,7 @@ function ListRefundPaymentWebhookLog({ customerId }) {
                             <TableCell>Remarks</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
-                    </TableHead>
+                    </StyledTableCell>
                     <TableBody>
                         {loading ? (
                             <TableBodySkeleton rowCount={10} columnCount={7} />

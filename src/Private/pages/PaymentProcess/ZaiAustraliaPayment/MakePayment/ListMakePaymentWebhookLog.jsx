@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
 import Box from "@mui/material/Box";
+import { styled } from "@mui/styles";
 import Table from "@mui/material/Table";
 import Paper from "@mui/material/Paper";
+import React, { useEffect } from "react";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
+import { useDispatch, useSelector } from "react-redux";
 import TableContainer from "@mui/material/TableContainer";
 
 import TablePagination from "App/components/Table/TablePagination";
@@ -16,6 +16,13 @@ import TableBodySkeleton from "App/components/Table/TableBodySkeleton";
 import actions from "../../store/actions";
 import MakePaymentRowForm from "./MakePaymentRowForm";
 import { webhookLogStatus } from "Private/data/webhookLogStatus";
+
+const StyledTableCell = styled(TableHead)(({ theme }) => ({
+    "& .MuiTableCell-root": {
+        backgroundColor: "#F1F7FE",
+        color: "#000",
+    },
+}));
 
 function ListMakePaymentWebhookLog({ customerId, transactionId }) {
     const dispatch = useDispatch();
@@ -71,21 +78,31 @@ function ListMakePaymentWebhookLog({ customerId, transactionId }) {
     return (
         <Box>
             <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
+                <Table borderAxis="bothBetween" variant="plain">
+                    <StyledTableCell>
+                        <TableRow
+                            sx={{ "&:last-child td, &:last-child th": { borderLeft: 1, borderColor: "#EAEBF0" } }}
+                        >
                             <TableCell>SN</TableCell>
+                            <TableCell
+                                sx={{
+                                    minWidth: "15rem",
+                                }}
+                            >
+                                Debtor Information
+                            </TableCell>
                             <TableCell>Webhook ID</TableCell>
-                            <TableCell align="right">Transaction Amount </TableCell>
+                            <TableCell>Transaction ID</TableCell>
+                            <TableCell>Transaction Amount </TableCell>
                             <TableCell>Currency</TableCell>
                             <TableCell>Amount to refund</TableCell>
                             <TableCell>Remarks</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
-                    </TableHead>
+                    </StyledTableCell>
                     <TableBody>
                         {loading ? (
-                            <TableBodySkeleton rowCount={10} columnCount={7} />
+                            <TableBodySkeleton rowCount={9} columnCount={9} />
                         ) : logData.data?.length <= 0 ? (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">

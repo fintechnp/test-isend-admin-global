@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { styled } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import Paper from "@mui/material/Paper";
@@ -15,6 +15,13 @@ import TablePagination from "App/components/Table/TablePagination";
 import TableBodySkeleton from "App/components/Table/TableBodySkeleton";
 
 import actions from "../../store/actions";
+
+const StyledTableCell = styled(TableHead)(({ theme }) => ({
+    "& .MuiTableCell-root": {
+        backgroundColor: "#F1F7FE",
+        color: "#000",
+    },
+}));
 
 function ListRefundPaymentLog({ customerId }) {
     const dispatch = useDispatch();
@@ -60,20 +67,16 @@ function ListRefundPaymentLog({ customerId }) {
         <Box>
             <TableContainer component={Paper}>
                 <Table>
-                    <TableHead>
+                    <StyledTableCell>
                         <TableRow>
                             <TableCell>SN</TableCell>
                             <TableCell>Transaction ID</TableCell>
-                            <TableCell>
-                                <Typography align="right">Transaction Amount</Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography align="right">Refund Amount</Typography>
-                            </TableCell>
+                            <TableCell>Transaction Amount</TableCell>
+                            <TableCell>Refund Amount</TableCell>
                             <TableCell>Currency</TableCell>
                             <TableCell>Remarks</TableCell>
                         </TableRow>
-                    </TableHead>
+                    </StyledTableCell>
                     <TableBody>
                         {loading ? (
                             <TableBodySkeleton rowCount={10} columnCount={6} />
