@@ -22,6 +22,24 @@ const emailTemplateActions = {
     OPEN_UPDATE_EMAIL_TEMPLATE_MODAL: "OPEN_UPDATE_EMAIL_TEMPLATE_MODAL",
     CLOSE_UPDATE_EMAIL_TEMPLATE_MODAL: "CLOSE_UPDATE_EMAIL_TEMPLATE_MODAL",
 
+    GET_EMAIL_ELEMENT: "GET_EMAIL_ELEMENT",
+    GET_EMAIL_ELEMENT_SUCCESS: "GET_EMAIL_ELEMENT_SUCCESS",
+    GET_EMAIL_ELEMENT_FAILURE: "GET_EMAIL_ELEMENT_FAILURE",
+
+    ADD_EMAIL_ELEMENT: "ADD_EMAIL_ELEMENT",
+    ADD_EMAIL_ELEMENT_SUCCESS: "ADD_EMAIL_ELEMENT_SUCCESS",
+    ADD_EMAIL_ELEMENT_FAILURE: "ADD_EMAIL_ELEMENT_FAILURE",
+    OPEN_ADD_EMAIL_ELEMENT_MODAL: "OPEN_ADD_EMAIL_ELEMENT_MODAL",
+    CLOSE_ADD_EMAIL_ELEMENT_MODAL: "CLOSE_ADD_EMAIL_ELEMENT_MODAL",
+    ADD_EMAIL_ELEMENT_RESET: "ADD_EMAIL_ELEMENT_RESET",
+
+    UPDATE_EMAIL_ELEMENT: "UPDATE_EMAIL_ELEMENT",
+    UPDATE_EMAIL_ELEMENT_SUCCESS: "UPDATE_EMAIL_ELEMENT_SUCCESS",
+    UPDATE_EMAIL_ELEMENT_FAILURE: "UPDATE_EMAIL_ELEMENT_FAILURE",
+    UPDATE_EMAIL_ELEMENT_RESET: "UPDATE_EMAIL_ELEMENT_RESET",
+    OPEN_UPDATE_EMAIL_ELEMENT_MODAL: "OPEN_UPDATE_EMAIL_ELEMENT_MODAL",
+    CLOSE_UPDATE_EMAIL_ELEMENT_MODAL: "CLOSE_UPDATE_EMAIL_ELEMENT_MODAL",
+
     get_email_templates: (query) => ({
         type: emailTemplateActions.GET_EMAIL_TEMPLATE,
         query,
@@ -39,6 +57,22 @@ const emailTemplateActions = {
 
     update_email_template: (id, data) => ({
         type: emailTemplateActions.UPDATE_EMAIL_TEMPLATE,
+        data,
+        id,
+    }),
+
+    get_email_element: (query) => ({
+        type: emailTemplateActions.GET_EMAIL_ELEMENT,
+        query,
+    }),
+
+    add_email_element: (data) => ({
+        type: emailTemplateActions.ADD_EMAIL_ELEMENT,
+        data,
+    }),
+
+    update_email_element: (id, data) => ({
+        type: emailTemplateActions.UPDATE_EMAIL_ELEMENT,
         data,
         id,
     }),

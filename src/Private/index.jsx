@@ -575,6 +575,11 @@ import {
 } from "./components/email-template/store/reducer/emailTemplateReducer";
 import EmailTemplateSaga from "./components/email-template/store/emailTemplateSaga";
 
+import {
+    getEmailElementReducer,
+    addEmailElementReducer,
+    updateEmailElementReducer,
+} from "./components/email-template/store/reducer/emailElementReducer";
 // region: Dashboard
 import {
     DashboardSaga,
@@ -943,6 +948,9 @@ export const privateReducer = {
     get_email_template_tags: getEmailTemplateTagReducer,
     add_email_template: addEmailTemplateReducer,
     update_email_template: updateEmailTemplateReducer,
+    get_email_element: getEmailElementReducer,
+    add_email_element: addEmailElementReducer,
+    update_email_element: updateEmailElementReducer,
 
     // funding sources
     get_funding_source_list: getFundingSourcesReducer,

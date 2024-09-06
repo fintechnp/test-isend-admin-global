@@ -1,24 +1,25 @@
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useMemo } from "react";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ListItemButton from "@mui/material/ListItemButton";
 
-import Button from "App/components/Button/Button";
 import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
+import AddEmailElementModal from "./AddEmailElementModal";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 import AddEmailTemplateModal from "Private/components/email-template/AddEmailTemplateModal";
 import EditEmailTemplateModal from "Private/components/email-template/EditEmailTemplateModal";
 
 import dateUtils from "App/utils/dateUtils";
+import routePaths from "Private/config/routePaths";
 import useAuthUser from "Private/hooks/useAuthUser";
 import HasPermission from "../shared/HasPermission";
 import { permissions } from "Private/data/permissions";
@@ -47,10 +48,11 @@ const sortByData = [
 function ListEmailTemplate() {
     const dispatch = useDispatch();
     const { can } = useAuthUser();
+    const navigate = useNavigate();
 
-    const { response, loading: isLoading } = useSelector((state) => state.get_email_templates);
     const { success: isAddSuccess } = useSelector((state) => state.add_email_template);
     const { success: isUpdateSuccess } = useSelector((state) => state.update_email_template);
+    const { response, loading: isLoading } = useSelector((state) => state.get_email_templates);
 
     const filterFields = [
         {
@@ -107,7 +109,7 @@ function ListEmailTemplate() {
                 cell: ({ getValue, row }) => (
                     <Column>
                         <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
-                        <Typography>By: {row.original.created_by}</Typography>
+                        {row.original.created_by && <Typography>By: {row.original.created_by}</Typography>}
                     </Column>
                 ),
             },
@@ -127,25 +129,23 @@ function ListEmailTemplate() {
                           header: "Actions",
                           accessorKey: "show",
                           cell: ({ row }) => (
-                              <TableRowActionContainer>
-                                  <IconButton
-                                      onClick={() =>
-                                          dispatch({
-                                              type: "OPEN_UPDATE_EMAIL_TEMPLATE_MODAL",
-                                              payload: row.original,
-                                          })
-                                      }
-                                  >
-                                      <EditOutlinedIcon
-                                          sx={{
-                                              fontSize: "20px",
-                                              "&:hover": {
-                                                  background: "transparent",
-                                              },
-                                          }}
-                                      />
-                                  </IconButton>
-                              </TableRowActionContainer>
+                              <PopoverButton>
+                                  {({ onClose }) => (
+                                      <HasPermission permission={permissions.EDIT_EMAIL_TEMPLATE}>
+                                          <ListItemButton
+                                              onClick={() => {
+                                                  onClose();
+                                                  dispatch({
+                                                      type: "OPEN_UPDATE_EMAIL_TEMPLATE_MODAL",
+                                                      payload: row.original,
+                                                  });
+                                              }}
+                                          >
+                                              Edit
+                                          </ListItemButton>
+                                      </HasPermission>
+                                  )}
+                              </PopoverButton>
                           ),
                       },
                   ]
@@ -198,19 +198,42 @@ function ListEmailTemplate() {
                                     { key: "Descending", value: "desc" },
                                 ]}
                             />
-
-                            <HasPermission permission={permissions.CREATE_EMAIL_TEMPLATE}>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => {
-                                        dispatch({
-                                            type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
-                                        });
-                                    }}
-                                >
-                                    Create Email Template
-                                </Button>
-                            </HasPermission>
+                            <PopoverButton>
+                                {({ onClose }) => (
+                                    <>
+                                        <HasPermission permission={permissions.CREATE_EMAIL_TEMPLATE}>
+                                            <ListItemButton
+                                                onClick={() => {
+                                                    onClose();
+                                                    dispatch({
+                                                        type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
+                                                    });
+                                                }}
+                                            >
+                                                Create Email Template
+                                            </ListItemButton>
+                                        </HasPermission>
+                                        {/* <HasPermission permission={permissions.CREATE_EMAIL_ELEMENT}> */}
+                                        <ListItemButton
+                                            onClick={() => {
+                                                dispatch({
+                                                    type: "OPEN_ADD_EMAIL_ELEMENT_MODAL",
+                                                });
+                                            }}
+                                        >
+                                            Create Email Element
+                                        </ListItemButton>
+                                        {/* </HasPermission> */}
+                                        <ListItemButton
+                                            onClick={() => {
+                                                navigate(routePaths.ListEmailElement);
+                                            }}
+                                        >
+                                            List Email Element
+                                        </ListItemButton>
+                                    </>
+                                )}
+                            </PopoverButton>
                         </>
                     }
                 >
@@ -229,6 +252,7 @@ function ListEmailTemplate() {
             </Column>
             <AddEmailTemplateModal />
             <EditEmailTemplateModal />
+            <AddEmailElementModal />
         </PageContent>
     );
 }

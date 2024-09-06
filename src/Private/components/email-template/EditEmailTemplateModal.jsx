@@ -46,8 +46,8 @@ export default function EditEmailTemplateModal() {
                             email_format: initialFormState?.email_format ?? "",
                             template_type: initialFormState?.template_type ?? "",
                             template_for: initialFormState?.template_for ?? "",
-                            email_header: initialFormState?.email_header ?? "",
-                            email_footer: initialFormState?.email_footer ?? "",
+                            header_element_id: initialFormState?.header_element_id ?? "",
+                            footer_element_id: initialFormState?.footer_element_id ?? "",
                         }}
                         insertTag={selectedTag}
                     />

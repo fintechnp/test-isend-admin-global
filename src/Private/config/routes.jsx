@@ -201,6 +201,7 @@ import ListCampaignLedgerReport from "Private/pages/Reports/CampaignReport/ListC
 import ListCampaignUsageReport from "Private/pages/Reports/CampaignReport/ListCampaignUsageReport";
 import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZaiComponent";
 import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
+import ListEmailElement from "Private/components/email-template/ListEmailElement";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -330,7 +331,10 @@ const privateRoutes = [
         path: "/setup/email-template",
         component: <ListEmailTemplate />,
     },
-
+    {
+        path: routePaths.ListEmailElement,
+        component: <ListEmailElement />,
+    },
     {
         path: routePaths.countries.index,
         component: <ListCountries />,

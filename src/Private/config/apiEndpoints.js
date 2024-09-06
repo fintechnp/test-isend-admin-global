@@ -22,6 +22,9 @@ const apiEndpoints = {
         create: "/email/template",
         update: "/email/template/update/:template_id",
         tagList: "/email/template/tags",
+        elementList: "/email/element",
+        elementCreate: "/email/element",
+        elementUpdate: "/email/element/update/:element_id",
     },
 
     countries: {

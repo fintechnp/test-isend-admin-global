@@ -17,20 +17,26 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 
-import { templateForOptions } from "./data/template-for";
+import { useDispatch, useSelector } from "react-redux";
 import referenceTypeId from "Private/config/referenceTypeId";
+import emailTemplateActions from "./store/emailTemplateActions";
 import { templateFor as TemplateForConstant } from "./data/template-for";
+import { templateForLabels, templateForOptions } from "./data/template-for";
 
 const schema = Yup.object().shape({
     email_subject: Yup.string().required("Email subject is required"),
     email_format: Yup.string().required("Email format is required"),
     template_type: Yup.string().required("Email template type  is required"),
-    email_header: Yup.string().required("Email header is required"),
-    email_footer: Yup.string().required("Email footer is required"),
+    header_element_id: Yup.string().required("Email header is required"),
+    footer_element_id: Yup.string().required("Email footer is required"),
 });
 
 const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, loading, insertTag }) => {
+    const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
+    const { response: emailElementData, loading: emailElementLoading } = useSelector(
+        (state) => state.get_email_element,
+    );
 
     const methods = useForm({
         resolver: yupResolver(schema),
@@ -46,8 +52,6 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
     const editorRef = useRef(null);
     const templateFor = watch("template_for");
     const emailFormat = watch("email_format");
-    const emailHeader = watch("email_header");
-    const emailFooter = watch("email_footer");
 
     const referenceTypeIdForTemplateType =
         templateFor === TemplateForConstant.ADMIN
@@ -57,6 +61,20 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
               : templateFor === TemplateForConstant.ADMINTOCUSTOMER
                 ? referenceTypeId.emailTemplateTypeForAdminToCustomer
                 : null;
+
+    const emailElementHeader = emailElementData?.data.filter((el) => el.element_type === "header") || [];
+
+    const emailElementFooter = emailElementData?.data.filter((el) => el.element_type === "footer") || [];
+
+    const emailHeaderOptions = emailElementHeader?.map((el) => ({
+        label: templateForLabels[el.element_for],
+        value: el.element_id,
+    }));
+
+    const emailFooterOptions = emailElementFooter?.map((el) => ({
+        label: templateForLabels[el.element_for],
+        value: el.element_id,
+    }));
 
     const referenceData = referenceTypeIdForTemplateType
         ? (reference
@@ -88,6 +106,10 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
         }
     }, [insertTag]);
 
+    useEffect(() => {
+        dispatch(emailTemplateActions.get_email_element());
+    }, []);
+
     return (
         <HookForm onSubmit={onSubmit} {...methods}>
             <Stack direction="column" spacing={3} columnSpacing={5}>
@@ -101,10 +123,16 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
                     <FormTextField name="email_subject" label="Email Subject" />
                 </Stack>
                 <Stack item xs={12} md={6}>
+                    <FormSelect name="header_element_id" label="Email Header" options={emailHeaderOptions} />
+                </Stack>
+                <Stack item xs={12} md={6}>
+                    <FormSelect name="footer_element_id" label="Email Footer" options={emailFooterOptions} />
+                </Stack>
+                {/* <Stack item xs={12} md={6}>
                     <Typography>Email Header</Typography>
                     <ReactQuill theme="snow" value={emailHeader} onChange={(v) => setValue("email_header", v)} />
                     <FormHelperText error={true}>{errors?.email_header?.message}</FormHelperText>
-                </Stack>
+                </Stack> */}
                 <Stack item xs={12} md={6}>
                     <Typography>Email Format</Typography>
                     <ReactQuill
@@ -115,11 +143,11 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
                     />
                     <FormHelperText error={true}>{errors?.email_format?.message}</FormHelperText>
                 </Stack>
-                <Stack item xs={12} md={6}>
+                {/* <Stack item xs={12} md={6}>
                     <Typography>Email Footer</Typography>
                     <ReactQuill theme="snow" value={emailFooter} onChange={(v) => setValue("email_footer", v)} />
                     <FormHelperText error={true}>{errors?.email_footer?.message}</FormHelperText>
-                </Stack>
+                </Stack> */}
 
                 <Grid item xs={12}>
                     <ButtonWrapper>

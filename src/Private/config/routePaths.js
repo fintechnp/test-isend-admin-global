@@ -197,6 +197,9 @@ const routePaths = {
     // region - zaiLogs
 
     ListZaiLogs: "zai-logs",
+
+    // region -email element
+    ListEmailElement: "/setup/email-element",
 };
 
 export default routePaths;
