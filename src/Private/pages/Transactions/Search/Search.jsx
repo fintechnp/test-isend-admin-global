@@ -1,7 +1,5 @@
-import moment from "moment";
 import * as Yup from "yup";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
@@ -286,13 +284,19 @@ function Search(props) {
             },
             {
                 header: "Transaction Status",
-                accessorKey: "transaction_status",
-                cell: ({ getValue, row }) => <StatusBadge status={getValue() ?? "N/A"} />,
+                accessorKey: "transaction_status_code",
+                cell: ({ row }) => (
+                    <StatusBadge
+                        status={
+                            isEmpty(row?.original?.status) ? row.original.transaction_status_code : row.original.status
+                        }
+                    />
+                ),
             },
             {
                 header: "Send Status",
-                accessorKey: "send_status",
-                cell: ({ getValue }) => <StatusBadge status={getValue() ?? "N/A"} />,
+                accessorKey: "send_status_code",
+                cell: ({ row }) => <StatusBadge status={row.original.send_status_code} />,
             },
         ],
         [],

@@ -1,24 +1,27 @@
 import React from "react";
-import { Status } from "./Status";
 import Chip from "@mui/material/Chip";
 import capitalize from "lodash/capitalize";
 
+import isEmpty from "App/helpers/isEmpty";
+
+import { Status } from "./Status";
+
 export default function StatusBadge({ status }) {
     const colors = {
-        [Status.W]: "secondary",
-        [Status.I]: "primary",
-        [Status.B]: "error",
-        [Status.P]: "warning",
-        [Status.C]: "success",
-        [Status.F]: "error",
-        [Status.R]: "error",
-        [Status.E]: "error",
+        W: "secondary",
+        I: "primary",
+        B: "error",
+        P: "warning",
+        C: "success",
+        F: "error",
+        R: "error",
+        E: "error",
         "": null,
     };
 
-    const color = colors[status];
+    const color = colors[status.toUpperCase()];
 
-    const label = status === "" ? "N/A" : capitalize(status);
+    const label = isEmpty(status) ? "N/A" : capitalize(status);
 
-    return <Chip color={color || "default"} label={label} size="medium" />;
+    return <Chip color={color || "default"} label={Status?.[label] ?? "N/A"} size="medium" />;
 }

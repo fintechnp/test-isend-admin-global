@@ -256,13 +256,13 @@ const DailyTransactions = (props) => {
                                 lineHeight: 1.2,
                             }}
                         >
-                            {!isEmpty(data.value)
-                                ? ReferenceName(66, data.row.value)
+                            {isEmpty(data.row.original.status)
+                                ? data.row.original.send_status
                                 : ReferenceName(66, data.row.original.status)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             {!isEmpty(data.row.original.transaction_status)
-                                ? ReferenceName(66, data.row.original.transaction_status)
+                                ? data.row.original.transaction_status
                                 : " "}
                         </Typography>
                     </Box>
