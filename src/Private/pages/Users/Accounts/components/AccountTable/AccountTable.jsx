@@ -216,6 +216,15 @@ function AccountTable({ onPageChange, onRowsPerPageChange, filterSchema }) {
                                     <HasPermission permission={permissions.EDIT_USER}>
                                         <AddAccount update={true} update_data={row?.original} onClose={onClose} />
                                     </HasPermission>
+                                    <HasPermission permission={permissions.RESET_USER_PASSWORD}>
+                                        <ListItemButton
+                                            onClick={() =>
+                                                handleResetPassword(row?.original, row?.original?.email, onClose())
+                                            }
+                                        >
+                                            Reset Password
+                                        </ListItemButton>
+                                    </HasPermission>
                                 </>
                             )}
                         </PopoverButton>
