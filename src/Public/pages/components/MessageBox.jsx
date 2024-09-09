@@ -1,7 +1,7 @@
 import React from "react";
-import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
-import MuiPaper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import MuiButton from "@mui/material/Button";
 import CardMedia from "@mui/material/CardMedia";
 import { useNavigate } from "react-router-dom";
@@ -9,13 +9,13 @@ import Typography from "@mui/material/Typography";
 
 import Logo from "../../../assets/long-logo.svg";
 
-const Paper = styled(MuiPaper)(({ theme }) => ({
+const WrapperBox = styled(Box)(({ theme }) => ({
     minWidth: "100%",
     height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
+    // background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
 }));
 
 const FormContainer = styled(Grid)(({ theme }) => ({
@@ -50,17 +50,17 @@ const Button = styled(MuiButton)(({ theme }) => ({
     fontSize: "13px",
     borderRadius: "2px",
     textTransform: "capitalize",
-    background: "linear-gradient(45deg, #1761AE 30%, #21CBF3 90%)",
-    "&:hover": {
-        background: "linear-gradient(45deg, #1761AE 30%, #091f99 90%)",
-    },
+    // background: "linear-gradient(45deg, #1761AE 30%, #21CBF3 90%)",
+    // "&:hover": {
+    //     background: "linear-gradient(45deg, #1761AE 30%, #091f99 90%)",
+    // },
 }));
 
 const MessageBox = ({ message }) => {
     const navigate = useNavigate();
 
     return (
-        <Paper square={true}>
+        <WrapperBox>
             <FormContainer container rowSpacing={1} direction="column">
                 <Grid item>
                     <LogoWrapper component="img" image={Logo} alt="isend logo" />
@@ -92,7 +92,7 @@ const MessageBox = ({ message }) => {
                     </Grid>
                 </Grid>
             </FormContainer>
-        </Paper>
+        </WrapperBox>
     );
 };
 
