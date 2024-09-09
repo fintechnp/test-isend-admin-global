@@ -11,8 +11,8 @@ export const updatePromoCodeSchema = Yup.object().shape({
 
     limitPerUser: Yup.number().required("Limit per user is required").min(0),
     limitPerPromo: Yup.number().required("Limit per promo is required").min(0),
-    termsAndCondition: Yup.string().required("Terms and conditions are required"),
-    webImage: Yup.string().optional(),
-    mobileImage: Yup.string().optional(),
+    TermsAndCondition: Yup.string().required("Terms and conditions are required"),
+    WebImage: Yup.string().optional(),
+    MobileImage: Yup.string().optional(),
     description: Yup.string().required("Description is required"),
 });

@@ -21,16 +21,16 @@ const EditPromoCode = () => {
     const getUpdateById = response?.data;
 
     const initialValues = {
-        startDate: getUpdateById?.startDate || "",
-        endDate: getUpdateById?.endDate || "",
-        status: getUpdateById?.status || 0,
-        budget: getUpdateById?.budget || 0,
-        limitPerUser: getUpdateById?.limitPerUser || 0,
-        limitPerPromo: getUpdateById?.limitPerCampaign || 1,
-        termsAndCondition: HtmlToPlainText(getUpdateById?.termsAndCondition) || "",
-        webImage: getUpdateById?.webImage || "",
-        mobileImage: getUpdateById?.mobileImage || "",
-        description: getUpdateById?.description || "",
+        StartDate: getUpdateById?.startDate || "",
+        EndDate: getUpdateById?.endDate || "",
+        Status: getUpdateById?.status || 0,
+        Budget: getUpdateById?.budget || 0,
+        LimitPerUser: getUpdateById?.limitPerUser || 0,
+        LimitPerPromo: getUpdateById?.limitPerCampaign || 1,
+        TermsAndCondition: HtmlToPlainText(getUpdateById?.termsAndCondition) || "",
+        WebImage: getUpdateById?.WebImage || "",
+        MobileImage: getUpdateById?.MobileImage || "",
+        Description: getUpdateById?.description || "",
     };
 
     useEffect(() => {
@@ -38,22 +38,34 @@ const EditPromoCode = () => {
     }, [dispatch, promoCodeId]);
 
     const handleSubmit = (data) => {
-        const { campaign, reward, trigger, ...rest } = data;
+        const formData = Object.fromEntries(data.entries());
 
         const filteredData = {
-            startDate: data.campaign.startDate,
-            endDate: data.campaign.endDate,
-            status: data.campaign.status,
-            budget: data.campaign.budget,
-            limitPerUser: data.limitPerUser,
-            limitPerPromo: data.limitPerPromo,
-            description: data.description,
-            webImage: data.webImage,
-            mobileImage: data.mobileImage,
-            termsAndCondition: marked(data.termsAndCondition),
+            StartDate: formData["Campaign.StartDate"] || "",
+            EndDate: formData["Campaign.EndDate"] || "",
+            Status: parseInt(formData["Campaign.Status"], 10) || 0,
+            Budget: parseFloat(formData["Campaign.Budget"]) || 0,
+            LimitPerUser: parseInt(formData["LimitPerUser"], 10) || 0,
+            LimitPerPromo: parseInt(formData["LimitPerPromo"], 10) || 1,
+            Description: formData["Description"] || "",
+            TermsAndCondition: marked(formData["TermsAndCondition"]) || "",
         };
 
-        dispatch(promoCodeActions.update_promo_code(promoCodeId, filteredData));
+        const finalFormData = new FormData();
+
+        for (const key in filteredData) {
+            finalFormData.append(key, filteredData[key]);
+        }
+
+        if (data.get("WebImage")) {
+            finalFormData.append("WebImage", data.get("WebImage"));
+        }
+
+        if (data.get("MobileImage")) {
+            finalFormData.append("MobileImage", data.get("MobileImage"));
+        }
+
+        dispatch(promoCodeActions.update_promo_code(promoCodeId, finalFormData));
     };
 
     useEffect(() => {

@@ -21,7 +21,7 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
 
     const { methods } = useForm();
 
-    const attributeFamily = watch(`trigger.${index}.attribute`);
+    const attributeFamily = watch(`AttributeConditions.${index}.attribute`);
 
     const attributeFamilyTypeId = allAttributeList?.find(
         (item) => item?.attributeFamilyId === attributeFamily,
@@ -32,25 +32,25 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
     useEffect(() => {
         switch (attributeFamilyTypeId) {
             case campaignEventTypes.DATE:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.ON_SAME_DAY);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.ON_SAME_DAY);
                 break;
             case campaignEventTypes.DATE_RANGE:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.BETWEEN);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.BETWEEN);
                 break;
             case campaignEventTypes.AMOUNT:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
                 break;
             case campaignEventTypes.COUNT:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
                 break;
             case campaignEventTypes.BENEFICIARY_COUNTRY:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
                 break;
             case campaignEventTypes.BENEFICIARY_RELATION:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
                 break;
             default:
-                setValue(`trigger.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
+                setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.GREATER_THAN);
         }
     }, [attributeFamilyTypeId]);
 
@@ -71,7 +71,11 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
     return (
         <Grid container mb={1} spacing={2}>
             <Grid item xs={12} md={6} lg={3}>
-                <FormSelect placeholder="Attribute" name={`trigger.${index}.attribute`} options={mappedAttributeList} />
+                <FormSelect
+                    placeholder="Attribute"
+                    name={`AttributeConditions.${index}.attribute`}
+                    options={mappedAttributeList}
+                />
             </Grid>
             <Grid
                 display={
@@ -88,7 +92,7 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
                 lg={3}
             >
                 <FormSelect
-                    name={`trigger.${index}.criteria`}
+                    name={`AttributeConditions.${index}.criteria`}
                     options={triggerFormOptions}
                     disabled={
                         attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE ||
@@ -104,21 +108,21 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
                         label="Currency"
                         placeholder="Currency"
                         options={countryCurrency}
-                        name={`trigger.${index}.currency`}
+                        name={`AttributeConditions.${index}.currency`}
                     />
                 </Grid>
             )}
             {(attributeFamilyTypeId === campaignEventTypes.AMOUNT ||
                 attributeFamilyTypeId === campaignEventTypes.COUNT) && (
                 <Grid item xs={12} md={6} lg={3}>
-                    <FormTextField label={amountLabel} type="number" name={`trigger.${index}.amount`} />
+                    <FormTextField label={amountLabel} type="number" name={`AttributeConditions.${index}.amount`} />
                 </Grid>
             )}
 
             {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION && (
                 <Grid item xs={12} md={6} lg={3}>
                     <FormReferenceDataAutoComplete
-                        name={`trigger.${index}.amount`}
+                        name={`AttributeConditions.${index}.amount`}
                         label="Relation"
                         labelKey="name"
                         valueKey="reference_id"

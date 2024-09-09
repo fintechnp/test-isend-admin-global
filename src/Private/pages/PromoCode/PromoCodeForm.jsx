@@ -40,7 +40,8 @@ import { updatePromoCodeSchema } from "./schema/updatePromoCodeSchema";
 import { displayMechanismsOptions } from "./data/displayMechanismEnums";
 import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
-import { FormHelperText } from "@mui/material";
+import { FormHelperText, FormLabel } from "@mui/material";
+import FormFileField from "App/core/hook-form/FormFileField";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -82,18 +83,18 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
     const methods = useForm({
         defaultValues: isAddMode
             ? {
-                  campaign: {
-                      campaignName: "",
-                      campaignType: campaignCodes.PROMO,
-                      validCountry: "",
-                      startDate: "",
-                      endDate: "",
-                      status: 0,
-                      budget: 0,
+                  Campaign: {
+                      CampaignName: "",
+                      CampaignType: campaignCodes.PROMO,
+                      ValidCountry: "",
+                      StartDate: "",
+                      EndDate: "",
+                      Status: 0,
+                      Budget: 0,
                   },
-                  trigger: [],
-                  triggerReferrer: [],
-                  reward: [
+                  AttributeConditions: [],
+                  ReferralFamilyCondition: [],
+                  Rewards: [
                       {
                           minimumAmount: 0,
                           maximumAmount: 0,
@@ -103,17 +104,17 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                           rewardLimit: 0,
                       },
                   ],
-                  limitPerUser: 0,
-                  limitPerPromo: 0,
-                  termsAndCondition: "",
-                  webImage: "",
-                  mobileImage: "",
-                  description: "",
+                  LimitPerUser: 0,
+                  LimitPerPromo: 0,
+                  TermsAndCondition: "",
+                  WebImage: "",
+                  MobileImage: "",
+                  Description: "",
               }
             : {
-                  trigger: initialValues?.trigger || [],
-                  triggerReferrer: initialValues?.triggerReferrer || [],
-                  reward: initialValues?.reward || [
+                  TriggerCriteria: initialValues?.TriggerCriteria || [],
+                  ReferralFamilyCondition: initialValues?.ReferralFamilyCondition || [],
+                  Rewards: initialValues?.Rewards || [
                       {
                           minimumAmount: initialValues?.minimumAmount || 0,
                           maximumAmount: initialValues?.maximumAmount || 0,
@@ -124,7 +125,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                       },
                   ],
               },
-        resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
+        //  resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
         mode: "onSubmit",
     });
 
@@ -136,37 +137,37 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
 
     useEffect(() => {
         if (!isAddMode) {
-            setValue("campaign.campaignName", initialValues?.campaignName || "");
-            setValue("campaign.campaignType", initialValues?.campaignType || campaignCodes.PROMO);
-            setValue("campaign.validCountry", initialValues?.validCountry || "");
-            setValue("campaign.startDate", initialValues?.startDate || "");
-            setValue("campaign.endDate", initialValues?.endDate || "");
-            setValue("campaign.status", initialValues?.status || "");
-            setValue("campaign.budget", initialValues?.budget || "");
-            setValue("limitPerUser", initialValues?.limitPerUser || "");
-            setValue("limitPerPromo", initialValues?.limitPerPromo || "");
-            setValue("termsAndCondition", initialValues?.termsAndCondition || "");
-            setValue("webImage", initialValues?.webImage || "");
-            setValue("mobileImage", initialValues?.mobileImage || "");
-            setValue("description", initialValues?.description || "");
+            setValue("Campaign.CampaignName", initialValues?.CampaignName || "");
+            setValue("Campaign.CampaignType", initialValues?.CampaignType || campaignCodes.PROMO);
+            setValue("Campaign.ValidCountry", initialValues?.ValidCountry || "");
+            setValue("Campaign.StartDate", initialValues?.StartDate || "");
+            setValue("Campaign.EndDate", initialValues?.EndDate || "");
+            setValue("Campaign.Status", initialValues?.Status || "");
+            setValue("Campaign.Budget", initialValues?.Budget || "");
+            setValue("LimitPerUser", initialValues?.LimitPerUser || "");
+            setValue("LimitPerPromo", initialValues?.LimitPerPromo || "");
+            setValue("TermsAndCondition", initialValues?.TermsAndCondition || "");
+            setValue("WebImage", initialValues?.WebImage || "");
+            setValue("MobileImage", initialValues?.MobileImage || "");
+            setValue("Description", initialValues?.Description || "");
         }
     }, [initialValues]);
 
-    const campaignType = watch("campaign.campaignType");
-    const campaign = watch("campaign");
+    const CampaignType = watch("Campaign.CampaignType");
+    const Campaign = watch("Campaign");
 
     useEffect(() => {
-        if (campaignType === campaignCodes.PROMO) {
-            setValue("trigger", [
+        if (CampaignType === campaignCodes.PROMO) {
+            setValue("AttributeConditions", [
                 {
                     attribute: campaignEventTypes.BIRTH_DATE,
                     currency: "",
                     amount: 0,
                 },
             ]);
-            setValue("triggerReferrer", []);
-        } else if (campaignType === campaignCodes.REFERRAL) {
-            setValue("triggerReferrer", [
+            setValue("ReferralFamilyCondition", []);
+        } else if (CampaignType === campaignCodes.REFERRAL) {
+            setValue("ReferralFamilyCondition", [
                 {
                     referrerneedkyc: true,
                     referrerleasttransactions: 0,
@@ -176,9 +177,9 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                     kycverifyingdays: 0,
                 },
             ]);
-            setValue("trigger", []);
+            setValue("AttributeConditions", []);
         }
-    }, [campaign?.campaignType, campaignCodes, initialTriggerValue, setValue]);
+    }, [Campaign?.CampaignType, campaignCodes, initialTriggerValue, setValue]);
 
     const { control } = methods;
 
@@ -188,7 +189,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
         remove: removeTriggerFields,
     } = useFieldArray({
         control,
-        name: "trigger",
+        name: "AttributeConditions",
     });
 
     const {
@@ -197,7 +198,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
         remove: removeRewardFields,
     } = useFieldArray({
         control,
-        name: "reward",
+        name: "Rewards",
     });
 
     const {
@@ -206,68 +207,85 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
         remove: removetriggerReferrerFields,
     } = useFieldArray({
         control,
-        name: "triggerReferrer",
+        name: "ReferralFamilyCondition",
     });
 
-    useEffect(() => {
-        if (Object.keys(errors).length > 0) {
-        }
-    }, [errors]);
-
     const onSubmit = (data) => {
-        const { campaignType } = data.campaign;
+        const { CampaignType } = data.Campaign;
 
         const formattedData = {
-            campaign: {
-                campaignName: data.campaign.campaignName,
-                campaignType: data.campaign.campaignType,
-                validCountry: data.campaign.validCountry,
-                startDate: data.campaign.startDate,
-                endDate: data.campaign.endDate,
-                status: data.campaign.status,
-                budget: data.campaign.budget,
-            },
+            "Campaign.CampaignName": data.Campaign.CampaignName,
+            "Campaign.CampaignType": data.Campaign.CampaignType,
+            "Campaign.ValidCountry": data.Campaign.ValidCountry,
+            "Campaign.StartDate": data.Campaign.StartDate,
+            "Campaign.EndDate": data.Campaign.EndDate,
+            "Campaign.Status": data.Campaign.Status,
+            "Campaign.Budget": data.Campaign.Budget,
 
-            reward: data.reward.map((field) => ({
-                minimumAmount: field.minimumAmount,
-                maximumAmount: field.maximumAmount,
-                rewardOn: field.rewardOn,
-                rewardType: field.rewardType,
-                rewardValue: field.rewardValue,
-                rewardLimit: field.rewardLimit,
-            })),
-
-            displayMechanism: data.displayMechanism,
-            limitPerUser: data.limitPerUser,
-            limitPerPromo: data.limitPerPromo,
-            termsAndCondition: marked(data.termsAndCondition),
-            triggerCriteria: data.triggerCriteria,
-            webImage: data.webImage,
-            mobileImage: data.mobileImage,
-            description: data.description,
+            Rewards: Array.isArray(data.Rewards)
+                ? data.Rewards.map((field) => ({
+                      minimumAmount: field.minimumAmount,
+                      maximumAmount: field.maximumAmount,
+                      rewardOn: field.rewardOn,
+                      rewardType: field.rewardType,
+                      rewardValue: field.rewardValue,
+                      rewardLimit: field.rewardLimit,
+                  }))
+                : [],
+            DisplayMechanism: data.DisplayMechanism,
+            LimitPerUser: data.LimitPerUser,
+            LimitPerPromo: data.LimitPerPromo,
+            TermsAndCondition: marked(data.TermsAndCondition),
+            AttributeConditions: Array.isArray(data.AttributeConditions)
+                ? data.AttributeConditions.map((field) => ({
+                      attribute: field.attribute,
+                      criteria: field.criteria,
+                      currency: field.currency,
+                      amount: field.amount,
+                  }))
+                : [],
+            WebImage: data.WebImage,
+            MobileImage: data.MobileImage,
+            Description: data.Description,
         };
 
-        if (campaignType === campaignCodes.PROMO) {
-            formattedData.trigger = data.trigger.map((field) => {
-                return {
-                    attribute: field.attribute,
-                    criteria: field.criteria,
-                    currency: field.currency,
-                    amount: field.amount,
-                };
-            });
+        if (CampaignType === campaignCodes.PROMO) {
+            formattedData.AttributeConditions = Array.isArray(data.AttributeConditions)
+                ? data.AttributeConditions.map((field) => ({
+                      attribute: field.attribute,
+                      criteria: field.criteria,
+                      currency: field.currency,
+                      amount: field.amount,
+                  }))
+                : [];
         }
 
-        if (campaignType === campaignCodes.REFERRAL) {
-            formattedData.triggerReferrer = data.triggerReferrer.map((field) => ({
-                referrerneedkyc: field.referrerneedkyc,
-                referrerleasttransactions: field.referrerleasttransactions,
-                refereeneedkyc: field.refereeneedkyc,
-                refereeleasttransactions: field.refereeleasttransactions,
-            }));
+        if (CampaignType === campaignCodes.REFERRAL) {
+            formattedData.ReferralFamilyCondition = Array.isArray(data.ReferralFamilyCondition)
+                ? data.ReferralFamilyCondition.map((field) => ({
+                      referrerneedkyc: field.referrerneedkyc,
+                      referrerleasttransactions: field.referrerleasttransactions,
+                      refereeneedkyc: field.refereeneedkyc,
+                      refereeleasttransactions: field.refereeleasttransactions,
+                  }))
+                : [];
         }
 
-        handleSubmit(formattedData);
+        const formData = new FormData();
+
+        Object.keys(formattedData).forEach((key) => {
+            if (Array.isArray(formattedData[key])) {
+                formattedData[key].forEach((item, index) => {
+                    Object.keys(item).forEach((subKey) => {
+                        formData.append(`${key}[${index}][${subKey}]`, item[subKey]);
+                    });
+                });
+            } else {
+                formData.append(key, formattedData[key]);
+            }
+        });
+
+        handleSubmit(formData);
     };
 
     return (
@@ -280,7 +298,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                         {isAddMode && (
                             <>
                                 <Grid item xs={12} md={6} lg={3}>
-                                    <FormTextField name="campaign.campaignName" label="Campaign Name" required />
+                                    <FormTextField name="Campaign.CampaignName" label="Campaign Name" required />
 
                                     <FormHelperText error={true}>{errors?.campaign?.campaignName}</FormHelperText>
                                 </Grid>
@@ -288,7 +306,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormSelect
                                         type="number"
-                                        name="campaign.campaignType"
+                                        name="Campaign.CampaignType"
                                         label="Campaign Type"
                                         options={campaignCodesOptions}
                                         required
@@ -297,7 +315,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
 
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormSelect
-                                        name="campaign.validCountry"
+                                        name="Campaign.ValidCountry"
                                         label="Valid Country"
                                         options={countryData}
                                         required
@@ -307,21 +325,21 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                         )}
 
                         <Grid item xs={12} md={6} lg={3}>
-                            <FormDateTimePicker name="campaign.startDate" label="Start Date Time" />
+                            <FormDateTimePicker name="Campaign.StartDate" label="Start Date Time" />
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>
-                            <FormDateTimePicker name="campaign.endDate" label="End Date Time" />
+                            <FormDateTimePicker name="Campaign.EndDate" label="End Date Time" />
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>
-                            <FormTextField type="number" name="campaign.budget" label="Budget" />
+                            <FormTextField type="number" name="Campaign.Budget" label="Budget" />
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={3}>
                             <FormSelect
                                 type="number"
-                                name="campaign.status"
+                                name="Campaign.Status"
                                 label="Status"
                                 options={campaignStatusOptions}
                                 required
@@ -334,7 +352,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                     {/* TRIGGER FIELDS */}
                     {isAddMode && (
                         <>
-                            {campaign.campaignType === campaignCodes.PROMO ? (
+                            {Campaign.CampaignType === campaignCodes.PROMO ? (
                                 <Grid item xs={12}>
                                     <Grid marginTop={3} marginBottom={2} display="flex">
                                         <Grid item xs={12}>
@@ -343,7 +361,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                         <Grid item xs={12} md={6} lg={3}>
                                             <FormSelect
                                                 options={campaignTriggerCriteriaOptions}
-                                                name="triggerCriteria"
+                                                name="TriggerCriteria"
                                                 label="Trigger Criteria"
                                                 required
                                             />
@@ -403,7 +421,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                         );
                                     })}
                                 </Grid>
-                            ) : campaign.campaignType === campaignCodes.REFERRAL ? (
+                            ) : Campaign.CampaignType === campaignCodes.REFERRAL ? (
                                 <Grid container spacing={2}>
                                     <Grid marginTop={3} marginBottom={2} item xs={12}>
                                         <Typography variant="h6">Trigger Configuration</Typography>
@@ -413,10 +431,10 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                             <Grid item xs={12} md={6} lg={3}>
                                                 <FormSelect
                                                     label="Referrer Need KYC?"
-                                                    name={`triggerReferrer.${index}.referrerneedkyc`}
+                                                    name={`ReferralFamilyCondition.${index}.referrerneedkyc`}
                                                     options={[
                                                         { value: true, label: "True" },
-                                                        { value: false, label: "False" }, // Fix typo
+                                                        { value: false, label: "False" },
                                                     ]}
                                                 />
                                             </Grid>
@@ -424,16 +442,16 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                 <FormTextField
                                                     type="number"
                                                     label="Referrer Least Transactions"
-                                                    name={`triggerReferrer.${index}.referrerleasttransactions`}
+                                                    name={`ReferralFamilyCondition.${index}.referrerleasttransactions`}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={3}>
                                                 <FormSelect
                                                     label="Referee Need KYC?"
-                                                    name={`triggerReferrer.${index}.refereeneedkyc`}
+                                                    name={`ReferralFamilyCondition.${index}.refereeneedkyc`}
                                                     options={[
                                                         { value: true, label: "True" },
-                                                        { value: false, label: "False" }, // Fix typo
+                                                        { value: false, label: "False" },
                                                     ]}
                                                 />
                                             </Grid>
@@ -441,21 +459,21 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                 <FormTextField
                                                     type="number"
                                                     label="Referee Least Transactions"
-                                                    name={`triggerReferrer.${index}.refereeleasttransactions`}
+                                                    name={`ReferralFamilyCondition.${index}.refereeleasttransactions`}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={3}>
                                                 <FormTextField
                                                     type="number"
                                                     label="Minimum Referrer"
-                                                    name={`triggerReferrer.${index}.minimumreferrer`}
+                                                    name={`ReferralFamilyCondition.${index}.minimumreferrer`}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} md={6} lg={3}>
                                                 <FormTextField
                                                     type="number"
                                                     label="KYC Verifying Days"
-                                                    name={`triggerReferrer.${index}.kycverifyingdays`}
+                                                    name={`ReferralFamilyCondition.${index}.kycverifyingdays`}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -528,7 +546,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                         <FormTextField
                                                             label="Minimum Amount"
                                                             type="number"
-                                                            name={`reward.${index}.minimumAmount`}
+                                                            name={`Rewards.${index}.minimumAmount`}
                                                             required
                                                         />
                                                     </CellContainer>
@@ -539,7 +557,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                         <FormTextField
                                                             label="Maximum Amount"
                                                             type="number"
-                                                            name={`reward.${index}.maximumAmount`}
+                                                            name={`Rewards.${index}.maximumAmount`}
                                                             required
                                                         />
                                                     </CellContainer>
@@ -548,7 +566,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                 <TableCell>
                                                     <CellContainer>
                                                         <FormSelect
-                                                            name={`reward.${index}.rewardOn`}
+                                                            name={`Rewards.${index}.rewardOn`}
                                                             options={rewardOnOptions}
                                                         />
                                                     </CellContainer>
@@ -557,7 +575,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                 <TableCell>
                                                     <CellContainer>
                                                         <FormSelect
-                                                            name={`reward.${index}.rewardType`}
+                                                            name={`Rewards.${index}.rewardType`}
                                                             options={rewardTypeOptions}
                                                         />
                                                     </CellContainer>
@@ -568,7 +586,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                         <FormTextField
                                                             label="Value"
                                                             type="number"
-                                                            name={`reward.${index}.rewardValue`}
+                                                            name={`Rewards.${index}.rewardValue`}
                                                         />
                                                     </CellContainer>
                                                 </TableCell>
@@ -578,7 +596,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                         <FormTextField
                                                             label="Limit"
                                                             type="number"
-                                                            name={`reward.${index}.rewardLimit`}
+                                                            name={`Rewards.${index}.rewardLimit`}
                                                         />
                                                     </CellContainer>
                                                 </TableCell>
@@ -643,7 +661,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                         {isAddMode && (
                             <Grid item xs={12} md={4} lg={3}>
                                 <FormSelect
-                                    name="displayMechanism"
+                                    name="DisplayMechanism"
                                     label="Display Mechanism"
                                     options={displayMechanismsOptions}
                                     required
@@ -652,23 +670,24 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                         )}
 
                         <Grid item xs={12} md={4} lg={4}>
-                            <FormTextField type="number" name="limitPerUser" label="Limit Per User" />
+                            <FormTextField type="number" name="LimitPerUser" label="Limit Per User" />
                         </Grid>
 
                         <Grid item xs={12} md={4} lg={4}>
-                            <FormTextField type="number" name="limitPerPromo" label="Limit Per Promo" />
+                            <FormTextField type="number" name="LimitPerPromo" label="Limit Per Promo" />
                         </Grid>
                     </Grid>
 
                     <Grid container spacing={2} marginY={2}>
                         <Grid item xs={12} md={6} lg={6}>
-                            <FormTextArea name="description" label="Description" />
+                            <FormTextArea name="Description" label="Description" />
                         </Grid>
 
                         <Grid
                             sx={{
                                 display: "flex",
                                 textAlign: "center",
+                                flexDirection: "row",
                                 alignItems: "center",
                                 justifyContent: "center",
                             }}
@@ -677,18 +696,23 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                             md={6}
                             lg={6}
                         >
-                            <Grid container spacing={2} direction="column">
-                                <Grid item>
-                                    <FormTextField name="webImage" label="Web Image" type="text" />
+                            <Grid container direction="row">
+                                <Grid item xs={6}>
+                                    <FormLabel htmlFor="WebImage" component="label">
+                                        Web Image
+                                    </FormLabel>
+                                    <FormFileField name="WebImage" accept="image/*" />
                                 </Grid>
-                                <Grid item>
-                                    <FormTextField name="mobileImage" label="Mobile Image" type="text" />
+                                <Grid item xs={6}>
+                                    <FormLabel htmlFor="MobileImage" component="label">
+                                        Mobile Image
+                                    </FormLabel>
+                                    <FormFileField name="MobileImage" accept="image/*" />
                                 </Grid>
                             </Grid>
                         </Grid>
-
                         <Grid item xs={12}>
-                            <FormTextArea name="termsAndCondition" label="Terms and Conditions" required />
+                            <FormTextArea name="TermsAndCondition" label="Terms and Conditions" required />
                         </Grid>
                     </Grid>
 

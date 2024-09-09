@@ -389,7 +389,7 @@ export default function ViewPromoCode() {
                         <Wrapper>
                             <Typography variant="h6">Campaign Images</Typography>
 
-                            <Box display="flex" flexDirection="column" gap={1}>
+                            <Box display="flex" flexDirection="column" gap={4}>
                                 {filteredPromoImages.length > 0 ? (
                                     filteredPromoImages.map((image, index) => (
                                         <Card key={index}>
