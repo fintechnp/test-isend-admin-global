@@ -25,7 +25,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 import isEmpty from "App/helpers/isEmpty";
 import routePaths from "Private/config/routePaths";
 import ReferralCode from "./components/ReferralCodeBadge";
-import KycStatusBadge from "Private/pages/Customers/Search/components/KycStatusBadge";
+import ReferralStatusBadge from "./components/ReferralStatusBadge";
 
 const schema = Yup.object().shape({
     from_date: Yup.string().nullable().optional(),
@@ -102,18 +102,18 @@ export default function ListReferralReport() {
                     }}
                 >
                     <BadgeAvatar
-                        avatarUrl={getFlagUrl(row.original.iso2)}
+                        avatarUrl={getFlagUrl(row.original.referrer_iso2)}
                         avatarDimension={20}
                         smallAvatarDimension={0}
                     />
                     <Column>
                         <Typography variant="body1">
-                            {row.original.customer_name ? row.original.customer_name : "-"} (
-                            {row.original.customer_id ? row.original.customer_id : "-"})
+                            {!isEmpty(row.original.referrer_name) ? row.original.referrer_name : "N/A"} (
+                            {!isEmpty(row.original.referrer_customer_id) ? row.original.referrer_customer_id : "-"})
                         </Typography>
                         <CustomerDetailsWrapper>
                             <PhoneOutlinedIcon sx={{ marginRight: 1 }} fontSize="12px" />
-                            {row.original.mobile_number ? row.original.mobile_number : "n/a"}
+                            {!isEmpty(row.original.referrer_mobile_no) ? row.original.referrer_mobile_no : "n/a"}
                         </CustomerDetailsWrapper>
                     </Column>
                 </Column>
@@ -130,18 +130,18 @@ export default function ListReferralReport() {
                     }}
                 >
                     <BadgeAvatar
-                        avatarUrl={getFlagUrl(row.original.referreriso2)}
+                        avatarUrl={getFlagUrl(row.original.referee_iso2)}
                         avatarDimension={20}
                         smallAvatarDimension={0}
                     />
                     <Column>
                         <Typography variant="body1">
-                            {row.original.referred_by ? row.original.referred_by : "-"} (
-                            {row.original.referred_by_customer_id ? row.original.referred_by_customer_id : "-"})
+                            {!isEmpty(row.original.referee_name) ? row.original.referee_name : "N/A"} (
+                            {!isEmpty(row.original.referee_customer_id) ? row.original.referee_customer_id : "-"})
                         </Typography>
                         <CustomerDetailsWrapper>
                             <PhoneOutlinedIcon sx={{ marginRight: 1 }} fontSize="12px" />
-                            {row.original.referred_by_mobilenumber ? row.original.referred_by_mobilenumber : "n/a"}
+                            {!isEmpty(row.original.referee_mobile_no) ? row.original.referee_mobile_no : "n/a"}
                         </CustomerDetailsWrapper>
                     </Column>
                 </Column>
@@ -149,8 +149,8 @@ export default function ListReferralReport() {
         },
         {
             header: "Referral Code",
-            accessorKey: "referral_code",
-            cell: ({ getValue }) => <ReferralCode code={getValue()}></ReferralCode>,
+            accessorKey: "referrer_referral_code",
+            cell: ({ getValue }) => <ReferralCode code={getValue() ?? "N/A"}></ReferralCode>,
         },
 
         {
@@ -159,15 +159,13 @@ export default function ListReferralReport() {
             columns: [
                 {
                     header: "Registration Date",
-                    accessorKey: "created_ts",
+                    accessorKey: "referrer_registered_date",
                     cell: ({ getValue }) => <>{dateUtils.getLocalDateTimeFromUTC(getValue())}</>,
                 },
                 {
                     header: "KYC Status",
-                    accessorKey: "kyc_status_name",
-                    cell: ({ row }) => (
-                        <>{<KycStatusBadge status={row.original.kyc_status} label={row.original.kyc_status_name} />}</>
-                    ),
+                    accessorKey: "referee_kyc_status_name",
+                    cell: ({ row }) => <ReferralStatusBadge status={row.original.referee_kyc_status} />,
                 },
             ],
         },
