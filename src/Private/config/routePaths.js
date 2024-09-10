@@ -192,7 +192,8 @@ const routePaths = {
     ListCampaignUsageReport: "/report/campaign/usage/:id",
 
     // region - Transactions
-    viewTransaction: "/transactions/details/:tid/:customerId",
+    viewTransaction: "/transactions/details/:id/:customerId",
+    viewAMLTransaction: "/transactions/details/aml-suspicious/:tid/:customerId",
 
     // region - zaiLogs
 

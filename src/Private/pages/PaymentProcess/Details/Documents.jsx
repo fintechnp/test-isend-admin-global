@@ -8,6 +8,7 @@ import MuiIconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 
 import actions from "../store/actions";
+import isEmpty from "App/helpers/isEmpty";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
@@ -63,7 +64,11 @@ const TransactionDocuments = () => {
     ];
     return (
         <PageContent title="Transaction Documents">
-            <TanstackReactTable data={documentData ? [documentData] : []} columns={columns} loading={documentLoading} />
+            <TanstackReactTable
+                data={isEmpty(documentData) ? [] : [documentData]}
+                columns={columns}
+                loading={documentLoading}
+            />
         </PageContent>
     );
 };

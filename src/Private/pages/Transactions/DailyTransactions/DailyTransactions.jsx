@@ -12,6 +12,8 @@ import PageContent from "App/components/Container/PageContent";
 
 import actions from "./../store/actions";
 import Filter from "./../components/Filter";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
@@ -55,7 +57,13 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/transactions/details/${data?.value}`} style={{ textDecoration: "none" }}>
+                            <Link
+                                to={buildRoute(routePaths.viewTransaction, {
+                                    id: data?.value,
+                                    customerId: data?.row?.original?.customer_id,
+                                })}
+                                style={{ textDecoration: "none" }}
+                            >
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>

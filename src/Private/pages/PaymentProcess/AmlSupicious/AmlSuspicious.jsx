@@ -237,7 +237,11 @@ const AmlSuspicious = (props) => {
                     >
                         <Tooltip title="Transactions Details" arrow>
                             <IconButton
-                                onClick={() => navigate(`/transactions/details/aml-suspicious/${row.original.tid}`)}
+                                onClick={() =>
+                                    navigate(
+                                        `/transactions/details/aml-suspicious/${row.original.tid}/${row.original.customer_id}`,
+                                    )
+                                }
                             >
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{

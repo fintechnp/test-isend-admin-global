@@ -82,13 +82,13 @@ const StyleImageWrapper = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export default function Details({ isAML = false }) {
+export default function Details({ isAML = false, data: transData }) {
     const [openCommentDrawer, setOpenCommentDrawer] = useState(false);
     const [openSuspiciosModal, setOpenSuspiciosModal] = useState(false);
     const [openAttachmentDrawer, setOpenAttachmentDrawer] = useState(false);
     const [openModal, setOpenModal] = useState(false);
 
-    const { tid: transactionId, customerId } = useParams();
+    const { id: transactionId, tid: transactionAmlId, customerId } = useParams();
 
     const navigate = useNavigate();
 
@@ -98,8 +98,7 @@ export default function Details({ isAML = false }) {
 
     const { loading: downloadPdfLoading } = useSelector((state) => state.download_transaction_pdf);
     const { response: Documents, loading } = useSelector((state) => state.get_documents);
-    const { response: data, loading: transactionLoading } = useSelector((state) => state.get_transactions_byid);
-    const transactionData = data.data;
+    const transactionData = transData;
 
     useEffect(() => {
         if (customerId) {
@@ -110,10 +109,6 @@ export default function Details({ isAML = false }) {
             );
         }
     }, [customerId]);
-
-    useEffect(() => {
-        dispatch(TransactionsAction.get_transactions_byid(transactionId));
-    }, [transactionId]);
 
     const DocumentsUrl = Array.isArray(Documents?.data)
         ? Documents.data.map((doc) => doc?.document).filter((url) => url)
@@ -136,7 +131,7 @@ export default function Details({ isAML = false }) {
     const handleDownloadPDF = () => {
         dispatch(
             actions.download_transaction_pdf({
-                transactionId: transactionId,
+                transactionId: transactionId ?? transactionAmlId,
             }),
         );
     };
@@ -261,7 +256,7 @@ export default function Details({ isAML = false }) {
                     accessorKey: "payout_country_data",
                 },
 
-                ...(PaymentType.wallet === data.payment_type
+                ...(PaymentType.wallet === transactionData?.payment_type
                     ? [
                           {
                               label: "Location Name",
@@ -270,7 +265,7 @@ export default function Details({ isAML = false }) {
                       ]
                     : []),
 
-                ...(PaymentType.cashPickup === data.payment_type
+                ...(PaymentType.cashPickup === transactionData?.payment_type
                     ? [
                           {
                               label: "Wallet Name",
@@ -278,7 +273,7 @@ export default function Details({ isAML = false }) {
                           },
                       ]
                     : []),
-                ...(PaymentType.bankTransfer === data.payment_type
+                ...(PaymentType.bankTransfer === transactionData?.payment_type
                     ? [
                           {
                               label: "Bank Account Number",
@@ -295,10 +290,10 @@ export default function Details({ isAML = false }) {
     ]);
 
     const documents = [
-        {
-            label: "Receipt",
-            urls: [data?.ref3].filter((v) => !isEmpty(v)),
-        },
+        // {
+        //     label: "Receipt",
+        //     urls: [transactionData?.ref3],
+        // },
         {
             label: "KYC Documents",
             urls: DocumentsUrl,
@@ -422,7 +417,6 @@ export default function Details({ isAML = false }) {
                 },
             ]}
         >
-            {transactionLoading && <p>Loading</p>}
             <PageContentContainer title="Transaction Details">
                 <ResponsiveBox
                     sx={{
@@ -505,7 +499,7 @@ export default function Details({ isAML = false }) {
                         variant="outlined"
                         disableElevation
                         disableRipple
-                        onClick={() => navigate(`/transaction/remarks/${transactionId}`)}
+                        onClick={() => navigate(`/transaction/remarks/${transactionId ?? transactionAmlId}`)}
                     >
                         Remarks
                     </Button>
@@ -515,7 +509,7 @@ export default function Details({ isAML = false }) {
                         variant="outlined"
                         disableElevation
                         disableRipple
-                        onClick={() => navigate(`/transaction/documents/${transactionId}`)}
+                        onClick={() => navigate(`/transaction/documents/${transactionId ?? transactionAmlId}`)}
                     >
                         Documents
                     </Button>
@@ -540,7 +534,7 @@ export default function Details({ isAML = false }) {
                         handleClose={handleCloseSuspiciosModal}
                     />
 
-                    {data?.is_b2b && (
+                    {transactionData?.is_b2b && (
                         <>
                             <Button
                                 variant="outlined"
@@ -582,7 +576,7 @@ export default function Details({ isAML = false }) {
                 <Drawer anchor="right" open={openCommentDrawer} onClose={toggleCommentDrawer}>
                     <Box sx={{ width: 650, px: 2 }}>
                         <AddComment
-                            referenceId={transactionId}
+                            referenceId={transactionId ?? transactionAmlId}
                             referenceType="Transaction"
                             handleClose={() => {
                                 setOpenCommentDrawer(false);
@@ -595,7 +589,7 @@ export default function Details({ isAML = false }) {
                     <Box sx={{ width: 650, padding: "1rem" }}>
                         <GetAttachment
                             attachmentType="Transaction"
-                            attachmentId={transactionId}
+                            attachmentId={transactionId ?? transactionAmlId}
                             onClose={setOpenAttachmentDrawer}
                         />
                     </Box>
@@ -618,7 +612,7 @@ export default function Details({ isAML = false }) {
                     }}
                     children={
                         <SendMail
-                            id={transactionId}
+                            id={transactionId ?? transactionAmlId}
                             onClose={() => {
                                 setOpenModal(false);
                             }}

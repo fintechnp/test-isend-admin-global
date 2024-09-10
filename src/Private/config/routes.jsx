@@ -555,7 +555,7 @@ const privateRoutes = [
         component: <TransactionsDetails title="Transaction Details" />,
     },
     {
-        path: "/transactions/details/aml-suspicious/:tid",
+        path: routePaths.viewAMLTransaction,
         component: <TransactionsDetails title="Transaction Details" />,
     },
     {

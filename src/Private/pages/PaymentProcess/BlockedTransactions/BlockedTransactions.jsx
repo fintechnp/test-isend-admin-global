@@ -238,7 +238,11 @@ const BlockedTransactions = (props) => {
                         }}
                     >
                         <Tooltip title="Transactions Details" arrow>
-                            <IconButton onClick={() => navigate(`/transactions/details/${row.original.tid}`)}>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(`/transactions/details/${row.original.tid}/${row.original.customer_id}`)
+                                }
+                            >
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         fontSize: "20px",

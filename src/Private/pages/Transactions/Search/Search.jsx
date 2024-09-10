@@ -145,7 +145,7 @@ function Search(props) {
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
                             <Link
                                 to={buildRoute(routePaths.viewTransaction, {
-                                    tid: row.original.tid,
+                                    id: row.original.tid,
                                     customerId: row.original.customer_id,
                                 })}
                                 style={{ textDecoration: "none" }}
