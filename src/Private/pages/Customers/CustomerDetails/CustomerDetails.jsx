@@ -42,8 +42,7 @@ import RecentlyAddedBeneficiaries from "./RecentlyAddedBeneficiaries";
 import CustomerStatusBadge from "../Search/components/CustomerStatusBadge";
 import customerActions from "Private/pages/Customers/Documents/store/actions";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
-import Cookies from "js-cookie";
-import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
+import ReferralCodeBadge from "Private/pages/Reports/Referral/components/ReferralCodeBadge";
 
 const CustomerTypeContainer = styled("div")(({ theme }) => ({
     "& .MuiIconButton-root": {
@@ -179,6 +178,10 @@ function CustomerDetails() {
                     accessorKey: "zai_pay_id",
                 },
                 {
+                    label: "Customer Referral Code",
+                    accessorKey: "referral_code",
+                },
+                {
                     label: "Occupation",
                     accessorKey: "occupation_data",
                 },
@@ -206,6 +209,10 @@ function CustomerDetails() {
                 {
                     label: "Account Status",
                     cell: (data) => <CustomerStatusBadge status={data?.is_active ? "active" : "blocked"} />,
+                },
+                {
+                    label: "Customer Referral Code",
+                    cell: (data) => <ReferralCodeBadge code={data?.referral_code ?? "N/A"} />,
                 },
             ],
         },

@@ -24,7 +24,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import isEmpty from "App/helpers/isEmpty";
 import routePaths from "Private/config/routePaths";
-import ReferralCode from "./components/ReferralCodeBadge";
+import ReferralCodeBadge from "./components/ReferralCodeBadge";
 import ReferralStatusBadge from "./components/ReferralStatusBadge";
 
 const schema = Yup.object().shape({
@@ -150,7 +150,7 @@ export default function ListReferralReport() {
         {
             header: "Referral Code",
             accessorKey: "referrer_referral_code",
-            cell: ({ getValue }) => <ReferralCode code={getValue() ?? "N/A"}></ReferralCode>,
+            cell: ({ getValue }) => <ReferralCodeBadge code={getValue() ?? "N/A"}></ReferralCodeBadge>,
         },
 
         {

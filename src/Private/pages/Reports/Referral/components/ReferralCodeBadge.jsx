@@ -12,8 +12,8 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
 }));
 
-const ReferralCode = ({ code }) => {
+const ReferralCodeBadge = ({ code }) => {
     return <StyledTypography variant="body2">{code}</StyledTypography>;
 };
 
-export default ReferralCode;
+export default ReferralCodeBadge;
