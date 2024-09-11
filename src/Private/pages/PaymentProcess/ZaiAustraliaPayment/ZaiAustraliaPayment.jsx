@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
-import { useForm } from "react-hook-form";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo } from "react";
@@ -52,8 +51,6 @@ const ZaiAustraliaPayment = () => {
         pageSizeKeyName: "page_size",
     });
 
-    const { reset: formReset } = useForm();
-
     const [showBalance, setShowBalance] = useState({
         isOpen: false,
         customerId: null,
@@ -77,14 +74,8 @@ const ZaiAustraliaPayment = () => {
     );
 
     useEffect(() => {
-        dispatch(actions?.get_zai_australia_payment_details(filterSchema));
-        dispatch({ type: "GET_ZAI_AUSTRALIA_PAYMENT" });
+        dispatch(actions.get_zai_australia_payment_details(filterSchema));
     }, [filterSchema]);
-
-    const handleReset = () => {
-        dispatch({ type: "GET_ZAI_AUSTRALIA_PAYMENT_RESET" });
-        formReset();
-    };
 
     const transactionStatusOptions =
         reference
