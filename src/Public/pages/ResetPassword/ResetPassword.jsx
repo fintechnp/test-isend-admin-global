@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
 import { reset } from "redux-form";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
+import isEmpty from "App/helpers/isEmpty";
 import ResetForm from "../components/ResetForm";
 import actions from "../../../Common/store/actions";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import isEmpty from "App/helpers/isEmpty";
 import PageNotFound from "App/components/PageNotFound";
+import PublicLayoutContainer from "../components/PublicLayoutContainer";
 
 function ResetPassword() {
     const navigate = useNavigate();
@@ -45,9 +46,9 @@ function ResetPassword() {
     };
 
     return (
-        <>
+        <PublicLayoutContainer>
             <ResetForm onSubmit={handleReset} loading={loading} />
-        </>
+        </PublicLayoutContainer>
     );
 }
 

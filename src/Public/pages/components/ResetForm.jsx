@@ -1,25 +1,26 @@
 import React from "react";
+import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
-import MuiPaper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import MuiButton from "@mui/material/Button";
-import { Grid, Typography } from "@mui/material";
-import { Field, Form, reduxForm } from "redux-form";
 import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { Field, Form, reduxForm } from "redux-form";
 
-import TextField from "../../../App/components/Fields/TextField";
+import Logo from "../../../assets/long-logo.svg";
 import Validator from "../../../App/utils/validators";
 import Loading from "../../../App/components/Loading";
-import Logo from "../../../assets/long-logo.svg";
+import TextField from "../../../App/components/Fields/TextField";
 
 const FORM_NAME = "reset_password_form";
 
-const Paper = styled(MuiPaper)(({ theme }) => ({
+const WrapperBox = styled(Box)(({ theme }) => ({
     minWidth: "100%",
     height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
+    // background: "linear-gradient(90deg, rgba(12,12,150,1) 16%, rgba(114,107,236,1) 50%, rgba(0,212,255,1) 100%)",
 }));
 
 const FormContainer = styled(Grid)(({ theme }) => ({
@@ -54,15 +55,15 @@ const Button = styled(MuiButton)(({ theme }) => ({
     fontSize: "13px",
     borderRadius: "2px",
     textTransform: "capitalize",
-    background: "linear-gradient(45deg, #1761AE 30%, #21CBF3 90%)",
-    "&:hover": {
-        background: "linear-gradient(45deg, #1761AE 30%, #091f99 90%)",
-    },
+    // background: "linear-gradient(45deg, #1761AE 30%, #21CBF3 90%)",
+    // "&:hover": {
+    //     background: "linear-gradient(45deg, #1761AE 30%, #091f99 90%)",
+    // },
 }));
 
 const ResetForm = ({ handleSubmit, loading }) => {
     return (
-        <Paper square={true}>
+        <WrapperBox>
             <Form onSubmit={handleSubmit} data-testid="login_form">
                 <FormContainer container rowSpacing={1} direction="column">
                     <Grid item>
@@ -113,7 +114,7 @@ const ResetForm = ({ handleSubmit, loading }) => {
                     <Loading loading={loading} box={true} />
                 </FormContainer>
             </Form>
-        </Paper>
+        </WrapperBox>
     );
 };
 
