@@ -51,8 +51,6 @@ const ListPromoCode = () => {
 
     const data = promoCodes?.data ?? [];
 
-    console.log("The response is ", promoCodes?.pagination);
-
     useEffect(() => {
         dispatch(promoCodeActions.get_promo_codes(filterSchema));
     }, [dispatch, filterSchema]);

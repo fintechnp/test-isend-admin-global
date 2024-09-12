@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import FilterForm from "App/components/Filter/FilterForm";
 import FilterButton from "App/components/Button/FilterButton";
 import useListFilterStore from "App/hooks/useListFilterStore";
@@ -20,16 +22,25 @@ const initialState = {
 
 const ListCampaignReportDetails = () => {
     const dispatch = useDispatch();
-    const methods = useListFilterStore({ initialState });
+    const methods = useListFilterStore({ initialState, pageNumberKeyName: "Page", pageSizeKeyName: "PageSize" });
 
-    const { isFilterOpen, closeFilter, openFilter, filterSchema, onDeleteFilterParams, onFilterSubmit, reset } =
-        methods;
+    const {
+        isFilterOpen,
+        closeFilter,
+        openFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        reset,
+        onPageChange,
+        onRowsPerPageChange,
+    } = methods;
 
     const { response: campaignReportDetails, loading: isLoading } = useSelector(
         (state) => state.get_campaign_report_details,
     );
 
-    const campaignReportDetailsData = campaignReportDetails?.data?.data ?? [];
+    const campaignReportDetailsData = campaignReportDetails?.data ?? [];
 
     useEffect(() => {
         dispatch(ReportsAction.get_campaign_report_details(filterSchema));
@@ -40,7 +51,6 @@ const ListCampaignReportDetails = () => {
             {
                 header: "SN",
                 accessorKey: "f_serial_no",
-                cell: (info) => info.row.index + 1,
             },
             {
                 header: "Campaign Name",
@@ -72,19 +82,25 @@ const ListCampaignReportDetails = () => {
             {
                 header: "Usage Date",
                 accessorKey: "usageDate",
-                cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
+                cell: ({ getValue }) => (
+                    <>{!isEmpty(getValue()) ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>
+                ),
             },
 
             {
                 header: "Created At",
                 accessorKey: "createdTs",
-                cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
+                cell: ({ getValue }) => (
+                    <>{!isEmpty(getValue()) ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>
+                ),
             },
 
             {
                 header: "Updated At",
                 accessorKey: "updatedTs",
-                cell: ({ getValue }) => <>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>,
+                cell: ({ getValue }) => (
+                    <>{!isEmpty(getValue()) ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>
+                ),
             },
         ],
         [],
@@ -151,6 +167,12 @@ const ListCampaignReportDetails = () => {
                 <PageContentContainer title="List Campaign Report Details">
                     <TanstackReactTable columns={columns} data={campaignReportDetailsData} loading={isLoading} />
                 </PageContentContainer>
+
+                <TablePagination
+                    paginationData={campaignReportDetails?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
             </Column>
         </PageContent>
     );

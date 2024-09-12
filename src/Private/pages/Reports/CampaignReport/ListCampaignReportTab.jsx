@@ -31,7 +31,6 @@ export default function ListCampaignReportTab() {
                 <TabPanel value="2">
                     <ListCampaignReportDetails />
                 </TabPanel>
-                <TabPanel value="3">Item Three</TabPanel>
             </TabContext>
         </Box>
     );
