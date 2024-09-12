@@ -55,6 +55,14 @@ export default function FormDateTimePicker({
                                     size="small" // Set the size to small
                                     fullWidth={fullWidth}
                                     focused={focused}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        readOnly: true, // Disable direct text input
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        readOnly: true, // Disable direct text input
+                                    }}
                                 />
                             )}
                             required={required}

@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
@@ -55,6 +55,7 @@ const CellContainer = styled(Box)(() => ({
 export default function PromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { response } = useSelector((state) => state.get_countries);
 
@@ -125,7 +126,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                       },
                   ],
               },
-        //  resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
+        resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
         mode: "onSubmit",
     });
 
@@ -162,6 +163,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                 {
                     attribute: campaignEventTypes.BIRTH_DATE,
                     currency: "",
+                    criteria: 0,
                     amount: 0,
                 },
             ]);
@@ -179,7 +181,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
             ]);
             setValue("AttributeConditions", []);
         }
-    }, [Campaign?.CampaignType, campaignCodes, initialTriggerValue, setValue]);
+    }, [Campaign?.CampaignType, campaignCodes, initialTriggerValue, setValue, location]);
 
     const { control } = methods;
 
@@ -298,7 +300,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                         {isAddMode && (
                             <>
                                 <Grid item xs={12} md={6} lg={3}>
-                                    <FormTextField name="Campaign.CampaignName" label="Campaign Name" required />
+                                    <FormTextField name="Campaign.CampaignName" label="Campaign Name" />
 
                                     <FormHelperText error={true}>{errors?.campaign?.campaignName}</FormHelperText>
                                 </Grid>
@@ -309,7 +311,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                         name="Campaign.CampaignType"
                                         label="Campaign Type"
                                         options={campaignCodesOptions}
-                                        required
                                     />
                                 </Grid>
 
@@ -318,7 +319,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                         name="Campaign.ValidCountry"
                                         label="Valid Country"
                                         options={countryData}
-                                        required
                                     />
                                 </Grid>
                             </>
@@ -342,7 +342,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                 name="Campaign.Status"
                                 label="Status"
                                 options={campaignStatusOptions}
-                                required
                             />
                         </Grid>
                     </Grid>
@@ -363,7 +362,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                 options={campaignTriggerCriteriaOptions}
                                                 name="TriggerCriteria"
                                                 label="Trigger Criteria"
-                                                required
                                             />
                                         </Grid>
                                     </Grid>
@@ -547,7 +545,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                             label="Minimum Amount"
                                                             type="number"
                                                             name={`Rewards.${index}.minimumAmount`}
-                                                            required
                                                         />
                                                     </CellContainer>
                                                 </TableCell>
@@ -558,7 +555,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                                             label="Maximum Amount"
                                                             type="number"
                                                             name={`Rewards.${index}.maximumAmount`}
-                                                            required
                                                         />
                                                     </CellContainer>
                                                 </TableCell>
@@ -664,7 +660,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                     name="DisplayMechanism"
                                     label="Display Mechanism"
                                     options={displayMechanismsOptions}
-                                    required
                                 />
                             </Grid>
                         )}
@@ -712,7 +707,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <FormTextArea name="TermsAndCondition" label="Terms and Conditions" required />
+                            <FormTextArea name="TermsAndCondition" label="Terms and Conditions" />
                         </Grid>
                     </Grid>
 
