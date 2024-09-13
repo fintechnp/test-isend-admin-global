@@ -58,8 +58,6 @@ const ListPromoCode = () => {
     useEffect(() => {
         if (isStatusSuccess) {
             dispatch(promoCodeActions.get_promo_codes(filterSchema));
-        } else if (!isStatusSuccess) {
-            dispatch(promoCodeActions.get_promo_codes(filterSchema));
         }
     }, [dispatch, isStatusSuccess]);
 

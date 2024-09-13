@@ -1,29 +1,23 @@
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
 
-import { campaignEventTypes } from "./data/campaignEventTypesEnums";
 import {
     triggerAttributeTypes,
     triggerAttributeTypesOptions,
-    triggerAttributeTypesOptionsDisabled,
     triggerAttributeTypesOptionsCount,
+    triggerAttributeTypesOptionsDisabled,
 } from "./data/triggerAttributeTypesEnums";
-import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
 import referenceTypeId from "Private/config/referenceTypeId";
+import { campaignEventTypes } from "./data/campaignEventTypesEnums";
+import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
 
 export default function TriggerForm({ index, mappedAttributeList, countryCurrency, allAttributeList }) {
     const { watch, setValue } = useFormContext();
-
-    const country = JSON.parse(localStorage.getItem("country") || "[]");
-
-    const countryList = country?.map((country) => ({
-        label: country.country,
-        value: country.tid,
-    }));
 
     const attributeFamily = watch(`AttributeConditions.${index}.attribute`);
 
@@ -37,7 +31,7 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
         let criteria = triggerAttributeTypes.GREATER_THAN;
 
         switch (attributeFamilyTypeId) {
-            case campaignEventTypes.DATE:
+            case campaignEventTypes.BIRTH_DATE:
                 criteria = triggerAttributeTypes.ON_SAME_DAY;
                 break;
             case campaignEventTypes.DATE_RANGE:
@@ -137,13 +131,11 @@ export default function TriggerForm({ index, mappedAttributeList, countryCurrenc
 
             {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY && (
                 <Grid item xs={12} md={6} lg={3}>
-                    <FormSelect
+                    <FormSelectCountry
                         name={`AttributeConditions.${index}.amount`}
-                        label="Countries"
-                        placeholder="Countries"
-                        options={countryList ?? []}
-                        showChooseOption={true}
-                        chooseOptionLabel="Select a country"
+                        labelKey="country"
+                        valueKey="country_id"
+                        helperText="Country"
                     />
                 </Grid>
             )}

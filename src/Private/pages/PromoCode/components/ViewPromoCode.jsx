@@ -24,6 +24,7 @@ import routePaths from "Private/config/routePaths";
 
 import { promoCodeActions } from "../store";
 import AddCampaignBudgetModal from "./AddCampaignBudgetModal";
+import { campaignEventTypes } from "../data/campaignEventTypesEnums";
 
 const Wrapper = styled(Box)(({ theme }) => ({
     border: `1px solid ${theme.palette.stroke.base}`,
@@ -121,6 +122,13 @@ export default function ViewPromoCode() {
             height: 100,
         },
     ];
+
+    const attributeFamilyCampaigns = response?.data?.attributeFamilyCampaigns;
+
+    const attributeValue =
+        attributeFamilyCampaigns && Array.isArray(attributeFamilyCampaigns)
+            ? attributeFamilyCampaigns.map((item) => item.attributeFamilyType)
+            : [];
 
     const filteredPromoImages = PromoImages.filter((image) => !isEmpty(image.src) && !isEmpty(image.label));
 
@@ -236,15 +244,31 @@ export default function ViewPromoCode() {
             header: "Criteria",
             accessorKey: "criteriaName",
         },
-        {
-            header: "Currency",
-            accessorKey: "currency",
-            cell: (data) => (data.currency ? data.currency : "N/A"),
-        },
-        {
-            header: "Amount",
-            accessorKey: "amount",
-        },
+
+        ...(campaignEventTypes?.AMOUNT === attributeValue
+            ? [
+                  {
+                      header: "Currency",
+                      accessorKey: "currency",
+                      cell: (data) => (data.currency ? data.currency : "N/A"),
+                  },
+                  {
+                      header: "Amount",
+                      accessorKey: "amount",
+                  },
+              ]
+            : []),
+
+        ...(campaignEventTypes?.COUNT ||
+        campaignEventTypes?.BENEFICIARY_COUNTRY ||
+        campaignEventTypes?.BENEFICIARY_RELATION === attributeValue
+            ? [
+                  {
+                      header: "Amount",
+                      accessorKey: "amount",
+                  },
+              ]
+            : []),
     ]);
 
     const AdditionalDataDefinition = useSourceDetail([

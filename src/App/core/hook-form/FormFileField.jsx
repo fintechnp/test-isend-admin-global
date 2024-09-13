@@ -1,12 +1,10 @@
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useDropzone } from "react-dropzone";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import CancelIcon from "@mui/icons-material/Cancel";
 import FormHelperText from "@mui/material/FormHelperText";
 import { Controller, useFormContext, get } from "react-hook-form";
 import UploadIcon from "App/components/Icon/UploadIcon";
@@ -15,7 +13,7 @@ import { Button } from "@mui/material";
 // Styled preview container for images
 const FilePreview = styled(Box)({
     width: "100%",
-    height: "150px",
+    height: "40px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -35,14 +33,20 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
     } = useFormContext();
     const file = watch(name);
     const errorMessage = get(errors, name)?.message;
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     const onDrop = useCallback(
         (acceptedFiles) => {
-            setValue(name, acceptedFiles[0]);
+            const droppedFile = acceptedFiles[0];
+            setValue(name, droppedFile);
             clearErrors(name);
             inputRef.current.value = "";
+
+            // Create and set preview URL
+            const fileUrl = URL.createObjectURL(droppedFile);
+            setPreviewUrl(fileUrl);
         },
-        [name, setValue],
+        [name, setValue, clearErrors],
     );
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -54,6 +58,10 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
     const handleRemove = () => {
         setValue(name, null);
         inputRef.current.value = "";
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            setPreviewUrl(null);
+        }
     };
 
     return (
@@ -72,9 +80,9 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
                     {label}
                 </Typography>
 
-                {file ? (
+                {file && previewUrl ? (
                     <FilePreview>
-                        <img src={URL.createObjectURL(file)} alt="Preview" />
+                        <img src={previewUrl} alt="Preview" />
                     </FilePreview>
                 ) : (
                     <Box display="flex" flexDirection="column" alignItems="center">

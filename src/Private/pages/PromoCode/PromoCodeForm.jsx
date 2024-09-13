@@ -7,12 +7,12 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
-import { useLocation, useNavigate } from "react-router-dom";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -42,6 +42,8 @@ import { campaignCodesOptions, campaignCodes } from "./data/campaignCodes";
 import { campaignTriggerCriteriaOptions } from "./data/campaignTriggerCriteria";
 import { FormHelperText, FormLabel } from "@mui/material";
 import FormFileField from "App/core/hook-form/FormFileField";
+import { triggerAttributeTypes } from "./data/triggerAttributeTypesEnums";
+import isEmpty from "App/helpers/isEmpty";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -81,6 +83,8 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
 
     const countryCurrency = response?.data?.map((c) => ({ value: c.currency, label: c.currency }));
 
+    console.log("The initial values are", initialValues);
+
     const methods = useForm({
         defaultValues: isAddMode
             ? {
@@ -93,8 +97,24 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                       Status: 0,
                       Budget: 0,
                   },
-                  AttributeConditions: [],
-                  ReferralFamilyCondition: [],
+                  AttributeConditions: [
+                      {
+                          attribute: campaignEventTypes.BIRTH_DATE,
+                          criteria: triggerAttributeTypes.ON_SAME_DAY,
+                          currency: "",
+                          amount: 0,
+                      },
+                  ],
+                  ReferralFamilyCondition: [
+                      {
+                          referrerneedkyc: true,
+                          referrerleasttransactions: 0,
+                          refereeneedkyc: true,
+                          refereeleasttransactions: 0,
+                          minimumreferrer: 0,
+                          kycverifyingdays: 0,
+                      },
+                  ],
                   Rewards: [
                       {
                           minimumAmount: 0,
@@ -133,8 +153,14 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
     const {
         watch,
         setValue,
+        reset,
+        control,
         formState: { errors },
     } = methods;
+
+    useEffect(() => {
+        reset();
+    }, []);
 
     useEffect(() => {
         if (!isAddMode) {
@@ -157,33 +183,15 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
     const CampaignType = watch("Campaign.CampaignType");
     const Campaign = watch("Campaign");
 
+    console.log("The initial values are", initialValues);
+
     useEffect(() => {
         if (CampaignType === campaignCodes.PROMO) {
-            setValue("AttributeConditions", [
-                {
-                    attribute: campaignEventTypes.BIRTH_DATE,
-                    currency: "",
-                    criteria: 0,
-                    amount: 0,
-                },
-            ]);
-            setValue("ReferralFamilyCondition", []);
+            setValue("AttributeConditions");
         } else if (CampaignType === campaignCodes.REFERRAL) {
-            setValue("ReferralFamilyCondition", [
-                {
-                    referrerneedkyc: true,
-                    referrerleasttransactions: 0,
-                    refereeneedkyc: true,
-                    refereeleasttransactions: 0,
-                    minimumreferrer: 0,
-                    kycverifyingdays: 0,
-                },
-            ]);
-            setValue("AttributeConditions", []);
+            setValue("ReferralFamilyCondition");
         }
-    }, [Campaign?.CampaignType, campaignCodes, initialTriggerValue, setValue, location]);
-
-    const { control } = methods;
+    }, [Campaign?.CampaignType, campaignCodes, initialTriggerValue, setValue, location.pathname]);
 
     const {
         fields: triggerFields,
@@ -301,8 +309,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                             <>
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormTextField name="Campaign.CampaignName" label="Campaign Name" />
-
-                                    <FormHelperText error={true}>{errors?.campaign?.campaignName}</FormHelperText>
                                 </Grid>
 
                                 <Grid item xs={12} md={6} lg={3}>
@@ -691,12 +697,47 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                             md={6}
                             lg={6}
                         >
-                            <Grid container direction="row">
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={6}>
+                                    {!isAddMode && (
+                                        <Box display="flex" alignItems="center">
+                                            {!isEmpty(initialValues.WebImage) ? (
+                                                <img
+                                                    src={initialValues.WebImage}
+                                                    alt="Web"
+                                                    height={40}
+                                                    width={40}
+                                                    style={{ marginRight: "8px" }}
+                                                />
+                                            ) : (
+                                                <Typography>No Web Image Available. Upload New</Typography>
+                                            )}
+                                        </Box>
+                                    )}
+                                </Grid>
                                 <Grid item xs={6}>
                                     <FormLabel htmlFor="WebImage" component="label">
                                         Web Image
                                     </FormLabel>
                                     <FormFileField name="WebImage" accept="image/*" />
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    {!isAddMode && (
+                                        <Box display="flex" alignItems="center">
+                                            {!isEmpty(initialValues.MobileImage) ? (
+                                                <img
+                                                    src={initialValues.MobileImage}
+                                                    alt="Mobile"
+                                                    height={40}
+                                                    width={40}
+                                                    style={{ marginRight: "8px" }}
+                                                />
+                                            ) : (
+                                                <Typography>No Mobile Image Available. Upload New</Typography>
+                                            )}
+                                        </Box>
+                                    )}
                                 </Grid>
                                 <Grid item xs={6}>
                                     <FormLabel htmlFor="MobileImage" component="label">

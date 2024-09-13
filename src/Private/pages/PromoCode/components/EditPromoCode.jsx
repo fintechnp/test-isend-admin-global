@@ -28,8 +28,8 @@ const EditPromoCode = () => {
         LimitPerUser: getUpdateById?.limitPerUser || 0,
         LimitPerPromo: getUpdateById?.limitPerCampaign || 1,
         TermsAndCondition: HtmlToPlainText(getUpdateById?.termsAndCondition) || "",
-        WebImage: getUpdateById?.WebImage || "",
-        MobileImage: getUpdateById?.MobileImage || "",
+        WebImage: getUpdateById?.webImage || "",
+        MobileImage: getUpdateById?.mobileImage || "",
         Description: getUpdateById?.description || "",
     };
 
