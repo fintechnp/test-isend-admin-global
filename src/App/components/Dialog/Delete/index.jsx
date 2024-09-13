@@ -1,13 +1,15 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import { styled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
+f;
+import LoadingButton from "@mui/lab/LoadingButton";
+import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import ListItemButton from "@mui/material/ListItemButton";
 import MuiDialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Tooltip } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -99,7 +101,16 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function DeleteDialog({ fontSize, loading, parent_id, id, handleDelete, tooltext, button = false }) {
+function DeleteDialog({
+    fontSize,
+    loading,
+    parent_id,
+    id,
+    handleDelete,
+    tooltext,
+    button = false,
+    enablePopoverAction = false,
+}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -119,18 +130,22 @@ function DeleteDialog({ fontSize, loading, parent_id, id, handleDelete, tooltext
         <div>
             <Tooltip title={tooltext} arrow>
                 {button ? (
-                    <DeleteButton
-                        onClick={handleClickOpen}
-                        endIcon={
-                            <DeleteOutlineOutlinedIcon
-                                sx={{
-                                    fontSize: "16px",
-                                }}
-                            />
-                        }
-                    >
-                        Delete
-                    </DeleteButton>
+                    enablePopoverAction ? (
+                        <ListItemButton onClick={handleClickOpen}>Delete</ListItemButton>
+                    ) : (
+                        <DeleteButton
+                            onClick={handleClickOpen}
+                            endIcon={
+                                <DeleteOutlineOutlinedIcon
+                                    sx={{
+                                        fontSize: "16px",
+                                    }}
+                                />
+                            }
+                        >
+                            Delete
+                        </DeleteButton>
+                    )
                 ) : (
                     <DeleteIcon
                         size="small"

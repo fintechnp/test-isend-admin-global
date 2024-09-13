@@ -18,6 +18,7 @@ import Row from "App/components/Row/Row";
 import TextButton from "App/components/Button/TextButton";
 
 import { ReferenceName } from "App/helpers";
+import { ListItemButton } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -119,7 +120,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function LargeImage({ image, side, title }) {
+function LargeImage({ image, side, title, enablePopoverAction }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -132,18 +133,22 @@ function LargeImage({ image, side, title }) {
 
     return (
         <div>
-            <Tooltip title="Enlarge Image" arrow>
-                <IconButton sx={{ paddingRight: "6px" }} onClick={handleClickOpen}>
-                    <SettingsOverscanIcon
-                        sx={{
-                            fontSize: "25px",
-                            "&:hover": {
-                                background: "transparent",
-                            },
-                        }}
-                    />
-                </IconButton>
-            </Tooltip>
+            {enablePopoverAction ? (
+                <ListItemButton onClick={handleClickOpen}>View Image</ListItemButton>
+            ) : (
+                <Tooltip title="Enlarge Image" arrow>
+                    <IconButton sx={{ paddingRight: "6px" }} onClick={handleClickOpen}>
+                        <SettingsOverscanIcon
+                            sx={{
+                                fontSize: "25px",
+                                "&:hover": {
+                                    background: "transparent",
+                                },
+                            }}
+                        />
+                    </IconButton>
+                </Tooltip>
+            )}
             <BootstrapDialog
                 onClose={handleClose}
                 TransitionComponent={Transition}
