@@ -25,11 +25,11 @@ import Tooltip from "App/components/Tooltip/Tooltip";
 import { getCustomerName } from "App/helpers/getFullName";
 import Clipboard from "App/components/Clipboard/Clipboard";
 import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
-import { UNITED_STATES_ISO3 } from "App/data/SendingCountry";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
+import { SINGAPORE_ISO3, UNITED_STATES_ISO3 } from "App/data/SendingCountry";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import UpdateKyc from "./UpdateKyc";
@@ -155,21 +155,23 @@ function CustomerDetails() {
                 },
             ],
         },
-
-        {
-            title: "BSB Details",
-            items: [
-                {
-                    label: "Zai Account Number",
-                    accessorKey: "zai_account_number",
-                },
-                {
-                    label: "Zai Routing Number",
-                    accessorKey: "zai_routing_number",
-                },
-            ],
-        },
-
+        ...(data?.country?.toUpperCase() === UNITED_STATES_ISO3 || data?.country?.toUpperCase() === SINGAPORE_ISO3
+            ? []
+            : [
+                  {
+                      title: "BSB Details",
+                      items: [
+                          {
+                              label: "Zai Account Number",
+                              accessorKey: "zai_account_number",
+                          },
+                          {
+                              label: "Zai Routing Number",
+                              accessorKey: "zai_routing_number",
+                          },
+                      ],
+                  },
+              ]),
         {
             title: "Other Details",
             items: [
