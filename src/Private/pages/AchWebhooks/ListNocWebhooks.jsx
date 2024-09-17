@@ -1,4 +1,3 @@
-import * as Yup from "yup";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,30 +10,8 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { isAfter } from "date-fns";
-import isEmpty from "App/helpers/isEmpty";
 import { achWebhookActions } from "./store";
 import dateUtils from "App/utils/dateUtils";
-
-const schema = Yup.object().shape({
-    received_date_from: Yup.string().nullable().optional(),
-    received_date_to: Yup.string()
-        .nullable()
-        .optional()
-        .when("received_date_from", {
-            is: (value) => !isEmpty(value),
-            then: (schema) =>
-                schema.test({
-                    name: "is-after",
-                    message: "Received Date To must be after Received Date From",
-                    test: function (value) {
-                        const { received_date_from } = this.parent;
-                        return value ? isAfter(new Date(value), new Date(received_date_from)) : true;
-                    },
-                }),
-            otherwise: (schema) => schema.nullable().optional(),
-        }),
-});
 
 const initialState = {
     page_number: 1,
@@ -72,12 +49,7 @@ export default function ListNocWebhooks() {
             accessorKey: "trace_number",
         },
         {
-            header: "Received Date From",
-            accessorKey: "created_ts",
-            cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
-        },
-        {
-            header: "Received Date To",
+            header: "Received Date",
             accessorKey: "created_ts",
             cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
         },
@@ -94,19 +66,8 @@ export default function ListNocWebhooks() {
     const filterFields = [
         {
             type: fieldTypes.DATE,
-            name: "received_date_from",
-            label: "Received Date From",
-            props: {
-                withStartDayTimezone: true,
-            },
-        },
-        {
-            type: fieldTypes.DATE,
-            name: "received_date_to",
-            label: "Received Date To",
-            props: {
-                withEndDayTimezone: true,
-            },
+            name: "received_date",
+            label: "Received Date",
         },
         {
             type: fieldTypes.TEXTFIELD,
@@ -158,7 +119,6 @@ export default function ListNocWebhooks() {
                     onReset={reset}
                     fields={filterFields}
                     values={filterSchema}
-                    schema={schema}
                     onDelete={onDeleteFilterParams}
                 />
                 <PageContentContainer>

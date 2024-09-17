@@ -81,6 +81,11 @@ export default function ListOdfiWebhooks() {
             accessorKey: "transaction_type",
         },
         {
+            header: "File",
+            accessorKey: "file_name",
+            cell: ({ getValue }) => <>{getValue() ? getValue() : "-"}</>,
+        },
+        {
             header: "Received Date",
             accessorKey: "created_ts",
             cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
