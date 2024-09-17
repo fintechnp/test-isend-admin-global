@@ -52,6 +52,12 @@ const actions = {
     OPEN_VIEW_FCM_MODAL: "OPEN_VIEW_FCM_MODAL",
     CLOSE_VIEW_FCM_MODAL: "CLOSE_VIEW_FCM_MODAL",
 
+    OPEN_ADD_FCM_MODAL: "OPEN_ADD_FCM_MODAL",
+    CLOSE_ADD_FCM_MODAL: "CLOSE_ADD_FCM_MODAL",
+
+    OPEN_UPDATE_FCM_MODAL: "OPEN_UPDATE_FCM_MODAL",
+    CLOSE_UPDATE_FCM_MODAL: "CLOSE_UPDATE_FCM_MODAL",
+
     GET_FCM_BY_CUSTOMER_ID: "GET_FCM_BY_CUSTOMER_ID",
     GET_FCM_BY_CUSTOMER_ID_SUCCESS: "GET_FCM_BY_CUSTOMER_ID_SUCCESS",
     GET_FCM_BY_CUSTOMER_ID_FAILED: "GET_FCM_BY_CUSTOMER_ID_FAILED",
@@ -145,6 +151,10 @@ const actions = {
         id,
     }),
 
+    open_fcm_form: () => ({
+        type: actions.OPEN_ADD_FCM_MODAL,
+    }),
+
     delete_fcm: (id) => ({
         type: actions.DELETE_FCM,
         id,
@@ -159,8 +169,21 @@ const actions = {
         payload,
     }),
 
+    open_update_fcm_modal: (payload) => ({
+        type: actions.OPEN_UPDATE_FCM_MODAL,
+        payload,
+    }),
+
     close_view_fcm_modal: () => ({
         type: actions.CLOSE_VIEW_FCM_MODAL,
+    }),
+
+    close_add_fcm_modal: () => ({
+        type: actions.CLOSE_ADD_FCM_MODAL,
+    }),
+
+    close_update_fcm_modal: () => ({
+        type: actions.CLOSE_UPDATE_FCM_MODAL,
     }),
 
     open_view_sms_modal: (payload) => ({

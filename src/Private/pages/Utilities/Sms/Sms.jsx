@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 
 import Row from "App/components/Row/Row";
+import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
 import ViewSmsModal from "./ViewSms/ViewSmsModal";
 import withPermission from "Private/HOC/withPermission";
@@ -21,12 +22,12 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import CreateSms from "./CreateSms";
 import actions from "./../store/actions";
-import { format, parseISO } from "date-fns";
+import isEmpty from "App/helpers/isEmpty";
 import getFlagUrl from "App/helpers/getFlagUrl";
 import { useConfirm } from "App/core/mui-confirm";
 import { permissions } from "Private/data/permissions";
-import useListFilterStore from "App/hooks/useListFilterStore";
 import SmsStatusBadge from "./components/SmsStatusBadge";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     page_number: 1,
@@ -105,10 +106,14 @@ const Sms = () => {
                         <Row gap="8px">
                             <Column>
                                 <Typography color="text.primary" fontSize={14} fontWeight={400}>
-                                    {format(parseISO(row.original.created_ts), "yyyy-MM-dd")}
+                                    {!isEmpty(row.original.created_ts)
+                                        ? dateUtils.getLocalDateFromUTC(row.original.created_ts)
+                                        : "N/A"}
                                 </Typography>
                                 <Typography color="text.primary" fontSize={14} fontWeight={400}>
-                                    {format(parseISO(row.original.created_ts), "hh:mm a")}
+                                    {!isEmpty(row.original.created_ts)
+                                        ? dateUtils.getLocalTimeFromUTC(row.original.created_ts)
+                                        : "N/A"}
                                 </Typography>
                             </Column>
                         </Row>

@@ -3,24 +3,30 @@ import React, { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, ListItemButton, Typography } from "@mui/material";
 
+import Row from "App/components/Row/Row";
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
+import { ReferenceName } from "App/helpers";
 import { useConfirm } from "App/core/mui-confirm";
 import Column from "App/components/Column/Column";
+import Button from "App/components/Button/Button";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
-import Table, { TablePagination } from "App/components/Table";
+import FilterForm from "App/components/Filter/FilterForm";
+import { TablePagination } from "App/components/Table";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import CreateFcm from "./CreateFcm";
 import actions from "./../store/actions";
 import ViewFcmModal from "./ViewSms/ViewFcmModal";
-import { FormatDate, ReferenceName } from "App/helpers";
-import FilterForm from "App/components/Filter/FilterForm";
+import AddFcmModal from "./CreateFcm/AddFcmModal";
+import EditFcmModal from "./CreateFcm/EditFcmModal";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -80,25 +86,24 @@ const Fcm = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Title",
-                accessor: "title",
-                Cell: (data) => (
+                header: "Title",
+                accessorKey: "title",
+                cell: ({ row }) => (
                     <Box>
                         <StyledName component="p" sx={{ fontSize: "14px", opacity: 0.9 }}>
-                            {data.value ? data.value : "N/A"}
+                            {row.original.title ? row.original.title : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Topic",
-                accessor: "topic",
-                Cell: (data) => (
+                header: "Topic",
+                accessorKey: "topic",
+                cell: ({ row }) => (
                     <Box>
                         <StyledName
                             component="p"
@@ -108,16 +113,15 @@ const Fcm = () => {
                                 opacity: 0.8,
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {row.original.topic ? row.original.topic : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Type",
-                accessor: "type",
-                maxWidth: 80,
-                Cell: (data) => (
+                header: "Type",
+                accessorKey: "type",
+                cell: ({ row }) => (
                     <Box>
                         <StyledName
                             component="p"
@@ -127,69 +131,90 @@ const Fcm = () => {
                                 opacity: 0.8,
                             }}
                         >
-                            {data.value ? ReferenceName(89, data.value) : "N/A"}
+                            {row.original.type ? ReferenceName(89, row.original.type) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Body</Typography>
                     </Box>
                 ),
-                accessor: "body",
-                Cell: (data) => (
+                accessorKey: "body",
+                cell: ({ row }) => (
                     <Box>
-                        <Text component="span">{data?.value ? data?.value : "N/A"}</Text>
+                        <Text component="span">{row.original.body ? row.original.body : "N/A"}</Text>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Status</Typography>
                     </Box>
                 ),
-                accessor: "status",
+                accessorKey: "status",
                 maxWidth: 100,
-                Cell: (data) => (
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? ReferenceName(88, data.value) : "N/A"}
+                            {row.original.status ? ReferenceName(88, row.original.status) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Created Date</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
-                Cell: (data) => (
-                    <Box textAlign="center" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? FormatDate(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
+                accessorKey: "created_ts",
+                cell: ({ row }) => (
+                    <Row gap="8px">
+                        <Column>
+                            <Typography color="text.primary" fontSize={14} fontWeight={400}>
+                                {!isEmpty(row.original.created_ts)
+                                    ? dateUtils.getLocalDateFromUTC(row.original.created_ts)
+                                    : "N/A"}
+                            </Typography>
+                            <Typography color="text.primary" fontSize={14} fontWeight={400}>
+                                {!isEmpty(row.original.created_ts)
+                                    ? dateUtils.getLocalTimeFromUTC(row.original.created_ts)
+                                    : "N/A"}
+                            </Typography>
+                        </Column>
+                    </Row>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => {
+                accessorKey: "show",
+                cell: ({ row }) => {
                     return (
                         <PopoverButton>
                             {({ onClose }) => (
                                 <>
                                     <HasPermission permission={permissions.EDIT_FCM}>
-                                        <CreateFcm onClose={onClose} update={true} update_data={row?.original} />
+                                        <ListItemButton
+                                            onClick={() => {
+                                                dispatch(
+                                                    {
+                                                        type: "OPEN_UPDATE_FCM_MODAL",
+                                                        payload: row.original,
+                                                    },
+                                                    onClose(),
+                                                );
+                                            }}
+                                        >
+                                            Edit FCM
+                                        </ListItemButton>
                                     </HasPermission>
 
                                     <ListItemButton
@@ -301,7 +326,7 @@ const Fcm = () => {
         >
             <Column gap="16px">
                 <FilterForm
-                    title="Search Sms"
+                    title="Search FCM"
                     open={isFilterOpen}
                     onClose={closeFilter}
                     onSubmit={onFilterSubmit}
@@ -323,18 +348,19 @@ const Fcm = () => {
                                 values={filterSchema}
                             />
                             <HasPermission permission={permissions.CREATE_FCM}>
-                                <CreateFcm />
+                                <Button variant="contained" onClick={() => dispatch(actions.open_fcm_form())}>
+                                    Create FCM
+                                </Button>
                             </HasPermission>
                         </>
                     }
                 >
-                    <Table
+                    <TanstackReactTable
                         columns={columns}
-                        data={FcmData?.data || []}
-                        title="Fcm Message Details"
                         sub_columns={sub_columns}
+                        data={FcmData?.data || []}
                         loading={l_loading}
-                        rowsPerPage={8}
+                        title="Fcm Message Details"
                     />
                 </PageContentContainer>
 
@@ -344,6 +370,9 @@ const Fcm = () => {
                     handleChangeRowsPerPage={onRowsPerPageChange}
                 />
             </Column>
+
+            <AddFcmModal />
+            <EditFcmModal />
 
             <ViewFcmModal />
         </PageContent>

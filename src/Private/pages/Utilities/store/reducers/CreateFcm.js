@@ -35,6 +35,24 @@ const reducer = (state = initialState, action) => {
                 error: null,
                 response: [],
             };
+
+        case actions.OPEN_ADD_FCM_MODAL:
+            return {
+                is_modal_open: true,
+                success: false,
+                loading: false,
+                error: null,
+                response: undefined,
+            };
+        case actions.CLOSE_ADD_FCM_MODAL:
+            return {
+                is_modal_open: false,
+                success: false,
+                loading: false,
+                error: null,
+                response: undefined,
+            };
+
         default:
             return state;
     }

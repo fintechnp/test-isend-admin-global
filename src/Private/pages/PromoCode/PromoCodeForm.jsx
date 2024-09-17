@@ -146,7 +146,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                       },
                   ],
               },
-        resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
+        //  resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
         mode: "onSubmit",
     });
 

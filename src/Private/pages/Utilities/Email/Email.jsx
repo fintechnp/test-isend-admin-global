@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
+import React, { useState, useEffect, useMemo } from "react";
 import useListFilterStore from "App/hooks/useListFilterStore";
 
 import Row from "App/components/Row/Row";
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import { useConfirm } from "App/core/mui-confirm";
 import Column from "App/components/Column/Column";
@@ -18,10 +18,8 @@ import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-
 import CreateEmail from "./CreateEmail";
 import actions from "./../store/actions";
-import { format, parseISO } from "date-fns";
 import { permissions } from "Private/data/permissions";
 import ViewEmailModal from "./ViewEmail/ViewEmailModal";
 import withPermission from "Private/HOC/withPermission";
@@ -92,16 +90,20 @@ const Email = () => {
             },
             {
                 header: "Email Date & Time",
-                accessorKey: "status",
+                accessorKey: "created_ts",
                 cell: ({ row }) => {
                     return (
                         <Row gap="8px">
                             <Column>
                                 <Typography color="text.primary">
-                                    {format(parseISO(row.original.created_ts), "yyyy-MM-dd")}
+                                    {!isEmpty(row.original.created_ts)
+                                        ? dateUtils.getLocalDateFromUTC(row.original.created_ts)
+                                        : "N/A"}
                                 </Typography>
                                 <Typography color="text.primary">
-                                    {format(parseISO(row.original.created_ts), "hh:mm a")}
+                                    {!isEmpty(row.original.created_ts)
+                                        ? dateUtils.getLocalTimeFromUTC(row.original.created_ts)
+                                        : "N/A"}
                                 </Typography>
                             </Column>
                         </Row>
