@@ -1,13 +1,16 @@
 import * as Yup from "yup";
 import PropTypes from "prop-types";
-import ReactQuill from "react-quill";
+import { styled } from "@mui/styles";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import "react-quill/dist/quill.snow.css";
 import { useForm } from "react-hook-form";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormHelperText from "@mui/material/FormHelperText";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import React, { useCallback, useEffect, useRef } from "react";
 
 import HookForm from "App/core/hook-form/HookForm";
@@ -23,6 +26,13 @@ import emailTemplateActions from "./store/emailTemplateActions";
 import { templateFor as TemplateForConstant } from "./data/template-for";
 import { templateForLabels, templateForOptions } from "./data/template-for";
 
+const CKEditorWrapper = styled(CKEditor)(({ theme }) => ({
+    "& .ck-editor .ck.ck-editor__main > .ck-editor__editable": {
+        minHeight: "300px !important",
+    },
+    minHeight: "300px !important",
+}));
+
 const schema = Yup.object().shape({
     email_subject: Yup.string().required("Email subject is required"),
     email_format: Yup.string().required("Email format is required"),
@@ -31,7 +41,17 @@ const schema = Yup.object().shape({
     footer_element_id: Yup.string().required("Email footer is required"),
 });
 
-const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, loading, insertTag }) => {
+const EmailTemplateForm = ({
+    initialValues,
+    onSubmit,
+    handleClose,
+    isAddMode,
+    loading,
+    insertTag,
+    setPreviewData,
+    openPreviewModal,
+    tagClicked = false,
+}) => {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const { response: emailElementData, loading: emailElementLoading } = useSelector(
@@ -47,6 +67,7 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
         watch,
         setValue,
         formState: { errors },
+        getValues,
     } = methods;
 
     const editorRef = useRef(null);
@@ -67,12 +88,12 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
     const emailElementFooter = emailElementData?.data.filter((el) => el.element_type === "footer") || [];
 
     const emailHeaderOptions = emailElementHeader?.map((el) => ({
-        label: templateForLabels[el.element_for],
+        label: `${el.element_label} ${templateForLabels[el.element_for]}`,
         value: el.element_id,
     }));
 
     const emailFooterOptions = emailElementFooter?.map((el) => ({
-        label: templateForLabels[el.element_for],
+        label: `${el.element_label} ${templateForLabels[el.element_for]}`,
         value: el.element_id,
     }));
 
@@ -85,26 +106,34 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
               })) ?? [])
         : [];
 
-    const insertTagAtCursor = useCallback((insertTag) => {
-        if (insertTag && editorRef.current) {
-            // Get the Quill editor instance
-            const editor = editorRef.current.editor;
-            // Get current selection (cursor position)
-            const range = editor.selection;
-            if (range) {
-                // Insert tag at cursor position
-                editor.insertText(range.savedRange.index, insertTag, { bold: true });
-                // Set cursor position after the inserted tag
-                editor.setSelection(range.savedRange.index + insertTag.length);
+    const insertTagAtCursor = useCallback(
+        (insertTag) => {
+            if (insertTag && editorRef.current) {
+                const editor = editorRef.current;
+
+                // Get the current selection (caret position)
+                const selection = editor.model.document.selection;
+                const position = selection.getFirstPosition();
+
+                // Create a text node for the tag to insert
+                const insertText = editor.model.change((writer) => {
+                    return writer.createText(insertTag, { bold: true });
+                });
+
+                // Insert the tag at the caret position
+                editor.model.change((writer) => {
+                    writer.insert(insertText, position); // Insert at the caret position
+                });
             }
-        }
-    }, []);
+        },
+        [editorRef],
+    );
 
     useEffect(() => {
         if (insertTag) {
             insertTagAtCursor(insertTag);
         }
-    }, [insertTag]);
+    }, [insertTag, tagClicked]);
 
     useEffect(() => {
         dispatch(emailTemplateActions.get_email_element());
@@ -128,34 +157,56 @@ const EmailTemplateForm = ({ initialValues, onSubmit, handleClose, isAddMode, lo
                 <Stack item xs={12} md={6}>
                     <FormSelect name="footer_element_id" label="Email Footer" options={emailFooterOptions} />
                 </Stack>
-                {/* <Stack item xs={12} md={6}>
-                    <Typography>Email Header</Typography>
-                    <ReactQuill theme="snow" value={emailHeader} onChange={(v) => setValue("email_header", v)} />
-                    <FormHelperText error={true}>{errors?.email_header?.message}</FormHelperText>
-                </Stack> */}
+
                 <Stack item xs={12} md={6}>
                     <Typography>Email Format</Typography>
-                    <ReactQuill
-                        theme="snow"
-                        value={emailFormat}
-                        onChange={(v) => setValue("email_format", v)}
-                        ref={editorRef}
+                    <CKEditorWrapper
+                        config={{}}
+                        editor={ClassicEditor}
+                        data={emailFormat}
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            setValue("email_format", data);
+                        }}
+                        onReady={(editor) => {
+                            editorRef.current = editor;
+                            editor.ui.view.editable.element.style.minHeight = "200px";
+                        }}
+                        onBlur={(event, editor) => {
+                            editor.editing.view.change((writer) => {
+                                writer.setStyle("height", `300px`, editor.editing.view.document.getRoot());
+                            });
+                        }}
+                        onFocus={(event, editor) => {
+                            editor.editing.view.change((writer) => {
+                                writer.setStyle("height", `300px`, editor.editing.view.document.getRoot());
+                            });
+                        }}
                     />
                     <FormHelperText error={true}>{errors?.email_format?.message}</FormHelperText>
                 </Stack>
-                {/* <Stack item xs={12} md={6}>
-                    <Typography>Email Footer</Typography>
-                    <ReactQuill theme="snow" value={emailFooter} onChange={(v) => setValue("email_footer", v)} />
-                    <FormHelperText error={true}>{errors?.email_footer?.message}</FormHelperText>
-                </Stack> */}
 
-                <Grid item xs={12}>
-                    <ButtonWrapper>
-                        <CancelButton onClick={handleClose} disabled={loading}>
-                            Cancel
-                        </CancelButton>
-                        <SubmitButton isLoading={loading} isAddMode={isAddMode} />
-                    </ButtonWrapper>
+                <Grid container>
+                    <Grid item xs={6}>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => {
+                                isAddMode ? setPreviewData({ ...getValues() }) : "";
+                                openPreviewModal(true);
+                            }}
+                        >
+                            Preview
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <ButtonWrapper>
+                            <CancelButton onClick={handleClose} disabled={loading}>
+                                Cancel
+                            </CancelButton>
+                            <SubmitButton isLoading={loading} isAddMode={isAddMode} />
+                        </ButtonWrapper>
+                    </Grid>
                 </Grid>
             </Stack>
         </HookForm>
