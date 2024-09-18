@@ -99,7 +99,7 @@ function ListMakePaymentWebhookLog({ customerId, transactionId }) {
                             <TableCell>Transaction ID</TableCell>
                             <TableCell>Transaction Amount </TableCell>
                             <TableCell>Currency</TableCell>
-                            <TableCell>Amount to refund</TableCell>
+                            <TableCell>Amount to pay</TableCell>
                             <TableCell>Remarks</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
