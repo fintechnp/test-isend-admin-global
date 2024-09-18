@@ -19,11 +19,10 @@ import { webhookLogStatus } from "Private/data/webhookLogStatus";
 
 const StyledTableCell = styled(TableHead)(({ theme }) => ({
     "& .MuiTableCell-root": {
-        backgroundColor: "#F1F7FE",
-        color: "#000",
+        backgroundColor: theme.palette.background.light,
+        color: theme.palette.text.primary,
     },
 }));
-
 function ListMakePaymentWebhookLog({ customerId, transactionId }) {
     const dispatch = useDispatch();
 
@@ -81,7 +80,12 @@ function ListMakePaymentWebhookLog({ customerId, transactionId }) {
                 <Table borderAxis="bothBetween" variant="plain">
                     <StyledTableCell>
                         <TableRow
-                            sx={{ "&:last-child td, &:last-child th": { borderLeft: 1, borderColor: "#EAEBF0" } }}
+                            sx={{
+                                "&:last-child td, &:last-child th": {
+                                    borderLeft: 1,
+                                    borderColor: (theme) => theme.palette.background.light,
+                                },
+                            }}
                         >
                             <TableCell>SN</TableCell>
                             <TableCell
