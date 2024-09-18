@@ -27,7 +27,7 @@ export default function EditEmailElementModal() {
     }, []);
 
     return (
-        <Modal open={isOpen} onClose={handleClose} title="Edit Email Element">
+        <Modal open={isOpen} onClose={handleClose} title="Add Email Element">
             <Box>
                 <EmailElementForm
                     isAddMode={false}
@@ -35,7 +35,6 @@ export default function EditEmailElementModal() {
                         element_for: initialFormState?.element_for,
                         element_type: initialFormState?.element_type,
                         element_content: initialFormState?.element_content,
-                        element_label: initialFormState?.element_label,
                     }}
                     onSubmit={handleSubmit}
                     handleClose={handleClose}

@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useMemo } from "react";
 import Typography from "@mui/material/Typography";
@@ -199,34 +198,42 @@ function ListEmailTemplate() {
                                     { key: "Descending", value: "desc" },
                                 ]}
                             />
-                            <Button
-                                variant="contained"
-                                onClick={() =>
-                                    dispatch({
-                                        type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
-                                    })
-                                }
-                            >
-                                Create Email Template
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    dispatch({
-                                        type: "OPEN_ADD_EMAIL_ELEMENT_MODAL",
-                                    });
-                                }}
-                            >
-                                Create Email Element
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    navigate(routePaths.ListEmailElement);
-                                }}
-                            >
-                                List Email Element
-                            </Button>
+                            <PopoverButton>
+                                {({ onClose }) => (
+                                    <>
+                                        <HasPermission permission={permissions.CREATE_EMAIL_TEMPLATE}>
+                                            <ListItemButton
+                                                onClick={() => {
+                                                    onClose();
+                                                    dispatch({
+                                                        type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
+                                                    });
+                                                }}
+                                            >
+                                                Create Email Template
+                                            </ListItemButton>
+                                        </HasPermission>
+                                        {/* <HasPermission permission={permissions.CREATE_EMAIL_ELEMENT}> */}
+                                        <ListItemButton
+                                            onClick={() => {
+                                                dispatch({
+                                                    type: "OPEN_ADD_EMAIL_ELEMENT_MODAL",
+                                                });
+                                            }}
+                                        >
+                                            Create Email Element
+                                        </ListItemButton>
+                                        {/* </HasPermission> */}
+                                        <ListItemButton
+                                            onClick={() => {
+                                                navigate(routePaths.ListEmailElement);
+                                            }}
+                                        >
+                                            List Email Element
+                                        </ListItemButton>
+                                    </>
+                                )}
+                            </PopoverButton>
                         </>
                     }
                 >
