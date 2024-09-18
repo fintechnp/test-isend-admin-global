@@ -645,6 +645,13 @@ import {
     GetPromoCodeUsageReducers,
     UpdatePromoCodeReducer,
 } from "./pages/PromoCode/store";
+import {
+    AddPromoSetupReducer,
+    DeletePromoSetupReducer,
+    GetPromoSetupDetailsReducer,
+    GetPromoSetupReducer,
+    UpdatePromoSetupReducer,
+} from "./pages/Setup/PromoSetup/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -752,6 +759,13 @@ export const privateReducer = {
     add_service_charge: AddServiceChargeReducer,
     update_service_charge: UpdateServiceChargeReducer,
     delete_service_charge: DeleteServiceChargeReducer,
+
+    //setup promo
+    get_promo_setup: GetPromoSetupReducer,
+    get_promo_setup_details: GetPromoSetupDetailsReducer,
+    add_promo_setup: AddPromoSetupReducer,
+    update_promo_setup: UpdatePromoSetupReducer,
+    delete_promo_setup: DeletePromoSetupReducer,
 
     //exchange charge
     get_all_exchange_rate: GetAllExchangeRateReducer,
