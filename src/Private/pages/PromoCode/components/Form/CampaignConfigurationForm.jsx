@@ -22,8 +22,6 @@ const ImageWrapper = styled(Box)(({ theme }) => ({
 export const CampaignConfigurationForm = ({ isAddMode, initialValues, displayMechanismsOptions }) => {
     const { control, getValues } = useFormContext();
 
-    console.log(getValues());
-
     return (
         <>
             <Grid container spacing={2} marginY={2}>

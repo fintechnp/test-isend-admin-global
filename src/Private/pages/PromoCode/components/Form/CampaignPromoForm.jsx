@@ -113,26 +113,24 @@ export default function CampaignPromoForm({
                         if (attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE) {
                             setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.ON_SAME_DAY);
                         } else if (attributeFamilyTypeId === campaignEventTypes.DATE_RANGE) {
-                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
+                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.BETWEEN);
                         } else if (attributeFamilyTypeId === campaignEventTypes.AMOUNT) {
                             setValue(
                                 `AttributeConditions.${index}.criteria`,
                                 triggerAttributeTypesOptionsDisabled[0]?.value,
                             );
-                            setValue(`AttributeConditions.${index}.amount`, 0); // Initialize amount
-                            setValue(`AttributeConditions.${index}.currency`, countryCurrency[0]?.value); // Initialize currency
+                            setValue(`AttributeConditions.${index}.amount`, 0);
+                            setValue(`AttributeConditions.${index}.currency`, countryCurrency[0]?.value);
                         } else if (attributeFamilyTypeId === campaignEventTypes.COUNT) {
                             setValue(
                                 `AttributeConditions.${index}.criteria`,
                                 triggerAttributeTypesOptionsDisabled[0].value,
                             );
-                            setValue(`AttributeConditions.${index}.amount`, 0); // Initialize amount
+                            setValue(`AttributeConditions.${index}.amount`, 0);
                         } else if (attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY) {
                             setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
-                            // No need to set amount or currency
                         } else if (attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION) {
                             setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
-                            // No need to set amount or currency
                         }
                     }
                 }, [attributeFamilyTypeId, campaignEventTypes]);
