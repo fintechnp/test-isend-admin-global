@@ -26,7 +26,7 @@ import { templateForLabels, templateForOptions, templateFor as TemplateForConsta
 const schema = Yup.object().shape({
     email_subject: Yup.string().required("Email subject is required"),
     email_format: Yup.string().required("Email format is required"),
-    template_type: Yup.string().required("Email template type  is required"),
+    template_type: Yup.string().required("Template type  is required"),
     header_element_id: Yup.string().required("Email header is required"),
     footer_element_id: Yup.string().required("Email footer is required"),
 });

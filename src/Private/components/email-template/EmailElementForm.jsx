@@ -20,10 +20,10 @@ import CKEditorComponent from "App/components/Editor/CkEditor";
 import { templateForOptions, emailElementTypeOptions } from "./data/template-for";
 
 const schema = Yup.object().shape({
-    element_type: Yup.string().required("Email Type is required"),
-    element_for: Yup.string().required("Email For is required"),
-    element_label: Yup.string().required("Email Label is required"),
-    element_content: Yup.string().required("Email Content is required"),
+    element_type: Yup.string().required("Element Type is required"),
+    element_for: Yup.string().required("Element For is required"),
+    element_label: Yup.string().required("Element Label is required"),
+    element_content: Yup.string().required("Element Content is required"),
 });
 
 const EmailElementForm = ({ initialValues, onSubmit, handleClose, isAddMode, loading }) => {
