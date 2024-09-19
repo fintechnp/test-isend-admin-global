@@ -7,9 +7,10 @@ import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { promoCodeActions } from "../store";
-import PromoCodeForm from "../PromoCodeForm";
+import ParentPromoCodeForm from "./ParentPromoCodeForm";
 import HtmlToPlainText from "../HtmlToPlainText";
+import { promoCodeActions } from "../store";
+
 const EditPromoCode = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -20,17 +21,19 @@ const EditPromoCode = () => {
 
     const getUpdateById = response?.data;
 
+    console.log(getUpdateById?.status);
+
     const initialValues = {
-        StartDate: getUpdateById?.startDate || "",
-        EndDate: getUpdateById?.endDate || "",
-        Status: getUpdateById?.status || 0,
-        Budget: getUpdateById?.budget || 0,
-        LimitPerUser: getUpdateById?.limitPerUser || 0,
-        LimitPerPromo: getUpdateById?.limitPerCampaign || 1,
-        TermsAndCondition: HtmlToPlainText(getUpdateById?.termsAndCondition) || "",
-        WebImage: getUpdateById?.webImage || "",
-        MobileImage: getUpdateById?.mobileImage || "",
-        Description: getUpdateById?.description || "",
+        StartDate: getUpdateById?.startDate,
+        EndDate: getUpdateById?.endDate,
+        Status: getUpdateById?.status,
+        Budget: getUpdateById?.budget,
+        LimitPerUser: getUpdateById?.limitPerUser,
+        LimitPerPromo: getUpdateById?.limitPerCampaign,
+        TermsAndCondition: HtmlToPlainText(getUpdateById?.termsAndCondition),
+        WebImage: getUpdateById?.webImage,
+        MobileImage: getUpdateById?.mobileImage,
+        Description: getUpdateById?.description,
     };
 
     useEffect(() => {
@@ -38,17 +41,19 @@ const EditPromoCode = () => {
     }, [dispatch, promoCodeId]);
 
     const handleSubmit = (data) => {
+        console.log(data);
+
         const formData = Object.fromEntries(data.entries());
 
         const filteredData = {
-            StartDate: formData["Campaign.StartDate"] || "",
-            EndDate: formData["Campaign.EndDate"] || "",
-            Status: parseInt(formData["Campaign.Status"], 10) || 0,
-            Budget: parseFloat(formData["Campaign.Budget"]) || 0,
-            LimitPerUser: parseInt(formData["LimitPerUser"], 10) || 0,
-            LimitPerPromo: parseInt(formData["LimitPerPromo"], 10) || 1,
-            Description: formData["Description"] || "",
-            TermsAndCondition: marked(formData["TermsAndCondition"]) || "",
+            StartDate: formData["Campaign.StartDate"],
+            EndDate: formData["Campaign.EndDate"],
+            Status: parseInt(formData["Campaign.Status"], 10),
+            Budget: parseFloat(formData["Campaign.Budget"]),
+            LimitPerUser: parseInt(formData["LimitPerUser"], 10) ?? 0,
+            LimitPerPromo: parseInt(formData["LimitPerPromo"], 10) ?? 0,
+            Description: formData["Description"],
+            TermsAndCondition: marked(formData["TermsAndCondition"]),
         };
 
         const finalFormData = new FormData();
@@ -91,7 +96,7 @@ const EditPromoCode = () => {
             documentTitle="Edit Campaign"
         >
             <PageContentContainer title="Edit Campaign">
-                <PromoCodeForm
+                <ParentPromoCodeForm
                     isAddMode={false}
                     isSubmitting={isLoading}
                     handleSubmit={handleSubmit}

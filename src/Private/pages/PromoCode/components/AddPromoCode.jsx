@@ -6,8 +6,8 @@ import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import ParentPromoCodeForm from "./ParentPromoCodeForm";
 import { promoCodeActions } from "../store";
-import PromoCodeForm from "../PromoCodeForm";
 
 const AddPromoCode = () => {
     const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const AddPromoCode = () => {
             documentTitle="Add Campaign"
         >
             <PageContentContainer title="Add Campaign">
-                <PromoCodeForm isSubmitting={isLoading} isAddMode={true} handleSubmit={handleSubmit} />
+                <ParentPromoCodeForm isSubmitting={isLoading} isAddMode={true} handleSubmit={handleSubmit} />
             </PageContentContainer>
         </PageContent>
     );

@@ -46,11 +46,26 @@ const addPromoCode = takeEvery(actions.ADD_PROMO_CODE, function* (action) {
             type: actions.ADD_PROMO_CODE_SUCCESS,
             response: res,
         });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        })
+
+
+
     } catch (error) {
         yield put({
             type: actions.ADD_PROMO_CODE_FAILED,
             error: error?.data,
         });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+
+
     }
 });
 

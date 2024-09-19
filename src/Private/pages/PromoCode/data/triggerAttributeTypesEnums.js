@@ -8,6 +8,15 @@ export const triggerAttributeTypes = {
     EQUALS_TO: 6,
 };
 
+export const triggerAttributeDisabled = {
+    GREATER_THAN: 1,
+    GREATER_THAN_EQUAL_TO: 2,
+    LESS_THAN_EQUAL_TO: 3,
+    LESS_THAN: 4,
+    BETWEEN: 5,
+    EQUALS_TO: 6,
+};
+
 export const triggerAttributeTypesOptions = [
     { label: "On Same Day", value: triggerAttributeTypes.ON_SAME_DAY },
     { label: "Greater Than", value: triggerAttributeTypes.GREATER_THAN },

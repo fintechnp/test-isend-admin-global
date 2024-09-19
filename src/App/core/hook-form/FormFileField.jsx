@@ -1,24 +1,25 @@
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import React, { useCallback, useRef, useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import { useDropzone } from "react-dropzone";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 import FormHelperText from "@mui/material/FormHelperText";
+import React, { useCallback, useRef, useState } from "react";
 import { Controller, useFormContext, get } from "react-hook-form";
-import UploadIcon from "App/components/Icon/UploadIcon";
-import { Button } from "@mui/material";
 
-// Styled preview container for images
+import UploadIcon from "App/components/Icon/UploadIcon";
+
 const FilePreview = styled(Box)({
     width: "100%",
-    height: "40px",
+    height: "90px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "4px",
     overflow: "hidden",
+    position: "relative",
     "& img": { width: "auto", height: "100%" },
 });
 
@@ -83,31 +84,26 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
                 {file && previewUrl ? (
                     <FilePreview>
                         <img src={previewUrl} alt="Preview" />
+                        <IconButton
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemove();
+                            }}
+                            sx={{
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                color: "error.main",
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
                     </FilePreview>
                 ) : (
                     <Box display="flex" flexDirection="column" alignItems="center">
                         <UploadIcon sx={{ mb: 1 }} />
                         <Typography>{isDragActive ? "Drop Here" : "Drag & Drop or click to upload"}</Typography>
                     </Box>
-                )}
-
-                {file && (
-                    <Tooltip title="Remove" arrow>
-                        <Button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleRemove();
-                            }}
-                            sx={{
-                                marginTop: 1,
-                            }}
-                            variant="outlined"
-                            size="small"
-                            color="error"
-                        >
-                            Remove
-                        </Button>
-                    </Tooltip>
                 )}
             </Box>
 

@@ -2,14 +2,13 @@ import dayjs from "dayjs";
 import React from "react";
 import PropTypes from "prop-types";
 import Stack from "@mui/material/Stack";
-import { Controller } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import FormHelperText from "@mui/material/FormHelperText";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Controller, useFormContext, get } from "react-hook-form";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
-import { useReactHookFormContext } from "./useReactHookForm";
 
 export default function FormDateTimePicker({
     name,
@@ -21,11 +20,18 @@ export default function FormDateTimePicker({
     disableFuture,
     isOptional,
     focused,
+    error,
     disabled,
+    color,
     fullWidth,
 }) {
-    const { control, clearErrors } = useReactHookFormContext();
-
+    const {
+        control,
+        clearErrors,
+        setValue,
+        formState: { errors },
+        getValues,
+    } = useFormContext();
     return (
         <Controller
             name={name}
@@ -52,16 +58,19 @@ export default function FormDateTimePicker({
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    size="small" // Set the size to small
+                                    size="small"
                                     fullWidth={fullWidth}
                                     focused={focused}
+                                    color={color}
+                                    error={!!errors[name]}
+                                    helperText={errors[name]?.message ?? ""}
                                     InputProps={{
                                         ...params.InputProps,
-                                        readOnly: true, // Disable direct text input
+                                        readOnly: true,
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        readOnly: true, // Disable direct text input
+                                        readOnly: true,
                                     }}
                                 />
                             )}
@@ -73,6 +82,7 @@ export default function FormDateTimePicker({
                             disableFuture={disableFuture}
                             onFocus={() => clearErrors(name)}
                         />
+                        <FormHelperText error={true}> {error ?? get(errors, name)?.message ?? ""}</FormHelperText>
                     </LocalizationProvider>
                 </Stack>
             )}
@@ -92,6 +102,24 @@ FormDateTimePicker.propTypes = {
     isOptional: PropTypes.bool,
     fullWidth: PropTypes.bool,
     focused: PropTypes.bool,
+    error: PropTypes.string,
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
+    color: PropTypes.oneOf(["primary", "secondary", "error", "info", "success", "warning"]),
+};
+
+FormDateTimePicker.defaultProps = {
+    label: "",
+    required: false,
+    minDate: null,
+    maxDate: null,
+    disablePast: false,
+    disableFuture: false,
+    defaultValue: null,
+    isOptional: false,
+    fullWidth: false,
+    focused: false,
+    disabled: false,
+    onChange: () => {},
+    color: "primary",
 };
