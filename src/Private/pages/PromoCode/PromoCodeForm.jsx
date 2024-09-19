@@ -83,8 +83,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
 
     const countryCurrency = response?.data?.map((c) => ({ value: c.currency, label: c.currency }));
 
-    console.log("The initial values are", initialValues);
-
     const methods = useForm({
         defaultValues: isAddMode
             ? {
@@ -182,8 +180,6 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
 
     const CampaignType = watch("Campaign.CampaignType");
     const Campaign = watch("Campaign");
-
-    console.log("The initial values are", initialValues);
 
     useEffect(() => {
         if (CampaignType === campaignCodes.PROMO) {

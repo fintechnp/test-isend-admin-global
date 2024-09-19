@@ -30,6 +30,10 @@ export default function ListEmailElement() {
                 accessorKey: "f_serial_no",
             },
             {
+                header: "Element Label",
+                accessorKey: "element_label",
+            },
+            {
                 header: "Element For",
                 accessorKey: "element_for",
                 cell: ({ getValue }) => <>{templateForLabels[getValue()]}</>,

@@ -50,7 +50,6 @@ function ListRefundPaymentWebhookLog({ customerId }) {
     }, [dispatch, filterSchema, customerId]);
 
     const onRefundSuccess = () => {
-        console.log("refunded");
         dispatch(
             actions.get_zai_logs({
                 ...filterSchema,

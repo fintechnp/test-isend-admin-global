@@ -32,7 +32,6 @@ function HookStepForm({ children, onSubmit, encType, stepForms, isAddMode = fals
                 error.inner.forEach((e) => {
                     const path = e.path;
                     setError(path, { message: e.message });
-                    console.log({ message: e.message });
                 });
             }
         }

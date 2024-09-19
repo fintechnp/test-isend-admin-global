@@ -63,8 +63,6 @@ export default function ViewFcmModal() {
 
     const { is_open: isOpen, data } = useSelector((state) => state.view_fcm);
 
-    console.log(data);
-
     const handleClose = useCallback(() => {
         dispatch(actions.close_view_fcm_modal());
     }, [dispatch]);

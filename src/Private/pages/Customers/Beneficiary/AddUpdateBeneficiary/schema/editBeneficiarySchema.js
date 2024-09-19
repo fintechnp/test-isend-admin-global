@@ -26,7 +26,6 @@ export const editForm3Schema = editForm2Schema.concat(
         delivery_option_id: Yup.string().required("Deliver Option is required"),
         account_number: Yup.string().when("delivery_option_id", {
             is: (value) => {
-                console.log(typeof value, "hello");
                 return !isEmpty(value) && +value === 3;
             },
             then: (schema) => schema.required("Account number is required"),
