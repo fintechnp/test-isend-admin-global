@@ -48,7 +48,7 @@ export default function CampaignPromoForm({
                     criteria = triggerAttributeTypes.ON_SAME_DAY;
                     break;
                 case campaignEventTypes.DATE_RANGE:
-                    criteria = triggerAttributeTypes.BETWEEN;
+                    criteria = triggerAttributeTypes.EQUALS_TO;
                     break;
                 case campaignEventTypes.AMOUNT:
                 case campaignEventTypes.COUNT:
@@ -113,7 +113,7 @@ export default function CampaignPromoForm({
                         if (attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE) {
                             setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.ON_SAME_DAY);
                         } else if (attributeFamilyTypeId === campaignEventTypes.DATE_RANGE) {
-                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.BETWEEN);
+                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
                         } else if (attributeFamilyTypeId === campaignEventTypes.AMOUNT) {
                             setValue(
                                 `AttributeConditions.${index}.criteria`,

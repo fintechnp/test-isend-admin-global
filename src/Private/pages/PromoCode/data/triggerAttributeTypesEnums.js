@@ -4,8 +4,7 @@ export const triggerAttributeTypes = {
     GREATER_THAN_EQUAL_TO: 2,
     LESS_THAN_EQUAL_TO: 3,
     LESS_THAN: 4,
-    BETWEEN: 5,
-    EQUALS_TO: 6,
+    EQUALS_TO: 5,
 };
 
 export const triggerAttributeDisabled = {
@@ -13,8 +12,7 @@ export const triggerAttributeDisabled = {
     GREATER_THAN_EQUAL_TO: 2,
     LESS_THAN_EQUAL_TO: 3,
     LESS_THAN: 4,
-    BETWEEN: 5,
-    EQUALS_TO: 6,
+    EQUALS_TO: 5,
 };
 
 export const triggerAttributeTypesOptions = [
@@ -23,7 +21,6 @@ export const triggerAttributeTypesOptions = [
     { label: "Greater Than Equal To", value: triggerAttributeTypes.GREATER_THAN_EQUAL_TO },
     { label: "Less Than Equal To", value: triggerAttributeTypes.LESS_THAN_EQUAL_TO },
     { label: "Less Than", value: triggerAttributeTypes.LESS_THAN },
-    { label: "Between", value: triggerAttributeTypes.BETWEEN },
     { label: "Equals To", value: triggerAttributeTypes.EQUALS_TO },
 ];
 
@@ -32,7 +29,7 @@ export const triggerAttributeTypesOptionsDisabled = [
     { label: "Greater Than Equal To", value: triggerAttributeTypes.GREATER_THAN_EQUAL_TO },
     { label: "Less Than Equal To", value: triggerAttributeTypes.LESS_THAN_EQUAL_TO },
     { label: "Less Than", value: triggerAttributeTypes.LESS_THAN },
-    { label: "Between", value: triggerAttributeTypes.BETWEEN },
+    { label: "Equals To", value: triggerAttributeTypes.EQUALS_TO },
 ];
 
 export const triggerAttributeTypesOptionsCount = [
