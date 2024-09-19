@@ -78,7 +78,7 @@ export default class Api {
                         preserveIntendedPath();
                         // Attempt to refresh the token
                         const response = await axios.post(
-                            "https://devadminapi.isendglobal.com/api/account/refreshtoken",
+                            `${BaseUrlConfiguration.getApiBaseUrl()}/account/refreshtoken`,
                             {
                                 access_token: AuthUtility.getAccessToken(),
                                 refresh_token: AuthUtility.getRefreshToken(),
