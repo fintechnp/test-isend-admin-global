@@ -1,20 +1,22 @@
-import React, { useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { change, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
-import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
 import * as Yup from "yup";
-
+import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
-import FormTextField from "App/core/hook-form/FormTextField";
+import { useDispatch } from "react-redux";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+
 import HookForm from "App/core/hook-form/HookForm";
+import { yupResolver } from "@hookform/resolvers/yup";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormCheckbox from "App/core/hook-form/FormCheckbox";
-import { yupResolver } from "@hookform/resolvers/yup";
+import FormTextField from "App/core/hook-form/FormTextField";
+import FormPartnerSelect from "App/core/hook-form/FormPartnerSelect";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+
+import PartnerType from "App/data/PartnerType";
 
 const deliveryOptionsSchema = Yup.object().shape({
     delivery_name: Yup.string().required("Delivery name is required"),
@@ -52,20 +54,18 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
+    color: theme.palette.primary.main,
+    borderRadius: "8px",
     textTransform: "capitalize",
-    background: theme.palette.warning.main,
+    background: theme.palette.surface.primarySecond,
     "&:hover": {
-        background: theme.palette.warning.dark,
+        background: theme.palette.surface.primarySecond,
     },
 }));
 
 const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
     color: "#fff",
-    borderRadius: "2px",
+    borderRadius: "8px",
     textTransform: "capitalize",
     background: theme.palette.primary.main,
     "&:hover": {
@@ -153,231 +153,47 @@ const DeliveryOptionForm = ({
     }, [countryDataChanged.country_code]);
 
     return (
-        // <Form onSubmit={handleSubmit}>
-        //     <Container container direction="column">
-        //         <Grid item xs={12}>
-        //             <FormWrapper container direction="row">
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="delivery_name"
-        //                         label="Delivery Name"
-        //                         type="text"
-        //                         small={12}
-        //                         component={TextField}
-        //                         validate={[Validator.emptyValidator, Validator.minValue1]}
-        //                     />
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="country_code"
-        //                         label="Country"
-        //                         type="number"
-        //                         small={12}
-        //                         onChange={handleCurrency}
-        //                         component={SelectField}
-        //                         validate={[Validator.emptyValidator, Validator.minValue1]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Country
-        //                         </option>
-        //                         {country &&
-        //                             country.map((data) => (
-        //                                 <option value={data.iso3} key={data.tid}>
-        //                                     {data.country}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="currency_code"
-        //                         label="Currency"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         validate={[Validator.emptyValidator, Validator.minValue1]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Currency
-        //                         </option>
-        //                         {country &&
-        //                             country.map((data) => (
-        //                                 <option value={data.currency} key={data.tid}>
-        //                                     {data.currency_name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payment_type"
-        //                         label="Payment Type"
-        //                         type="text"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         validate={[Validator.emptyValidator, Validator.minValue1]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Payment Type
-        //                         </option>
-        //                         {reference &&
-        //                             reference
-        //                                 ?.filter((ref_data) => ref_data.reference_type === 1)[0]
-        //                                 .reference_data.map((data) => (
-        //                                     <option value={data.value} key={data.reference_id}>
-        //                                         {data.name}
-        //                                     </option>
-        //                                 ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_agent_id"
-        //                         label="Payout Agent"
-        //                         type="number"
-        //                         small={12}
-        //                         disabled={partnerList.length > 0 ? false : true}
-        //                         component={SelectField}
-        //                         validate={[Validator.emptyValidator, Validator.minValue1]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Payout Agent
-        //                         </option>
-        //                         {partnerList &&
-        //                             partnerList.map((data, index) => (
-        //                                 <option value={data.agent_id} key={data?.tid}>
-        //                                     {data.name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 {update && (
-        //                     <FieldWrapper item xs={12} sm={6}>
-        //                         <Grid container alignItems="flex-end" justifyContent="flex-end">
-        //                             <Grid item xs={12}>
-        //                                 <StatusText component="p">Status</StatusText>
-        //                             </Grid>
-        //                             <Grid item xs={12}>
-        //                                 <Field
-        //                                     name="is_active"
-        //                                     label="Active"
-        //                                     small={12}
-        //                                     reverse="row-reverse"
-        //                                     component={CheckboxField}
-        //                                 />
-        //                             </Grid>
-        //                         </Grid>
-        //                     </FieldWrapper>
-        //                 )}
-        //             </FormWrapper>
-        //         </Grid>
-        //         <Grid item>
-        //             <Divider sx={{ pt: 1.2 }} />
-        //         </Grid>
-        //         <Grid item>
-        //             <ButtonWrapper
-        //                 container
-        //                 columnGap={2}
-        //                 direction="row"
-        //                 justifyContent="flex-end"
-        //                 alignItems="center"
-        //             >
-        //                 <Grid item>
-        //                     <CancelButton size="small" variant="contained" onClick={handleClose}>
-        //                         Cancel
-        //                     </CancelButton>
-        //                 </Grid>
-        //                 <Grid item>
-        //                     <CreateButton
-        //                         size="small"
-        //                         variant="outlined"
-        //                         loading={loading}
-        //                         endIcon={update ? <UpdateIcon /> : <AddIcon />}
-        //                         type="submit"
-        //                     >
-        //                         {buttonText}
-        //                     </CreateButton>
-        //                 </Grid>
-        //             </ButtonWrapper>
-        //         </Grid>
-        //     </Container>
-        // </Form>
-        <>
-            <HookForm onSubmit={handleSubmit} {...methods}>
-                <Container>
-                    <Grid item xs={12}>
-                        <FormWrapper container direction="row">
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormTextField name="delivery_name" label="Delivery Name" />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Country" name="country_code" options={countryOptions} />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Currency" name="currency_code" options={currencyOptions} />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Payment Type" name="payment_type" options={referenceOptions} />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect
-                                    label="Payout Agent"
-                                    name="payout_agent_id"
-                                    options={partnerOptions}
-                                    disabled={partnerList?.length > 0 ? false : true}
-                                />
-                            </FieldWrapper>
-                            {update && (
-                                <FieldWrapper item xs={12} sm={6}>
-                                    <Grid container alignItems="flex-end" justifyContent="flex-end">
-                                        <Grid item xs={12}>
-                                            <StatusText component="p">Status</StatusText>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <FormCheckbox name="is_active" label="Active" />
-                                        </Grid>
-                                    </Grid>
-                                </FieldWrapper>
-                            )}
-                        </FormWrapper>
+        <HookForm onSubmit={handleSubmit} {...methods}>
+            <Grid container spacing={1} sx={{ border: "1px solid #EAEBF0", padding: "8px 16px 16px 8px" }}>
+                <Grid item xs={12} sm={6}>
+                    <FormTextField name="delivery_name" label="Delivery Name" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormSelectCountry label="Country" name="country_code" options={countryOptions} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormSelect label="Currency" name="currency_code" options={currencyOptions} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormSelect label="Payment Type" name="payment_type" options={referenceOptions} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormPartnerSelect label="Payout Agent" name="payout_agent_id" partnerType={PartnerType.PAY} />
+                </Grid>
+                {update && (
+                    <Grid item xs={12} sm={6}>
+                        <StatusText component="p">Status</StatusText>
+                        <FormCheckbox name="is_active" label="Active" />
                     </Grid>
-                    <Grid>
-                        <Grid item>
-                            <Divider sx={{ pt: 1.2 }} />
-                        </Grid>
-                        <Grid item>
-                            <ButtonWrapper
-                                container
-                                columnGap={2}
-                                direction="row"
-                                justifyContent="flex-end"
-                                alignItems="center"
-                            >
-                                <Grid item>
-                                    <CancelButton size="small" variant="contained" onClick={handleClose}>
-                                        Cancel
-                                    </CancelButton>
-                                </Grid>
-                                <Grid item>
-                                    <CreateButton
-                                        size="small"
-                                        variant="outlined"
-                                        loading={loading}
-                                        endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                        type="submit"
-                                    >
-                                        {buttonText}
-                                    </CreateButton>
-                                </Grid>
-                            </ButtonWrapper>
-                        </Grid>
+                )}
+            </Grid>
+
+            <Grid item>
+                <ButtonWrapper container columnGap={2} direction="row" justifyContent="flex-end" alignItems="center">
+                    <Grid item>
+                        <CancelButton size="medium" variant="contained" onClick={handleClose}>
+                            Cancel
+                        </CancelButton>
                     </Grid>
-                </Container>
-            </HookForm>
-        </>
+                    <Grid item>
+                        <CreateButton size="medium" variant="contained" loading={loading} type="submit">
+                            {buttonText}
+                        </CreateButton>
+                    </Grid>
+                </ButtonWrapper>
+            </Grid>
+        </HookForm>
     );
 };
-
-// export default React.memo(reduxForm({ form: ["form"] })(DeliveryOptionForm));
 
 export default DeliveryOptionForm;

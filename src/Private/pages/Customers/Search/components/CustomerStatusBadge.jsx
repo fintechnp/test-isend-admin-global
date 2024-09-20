@@ -22,16 +22,19 @@ export default function CustomerStatusBadge({ status }) {
     const labels = {
         active: "Active",
         blocked: "Blocked",
+        inActive: "Inactive",
     };
 
     const colors = {
         active: theme.palette.success.main,
         blocked: theme.palette.error.main,
+        inActive: theme.palette.error.main,
     };
 
     const surfaceColors = {
         active: theme.palette.surface.successSecond,
         blocked: theme.palette.surface.dangerSecond,
+        inActive: theme.palette.surface.dangerSecond,
     };
 
     return (
@@ -47,5 +50,5 @@ export default function CustomerStatusBadge({ status }) {
 }
 
 CustomerStatusBadge.propTypes = {
-    status: PropTypes.oneOf(["active", "blocked"]).isRequired,
+    status: PropTypes.oneOf(["active", "blocked", "inActive"]).isRequired,
 };

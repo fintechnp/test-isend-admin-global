@@ -82,7 +82,14 @@ const BuildFilterInput = ({ field }) => {
         return <FormSelectCountry name={field.name} label={field.label} {...field.props} />;
 
     if (field.type === fieldTypes.PARTNER_SELECT)
-        return <FormPartnerSelect name={field.name} label={field.label} {...field.props} />;
+        return (
+            <FormPartnerSelect
+                name={field.name}
+                label={field.label}
+                {...field.props}
+                partnerType={field?.partnerType}
+            />
+        );
 
     return <>Not implemented yet</>;
 };

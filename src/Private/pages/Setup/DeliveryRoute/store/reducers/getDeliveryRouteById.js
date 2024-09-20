@@ -1,6 +1,7 @@
 import actions from "../actions";
 
 const initialState = {
+    is_open: false,
     success: false,
     loading: false,
     error: null,
@@ -13,6 +14,7 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
+                is_open: true,
             };
         case actions.GET_DELIVERY_ROUTE_BY_ID_SUCCESS:
             return {
@@ -27,6 +29,16 @@ const reducer = (state = initialState, action) => {
                 success: false,
                 loading: false,
                 error: action.error,
+            };
+        case actions.OPEN_DELIVERY_ROUTE_BY_ID_MODAL:
+            return {
+                ...state,
+                is_open: true,
+            };
+        case actions.CLOSE_DELIVERY_ROUTE_BY_ID_MODAL:
+            return {
+                ...state,
+                is_open: false,
             };
         default:
             return state;

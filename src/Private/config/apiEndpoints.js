@@ -317,6 +317,15 @@ const apiEndpoints = {
     GetCampaignReports: "/campaign/campaignReport",
     GetCampaignReportDetails: "/campaign/campaignReportDetails",
     GetCampaignLedgerReport: "/campaign/campaignLegerReport",
+
+    // payout Locations
+    GetAllPayoutLocations: "/payoutlocation",
+
+    //Delivery Options
+    GetDeliveryOptions: "/deliveryoption",
+    GetDeliveryRoutes: "/deliveryroute",
+    GetParnterBanks: "/partnerbank",
+    GetPayoutLocations: "/payoutlocation",
 };
 
 export default apiEndpoints;

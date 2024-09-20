@@ -1,41 +1,52 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import IconButton from "@mui/material/IconButton";
-import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { Box, Button, ListItemButton, Typography } from "@mui/material";
 
 import { Delete } from "App/components";
-import Filter from "./components/Filter";
+import Column from "App/components/Column/Column";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import AddDeliveryOption from "./components/AddDeliveryOption";
+import PopoverButton from "App/components/Button/PopoverButton";
 import { TablePagination, TableSwitch } from "App/components/Table";
-
-import Spacer from "App/components/Spacer/Spacer";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./store/actions";
-import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
-import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
-import HasPermission from "Private/components/shared/HasPermission";
 import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import HasPermission from "Private/components/shared/HasPermission";
+import ViewDeliveryOptionModal from "./components/ViewDeliveryOptionModal";
+import CustomerStatusBadge from "Private/pages/Customers/Search/components/CustomerStatusBadge";
+
+import dateUtils from "App/utils/dateUtils";
+import PartnerType from "App/data/PartnerType";
+import apiEndpoints from "Private/config/apiEndpoints";
+import ExportUpload from "Private/components/reports/ExportUpload";
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
-    payout_country: "",
-    payout_currency: "",
-    payment_type: "",
-    search: "",
-    sort_by: "country_code",
+    page_size: 10,
+    sort_by: "created_ts",
     order_by: "DESC",
 };
 
 const DeliveryOption = () => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const reference = JSON.parse(localStorage.getItem("reference"));
+    const country = JSON.parse(localStorage.getItem("country"));
+
+    const currencyOptions = country.map((c) => ({ label: c.currency_name, value: c.currency }));
+
+    const paymentTypeOptions = reference
+        ?.filter((ref) => ref.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((ref) => ({ label: ref.name, value: ref.value }));
 
     const { can } = useAuthUser();
 
@@ -43,6 +54,85 @@ const DeliveryOption = () => {
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_delivery_option);
     const { success: a_success } = useSelector((state) => state.add_delivery_option);
     const { success: u_success } = useSelector((state) => state.update_delivery_option);
+    const { is_open } = useSelector((state) => state.get_delivery_option_details);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        onQuickFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({ initialState });
+
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "delivery_name",
+            label: "Delivery Name",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "payout_country",
+            label: "Country",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payout_currency",
+            label: "Currency",
+            options: currencyOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payment_type",
+            label: "Payment Type",
+            options: paymentTypeOptions,
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            name: "payout_agent",
+            label: "Payout Agent",
+            partnerType: PartnerType.PAY,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "is_active",
+            label: "Status",
+            options: [
+                {
+                    label: "Active",
+                    value: true,
+                },
+                {
+                    label: "Inactive",
+                    value: false,
+                },
+            ],
+        },
+    ];
+
+    const sortByData = [
+        {
+            key: "Created Date",
+            value: "created_ts",
+        },
+        {
+            key: "Country",
+            value: "country_code",
+        },
+        {
+            key: "Payment Type",
+            value: "payment_type",
+        },
+        {
+            key: "Option Name",
+            value: "delivery_name",
+        },
+    ];
 
     useEffect(() => {
         dispatch(actions.get_all_delivery_option(filterSchema));
@@ -52,11 +142,11 @@ const DeliveryOption = () => {
     const columns = useMemo(
         () => [
             {
-                header: "ID",
-                accessorKey: "delivery_option_id",
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                header: "Option Name",
+                header: "Delivery Option",
                 accessorKey: "delivery_name",
             },
             {
@@ -73,157 +163,79 @@ const DeliveryOption = () => {
                 accessorKey: "country_code",
                 cell: ({ row, getValue }) => {
                     return (
-                        <Box>
+                        <Column>
                             <Typography component="p">{getValue() ? CountryName(getValue()) : "N/A"}</Typography>
                             <Typography color="grey.600" variant="caption">
                                 {row?.original?.currency_code ? CurrencyName(row?.original?.currency_code) : "N/A"}
                             </Typography>
-                        </Box>
+                        </Column>
+                    );
+                },
+            },
+            {
+                header: "Created At/By",
+                accessorKey: "created_ts",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                            <Typography>By: {row.original.created_by ? row.original.created_by : "-"}</Typography>
+                        </Column>
+                    );
+                },
+            },
+            {
+                header: "Update status",
+                accessorKey: "updated_ts",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                            <Typography>By: {row.original.updated_by ? row.original.updated_by : "-"}</Typography>
+                        </Column>
                     );
                 },
             },
             {
                 header: "Status",
                 accessorKey: "is_active",
-                cell: ({ getValue, row }) => (
-                    <>
-                        {can(permissions.EDIT_DELIVERY_OPTION) ? (
-                            <>
-                                <TableSwitch
-                                    value={getValue() ?? false}
-                                    data={row.original}
-                                    handleStatus={handleStatus}
-                                />
-                            </>
-                        ) : (
-                            <>{!!data.value ? "Active" : "Inactive"}</>
-                        )}
-                    </>
-                ),
+                cell: ({ getValue }) => <CustomerStatusBadge status={getValue() ? "active" : "inActive"} />,
             },
             {
                 header: "Actions",
                 accessorKey: "show",
                 cell: ({ row }) => (
-                    <TableRowActionContainer>
-                        <span onClick={() => row.toggleExpanded()}>
-                            {row.getIsExpanded() ? (
-                                <Tooltip title="Hide Delivery Option Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Show Delivery Option Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </span>
-                        <HasPermission permission={permissions.EDIT_DELIVERY_OPTION}>
-                            <AddDeliveryOption update={true} update_data={row?.original} />
-                        </HasPermission>
-                        <HasPermission permission={permissions.DELETE_DELIVERY_OPTION}>
-                            <Delete
-                                id={row.original.tid}
-                                handleDelete={handleDelete}
-                                loading={d_loading}
-                                tooltext="Delete Delivery Option"
-                            />
-                        </HasPermission>
-                    </TableRowActionContainer>
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                <ListItemButton
+                                    onClick={() => {
+                                        onClose();
+                                        dispatch(actions.get_delivery_option_details(row.original.tid));
+                                    }}
+                                >
+                                    View
+                                </ListItemButton>
+                                <HasPermission permission={permissions.EDIT_DELIVERY_OPTION}>
+                                    <AddDeliveryOption update={true} update_data={row?.original} enablePopoverAction />
+                                </HasPermission>
+                                <HasPermission permission={permissions.DELETE_DELIVERY_OPTION}>
+                                    <Delete
+                                        id={row.original.tid}
+                                        handleDelete={handleDelete}
+                                        loading={d_loading}
+                                        tooltext="Delete Delivery Option"
+                                        enablePopoverAction
+                                    />
+                                </HasPermission>
+                            </>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
         [],
     );
-
-    const sub_columns = [
-        { key: "delivery_option_id", name: "Id", type: "default" },
-        { key: "delivery_name", name: "Name", type: "default" },
-        { key: "payout_agent", name: "Payout Agent", type: "default" },
-        { key: "country_code", name: "Country", type: "country" },
-        { key: "currency_code", name: "Currency", type: "currency" },
-        {
-            key: "payment_type",
-            name: "Payment Type",
-            type: "reference",
-            ref_value: 1,
-        },
-        { key: "is_active", name: "Status", type: "boolean" },
-        { key: "created_ts", name: "Created Date", type: "date" },
-    ];
-
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleCountry = (e) => {
-        const country = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            payout_country: country,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handlePayemntType = (e) => {
-        const payment = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            payment_type: payment,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
 
     const handleDelete = (id) => {
         dispatch(actions.delete_delivery_option(id));
@@ -235,37 +247,54 @@ const DeliveryOption = () => {
 
     return (
         <PageContent
-            title="Delivery Options"
+            documentTitle="Delivery Options"
             topRightEndContent={
-                <HasPermission permission={permissions.CREATE_DELIVERY_OPTION}>
-                    <AddDeliveryOption update={false} />
-                </HasPermission>
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
+            breadcrumbs={[{ label: "Setup" }, { label: "Delivery Options" }]}
         >
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handlePayemntType={handlePayemntType}
-            />
-            <Spacer />
-            <TanstackReactTable
-                columns={columns}
-                title="Delivery Option Details"
-                data={deliveryoption_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                totalPage={deliveryoption_data?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={deliveryoption_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Delivery Options"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onClose={closeFilter}
+                    onDelete={onDeleteFilterParams}
+                />
+                <PageContentContainer
+                    title="Delivery Options"
+                    topRightContent={
+                        <>
+                            {/* <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                values={filterSchema}
+                                disabled={g_loading}
+                                sortByData={sortByData}
+                            /> */}
+                            <ExportUpload
+                                filename="Delivery Options"
+                                columns={columns}
+                                data={deliveryoption_data?.data || []}
+                                paginationData={deliveryoption_data?.pagination}
+                                apiEndpoint={apiEndpoints.GetDeliveryOptions}
+                            />
+                            <AddDeliveryOption update={false} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={deliveryoption_data?.data || []} loading={g_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={deliveryoption_data?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
+            <ViewDeliveryOptionModal open={is_open} />
         </PageContent>
     );
 };

@@ -1,23 +1,24 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useDispatch, useSelector } from "react-redux";
+import DialogContent from "@mui/material/DialogContent";
+import ListItemButton from "@mui/material/ListItemButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
-import PartnerActions from "./../../../Partner/store/actions";
+import Modal from "App/components/Modal/Modal";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -103,7 +104,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddPayoutLocation({ update_data, update }) {
+function AddPayoutLocation({ update_data, update, enablePopoverAction }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const { success: add_success, loading: add_loading } = useSelector((state) => state.add_payout_location);
@@ -136,65 +137,70 @@ function AddPayoutLocation({ update_data, update }) {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Payout Location" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                enablePopoverAction ? (
+                    <ListItemButton onClick={handleClickOpen}>Edit</ListItemButton>
+                ) : (
+                    <Tooltip title="Edit Payout Location" arrow>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </Tooltip>
+                )
             ) : (
-                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                    Add Payout Location
+                <AddButton
+                    size="medium"
+                    variant="contained"
+                    onClick={handleClickOpen}
+                    endIcon={<AddCircleOutlineIcon />}
+                >
+                    Create Payout Location
                 </AddButton>
             )}
-            <BootstrapDialog
+            <Modal
                 onClose={handleClose}
                 TransitionComponent={Transition}
                 aria-labelledby="customized-dialog-title"
                 open={open}
+                title={update ? "Update Payout Location" : "Create Payout Location"}
             >
-                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {update ? "Update" : "Create New"} Payout Location
-                </BootstrapDialogTitle>
-                <DialogContent dividers>
-                    {update ? (
-                        <AccountForm
-                            destroyOnUnmount
-                            initialValues={{
-                                tid: memoizedData?.tid,
-                                location_name: memoizedData?.location_name,
-                                location_code: memoizedData?.location_code,
-                                country: memoizedData?.country,
-                                currency: memoizedData?.currency,
-                                payment_type: memoizedData?.payment_type,
-                                is_active: memoizedData?.is_active,
-                            }}
-                            onSubmit={handlePayoutLocationUpdate}
-                            buttonText="Update"
-                            update={update}
-                            loading={update_loading}
-                            form={`update_payout_location_form`}
-                            handleClose={handleClose}
-                        />
-                    ) : (
-                        <AccountForm
-                            update={update}
-                            enableReinitialize={true}
-                            onSubmit={handlePayoutLocationSubmit}
-                            buttonText="Create"
-                            form={`add_payout_location_form`}
-                            loading={add_loading}
-                            handleClose={handleClose}
-                        />
-                    )}
-                </DialogContent>
-            </BootstrapDialog>
+                {update ? (
+                    <AccountForm
+                        destroyOnUnmount
+                        initialValues={{
+                            tid: memoizedData?.tid,
+                            location_name: memoizedData?.location_name,
+                            location_code: memoizedData?.location_code,
+                            country: memoizedData?.country,
+                            currency: memoizedData?.currency,
+                            payment_type: memoizedData?.payment_type,
+                            is_active: memoizedData?.is_active,
+                        }}
+                        onSubmit={handlePayoutLocationUpdate}
+                        buttonText="Update"
+                        update={update}
+                        loading={update_loading}
+                        form={`update_payout_location_form`}
+                        handleClose={handleClose}
+                    />
+                ) : (
+                    <AccountForm
+                        update={update}
+                        enableReinitialize={true}
+                        onSubmit={handlePayoutLocationSubmit}
+                        buttonText="Create"
+                        form={`add_payout_location_form`}
+                        loading={add_loading}
+                        handleClose={handleClose}
+                    />
+                )}
+            </Modal>
         </div>
     );
 }

@@ -1,8 +1,8 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -127,25 +127,25 @@ function DeleteDialog({
 
     return (
         <div>
-            <Tooltip title={tooltext} arrow>
-                {button ? (
-                    enablePopoverAction ? (
-                        <ListItemButton onClick={handleClickOpen}>Delete</ListItemButton>
-                    ) : (
-                        <DeleteButton
-                            onClick={handleClickOpen}
-                            endIcon={
-                                <DeleteOutlineOutlinedIcon
-                                    sx={{
-                                        fontSize: "16px",
-                                    }}
-                                />
-                            }
-                        >
-                            Delete
-                        </DeleteButton>
-                    )
-                ) : (
+            {enablePopoverAction ? (
+                <ListItemButton onClick={handleClickOpen}>Delete</ListItemButton>
+            ) : button ? (
+                <Tooltip title={tooltext} arrow>
+                    <DeleteButton
+                        onClick={handleClickOpen}
+                        endIcon={
+                            <DeleteOutlineOutlinedIcon
+                                sx={{
+                                    fontSize: "16px",
+                                }}
+                            />
+                        }
+                    >
+                        Delete
+                    </DeleteButton>
+                </Tooltip>
+            ) : (
+                <Tooltip title={tooltext} arrow>
                     <DeleteIcon
                         size="small"
                         loading={loading}
@@ -167,8 +167,8 @@ function DeleteDialog({
                             }}
                         />
                     </DeleteIcon>
-                )}
-            </Tooltip>
+                </Tooltip>
+            )}
             <BootstrapDialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
                 <DialogTitle textAlign="center" id="responsive-dialog-title">
                     {"Do you want to delete this?"}

@@ -73,7 +73,7 @@ export default function SourceDetails({
                         {item.label}
                     </Typography>
                     {isLoading ? (
-                        <Skeleton />
+                        <Skeleton width="20px" />
                     ) : (
                         <Box>
                             {typeof value === "string" ? (

@@ -1,24 +1,25 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
-import { Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-import AccountForm from "./Form";
+import DeliveryRoute from "./Form";
+import Modal from "App/components/Modal/Modal";
+
 import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
-import DeliveryRoute from "./Form";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -113,7 +114,7 @@ const filter = {
     order_by: "DESC",
 };
 
-function AddDeliveryRoute({ update_data, update }) {
+function AddDeliveryRoute({ update_data, update, enablePopoverAction }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [filterSchemaPay, setFilterSchemaPay] = React.useState({
@@ -186,103 +187,69 @@ function AddDeliveryRoute({ update_data, update }) {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Delivery Route" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                enablePopoverAction ? (
+                    <ListItemButton onClick={handleClickOpen}> Edit </ListItemButton>
+                ) : (
+                    <Tooltip title="Edit Delivery Route" arrow>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </Tooltip>
+                )
             ) : (
-                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                    Add Delivery Route
+                <AddButton
+                    size="medium"
+                    variant="contained"
+                    onClick={handleClickOpen}
+                    endIcon={<AddCircleOutlineIcon />}
+                >
+                    Create Delivery Route
                 </AddButton>
             )}
-            <BootstrapDialog
+            <Modal
                 onClose={handleClose}
-                TransitionComponent={Transition}
-                aria-labelledby="customized-dialog-title"
                 open={open}
+                title={update ? "Update Delivery Route" : "Create New Delivery Route"}
             >
-                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {update ? "Update" : "Create New"} Delivery Route
-                </BootstrapDialogTitle>
-                <DialogContent dividers>
-                    {/* {update ? (
-                        <AccountForm
-                            destroyOnUnmount
-                            initialValues={{
-                                tid: memoizedData?.tid,
-                                send_agent_id: memoizedData?.send_agent_id,
-                                payout_agent_id: memoizedData?.payout_agent_id,
-                                payout_country: memoizedData?.payout_country,
-                                payout_currency: memoizedData?.payout_currency,
-                                payment_type: memoizedData?.payment_type,
-                                is_active: memoizedData?.is_active,
-                            }}
-                            onSubmit={handleRouteUpdate}
-                            buttonText="Update"
-                            update={update}
-                            payout_country={memoizedData?.payout_country}
-                            loading={update_loading}
-                            form={`update_delivery_route_form`}
-                            handleClose={handleClose}
-                            handleAgent={handleAgent}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
-                        />
-                    ) : (
-                        <AccountForm
-                            update={update}
-                            enableReinitialize={true}
-                            onSubmit={handleRouteSubmit}
-                            buttonText="Create"
-                            form={`add_delivery_route_form`}
-                            loading={add_loading}
-                            handleAgent={handleAgent}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
-                            handleClose={handleClose}
-                        />
-                    )} */}
-                    {update ? (
-                        <DeliveryRoute
-                            initialValues={{
-                                tid: memoizedData?.tid,
-                                send_agent_id: memoizedData?.send_agent_id,
-                                payout_agent_id: memoizedData?.payout_agent_id,
-                                payout_country: memoizedData?.payout_country,
-                                payout_currency: memoizedData?.payout_currency,
-                                payment_type: memoizedData?.payment_type,
-                                is_active: memoizedData?.is_active,
-                            }}
-                            buttonText="Update"
-                            update={update}
-                            onSubmit={handleRouteUpdate}
-                            handleClose={handleClose}
-                            handleAgent={handleAgent}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
-                        />
-                    ) : (
-                        <DeliveryRoute
-                            update={update}
-                            buttonText="Create"
-                            onSubmit={handleRouteSubmit}
-                            loading={add_loading}
-                            handleAgent={handleAgent}
-                            partner_sending={partner_sending?.data || []}
-                            partner_payout={partner_payout?.data || []}
-                            handleClose={handleClose}
-                        />
-                    )}
-                </DialogContent>
-            </BootstrapDialog>
+                {update ? (
+                    <DeliveryRoute
+                        initialValues={{
+                            tid: memoizedData?.tid,
+                            send_agent_id: memoizedData?.send_agent_id,
+                            payout_agent_id: memoizedData?.payout_agent_id,
+                            payout_country: memoizedData?.payout_country,
+                            payout_currency: memoizedData?.payout_currency,
+                            payment_type: memoizedData?.payment_type,
+                            is_active: memoizedData?.is_active,
+                        }}
+                        buttonText="Update"
+                        update={update}
+                        onSubmit={handleRouteUpdate}
+                        handleClose={handleClose}
+                        handleAgent={handleAgent}
+                        partner_sending={partner_sending?.data || []}
+                        partner_payout={partner_payout?.data || []}
+                    />
+                ) : (
+                    <DeliveryRoute
+                        update={update}
+                        buttonText="Create"
+                        onSubmit={handleRouteSubmit}
+                        loading={add_loading}
+                        handleAgent={handleAgent}
+                        partner_sending={partner_sending?.data || []}
+                        partner_payout={partner_payout?.data || []}
+                        handleClose={handleClose}
+                    />
+                )}
+            </Modal>
         </div>
     );
 }

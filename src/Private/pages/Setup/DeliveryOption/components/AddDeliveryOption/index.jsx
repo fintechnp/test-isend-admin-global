@@ -1,24 +1,25 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import { Box } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
+import { Box, ListItemButton } from "@mui/material";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useDispatch, useSelector } from "react-redux";
+import DialogContent from "@mui/material/DialogContent";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import AccountForm from "./Form";
 import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
 import DeliveryOptionForm from "./Form";
+import Modal from "App/components/Modal/Modal";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -104,7 +105,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddDeliveryOption({ update_data, update }) {
+function AddDeliveryOption({ update_data, update, enablePopoverAction }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [filterSchema, setFilterSchema] = React.useState({
@@ -173,67 +174,71 @@ function AddDeliveryOption({ update_data, update }) {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Delivery Option" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                enablePopoverAction ? (
+                    <ListItemButton onClick={handleClickOpen}>Edit</ListItemButton>
+                ) : (
+                    <Tooltip title="Edit Delivery Option" arrow>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </Tooltip>
+                )
             ) : (
-                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
+                <AddButton
+                    size="medium"
+                    variant="contained"
+                    onClick={handleClickOpen}
+                    endIcon={<AddCircleOutlineIcon />}
+                >
                     Add Delivery Option
                 </AddButton>
             )}
-            <BootstrapDialog
+            <Modal
                 onClose={handleClose}
                 TransitionComponent={Transition}
-                aria-labelledby="customized-dialog-title"
                 open={open}
+                title={update ? "Update Delivery Option" : "Create Delivery Option"}
             >
-                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {update ? "Update" : "Create New"} Delivery Option
-                </BootstrapDialogTitle>
-                <DialogContent dividers>
-                    {update ? (
-                        <DeliveryOptionForm
-                            partnerList={partner_data?.data || []}
-                            initialValues={{
-                                payout_agent_id: memoizedData?.payout_agent_id,
-                                delivery_name: memoizedData?.delivery_name,
-                                payment_type: memoizedData?.payment_type,
-                                country_code: memoizedData?.country_code,
-                                currency_code: memoizedData?.currency_code,
-                                is_active: memoizedData?.is_active,
-                            }}
-                            buttonText="Update"
-                            update={update}
-                            payout_country={memoizedData?.country_code}
-                            user_type={update_data?.user_type}
-                            loading={update_loading}
-                            handleAgent={handleAgent}
-                            handleClose={handleClose}
-                            onSubmit={handleDeliveryOptionUpdate}
-                        />
-                    ) : (
-                        <DeliveryOptionForm
-                            partnerList={partner_data?.data || []}
-                            update={update}
-                            payout_country={memoizedData?.country_code}
-                            loading={add_loading}
-                            buttonText="Create"
-                            handleClose={handleClose}
-                            handleAgent={handleAgent}
-                            onSubmit={handleDeliveryOptionSubmit}
-                        />
-                    )}
-                </DialogContent>
-            </BootstrapDialog>
+                {update ? (
+                    <DeliveryOptionForm
+                        partnerList={partner_data?.data || []}
+                        initialValues={{
+                            payout_agent_id: memoizedData?.payout_agent_id,
+                            delivery_name: memoizedData?.delivery_name,
+                            payment_type: memoizedData?.payment_type,
+                            country_code: memoizedData?.country_code,
+                            currency_code: memoizedData?.currency_code,
+                            is_active: memoizedData?.is_active,
+                        }}
+                        buttonText="Update"
+                        update={update}
+                        payout_country={memoizedData?.country_code}
+                        user_type={update_data?.user_type}
+                        loading={update_loading}
+                        handleAgent={handleAgent}
+                        handleClose={handleClose}
+                        onSubmit={handleDeliveryOptionUpdate}
+                    />
+                ) : (
+                    <DeliveryOptionForm
+                        partnerList={partner_data?.data || []}
+                        update={update}
+                        payout_country={memoizedData?.country_code}
+                        loading={add_loading}
+                        buttonText="Create"
+                        handleClose={handleClose}
+                        handleAgent={handleAgent}
+                        onSubmit={handleDeliveryOptionSubmit}
+                    />
+                )}
+            </Modal>
         </div>
     );
 }
