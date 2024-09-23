@@ -1,4 +1,6 @@
 import { marked } from "marked";
+import { styled } from "@mui/styles";
+import Box from "@mui/material/Box";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,6 +12,19 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 import ParentPromoCodeForm from "./ParentPromoCodeForm";
 import HtmlToPlainText from "../HtmlToPlainText";
 import { promoCodeActions } from "../store";
+
+const StyledLoaderWrapper = styled(Box)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+    overflow: "auto",
+}));
 
 const EditPromoCode = () => {
     const dispatch = useDispatch();
@@ -96,12 +111,24 @@ const EditPromoCode = () => {
             documentTitle="Edit Campaign"
         >
             <PageContentContainer title="Edit Campaign">
-                <ParentPromoCodeForm
-                    isAddMode={false}
-                    isSubmitting={isLoading}
-                    handleSubmit={handleSubmit}
-                    initialValues={initialValues}
-                />
+                {isLoading && (
+                    <StyledLoaderWrapper>
+                        <ImageLoader />
+                    </StyledLoaderWrapper>
+                )}
+
+                <Box
+                    sx={{
+                        filter: isLoading ? "blur(4px)" : "none",
+                    }}
+                >
+                    <ParentPromoCodeForm
+                        isAddMode={false}
+                        isSubmitting={isLoading}
+                        handleSubmit={handleSubmit}
+                        initialValues={initialValues}
+                    />
+                </Box>
             </PageContentContainer>
         </PageContent>
     );

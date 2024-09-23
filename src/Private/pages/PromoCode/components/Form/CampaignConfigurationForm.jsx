@@ -44,7 +44,7 @@ export const CampaignConfigurationForm = ({ isAddMode, initialValues, displayMec
                     <FormTextField
                         type="number"
                         name="LimitPerPromo"
-                        label="Total redemptions Allowed"
+                        label="Total Redemptions Allowed"
                         control={control}
                     />
                 </Grid>

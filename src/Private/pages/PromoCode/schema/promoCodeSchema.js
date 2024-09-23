@@ -4,7 +4,7 @@ import { campaignEventTypes } from "../data/campaignEventTypesEnums";
 import { rewardTypeEnums } from "../data/rewardTypeEnums";
 
 const attributeConditionsSchema = Yup.object().shape({
-    attribute: Yup.number().required("Attribute is required").integer(),
+    attribute: Yup.number().typeError("Attribute is required").required("Attribute is required").integer(),
     criteria: Yup.number().required("Criteria is required").integer(),
     currency: Yup.string().test("currency-required", "Currency is required", function (value) {
         const { attribute } = this.parent;
@@ -27,16 +27,31 @@ const attributeConditionsSchema = Yup.object().shape({
 });
 
 const rewardsSchema = Yup.object().shape({
-    minimumAmount: Yup.number().required("Minimum amount is required").min(0.1),
+    minimumAmount: Yup.number()
+        .typeError("Minimum amount is required")
+        .required("Minimum amount is required")
+        .min(0.1, "Minimum Amount must be greater than or equal to 0.1"),
     maximumAmount: Yup.number()
+        .typeError("Maximum Amount is required")
         .required("Maximum amount is required")
         .min(Yup.ref("minimumAmount"), "Maximum amount must be greater than minimum amount"),
-    rewardOn: Yup.number().required("Reward on is required").integer(),
-    rewardType: Yup.number().required("Reward type is required").integer(),
-    rewardValue: Yup.number().required("Reward value is required").min(0.1),
+    rewardOn: Yup.number().typeError("Reward on is required").required("Reward on is required").integer(),
+    rewardType: Yup.number().typeError("Reward Type is required").required("Reward type is required").integer(),
+    rewardCategory: Yup.number()
+        .typeError("Reward Category is required")
+        .required("Reward category is required")
+        .integer(),
+    rewardValue: Yup.number()
+        .typeError("Reward value is required")
+        .required("Reward value is required")
+        .min(0.1, "Reward value must be greater than or equal to 0.1"),
     rewardLimit: Yup.number().when("rewardType", {
         is: (value) => value === rewardTypeEnums.PERCENTAGE,
-        then: (schema) => schema.required("Reward limit Must be at least 1").min(0.1),
+        then: (schema) =>
+            schema
+                .required("Reward limit must be at least 1")
+                .typeError("Reward limit must be greater than or equal to 0.1")
+                .min(0.1, "Reward limit must be greater than or equal to 0.1"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
 });
@@ -50,13 +65,13 @@ const referralFamilyConditionSchema = Yup.object().shape({
 
 export const createPromoCodeSchema = Yup.object().shape({
     Campaign: Yup.object().shape({
-        CampaignName: Yup.string().required("Campaign name is required"),
-        CampaignType: Yup.number().required("Campaign type is required"),
-        ValidCountry: Yup.string().required("Valid country is required"),
-        StartDate: Yup.string().required("Start date is required"),
-        EndDate: Yup.string().required("End date is required"),
+        CampaignName: Yup.string().required("Campaign Name is required"),
+        CampaignType: Yup.number().required("Campaign Type is required"),
+        ValidCountry: Yup.string().required("Valid Country is required"),
+        StartDate: Yup.string().required("Start Date is required"),
+        EndDate: Yup.string().required("End Date is required"),
         Status: Yup.number().required("Status is required").integer(),
-        Budget: Yup.number().required("Budget is required").min(0.1),
+        Budget: Yup.number().typeError("Budget is required").required("Budget is required").min(0),
     }),
     Rewards: Yup.array().of(rewardsSchema),
     DisplayMechanism: Yup.number().required("Display mechanism is required").integer(),
@@ -73,7 +88,7 @@ export const updatePromoCodeSchema = Yup.object().shape({
     Campaign: Yup.object().shape({
         StartDate: Yup.string().required("Start date is required"),
         EndDate: Yup.string().required("End date is required"),
-        Budget: Yup.number().required("Budget is required").min(0.1),
+        Budget: Yup.number().typeError("Budget is required").required("Budget is required").min(0),
         Status: Yup.number().required("Status is required").integer(),
     }),
     LimitPerUser: Yup.mixed().optional(),

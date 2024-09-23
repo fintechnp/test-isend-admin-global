@@ -62,7 +62,7 @@ function ListCampaignAttribute() {
                                     Edit
                                 </ListItemButton>
                             </HasPermission>
-                            <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
+                            {/* <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
                                 <ListItemButton
                                     onClick={() => {
                                         handleDelete(row.original.attributeFamilyId);
@@ -70,7 +70,7 @@ function ListCampaignAttribute() {
                                 >
                                     Delete
                                 </ListItemButton>
-                            </HasPermission>
+                            </HasPermission> */}
                         </>
                     )}
                 </PopoverButton>

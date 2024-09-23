@@ -17,6 +17,7 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 
 import { rewardTypeEnums } from "../../data/rewardTypeEnums";
+import { campaignRewardCatogoryEnums } from "../../data/campaignRewardCatogoryEnums";
 
 const CellContainer = styled(Box)(() => ({
     flex: 1,
@@ -44,6 +45,7 @@ const RewardConfigurationForm = ({
     rewardFields,
     rewardOnOptions,
     rewardTypeOptions,
+    campaignRewardEnumsOptions,
     addRewardFields,
     removeRewardFields,
 }) => {
@@ -52,29 +54,27 @@ const RewardConfigurationForm = ({
     return (
         <>
             <Grid item xs={12}>
-                <Grid marginTop={3} marginBottom={2} display="flex">
-                    <Grid item xs={12}>
-                        <Typography variant="h6">Reward Configuration</Typography>
-                    </Grid>
-                </Grid>
                 <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell width={450}>Minimum Amount</TableCell>
-                            <TableCell width={450}>Maximum Amount</TableCell>
-                            <TableCell width={450}>Reward On</TableCell>
-                            <TableCell width={450}>Reward Type</TableCell>
-                            <TableCell width={450}>Value</TableCell>
-                            <TableCell width={450}>Limit</TableCell>
-                            <TableCell width={200}>Action</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rewardFields.map((field, index) => {
-                            const rewardLimitDisplay = watch(`Rewards.${index}.rewardType`);
+                    {rewardFields.map((field, index) => (
+                        <React.Fragment key={`${field.id}_field`}>
+                            {index === 0 && (
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell width={450}>Minimum Amount</TableCell>
+                                        <TableCell width={450}>Maximum Amount</TableCell>
+                                        <TableCell width={450}>Reward On</TableCell>
+                                        <TableCell width={450}>Reward Type</TableCell>
+                                        <TableCell width={450}>Value</TableCell>
 
-                            return (
-                                <TableRow key={`${field.id}_field`}>
+                                        <TableCell width={450}>Limit</TableCell>
+
+                                        <TableCell width={450}>Reward Category</TableCell>
+                                        <TableCell width={200}>Action</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                            )}
+                            <TableBody>
+                                <TableRow>
                                     <TableCell>
                                         <CellContainer>
                                             <FormTextField
@@ -85,7 +85,6 @@ const RewardConfigurationForm = ({
                                             />
                                         </CellContainer>
                                     </TableCell>
-
                                     <TableCell>
                                         <CellContainer>
                                             <FormTextField
@@ -96,7 +95,6 @@ const RewardConfigurationForm = ({
                                             />
                                         </CellContainer>
                                     </TableCell>
-
                                     <TableCell>
                                         <CellContainer>
                                             <FormSelect
@@ -106,7 +104,6 @@ const RewardConfigurationForm = ({
                                             />
                                         </CellContainer>
                                     </TableCell>
-
                                     <TableCell>
                                         <CellContainer>
                                             <FormSelect
@@ -116,7 +113,6 @@ const RewardConfigurationForm = ({
                                             />
                                         </CellContainer>
                                     </TableCell>
-
                                     <TableCell>
                                         <CellContainer>
                                             <FormTextField
@@ -127,8 +123,7 @@ const RewardConfigurationForm = ({
                                             />
                                         </CellContainer>
                                     </TableCell>
-
-                                    {rewardLimitDisplay === rewardTypeEnums.PERCENTAGE ? (
+                                    {watch(`Rewards.${index}.rewardType`) === rewardTypeEnums.PERCENTAGE ? (
                                         <TableCell>
                                             <CellContainer>
                                                 <FormTextField
@@ -140,21 +135,27 @@ const RewardConfigurationForm = ({
                                             </CellContainer>
                                         </TableCell>
                                     ) : (
-                                        <TableCell>
+                                        <TableCell
+                                            sx={{
+                                                visibility: "none",
+                                            }}
+                                        >
                                             <CellContainer>
                                                 <CellDisabledFiled>
-                                                    <Typography
-                                                        sx={{
-                                                            textAlign: "left",
-                                                        }}
-                                                    >
-                                                        Limit
-                                                    </Typography>
+                                                    <Typography sx={{ textAlign: "left" }}>Limit</Typography>
                                                 </CellDisabledFiled>
                                             </CellContainer>
                                         </TableCell>
                                     )}
-
+                                    <TableCell>
+                                        <CellContainer>
+                                            <FormSelect
+                                                name={`Rewards.${index}.rewardCategory`}
+                                                options={campaignRewardEnumsOptions}
+                                                control={control}
+                                            />
+                                        </CellContainer>
+                                    </TableCell>
                                     <TableCell>
                                         <CellContainer sx={{ gap: 2 }}>
                                             {index > 0 ? (
@@ -171,29 +172,30 @@ const RewardConfigurationForm = ({
                                                     <CloseOutlinedIcon />
                                                 </Button>
                                             )}
+                                            <Button
+                                                onClick={() =>
+                                                    addRewardFields({
+                                                        minimumAmount: 0,
+                                                        maximumAmount: 0,
+                                                        rewardOn: 0,
+                                                        rewardType: 0,
+                                                        rewardValue: 0,
+                                                        rewardLimit: 0,
+                                                        rewardCategory: campaignRewardCatogoryEnums.Referrer,
+                                                    })
+                                                }
+                                                sx={{ marginTop: 2 }}
+                                                variant="contained"
+                                                size="large"
+                                            >
+                                                <AddOutlinedIcon fontSize="medium" />
+                                            </Button>
                                         </CellContainer>
                                     </TableCell>
                                 </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                    <Button
-                        onClick={() =>
-                            addRewardFields({
-                                minimumAmount: 0,
-                                maximumAmount: 0,
-                                rewardOn: 0,
-                                rewardType: 0,
-                                rewardValue: 0,
-                                rewardLimit: 0,
-                            })
-                        }
-                        sx={{ marginTop: 2 }}
-                        variant="contained"
-                        size="large"
-                    >
-                        <AddOutlinedIcon fontSize="medium" />
-                    </Button>
+                            </TableBody>
+                        </React.Fragment>
+                    ))}
                 </Table>
             </Grid>
         </>

@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -19,6 +19,11 @@ import attributeFamilyActions from "Private/features/attributeFamily/attributeFa
 
 import CampaignPromoForm from "./Form/CampaignPromoForm";
 import { rewardTypeOptions } from "../data/rewardTypeEnums";
+import {
+    campaignRewardCatogoryEnums,
+    campaignRewardCatogoryEnumsOptionsReferrer,
+    campaignRewardCatogoryEnumsOptionsReferee,
+} from "../data/campaignRewardCatogoryEnums";
 import { campaignStatusOptions } from "../data/campaignStatus";
 import CampaignReferralForm from "./Form/CampaignReferralForm";
 import { campaignEventTypes } from "../data/campaignEventTypesEnums";
@@ -35,6 +40,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
+    const [campaignRewardEnumsOptions, setCampaignRewardEnumsOptions] = useState([]);
 
     const { response } = useSelector((state) => state.get_countries);
 
@@ -94,6 +100,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                           rewardType: 0,
                           rewardValue: 0,
                           rewardLimit: 0,
+                          rewardCategory: campaignRewardCatogoryEnums.Referrer,
                       },
                   ],
                   TriggerCriteria: campaignTriggerCriteria.ALL_CONDITIONS_ARE_TRUE,
@@ -118,6 +125,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                           rewardType: initialValues?.rewardType || 0,
                           rewardValue: initialValues?.rewardValue || 0,
                           rewardLimit: initialValues?.rewardLimit || 0,
+                          rewardCategory: initialValues?.rewardCategory || 0,
                       },
                   ],
               },
@@ -133,8 +141,6 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
         formState: { errors },
     } = methods;
 
-    console.log(errors);
-
     useEffect(() => {
         if (!isAddMode) {
             setValue("Campaign.CampaignName", initialValues?.CampaignName);
@@ -149,6 +155,9 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             setValue("WebImage", initialValues?.WebImage);
             setValue("MobileImage", initialValues?.MobileImage);
             setValue("Description", initialValues?.Description);
+        }
+        if (isAddMode) {
+            setValue("Campaign.Budget", 0);
         }
     }, [initialValues]);
 
@@ -202,6 +211,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                       rewardType: field.rewardType,
                       rewardValue: field.rewardValue,
                       rewardLimit: field.rewardLimit,
+                      rewardCategory: field.rewardCategory,
                   }))
                 : [],
             DisplayMechanism: data.DisplayMechanism,
@@ -325,13 +335,29 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                     {/* Reward Configuration */}
 
                     {isAddMode && (
-                        <RewardConfigurationForm
-                            rewardFields={rewardFields}
-                            rewardOnOptions={rewardOnOptions}
-                            rewardTypeOptions={rewardTypeOptions}
-                            addRewardFields={addRewardFields}
-                            removeRewardFields={removeRewardFields}
-                        />
+                        <Grid item xs={12}>
+                            <Grid marginTop={3} marginBottom={2} display="flex">
+                                <Grid item xs={12}>
+                                    <Typography variant="h6">
+                                        {Campaign.CampaignType === campaignCodes.PROMO
+                                            ? "Reward Configuration"
+                                            : "Referral Reward Configuration"}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <RewardConfigurationForm
+                                rewardFields={rewardFields}
+                                rewardOnOptions={rewardOnOptions}
+                                rewardTypeOptions={rewardTypeOptions}
+                                campaignRewardEnumsOptions={
+                                    Campaign.CampaignType === campaignCodes.PROMO
+                                        ? campaignRewardCatogoryEnumsOptionsReferrer
+                                        : campaignRewardCatogoryEnumsOptionsReferee
+                                }
+                                addRewardFields={addRewardFields}
+                                removeRewardFields={removeRewardFields}
+                            />
+                        </Grid>
                     )}
 
                     {/* Last Part */}
