@@ -1,33 +1,37 @@
 import * as Yup from "yup";
-import { isAfter } from "date-fns";
-import { Link } from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { format, isAfter, parseISO } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Filter from "../Shared/Filter";
 import actions from "../store/actions";
+import Row from "App/components/Row/Row";
+import { ReferenceName } from "App/helpers";
 import Column from "App/components/Column/Column";
+import PhoneIcon from "App/components/Icon/PhoneIcon";
 import { TablePagination } from "App/components/Table";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import FilterButton from "App/components/Button/FilterButton";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import PageContent from "App/components/Container/PageContent";
-import { CountryName, ReferenceName, FormatDateTime } from "App/helpers";
+import CustomerAvatar from "App/components/Avatar/CustomerAvatar";
+import KycStat from "Private/pages/Customers/Search/components/KycStat";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
-import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 import KycStatusBadge from "Private/pages/Customers/Search/components/KycStatusBadge";
 import CustomerStatusBadge from "Private/pages/Customers/Search/components/CustomerStatusBadge";
 
 import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
 import PartnerType from "App/data/PartnerType";
+import calculateAge from "App/helpers/calculateAge";
+import { GenderStringOptions } from "App/data/Gender";
+import { getCustomerName } from "App/helpers/getFullName";
 import referenceTypeId from "Private/config/referenceTypeId";
-import Cookies from "js-cookie";
 
 const schema = Yup.object().shape({
     created_from_date: Yup.string().nullable().optional(),
@@ -39,27 +43,10 @@ const schema = Yup.object().shape({
             then: (schema) =>
                 Yup.string().test({
                     name: "is-after",
-                    message: "Member To must be after Member From",
+                    message: "To Date must be after From Date",
                     test: function (value) {
                         const { created_from_date } = this.parent;
                         return value ? isAfter(new Date(value), new Date(created_from_date)) : true;
-                    },
-                }),
-            otherwise: (schema) => Yup.string().nullable().optional(),
-        }),
-    kyc_from_date: Yup.string().nullable().optional(),
-    kyc_to_date: Yup.string()
-        .nullable()
-        .optional()
-        .when("kyc_from_date", {
-            is: (value) => !isEmpty(value),
-            then: (schema) =>
-                Yup.string().test({
-                    name: "is-after",
-                    message: "KYC To date must be after KYC From date",
-                    test: function (value) {
-                        const { kyc_from_date } = this.parent;
-                        return value ? isAfter(new Date(value), new Date(kyc_from_date)) : true;
                     },
                 }),
             otherwise: (schema) => Yup.string().nullable().optional(),
@@ -79,7 +66,9 @@ const StyledMail = styled(Typography)(({ theme }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 10,
+    created_from_date: dateUtils.getDateBeforeTwoWeeks(),
+    created_to_date: dateUtils.getTodayDate(),
     sort_by: "created_ts",
     order_by: "DESC",
 };
@@ -102,6 +91,10 @@ function CustomerReports(props) {
         ?.filter((ref_data) => ref_data.reference_type === 21)[0]
         .reference_data.map((data) => ({ ...data, label: data.name }));
 
+    const IdTypeOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.identityTypes)[0]
+        .reference_data.map((data) => ({ ...data, label: data.name }));
+
     const { response: CustomerReports, loading: l_loading } = useSelector((state) => state.get_customer_report);
 
     const {
@@ -117,18 +110,27 @@ function CustomerReports(props) {
         reset,
     } = useListFilterStore({
         initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "created_from_date",
+        toDateParamName: "created_to_date",
     });
 
     const filterFields = [
         {
-            type: fieldTypes.TEXTFIELD,
-            name: "customer_id",
-            label: "Customer Id",
+            type: fieldTypes.DATE,
+            name: "created_from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
         },
         {
-            type: fieldTypes.TEXTFIELD,
-            name: "name",
-            label: "Name",
+            type: fieldTypes.DATE,
+            name: "created_to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
         },
         {
             type: fieldTypes.COUNTRY_SELECT,
@@ -150,11 +152,6 @@ function CustomerReports(props) {
         },
         {
             type: fieldTypes.TEXTFIELD,
-            name: "id_number",
-            label: "Id Number",
-        },
-        {
-            type: fieldTypes.TEXTFIELD,
             name: "mobile_number",
             label: "Mobile Number",
         },
@@ -165,46 +162,76 @@ function CustomerReports(props) {
         },
         {
             type: fieldTypes.DATE,
-            name: "created_from_date",
-            label: "Member From",
-            props: {
-                withStartDayTimezone: true,
-            },
-        },
-        {
-            type: fieldTypes.DATE,
-            name: "created_to_date",
-            label: "Member To",
-            props: {
-                withEndDayTimezone: true,
-            },
-        },
-        {
-            type: fieldTypes.DATE,
             name: "date_of_birth",
             label: "Date of Birth",
         },
         {
             type: fieldTypes.SELECT,
+            name: "gender",
+            label: "Gender",
+            options: GenderStringOptions,
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "kyc_filled_date",
+            label: "KYC Filled Date",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "id_issue_date",
+            label: "Id Issue Date",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "id_expiry_date",
+            label: "Id Expiry Date",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "id_type",
+            label: "Id Type",
+            options: IdTypeOptions,
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "id_number",
+            label: "Id Number",
+        },
+        {
+            type: fieldTypes.SELECT,
             name: "kyc_status",
-            label: "Status",
+            label: "KYC Status",
             options: KycStatusOptions,
         },
         {
-            type: fieldTypes.DATE,
-            name: "kyc_from_date",
-            label: "Kyc Date From",
-            props: {
-                withStartDayTimezone: true,
-            },
+            type: fieldTypes.SELECT,
+            name: "is_active",
+            label: "Account Status",
+            options: [
+                {
+                    label: "Active",
+                    value: true,
+                },
+                {
+                    label: "Inactive",
+                    value: false,
+                },
+            ],
         },
         {
-            type: fieldTypes.DATE,
-            name: "kyc_to_date",
-            label: "Kyc Date To",
-            props: {
-                withEndDayTimezone: true,
-            },
+            type: fieldTypes.SELECT,
+            name: "is_deleted",
+            label: "Is Deleted",
+            options: [
+                {
+                    label: "Yes",
+                    value: true,
+                },
+                {
+                    label: "No",
+                    value: false,
+                },
+            ],
         },
     ];
 
@@ -227,113 +254,140 @@ function CustomerReports(props) {
     const columns = useMemo(
         () => [
             {
-                header: "Id",
-                accessorKey: "tid",
-                cell: ({ row, getValue }) => (
-                    <Link to={`/customer/details/${row.original.tid}`} style={{ textDecoration: "none" }}>
-                        {getValue() ? getValue() : "N/A"}
-                    </Link>
-                ),
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                header: "Name",
+                header: "Customer Details",
                 accessorKey: "first_name",
+                cell: ({ row }) => {
+                    const age = calculateAge(row.original.date_of_birth);
+
+                    const caption = [age ? `${age} y` : "", row.original.gender].filter((value) => !isEmpty(value));
+
+                    return (
+                        <Row gap="8px">
+                            <CustomerAvatar
+                                name={getCustomerName(row.original)}
+                                countryIso2Code={row.original.country_ios2}
+                            />
+                            <Column>
+                                <Typography fontWeight={500}>
+                                    {getCustomerName(row.original)} ({row.original.customer_id})
+                                </Typography>
+                                <Row alignItems="center" gap="2px">
+                                    <PhoneIcon />
+                                    <Typography variant="caption">
+                                        {!isEmpty(row.original.phone_number)
+                                            ? row.original.phone_number
+                                            : row.original.mobile_number}
+                                        {caption.length > 0 ? ", " : null} {caption.join(" / ")}
+                                    </Typography>
+                                </Row>
+                            </Column>
+                        </Row>
+                    );
+                },
+            },
+            {
+                header: "Address Details",
+                accessorKey: "address",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? getValue() : "-"}</Typography>
+                            <Typography>
+                                {row.original.street ? row.original.street : "-"},{" "}
+                                {row.original.city ? row.original.city : "-"}
+                            </Typography>
+                            <Typography>
+                                {row.original.state ? row.original.state : "-"},{" "}
+                                {row.original.country ? row.original.country : "-"}
+                            </Typography>
+                        </Column>
+                    );
+                },
+            },
+            {
+                header: "Contact Details",
+                accessorKey: "email",
                 cell: ({ row, getValue }) => (
-                    <>
+                    <Column>
                         <Typography>
-                            {getValue()} {row.original?.middle_name} {row.original?.last_name}
+                            {" "}
+                            {!isEmpty(row.original.phone_number)
+                                ? row.original.phone_number
+                                : row.original.mobile_number}
                         </Typography>
-                        <Typography
-                            sx={{
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {row.original?.customer_type_data ? row.original?.customer_type_data : "-"}
-                        </Typography>
-                    </>
-                ),
-            },
-            {
-                header: "Identity",
-                accessorKey: "id_type",
-                cell: ({ row, getValue }) => (
-                    <>
-                        <Typography>{getValue() ? getValue() : ""}</Typography>
-                        <Typography
-                            sx={{
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {row.original?.id_number ? row.original?.id_number : "-"}
-                        </Typography>
-                    </>
-                ),
-            },
-            {
-                header: "Address",
-                accessorKey: "country",
-                cell: ({ row, getValue }) => (
-                    <>
-                        <Typography>
-                            {row.original?.postcode} {row.original?.unit} {row.original?.street} {row.original?.address}
-                        </Typography>
-                        <Typography sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {row.original?.state}
-                            {row.original?.state && ","} {CountryName(getValue())}
-                        </Typography>
-                    </>
-                ),
-            },
-            {
-                header: "Contact",
-                accessorKey: "mobile_number",
-                cell: ({ row, getValue }) => (
-                    <>
-                        <Typography
-                            sx={{
-                                fontSize: "13px",
-                            }}
-                        >
+                        <Typography sx={{ color: (theme) => theme.palette.text.main }}>
                             {getValue() ? getValue() : "-"}
                         </Typography>
-                        <Tooltip title={row.original?.email} arrow>
-                            <StyledMail
-                                component="p"
-                                sx={{
-                                    fontSize: "13px",
-                                    opacity: 0.6,
-                                }}
-                            >
-                                {row.original?.email ? row.original?.email : "N/A"}
-                            </StyledMail>
-                        </Tooltip>
-                    </>
+                    </Column>
+                ),
+            },
+            {
+                header: "KYC Document",
+                accessorKey: "id_type",
+                cell: ({ getValue }) => (
+                    <>{getValue() ? ReferenceName(referenceTypeId.kycDocuments, getValue()) : "-"}</>
+                ),
+            },
+            {
+                header: "Id Number",
+                accessorKey: "id_number",
+            },
+
+            {
+                header: "Id",
+                accessorKey: "id_issue_date",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>
+                            Issue: {getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}
+                        </Typography>
+                        <Typography>
+                            Expiry:{" "}
+                            {row.original.id_expiry_date
+                                ? format(parseISO(row.original.id_expiry_date), "MMM dd, yyyy")
+                                : "-"}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
                 header: "KYC Status",
                 accessorKey: "kyc_status",
                 cell: ({ row, getValue }) => (
-                    <>
-                        <KycStatusBadge
-                            status={getValue()}
-                            label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : "Not Started"}
-                        />
-                        <Typography mt="5px">{row.original?.address ? row.original?.address : "-"}</Typography>
-                    </>
+                    <KycStatusBadge
+                        status={getValue()}
+                        label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : "Not Started"}
+                    />
                 ),
             },
             {
-                header: "Since/Status",
+                header: "Registered At/By",
                 accessorKey: "created_ts",
-                cell: ({ row, getValue }) => (
-                    <>
-                        <Typography mb="5px">{FormatDateTime(getValue())}</Typography>
-                        <CustomerStatusBadge status={row.original?.is_active ? "active" : "blocked"} />
-                    </>
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}</Typography>
+                        <Typography>{row.original?.created_by ? row.original?.created_by : "-"}</Typography>
+                    </Column>
                 ),
+            },
+            {
+                header: "Updated At/By",
+                accessorKey: "updated_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}</Typography>
+                        <Typography>{row.original?.updated_by ? row.original?.updated_by : "-"}</Typography>
+                    </Column>
+                ),
+            },
+            {
+                header: "Account Status",
+                accessorKey: "is_active",
+                cell: ({ getValue }) => <CustomerStatusBadge status={getValue() ? "active" : "blocked"} />,
             },
         ],
         [],
@@ -414,23 +468,14 @@ function CustomerReports(props) {
                 <PageContentContainer
                     title="Customers"
                     topRightContent={
-                        <>
-                            <Filter
-                                fileName="CustomerReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                csvReport={csvReport}
-                                state={filterSchema}
-                                downloadData={downloadData}
-                            />
-                            <TableGridQuickFilter
-                                onSortByChange={onQuickFilter}
-                                onOrderByChange={onQuickFilter}
-                                disabled={l_loading}
-                                sortByData={sortData}
-                                values={filterSchema}
-                            />
-                        </>
+                        <Filter
+                            fileName="CustomerReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
                     }
                 >
                     <TanstackReactTable columns={columns} data={CustomerReports?.data || []} loading={l_loading} />
@@ -439,6 +484,11 @@ function CustomerReports(props) {
                     paginationData={CustomerReports?.pagination}
                     handleChangePage={onPageChange}
                     handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+                <KycStat
+                    fromDate={filterSchema?.created_from_date}
+                    toDate={filterSchema?.created_to_date}
+                    pageName="customer_report"
                 />
             </Column>
         </PageContent>
