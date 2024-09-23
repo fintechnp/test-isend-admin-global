@@ -559,6 +559,10 @@ const privateRoutes = [
         component: <TransactionsDetails title="Transaction Details" />,
     },
     {
+        path: "/transactions/details/:id",
+        component: <TransactionsDetails title="Transaction Details" />,
+    },
+    {
         path: "/transaction/documents/:id",
         component: <TransactionDocuments />,
     },

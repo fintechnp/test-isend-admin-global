@@ -305,6 +305,14 @@ export default function Details({ isAML = false, data: transData }) {
             label: `${transactionData?.transaction_status}`,
             date: `${dateUtils.getLocalDateTimeFromUTC(transactionData?.created_ts)}`,
         },
+        ...(transactionData?.send_status
+            ? [
+                  {
+                      label: `${transactionData.send_status}`,
+                      date: `${transactionData?.updated_ts ? dateUtils.getLocalDateTimeFromUTC(transactionData?.updated_ts) : "-"}`,
+                  },
+              ]
+            : []),
     ];
 
     const transactionStatusDefinition = transactionStatus.map((item, index) => (

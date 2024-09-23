@@ -43,8 +43,10 @@ const StyledName = styled(Typography)(({ theme }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 10,
     status: null,
+    from_date: dateUtils.getDateBeforeTwoWeeks(),
+    to_date: dateUtils.getTodayDate(),
     sort_by: "created_ts",
     order_by: "DESC",
 };
@@ -118,7 +120,10 @@ function Search(props) {
         onQuickFilter,
         onFilterSubmit,
         reset,
-    } = useListFilterStore({ initialState });
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+    });
 
     useEffect(() => {
         dispatch(actions.get_transactions(filterSchema));
@@ -173,7 +178,7 @@ function Search(props) {
                                 avatarDimension={20}
                                 smallAvatarDimension={0}
                             />
-                            <Typography variant="body2">
+                            <Typography>
                                 {row.original.customer_name}&nbsp;({row.original.customer_id_number})
                             </Typography>
                         </Row>
@@ -194,7 +199,7 @@ function Search(props) {
                                 avatarDimension={20}
                                 smallAvatarDimension={0}
                             />
-                            <Typography>
+                            <Typography variant="body2">
                                 {row.original.beneficiary_name}&nbsp;({row?.original?.customer_id})
                             </Typography>
                         </Row>
@@ -298,11 +303,31 @@ function Search(props) {
                 accessorKey: "send_status_code",
                 cell: ({ row }) => <StatusBadge status={row.original.send_status_code} />,
             },
+            {
+                header: "Partner",
+                accessorKey: "agent_name",
+            },
         ],
         [],
     );
 
     const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            label: "From Date",
+            name: "from_date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            label: "To Date",
+            name: "to_date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
         {
             type: fieldTypes.TEXTFIELD,
             label: "Full Name",
@@ -342,17 +367,13 @@ function Search(props) {
             type: fieldTypes.PARTNER_SELECT,
             label: "Sending Agent",
             name: "sending_agent_id",
-            props: {
-                partnerType: PartnerType.SEND,
-            },
+            partnerType: PartnerType.SEND,
         },
         {
             type: fieldTypes.PARTNER_SELECT,
             label: "Payout Agent",
             name: "payout_agent_id",
-            props: {
-                partnerType: PartnerType.PAY,
-            },
+            partnerType: PartnerType.PAY,
         },
         {
             type: fieldTypes.SELECT,
@@ -365,22 +386,6 @@ function Search(props) {
             label: "Status",
             name: "status",
             options: statusOptions,
-        },
-        {
-            type: fieldTypes.DATE,
-            label: "From Date",
-            name: "from_date",
-            props: {
-                withStartDayTimezone: true,
-            },
-        },
-        {
-            type: fieldTypes.DATE,
-            label: "To Date",
-            name: "to_date",
-            props: {
-                withEndDayTimezone: true,
-            },
         },
     ];
 
@@ -401,7 +406,11 @@ function Search(props) {
     };
 
     const downloadData = () => {
-        dispatch(downloadActions.download_report(filterSchema, "transaction"));
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 10000,
+        };
+        dispatch(downloadActions.download_report(updatedFilterSchema, "transaction"));
     };
 
     return (
@@ -432,23 +441,14 @@ function Search(props) {
                 <PageContentContainer
                     title="Transaction List"
                     topRightContent={
-                        <>
-                            <Filter
-                                fileName="TransactionReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                csvReport={csvReport}
-                                state={filterSchema}
-                                downloadData={downloadData}
-                            />
-                            <TableGridQuickFilter
-                                sortByData={sortData}
-                                onOrderByChange={onQuickFilter}
-                                onSortByChange={onQuickFilter}
-                                disabled={l_loading}
-                                values={filterSchema}
-                            />
-                        </>
+                        <Filter
+                            fileName="TransactionReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
                     }
                 >
                     <TanstackReactTable columns={columns} data={transactionsData?.data || []} loading={l_loading} />
