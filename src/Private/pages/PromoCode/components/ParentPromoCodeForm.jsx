@@ -19,14 +19,10 @@ import attributeFamilyActions from "Private/features/attributeFamily/attributeFa
 
 import CampaignPromoForm from "./Form/CampaignPromoForm";
 import { rewardTypeOptions } from "../data/rewardTypeEnums";
-import {
-    campaignRewardCatogoryEnums,
-    campaignRewardCatogoryEnumsOptionsReferrer,
-    campaignRewardCatogoryEnumsOptionsReferee,
-} from "../data/campaignRewardCatogoryEnums";
+import { campaignRewardCatogoryEnums } from "../data/campaignRewardCatogoryEnums";
 import { campaignStatusOptions } from "../data/campaignStatus";
 import CampaignReferralForm from "./Form/CampaignReferralForm";
-import { campaignEventTypes } from "../data/campaignEventTypesEnums";
+import { campaignEventTypes, campaignEventTypesOptions } from "../data/campaignEventTypesEnums";
 import CampaignInformationForm from "./Form/CampaignInformationForm";
 import RewardConfigurationForm from "./Form/RewardConfigurationForm";
 import { triggerAttributeTypes } from "../data/triggerAttributeTypesEnums";
@@ -35,12 +31,11 @@ import { CampaignConfigurationForm } from "./Form/CampaignConfigurationForm";
 import { createPromoCodeSchema, updatePromoCodeSchema } from "../schema/promoCodeSchema";
 import { DisplayMechanismEnums, displayMechanismsOptions } from "../data/displayMechanismEnums";
 import { campaignTriggerCriteria, campaignTriggerCriteriaOptions } from "../data/campaignTriggerCriteria";
+import RefereeRewardConfigurationForm from "./Form/RefereeRewardConfigurationForm";
 
 export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
-    const [campaignRewardEnumsOptions, setCampaignRewardEnumsOptions] = useState([]);
 
     const { response } = useSelector((state) => state.get_countries);
 
@@ -101,6 +96,18 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                           rewardValue: 0,
                           rewardLimit: 0,
                           rewardCategory: campaignRewardCatogoryEnums.Referrer,
+                      },
+                  ],
+
+                  RefereeRewards: [
+                      {
+                          minimumAmount: 0,
+                          maximumAmount: 0,
+                          rewardOn: rewardOnEnums.SERVICE_CHARGE,
+                          rewardType: 0,
+                          rewardValue: 0,
+                          rewardLimit: 0,
+                          rewardCategory: campaignRewardCatogoryEnums.Referee,
                       },
                   ],
                   TriggerCriteria: campaignTriggerCriteria.ALL_CONDITIONS_ARE_TRUE,
@@ -183,6 +190,15 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
     });
 
     const {
+        fields: refereeRewardFields,
+        append: addRefereeRewardFields,
+        remove: removeRefereeRewardFields,
+    } = useFieldArray({
+        control,
+        name: "RefereeRewards",
+    });
+
+    const {
         fields: triggerReferrerFields,
         append: addtriggerReferrerFields,
         remove: removetriggerReferrerFields,
@@ -194,6 +210,20 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
     const onSubmit = (data) => {
         const { CampaignType } = data.Campaign;
 
+        // Combine both Rewards and RefereeRewards into a single array
+        const combinedRewards = [
+            ...(Array.isArray(data.Rewards) ? data.Rewards : []),
+            ...(Array.isArray(data.RefereeRewards) ? data.RefereeRewards : []),
+        ].map((field) => ({
+            minimumAmount: field.minimumAmount,
+            maximumAmount: field.maximumAmount,
+            rewardOn: field.rewardOn,
+            rewardType: field.rewardType,
+            rewardValue: field.rewardValue,
+            rewardLimit: field.rewardLimit,
+            rewardCategory: field.rewardCategory,
+        }));
+
         const formattedData = {
             "Campaign.CampaignName": data.Campaign.CampaignName,
             "Campaign.CampaignType": data.Campaign.CampaignType,
@@ -203,17 +233,9 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             "Campaign.Status": data.Campaign.Status,
             "Campaign.Budget": data.Campaign.Budget,
 
-            Rewards: Array.isArray(data.Rewards)
-                ? data.Rewards.map((field) => ({
-                      minimumAmount: field.minimumAmount,
-                      maximumAmount: field.maximumAmount,
-                      rewardOn: field.rewardOn,
-                      rewardType: field.rewardType,
-                      rewardValue: field.rewardValue,
-                      rewardLimit: field.rewardLimit,
-                      rewardCategory: field.rewardCategory,
-                  }))
-                : [],
+            // Set combined rewards under the single Rewards key
+            Rewards: combinedRewards,
+
             DisplayMechanism: data.DisplayMechanism,
             TriggerCriteria: data.TriggerCriteria,
             LimitPerUser: data.LimitPerUser ?? 0,
@@ -222,11 +244,8 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             AttributeConditions: Array.isArray(data.AttributeConditions)
                 ? data.AttributeConditions.map((field) => ({
                       attribute: field?.attribute,
-
                       criteria: field?.criteria,
-
                       currency: field?.currency ?? "",
-
                       amount: field?.amount ?? 0,
                   }))
                 : [],
@@ -239,11 +258,8 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             formattedData.AttributeConditions = Array.isArray(data.AttributeConditions)
                 ? data.AttributeConditions.map((field) => ({
                       attribute: field.attribute,
-
                       criteria: field.criteria,
-
                       currency: field.currency ?? "",
-
                       amount: field.amount ?? 0,
                   }))
                 : [];
@@ -270,10 +286,20 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                     });
                 });
             } else {
-                formData.append(key, formattedData[key]);
+                // Append WebImage and MobileImage only if they have values
+                if (key === "WebImage" && formattedData.WebImage) {
+                    formData.append(key, formattedData.WebImage);
+                } else if (key === "MobileImage" && formattedData.MobileImage) {
+                    formData.append(key, formattedData.MobileImage);
+                } else if (key !== "WebImage" && key !== "MobileImage") {
+                    formData.append(key, formattedData[key]);
+                }
             }
         });
 
+        // Send formData to your API
+        console.log("Submitting:", formData);
+        // Replace with your API call
         handleSubmit(formData);
     };
 
@@ -345,18 +371,32 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                                     </Typography>
                                 </Grid>
                             </Grid>
+
                             <RewardConfigurationForm
                                 rewardFields={rewardFields}
                                 rewardOnOptions={rewardOnOptions}
                                 rewardTypeOptions={rewardTypeOptions}
-                                campaignRewardEnumsOptions={
-                                    Campaign.CampaignType === campaignCodes.PROMO
-                                        ? campaignRewardCatogoryEnumsOptionsReferrer
-                                        : campaignRewardCatogoryEnumsOptionsReferee
-                                }
                                 addRewardFields={addRewardFields}
                                 removeRewardFields={removeRewardFields}
                             />
+
+                            {Campaign.CampaignType === campaignCodes.REFERRAL && (
+                                <Grid>
+                                    <Grid marginTop={3} marginBottom={2} display="flex">
+                                        <Grid item xs={12}>
+                                            <Typography variant="h6">Referee Reward Configuration</Typography>
+                                        </Grid>
+                                    </Grid>
+
+                                    <RefereeRewardConfigurationForm
+                                        refereeRewardFields={refereeRewardFields}
+                                        addRefereeRewardFields={addRefereeRewardFields}
+                                        removeRefereeRewardFields={removeRefereeRewardFields}
+                                        rewardOnOptions={rewardOnOptions}
+                                        rewardTypeOptions={rewardTypeOptions}
+                                    />
+                                </Grid>
+                            )}
                         </Grid>
                     )}
 

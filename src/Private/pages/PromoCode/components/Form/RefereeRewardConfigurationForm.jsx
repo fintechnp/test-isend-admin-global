@@ -20,7 +20,6 @@ import { rewardTypeEnums } from "../../data/rewardTypeEnums";
 import {
     campaignRewardCatogoryEnums,
     campaignRewardCatogoryEnumsOptionsReferee,
-    campaignRewardCatogoryEnumsOptionsReferrer,
 } from "../../data/campaignRewardCatogoryEnums";
 
 const CellContainer = styled(Box)(() => ({
@@ -45,27 +44,39 @@ const CellDisabledFiled = styled(Box)(() => ({
     cursor: "not-allowed",
 }));
 
-const RewardConfigurationForm = ({
-    rewardFields,
+const RefereeRewardConfigurationForm = ({
+    refereeRewardFields,
     rewardOnOptions,
     rewardTypeOptions,
     campaignRewardEnumsOptions,
-    addRewardFields,
-    removeRewardFields,
+    addRefereeRewardFields,
+    removeRefereeRewardFields,
 }) => {
     const { control, watch, setValue } = useFormContext();
 
     useEffect(() => {
-        rewardFields.forEach((_, index) => {
-            setValue(`Rewards.${index}.rewardCategory`, campaignRewardCatogoryEnumsOptionsReferrer[0].value);
+        refereeRewardFields.forEach((_, index) => {
+            setValue(`RefereeRewards.${index}.rewardCategory`, campaignRewardCatogoryEnumsOptionsReferee[0].value);
         });
-    }, [rewardFields, setValue]);
+    }, [refereeRewardFields, setValue]);
+
+    const handleAddField = () => {
+        addRefereeRewardFields({
+            minimumAmount: 0,
+            maximumAmount: 0,
+            rewardOn: 0,
+            rewardType: 0,
+            rewardValue: 0,
+            rewardLimit: 0,
+            rewardCategory: campaignRewardCatogoryEnums.Referrer,
+        });
+    };
 
     return (
         <>
             <Grid item xs={12}>
                 <Table>
-                    {rewardFields.map((field, index) => (
+                    {refereeRewardFields.map((field, index) => (
                         <React.Fragment key={`${field.id}_field`}>
                             {index === 0 && (
                                 <TableHead>
@@ -75,14 +86,12 @@ const RewardConfigurationForm = ({
                                         <TableCell width={450}>Reward On</TableCell>
                                         <TableCell width={450}>Reward Type</TableCell>
                                         <TableCell width={450}>Value</TableCell>
-
                                         <TableCell width={450}>Limit</TableCell>
-
                                         <TableCell
+                                            width={450}
                                             sx={{
                                                 display: "none",
                                             }}
-                                            width={450}
                                         >
                                             Reward Category
                                         </TableCell>
@@ -97,7 +106,7 @@ const RewardConfigurationForm = ({
                                             <FormTextField
                                                 label="Minimum Amount"
                                                 type="number"
-                                                name={`Rewards.${index}.minimumAmount`}
+                                                name={`RefereeRewards.${index}.minimumAmount`}
                                                 control={control}
                                             />
                                         </CellContainer>
@@ -107,7 +116,7 @@ const RewardConfigurationForm = ({
                                             <FormTextField
                                                 label="Maximum Amount"
                                                 type="number"
-                                                name={`Rewards.${index}.maximumAmount`}
+                                                name={`RefereeRewards.${index}.maximumAmount`}
                                                 control={control}
                                             />
                                         </CellContainer>
@@ -115,7 +124,7 @@ const RewardConfigurationForm = ({
                                     <TableCell>
                                         <CellContainer>
                                             <FormSelect
-                                                name={`Rewards.${index}.rewardOn`}
+                                                name={`RefereeRewards.${index}.rewardOn`}
                                                 options={rewardOnOptions}
                                                 control={control}
                                             />
@@ -124,7 +133,7 @@ const RewardConfigurationForm = ({
                                     <TableCell>
                                         <CellContainer>
                                             <FormSelect
-                                                name={`Rewards.${index}.rewardType`}
+                                                name={`RefereeRewards.${index}.rewardType`}
                                                 options={rewardTypeOptions}
                                                 control={control}
                                             />
@@ -135,28 +144,24 @@ const RewardConfigurationForm = ({
                                             <FormTextField
                                                 label="Value"
                                                 type="number"
-                                                name={`Rewards.${index}.rewardValue`}
+                                                name={`RefereeRewards.${index}.rewardValue`}
                                                 control={control}
                                             />
                                         </CellContainer>
                                     </TableCell>
-                                    {watch(`Rewards.${index}.rewardType`) === rewardTypeEnums.PERCENTAGE ? (
+                                    {watch(`RefereeRewards.${index}.rewardType`) === rewardTypeEnums.PERCENTAGE ? (
                                         <TableCell>
                                             <CellContainer>
                                                 <FormTextField
                                                     label="Limit"
                                                     type="number"
-                                                    name={`Rewards.${index}.rewardLimit`}
+                                                    name={`RefereeRewards.${index}.rewardLimit`}
                                                     control={control}
                                                 />
                                             </CellContainer>
                                         </TableCell>
                                     ) : (
-                                        <TableCell
-                                            sx={{
-                                                display: "none",
-                                            }}
-                                        >
+                                        <TableCell sx={{ visibility: "none" }}>
                                             <CellContainer>
                                                 <CellDisabledFiled>
                                                     <Typography sx={{ textAlign: "left" }}>Limit</Typography>
@@ -171,9 +176,8 @@ const RewardConfigurationForm = ({
                                     >
                                         <CellContainer>
                                             <FormSelect
-                                                type="hidden"
-                                                name={`Rewards.${index}.rewardCategory`}
-                                                options={campaignRewardCatogoryEnumsOptionsReferrer}
+                                                name={`RefereeRewards.${index}.rewardCategory`}
+                                                options={campaignRewardCatogoryEnumsOptionsReferee}
                                                 control={control}
                                             />
                                         </CellContainer>
@@ -185,30 +189,16 @@ const RewardConfigurationForm = ({
                                                     size="small"
                                                     color="error"
                                                     variant="contained"
-                                                    onClick={() => removeRewardFields(index)}
+                                                    onClick={() => removeRefereeRewardFields(index)}
                                                 >
-                                                    <CloseOutlinedIcon />
+                                                    <CloseOutlinedIcon fontSize="small" />
                                                 </Button>
                                             ) : (
                                                 <Button size="small" color="error" variant="contained" disabled>
                                                     <CloseOutlinedIcon />
                                                 </Button>
                                             )}
-                                            <Button
-                                                onClick={() =>
-                                                    addRewardFields({
-                                                        minimumAmount: 0,
-                                                        maximumAmount: 0,
-                                                        rewardOn: 0,
-                                                        rewardType: 0,
-                                                        rewardValue: 0,
-                                                        rewardLimit: 0,
-                                                        rewardCategory: campaignRewardCatogoryEnums.Referrer,
-                                                    })
-                                                }
-                                                variant="contained"
-                                                size="small"
-                                            >
+                                            <Button onClick={handleAddField} variant="contained" size="small">
                                                 <AddOutlinedIcon fontSize="medium" />
                                             </Button>
                                         </CellContainer>
@@ -223,4 +213,4 @@ const RewardConfigurationForm = ({
     );
 };
 
-export default RewardConfigurationForm;
+export default RefereeRewardConfigurationForm;

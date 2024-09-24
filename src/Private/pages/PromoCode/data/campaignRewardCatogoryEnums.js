@@ -8,6 +8,10 @@ export const campaignRewardCatogoryEnumsOptionsReferrer = [
 ];
 
 export const campaignRewardCatogoryEnumsOptionsReferee = [
+    { label: "Referee", value: campaignRewardCatogoryEnums.Referee },
+];
+
+export const campaignRewardCatogoryEnumsOptions = [
     { label: "Referrer", value: campaignRewardCatogoryEnums.Referrer },
     { label: "Referee", value: campaignRewardCatogoryEnums.Referee },
 ];

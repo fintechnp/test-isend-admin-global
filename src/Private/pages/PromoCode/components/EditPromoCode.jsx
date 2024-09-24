@@ -1,9 +1,10 @@
 import { marked } from "marked";
-import { styled } from "@mui/styles";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/styles";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { ReactComponent as ImageLoader } from "/src/assets/isend/isend-Loader.svg";
 
 import routePaths from "Private/config/routePaths";
 import PageContent from "App/components/Container/PageContent";

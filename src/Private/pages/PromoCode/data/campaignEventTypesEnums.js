@@ -8,6 +8,7 @@ export const campaignEventTypes = {
 };
 
 export const campaignEventTypesOptions = [
+    { label: "Select Campaign Attribute", value: "" },
     { label: "BIRTH_DATE", value: campaignEventTypes.BIRTH_DATE },
     { label: "Date Range", value: campaignEventTypes.DATE_RANGE },
     { label: "Amount", value: campaignEventTypes.AMOUNT },

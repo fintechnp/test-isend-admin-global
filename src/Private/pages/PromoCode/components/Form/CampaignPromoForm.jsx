@@ -16,7 +16,7 @@ import {
     triggerAttributeTypesOptionsDisabled,
 } from "../../data/triggerAttributeTypesEnums";
 import referenceTypeId from "Private/config/referenceTypeId";
-import { campaignEventTypes } from "../../data/campaignEventTypesEnums";
+import { campaignEventTypes, campaignEventTypesOptions } from "../../data/campaignEventTypesEnums";
 
 export default function CampaignPromoForm({
     triggerFields,
@@ -27,7 +27,6 @@ export default function CampaignPromoForm({
     removeTriggerFields,
 }) {
     const { watch, setValue, control } = useFormContext();
-
     const attributeConditions = watch("AttributeConditions");
 
     useEffect(() => {
@@ -37,9 +36,9 @@ export default function CampaignPromoForm({
                 (item) => item?.attributeFamilyId === attributeFamily,
             )?.attributeTypeValue;
 
-            if (!attributeFamilyTypeId) {
-                return;
-            }
+            setValue(`AttributeConditions.${index}.attribute`, campaignEventTypesOptions[1].value);
+
+            if (!attributeFamilyTypeId) return;
 
             let criteria = triggerAttributeTypes.GREATER_THAN;
 
@@ -106,43 +105,17 @@ export default function CampaignPromoForm({
                     }
                 })();
 
-                const watchCountry = watch(`AttributeConditions.${index}.amount`);
-
-                useEffect(() => {
-                    if (attributeFamilyTypeId) {
-                        if (attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE) {
-                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.ON_SAME_DAY);
-                        } else if (attributeFamilyTypeId === campaignEventTypes.DATE_RANGE) {
-                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
-                        } else if (attributeFamilyTypeId === campaignEventTypes.AMOUNT) {
-                            setValue(
-                                `AttributeConditions.${index}.criteria`,
-                                triggerAttributeTypesOptionsDisabled[0]?.value,
-                            );
-                            setValue(`AttributeConditions.${index}.amount`, 0);
-                            setValue(`AttributeConditions.${index}.currency`, countryCurrency[0]?.value);
-                        } else if (attributeFamilyTypeId === campaignEventTypes.COUNT) {
-                            setValue(
-                                `AttributeConditions.${index}.criteria`,
-                                triggerAttributeTypesOptionsDisabled[0].value,
-                            );
-                            setValue(`AttributeConditions.${index}.amount`, 0);
-                        } else if (attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY) {
-                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
-                        } else if (attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION) {
-                            setValue(`AttributeConditions.${index}.criteria`, triggerAttributeTypes.EQUALS_TO);
-                        }
-                    }
-                }, [attributeFamilyTypeId, campaignEventTypes]);
-
                 return (
                     <Grid container mb={1} spacing={2} key={`${field.id}_field`}>
                         <Grid item xs={12} md={6} lg={3}>
                             <FormSelect
+                                label="Select an Option"
                                 placeholder="Attribute"
                                 name={`AttributeConditions.${index}.attribute`}
                                 options={mappedAttributeList}
                                 control={control}
+                                showChooseOption={true}
+                                chooseOptionLabel="Select an option"
                             />
                         </Grid>
 
@@ -221,15 +194,12 @@ export default function CampaignPromoForm({
                                     size="small"
                                     color="primary"
                                     onClick={() =>
-                                        handleTrigger(
-                                            {
-                                                attribute: field.attribute,
-                                                criteria: field.criteria,
-                                                currency: field.currency,
-                                                amount: field.amount,
-                                            },
-                                            index,
-                                        )
+                                        handleTrigger({
+                                            attribute: field.attribute,
+                                            criteria: field.criteria,
+                                            currency: field.currency,
+                                            amount: field.amount,
+                                        })
                                     }
                                 >
                                     Add

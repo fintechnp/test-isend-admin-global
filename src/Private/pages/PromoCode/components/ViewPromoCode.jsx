@@ -85,9 +85,11 @@ export default function ViewPromoCode() {
 
     const data = response?.data;
 
-    const promoCodeData = data?.promoCodeThresholds || [];
+    const promoCodeData = data?.promoCodeThresholds ?? [];
 
-    const attributeFamilyData = data?.attributeFamilyCampaigns || [];
+    const attributeFamilyData = data?.attributeFamilyCampaigns ?? [];
+
+    const referralFamilyCampaignsData = data?.referralFamilyCampaigns ?? [];
 
     const promoCodeId = data?.id;
 
@@ -230,6 +232,46 @@ export default function ViewPromoCode() {
         },
     ]);
 
+    const referrerColumns = useMemo(() => [
+        {
+            header: "SN",
+            accessorKey: "f_serial_no",
+            cell: (info) => info.row.index + 1,
+        },
+        {
+            header: "Referrer Need Kyc ?",
+            accessorKey: "referrerneedkyc",
+        },
+        {
+            header: "Least Referrer Transactions",
+            accessorKey: "referrerleasttransactions",
+        },
+        {
+            header: "Minimum Referrer",
+            accessorKey: "minimumreferrer",
+        },
+    ]);
+
+    const refereeColumns = useMemo(() => [
+        {
+            header: "SN",
+            accessorKey: "f_serial_no",
+            cell: (info) => info.row.index + 1,
+        },
+        {
+            header: "Referee Need Kyc ?",
+            accessorKey: "refereeneedkyc",
+        },
+        {
+            header: "Least Referee Transactions",
+            accessorKey: "refereeleasttransactions",
+        },
+        {
+            header: "KYC Verifiying Days ",
+            accessorKey: "kycverifyingdays",
+        },
+    ]);
+
     const Attributecolumns = useMemo(() => [
         {
             header: "SN",
@@ -237,20 +279,20 @@ export default function ViewPromoCode() {
             cell: (info) => info.row.index + 1,
         },
         {
-            header: "Attribute",
+            header: "Attribute Name",
             accessorKey: "attributeFamilyName",
         },
         {
-            header: "Criteria",
+            header: "Criteria Name",
             accessorKey: "criteriaName",
         },
 
-        ...(campaignEventTypes?.AMOUNT === attributeValue
+        ...(attributeValue.includes(campaignEventTypes?.AMOUNT)
             ? [
                   {
                       header: "Currency",
                       accessorKey: "currency",
-                      cell: (data) => (data.currency ? data.currency : "N/A"),
+                      cell: ({ row }) => (row.original.currency ? row.original.currency : "N/A"),
                   },
                   {
                       header: "Amount",
@@ -259,13 +301,21 @@ export default function ViewPromoCode() {
               ]
             : []),
 
-        ...(campaignEventTypes?.COUNT ||
-        campaignEventTypes?.BENEFICIARY_COUNTRY ||
-        campaignEventTypes?.BENEFICIARY_RELATION === attributeValue
+        ...(attributeValue.includes(campaignEventTypes?.COUNT) ||
+        attributeValue.includes(campaignEventTypes?.BENEFICIARY_COUNTRY)
             ? [
                   {
                       header: "Amount",
                       accessorKey: "amount",
+                  },
+              ]
+            : []),
+
+        ...(attributeValue.includes(campaignEventTypes?.BENEFICIARY_RELATION)
+            ? [
+                  {
+                      header: "Beneficiary Relation",
+                      accessorKey: "Value",
                   },
               ]
             : []),
@@ -377,36 +427,49 @@ export default function ViewPromoCode() {
                             }}
                         />
 
-                        <Grid item>
-                            <Typography marginBottom={2} variant="h6">
-                                Criteria for Eligibility
-                            </Typography>
+                        {attributeFamilyData.length > 0 && (
+                            <Grid item>
+                                <Typography marginBottom={2} variant="h6">
+                                    Attribute Values
+                                </Typography>
 
-                            {attributeFamilyData.length > 0 &&
-                                attributeFamilyData.map((attribute, index) => (
-                                    <TanstackReactTable
-                                        key={attribute.id || index}
-                                        id={`attribute-family-table-${attribute.id || index}`}
-                                        columns={Attributecolumns}
-                                        data={[attribute]}
-                                    />
-                                ))}
-                        </Grid>
+                                <TanstackReactTable columns={Attributecolumns} data={attributeFamilyData} />
+                            </Grid>
+                        )}
 
-                        <Grid item>
-                            <Typography marginBottom={2} variant="h6">
-                                Discount Details
-                            </Typography>
-                            {promoCodeData.length > 0 &&
-                                promoCodeData.map((promo, index) => (
-                                    <TanstackReactTable
-                                        key={promo.id || index}
-                                        id={`promo-code-table-${promo.id || index}`}
-                                        columns={columns}
-                                        data={[promo]}
-                                    />
-                                ))}
-                        </Grid>
+                        {referralFamilyCampaignsData.length > 0 && (
+                            <Grid item>
+                                <Typography variant="h6" marginBottom={2}>
+                                    Referral Family Campaigns
+                                </Typography>
+
+                                <Grid item>
+                                    <Typography variant="body1" fontWeight={600} marginBottom={2}>
+                                        Referrer
+                                    </Typography>
+
+                                    <TanstackReactTable columns={referrerColumns} data={referralFamilyCampaignsData} />
+                                </Grid>
+
+                                <Grid item marginTop={2}>
+                                    <Typography variant="body1" fontWeight={600}>
+                                        Referrer
+                                    </Typography>
+
+                                    <TanstackReactTable columns={refereeColumns} data={referralFamilyCampaignsData} />
+                                </Grid>
+                            </Grid>
+                        )}
+
+                        {promoCodeData.length > 0 && (
+                            <Grid item>
+                                <Typography marginBottom={2} variant="h6">
+                                    Discount Details
+                                </Typography>
+
+                                <TanstackReactTable columns={columns} data={promoCodeData} />
+                            </Grid>
+                        )}
                     </Grid>
 
                     <StyleImageWrapper>
