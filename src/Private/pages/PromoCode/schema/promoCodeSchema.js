@@ -49,12 +49,22 @@ const rewardsSchema = Yup.object().shape({
 
 const referralFamilyConditionSchema = Yup.object().shape({
     referrerneedkyc: Yup.boolean().required("Referrer KYC is required"),
-    referrerleasttransactions: Yup.number().required("Referrer least transactions are required").min(0),
+    referrerleasttransactions: Yup.number()
+        .required("Referrer least transactions are required")
+        .typeError("Referrer least transactions are required")
+        .min(0),
+    minimumreferrer: Yup.number()
+        .required("Minimum Referee is required")
+        .typeError("Minimum Referee is required")
+        .min(0),
     refereeneedkyc: Yup.boolean().required("Referee KYC is required"),
-    refereeleasttransactions: Yup.number().required("Referee least transactions are required").min(0),
+    refereeleasttransactions: Yup.number()
+        .required("Referee least transactions are required")
+        .typeError("Referee least transactions are required")
+        .min(0),
 });
 
-export const createPromoCodeSchema = Yup.object().shape({
+export const createAttributePromoCodeSchema = Yup.object().shape({
     Campaign: Yup.object().shape({
         CampaignName: Yup.string().required("Campaign Name is required"),
         CampaignType: Yup.number().required("Campaign Type is required"),
@@ -72,6 +82,26 @@ export const createPromoCodeSchema = Yup.object().shape({
     MobileImage: Yup.string().nullable(),
     Description: Yup.string().required("Description is required"),
     AttributeConditions: Yup.array().of(attributeConditionsSchema),
+    TermsAndCondition: Yup.string().required("Terms and conditions are required"),
+});
+
+export const createReferralPromoCodeSchema = Yup.object().shape({
+    Campaign: Yup.object().shape({
+        CampaignName: Yup.string().required("Campaign Name is required"),
+        CampaignType: Yup.number().required("Campaign Type is required"),
+        ValidCountry: Yup.string().required("Valid Country is required"),
+        StartDate: Yup.string().required("Start Date is required"),
+        EndDate: Yup.string().required("End Date is required"),
+        Status: Yup.number().required("Status is required").integer(),
+        Budget: Yup.number().typeError("Budget is required").required("Budget is required").min(0),
+    }),
+    Rewards: Yup.array().of(rewardsSchema),
+    DisplayMechanism: Yup.number().required("Display mechanism is required").integer(),
+    LimitPerUser: Yup.mixed().optional(),
+    LimitPerPromo: Yup.mixed().optional(),
+    WebImage: Yup.string().nullable(),
+    MobileImage: Yup.string().nullable(),
+    Description: Yup.string().required("Description is required"),
     ReferralFamilyCondition: Yup.array().of(referralFamilyConditionSchema),
     TermsAndCondition: Yup.string().required("Terms and conditions are required"),
 });

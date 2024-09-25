@@ -27,12 +27,22 @@ import { campaignCodes, campaignCodesOptions } from "../data/campaignCodes";
 import { CampaignConfigurationForm } from "./Form/CampaignConfigurationForm";
 import { campaignRewardCatogoryEnums } from "../data/campaignRewardCatogoryEnums";
 import RefereeRewardConfigurationForm from "./Form/RefereeRewardConfigurationForm";
-import { createPromoCodeSchema, updatePromoCodeSchema } from "../schema/promoCodeSchema";
+import {
+    updatePromoCodeSchema,
+    createAttributePromoCodeSchema,
+    createReferralPromoCodeSchema,
+} from "../schema/promoCodeSchema";
 import { DisplayMechanismEnums, displayMechanismsOptions } from "../data/displayMechanismEnums";
 import { campaignTriggerCriteria, campaignTriggerCriteriaOptions } from "../data/campaignTriggerCriteria";
 
 export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
+
+    const getCampaignConditionSchema = (campaignType) => {
+        return campaignType === campaignCodes.PROMO ? createAttributePromoCodeSchema : createReferralPromoCodeSchema;
+    };
+
+    const [schema, setSchema] = useState(getCampaignConditionSchema(campaignCodes.PROMO));
     const navigate = useNavigate();
 
     const [webImage, setWebImage] = useState(null);
@@ -136,7 +146,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                       },
                   ],
               },
-        resolver: yupResolver(isAddMode ? createPromoCodeSchema : updatePromoCodeSchema),
+        resolver: yupResolver(isAddMode ? schema : updatePromoCodeSchema),
         mode: "onSubmit",
     });
 
@@ -147,6 +157,14 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
         control,
         formState: { errors },
     } = methods;
+
+    const CampaignType = watch("Campaign.CampaignType");
+    const Campaign = watch("Campaign");
+
+    useEffect(() => {
+        const newSchema = getCampaignConditionSchema(CampaignType);
+        setSchema(newSchema);
+    }, [CampaignType]);
 
     useEffect(() => {
         if (!isAddMode) {
@@ -162,9 +180,6 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             setValue("Description", initialValues?.Description);
         }
     }, [initialValues]);
-
-    const CampaignType = watch("Campaign.CampaignType");
-    const Campaign = watch("Campaign");
 
     const {
         fields: triggerFields,
@@ -334,6 +349,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                                         </Grid>
                                         <Grid item xs={12} md={6} lg={3}>
                                             <FormSelect
+                                                required
                                                 options={campaignTriggerCriteriaOptions}
                                                 name="TriggerCriteria"
                                                 label="Trigger Criteria"
