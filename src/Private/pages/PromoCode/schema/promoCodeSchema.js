@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 
-import { campaignEventTypes } from "../data/campaignEventTypesEnums";
 import { rewardTypeEnums } from "../data/rewardTypeEnums";
 
 const attributeConditionsSchema = Yup.object().shape({
@@ -9,26 +8,16 @@ const attributeConditionsSchema = Yup.object().shape({
     criteria: Yup.number().required("Criteria is required").typeError("Criteria is required").integer(),
     attributeTypeValue: Yup.number().optional().nullable(),
     currency: Yup.string().optional().nullable(),
-    amount: Yup.number().test("required", "This field is required", function (value, context) {
-        const { attributeTypeValue } = context.parent;
-        if (
-            attributeTypeValue === campaignEventTypes.AMOUNT ||
-            attributeTypeValue === campaignEventTypes.BENEFICIARY_COUNTRY ||
-            attributeTypeValue === campaignEventTypes.BENEFICIARY_RELATION
-        ) {
-            if (value <= 0 || !value) {
-                return false;
-            }
-            return true;
-        }
-    }),
 });
 
 const rewardsSchema = Yup.object().shape({
-    minimumAmount: Yup.number().typeError("Required").required("Required").min(0.1, "Required"),
+    minimumAmount: Yup.number()
+        .typeError("Minimum amount is required")
+        .required("Minimum amount is required")
+        .min(0.1, "Minimum Amount must be greater than or equal to 0.1"),
     maximumAmount: Yup.number()
-        .typeError("Required")
-        .required("Required")
+        .typeError("Maximum Amount is required")
+        .required("Maximum amount is required")
         .min(Yup.ref("minimumAmount"), "Maximum amount must be greater than minimum amount"),
     rewardOn: Yup.number().typeError("Reward on is required").required("Reward on is required").integer(),
     rewardType: Yup.number().typeError("Reward Type is required").required("Reward type is required").integer(),
@@ -39,10 +28,14 @@ const rewardsSchema = Yup.object().shape({
     rewardValue: Yup.number()
         .typeError("Reward value is required")
         .required("Reward value is required")
-        .min(0.1, "Required"),
+        .min(0.1, "Reward value must be greater than or equal to 0.1"),
     rewardLimit: Yup.number().when("rewardType", {
         is: (value) => value === rewardTypeEnums.PERCENTAGE,
-        then: (schema) => schema.required("Required").typeError("Required").min(0.1, "Required"),
+        then: (schema) =>
+            schema
+                .required("Reward limit must be at least 1")
+                .typeError("Reward limit must be greater than or equal to 0.1")
+                .min(0.1, "Reward limit must be greater than or equal to 0.1"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
 });
