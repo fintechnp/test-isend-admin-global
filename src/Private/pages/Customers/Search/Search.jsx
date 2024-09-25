@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 import Button from "@mui/material/Button";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,8 +50,14 @@ const initialState = {
     date_of_birth: "",
     sort_by: "created_ts",
     order_by: "DESC",
-    is_deleted: false,
+    is_deleted: null,
 };
+
+const allDeletedOptions = [
+    { label: "All", value: "all" },
+    { label: "Active", value: false },
+    { label: "Closed", value: true },
+];
 
 const schema = Yup.object().shape({
     from_date: Yup.string()
@@ -118,7 +126,7 @@ function Search() {
     const handleChangeIsDeleted = (e) => {
         onFilterSubmit({
             ...filterSchema,
-            is_deleted: e.target.checked,
+            is_deleted: e.target.value === "all" ? null : e.target.value,
         });
     };
 
@@ -339,15 +347,23 @@ function Search() {
                     topRightContent={
                         <>
                             <FormControlLabel
+                                sx={{ marginRight: 0 }}
                                 control={
-                                    <Checkbox
-                                        name="isDeleted"
-                                        checked={!!filterSchema.is_deleted}
+                                    <Select
+                                        size="small"
+                                        name="is_deleted"
                                         onChange={handleChangeIsDeleted}
-                                    />
+                                        value={filterSchema.is_deleted === null ? "all" : filterSchema.is_deleted}
+                                    >
+                                        {allDeletedOptions.map((option, index) => (
+                                            <MenuItem key={index} value={option.value} selected={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
                                 }
-                                label="All Deleted"
-                            ></FormControlLabel>
+                            />
+
                             <TableGridQuickFilter
                                 onSortByChange={onQuickFilter}
                                 onOrderByChange={onQuickFilter}
