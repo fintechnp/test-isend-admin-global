@@ -4,6 +4,6 @@ export const campaignCodes = {
 };
 
 export const campaignCodesOptions = [
-    { label: "PROMO", value: campaignCodes.PROMO },
-    { label: "REFERRAL", value: campaignCodes.REFERRAL },
+    { label: "Promo", value: campaignCodes.PROMO },
+    { label: "Referral", value: campaignCodes.REFERRAL },
 ];

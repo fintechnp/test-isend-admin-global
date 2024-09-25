@@ -29,12 +29,19 @@ function ListCampaignAttribute() {
         dispatch(attributeFamilyActions.delete_attribute_family(attributeFamilyId));
     };
 
+    const attributeFamilyDataSN = attributeFamiliesData?.data?.data?.map((item, index) => {
+        return {
+            f_serial_no: index + 1,
+            ...item,
+        };
+    });
     useEffect(() => {
         dispatch(attributeFamilyActions.get_attribute_family_list());
         dispatch(attributeFamilyActions.delete_attribute_family_reset());
     }, [a_success, u_success, d_success]);
 
     const columns = useMemo(() => [
+        { header: "S.N", accessorKey: "f_serial_no" },
         {
             header: "Attribute Name",
             accessorKey: "attributeName",
@@ -43,10 +50,7 @@ function ListCampaignAttribute() {
             header: "Attribute Type Value Name",
             accessorKey: "attributeTypeValueName",
         },
-        {
-            header: "Attribute Type Value",
-            accessorKey: "attributeTypeValue",
-        },
+
         {
             header: "Actions",
             cell: ({ row }) => (
@@ -101,11 +105,7 @@ function ListCampaignAttribute() {
                         </HasPermission>
                     }
                 >
-                    <TanstackReactTable
-                        loading={isLoading}
-                        columns={columns}
-                        data={attributeFamiliesData?.data?.data ?? []}
-                    />
+                    <TanstackReactTable loading={isLoading} columns={columns} data={attributeFamilyDataSN ?? []} />
                 </PageContentContainer>
             </Column>
 

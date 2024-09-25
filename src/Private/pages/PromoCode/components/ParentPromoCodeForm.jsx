@@ -19,23 +19,24 @@ import attributeFamilyActions from "Private/features/attributeFamily/attributeFa
 
 import CampaignPromoForm from "./Form/CampaignPromoForm";
 import { rewardTypeOptions } from "../data/rewardTypeEnums";
-import { campaignRewardCatogoryEnums } from "../data/campaignRewardCatogoryEnums";
 import { campaignStatusOptions } from "../data/campaignStatus";
 import CampaignReferralForm from "./Form/CampaignReferralForm";
-import { campaignEventTypes, campaignEventTypesOptions } from "../data/campaignEventTypesEnums";
 import CampaignInformationForm from "./Form/CampaignInformationForm";
 import RewardConfigurationForm from "./Form/RewardConfigurationForm";
-import { triggerAttributeTypes } from "../data/triggerAttributeTypesEnums";
 import { campaignCodes, campaignCodesOptions } from "../data/campaignCodes";
 import { CampaignConfigurationForm } from "./Form/CampaignConfigurationForm";
+import { campaignRewardCatogoryEnums } from "../data/campaignRewardCatogoryEnums";
+import RefereeRewardConfigurationForm from "./Form/RefereeRewardConfigurationForm";
 import { createPromoCodeSchema, updatePromoCodeSchema } from "../schema/promoCodeSchema";
 import { DisplayMechanismEnums, displayMechanismsOptions } from "../data/displayMechanismEnums";
 import { campaignTriggerCriteria, campaignTriggerCriteriaOptions } from "../data/campaignTriggerCriteria";
-import RefereeRewardConfigurationForm from "./Form/RefereeRewardConfigurationForm";
 
 export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [webImage, setWebImage] = useState(null);
+    const [mobileImage, setMobileImage] = useState(null);
 
     const { response } = useSelector((state) => state.get_countries);
 
@@ -73,8 +74,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                   },
                   AttributeConditions: [
                       {
-                          attribute: campaignEventTypes.BIRTH_DATE,
-                          criteria: triggerAttributeTypes.GREATER_THAN,
+                          attribute: "",
                       },
                   ],
                   ReferralFamilyCondition: [
@@ -159,12 +159,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             setValue("LimitPerUser", initialValues?.LimitPerUser ?? 0);
             setValue("LimitPerPromo", initialValues?.LimitPerPromo ?? 0);
             setValue("TermsAndCondition", initialValues?.TermsAndCondition);
-            setValue("WebImage", initialValues?.WebImage);
-            setValue("MobileImage", initialValues?.MobileImage);
             setValue("Description", initialValues?.Description);
-        }
-        if (isAddMode) {
-            setValue("Campaign.Budget", 0);
         }
     }, [initialValues]);
 
@@ -210,11 +205,18 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
     const onSubmit = (data) => {
         const { CampaignType } = data.Campaign;
 
-        // Combine both Rewards and RefereeRewards into a single array
-        const combinedRewards = [
-            ...(Array.isArray(data.Rewards) ? data.Rewards : []),
-            ...(Array.isArray(data.RefereeRewards) ? data.RefereeRewards : []),
-        ].map((field) => ({
+        let combinedRewards = [];
+
+        if (CampaignType === campaignCodes.PROMO) {
+            combinedRewards = Array.isArray(data.Rewards) ? data.Rewards : [];
+        } else if (CampaignType === campaignCodes.REFERRAL) {
+            combinedRewards = [
+                ...(Array.isArray(data.Rewards) ? data.Rewards : []),
+                ...(Array.isArray(data.RefereeRewards) ? data.RefereeRewards : []),
+            ];
+        }
+
+        combinedRewards = combinedRewards.map((field) => ({
             minimumAmount: field.minimumAmount,
             maximumAmount: field.maximumAmount,
             rewardOn: field.rewardOn,
@@ -232,10 +234,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             "Campaign.EndDate": data.Campaign.EndDate,
             "Campaign.Status": data.Campaign.Status,
             "Campaign.Budget": data.Campaign.Budget,
-
-            // Set combined rewards under the single Rewards key
             Rewards: combinedRewards,
-
             DisplayMechanism: data.DisplayMechanism,
             TriggerCriteria: data.TriggerCriteria,
             LimitPerUser: data.LimitPerUser ?? 0,
@@ -276,30 +275,24 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                 : [];
         }
 
+        const { WebImage, MobileImage, ...rest } = formattedData;
+
         const formData = new FormData();
 
-        Object.keys(formattedData).forEach((key) => {
-            if (Array.isArray(formattedData[key])) {
-                formattedData[key].forEach((item, index) => {
-                    Object.keys(item).forEach((subKey) => {
-                        formData.append(`${key}[${index}][${subKey}]`, item[subKey]);
-                    });
+        for (const key in rest) {
+            if (Array.isArray(rest[key])) {
+                rest[key].forEach((item, index) => {
+                    for (const itemKey in item) {
+                        formData.append(`${key}[${index}].${itemKey}`, item[itemKey]);
+                    }
                 });
             } else {
-                // Append WebImage and MobileImage only if they have values
-                if (key === "WebImage" && formattedData.WebImage) {
-                    formData.append(key, formattedData.WebImage);
-                } else if (key === "MobileImage" && formattedData.MobileImage) {
-                    formData.append(key, formattedData.MobileImage);
-                } else if (key !== "WebImage" && key !== "MobileImage") {
-                    formData.append(key, formattedData[key]);
-                }
+                formData.append(key, rest[key]);
             }
-        });
+        }
+        formData.append("WebImage", webImage);
+        formData.append("MobileImage", mobileImage);
 
-        // Send formData to your API
-        console.log("Submitting:", formData);
-        // Replace with your API call
         handleSubmit(formData);
     };
 
@@ -407,6 +400,8 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                             initialValues={initialValues}
                             isAddMode={isAddMode}
                             displayMechanismsOptions={displayMechanismsOptions}
+                            setMobileImage={setMobileImage}
+                            setWebImage={setWebImage}
                         />
                     </Grid>
 

@@ -1,29 +1,39 @@
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useDropzone } from "react-dropzone";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import CancelIcon from "@mui/icons-material/Cancel";
 import FormHelperText from "@mui/material/FormHelperText";
 import { Controller, useFormContext, get } from "react-hook-form";
+
+import Center from "App/components/Center/Center";
 import UploadIcon from "App/components/Icon/UploadIcon";
-import { Button } from "@mui/material";
 
-// Styled preview container for images
-const FilePreview = styled(Box)({
+const FilePreview = styled(Box)(({ theme }) => ({
     width: "100%",
-    height: "40px",
+    height: "60px",
+    minHeight: "200px",
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
     borderRadius: "4px",
-    overflow: "hidden",
-    "& img": { width: "auto", height: "100%" },
-});
+    borderColor: "rgba(0, 0, 0, 0.23)",
+    overflow: "auto",
+    "& img": {
+        width: "auto",
+        height: "100%",
+        objectFit: "cover",
+    },
+}));
 
-function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
+function FormFileField({ name, label, required, disabled, acceptedFiles = [], onImageCallback, ...rest }) {
     const inputRef = useRef();
+
     const {
         control,
         clearErrors,
@@ -31,22 +41,17 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
         setValue,
         watch,
     } = useFormContext();
-    const file = watch(name);
-    const errorMessage = get(errors, name)?.message;
-    const [previewUrl, setPreviewUrl] = useState(null);
 
     const onDrop = useCallback(
         (acceptedFiles) => {
-            const droppedFile = acceptedFiles[0];
-            setValue(name, droppedFile);
+            setValue(name, acceptedFiles[0]);
+            if (typeof onImageCallback === "function") {
+                onImageCallback(acceptedFiles[0]);
+            }
             clearErrors(name);
             inputRef.current.value = "";
-
-            // Create and set preview URL
-            const fileUrl = URL.createObjectURL(droppedFile);
-            setPreviewUrl(fileUrl);
         },
-        [name, setValue, clearErrors],
+        [name, setValue],
     );
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -55,67 +60,149 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
         accept: acceptedFiles,
     });
 
+    const file = watch(name);
+
     const handleRemove = () => {
         setValue(name, null);
         inputRef.current.value = "";
-        if (previewUrl) {
-            URL.revokeObjectURL(previewUrl);
-            setPreviewUrl(null);
-        }
     };
+
+    const errorMessage = get(errors, name)?.message;
 
     return (
         <Box display="flex" flexDirection="column">
             <Box
                 {...getRootProps()}
                 sx={{
-                    border: `1px solid ${errorMessage ? "error.main" : "rgba(0, 0, 0, 0.23)"}`,
+                    border: (theme) =>
+                        `1px solid ${errorMessage ? theme.palette.error.main : theme.palette.stroke.base}`,
+                    padding: "16px",
                     borderRadius: "8px",
-                    p: 2,
-                    textAlign: "center",
                 }}
                 onClick={() => inputRef.current.click()}
             >
-                <Typography variant="subtitle1" fontWeight={600}>
-                    {label}
-                </Typography>
-
-                {file && previewUrl ? (
-                    <FilePreview>
-                        <img src={previewUrl} alt="Preview" />
-                    </FilePreview>
-                ) : (
-                    <Box display="flex" flexDirection="column" alignItems="center">
-                        <UploadIcon sx={{ mb: 1 }} />
-                        <Typography>{isDragActive ? "Drop Here" : "Drag & Drop or click to upload"}</Typography>
-                    </Box>
-                )}
-
-                {file && (
-                    <Tooltip title="Remove" arrow>
-                        <Button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleRemove();
-                            }}
-                            sx={{
-                                marginTop: 1,
-                            }}
-                            variant="outlined"
-                            size="small"
-                            color="error"
-                        >
-                            Remove
-                        </Button>
-                    </Tooltip>
-                )}
+                <Box mb="16px" display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography fontWeight={600} fontSize="1.143rem" lineHeight="1.714rem">
+                        {label}
+                    </Typography>
+                    {file && (
+                        <Tooltip placement="top" title="Remove" arrow>
+                            <IconButton
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    handleRemove();
+                                }}
+                                color="error"
+                            >
+                                <CancelIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                </Box>
+                <Box
+                    sx={{
+                        border: (theme) => `1px dotted ${theme.palette.stroke.base}`,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        p: "10px",
+                        borderRadius: "10px",
+                    }}
+                >
+                    <Controller
+                        name={name}
+                        control={control}
+                        render={({ field }) => (
+                            <>
+                                <input {...getInputProps()} ref={inputRef} accept={acceptedFiles.join(", ")} />
+                                {file ? (
+                                    <FilePreview>
+                                        <img src={URL.createObjectURL(file)} />
+                                    </FilePreview>
+                                ) : (
+                                    <Box
+                                        display="flex"
+                                        flexDirection="column"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        gap="10px"
+                                    >
+                                        <Center
+                                            sx={{
+                                                border: (theme) => `1px solid ${theme.palette.stroke.base}`,
+                                                height: "36px",
+                                                width: "26px",
+                                                borderRadius: "50%",
+                                            }}
+                                        >
+                                            <UploadIcon />
+                                        </Center>
+                                        {isDragActive ? (
+                                            <Box
+                                                display="flex"
+                                                flexDirection="column"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                gap="4px"
+                                            >
+                                                <Typography
+                                                    fontWeight={500}
+                                                    textAlign="center"
+                                                    fontSize="1.143rem"
+                                                    lineHeight="3.714rem"
+                                                >
+                                                    Drop Here
+                                                </Typography>
+                                            </Box>
+                                        ) : (
+                                            <Box
+                                                display="flex"
+                                                flexDirection="column"
+                                                justifyContent="center"
+                                                alignItems="center"
+                                                gap="2px"
+                                            >
+                                                <Typography
+                                                    fontWeight={500}
+                                                    textAlign="center"
+                                                    fontSize="1.143rem"
+                                                    lineHeight="1.714rem"
+                                                >
+                                                    Drag and Drop or{" "}
+                                                    <Typography
+                                                        component="span"
+                                                        color="primary.main"
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            "&:hover": {
+                                                                textDecoration: "underline",
+                                                                cursor: "pointer",
+                                                            },
+                                                        }}
+                                                        fontSize="1.143rem"
+                                                        lineHeight="1.714rem"
+                                                    >
+                                                        choose your file{" "}
+                                                    </Typography>
+                                                    for upload
+                                                </Typography>
+                                                <Typography
+                                                    textAlign="center"
+                                                    fontSize="1.143rem"
+                                                    lineHeight="1.714rem"
+                                                >
+                                                    JPG or PNG
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                )}
+                            </>
+                        )}
+                    />
+                </Box>
             </Box>
-
-            <Controller
-                name={name}
-                control={control}
-                render={({ field }) => <input {...getInputProps()} ref={inputRef} />}
-            />
             <FormHelperText error>{errorMessage}</FormHelperText>
         </Box>
     );
@@ -124,7 +211,8 @@ function FormFileField({ name, label, acceptedFiles = [], ...rest }) {
 FormFileField.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
-    acceptedFiles: PropTypes.array,
+    required: PropTypes.bool,
+    acceptedFiles: PropTypes.string,
 };
 
 export default FormFileField;

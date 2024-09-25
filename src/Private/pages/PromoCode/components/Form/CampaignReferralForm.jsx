@@ -21,13 +21,15 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
             </Grid>
             {triggerReferrerFields.map((field, index) => (
                 <React.Fragment key={`${field.id}_field`}>
-                    <Box sx={{ flexGrow: 1 }}>
-                        {/* Referrer Section */}
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Typography variant="body2">Referrer</Typography>
-                            </Grid>
-                            <Grid container item spacing={3}>
+                    {/* Referrer Section */}
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} lg={6}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" fontSize={14} fontWeight={500}>
+                                        Referrer
+                                    </Typography>
+                                </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormSelect
                                         label="Referrer Need KYC?"
@@ -39,16 +41,6 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                         control={control}
                                     />
                                 </Grid>
-
-                                <Grid item xs={12} sm={4}>
-                                    <FormTextField
-                                        type="number"
-                                        label="KYC Verifying Days"
-                                        name={`ReferralFamilyCondition.${index}.kycverifyingdays`}
-                                        control={control}
-                                    />
-                                </Grid>
-
                                 <Grid item xs={12} sm={4}>
                                     <FormTextField
                                         type="number"
@@ -57,20 +49,24 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                         control={control}
                                     />
                                 </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <FormTextField
+                                        type="number"
+                                        label="Minimum Referee"
+                                        name={`ReferralFamilyCondition.${index}.minimumreferrer`}
+                                        control={control}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
 
-                        {/* Divider */}
-                        <Grid item xs={12} my={2}>
-                            <Divider />
-                        </Grid>
-
-                        {/* Referee Section */}
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Typography variant="body2">Referee</Typography>
-                            </Grid>
-                            <Grid container item spacing={3}>
+                        <Grid item xs={12} lg={6}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" fontSize={14} fontWeight={500}>
+                                        Referee
+                                    </Typography>
+                                </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormSelect
                                         label="Referee Need KYC?"
@@ -95,50 +91,17 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                 <Grid item xs={12} sm={4}>
                                     <FormTextField
                                         type="number"
-                                        label="Minimum Referee"
-                                        name={`ReferralFamilyCondition.${index}.minimumreferrer`}
+                                        label="KYC Verifying Days"
+                                        name={`ReferralFamilyCondition.${index}.kycverifyingdays`}
                                         control={control}
                                     />
                                 </Grid>
                             </Grid>
+                            {/* <Grid item xs={1}>
+                                    <Divider orientation="vertical"  />
+                                </Grid> */}
                         </Grid>
-
-                        {/* Add and Remove Buttons */}
-                        <Grid item xs={12} mt={2}>
-                            <ButtonWrapper>
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    onClick={() => {
-                                        addtriggerReferrerFields({
-                                            referrerneedkyc: "",
-                                            referrerleasttransactions: 0,
-                                            refereeneedkyc: "",
-                                            refereeleasttransactions: 0,
-                                            minimumreferrer: 0,
-                                            kycverifyingdays: 0,
-                                        });
-                                    }}
-                                >
-                                    Add Condition
-                                </Button>
-                                {index > 0 ? (
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        color="error"
-                                        onClick={() => removetriggerReferrerFields(index)}
-                                    >
-                                        <ClearOutlinedIcon />
-                                    </Button>
-                                ) : (
-                                    <Button variant="contained" size="small" color="error" disabled>
-                                        <ClearOutlinedIcon />
-                                    </Button>
-                                )}
-                            </ButtonWrapper>
-                        </Grid>
-                    </Box>
+                    </Grid>
                 </React.Fragment>
             ))}
         </>

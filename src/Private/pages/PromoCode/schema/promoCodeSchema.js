@@ -6,10 +6,12 @@ import { rewardTypeEnums } from "../data/rewardTypeEnums";
 const attributeConditionsSchema = Yup.object().shape({
     attribute: Yup.number().typeError("Attribute is required").required("Attribute is required").integer(),
     criteria: Yup.number().required("Criteria is required").integer(),
-    currency: Yup.string().test("currency-required", "Currency is required", function (value) {
-        const { attribute } = this.parent;
-        return attribute == campaignEventTypes.AMOUNT ? value && value.length > 0 : true;
-    }),
+    currency: Yup.string()
+        .test("currency-required", "Currency is required", function (value) {
+            const { attribute } = this.parent;
+            return attribute == campaignEventTypes.AMOUNT ? value && value.length > 0 : true;
+        })
+        .nullable(),
     amount: Yup.number().test("amount-required", "Amount is required", function (value) {
         const { attribute } = this.parent;
         if (
@@ -82,6 +84,7 @@ export const createPromoCodeSchema = Yup.object().shape({
     Description: Yup.string().required("Description is required"),
     AttributeConditions: Yup.array().of(attributeConditionsSchema),
     ReferralFamilyCondition: Yup.array().of(referralFamilyConditionSchema),
+    TermsAndCondition: Yup.string().required("Terms and conditions are required"),
 });
 
 export const updatePromoCodeSchema = Yup.object().shape({

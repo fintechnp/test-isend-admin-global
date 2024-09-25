@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet"
-    width="400" height="400" viewBox="0 0 1080 400" style="width:50%;height:50%">
+    width="300" height="300" viewBox="0 0 1080 400" style="width:30%;height:30%">
     <defs>
         <animate repeatCount="indefinite" dur="3s" begin="0s" xlink:href="#_R_G_L_6_G" fill="freeze"
             attributeName="opacity" from="0" to="0" keyTimes="0;0.6555556;0.7666667;0.8777778;0.9944444;1"

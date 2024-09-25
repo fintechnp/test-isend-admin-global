@@ -37,8 +37,6 @@ const EditPromoCode = () => {
 
     const getUpdateById = response?.data;
 
-    console.log(getUpdateById?.status);
-
     const initialValues = {
         StartDate: getUpdateById?.startDate,
         EndDate: getUpdateById?.endDate,
@@ -57,8 +55,6 @@ const EditPromoCode = () => {
     }, [dispatch, promoCodeId]);
 
     const handleSubmit = (data) => {
-        console.log(data);
-
         const formData = Object.fromEntries(data.entries());
 
         const filteredData = {

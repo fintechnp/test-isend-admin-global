@@ -1,7 +1,7 @@
+import React from "react";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useFormContext } from "react-hook-form";
-import React, { useCallback, useEffect } from "react";
 
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
@@ -16,7 +16,7 @@ import {
     triggerAttributeTypesOptionsDisabled,
 } from "../../data/triggerAttributeTypesEnums";
 import referenceTypeId from "Private/config/referenceTypeId";
-import { campaignEventTypes, campaignEventTypesOptions } from "../../data/campaignEventTypesEnums";
+import { campaignEventTypes } from "../../data/campaignEventTypesEnums";
 
 export default function CampaignPromoForm({
     triggerFields,
@@ -27,62 +27,25 @@ export default function CampaignPromoForm({
     removeTriggerFields,
 }) {
     const { watch, setValue, control } = useFormContext();
+
     const attributeConditions = watch("AttributeConditions");
 
-    useEffect(() => {
-        triggerFields.forEach((_, index) => {
-            const attributeFamily = attributeConditions?.[index]?.attribute;
-            const attributeFamilyTypeId = allAttributeList?.find(
-                (item) => item?.attributeFamilyId === attributeFamily,
-            )?.attributeTypeValue;
-
-            setValue(`AttributeConditions.${index}.attribute`, campaignEventTypesOptions[1].value);
-
-            if (!attributeFamilyTypeId) return;
-
-            let criteria = triggerAttributeTypes.GREATER_THAN;
-
-            switch (attributeFamilyTypeId) {
-                case campaignEventTypes.BIRTH_DATE:
-                    criteria = triggerAttributeTypes.ON_SAME_DAY;
-                    break;
-                case campaignEventTypes.DATE_RANGE:
-                    criteria = triggerAttributeTypes.EQUALS_TO;
-                    break;
-                case campaignEventTypes.AMOUNT:
-                case campaignEventTypes.COUNT:
-                    criteria = triggerAttributeTypes.GREATER_THAN;
-                    break;
-                case campaignEventTypes.BENEFICIARY_COUNTRY:
-                case campaignEventTypes.BENEFICIARY_RELATION:
-                    criteria = triggerAttributeTypes.EQUALS_TO;
-                    break;
-                default:
-                    criteria = triggerAttributeTypes.GREATER_THAN;
-            }
-
-            const currentCriteria = attributeConditions?.[index]?.criteria;
-
-            if (currentCriteria !== criteria) {
-                setValue(`AttributeConditions.${index}.criteria`, criteria);
-            }
-        });
-    }, [attributeConditions, allAttributeList, triggerFields, setValue]);
-
-    const handleTrigger = useCallback(
-        (field) => {
-            addTriggerFields({
-                attribute: field.attribute,
-                criteria: field.criteria,
-                currency: field.currency,
-                amount: field.amount,
-            });
-        },
-        [addTriggerFields],
-    );
+    const getTriggerFormOptions = (attributeFamilyTypeId) => {
+        switch (attributeFamilyTypeId) {
+            case campaignEventTypes.BIRTH_DATE:
+            case campaignEventTypes.DATE_RANGE:
+            case campaignEventTypes.BENEFICIARY_COUNTRY:
+            case campaignEventTypes.BENEFICIARY_RELATION:
+                return triggerAttributeTypesOptions;
+            case campaignEventTypes.COUNT:
+                return triggerAttributeTypesOptionsCount;
+            default:
+                return triggerAttributeTypesOptionsDisabled;
+        }
+    };
 
     return (
-        <Grid container>
+        <Grid container gap={2}>
             {triggerFields.map((field, index) => {
                 const attributeFamily = attributeConditions?.[index]?.attribute;
                 const attributeFamilyTypeId = allAttributeList?.find(
@@ -91,119 +54,145 @@ export default function CampaignPromoForm({
 
                 const amountLabel = attributeFamilyTypeId === campaignEventTypes.AMOUNT ? "Amount" : "Count";
 
-                const triggerFormOptions = (() => {
-                    switch (attributeFamilyTypeId) {
-                        case campaignEventTypes.BIRTH_DATE:
-                        case campaignEventTypes.DATE_RANGE:
-                        case campaignEventTypes.BENEFICIARY_COUNTRY:
-                        case campaignEventTypes.BENEFICIARY_RELATION:
-                            return triggerAttributeTypesOptions;
-                        case campaignEventTypes.COUNT:
-                            return triggerAttributeTypesOptionsCount;
-                        default:
-                            return triggerAttributeTypesOptionsDisabled;
-                    }
-                })();
+                const triggerFormOptions = getTriggerFormOptions(attributeFamilyTypeId);
 
                 return (
                     <Grid container mb={1} spacing={2} key={`${field.id}_field`}>
-                        <Grid item xs={12} md={6} lg={3}>
-                            <FormSelect
-                                label="Select an Option"
-                                placeholder="Attribute"
-                                name={`AttributeConditions.${index}.attribute`}
-                                options={mappedAttributeList}
-                                control={control}
-                                showChooseOption={true}
-                                chooseOptionLabel="Select an option"
-                            />
+                        <Grid item xs={10}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={6} lg={3}>
+                                    <FormSelect
+                                        label="Select an Option"
+                                        name={`AttributeConditions.${index}.attribute`}
+                                        options={mappedAttributeList}
+                                        onChange={(e) => {
+                                            const attributeFamilyTypeId = allAttributeList?.find(
+                                                (item) => item?.attributeFamilyId === e.target.value,
+                                            )?.attributeTypeValue;
+
+                                            if (attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE) {
+                                                setValue(
+                                                    `AttributeConditions.${index}.criteria`,
+                                                    triggerAttributeTypes.ON_SAME_DAY,
+                                                );
+                                            } else if (attributeFamilyTypeId === campaignEventTypes.DATE_RANGE) {
+                                                setValue(
+                                                    `AttributeConditions.${index}.criteria`,
+                                                    triggerAttributeTypes.EQUALS_TO,
+                                                );
+                                            } else if (attributeFamilyTypeId === campaignEventTypes.AMOUNT) {
+                                                setValue(
+                                                    `AttributeConditions.${index}.criteria`,
+                                                    triggerAttributeTypesOptionsDisabled[0]?.value,
+                                                );
+                                                setValue(`AttributeConditions.${index}.amount`, 0);
+                                                setValue(
+                                                    `AttributeConditions.${index}.currency`,
+                                                    countryCurrency[0]?.value,
+                                                );
+                                            } else if (attributeFamilyTypeId === campaignEventTypes.COUNT) {
+                                                setValue(
+                                                    `AttributeConditions.${index}.criteria`,
+                                                    triggerAttributeTypesOptionsDisabled[0].value,
+                                                );
+                                                setValue(`AttributeConditions.${index}.amount`, 0);
+                                                setValue(`AttributeConditions.${index}.currency`, null);
+                                            } else if (
+                                                attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY
+                                            ) {
+                                                setValue(
+                                                    `AttributeConditions.${index}.criteria`,
+                                                    triggerAttributeTypes.EQUALS_TO,
+                                                );
+                                            } else if (
+                                                attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION
+                                            ) {
+                                                setValue(
+                                                    `AttributeConditions.${index}.criteria`,
+                                                    triggerAttributeTypes.EQUALS_TO,
+                                                );
+                                            }
+                                        }}
+                                    />
+                                </Grid>
+                                {attributeFamilyTypeId && (
+                                    <>
+                                        {!(
+                                            attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE ||
+                                            attributeFamilyTypeId === campaignEventTypes.DATE_RANGE ||
+                                            attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY ||
+                                            attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION
+                                        ) && (
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormSelect
+                                                    name={`AttributeConditions.${index}.criteria`}
+                                                    options={triggerFormOptions}
+                                                />
+                                            </Grid>
+                                        )}
+
+                                        {attributeFamilyTypeId === campaignEventTypes.AMOUNT && (
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormSelect
+                                                    label="Currency"
+                                                    placeholder="Currency"
+                                                    options={countryCurrency}
+                                                    name={`AttributeConditions.${index}.currency`}
+                                                />
+                                            </Grid>
+                                        )}
+
+                                        {(attributeFamilyTypeId === campaignEventTypes.AMOUNT ||
+                                            attributeFamilyTypeId === campaignEventTypes.COUNT) && (
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormTextField
+                                                    label={amountLabel}
+                                                    type="number"
+                                                    name={`AttributeConditions.${index}.amount`}
+                                                />
+                                            </Grid>
+                                        )}
+
+                                        {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION && (
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormReferenceDataAutoComplete
+                                                    name={`AttributeConditions.${index}.amount`}
+                                                    label="Relation"
+                                                    labelKey="name"
+                                                    valueKey="reference_id"
+                                                    referenceTypeId={referenceTypeId.relations}
+                                                />
+                                            </Grid>
+                                        )}
+
+                                        {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY && (
+                                            <Grid item xs={12} md={6} lg={3}>
+                                                <FormSelectCountry
+                                                    name={`AttributeConditions.${index}.amount`}
+                                                    labelKey="country"
+                                                    valueKey="country_id"
+                                                    helperText="Country"
+                                                />
+                                            </Grid>
+                                        )}
+                                    </>
+                                )}
+                            </Grid>
                         </Grid>
-
-                        {attributeFamilyTypeId && (
-                            <>
-                                {!(
-                                    attributeFamilyTypeId === campaignEventTypes.BIRTH_DATE ||
-                                    attributeFamilyTypeId === campaignEventTypes.DATE_RANGE ||
-                                    attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY ||
-                                    attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION
-                                ) && (
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormSelect
-                                            name={`AttributeConditions.${index}.criteria`}
-                                            options={triggerFormOptions}
-                                            control={control}
-                                        />
-                                    </Grid>
-                                )}
-
-                                {attributeFamilyTypeId === campaignEventTypes.AMOUNT && (
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormSelect
-                                            label="Currency"
-                                            placeholder="Currency"
-                                            options={countryCurrency}
-                                            name={`AttributeConditions.${index}.currency`}
-                                            control={control}
-                                        />
-                                    </Grid>
-                                )}
-
-                                {(attributeFamilyTypeId === campaignEventTypes.AMOUNT ||
-                                    attributeFamilyTypeId === campaignEventTypes.COUNT) && (
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormTextField
-                                            label={amountLabel}
-                                            type="number"
-                                            name={`AttributeConditions.${index}.amount`}
-                                            control={control}
-                                        />
-                                    </Grid>
-                                )}
-
-                                {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION && (
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormReferenceDataAutoComplete
-                                            name={`AttributeConditions.${index}.amount`}
-                                            label="Relation"
-                                            labelKey="name"
-                                            valueKey="reference_id"
-                                            referenceTypeId={referenceTypeId.relations}
-                                            control={control}
-                                        />
-                                    </Grid>
-                                )}
-
-                                {attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY && (
-                                    <Grid item xs={12} md={6} lg={3}>
-                                        <FormSelectCountry
-                                            name={`AttributeConditions.${index}.amount`}
-                                            labelKey="country"
-                                            valueKey="country_id"
-                                            helperText="Country"
-                                            control={control}
-                                        />
-                                    </Grid>
-                                )}
-                            </>
-                        )}
-
-                        <Grid item xs={12}>
+                        <Grid item xs={2} display="flex" alignItems="center" justifyContent="flex-end">
                             <ButtonWrapper>
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    color="primary"
-                                    onClick={() =>
-                                        handleTrigger({
-                                            attribute: field.attribute,
-                                            criteria: field.criteria,
-                                            currency: field.currency,
-                                            amount: field.amount,
-                                        })
-                                    }
-                                >
-                                    Add
-                                </Button>
+                                {triggerFields?.length - 1 === index && (
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        color="primary"
+                                        onClick={() => {
+                                            addTriggerFields();
+                                        }}
+                                    >
+                                        Add
+                                    </Button>
+                                )}
 
                                 {index > 0 ? (
                                     <Button

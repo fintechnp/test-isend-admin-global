@@ -50,10 +50,7 @@ const addPromoCode = takeEvery(actions.ADD_PROMO_CODE, function* (action) {
         yield put({
             type: "SET_TOAST_DATA",
             response: res,
-        })
-
-
-
+        });
     } catch (error) {
         yield put({
             type: actions.ADD_PROMO_CODE_FAILED,
@@ -64,8 +61,6 @@ const addPromoCode = takeEvery(actions.ADD_PROMO_CODE, function* (action) {
             type: "SET_TOAST_DATA",
             response: error?.data,
         });
-
-
     }
 });
 
