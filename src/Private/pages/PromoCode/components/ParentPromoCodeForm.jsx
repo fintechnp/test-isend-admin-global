@@ -202,6 +202,18 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
         name: "ReferralFamilyCondition",
     });
 
+    const attributeFamilyTypeId = getAttributeFamilyList?.data?.data;
+
+    // const attributeFamilyCompare = getAttributeFamilyList?.data?.data?.map((attribute) => ({
+    //     attributeFamilyId: attribute.attributeFamilyId,
+    //     attributeName: attribute.attributeName,
+    // }));
+
+    const attributeFamilyCompare =
+        attributeFamilyTypeId && Array.isArray(attributeFamilyTypeId)
+            ? attributeFamilyTypeId?.map((item) => item.attributeFamilyId)
+            : [];
+
     const onSubmit = (data) => {
         const { CampaignType } = data.Campaign;
 
@@ -364,7 +376,6 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                                     </Typography>
                                 </Grid>
                             </Grid>
-
                             <RewardConfigurationForm
                                 rewardFields={rewardFields}
                                 rewardOnOptions={rewardOnOptions}

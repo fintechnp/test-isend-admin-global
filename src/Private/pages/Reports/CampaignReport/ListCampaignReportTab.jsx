@@ -8,6 +8,7 @@ import TabContext from "@mui/lab/TabContext";
 
 import ListCampaignReport from "./ListCampaignReport";
 import ListCampaignReportDetails from "./ListCampaignReportDetails";
+import ListCampaignIncentiveReport from "./IncentiveReport/ListCampaignIncentiveReport";
 
 export default function ListCampaignReportTab() {
     const [value, setValue] = useState("1");
@@ -23,6 +24,7 @@ export default function ListCampaignReportTab() {
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Campaign Report" value="1" />
                         <Tab label="Campaign report Details" value="2" />
+                        <Tab label="Campaign Incentive Report" value="3" />
                     </TabList>
                 </Box>
                 <TabPanel value="1">
@@ -30,6 +32,9 @@ export default function ListCampaignReportTab() {
                 </TabPanel>
                 <TabPanel value="2">
                     <ListCampaignReportDetails />
+                </TabPanel>
+                <TabPanel value="3">
+                    <ListCampaignIncentiveReport />
                 </TabPanel>
             </TabContext>
         </Box>

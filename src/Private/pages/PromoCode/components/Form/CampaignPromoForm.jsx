@@ -56,6 +56,8 @@ export default function CampaignPromoForm({
 
                 const triggerFormOptions = getTriggerFormOptions(attributeFamilyTypeId);
 
+                const watchAttribute = watch(`AttributeConditions.${index}.attribute`);
+
                 return (
                     <Grid container mb={1} spacing={2} key={`${field.id}_field`}>
                         <Grid item xs={10}>
@@ -75,10 +77,18 @@ export default function CampaignPromoForm({
                                                     `AttributeConditions.${index}.criteria`,
                                                     triggerAttributeTypes.ON_SAME_DAY,
                                                 );
+                                                setValue(
+                                                    `AttributeConditions.${index}.attributeTypeValue`,
+                                                    attributeFamilyTypeId,
+                                                );
                                             } else if (attributeFamilyTypeId === campaignEventTypes.DATE_RANGE) {
                                                 setValue(
                                                     `AttributeConditions.${index}.criteria`,
                                                     triggerAttributeTypes.EQUALS_TO,
+                                                );
+                                                setValue(
+                                                    `AttributeConditions.${index}.attributeTypeValue`,
+                                                    attributeFamilyTypeId,
                                                 );
                                             } else if (attributeFamilyTypeId === campaignEventTypes.AMOUNT) {
                                                 setValue(
@@ -90,6 +100,10 @@ export default function CampaignPromoForm({
                                                     `AttributeConditions.${index}.currency`,
                                                     countryCurrency[0]?.value,
                                                 );
+                                                setValue(
+                                                    `AttributeConditions.${index}.attributeTypeValue`,
+                                                    attributeFamilyTypeId,
+                                                );
                                             } else if (attributeFamilyTypeId === campaignEventTypes.COUNT) {
                                                 setValue(
                                                     `AttributeConditions.${index}.criteria`,
@@ -97,6 +111,10 @@ export default function CampaignPromoForm({
                                                 );
                                                 setValue(`AttributeConditions.${index}.amount`, 0);
                                                 setValue(`AttributeConditions.${index}.currency`, null);
+                                                setValue(
+                                                    `AttributeConditions.${index}.attributeTypeValue`,
+                                                    attributeFamilyTypeId,
+                                                );
                                             } else if (
                                                 attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_COUNTRY
                                             ) {
@@ -104,12 +122,20 @@ export default function CampaignPromoForm({
                                                     `AttributeConditions.${index}.criteria`,
                                                     triggerAttributeTypes.EQUALS_TO,
                                                 );
+                                                setValue(
+                                                    `AttributeConditions.${index}.attributeTypeValue`,
+                                                    attributeFamilyTypeId,
+                                                );
                                             } else if (
                                                 attributeFamilyTypeId === campaignEventTypes.BENEFICIARY_RELATION
                                             ) {
                                                 setValue(
                                                     `AttributeConditions.${index}.criteria`,
                                                     triggerAttributeTypes.EQUALS_TO,
+                                                );
+                                                setValue(
+                                                    `AttributeConditions.${index}.attributeTypeValue`,
+                                                    attributeFamilyTypeId,
                                                 );
                                             }
                                         }}

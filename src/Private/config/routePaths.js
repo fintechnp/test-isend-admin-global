@@ -191,6 +191,10 @@ const routePaths = {
     ListCampaignLedgerReport: "/report/campaign/ledger/:id",
     ListCampaignUsageReport: "/report/campaign/usage/:id",
 
+    // region - Campaign Incentive Reports
+
+    ListCampaignIncentiveReports: "/report/campaign/incentive",
+
     // region - Transactions
     viewTransaction: "/transactions/details/:id/:customerId",
     viewAMLTransaction: "/transactions/details/aml-suspicious/:tid/:customerId",

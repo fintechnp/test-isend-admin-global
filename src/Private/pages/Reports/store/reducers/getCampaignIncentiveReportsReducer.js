@@ -7,14 +7,14 @@ const initialState = {
     response: [],
 };
 
-const getAchResponseReducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.ACH_ENTRIES_REPORT:
+        case actions.CAMPAIGN_INCENTIVE_REPORT:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.ACH_ENTRIES_REPORT_SUCCESS:
+        case actions.CAMPAIGN_INCENTIVE_REPORT_SUCCESS:
             return {
                 ...state,
                 success: true,
@@ -22,23 +22,21 @@ const getAchResponseReducer = (state = initialState, action) => {
                 response: action.response,
                 error: null,
             };
-        case actions.ACH_ENTRIES_REPORT_FAILED:
+        case actions.CAMPAIGN_INCENTIVE_REPORT_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
                 error: action.error,
+                response: null,
             };
-        case actions.ACH_ENTRIES_REPORT_RESET:
+        case actions.CAMPAIGN_INCENTIVE_REPORT_RESET:
             return {
-                success: false,
-                loading: false,
-                error: null,
-                response: [],
+                ...initialState,
             };
         default:
             return state;
     }
 };
 
-export default getAchResponseReducer;
+export default reducer;

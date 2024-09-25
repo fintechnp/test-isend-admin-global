@@ -42,7 +42,7 @@ const CKEditorComponent = ({ elementData, name, label, ...rest }) => {
                         {editorLoaded ? (
                             <Box
                                 sx={(theme) => ({
-                                    border: `1px solid ${isError ? theme.palette.error.main : ""}`,
+                                    border: `1px solid ${isError ? theme.palette.error.main : "transparent"}`,
                                 })}
                             >
                                 <CKEditor

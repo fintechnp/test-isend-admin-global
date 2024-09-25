@@ -12,5 +12,7 @@ export { default as getCampaignReportsReducer } from "./reducers/getCampaignRepo
 export { default as getCampaignReportDetailsReducer } from "./reducers/getCampaignReportDetailsReducer";
 export { default as getCampaignLedgerReportsReducer } from "./reducers/getCampaignLedgerReportsReducer";
 export { default as getCampaignUsageReportReducer } from "./reducers/getCampaignUsageReportReducer";
+export { default as getCampaignIncentiveReportsReducer } from "./reducers/getCampaignIncentiveReportsReducer";
+export { default as updateCampaignIncentiveStatusByIdReducer } from "./reducers/updateCampaignIncentiveStatusByIdReducer";
 
 export { default as ReportsAction } from "./actions";

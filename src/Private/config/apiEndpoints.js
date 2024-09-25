@@ -313,10 +313,15 @@ const apiEndpoints = {
     GetReferralReports: "/referral-code-report",
     GetReferralReportById: "/referral-code-detail/:id",
 
+    // GET
+
     // Campaign Reports
     GetCampaignReports: "/campaign/campaignReport",
     GetCampaignReportDetails: "/campaign/campaignReportDetails",
     GetCampaignLedgerReport: "/campaign/campaignLegerReport",
+    GetCampaignIncentiveReport: "/campaign/incentive",
+
+    UpdateCampaignIncentiveReportStatus: "/campaign/incentive/:id/status",
 
     // payout Locations
     GetAllPayoutLocations: "/payoutlocation",

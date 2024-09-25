@@ -295,6 +295,8 @@ import {
     getCampaignReportDetailsReducer,
     getCampaignLedgerReportsReducer,
     getCampaignUsageReportReducer,
+    getCampaignIncentiveReportsReducer,
+    updateCampaignIncentiveStatusByIdReducer,
 } from "./pages/Reports/store";
 
 //Utilities
@@ -901,6 +903,8 @@ export const privateReducer = {
     get_campaign_report_details: getCampaignReportDetailsReducer,
     get_campaign_ledger_report: getCampaignLedgerReportsReducer,
     get_campaign_code_report_usage: getCampaignUsageReportReducer,
+    get_campaign_incentive_report: getCampaignIncentiveReportsReducer,
+    update_campaign_incentive_status: updateCampaignIncentiveStatusByIdReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,

@@ -290,6 +290,53 @@ export const getReferralReportById = takeEvery(actions.REFERRAL_REPORT_BY_ID, fu
     }
 });
 
+export const getCampaignIncentiveReport = takeEvery(actions.CAMPAIGN_INCENTIVE_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignIncentiveReport), action.query);
+
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_FAILED,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const updateCampaignIncentiveStatus = takeEvery(actions.CAMPAIGN_INCENTIVE_REPORT_STATUS, function* (action) {
+    try {
+        const res = yield call(
+            api.put,
+            buildRoute(apiEndpoints.UpdateCampaignIncentiveReportStatus, action.id),
+            action.data,
+        );
+
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_STATUS_SUCCESS,
+            response: res,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_STATUS_FAILED,
+            response: error?.data,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerReport,
@@ -310,5 +357,7 @@ export default function* saga() {
         getCampaignReportDetails,
         getCampaignLedgerReport,
         getCampaignCodeUsageReport,
+        getCampaignIncentiveReport,
+        updateCampaignIncentiveStatus,
     ]);
 }

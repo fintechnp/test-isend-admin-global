@@ -5,37 +5,30 @@ import { rewardTypeEnums } from "../data/rewardTypeEnums";
 
 const attributeConditionsSchema = Yup.object().shape({
     attribute: Yup.number().typeError("Attribute is required").required("Attribute is required").integer(),
-    criteria: Yup.number().required("Criteria is required").integer(),
-    currency: Yup.string()
-        .test("currency-required", "Currency is required", function (value) {
-            const { attribute } = this.parent;
-            return attribute == campaignEventTypes.AMOUNT ? value && value.length > 0 : true;
-        })
-        .nullable(),
-    amount: Yup.number().test("amount-required", "Amount is required", function (value) {
-        const { attribute } = this.parent;
+
+    criteria: Yup.number().required("Criteria is required").typeError("Criteria is required").integer(),
+    attributeTypeValue: Yup.number().optional().nullable(),
+    currency: Yup.string().optional().nullable(),
+    amount: Yup.number().test("required", "This field is required", function (value, context) {
+        const { attributeTypeValue } = context.parent;
         if (
-            [
-                campaignEventTypes.AMOUNT,
-                campaignEventTypes.COUNT,
-                campaignEventTypes.BENEFICIARY_COUNTRY,
-                campaignEventTypes.BENEFICIARY_RELATION,
-            ].includes(attribute)
+            attributeTypeValue === campaignEventTypes.AMOUNT ||
+            attributeTypeValue === campaignEventTypes.BENEFICIARY_COUNTRY ||
+            attributeTypeValue === campaignEventTypes.BENEFICIARY_RELATION
         ) {
-            return value !== undefined && value >= 0;
+            if (value <= 0 || !value) {
+                return false;
+            }
+            return true;
         }
-        return true;
     }),
 });
 
 const rewardsSchema = Yup.object().shape({
-    minimumAmount: Yup.number()
-        .typeError("Minimum amount is required")
-        .required("Minimum amount is required")
-        .min(0.1, "Minimum Amount must be greater than or equal to 0.1"),
+    minimumAmount: Yup.number().typeError("Required").required("Required").min(0.1, "Required"),
     maximumAmount: Yup.number()
-        .typeError("Maximum Amount is required")
-        .required("Maximum amount is required")
+        .typeError("Required")
+        .required("Required")
         .min(Yup.ref("minimumAmount"), "Maximum amount must be greater than minimum amount"),
     rewardOn: Yup.number().typeError("Reward on is required").required("Reward on is required").integer(),
     rewardType: Yup.number().typeError("Reward Type is required").required("Reward type is required").integer(),
@@ -46,14 +39,10 @@ const rewardsSchema = Yup.object().shape({
     rewardValue: Yup.number()
         .typeError("Reward value is required")
         .required("Reward value is required")
-        .min(0.1, "Reward value must be greater than or equal to 0.1"),
+        .min(0.1, "Required"),
     rewardLimit: Yup.number().when("rewardType", {
         is: (value) => value === rewardTypeEnums.PERCENTAGE,
-        then: (schema) =>
-            schema
-                .required("Reward limit must be at least 1")
-                .typeError("Reward limit must be greater than or equal to 0.1")
-                .min(0.1, "Reward limit must be greater than or equal to 0.1"),
+        then: (schema) => schema.required("Required").typeError("Required").min(0.1, "Required"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
 });
