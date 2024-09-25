@@ -13,6 +13,7 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+import isEmpty from "App/helpers/isEmpty";
 
 const schema = Yup.object().shape({
     payment_name: Yup.string().required("Payment name is required").max(100, "Must be 100 characters or less"),
@@ -53,6 +54,10 @@ const FundingSourceForm = ({ onSubmit, isAddMode, isProcessing, onCancel, defaul
     };
 
     useEffect(() => {
+        if (isEmpty(defaultValues) && isAddMode) {
+            setIsDisabled(false);
+            return;
+        }
         // Check if any field other than "funding_source_type" has changed
         const isChanged = Object.keys(watchedValues).some(
             (key) => key !== "funding_source_type" && watchedValues[key] !== defaultValues[key],
