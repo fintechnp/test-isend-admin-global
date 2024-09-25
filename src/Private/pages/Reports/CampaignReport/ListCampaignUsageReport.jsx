@@ -37,6 +37,7 @@ const ListCampaignUsageReport = () => {
     useEffect(() => {
         dispatch(
             ReportsAction.get_promo_code_usage_report({
+                ...filterSchema,
                 CampaignId: id,
             }),
         );
@@ -130,7 +131,7 @@ const ListCampaignUsageReport = () => {
                     onDelete={onDeleteFilterParams}
                 />
 
-                <PageContentContainer title="List Campaign Reports">
+                <PageContentContainer title="List Campaign Usage Report">
                     <TanstackReactTable columns={columns} data={campaignUsageReportData} loading={isLoading} />
                 </PageContentContainer>
             </Column>

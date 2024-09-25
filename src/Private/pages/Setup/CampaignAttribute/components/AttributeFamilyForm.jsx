@@ -18,7 +18,7 @@ const schema = Yup.object().shape({
     attributeTypeValue: Yup.string().required("Attribute Type value is required"),
 });
 
-const AttributeFamilyForm = ({ handleClose, loading, isAddMode = true, initialValues, onSubmit }) => {
+const AttributeFamilyForm = ({ handleClose, loading, isAddMode = true, initialValues, onSubmit, disabled }) => {
     const methods = useForm({
         defaultValues: initialValues,
         resolver: yupResolver(schema),
@@ -40,7 +40,7 @@ const AttributeFamilyForm = ({ handleClose, loading, isAddMode = true, initialVa
                 <Grid marginY={2} item xs={12}>
                     <ButtonWrapper>
                         <CancelButton onClick={handleClose}>Cancel</CancelButton>
-                        <SubmitButton isloading={loading} isAddMode={isAddMode} />
+                        <SubmitButton disabled={disabled} isloading={loading} isAddMode={isAddMode} />
                     </ButtonWrapper>
                 </Grid>
             </Grid>

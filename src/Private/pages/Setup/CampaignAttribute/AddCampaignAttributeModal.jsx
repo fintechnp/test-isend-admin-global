@@ -36,7 +36,13 @@ function AddCampaignAttributeModal() {
                 maxWidth: "450px",
             }}
         >
-            <AttributeFamilyForm onSubmit={handleSubmit} handleClose={handleClose} loading={loading} isAddMode={true} />
+            <AttributeFamilyForm
+                disabled={loading}
+                onSubmit={handleSubmit}
+                handleClose={handleClose}
+                loading={loading}
+                isAddMode={true}
+            />
         </Modal>
     );
 }

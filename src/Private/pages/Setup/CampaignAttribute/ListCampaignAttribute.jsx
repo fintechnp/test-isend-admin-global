@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 
 import Button from "App/components/Button/Button";
 import Column from "App/components/Column/Column";
+import { useConfirm } from "App/core/mui-confirm";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
@@ -18,15 +19,22 @@ import attributeFamilyActions from "Private/features/attributeFamily/attributeFa
 
 function ListCampaignAttribute() {
     const dispatch = useDispatch();
+    const confirm = useConfirm();
     const { response: attributeFamiliesData, loading: isLoading } = useSelector(
         (state) => state.get_attribute_family_list,
     );
+
     const { success: a_success } = useSelector((state) => state.add_attribute_family);
     const { success: u_success } = useSelector((state) => state.update_attribute_family);
     const { success: d_success } = useSelector((state) => state.delete_attribute_family);
 
-    const handleDelete = (attributeFamilyId) => {
-        dispatch(attributeFamilyActions.delete_attribute_family(attributeFamilyId));
+    const handleCampaignAttribute = (attributeFamilyId) => {
+        confirm({
+            description: "Are you sure you want to delete this attribute ?",
+            confirmationText: "Yes",
+        }).then(() => {
+            dispatch(attributeFamilyActions.delete_attribute_family(attributeFamilyId));
+        });
     };
 
     const attributeFamilyDataSN = attributeFamiliesData?.data?.data?.map((item, index) => {
@@ -66,15 +74,15 @@ function ListCampaignAttribute() {
                                     Edit
                                 </ListItemButton>
                             </HasPermission>
-                            {/* <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
+                            <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
                                 <ListItemButton
                                     onClick={() => {
-                                        handleDelete(row.original.attributeFamilyId);
+                                        handleCampaignAttribute(row.original.attributeFamilyId, onClose());
                                     }}
                                 >
                                     Delete
                                 </ListItemButton>
-                            </HasPermission> */}
+                            </HasPermission>
                         </>
                     )}
                 </PopoverButton>

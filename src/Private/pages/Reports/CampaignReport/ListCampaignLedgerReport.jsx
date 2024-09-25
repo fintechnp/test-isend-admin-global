@@ -36,6 +36,7 @@ const ListCampaignLedgerReport = () => {
     useEffect(() => {
         dispatch(
             ReportsAction.get_campaign_ledger_report({
+                ...filterSchema,
                 CampaignId: id,
             }),
         );
@@ -84,12 +85,6 @@ const ListCampaignLedgerReport = () => {
                 accessorKey: "created_ts",
                 cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
             },
-
-            {
-                header: "Updated At",
-                accessorKey: "updated_ts",
-                cell: ({ getValue }) => <>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>,
-            },
         ],
         [],
     );
@@ -97,12 +92,12 @@ const ListCampaignLedgerReport = () => {
     const filterFields = [
         {
             type: "date",
-            label: "Start Date",
+            label: "Created Start Date",
             name: "StartDate",
         },
         {
             type: "date",
-            label: "End Date",
+            label: "Created End Date",
             name: "EndDate",
         },
     ];
