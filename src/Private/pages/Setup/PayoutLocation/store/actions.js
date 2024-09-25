@@ -60,6 +60,10 @@ const actions = {
         type: actions.DELETE_PAYOUT_LOCATION,
         id,
     }),
+
+    close_get_payout_location_details_modal: () => ({
+        type: actions.CLOSE_GET_PAYOUT_LOCATION_DETAILS_MODAL,
+    }),
 };
 
 export default actions;

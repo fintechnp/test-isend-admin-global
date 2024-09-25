@@ -20,6 +20,7 @@ import Modal from "App/components/Modal/Modal";
 
 import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
+import { PayoutLocationAction } from "../../../../Setup/PayoutLocation/store";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialog-container": {
@@ -146,6 +147,7 @@ function AddPartnerBank({ update_data, update, handleCloseDialog, enablePopoverA
     };
 
     const handleClose = () => {
+        dispatch(PayoutLocationAction.close_get_payout_location_details_modal());
         const updatedFilter = {
             ...filterSchema,
             country: "",
