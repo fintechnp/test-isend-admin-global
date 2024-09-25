@@ -20,7 +20,6 @@ import { rewardOnEnums } from "../../data/rewardOnEnums";
 import { rewardTypeEnums } from "../../data/rewardTypeEnums";
 import {
     campaignRewardCatogoryEnums,
-    campaignRewardCatogoryEnumsOptionsReferee,
     campaignRewardCatogoryEnumsOptionsReferrer,
 } from "../../data/campaignRewardCatogoryEnums";
 
@@ -50,7 +49,6 @@ const RewardConfigurationForm = ({
     rewardFields,
     rewardOnOptions,
     rewardTypeOptions,
-    campaignRewardEnumsOptions,
     addRewardFields,
     removeRewardFields,
 }) => {
@@ -61,9 +59,6 @@ const RewardConfigurationForm = ({
     useEffect(() => {
         rewards.forEach((reward, index) => {
             setValue(`Rewards.${index}.rewardCategory`, campaignRewardCatogoryEnumsOptionsReferrer[0].value);
-            if (reward.rewardType === rewardTypeEnums.Fixed) {
-                setValue(`Rewards.${index}.rewardLimit`, 0);
-            }
         });
     }, [rewards]);
 
@@ -142,6 +137,11 @@ const RewardConfigurationForm = ({
                                                     name={`Rewards.${index}.rewardType`}
                                                     options={rewardTypeOptions}
                                                     disabled={isRewardTypeIncentive}
+                                                    onChange={(e) => {
+                                                        if (e.target.value === rewardTypeEnums.Fixed) {
+                                                            setValue(`Rewards.${index}.rewardLimit`, 0);
+                                                        }
+                                                    }}
                                                 />
                                             </CellContainer>
                                         </TableCell>
