@@ -331,6 +331,10 @@ const apiEndpoints = {
     GetDeliveryRoutes: "/deliveryroute",
     GetParnterBanks: "/partnerbank",
     GetPayoutLocations: "/payoutlocation",
+
+    // Application Config
+    GetApplicationConfig: "/config",
+    UpdateApplicationConfig: "/config",
 };
 
 export default apiEndpoints;

@@ -655,6 +655,12 @@ import {
     UpdatePromoSetupReducer,
 } from "./pages/Setup/PromoSetup/store";
 
+import {
+    ApplicationConfigSaga,
+    GetApplicationConfigReducer,
+    UpdateApplicationConfigReducer,
+} from "./pages/Setup/ApplicationConfig/store";
+
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
     get_user_details: GetUserDetailsReducer,
@@ -1184,6 +1190,10 @@ export const privateReducer = {
     delete_attribute_family: deleteAttributeFamilyReducer,
     add_attribute_family: addAttributeFamilyReducer,
     update_attribute_family: updateAttributeFamilyReducer,
+
+    // Application Config
+    get_application_config: GetApplicationConfigReducer,
+    update_application_config: UpdateApplicationConfigReducer,
 };
 
 export const privateSaga = [
@@ -1255,6 +1265,7 @@ export const privateSaga = [
     CustomerKycLogsSaga(),
     PromoCodeSagas(),
     attributeFamilySaga(),
+    ApplicationConfigSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

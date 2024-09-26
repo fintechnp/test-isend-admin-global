@@ -205,6 +205,9 @@ const routePaths = {
 
     // region -email element
     ListEmailElement: "/setup/email-element",
+
+    // Application Config
+    ListApplicationConfig: "/setup/application-config",
 };
 
 export default routePaths;

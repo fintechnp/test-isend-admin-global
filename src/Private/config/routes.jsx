@@ -202,6 +202,7 @@ import ListCampaignUsageReport from "Private/pages/Reports/CampaignReport/ListCa
 import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZaiComponent";
 import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 import ListEmailElement from "Private/components/email-template/ListEmailElement";
+import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -784,6 +785,12 @@ const privateRoutes = [
     {
         path: routePaths.EditPromoCode,
         component: <EditPromoCode />,
+    },
+
+    // ApplicationConfig
+    {
+        path: routePaths.ListApplicationConfig,
+        component: <ListApplicationConfig />,
     },
 ];
 
