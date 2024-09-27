@@ -173,7 +173,7 @@ function CustomerReports(props) {
         },
         {
             type: fieldTypes.DATE,
-            name: "kyc_filled_date",
+            name: "registered_kyc_date",
             label: "KYC Filled Date",
         },
         {
@@ -366,6 +366,18 @@ function CustomerReports(props) {
             },
             {
                 header: "Registered At/By",
+                accessorKey: "registered_kyc_date",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}</Typography>
+                        <Typography>
+                            {row.original?.register_agent_name ? row.original?.register_agent_name : "-"}
+                        </Typography>
+                    </Column>
+                ),
+            },
+            {
+                header: "Created At/By",
                 accessorKey: "created_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
