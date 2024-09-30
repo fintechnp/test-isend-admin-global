@@ -39,6 +39,7 @@ export const CampaignConfigurationForm = ({
                 {isAddMode && (
                     <Grid item xs={12} md={4} lg={4}>
                         <FormSelect
+                            required
                             name="DisplayMechanism"
                             label="Display Mechanism"
                             options={displayMechanismsOptions}
@@ -168,6 +169,7 @@ export const CampaignConfigurationForm = ({
                 </Grid>
                 <Grid item xs={12}>
                     <CKEditorComponent
+                        required
                         name="TermsAndCondition"
                         label="Terms And Condition"
                         elementData={termsAndCondition}

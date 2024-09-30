@@ -64,6 +64,7 @@ export default function CampaignPromoForm({
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormSelect
+                                        required
                                         label="Select an Option"
                                         name={`AttributeConditions.${index}.attribute`}
                                         options={mappedAttributeList}
@@ -160,6 +161,7 @@ export default function CampaignPromoForm({
                                         {attributeFamilyTypeId === campaignEventTypes.AMOUNT && (
                                             <Grid item xs={12} md={6} lg={3}>
                                                 <FormSelect
+                                                    required
                                                     label="Currency"
                                                     placeholder="Currency"
                                                     options={countryCurrency}
@@ -172,6 +174,7 @@ export default function CampaignPromoForm({
                                             attributeFamilyTypeId === campaignEventTypes.COUNT) && (
                                             <Grid item xs={12} md={6} lg={3}>
                                                 <FormTextField
+                                                    required
                                                     label={amountLabel}
                                                     type="number"
                                                     name={`AttributeConditions.${index}.amount`}
@@ -184,6 +187,7 @@ export default function CampaignPromoForm({
                                                 <FormReferenceDataAutoComplete
                                                     name={`AttributeConditions.${index}.amount`}
                                                     label="Relation"
+                                                    required={true}
                                                     labelKey="name"
                                                     valueKey="reference_id"
                                                     referenceTypeId={referenceTypeId.relations}

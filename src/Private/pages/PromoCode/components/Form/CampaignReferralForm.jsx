@@ -32,6 +32,7 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormSelect
+                                        required
                                         label="Referrer Need KYC?"
                                         name={`ReferralFamilyCondition.${index}.referrerneedkyc`}
                                         options={[
@@ -43,6 +44,7 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormTextField
+                                        required
                                         type="number"
                                         label="Referrer Least Transactions"
                                         name={`ReferralFamilyCondition.${index}.referrerleasttransactions`}
@@ -51,6 +53,7 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormTextField
+                                        required
                                         type="number"
                                         label="Minimum Referee"
                                         name={`ReferralFamilyCondition.${index}.minimumreferrer`}
@@ -69,6 +72,7 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <FormSelect
+                                        required
                                         label="Referee Need KYC?"
                                         name={`ReferralFamilyCondition.${index}.refereeneedkyc`}
                                         options={[
@@ -81,6 +85,7 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
 
                                 <Grid item xs={12} sm={4}>
                                     <FormTextField
+                                        required
                                         type="number"
                                         label="Referee Least Transactions"
                                         name={`ReferralFamilyCondition.${index}.refereeleasttransactions`}
@@ -90,6 +95,7 @@ const CampaignReferralForm = ({ triggerReferrerFields, addtriggerReferrerFields,
 
                                 <Grid item xs={12} sm={4}>
                                     <FormTextField
+                                        required
                                         type="number"
                                         label="KYC Verifying Days"
                                         name={`ReferralFamilyCondition.${index}.kycverifyingdays`}

@@ -61,4 +61,5 @@ FormReferenceDataAutoComplete.propTypes = {
     labelKey: PropTypes.oneOf(["reference_id", "name", "value"]),
     valueKey: PropTypes.oneOf(["reference_id", "name", "value"]),
     isOptional: PropTypes.bool,
+    required: PropTypes.bool,
 };

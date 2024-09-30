@@ -49,17 +49,22 @@ function FormSelect(props) {
                     fullWidth={fullWidth}
                     size={size}
                     error={!!get(errors, name)}
-                    required={required}
                     placeholder={placeholder}
                 >
-                    <InputLabel>{label}</InputLabel>
+                    <InputLabel>
+                        {
+                            <>
+                                {label}
+                                {required && <span style={{ color: "red", marginLeft: 2 }}>*</span>}
+                            </>
+                        }
+                    </InputLabel>
                     <Select
                         {...field}
                         {...rest}
                         error={!!get(errors, name)}
                         label={label}
                         variant={variant}
-                        required={required}
                         onFocus={() => clearErrors(name)}
                         disabled={disabled}
                         tabIndex={tabIndex}

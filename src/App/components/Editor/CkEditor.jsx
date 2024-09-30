@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import FormHelperText from "@mui/material/FormHelperText";
 import { Controller, get, useFormContext } from "react-hook-form";
 
-const CKEditorComponent = ({ elementData, name, label, ...rest }) => {
+const CKEditorComponent = ({ elementData, required, name, label, ...rest }) => {
     const [editorLoaded, setEditorLoaded] = useState(false);
     const [CKEditor, setCKEditor] = useState(null);
     const [ClassicEditor, setClassicEditor] = useState(null);
@@ -38,7 +38,10 @@ const CKEditorComponent = ({ elementData, name, label, ...rest }) => {
             render={() => {
                 return (
                     <Box>
-                        <InputLabel>{label ?? ""}</InputLabel>
+                        <InputLabel>
+                            {<>{label ?? ""}</>}
+                            {required && <span style={{ color: "red", marginLeft: 2 }}>*</span>}
+                        </InputLabel>
                         {editorLoaded ? (
                             <Box
                                 sx={(theme) => ({

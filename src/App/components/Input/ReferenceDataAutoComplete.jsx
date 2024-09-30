@@ -88,11 +88,23 @@ export default function ReferenceDataAutoComplete(props) {
                     {...params}
                     label={
                         <>
-                            {label} {isOptional && <Typography variant="caption">(Optional)</Typography>}
+                            {label}
+
+                            {required && (
+                                <span
+                                    style={{
+                                        color: "red",
+                                        marginLeft: 2,
+                                    }}
+                                >
+                                    *
+                                </span>
+                            )}
+
+                            {isOptional && !required && <Typography variant="caption">(Optional)</Typography>}
                         </>
                     }
                     placeholder={placeholder}
-                    required={required}
                     InputProps={{
                         disabled,
                         autoComplete: "new-password",
@@ -118,4 +130,5 @@ ReferenceDataAutoComplete.propTypes = {
     referenceTypeId: PropTypes.number.isRequired,
     labelKey: PropTypes.oneOf(["reference_id", "name", "value"]),
     valueKey: PropTypes.oneOf(["reference_id", "name", "value"]),
+    required: PropTypes.bool,
 };

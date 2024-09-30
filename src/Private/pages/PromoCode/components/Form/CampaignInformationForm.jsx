@@ -14,7 +14,7 @@ const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData,
             {isAddMode && (
                 <>
                     <Grid item xs={12} md={6} lg={3}>
-                        <FormTextField name="Campaign.CampaignName" label="Campaign Name" control={control} />
+                        <FormTextField required name="Campaign.CampaignName" label="Campaign Name" control={control} />
                     </Grid>
 
                     <Grid item xs={12} md={6} lg={3}>
@@ -24,12 +24,14 @@ const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData,
                             label="Campaign Type"
                             options={campaignCodesOptions}
                             control={control}
+                            required
                         />
                     </Grid>
 
                     <Grid item xs={12} md={6} lg={3}>
                         <FormSelect
                             type="number"
+                            required
                             name="Campaign.ValidCountry"
                             label="Valid Country"
                             options={countryData}
@@ -40,7 +42,7 @@ const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData,
             )}
 
             <Grid item xs={12} md={6} lg={3}>
-                <FormDateTimePicker name="Campaign.StartDate" label="Start Date Time" control={control} />
+                <FormDateTimePicker required name="Campaign.StartDate" label="Start Date Time" control={control} />
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>
@@ -48,11 +50,17 @@ const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData,
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField type="number" name="Campaign.Budget" label="Budget" control={control} />
+                <FormTextField required type="number" name="Campaign.Budget" label="Budget" control={control} />
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>
-                <FormSelect name="Campaign.Status" label="Status" options={campaignStatusOptions} control={control} />
+                <FormSelect
+                    required
+                    name="Campaign.Status"
+                    label="Status"
+                    options={campaignStatusOptions}
+                    control={control}
+                />
             </Grid>
         </Grid>
     );

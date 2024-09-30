@@ -100,6 +100,7 @@ const RewardConfigurationForm = ({
                                         <TableCell>
                                             <CellContainer>
                                                 <FormTextField
+                                                    required
                                                     label="Minimum Amount"
                                                     type="number"
                                                     name={`Rewards.${index}.minimumAmount`}
@@ -109,6 +110,7 @@ const RewardConfigurationForm = ({
                                         <TableCell>
                                             <CellContainer>
                                                 <FormTextField
+                                                    required
                                                     label="Maximum Amount"
                                                     type="number"
                                                     name={`Rewards.${index}.maximumAmount`}
@@ -148,6 +150,7 @@ const RewardConfigurationForm = ({
                                         <TableCell>
                                             <CellContainer>
                                                 <FormTextField
+                                                    required
                                                     label="Value"
                                                     type="number"
                                                     name={`Rewards.${index}.rewardValue`}
@@ -158,6 +161,7 @@ const RewardConfigurationForm = ({
                                             <TableCell>
                                                 <CellContainer>
                                                     <FormTextField
+                                                        required
                                                         label="Limit"
                                                         type="number"
                                                         name={`Rewards.${index}.rewardLimit`}
@@ -180,6 +184,7 @@ const RewardConfigurationForm = ({
                                         >
                                             <CellContainer>
                                                 <FormSelect
+                                                    required
                                                     type="hidden"
                                                     name={`Rewards.${index}.rewardCategory`}
                                                     options={campaignRewardCatogoryEnumsOptionsReferrer}

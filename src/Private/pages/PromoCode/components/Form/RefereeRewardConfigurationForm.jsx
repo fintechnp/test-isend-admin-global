@@ -104,6 +104,7 @@ const RefereeRewardConfigurationForm = ({
                                     <TableCell>
                                         <CellContainer>
                                             <FormTextField
+                                                required
                                                 label="Minimum Amount"
                                                 type="number"
                                                 name={`RefereeRewards.${index}.minimumAmount`}
@@ -114,6 +115,7 @@ const RefereeRewardConfigurationForm = ({
                                     <TableCell>
                                         <CellContainer>
                                             <FormTextField
+                                                required
                                                 label="Maximum Amount"
                                                 type="number"
                                                 name={`RefereeRewards.${index}.maximumAmount`}
@@ -142,6 +144,7 @@ const RefereeRewardConfigurationForm = ({
                                     <TableCell>
                                         <CellContainer>
                                             <FormTextField
+                                                required
                                                 label="Value"
                                                 type="number"
                                                 name={`RefereeRewards.${index}.rewardValue`}
@@ -153,6 +156,7 @@ const RefereeRewardConfigurationForm = ({
                                         <TableCell>
                                             <CellContainer>
                                                 <FormTextField
+                                                    required
                                                     label="Limit"
                                                     type="number"
                                                     name={`RefereeRewards.${index}.rewardLimit`}
