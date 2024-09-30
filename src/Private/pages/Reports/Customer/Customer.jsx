@@ -295,14 +295,14 @@ function CustomerReports(props) {
                 cell: ({ row, getValue }) => {
                     return (
                         <Column>
-                            <Typography>{getValue() ? getValue() : "-"}</Typography>
+                            <Typography>{getValue() ? getValue() : ""}</Typography>
                             <Typography>
-                                {row.original.street ? row.original.street : "-"},{" "}
-                                {row.original.city ? row.original.city : "-"}
+                                {row.original.street ? `${row.original.street},` : ""}
+                                {row.original.city ? row.original.city : ""}
                             </Typography>
                             <Typography>
-                                {row.original.state ? row.original.state : "-"},{" "}
-                                {row.original.country ? row.original.country : "-"}
+                                {row.original.state ? `${row.original.state},` : ""}
+                                {row.original.country ? row.original.country : ""}
                             </Typography>
                         </Column>
                     );
@@ -314,22 +314,21 @@ function CustomerReports(props) {
                 cell: ({ row, getValue }) => (
                     <Column>
                         <Typography>
-                            {" "}
                             {!isEmpty(row.original.phone_number)
                                 ? row.original.phone_number
                                 : row.original.mobile_number}
                         </Typography>
                         <Typography sx={{ color: (theme) => theme.palette.text.main }}>
-                            {getValue() ? getValue() : "-"}
+                            {getValue() ? getValue() : ""}
                         </Typography>
                     </Column>
                 ),
             },
             {
-                header: "KYC Document",
+                header: "KYC Document Type",
                 accessorKey: "id_type",
                 cell: ({ getValue }) => (
-                    <>{getValue() ? ReferenceName(referenceTypeId.kycDocuments, getValue()) : "-"}</>
+                    <>{getValue() ? ReferenceName(referenceTypeId.kycDocuments, getValue()) : ""}</>
                 ),
             },
             {
@@ -342,14 +341,11 @@ function CustomerReports(props) {
                 accessorKey: "id_issue_date",
                 cell: ({ getValue, row }) => (
                     <Column>
+                        <Typography>{getValue() ? `Issue: ${dateUtils.getFormattedDate(getValue())}` : ""}</Typography>
                         <Typography>
-                            Issue: {getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}
-                        </Typography>
-                        <Typography>
-                            Expiry:{" "}
                             {row.original.id_expiry_date
-                                ? format(parseISO(row.original.id_expiry_date), "MMM dd, yyyy")
-                                : "-"}
+                                ? `Expiry: ${dateUtils.getFormattedDate(row.original.id_expiry_date)}`
+                                : ""}
                         </Typography>
                     </Column>
                 ),
@@ -366,33 +362,22 @@ function CustomerReports(props) {
             },
             {
                 header: "Registered At/By",
-                accessorKey: "registered_kyc_date",
-                cell: ({ getValue, row }) => (
-                    <Column>
-                        <Typography>{getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}</Typography>
-                        <Typography>
-                            {row.original?.register_agent_name ? row.original?.register_agent_name : "-"}
-                        </Typography>
-                    </Column>
-                ),
-            },
-            {
-                header: "Created At/By",
                 accessorKey: "created_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}</Typography>
-                        <Typography>{row.original?.created_by ? row.original?.created_by : "-"}</Typography>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original?.created_by ? row.original?.created_by : ""}</Typography>
                     </Column>
                 ),
             },
+
             {
                 header: "Updated At/By",
                 accessorKey: "updated_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? format(parseISO(getValue()), "MMM dd, yyyy") : "-"}</Typography>
-                        <Typography>{row.original?.updated_by ? row.original?.updated_by : "-"}</Typography>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original?.updated_by ? row.original?.updated_by : ""}</Typography>
                     </Column>
                 ),
             },

@@ -178,8 +178,8 @@ const DeliveryOption = () => {
                 cell: ({ row, getValue }) => {
                     return (
                         <Column>
-                            <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
-                            <Typography>By: {row.original.created_by ? row.original.created_by : "-"}</Typography>
+                            <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : "-"}</Typography>
+                            <Typography>{row.original.created_by ? `By: ${row.original.created_by}` : ""}</Typography>
                         </Column>
                     );
                 },
@@ -190,8 +190,8 @@ const DeliveryOption = () => {
                 cell: ({ row, getValue }) => {
                     return (
                         <Column>
-                            <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
-                            <Typography>By: {row.original.updated_by ? row.original.updated_by : "-"}</Typography>
+                            <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                            <Typography>{row.original.updated_by ? `By: ${row.original.updated_by}` : ""}</Typography>
                         </Column>
                     );
                 },
