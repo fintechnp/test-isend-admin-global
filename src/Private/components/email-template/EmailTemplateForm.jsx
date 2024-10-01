@@ -89,8 +89,8 @@ const EmailTemplateForm = ({
 
     const referenceData = referenceTypeIdForTemplateType
         ? (reference
-              ?.filter((ref_data) => ref_data.reference_type === referenceTypeIdForTemplateType)[0]
-              .reference_data.map((ref) => ({
+              ?.find((ref_data) => ref_data.reference_type === referenceTypeIdForTemplateType)
+              ?.reference_data.map((ref) => ({
                   label: ref.name,
                   value: ref.value,
               })) ?? [])
