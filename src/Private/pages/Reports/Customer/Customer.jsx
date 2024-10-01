@@ -1,55 +1,57 @@
-import moment from "moment";
-import { reset } from "redux-form";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
+import * as Yup from "yup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { format, isAfter, parseISO } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Filter from "../Shared/Filter";
-import SearchForm from "./SearchForm";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import withPermission from "Private/HOC/withPermission";
-import Table, { TablePagination } from "App/components/Table";
-import PageContent from "App/components/Container/PageContent";
-
 import actions from "../store/actions";
-import dateUtils from "App/utils/dateUtils";
+import Row from "App/components/Row/Row";
+import { ReferenceName } from "App/helpers";
+import Column from "App/components/Column/Column";
+import PhoneIcon from "App/components/Icon/PhoneIcon";
+import { TablePagination } from "App/components/Table";
 import { permissions } from "Private/data/permissions";
-import PartnerActions from "../../Setup/Partner/store/actions";
-import { CountryName, ReferenceName, FormatDateTime } from "App/helpers";
+import withPermission from "Private/HOC/withPermission";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import PageContent from "App/components/Container/PageContent";
+import CustomerAvatar from "App/components/Avatar/CustomerAvatar";
+import KycStat from "Private/pages/Customers/Search/components/KycStat";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import KycStatusBadge from "Private/pages/Customers/Search/components/KycStatusBadge";
+import CustomerStatusBadge from "Private/pages/Customers/Search/components/CustomerStatusBadge";
 
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
+import PartnerType from "App/data/PartnerType";
+import calculateAge from "App/helpers/calculateAge";
+import { GenderStringOptions } from "App/data/Gender";
+import { getCustomerName } from "App/helpers/getFullName";
+import referenceTypeId from "Private/config/referenceTypeId";
 
-const StyledName = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "14px",
-    color: theme.palette.text.dark,
-    textTransform: "capitalize",
-}));
-
-const StyledStatus = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    paddingTop: "4px",
-    paddingBottom: "4px",
-    fontSize: "11px",
-    borderRadius: "6px",
-    textTransform: "capitalize",
-}));
+const schema = Yup.object().shape({
+    created_from_date: Yup.string().nullable().optional(),
+    created_to_date: Yup.string()
+        .nullable()
+        .optional()
+        .when("created_from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                Yup.string().test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { created_from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(created_from_date)) : true;
+                    },
+                }),
+            otherwise: (schema) => Yup.string().nullable().optional(),
+        }),
+});
 
 const StyledMail = styled(Typography)(({ theme }) => ({
     opacity: 0.9,
@@ -64,22 +66,9 @@ const StyledMail = styled(Typography)(({ theme }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
-    customer_id: 0,
-    agent_id: 0,
-    name: "",
-    id_number: "",
-    mobile_number: "",
-    email: "",
-    date_of_birth: "",
-    created_from_date: "",
-    created_to_date: "",
-    kyc_status: "",
-    kyc_from_date: "",
-    kyc_to_date: "",
-    country: "",
-    nationality: "",
-    search: "",
+    page_size: 10,
+    created_from_date: dateUtils.getDateBeforeTwoWeeks(),
+    created_to_date: dateUtils.getTodayDate(),
     sort_by: "created_ts",
     order_by: "DESC",
 };
@@ -95,238 +84,307 @@ const stateSend = {
 
 function CustomerReports(props) {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
     const [filterPartner, setFilterPartner] = useState(stateSend);
+    const reference = JSON.parse(localStorage.getItem("reference"));
+
+    const KycStatusOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === 21)[0]
+        .reference_data.map((data) => ({ ...data, label: data.name }));
+
+    const IdTypeOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.identityTypes)[0]
+        .reference_data.map((data) => ({ ...data, label: data.name }));
 
     const { response: CustomerReports, loading: l_loading } = useSelector((state) => state.get_customer_report);
 
-    const { response: SendingPartner, loading: p_loading } = useSelector((state) => state.get_sending_partner);
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "created_from_date",
+        toDateParamName: "created_to_date",
+    });
+
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "created_from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "created_to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "country",
+            label: "Country",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "nationality",
+            label: "Nationality",
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            name: "agent_id",
+            label: "Partner",
+            props: {
+                partnerType: PartnerType.SEND,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "mobile_number",
+            label: "Mobile Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "email",
+            label: "Email",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "date_of_birth",
+            label: "Date of Birth",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "gender",
+            label: "Gender",
+            options: GenderStringOptions,
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "registered_kyc_date",
+            label: "KYC Filled Date",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "id_issue_date",
+            label: "Id Issue Date",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "id_expiry_date",
+            label: "Id Expiry Date",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "id_type",
+            label: "Id Type",
+            options: IdTypeOptions,
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "id_number",
+            label: "Id Number",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "kyc_status",
+            label: "KYC Status",
+            options: KycStatusOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "is_active",
+            label: "Account Status",
+            options: [
+                {
+                    label: "Active",
+                    value: true,
+                },
+                {
+                    label: "Inactive",
+                    value: false,
+                },
+            ],
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "is_deleted",
+            label: "Is Deleted",
+            options: [
+                {
+                    label: "Yes",
+                    value: true,
+                },
+                {
+                    label: "No",
+                    value: false,
+                },
+            ],
+        },
+    ];
 
     const {
         response: ReportsDownload,
         loading: pd_loading,
+
         success: pd_success,
     } = useSelector((state) => state.download_report);
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_customer_reports"));
         dispatch({ type: "CUSTOMER_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_customer_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_customer_report(filterSchema));
     }, [dispatch, filterSchema]);
-
-    useEffect(() => {
-        if (filterPartner.country) {
-            dispatch(PartnerActions.get_sending_partner(filterPartner));
-        }
-    }, [dispatch, filterPartner]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/customer/details/${data.row.original.tid}`} style={{ textDecoration: "none" }}>
-                                {data.value ? data.value : "N/A"}
-                            </Link>
-                        </StyledName>
-                    </Box>
+                header: "S.N.",
+                accessorKey: "f_serial_no",
+            },
+            {
+                header: "Customer Details",
+                accessorKey: "first_name",
+                cell: ({ row }) => {
+                    const age = calculateAge(row.original.date_of_birth);
+
+                    const caption = [age ? `${age} y` : "", row.original.gender].filter((value) => !isEmpty(value));
+
+                    return (
+                        <Row gap="8px">
+                            <CustomerAvatar
+                                name={getCustomerName(row.original)}
+                                countryIso2Code={row.original.country_ios2}
+                            />
+                            <Column>
+                                <Typography fontWeight={500}>
+                                    {getCustomerName(row.original)} ({row.original.customer_id})
+                                </Typography>
+                                <Row alignItems="center" gap="2px">
+                                    <PhoneIcon />
+                                    <Typography variant="caption">
+                                        {!isEmpty(row.original.phone_number)
+                                            ? row.original.phone_number
+                                            : row.original.mobile_number}
+                                        {caption.length > 0 ? ", " : null} {caption.join(" / ")}
+                                    </Typography>
+                                </Row>
+                            </Column>
+                        </Row>
+                    );
+                },
+            },
+            {
+                header: "Address Details",
+                accessorKey: "address",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? getValue() : ""}</Typography>
+                            <Typography>
+                                {row.original.street ? `${row.original.street},` : ""}
+                                {row.original.city ? row.original.city : ""}
+                            </Typography>
+                            <Typography>
+                                {row.original.state ? `${row.original.state},` : ""}
+                                {row.original.country ? row.original.country : ""}
+                            </Typography>
+                        </Column>
+                    );
+                },
+            },
+            {
+                header: "Contact Details",
+                accessorKey: "email",
+                cell: ({ row, getValue }) => (
+                    <Column>
+                        <Typography>
+                            {!isEmpty(row.original.phone_number)
+                                ? row.original.phone_number
+                                : row.original.mobile_number}
+                        </Typography>
+                        <Typography sx={{ color: (theme) => theme.palette.text.main }}>
+                            {getValue() ? getValue() : ""}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Name",
-                accessor: "first_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value} {data?.row?.original?.middle_name} {data?.row?.original?.last_name}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.customer_type_data ? data?.row?.original?.customer_type_data : "N/A"}
-                        </StyledName>
-                    </Box>
+                header: "KYC Document Type",
+                accessorKey: "id_type",
+                cell: ({ getValue }) => (
+                    <>{getValue() ? ReferenceName(referenceTypeId.kycDocuments, getValue()) : ""}</>
                 ),
             },
             {
-                Header: "Identity",
-                accessor: "id_type",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.id_number ? data?.row?.original?.id_number : "N/A"}
-                        </StyledName>
-                    </Box>
+                header: "Id Number",
+                accessorKey: "id_number",
+            },
+
+            {
+                header: "Id",
+                accessorKey: "id_issue_date",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? `Issue: ${dateUtils.getFormattedDate(getValue())}` : ""}</Typography>
+                        <Typography>
+                            {row.original.id_expiry_date
+                                ? `Expiry: ${dateUtils.getFormattedDate(row.original.id_expiry_date)}`
+                                : ""}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Address",
-                accessor: "country",
-                minWidth: 170,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data?.row?.original?.postcode} {data?.row?.original?.unit} {data?.row?.original?.street}{" "}
-                            {data?.row?.original?.address}
-                        </StyledName>
-                        <StyledName component="span" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data?.row?.original?.state}
-                            {data?.row?.original?.state && ","} {CountryName(data.value)}
-                        </StyledName>
-                    </Box>
+                header: "KYC Status",
+                accessorKey: "kyc_status",
+                cell: ({ row, getValue }) => (
+                    <KycStatusBadge
+                        status={getValue()}
+                        label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : "Not Started"}
+                    />
                 ),
             },
             {
-                Header: "Contact",
-                accessor: "mobile_number",
-                minWidth: 160,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <Tooltip title={data?.row?.original?.email} arrow>
-                            <StyledMail
-                                component="p"
-                                sx={{
-                                    paddingLeft: "4px",
-                                    fontSize: "13px",
-                                    opacity: 0.6,
-                                }}
-                            >
-                                {data?.row?.original?.email ? data?.row?.original?.email : "N/A"}
-                            </StyledMail>
-                        </Tooltip>
-                    </Box>
+                header: "Registered At/By",
+                accessorKey: "created_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original?.created_by ? row.original?.created_by : ""}</Typography>
+                    </Column>
+                ),
+            },
+
+            {
+                header: "Updated At/By",
+                accessorKey: "updated_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original?.updated_by ? row.original?.updated_by : ""}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: () => (
-                    <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>KYC Status</Typography>
-                    </Box>
-                ),
-                accessor: "kyc_status",
-                maxWidth: 110,
-                Cell: (data) => (
-                    <Box textAlign="left">
-                        <StyledStatus component="p" value={data.value} sx={{ opacity: 0.8 }}>
-                            {data.value ? ReferenceName(21, data.value) : "N/A"}
-                        </StyledStatus>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.address ? data?.row?.original?.address : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>Since/Status</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                maxWidth: 110,
-                Cell: (data) => (
-                    <Box textAlign="left">
-                        <StyledName component="p" value={data.value}>
-                            {FormatDateTime(data?.value)}
-                        </StyledName>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "flex-start",
-                            }}
-                        >
-                            {data?.row?.original?.is_active ? (
-                                <Tooltip title="Active" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>Active</StyledName>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Blocked" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>Inactive</StyledName>
-                                </Tooltip>
-                            )}
-                        </Box>
-                    </Box>
-                ),
+                header: "Account Status",
+                accessorKey: "is_active",
+                cell: ({ getValue }) => <CustomerStatusBadge status={getValue() ? "active" : "blocked"} />,
             },
         ],
         [],
@@ -341,84 +399,12 @@ function CustomerReports(props) {
         { key: "Country", value: "country" },
     ];
 
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
     const handlePartner = (e) => {
         const updatedFilterSchema = {
             ...filterPartner,
             country: e.target.value,
         };
         setFilterPartner(updatedFilterSchema);
-    };
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_id: data?.agent_id,
-            customer_id: data?.customer_id,
-            id_number: data?.id_number,
-            name: data?.name,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-            created_from_date: data?.created_from_date,
-            created_to_date: data?.created_to_date,
-            kyc_status: data?.kyc_status,
-            kyc_from_date: data?.kyc_from_date,
-            kyc_to_date: data?.kyc_to_date,
-            country: data?.country,
-            nationality: data?.nationality,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_customer_reports"));
-        dispatch({ type: "CUSTOMER_REPORT_RESET" });
-        dispatch({ type: "GET_SENDING_PARTNER_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    //Pagination
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
     };
 
     //Downloads
@@ -449,64 +435,59 @@ function CustomerReports(props) {
     };
 
     return (
-        <PageContent title="Filter Customers" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        onSubmit={handleSearch}
-                        handlePartner={handlePartner}
-                        handleReset={handleReset}
-                        loading={l_loading}
-                        partner={SendingPartner?.data}
-                        initialValues={{
-                            created_from_date: dateUtils.getFromDate(moment().format("YYYY-MM-DD")),
-                            created_to_date: dateUtils.getToDate(moment().format("YYYY-MM-DD")),
-                        }}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && CustomerReports?.data && CustomerReports?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Customer Found" />
-                    </Grid>
-                )}
-                {!l_loading && CustomerReports?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
-                            <Filter
-                                fileName="CustomerReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                csvReport={csvReport}
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Customers List"
-                                state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
-                                downloadData={downloadData}
-                            />
-                            <Table
-                                columns={columns}
-                                data={CustomerReports?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={CustomerReports?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
+        <PageContent
+            documentTitle="Filter Customers"
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+            breadcrumbs={[
+                {
+                    label: "Generate Reports",
+                },
+                {
+                    label: "Customers",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <FilterForm
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onDelete={onDeleteFilterParams}
+                    schema={schema}
+                    title="Search Customers"
+                    onReset={reset}
+                />
+
+                <PageContentContainer
+                    title="Customers"
+                    topRightContent={
+                        <Filter
+                            fileName="CustomerReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={CustomerReports?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={CustomerReports?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+                <KycStat
+                    fromDate={filterSchema?.created_from_date}
+                    toDate={filterSchema?.created_to_date}
+                    pageName="customer_report"
+                />
+            </Column>
         </PageContent>
     );
 }

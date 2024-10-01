@@ -50,6 +50,14 @@ const actions = {
         id,
         query,
     }),
+
+    create_beneficiary_reset: () => ({
+        type: actions.CREATE_BENEFICIARY_RESET,
+    }),
+
+    update_beneficiary_reset: () => ({
+        type: actions.UPDATE_BENEFICIARY_RESET,
+    }),
 };
 
 export default actions;

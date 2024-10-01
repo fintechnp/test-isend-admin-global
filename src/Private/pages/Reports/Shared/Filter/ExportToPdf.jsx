@@ -1,10 +1,13 @@
 import React from "react";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { Page, Document, StyleSheet, View, Text, Image } from "@react-pdf/renderer";
 
-import logo from "../../../../../assets/isend_logo.png";
 import Table from "./PdfTable";
+import logo from "../../../../../assets/isend_logo.png";
+import DocumentDownloadIcon from "App/components/Icon/DocumentDownloadIcon";
 
 const styles = StyleSheet.create({
     page: {
@@ -43,6 +46,14 @@ const styles = StyleSheet.create({
     },
 });
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    background: theme.palette.surface.primarySecond,
+    fontWeight: 600,
+    "&:hover": {
+        background: theme.palette.surface.primarySecond,
+    },
+}));
+
 export const PdfDocument = ({ csvReport }) => {
     return (
         <Document>
@@ -67,7 +78,7 @@ export const PdfDocument = ({ csvReport }) => {
     );
 };
 
-const ExportToPdf = ({ setDown, downloadData, handleClose }) => {
+const ExportToPdf = ({ setDown, downloadData, handleClose, menu = false }) => {
     const fetchData = () => {
         setDown("pdf");
         downloadData();
@@ -75,10 +86,18 @@ const ExportToPdf = ({ setDown, downloadData, handleClose }) => {
     };
 
     return (
-        <MenuItem onClick={fetchData} disableRipple>
-            <PictureAsPdfIcon />
-            PDF
-        </MenuItem>
+        <>
+            {menu ? (
+                <MenuItem onClick={fetchData} disableRipple>
+                    <PictureAsPdfIcon />
+                    PDF
+                </MenuItem>
+            ) : (
+                <StyledButton endIcon={<DocumentDownloadIcon />} onClick={fetchData}>
+                    PDF
+                </StyledButton>
+            )}
+        </>
     );
 };
 

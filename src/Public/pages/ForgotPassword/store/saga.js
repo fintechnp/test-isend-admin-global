@@ -3,9 +3,7 @@ import Api from "App/services/api";
 import apiEndpoints from "Private/config/apiEndpoints";
 import { put, takeEvery, call, all } from "redux-saga/effects";
 
-
 export const forgotPassword = takeEvery(actions.FORGOT_PASSWORD_INIT, function* (action) {
-
     const api = new Api();
 
     try {

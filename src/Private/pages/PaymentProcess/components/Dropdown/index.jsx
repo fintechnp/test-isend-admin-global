@@ -29,10 +29,7 @@ const StyledMenu = styled((props) => (
         [theme.breakpoints.up("md")]: {
             maxWidth: "70%",
         },
-        color:
-            theme.palette.mode === "light"
-                ? "rgb(55, 65, 81)"
-                : theme.palette.grey[300],
+        color: theme.palette.mode === "light" ? "rgb(55, 65, 81)" : theme.palette.grey[300],
         boxShadow:
             "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
         "& .MuiMenu-list": {
@@ -65,12 +62,8 @@ export default function TransactionFilter({ handleFilter }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const [filterPay, setFilterPay] = React.useState(statePay);
-    const { response: partner_sending } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
-    );
+    const { response: partner_sending } = useSelector((state) => state.get_sending_partner);
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
 
     React.useEffect(() => {
         if (filterPay?.country) {

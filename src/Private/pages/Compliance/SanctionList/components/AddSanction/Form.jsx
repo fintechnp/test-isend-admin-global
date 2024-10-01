@@ -59,13 +59,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const PaymentRulesForm = ({
-    handleSubmit,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
+const PaymentRulesForm = ({ handleSubmit, update, loading, buttonText, handleClose }) => {
     const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
 
@@ -81,10 +75,7 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -101,15 +92,9 @@ const PaymentRulesForm = ({
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 37
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 37)[0]
                                         ?.reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -122,33 +107,21 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Sending Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
+                                        <option value={data.iso3} key={data.tid}>
                                             {data.country}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="address"
-                                label="Address"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="address" label="Address" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -170,29 +143,14 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="ref1"
-                                label="Reference 1"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="ref1" label="Reference 1" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="ref2"
-                                label="Reference 2"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="ref2" label="Reference 2" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -201,10 +159,7 @@ const PaymentRulesForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -221,11 +176,7 @@ const PaymentRulesForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

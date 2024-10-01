@@ -1,5 +1,5 @@
-if (typeof Storage === 'undefined') {
-  // Sorry! No Web Storage support...
+if (typeof Storage === "undefined") {
+    // Sorry! No Web Storage support...
 }
 
 /**
@@ -8,9 +8,9 @@ if (typeof Storage === 'undefined') {
  * @return boolean
  */
 function localStorageHas(key) {
-  var item = localStorage.getItem(key);
+    var item = localStorage.getItem(key);
 
-  return item !== null;
+    return item !== null;
 }
 
 /**
@@ -19,13 +19,13 @@ function localStorageHas(key) {
  * @return mixed
  */
 function localStorageGet(key) {
-  var item = localStorage.getItem(key);
+    var item = localStorage.getItem(key);
 
-  if (!item) return;
+    if (!item) return;
 
-  if (item[0] === '{' || item[0] === '[') return JSON.parse(item);
+    if (item[0] === "{" || item[0] === "[") return JSON.parse(item);
 
-  return item;
+    return item;
 }
 
 /**
@@ -34,15 +34,15 @@ function localStorageGet(key) {
  * @param string value
  */
 function localStorageSave(key, value) {
-  if (value === undefined) throw new Error("Can't store undefined value");
+    if (value === undefined) throw new Error("Can't store undefined value");
 
-  if (typeof value === 'object') {
-    value = JSON.stringify(value);
-  }
+    if (typeof value === "object") {
+        value = JSON.stringify(value);
+    }
 
-  if (typeof value !== 'string') throw new Error("Can't store unrecognized format value");
+    if (typeof value !== "string") throw new Error("Can't store unrecognized format value");
 
-  localStorage.setItem(key, value);
+    localStorage.setItem(key, value);
 }
 
 /**
@@ -50,7 +50,7 @@ function localStorageSave(key, value) {
  * @param string key
  */
 function localStorageRemove(key) {
-  localStorage.removeItem(key);
+    localStorage.removeItem(key);
 }
 
 export { localStorageGet, localStorageHas, localStorageRemove, localStorageSave };

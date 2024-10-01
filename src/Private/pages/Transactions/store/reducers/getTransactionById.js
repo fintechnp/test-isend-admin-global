@@ -1,4 +1,4 @@
-import actions from "../../../Customers/Search/store/actions";
+import actions from "../actions";
 
 const initialState = {
     success: false,

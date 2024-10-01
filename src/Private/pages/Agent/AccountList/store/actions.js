@@ -15,7 +15,6 @@ const actions = {
     get_account_balance_by_id: (id) => ({
         type: actions.GET_Account_Balance_By_ID,
         id,
-
     }),
 };
 

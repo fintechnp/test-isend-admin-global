@@ -176,8 +176,6 @@ class PermissionUtils {
         // Start the recursive search from the top-level of permissions
         return findParent(permissions, permissionId);
     }
-
-
 }
 
 export default new PermissionUtils();

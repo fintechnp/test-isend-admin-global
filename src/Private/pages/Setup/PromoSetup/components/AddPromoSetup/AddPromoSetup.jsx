@@ -20,7 +20,7 @@ import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -42,7 +42,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -123,18 +123,10 @@ function AddPromoSetup({ update_data, update }) {
         sort_by: "name",
         order_by: "DESC",
     });
-    const { response: PartnerSend } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: PartnerPayout } = useSelector(
-        (state) => state.get_payout_partner
-    );
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_promo_setup
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_promo_setup
-    );
+    const { response: PartnerSend } = useSelector((state) => state.get_sending_partner);
+    const { response: PartnerPayout } = useSelector((state) => state.get_payout_partner);
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_promo_setup);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_promo_setup);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -189,7 +181,7 @@ function AddPromoSetup({ update_data, update }) {
             };
             setFilterSchema(updatedFilter);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     return (
@@ -208,12 +200,7 @@ function AddPromoSetup({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Promo Setup
                 </AddButton>
             )}
@@ -223,10 +210,7 @@ function AddPromoSetup({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create"} Promo Setup
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
@@ -234,8 +218,7 @@ function AddPromoSetup({ update_data, update }) {
                         <PromoSetupForm
                             destroyOnUnmount
                             initialValues={{
-                                sending_agent_id:
-                                    memoizedData?.sending_agent_id,
+                                sending_agent_id: memoizedData?.sending_agent_id,
                                 payout_agent_id: memoizedData?.payout_agent_id,
                                 name: memoizedData?.name,
                                 payment_type: memoizedData?.payment_type,

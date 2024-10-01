@@ -22,6 +22,7 @@ import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import FormSearchAutocomplete from "App/core/hook-form/FormSearchAutocomplete";
 import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+import FormPartnerSelect from "App/core/hook-form/FormPartnerSelect";
 
 const CloseButton = styled(Button)(({ theme }) => ({
     background: theme.palette.surface.primarySecond,
@@ -43,13 +44,22 @@ export const fieldTypes = {
     DATE: "date",
     COUNTRY_SELECT: "country-select",
     SEARCH_AUTOCOMPLETE_API: "search-autocomplete-api",
+    PARTNER_SELECT: "partner-select",
 };
 
 const BuildFilterInput = ({ field }) => {
     if (field.type === fieldTypes.TEXTFIELD) return <FormTextField name={field.name} label={field.label} />;
 
     if (field.type === fieldTypes.SELECT)
-        return <FormSelect name={field.name} label={field.label} options={field.options} />;
+        return (
+            <FormSelect
+                name={field.name}
+                label={field.label}
+                options={field.options}
+                defaultValue={field?.defaultValue}
+                onChange={field?.onChange}
+            />
+        );
 
     if (field.type === fieldTypes.DATE)
         return <FormDatePicker name={field.name} label={field.label} options={field.options} {...field.props} />;
@@ -63,11 +73,23 @@ const BuildFilterInput = ({ field }) => {
                 paramkey={field.searchParamName}
                 valueKey={field.valueKey}
                 labelKey={field.labelKey}
+                shouldRenderPrevData={field?.shouldRenderPrevData}
+                pageNumberQueryKey={field?.pageNumberQueryKey}
             />
         );
 
     if (field.type === fieldTypes.COUNTRY_SELECT)
         return <FormSelectCountry name={field.name} label={field.label} {...field.props} />;
+
+    if (field.type === fieldTypes.PARTNER_SELECT)
+        return (
+            <FormPartnerSelect
+                name={field.name}
+                label={field.label}
+                {...field.props}
+                partnerType={field?.partnerType}
+            />
+        );
 
     return <>Not implemented yet</>;
 };
@@ -142,8 +164,8 @@ export default function FilterForm({ open, onClose, onSubmit, onReset, onDelete,
                                             <path
                                                 d="M7 1L1 7M7 7.00001L1 1.00001"
                                                 stroke="#105BB7"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
                                             />
                                         </svg>
                                     </Row>

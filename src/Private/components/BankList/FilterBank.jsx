@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 
 import HookForm from "App/core/hook-form/HookForm";
 import { ButtonWrapper } from "../AllButtons/Buttons";
@@ -59,7 +59,13 @@ const FilterBank = ({ sortByOptions, loading }) => {
                             columnSpacing={2}
                         >
                             <Grid item>
-                                <Button size="small" color="error" variant="contained" onClick={handleReset} disabled={loading}>
+                                <Button
+                                    size="small"
+                                    color="error"
+                                    variant="contained"
+                                    onClick={handleReset}
+                                    disabled={loading}
+                                >
                                     Reset
                                 </Button>
                             </Grid>

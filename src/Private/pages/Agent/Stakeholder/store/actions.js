@@ -90,7 +90,7 @@ const actions = {
     }),
 
     update_individual_stakeholder_reset: () => ({
-        type: actions.UPDATE_INDIVIDUAL_STAKEHOLDER,
+        type: actions.UPDATE_INDIVIDUAL_STAKEHOLDER_RESET,
     }),
 
     get_organization_stakeholder_by_id: (id) => ({

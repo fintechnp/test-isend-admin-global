@@ -1,7 +1,10 @@
 import { createContext } from "react";
+import useStepper from "./useStepper";
 
-export const StepperContext = (createContext < StepperType) | (null > null);
+// Create the context with a default value of null
+export const StepperContext = createContext(null);
 
+// Extract the provider from the context
 const StepperProvider = StepperContext.Provider;
 
 export default StepperProvider;

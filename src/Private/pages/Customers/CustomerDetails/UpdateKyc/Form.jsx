@@ -72,26 +72,16 @@ const KycUpdate = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength20,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength20, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Kyc Status
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 21
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 21)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -104,26 +94,16 @@ const KycUpdate = ({ handleSubmit, loading, handleClose }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength20,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength20, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Kyc Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 20
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 20)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -138,11 +118,7 @@ const KycUpdate = ({ handleSubmit, loading, handleClose }) => {
                                 minRows={5}
                                 small={12}
                                 component={TextAreaField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength160,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength160, Validator.minValue1]}
                             />
                         </FieldWrapper>
                     </FormWrapper>
@@ -159,11 +135,7 @@ const KycUpdate = ({ handleSubmit, loading, handleClose }) => {
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

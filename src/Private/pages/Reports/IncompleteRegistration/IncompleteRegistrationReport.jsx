@@ -168,7 +168,11 @@ function IncompleteRegistrationReport() {
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
-                    <IncompleteRegistrationFilterForm onSubmit={handleSearch} onReset={handleReset} loading={isReportLoading} />
+                    <IncompleteRegistrationFilterForm
+                        onSubmit={handleSearch}
+                        onReset={handleReset}
+                        loading={isReportLoading}
+                    />
                 </Grid>
 
                 {isReportLoading && (
@@ -211,4 +215,6 @@ function IncompleteRegistrationReport() {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_INCOMPLETE_REGISTRATION_REPORT]})(IncompleteRegistrationReport);
+export default withPermission({ permission: [permissions.GENERATE_INCOMPLETE_REGISTRATION_REPORT] })(
+    IncompleteRegistrationReport,
+);

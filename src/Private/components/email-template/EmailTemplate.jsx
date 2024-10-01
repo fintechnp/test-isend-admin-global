@@ -1,39 +1,74 @@
-import React, { useState, useEffect, useMemo } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import React, { useEffect, useMemo } from "react";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-import dateUtils from "App/utils/dateUtils";
-import Table, { TablePagination } from "App/components/Table";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
-
-import useAuthUser from "Private/hooks/useAuthUser";
-import { permissions } from "Private/data/permissions";
-import PageContent from "App/components/Container/PageContent";
-import EmailTemplateFilterForm from "./Filter/EmailTemplateFilterForm";
-import emailTemplateActions from "Private/components/email-template/store/emailTemplateActions";
-import PageContentContainer from "App/components/Container/PageContentContainer";
-import HasPermission from "../shared/HasPermission";
-import { Box, Button } from "@mui/material";
 import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import emailTemplateActions from "Private/components/email-template/store/emailTemplateActions";
+
+import dateUtils from "App/utils/dateUtils";
+import useAuthUser from "Private/hooks/useAuthUser";
+import HasPermission from "../shared/HasPermission";
+import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     PageNumber: 1,
     PageSize: 10,
+    OrderBy: "DESC",
+    SortBy: "created_ts",
 };
+
+const sortByData = [
+    {
+        key: "Email Subject",
+        value: "email_subject",
+    },
+    {
+        key: "Template Type",
+        value: "template_type",
+    },
+];
 
 const EmailTemplate = () => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
     const { can } = useAuthUser();
 
+    const { success: isAddSuccess } = useSelector((state) => state.add_email_template);
+    const { success: isUpdateSuccess } = useSelector((state) => state.update_email_template);
     const { response, loading: isLoading } = useSelector((state) => state.get_email_templates);
 
-    const { success: isAddSuccess } = useSelector((state) => state.add_email_template);
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Search",
+            name: "search",
+        },
+    ];
 
-    const { success: isUpdateSuccess } = useSelector((state) => state.update_email_template);
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({
+        initialState,
+    });
 
     useEffect(() => {
         dispatch(emailTemplateActions.get_email_templates(filterSchema));
@@ -116,54 +151,44 @@ const EmailTemplate = () => {
         [],
     );
 
-    const handleReset = () => {
-        dispatch(emailTemplateActions.get_email_templates(initialState));
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            PageNumber: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageNumber: 1,
-            PageSize: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            ...data,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     return (
         <>
-            <EmailTemplateFilterForm onSubmit={handleSearch} onReset={handleReset} loading={isLoading} />
+            <FilterForm
+                open={isFilterOpen}
+                onClose={closeFilter}
+                onSubmit={onFilterSubmit}
+                fields={filterFields}
+                values={filterSchema}
+                onDelete={onDeleteFilterParams}
+                title="Search Customers"
+                onReset={reset}
+            />
             <PageContentContainer
                 title="Email Templates"
                 topRightContent={
-                    <HasPermission permission={permissions.CREATE_EMAIL_TEMPLATE}>
-                        <Button
-                            variant="contained"
-                            onClick={() =>
-                                dispatch({
-                                    type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
-                                })
-                            }
-                        >
-                            Create Email Template
-                        </Button>
-                    </HasPermission>
+                    <>
+                        <TableGridQuickFilter
+                            onSortByChange={onQuickFilter}
+                            onOrderByChange={onQuickFilter}
+                            disabled={isLoading}
+                            sortByData={sortByData}
+                            values={filterSchema}
+                            orderByFieldName="OrderBy"
+                            sortByFieldName="SortBy"
+                        />
+                        <HasPermission permission={permissions.CREATE_EMAIL_TEMPLATE}>
+                            <Button
+                                variant="contained"
+                                onClick={() =>
+                                    dispatch({
+                                        type: "OPEN_ADD_EMAIL_TEMPLATE_MODAL",
+                                    })
+                                }
+                            >
+                                Create Email Template
+                            </Button>
+                        </HasPermission>
+                    </>
                 }
             >
                 <TanstackReactTable
@@ -175,8 +200,8 @@ const EmailTemplate = () => {
             </PageContentContainer>
             <TablePagination
                 paginationData={response?.pagination}
-                handleChangePage={handleChangePage}
-                handleChangeRowsPerPage={handleChangeRowsPerPage}
+                handleChangePage={onPageChange}
+                handleChangeRowsPerPage={onRowsPerPageChange}
             />
         </>
     );

@@ -1,60 +1,37 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import CableIcon from "@mui/icons-material/Cable";
-import MuiIconButton from "@mui/material/IconButton";
-import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { Box, Chip, ListItemButton, Tooltip, Typography } from "@mui/material";
+
+import { Delete } from "App/components";
+import Unmap from "App/components/Dialog/Unmap";
+import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
+import withPermission from "Private/HOC/withPermission";
+import AddPartnerBank from "./components/AddPartnerBank";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
+import ExportUpload from "Private/components/reports/ExportUpload";
+import HasPermission from "Private/components/shared/HasPermission";
+import ViewPartnerBankModal from "./components/ViewPartnerBankModal";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./store/actions";
-import Header from "./components/Header";
-import Filter from "./components/Filter";
-import AddPartnerBank from "./components/AddPartnerBank";
-import Table, { TablePagination } from "App/components/Table";
-import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
-import Unmap from "App/components/Dialog/Unmap";
-import PartnerActions from "./../Partner/store/actions";
-import PageContent from "App/components/Container/PageContent";
-import withPermission from "Private/HOC/withPermission";
+import dateUtils from "App/utils/dateUtils";
+import PartnerType from "App/data/PartnerType";
 import { permissions } from "Private/data/permissions";
-import HasPermission from "Private/components/shared/HasPermission";
-
-const PartnerBankContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import apiEndpoints from "Private/config/apiEndpoints";
+import PartnerActions from "./../Partner/store/actions";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 
 const MapWrapper = styled(Box)(({ theme }) => ({
     width: "100%",
-}));
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
-    color: "border.main",
-}));
-
-const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    color: "border.main",
 }));
 
 const filter = {
@@ -66,23 +43,38 @@ const filter = {
     order_by: "DESC",
 };
 
+const initialState = {
+    page_number: 1,
+    page_size: 10,
+    sort_by: "bank_name",
+    order_by: "DESC",
+};
+
 const PartnerBank = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState({
-        page_number: 1,
-        page_size: 15,
-        agent_id: "",
-        search: "",
-        sort_by: "bank_name",
-        order_by: "DESC",
-    });
+    const country = JSON.parse(localStorage.getItem("country"));
+    const currencyOptions = country.map((c) => ({ label: c.currency_name, value: c.currency }));
 
     const { response: partnerbank_data, loading: g_loading } = useSelector((state) => state.get_all_partner_bank);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_partner_bank);
     const { loading: un_loading, success: un_success } = useSelector((state) => state.unmapp_partner_bank);
     const { success: a_success } = useSelector((state) => state.create_partner_bank);
     const { success: u_success } = useSelector((state) => state.update_partner_bank);
+    const { is_open } = useSelector((state) => state.get_partner_bank_by_id);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onPageChange,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onQuickFilter,
+        onRowsPerPageChange,
+        reset,
+        filterSchema,
+    } = useListFilterStore({ initialState });
 
     React.useEffect(() => {
         dispatch(PartnerActions.get_payout_partner(filter));
@@ -99,255 +91,146 @@ const PartnerBank = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "partner_bank_id",
-                maxWidth: 60,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Bank Name",
-                accessor: "bank_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? data.value : "n/a"}
-                        </StyledName>
-                    </Box>
-                ),
+                header: "Bank Name",
+                accessorKey: "bank_name",
+                cell: ({ getValue, row }) => <>{getValue() ? getValue() : "-"}</>,
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Ex. Bank Code</Typography>
-                    </Box>
-                ),
-                accessor: "external_bank_code",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box>
-                        <Typography>Payment Type</Typography>
-                    </Box>
-                ),
-                accessor: "payment_type",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data?.value ? ReferenceName(1, data?.value) : "N/A"}</StyledText>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Country/Currency",
-                accessor: "country",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? CountryName(data.value) : ""}</StyledText>
-                        <Typography
-                            sx={{
-                                opacity: 0.6,
-                                fontSize: "12px",
-                                lineHeight: 1,
-                            }}
-                        >
-                            {data?.row?.original?.currency ? CurrencyName(data?.row?.original?.currency) : ""}
+                header: "Ex. Bank Code",
+                accessorKey: "external_bank_code",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>Code1: {getValue() ? getValue() : "-"}</Typography>
+                        <Typography>
+                            Code2: {row?.original?.external_bank_code1 ? row?.original?.external_bank_code1 : "-"}
                         </Typography>
-                    </Box>
+                        <Typography>
+                            Code3: {row?.original?.external_bank_code2 ? row?.original?.external_bank_code2 : "-"}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
-                Header: () => (
-                    <Box textAlign="center" sx={{}}>
-                        <Typography>Map Status</Typography>
-                    </Box>
+                header: "Payment Type",
+                accessorKey: "payment_type",
+                cell: ({ getValue, row }) => <>{getValue() ? ReferenceName(1, getValue()) : "-"}</>,
+            },
+            {
+                header: "Country/Currency",
+                accessorKey: "country",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? CountryName(getValue()) : "-"}</Typography>
+                        <Typography>{row?.original?.currency ? CurrencyName(row?.original?.currency) : "-"}</Typography>
+                    </Column>
                 ),
-                accessor: "is_mapped",
-                Cell: (data) => (
-                    <MapWrapper textAlign="center" sx={{}}>
-                        {data.value ? (
-                            <Tooltip title="Mapped" arrow>
-                                <CheckCircleOutlineIcon sx={{ color: "success.main" }} />
-                            </Tooltip>
+            },
+            {
+                header: "Created At/By",
+                accessorKey: "created_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original.created_by ? `By: ${row.original.created_by}` : ""}</Typography>
+                    </Column>
+                ),
+            },
+            {
+                header: "Updated At/By",
+                accessorKey: "updated_ts",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                            <Typography>{row.original.updated_by ? `By: ${row.original.updated_by}` : ""}</Typography>
+                        </Column>
+                    );
+                },
+            },
+            {
+                header: "Map Status",
+                accessorKey: "is_mapped",
+                cell: ({ getValue, row }) => (
+                    <MapWrapper sx={{}}>
+                        {getValue() ? (
+                            row.original.location_name
                         ) : (
-                            <Tooltip title="Not Mapped" arrow>
-                                <RemoveCircleOutlineIcon sx={{ color: "border.main" }} />
-                            </Tooltip>
+                            <Chip
+                                sx={{
+                                    background: (theme) => theme.palette.surface.dangerSecond,
+                                    color: (theme) => theme.palette.error.main,
+                                }}
+                                label="Not Mapped"
+                            />
                         )}
                     </MapWrapper>
                 ),
             },
             {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
-                                <Tooltip title="Hide Partner Bank Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Show Partner Bank Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </span>
-                        <HasPermission permission={permissions.EDIT_PARTNER_BANK}>
+                header: "Actions",
+                accessorKey: "show",
+                cell: ({ row }) => (
+                    <PopoverButton>
+                        {({ onClose }) => (
                             <>
-                                <AddPartnerBank update={true} update_data={row?.original} />
-                                {row?.original?.is_mapped ? (
-                                    <Unmap
-                                        success={un_success}
-                                        id={row.original.tid}
-                                        handleMapUnmap={handleUnmap}
-                                        loading={un_loading}
-                                        title="Do you want to unmap this partner bank?"
-                                        information="You have to remap after unmapping this. Make sure before
-                                unmapping."
-                                    />
-                                ) : (
-                                    <Tooltip title="Map Partner Bank" arrow>
-                                        <IconButton
+                                <ListItemButton
+                                    onClick={() => {
+                                        onClose();
+                                        dispatch(actions.get_partner_bank_byid(row?.original?.partner_bank_id));
+                                    }}
+                                >
+                                    View
+                                </ListItemButton>
+                                <HasPermission permission={permissions.EDIT_PARTNER_BANK}>
+                                    <AddPartnerBank update={true} update_data={row?.original} enablePopoverAction />
+
+                                    {/* {row?.original?.is_mapped ? (
+                                        <Unmap
+                                            success={un_success}
+                                            id={row.original.tid} 
+                                            handleMapUnmap={handleUnmap}
+                                            loading={un_loading}
+                                            title="Do you want to unmap this partner bank?"
+                                            information="You have to remap after unmapping this. Make sure before unmapping."
+                                            enablePopoverAction
+                                        />
+                                    ) : (
+                                        <ListItemButton
                                             onClick={() =>
                                                 navigate(
                                                     `/setup/partner-bank/map/${row?.original?.payment_type}/${row?.original?.country}/${row?.original?.currency}/${row?.original?.tid}`,
-                                                )
+                                                ) 
                                             }
                                         >
-                                            <CableIcon
-                                                sx={{
-                                                    fontSize: "20px",
-                                                    "&:hover": {
-                                                        background: "transparent",
-                                                    },
-                                                }}
-                                            />
-                                        </IconButton>
-                                    </Tooltip>
-                                )}
+                                            Map Partner Bank 
+                                        </ListItemButton>
+                                    )} */}
+                                </HasPermission>
+                                <HasPermission permission={permissions.DELETE_DELIVERY_ROUTE}>
+                                    <Delete
+                                        id={row.original.tid}
+                                        handleDelete={handleDelete}
+                                        loading={d_loading}
+                                        tooltext="Delete Parnter Bank"
+                                        enablePopoverAction
+                                    />
+                                </HasPermission>
                             </>
-                        </HasPermission>
-                    </Box>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
         [un_success],
     );
 
-    const sub_columns = [
-        { key: "partner_bank_id", name: "Id", type: "default" },
-        { key: "agent_id", name: "Payout Agent", type: "default" },
-        { key: "country", name: "Country", type: "country" },
-        { key: "currency", name: "Currency", type: "currency" },
-        {
-            key: "payment_type",
-            name: "Payment Type",
-            type: "reference",
-            ref_value: 1,
-        },
-        { key: "external_bank_code", name: "External Bank Code", type: "default" },
-        { key: "external_bank_code1", name: "External Bank Code 1", type: "default" },
-        { key: "external_bank_code2", name: "External Bank Code 2", type: "default" },
-        { key: "is_mapped", name: "Mapping Status", type: "boolean" },
-        { key: "created_ts", name: "Created Date", type: "date" },
-    ];
-
     const handleUnmap = useCallback((id) => {
         dispatch(actions.map_partner_bank(id, { payout_location_id: 0 }));
     }, []);
-
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleFilterAgent = (e) => {
-        const agent_id = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_id: agent_id,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSort = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
 
     const handleDelete = (id) => {
         dispatch(actions.delete_partner_bank(id));
@@ -355,34 +238,117 @@ const PartnerBank = (props) => {
 
     const handleCloseDialog = () => {
         dispatch(PartnerActions.get_payout_partner(filter));
+        dispatch({ type: "GET_PAYOUT_LOCATION_DETAILS_RESET" });
     };
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "bank_name",
+            label: "Bank Name",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "country",
+            label: "Country",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "currency",
+            label: "Currency",
+            options: currencyOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "is_active",
+            label: "Status",
+            options: [
+                {
+                    label: "Active",
+                    value: true,
+                },
+                {
+                    label: "Inactive",
+                    value: false,
+                },
+            ],
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "bank_code",
+            label: "Ex. Bank Code",
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            name: "agent_id",
+            label: "All Partner",
+            PartnerType: PartnerType.PAY,
+        },
+    ];
+
+    const sortByData = [
+        { key: "None", value: "" },
+        { key: "Payout Agent", value: "agent_id" },
+        { key: "Bank Name", value: "bank_name" },
+    ];
+
     return (
-        <PageContent documentTitle="Partner Banks">
-            <Header handleCloseDialog={handleCloseDialog} />
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleFilterAgent={handleFilterAgent}
-                handleOrder={handleOrder}
-                handleSort={handleSort}
-            />
-            <Table
-                columns={columns}
-                handleDelete={handleDelete}
-                title="Partner Bank Details"
-                data={partnerbank_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={partnerbank_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Partner Banks"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Partnter Banks",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Partner Bank"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onClose={closeFilter}
+                    onDelete={onDeleteFilterParams}
+                />
+                <PageContentContainer
+                    title="Partner Banks"
+                    topRightContent={
+                        <>
+                            {/* <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                values={filterSchema}
+                                disabled={g_loading}
+                                sortByData={sortByData}
+                            /> */}
+                            <ExportUpload
+                                columns={columns}
+                                data={partnerbank_data?.data}
+                                paginationData={partnerbank_data?.pagination}
+                                apiEndpoint={apiEndpoints.GetParnterBanks}
+                                filename="Partner Banks"
+                            />
+                            <AddPartnerBank update={false} handleCloseDialog={handleCloseDialog} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={partnerbank_data?.data || []} loading={g_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={partnerbank_data?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
+            <ViewPartnerBankModal open={is_open} />
         </PageContent>
     );
 };

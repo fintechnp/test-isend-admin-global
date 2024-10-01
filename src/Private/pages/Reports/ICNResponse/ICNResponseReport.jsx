@@ -186,7 +186,7 @@ function ICNResponseReport() {
         >
             <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
                 <Grid item xs={12}>
-                    <ICNResponseFilterForm onSubmit={handleSearch} onReset={handleReset} loading={l_loading}/>
+                    <ICNResponseFilterForm onSubmit={handleSearch} onReset={handleReset} loading={l_loading} />
                 </Grid>
                 {l_loading && (
                     <Grid item xs={12}>
@@ -223,4 +223,4 @@ function ICNResponseReport() {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_ICN_RESPONSE_REPORT]})(ICNResponseReport);
+export default withPermission({ permission: [permissions.GENERATE_ICN_RESPONSE_REPORT] })(ICNResponseReport);

@@ -1,35 +1,35 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import MuiIconButton from "@mui/material/IconButton";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
+import React, { useCallback, useEffect, useMemo } from "react";
+
+import { Delete } from "App/components";
+import Column from "App/components/Column/Column";
+import useAuthUser from "Private/hooks/useAuthUser";
+import withPermission from "Private/HOC/withPermission";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import PageContent from "App/components/Container/PageContent";
+import AddPayoutLocation from "./components/AddPayoutLocation";
+import PopoverButton from "App/components/Button/PopoverButton";
+import ExportUpload from "Private/components/reports/ExportUpload";
+import { TablePagination, TableSwitch } from "App/components/Table";
+import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import CustomerStatusBadge from "Private/pages/Customers/Search/components/CustomerStatusBadge";
 
 import actions from "./store/actions";
-import Header from "./components/Header";
-import Filter from "./components/Filter";
-import { Delete } from "App/components";
-import AddPayoutLocation from "./components/AddPayoutLocation";
-import Table, { TablePagination, TableSwitch } from "App/components/Table";
-import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
-import PageContent from "App/components/Container/PageContent";
-import withPermission from "Private/HOC/withPermission";
+import dateUtils from "App/utils/dateUtils";
 import { permissions } from "Private/data/permissions";
-import HasPermission from "Private/components/shared/HasPermission";
-import useAuthUser from "Private/hooks/useAuthUser";
-
-const MenuContainer = styled("div")(({ theme }) => ({
-    margin: "8px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import apiEndpoints from "Private/config/apiEndpoints";
+import referenceTypeId from "Private/config/referenceTypeId";
+import ViewPayoutLocationModal from "./ViewPayoutLocationModal";
+import { CountryName, CurrencyName, ReferenceName } from "App/helpers";
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
     "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
@@ -38,45 +38,44 @@ const SwitchWrapper = styled(Box)(({ theme }) => ({
     },
 }));
 
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
-const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "15px",
-    color: "border.main",
-}));
-
-const StyledText = styled(Typography)(({ theme }) => ({
-    opacity: 0.8,
-    fontSize: "15px",
-    color: "border.main",
-}));
-
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 10,
     country: "",
     currency: "",
     payment_type: "",
     search: "",
-    sort_by: "",
+    sort_by: "created_ts",
     order_by: "DESC",
 };
 
 const PayoutLocation = (props) => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
-
     const { can } = useAuthUser();
+    const reference = JSON.parse(localStorage.getItem("reference"));
+
+    const paymentTypeOptions = reference
+        ?.filter((ref) => ref.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((ref) => ({ label: ref.name, value: ref.value }));
 
     const { response: payoutloaction_data, loading: g_loading } = useSelector((state) => state.get_all_payout_location);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_payout_location);
     const { success: a_success } = useSelector((state) => state.add_payout_location);
     const { success: u_success } = useSelector((state) => state.update_payout_location);
+    const { is_open } = useSelector((state) => state.get_payout_location_details);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        onQuickFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch(actions.get_all_payout_location(filterSchema));
@@ -88,262 +87,190 @@ const PayoutLocation = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "payout_location_id",
-                maxWidth: 80,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Location Name",
-                accessor: "location_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? data.value : "n/a"}
-                        </StyledName>
-                    </Box>
-                ),
+                header: "Location Name",
+                accessorKey: "location_name",
+                cell: ({ getValue, row }) => <>{getValue() ? getValue() : "-"}</>,
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Location Code</Typography>
-                    </Box>
-                ),
-                accessor: "location_code",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
-                    </Box>
+                header: "Location Code",
+                accessorKey: "location_code",
+                cell: ({ getValue }) => <>{getValue() ? getValue() : "n/a"}</>,
+            },
+            {
+                header: "Payment Type",
+                accessorKey: "payment_type",
+                cell: ({ getValue }) => <>{getValue() ? ReferenceName(1, getValue()) : "-"}</>,
+            },
+            {
+                header: "Country/Currency",
+                accessorKey: "country",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? CountryName(getValue()) : "-"}</Typography>
+                        <Typography>{row?.original?.currency ? CurrencyName(row?.original?.currency) : "-"}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Payment Type</Typography>
-                    </Box>
-                ),
-                accessor: "payment_type",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? ReferenceName(1, data.value) : "n/a"}</StyledText>
-                    </Box>
-                ),
+                header: "Created At/By",
+                accessorKey: "created_ts",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                            <Typography>{row.original.created_by ? `By: ${row.original.created_by}` : ""}</Typography>
+                        </Column>
+                    );
+                },
             },
             {
-                Header: () => (
-                    <Box>
-                        <Typography>Country/Currency</Typography>
-                    </Box>
-                ),
-                accessor: "country",
-                Cell: (data) => (
-                    <Box>
-                        <StyledText component="p">{data.value ? CountryName(data.value) : ""}</StyledText>
-                        <Typography
-                            sx={{
-                                opacity: 0.6,
-                                fontSize: "12px",
-                                lineHeight: 1,
-                            }}
-                        >
-                            {data?.row?.original?.currency ? CurrencyName(data?.row?.original?.currency) : "n/a"}
-                        </Typography>
-                    </Box>
-                ),
+                header: "Update status",
+                accessorKey: "updated_ts",
+                cell: ({ row, getValue }) => {
+                    return (
+                        <Column>
+                            <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                            <Typography>{row.original.updated_by ? `By: ${row.original.updated_by}` : ""}</Typography>
+                        </Column>
+                    );
+                },
             },
             {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Status</Typography>
-                    </Box>
-                ),
-                accessor: "is_active",
-                width: 120,
-                Cell: (data) => (
-                    <>
-                        {can(permissions.EDIT_PAYOUT_LOCATION) ? (
-                            <SwitchWrapper textAlign="right" sx={{}}>
-                                <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
-                            </SwitchWrapper>
-                        ) : (
-                            <>{!!data?.value ? "Active" : "Inactive"}</>
+                header: "Status",
+                accessorKey: "is_active",
+                cell: ({ getValue }) => <CustomerStatusBadge status={getValue() ? "active" : "inActive"} />,
+            },
+            {
+                header: "Actions",
+                accessorKey: "show",
+                cell: ({ row }) => (
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                <ListItemButton
+                                    onClick={() => {
+                                        onClose();
+                                        dispatch(actions.get_payout_location_details(row?.original?.tid));
+                                    }}
+                                >
+                                    View
+                                </ListItemButton>
+                                <HasPermission permission={permissions.EDIT_PAYOUT_LOCATION}>
+                                    <AddPayoutLocation update={true} update_data={row?.original} enablePopoverAction />
+                                </HasPermission>
+                                <HasPermission permission={permissions.DELETE_PAYOUT_LOCATION}>
+                                    <Delete
+                                        id={row.original.tid}
+                                        handleDelete={handleDelete}
+                                        loading={d_loading}
+                                        tooltext="Delete Payout Location"
+                                        enablePopoverAction
+                                    />
+                                </HasPermission>
+                            </>
                         )}
-                    </>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
-                                <Tooltip title="Hide Payout Location Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Show Payout Location Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </span>
-                        <HasPermission permission={permissions.EDIT_PAYOUT_LOCATION}>
-                            <AddPayoutLocation update={true} update_data={row?.original} />
-                        </HasPermission>
-                        <HasPermission permission={permissions.DELETE_PAYOUT_LOCATION}>
-                            <Delete
-                                id={row.original.tid}
-                                handleDelete={handleDelete}
-                                loading={d_loading}
-                                tooltext="Delete Payout Location"
-                            />
-                        </HasPermission>
-                    </Box>
+                    </PopoverButton>
                 ),
             },
         ],
         [],
     );
 
-    const sub_columns = [
-        { key: "tid", name: "Id", type: "default" },
-        { key: "location_name", name: "Location Name", type: "default" },
-        { key: "location_code", name: "Location Code", type: "default" },
-        { key: "country", name: "Country", type: "country" },
-        { key: "currency", name: "Currency", type: "currency" },
+    const filterFields = [
         {
-            key: "payment_type",
-            name: "Payment Type",
-            type: "reference",
-            ref_value: 1,
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
         },
-        { key: "is_active", name: "Status", type: "boolean" },
-        { key: "created_ts", name: "Created Date", type: "date" },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "country",
+            label: "Country",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payment_type",
+            label: "Payment Type",
+            options: paymentTypeOptions,
+        },
     ];
 
     const handleStatus = useCallback((is_active, id) => {
         dispatch(actions.update_payout_location_status(id, { is_active: is_active }));
     }, []);
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleCountry = (e) => {
-        const country = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            country: country,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handlePayemntType = (e) => {
-        const payment = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            payment_type: payment,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleDelete = (id) => {
         dispatch(actions.delete_payout_location(id));
     };
 
+    const sortByData = [
+        { key: "", value: "created_ts" },
+        { key: "Created At", value: "created_ts" },
+        { key: "Payment Type", value: "payment_type" },
+        { key: "Country", value: "country" },
+    ];
+
     return (
-        <PageContent documentTitle="Payout Location">
-            <Header />
-            <Filter
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handlePayemntType={handlePayemntType}
-            />
-            <Table
-                columns={columns}
-                title="Payout Location Details"
-                data={payoutloaction_data?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={payoutloaction_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Payout Location"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Payout Location",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Payout Location"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onClose={closeFilter}
+                    onDelete={onDeleteFilterParams}
+                />
+                <PageContentContainer
+                    title="Payout Location"
+                    topRightContent={
+                        <>
+                            {/* <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                values={filterSchema}
+                                disabled={g_loading}
+                                sortByData={sortByData}
+                            /> */}
+                            <ExportUpload
+                                data={payoutloaction_data?.data}
+                                paginationData={payoutloaction_data?.pagination}
+                                columns={columns}
+                                filename="Payout Locations"
+                                apiEndpoint={apiEndpoints.GetPayoutLocations}
+                            />
+                            <AddPayoutLocation update={false} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={payoutloaction_data?.data || []} loading={g_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                    paginationData={payoutloaction_data?.pagination}
+                />
+            </Column>
+            <ViewPayoutLocationModal open={is_open} />
         </PageContent>
     );
 };

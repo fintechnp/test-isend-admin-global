@@ -42,7 +42,6 @@ const lastActionMiddleware = (store) => (next) => (action) => {
         });
         wait = true;
     } else if (action.type === "REFRESH_TOKEN_FAILED") {
-
         wait = false;
 
         buffer = [];
@@ -53,7 +52,7 @@ const lastActionMiddleware = (store) => (next) => (action) => {
             type: "RESET",
         });
 
-       AuthUtility.logOut()
+        AuthUtility.logOut();
 
         window.location.reload();
     } else if (action.type === "REFRESH_TOKEN_SUCCESS") {
@@ -87,11 +86,11 @@ const resetEnhancer = (rootReducer) => (state, action) => {
     if (action.type !== "RESET") return rootReducer(state, action);
 
     const newState = {};
-    
+
     // Iterate through known reducer keys and reset each one
     Object.keys(state).forEach((key) => {
         switch (key) {
-            case 'router':
+            case "router":
                 newState[key] = state[key];
                 break;
             default:
@@ -102,8 +101,8 @@ const resetEnhancer = (rootReducer) => (state, action) => {
     return newState;
 };
 
-const appReducer = resetEnhancer(createRootReducer())
- 
+const appReducer = resetEnhancer(createRootReducer());
+
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [lastActionMiddleware, sagaMiddleware];
 

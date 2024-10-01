@@ -22,8 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
  * @property {null} updated_by
  */
 
-class EmptyCountryListException extends Error {}
-
 const useSendingCountries = () => {
     const { response: countriesResponse, loading: isLoading } = useSelector((state) => state.get_send_country);
 
@@ -48,7 +46,7 @@ const useSendingCountries = () => {
      * @returns {Country|null}
      */
     const getCountryByIso3 = (iso3) => {
-        return countries.find((c) => c.iso3.toUpperCase() === countryId?.toUpperCase()) ?? null;
+        return countries.find((c) => c.iso3.toUpperCase() === iso3?.toUpperCase()) ?? null;
     };
 
     useEffect(() => {

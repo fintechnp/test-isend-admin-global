@@ -91,16 +91,8 @@ const orderData = [
     { key: "Descending", value: "DESC" },
 ];
 
-function Filter({
-    state,
-    handleSearch,
-    handleFilterAgent,
-    handleOrder,
-    handleSort,
-}) {
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
-    );
+function Filter({ state, handleSearch, handleFilterAgent, handleOrder, handleSort }) {
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
 
     return (
         <FilterWrapper>
@@ -111,19 +103,11 @@ function Filter({
             <DropWrapper>
                 <Box>
                     <FormControl sx={{ ml: 1, minWidth: 120 }}>
-                        <Select
-                            native
-                            onChange={handleFilterAgent}
-                            displayEmpty
-                            defaultValue=""
-                        >
+                        <Select native onChange={handleFilterAgent} displayEmpty defaultValue="">
                             <option value="">All Partner</option>
                             {partner_payout?.data &&
                                 partner_payout?.data.map((data) => (
-                                    <option
-                                        value={data.agent_id}
-                                        key={data?.tid}
-                                    >
+                                    <option value={data.agent_id} key={data?.tid}>
                                         {data.name}
                                     </option>
                                 ))}
@@ -137,17 +121,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = sortData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -166,17 +145,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

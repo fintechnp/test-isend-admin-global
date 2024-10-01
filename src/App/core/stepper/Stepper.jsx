@@ -167,7 +167,7 @@ export default function Stepper({ steps = [], activeStep, sx }) {
         <MuiStepper
             sx={{
                 "& .Mui-completed span": {
-                    borderColor: theme => theme.palette.primary.main,
+                    borderColor: (theme) => theme.palette.primary.main,
                 },
                 ...sx,
             }}

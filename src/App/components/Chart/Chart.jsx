@@ -7,18 +7,12 @@ const Chart = ({ customLegend, plugins, type, ...props }) => {
     const renderChart = () => {
         switch (type) {
             case "line":
-                return (
-                    <Line
-                        {...props}
-                        type={type}
-                        plugins={customLegend ? [HtmlLegendPlugin] : plugins}
-                    />
-                );
+                return <Line {...props} type={type} plugins={customLegend ? [HtmlLegendPlugin] : plugins} />;
 
             case "bar":
                 return (
                     <Bar
-                    style={{flex: 1}}
+                        style={{ flex: 1 }}
                         {...props}
                         type={type}
                         plugins={customLegend ? [HtmlLegendPlugin] : plugins}
@@ -26,13 +20,7 @@ const Chart = ({ customLegend, plugins, type, ...props }) => {
                 );
 
             case "pie":
-                return (
-                    <Pie
-                        {...props}
-                        type={type}
-                        plugins={customLegend ? [HtmlLegendPlugin] : plugins}
-                    />
-                );
+                return <Pie {...props} type={type} plugins={customLegend ? [HtmlLegendPlugin] : plugins} />;
             default:
                 return null;
         }

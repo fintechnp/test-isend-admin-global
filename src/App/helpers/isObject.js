@@ -5,5 +5,5 @@
  * @return {boolean}
  */
 export function isObject(value) {
-  return value !== null && typeof value === 'object';
+    return value !== null && typeof value === "object";
 }

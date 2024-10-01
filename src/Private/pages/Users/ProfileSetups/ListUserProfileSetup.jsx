@@ -1,39 +1,44 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import React, { useEffect, useMemo } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import TableContainer from "@mui/material/TableContainer";
 
-import Row from "App/components/Row/Row";
+import Radio from "@mui/material/Radio";
 import { useNavigate } from "react-router-dom";
-import { userProfileSetupActions } from "./store";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Column from "App/components/Column/Column";
+import RadioGroup from "@mui/material/RadioGroup";
 import { TablePagination } from "App/components/Table";
+import ListItemButton from "@mui/material/ListItemButton";
+import SubmitButton from "App/components/Button/SubmitButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import PageContent from "App/components/Container/PageContent";
-import EditIconButton from "App/components/Button/EditIconButton";
-import ViewIconButton from "App/components/Button/ViewIconButton";
-import SearchTextField from "App/components/Fields/SearchTextField";
-import TableBodySkeleton from "App/components/Table/TableBodySkeleton";
-import AddProfileSetupTableRowForm from "./components/AddProfileSetupTableRowForm";
+import PopoverButton from "App/components/Button/PopoverButton";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import ViewUserProfileSetupModal from "./components/ViewUserProfileSetupModal";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
 import buildRoute from "App/helpers/buildRoute";
+import { userProfileSetupActions } from "./store";
 import routePaths from "Private/config/routePaths";
 import useAuthUser from "Private/hooks/useAuthUser";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
-import dateUtils from "App/utils/dateUtils";
-import ViewUserProfileSetupModal from "./components/ViewUserProfileSetupModal";
-import { Box } from "@mui/material";
-import PageContentContainer from "App/components/Container/PageContentContainer";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
-const initialQueryParams = {
+const initialState = {
     page_number: 1,
     page_size: 10,
 };
+
+const schema = Yup.object().shape({
+    role_name: Yup.string().required("Required").min(1, "Required"),
+    is_active: Yup.boolean().required("Required"),
+});
 
 function ListUserProfileSetup() {
     const dispatch = useDispatch();
@@ -42,33 +47,174 @@ function ListUserProfileSetup() {
 
     const { can } = useAuthUser();
 
-    const { response, loading } = useSelector((state) => state.list_user_profile_setup);
+    const { response, loading: isLoading } = useSelector((state) => state.list_user_profile_setup);
 
-    const [filterSchema, setFilterSchema] = useState({ ...initialQueryParams });
+    const data =
+        response?.pagination?.currentPage === 1 ? [{}, ...(response?.data ?? [])] : [...(response?.data ?? [])];
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
+    const { filterSchema, onRowsPerPageChange, onPageChange } = useListFilterStore({ initialState });
+
+    const canUserProfileSetup = can(permissions.CREATE_USER_PROFILE_SETUP);
+
+    const {
+        response: userProfileSetup,
+        loading: isCreating,
+        success: isCreated,
+    } = useSelector((state) => state.add_user_profile_setup);
+
+    const methods = useForm({
+        defaultValues: {
+            is_active: true,
+        },
+        resolver: yupResolver(schema),
+    });
+
+    const {
+        watch,
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = methods;
+
+    const isActive = watch("is_active");
+
+    const handleChange = (e) => {
+        setValue("is_active", e.target.value === "true");
     };
 
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
+    const onSubmit = (data) => {
+        dispatch(userProfileSetupActions.add_user_profile_setup(data));
     };
+
+    const columns = useMemo(() => [
+        {
+            header: "S.N.",
+            accessorKey: "f_serial_no",
+        },
+        {
+            header: "Name",
+            accessorKey: "role_name",
+            cell: ({ row, getValue }) => (
+                <>
+                    {isEmpty(row.original) ? (
+                        <TextField
+                            {...register("role_name")}
+                            size="small"
+                            placeholder="Enter a name"
+                            error={!!errors?.name?.message}
+                            helperText={errors?.name?.message}
+                        />
+                    ) : (
+                        getValue()
+                    )}
+                </>
+            ),
+        },
+        {
+            header: "Status",
+            accessorKey: "is_active",
+            cell: ({ row, getValue }) => (
+                <>
+                    {isEmpty(row.original) ? (
+                        <RadioGroup row value={isActive} onChange={handleChange}>
+                            <FormControlLabel value={true} control={<Radio />} label="Active" />
+                            <FormControlLabel value={false} control={<Radio />} label="Inactive" />
+                        </RadioGroup>
+                    ) : getValue() ? (
+                        "Active"
+                    ) : (
+                        "Inactive"
+                    )}
+                </>
+            ),
+        },
+        {
+            header: "Created At",
+            accessorKey: "created_ts",
+            cell: ({ row, getValue }) => (
+                <>
+                    {" "}
+                    {isEmpty(row.original) ? (
+                        ""
+                    ) : (
+                        <>
+                            <Typography> {dateUtils.getFormattedDate(getValue())}</Typography>
+                            <Typography>{row.original?.created_by ?? "-"}</Typography>
+                        </>
+                    )}
+                </>
+            ),
+        },
+        {
+            header: "Updated At",
+            accessorKey: "updated_ts",
+            cell: ({ row, getValue }) => (
+                <>
+                    {isEmpty(row.original) ? (
+                        ""
+                    ) : (
+                        <>
+                            <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : "-"}</Typography>
+                            <Typography>{row.original?.updated_by}</Typography>
+                        </>
+                    )}
+                </>
+            ),
+        },
+        {
+            header: "Actions",
+            cell: ({ row }) => (
+                <>
+                    {isEmpty(row.original) ? (
+                        <SubmitButton
+                            type="button"
+                            onClick={handleSubmit(onSubmit)}
+                            submitText="Create"
+                            submittingText="Creating"
+                            isLoading={isCreating}
+                        />
+                    ) : (
+                        <PopoverButton>
+                            {({ onClose }) => (
+                                <>
+                                    {canUserProfileSetup && (
+                                        <ViewUserProfileSetupModal
+                                            userProfileSetupId={row.original.id}
+                                            onClose={onClose}
+                                        />
+                                    )}
+                                    {can(permissions.EDIT_USER_PROFILE_SETUP) && (
+                                        <ListItemButton
+                                            onClick={() => {
+                                                navigate(
+                                                    buildRoute(routePaths.users.editProfileSetup, row.original.id),
+                                                );
+                                                onClose();
+                                            }}
+                                        >
+                                            Edit
+                                        </ListItemButton>
+                                    )}
+                                </>
+                            )}
+                        </PopoverButton>
+                    )}
+                </>
+            ),
+        },
+    ]);
 
     useEffect(() => {
         dispatch(userProfileSetupActions.list_user_profile_setup(filterSchema));
     }, [filterSchema]);
 
-    const canUserProfileSetup = can(permissions.CREATE_USER_PROFILE_SETUP);
+    useEffect(() => {
+        if (isCreated) {
+            navigate(buildRoute(routePaths.users.editProfileSetup, userProfileSetup.data));
+        }
+        dispatch(userProfileSetupActions.add_user_profile_setup_reset());
+    }, [isCreated]);
 
     return (
         <PageContent
@@ -81,113 +227,17 @@ function ListUserProfileSetup() {
                     label: "Roles and Permissions",
                 },
             ]}
-
         >
-            <PageContentContainer>
-                <Row p={2}>
-                    <SearchTextField
-                        onChange={(value) => {
-                            setFilterSchema((prev) => ({ ...prev, search: value }));
-                        }}
-                        onClear={() => {
-                            setFilterSchema((prev) => ({ ...prev, search: null }));
-                        }}
-                    />
-                </Row>
-                <TableContainer>
-                    <Table>
-                        <TableHead sx={{ bgcolor: "primary.main", color: "white" }}>
-                            <TableRow>
-                                <TableCell>
-                                    <Typography color="white">SN</Typography>
-                                </TableCell>
-                                <TableCell color="white">
-                                    <Typography color="white">Name</Typography>
-                                </TableCell>
-
-                                <TableCell>
-                                    <Typography align="center" color="white">
-                                        Status
-                                    </Typography>
-                                </TableCell>
-                                <TableCell color="white">
-                                    <Typography color="white">Created At</Typography>
-                                </TableCell>
-                                <TableCell color="white">
-                                    <Typography color="white">Updated At</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography color="white">Actions</Typography>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {loading ? (
-                                <TableBodySkeleton columnCount={6} />
-                            ) : (
-                                <>
-                                    {canUserProfileSetup && response?.pagination?.currentPage === 1 && (
-                                        <AddProfileSetupTableRowForm />
-                                    )}
-                                    {response?.data?.map((role) => (
-                                        <TableRow key={role.id}>
-                                            <TableCell>
-                                                <Typography>
-                                                    {role.f_serial_no + (canUserProfileSetup ? 1 : 0)}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography>{role.role_name}</Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography textAlign="center">
-                                                    {role.is_active ? "Active" : "Inactive"}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Box>
-                                                    <Typography>
-                                                        {" "}
-                                                        {dateUtils.getFormattedDate(role.created_ts)}
-                                                    </Typography>
-                                                    <Typography>{role.created_by ?? ""}</Typography>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Box>
-                                                    <Typography>
-                                                        {role.updated_ts
-                                                            ? dateUtils.getFormattedDate(role.updated_ts)
-                                                            : "-"}
-                                                    </Typography>
-                                                    <Typography>{role.updated_by}</Typography>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell>
-                                                <ViewUserProfileSetupModal userProfileSetupId={role.id} />
-                                                {can(permissions.EDIT_USER_PROFILE_SETUP) && !!role?.is_editable && (
-                                                    <EditIconButton
-                                                        onClick={() =>
-                                                            navigate(
-                                                                buildRoute(routePaths.users.editProfileSetup, role.id),
-                                                            )
-                                                        }
-                                                    />
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </>
-                            )}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                        paginationData={response?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                </TableContainer>
-            </PageContentContainer>
+            <Column gap="16px">
+                <PageContentContainer title="Roles and Permissions">
+                    <TanstackReactTable columns={columns} data={data} loading={isLoading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={response?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

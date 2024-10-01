@@ -135,41 +135,53 @@ export const getIndividualStakeholderById = takeEvery(actions.GET_INDIVIDUAL_STA
     }
 });
 
+export const changeOrganizationStakeholderStatus = takeEvery(
+    actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.put,
+                buildRoute(apiEndpoints.ChangeOrganizationStakeholderStatus, action.id),
+                action.data,
+            );
+            yield put({
+                type: actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS_FAILED,
+                error: error?.data?.message,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    },
+);
 
-export const changeOrganizationStakeholderStatus = takeEvery(actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS, function* (action) {
-    try {
-        const res = yield call(api.put, buildRoute(apiEndpoints.ChangeOrganizationStakeholderStatus, action.id), action.data);
-        yield put({
-            type: actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS_SUCCESS,
-            response: res,
-        });
-        yield put({ type: "SET_TOAST_DATA", response: res });
-    } catch (error) {
-        yield put({
-            type: actions.CHANGE_ORGANIZATION_STAKEHOLDER_STATUS_FAILED,
-            error: error?.data?.message,
-        });
-        yield put({ type: "SET_TOAST_DATA", response: error?.data });
-    }
-});
-
-export const changeIndividualStakeholderStatus = takeEvery(actions.CHANGE_INDIVIDUAL_STAKEHOLDER_STATUS, function* (action) {
-    try {
-        const res = yield call(api.put, buildRoute(apiEndpoints.ChangeIndividualStakeholderStatus, action.id), action.data);
-        yield put({
-            type: actions.CHANGE_INDIVIDUAL_STAKEHOLDER_STATUS_SUCCESS,
-            response: res,
-        });
-        yield put({ type: "SET_TOAST_DATA", response: res });
-    } catch (error) {
-        yield put({
-            type: actions.CHANGE_INDIVIDUAL_STAKEHOLDER_STATUS_FAILED,
-            error: error?.data?.message,
-        });
-        yield put({ type: "SET_TOAST_DATA", response: error?.data });
-    }
-});
-
+export const changeIndividualStakeholderStatus = takeEvery(
+    actions.CHANGE_INDIVIDUAL_STAKEHOLDER_STATUS,
+    function* (action) {
+        try {
+            const res = yield call(
+                api.put,
+                buildRoute(apiEndpoints.ChangeIndividualStakeholderStatus, action.id),
+                action.data,
+            );
+            yield put({
+                type: actions.CHANGE_INDIVIDUAL_STAKEHOLDER_STATUS_SUCCESS,
+                response: res,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: res });
+        } catch (error) {
+            yield put({
+                type: actions.CHANGE_INDIVIDUAL_STAKEHOLDER_STATUS_FAILED,
+                error: error?.data?.message,
+            });
+            yield put({ type: "SET_TOAST_DATA", response: error?.data });
+        }
+    },
+);
 
 export default function* saga() {
     yield all([
@@ -182,6 +194,6 @@ export default function* saga() {
         getIndividualStakeholderById,
         getOrganizationStakeholderById,
         changeOrganizationStakeholderStatus,
-        changeIndividualStakeholderStatus
+        changeIndividualStakeholderStatus,
     ]);
 }

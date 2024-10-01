@@ -60,13 +60,7 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const Business = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-    buttonText,
-}) => {
+const Business = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
@@ -95,10 +89,7 @@ const Business = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -141,21 +132,14 @@ const Business = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Transaction Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.currency} key={data.iso3}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -168,48 +152,29 @@ const Business = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Settlement Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.currency} key={data.iso3}>
                                             {data.currency_name}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="tax_type"
-                                label="Tax Type"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
+                            <Field name="tax_type" label="Tax Type" type="text" small={12} component={SelectField}>
                                 <option value="" disabled>
                                     Select Tax Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 4
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 4)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -234,108 +199,42 @@ const Business = ({
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="time_zone"
-                                label="Time Zone"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                            >
+                            <Field name="time_zone" label="Time Zone" type="text" small={12} component={SelectField}>
                                 <option value="" disabled>
                                     Select Time Zone
                                 </option>
-                                <option value="-720">
-                                    (GMT - 12:00) International Date Line
-                                </option>
-                                <option value="-660">
-                                    (GMT - 11:00) Midway Island, Samoa
-                                </option>
-                                <option value="-600">
-                                    (GMT - 10:00) Hawaii
-                                </option>
-                                <option value="-540">
-                                    (GMT - 09:00) Alaska
-                                </option>
-                                <option value="-480">
-                                    (GMT - 08:00) US &amp; Canada; Tijuana
-                                </option>
-                                <option value="-420">
-                                    (GMT - 07:00) Arizona
-                                </option>
-                                <option value="-360">
-                                    (GMT - 06:00) Central America
-                                </option>
-                                <option value="-300">
-                                    (GMT - 05:00) Eastern Time
-                                </option>
-                                <option value="-240">
-                                    (GMT - 04:00) Atlantic Time
-                                </option>
-                                <option value="-210">
-                                    (GMT - 03:30) New Foundland
-                                </option>
-                                <option value="-180">
-                                    (GMT - 03:00) Brasilia
-                                </option>
-                                <option value="-120">
-                                    (GMT - 02:00) Mid Atlantic
-                                </option>
-                                <option value="-60">
-                                    (GMT - 01:00) Azores
-                                </option>
+                                <option value="-720">(GMT - 12:00) International Date Line</option>
+                                <option value="-660">(GMT - 11:00) Midway Island, Samoa</option>
+                                <option value="-600">(GMT - 10:00) Hawaii</option>
+                                <option value="-540">(GMT - 09:00) Alaska</option>
+                                <option value="-480">(GMT - 08:00) US &amp; Canada; Tijuana</option>
+                                <option value="-420">(GMT - 07:00) Arizona</option>
+                                <option value="-360">(GMT - 06:00) Central America</option>
+                                <option value="-300">(GMT - 05:00) Eastern Time</option>
+                                <option value="-240">(GMT - 04:00) Atlantic Time</option>
+                                <option value="-210">(GMT - 03:30) New Foundland</option>
+                                <option value="-180">(GMT - 03:00) Brasilia</option>
+                                <option value="-120">(GMT - 02:00) Mid Atlantic</option>
+                                <option value="-60">(GMT - 01:00) Azores</option>
                                 <option value="0">(GMT) Casablanca</option>
-                                <option value="60">
-                                    (GMT + 01:00) Amsterdam, Paris
-                                </option>
-                                <option value="120">
-                                    (GMT + 02:00) Athens, Istanbul
-                                </option>
-                                <option value="180">
-                                    (GMT + 03:00) Baghdad, Kuwait, Moscow
-                                </option>
-                                <option value="210">
-                                    (GMT + 03:30) Tehran
-                                </option>
-                                <option value="240">
-                                    (GMT + 04:00) Abu Dhabi
-                                </option>
+                                <option value="60">(GMT + 01:00) Amsterdam, Paris</option>
+                                <option value="120">(GMT + 02:00) Athens, Istanbul</option>
+                                <option value="180">(GMT + 03:00) Baghdad, Kuwait, Moscow</option>
+                                <option value="210">(GMT + 03:30) Tehran</option>
+                                <option value="240">(GMT + 04:00) Abu Dhabi</option>
                                 <option value="270">(GMT + 04:30) Kabul</option>
-                                <option value="300">
-                                    (GMT + 05:00) Ekaterinburg, Islamabad,
-                                    Karachi
-                                </option>
-                                <option value="330">
-                                    (GMT + 05:30) Mumbai, New Delhi
-                                </option>
-                                <option value="345">
-                                    (GMT + 05:45) Kathmandu
-                                </option>
+                                <option value="300">(GMT + 05:00) Ekaterinburg, Islamabad, Karachi</option>
+                                <option value="330">(GMT + 05:30) Mumbai, New Delhi</option>
+                                <option value="345">(GMT + 05:45) Kathmandu</option>
                                 <option value="360">(GMT + 06:00) Dhaka</option>
-                                <option value="390">
-                                    (GMT + 06:30) Rangoon
-                                </option>
-                                <option value="420">
-                                    (GMT + 07:00) Bangkok, Jakarta
-                                </option>
-                                <option value="480">
-                                    (GMT + 08:00) Beijing, Hong kong, Kuala
-                                    Lumpur, Singapore
-                                </option>
-                                <option value="540">
-                                    (GMT + 09:00) Osaka, Tokya, Seoul
-                                </option>
-                                <option value="570">
-                                    (GMT + 09:30) Darwin
-                                </option>
-                                <option value="600">
-                                    (GMT + 10:00) Brisbane, Sydney
-                                </option>
-                                <option value="660">
-                                    (GMT + 11:00) Magadan, New Caledonia
-                                </option>
-                                <option value="720">
-                                    (GMT + 12:00) Auckland, Fiji
-                                </option>
+                                <option value="390">(GMT + 06:30) Rangoon</option>
+                                <option value="420">(GMT + 07:00) Bangkok, Jakarta</option>
+                                <option value="480">(GMT + 08:00) Beijing, Hong kong, Kuala Lumpur, Singapore</option>
+                                <option value="540">(GMT + 09:00) Osaka, Tokya, Seoul</option>
+                                <option value="570">(GMT + 09:30) Darwin</option>
+                                <option value="600">(GMT + 10:00) Brisbane, Sydney</option>
+                                <option value="660">(GMT + 11:00) Magadan, New Caledonia</option>
+                                <option value="720">(GMT + 12:00) Auckland, Fiji</option>
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -355,20 +254,14 @@ const Business = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Commission Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.currency} key={data.iso3}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -381,35 +274,23 @@ const Business = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.minValue1,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.minValue1, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Bank Charge Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.currency} key={data.iso3}>
                                             {data.currency_name}
                                         </option>
                                     ))}
                             </Field>
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Grid
-                                container
-                                alignItems="flex-end"
-                                justifyContent="flex-end"
-                            >
+                            <Grid container alignItems="flex-end" justifyContent="flex-end">
                                 <Grid item xs={12}>
-                                    <StatusText component="p">
-                                        Is Prefunding?
-                                    </StatusText>
+                                    <StatusText component="p">Is Prefunding?</StatusText>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Field
@@ -428,12 +309,7 @@ const Business = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -447,11 +323,7 @@ const Business = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

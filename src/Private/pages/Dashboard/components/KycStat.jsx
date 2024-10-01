@@ -76,7 +76,7 @@ export default function KycStat() {
             iconBgColor: theme.palette.surface.warningSecond,
         },
         {
-            label: "Total Not Stared",
+            label: "Total Not Started",
             icon: <KycNotStartedIcon />,
             currentCount: data?.customerWithNoKycCount ?? 0,
             previousCount: previousData?.customerWithNoKycCount ?? 0,

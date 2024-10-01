@@ -16,7 +16,6 @@ const Label = styled(Typography)(({ theme }) => ({
     paddingTop: "2px",
     paddingBottom: "2px",
     textAlign: "left",
-    
 }));
 
 const FormControl = styled(MuiFormControl)(({ theme }) => ({
@@ -33,21 +32,14 @@ const FormControl = styled(MuiFormControl)(({ theme }) => ({
 const Input = styled(MuiTextareaAutosize)(({ theme }) => ({
     width: "100%",
     padding: "9px 10px",
-    
+
     fontSize: "14px",
     border: "1px solid #D0D3D5",
     borderRadius: "6px",
     background: "transparent",
 }));
 
-const TextAreaField = ({
-    label,
-    input,
-    placeholder,
-    small,
-    meta: { touched, invalid, error },
-    ...rest
-}) => {
+const TextAreaField = ({ label, input, placeholder, small, meta: { touched, invalid, error }, ...rest }) => {
     return (
         <Wrapper container>
             {label && (
@@ -57,12 +49,7 @@ const TextAreaField = ({
             )}
             <Grid item xs={12} md={small ? small : 8}>
                 <FormControl error={touched && invalid}>
-                    <Input
-                        variant="outlined"
-                        placeholder={placeholder ? placeholder : label}
-                        {...input}
-                        {...rest}
-                    />
+                    <Input variant="outlined" placeholder={placeholder ? placeholder : label} {...input} {...rest} />
                     {renderFromHelper({ touched, error })}
                 </FormControl>
             </Grid>

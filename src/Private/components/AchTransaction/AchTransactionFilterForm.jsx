@@ -17,10 +17,10 @@ export default function AchTransactionFilterForm({ isProcessing, onSubmit, onRes
     const minDate = moment(maxDate).subtract(30, "days").format("YYYY-MM-DD");
 
     const methods = useForm({
-        defaultValues:{
+        defaultValues: {
             from_date: minDate,
             to_date: maxDate,
-        }
+        },
     });
 
     const { reset, setValue } = methods;
@@ -55,7 +55,7 @@ export default function AchTransactionFilterForm({ isProcessing, onSubmit, onRes
                         columnSpacing={2}
                     >
                         <Grid item>
-                            <CancelButton  onClick={handleReset} disabled={isProcessing}>
+                            <CancelButton onClick={handleReset} disabled={isProcessing}>
                                 Reset
                             </CancelButton>
                         </Grid>

@@ -12,13 +12,7 @@ const Wrapper = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export default function CheckboxField({
-    label,
-    reverse,
-    half,
-    input,
-    ...rest
-}) {
+export default function CheckboxField({ label, reverse, half, input, ...rest }) {
     return (
         <Wrapper container>
             <Grid item xs={12} md={half ? 6 : 12}>

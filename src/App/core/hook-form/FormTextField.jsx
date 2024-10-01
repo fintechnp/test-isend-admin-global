@@ -119,7 +119,7 @@ function FormTextField(props) {
                             helperText={error ?? get(errors, name)?.message ?? ""}
                             label={
                                 <>
-                                    {label}{" "}
+                                    {label} {required && <span style={{ color: "red" }}>*</span>}
                                     {isOptional && (
                                         <Typography component="span" variant="caption">
                                             (Optional)
@@ -129,7 +129,6 @@ function FormTextField(props) {
                             }
                             variant={variant}
                             fullWidth={fullWidth}
-                            required={required}
                             size={size}
                             onFocus={() => clearErrors(name)}
                             disabled={disabled}

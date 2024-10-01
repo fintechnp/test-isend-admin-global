@@ -23,14 +23,12 @@ export const getEmailTemplates = takeEvery(actions.GET_EMAIL_TEMPLATE, function*
 });
 
 export const getEmailTagTemplates = takeEvery(actions.GET_EMAIL_TEMPLATE_TAG, function* (action) {
-    const res = yield call(api.get, buildRoute(apiEndpoints.emailTemplate.tagList), action.query);
-
-    yield put({
-        type: actions.GET_EMAIL_TEMPLATE_TAG_SUCCESS,
-        response: res,
-    });
-
     try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.emailTemplate.tagList), action.query);
+        yield put({
+            type: actions.GET_EMAIL_TEMPLATE_TAG_SUCCESS,
+            response: res,
+        });
     } catch (error) {
         yield put({
             type: actions.GET_EMAIL_TEMPLATE_TAG_FAILURE,
@@ -54,26 +52,32 @@ export const addEmailTemplate = takeEvery(actions.ADD_EMAIL_TEMPLATE, function* 
         });
     } catch (error) {
         yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+        yield put({
             type: actions.ADD_EMAIL_TEMPLATE_FAILURE,
             error: error?.data,
+        });
+        yield put({
+            type: actions.ADD_EMAIL_TEMPLATE_RESET,
         });
     }
 });
 
 export const updateEmailTemplate = takeEvery(actions.UPDATE_EMAIL_TEMPLATE, function* (action) {
-    const res = yield call(api.put, buildRoute(apiEndpoints.emailTemplate.update, action.id), action.data);
-
-    yield put({
-        type: actions.UPDATE_EMAIL_TEMPLATE_SUCCESS,
-        response: res,
-    });
-
-    yield put({
-        type: "SET_TOAST_DATA",
-        response: res,
-    });
-
     try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.emailTemplate.update, action.id), action.data);
+
+        yield put({
+            type: actions.UPDATE_EMAIL_TEMPLATE_SUCCESS,
+            response: res,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
     } catch (error) {
         yield put({
             type: actions.UPDATE_EMAIL_TEMPLATE_FAILURE,
@@ -82,6 +86,76 @@ export const updateEmailTemplate = takeEvery(actions.UPDATE_EMAIL_TEMPLATE, func
     }
 });
 
+export const getEmailElement = takeEvery(actions.GET_EMAIL_ELEMENT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.emailTemplate.elementList), action.query);
+        yield put({
+            type: actions.GET_EMAIL_ELEMENT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_EMAIL_ELEMENT_FAILURE,
+            error: error?.data,
+        });
+    }
+});
+
+export const addEmailElement = takeEvery(actions.ADD_EMAIL_ELEMENT, function* (action) {
+    try {
+        const res = yield call(api.post, buildRoute(apiEndpoints.emailTemplate.elementCreate), action.data);
+        yield put({
+            type: actions.ADD_EMAIL_ELEMENT_SUCCESS,
+            response: res,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+        yield put({
+            type: actions.ADD_EMAIL_ELEMENT_FAILURE,
+            error: error?.data,
+        });
+    }
+});
+
+export const updateEmailElement = takeEvery(actions.UPDATE_EMAIL_ELEMENT, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.emailTemplate.elementUpdate, action.id), action.data);
+        yield put({
+            type: actions.UPDATE_EMAIL_ELEMENT_SUCCESS,
+            response: res,
+        });
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+        yield put({
+            type: actions.UPDATE_EMAIL_ELEMENT_FAILURE,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* EmailTemplateSaga() {
-    yield all([getEmailTemplates, getEmailTagTemplates, addEmailTemplate, updateEmailTemplate]);
+    yield all([
+        getEmailTemplates,
+        getEmailTagTemplates,
+        addEmailTemplate,
+        updateEmailTemplate,
+        getEmailElement,
+        addEmailElement,
+        updateEmailElement,
+    ]);
 }

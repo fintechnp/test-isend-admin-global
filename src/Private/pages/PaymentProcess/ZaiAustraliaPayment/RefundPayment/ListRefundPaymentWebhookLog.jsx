@@ -19,8 +19,8 @@ import { webhookLogStatus } from "Private/data/webhookLogStatus";
 
 const StyledTableCell = styled(TableHead)(({ theme }) => ({
     "& .MuiTableCell-root": {
-        backgroundColor: "#F1F7FE",
-        color: "#000",
+        backgroundColor: theme.palette.background.light,
+        color: theme.palette.text.primary,
     },
 }));
 
@@ -50,7 +50,6 @@ function ListRefundPaymentWebhookLog({ customerId }) {
     }, [dispatch, filterSchema, customerId]);
 
     const onRefundSuccess = () => {
-        console.log("refunded");
         dispatch(
             actions.get_zai_logs({
                 ...filterSchema,
@@ -82,7 +81,12 @@ function ListRefundPaymentWebhookLog({ customerId }) {
                 <Table>
                     <StyledTableCell>
                         <TableRow
-                            sx={{ "&:last-child td, &:last-child th": { borderLeft: 1, borderColor: "#EAEBF0" } }}
+                            sx={{
+                                "&:last-child td, &:last-child th": {
+                                    borderLeft: 1,
+                                    borderColor: (theme) => theme.palette.background.light,
+                                },
+                            }}
                         >
                             <TableCell>SN</TableCell>
                             <TableCell>Transaction ID</TableCell>

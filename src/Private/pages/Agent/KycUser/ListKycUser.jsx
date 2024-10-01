@@ -1,59 +1,105 @@
-import Grid from "@mui/material/Grid";
-import React, { useState } from "react";
-import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
+import React, { useEffect, useMemo, useState } from "react";
 
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-
-import { Loading } from "App/components";
-import buildRoute from "App/helpers/buildRoute";
-import Spacer from "App/components/Spacer/Spacer";
-import routePaths from "Private/config/routePaths";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
-import NoResults from "../../Transactions/components/NoResults";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
-import FilterForm from "Private/components/KycUser/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
+import apiEndpoints from "Private/config/apiEndpoints";
+import { localStorageGet } from "App/helpers/localStorage";
+import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import PopoverButton from "App/components/Button/PopoverButton";
 import { KycUserActions as actions } from "Private/pages/Agent/KycUser/store";
+import { relatedTo as relatedToConstant, relatedToOptions } from "Private/data/b2b";
 
 const initialState = {
-    Page: 1,
-    PageSize: 10,
+    page_number: 1,
+    page_size: 10,
 };
 
 export default function ListKycUser() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
+    const agentInitialState = {
+        label: "Agent",
+        searchParamName: "Name",
+        valueKey: "marketMakerId",
+        apiEndpoint: apiEndpoints.marketMaker.getAll,
+        shouldRenderPrevData: true,
+        pageNumberQueryKey: "Page",
+    };
 
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const [newField, setNewField] = useState(agentInitialState);
 
     const { response, loading } = useSelector((state) => state.get_all_kyc_user);
 
+    const statusOptions = localStorageGet("reference")
+        ?.find((item) => item?.reference_type === referenceTypeId.balanceRequestStatus)
+        ?.reference_data?.map((referenceItem) => {
+            return {
+                label: referenceItem.name,
+                value: +referenceItem.value,
+            };
+        });
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        filterSchema,
+        reset,
+    } = useListFilterStore({ initialState });
+
     useEffect(() => {
         dispatch(actions.get_all_kyc_user(filterSchema));
-    }, []);
+    }, [filterSchema]);
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            Page: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageSize: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const filterFields = [
+        {
+            type: fieldTypes.SELECT,
+            name: "RelatedTo",
+            label: "Market Maker",
+            options: relatedToOptions,
+            defaultValue: relatedToConstant.AGENT,
+            onChange: (event) => {
+                const { value } = event.target;
+                const isAgentSelected = value === relatedToConstant.AGENT;
+                setNewField({
+                    label: isAgentSelected ? "Agent" : "Business",
+                    searchParamName: isAgentSelected ? "Name" : "BusinessName",
+                    valueKey: isAgentSelected ? "marketMakerId" : "businessId",
+                    apiEndpoint: isAgentSelected ? apiEndpoints.marketMaker.getAll : apiEndpoints.business.getAll,
+                    shouldRenderPrevData: true,
+                    pageNumberQueryKey: isAgentSelected ? "Page" : "PageNumber",
+                });
+            },
+        },
+        {
+            type: fieldTypes.SEARCH_AUTOCOMPLETE_API,
+            name: "marketMakerId",
+            labelKey: "name",
+            ...newField,
+        },
+        {
+            name: "statusId",
+            type: fieldTypes.SELECT,
+            label: "Status",
+            options: statusOptions,
+        },
+    ];
 
     const columns = useMemo(
         () => [
@@ -97,22 +143,18 @@ export default function ListKycUser() {
             {
                 header: "Actions",
                 cell: ({ row }) => (
-                    <TableRowActionContainer>
-                        <IconButton
-                            onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewKycUser, row?.original?.kycId));
-                            }}
-                        >
-                            <RemoveRedEyeOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <ListItemButton
+                                onClick={() => {
+                                    navigate(buildRoute(routePaths.agent.viewKycUser, row?.original?.kycId));
+                                    onClose();
                                 }}
-                            />
-                        </IconButton>
-                    </TableRowActionContainer>
+                            >
+                                View
+                            </ListItemButton>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
@@ -120,35 +162,48 @@ export default function ListKycUser() {
     );
 
     return (
-        <PageContent title="Kyc Users">
-            {loading && (
-                <Grid item xs={12}>
-                    <Loading loading={loading} />
-                </Grid>
-            )}
-            <FilterForm setFilterSchema={setFilterSchema} loading={loading} />
-            {!loading && response?.data && response?.data?.length === 0 ? (
-                <Grid item xs={12}>
-                    <NoResults text="No KYC Users Found" />
-                </Grid>
-            ) : (
-                <>
-                    <Spacer />
+        <PageContent
+            documentTitle="Kyc Users"
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "KYC USERS",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <FilterForm
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onDelete={onDeleteFilterParams}
+                    title="Search KYC Users"
+                    onReset={() => {
+                        reset();
+                        setNewField(agentInitialState);
+                    }}
+                />
+                <PageContentContainer title="KYC USERS">
                     <TanstackReactTable
                         columns={columns}
                         title="KYC USERS"
                         data={response?.data ?? []}
                         loading={loading}
-                        renderPagination={() => (
-                            <TablePagination
-                                paginationData={response?.pagination}
-                                handleChangePage={handleChangePage}
-                                handleChangeRowsPerPage={handleChangeRowsPerPage}
-                            />
-                        )}
                     />
-                </>
-            )}
+                </PageContentContainer>
+            </Column>
+            <TablePagination
+                paginationData={response?.pagination}
+                handleChangePage={onPageChange}
+                handleChangeRowsPerPage={onRowsPerPageChange}
+            />
         </PageContent>
     );
 }

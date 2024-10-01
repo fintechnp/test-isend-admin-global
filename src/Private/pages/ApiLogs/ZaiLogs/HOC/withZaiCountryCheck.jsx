@@ -10,7 +10,7 @@ const withZaiCountryCheck = (WrappedComponent) => {
         useEffect(() => {
             const getCountryISO3 = localStorage.getItem(SELECTED_COUNTRY_KEY);
 
-            if (getCountryISO3 !== "AUS") {
+            if (getCountryISO3 !== "SGP") {
                 navigate("/");
             }
         }, [navigate]);

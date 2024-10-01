@@ -9,28 +9,14 @@ const Label = styled(Typography)(({ theme }) => ({
     paddingBottom: "-4px",
 }));
 
-export default function SwitchField({
-    label,
-    input,
-    half,
-    small,
-    options,
-    ...rest
-}) {
+export default function SwitchField({ label, input, half, small, options, ...rest }) {
     return (
         <Grid container alignitems="center">
             <Grid item xs={6} md={half ? 8 : 4}>
                 <Label>{label}</Label>
             </Grid>
             <Grid item xs={6} md={half ? 4 : 8}>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={input.value ? true : false}
-                            onChange={input.onChange}
-                        />
-                    }
-                />
+                <FormControlLabel control={<Switch checked={input.value ? true : false} onChange={input.onChange} />} />
             </Grid>
         </Grid>
     );

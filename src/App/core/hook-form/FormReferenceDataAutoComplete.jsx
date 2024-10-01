@@ -47,6 +47,7 @@ export default function FormReferenceDataAutoComplete(props) {
             valueKey={valueKey}
             onChange={(_, value) => {
                 setValue(name, value?.[valueKey] ?? "");
+                onChange?.(value);
             }}
             required={required}
             isOptional={isOptional}
@@ -60,4 +61,5 @@ FormReferenceDataAutoComplete.propTypes = {
     labelKey: PropTypes.oneOf(["reference_id", "name", "value"]),
     valueKey: PropTypes.oneOf(["reference_id", "name", "value"]),
     isOptional: PropTypes.bool,
+    required: PropTypes.bool,
 };

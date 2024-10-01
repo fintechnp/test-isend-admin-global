@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import moment from "moment";
 import { RangeType } from "App/data/RangeType";
 
 class dateUtils {
@@ -17,11 +16,11 @@ class dateUtils {
     }
 
     getFromDate(date) {
-        return dayjs(date).startOf('day').toISOString()
+        return dayjs(date).startOf("day").toISOString();
     }
 
     getToDate(date) {
-        return dayjs(date).endOf('day').toISOString()
+        return dayjs(date).endOf("day").toISOString();
     }
 
     getDateRange(period) {
@@ -142,6 +141,24 @@ class dateUtils {
 
     getDate(date) {
         return date?.startsWith("0001-01-01") ? null : date?.substring(0, 10);
+    }
+
+    /**
+     * Get date 2 weeks ago from today
+     *
+     * @returns {string} - date 2 weeks ago from today in ISO format
+     */
+    getDateBeforeTwoWeeks() {
+        return dayjs().subtract(15, "day").startOf("day").toISOString();
+    }
+
+    /**
+     * Get today's date
+     *
+     * @returns {string} - today's date in ISO format
+     */
+    getTodayDate() {
+        return dayjs().endOf("day").toISOString();
     }
 }
 

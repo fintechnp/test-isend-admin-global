@@ -1,13 +1,13 @@
-import Grid from "@mui/material/Grid";
 import PropTypes from "prop-types";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import Grid from "@mui/material/Grid";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { useFieldArray, useFormContext, get } from "react-hook-form";
 
 import Row from "App/components/Row/Row";
 import Center from "App/components/Center/Center";
@@ -22,19 +22,26 @@ import FormInputWrapper from "App/core/hook-form/FormInputWrapper";
 import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
 import OrganizationStakeholderSelect from "./OrganizationStakeholderSelect";
 import FormGroupContainer from "App/components/Container/FormGroupContainer";
+import FormIdentityTypeSelect from "App/core/hook-form/FormIdentityTypeSelect";
 import FormReferenceDataAutoComplete from "App/core/hook-form/FormReferenceDataAutoComplete";
 
 import isEmpty from "App/helpers/isEmpty";
 import { relatedTo } from "Private/data/b2b";
 import { GenderOptions } from "App/data/Gender";
+import useCountries from "App/hooks/useCountries";
 import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
+import { documentFor } from "Private/pages/Setup/DocumentAcceptance/data/documentFor";
 
 export default function IndividualStakeholderForm({ isAddMode = true, isProcessing, relatedTo, relatedId }) {
+    const isDocumentSettingMounted = useRef(false);
+
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
+
+    const { getCountryById } = useCountries();
 
     const { response, loading: isLoading, success: isSuccess } = useSelector((state) => state.get_document_settings);
 
@@ -49,7 +56,7 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
         clearErrors,
     } = useFormContext();
 
-    const { append, update } = useFieldArray({
+    const { append, update, remove } = useFieldArray({
         control,
         name: "documents",
     });
@@ -58,46 +65,66 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
 
     const identityIssuedCountryId = watch("identityIssuedCountryId");
 
+    const identityTypeId = watch("identityTypeId");
+
+    const identityIssuedCountryIso3 = identityIssuedCountryId ? getCountryById(identityIssuedCountryId).iso3 : null;
+
     useEffect(() => {
-        if (!identityIssuedCountryId) return;
+        if (!identityIssuedCountryId || !identityTypeId) return;
 
         dispatch(
             actions.get_document_settings({
-                countryId: identityIssuedCountryId,
-                documentFor: "KYC",
+                CountryId: identityIssuedCountryId,
+                DocumentFor: "KYC",
+                ReferenceDataId: identityTypeId,
             }),
         );
-    }, [dispatch, identityIssuedCountryId]);
-
-    const documents = watch("documents") ?? [];
+    }, [dispatch, identityIssuedCountryId, identityTypeId]);
 
     useEffect(() => {
-        if (documents.length < 0 || isLoading) return;
+        if (isDocumentSettingMounted.current) {
+            setValue("documents", []);
+        }
+    }, [identityTypeId, identityIssuedCountryId]);
+
+    useEffect(() => {
+        // if (isAddMode && (isLoading || isEmpty(identityTypeId))) {
+        //     setValue("documents", []);
+        //     return;
+        // }
 
         const documentSettings = response?.data;
 
-        if (isAddMode && documentSettings?.length <= 0) {
-            setValue("documents", []);
-            return;
-        }
-
         documentSettings?.forEach((documentSetting) => {
-            const index = documents.findIndex((d) => d.documentTypeId === documentSetting.requiredDocumentId);
+            const documents = getValues("documents") ?? [];
+
+            const index = documents.findIndex(
+                (d) =>
+                    d.documentTypeId === documentSetting.requiredDocumentId &&
+                    d.documentSide === documentSetting.docSideName,
+            );
+
             if (index === -1) {
                 append({
                     documentId: "",
                     documentName: documentSetting.documentName,
                     documentTypeId: documentSetting.requiredDocumentId,
-                    isRequired: documentSetting.isRequired,
+                    isRequired: true,
+                    hasTwoSide: documentSetting.hasTwoSide,
+                    documentSide: documentSetting.docSideName,
                 });
             } else {
                 update(index, {
                     ...documents[index],
-                    isFieldRequired: documentSetting.isRequired,
+                    isFieldRequired: true,
+                    hasTwoSide: documentSetting.hasTwoSide,
+                    documentSide: documentSetting.docSideName,
                 });
             }
+
+            isDocumentSettingMounted.current = true;
         });
-    }, [response]);
+    }, [response, isLoading, identityTypeId]);
 
     const onChangeSameAsPermanentAddress = (e) => {
         const checked = e.target.checked;
@@ -110,7 +137,11 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
     };
 
     const handleFileUploadSuccess = (document, documentId) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const documents = getValues("documents") ?? [];
+
+        const index = documents.findIndex(
+            (d) => d.documentTypeId === document.documentTypeId && d.documentSide === document.documentSide,
+        );
 
         update(index, {
             ...documents[index],
@@ -121,7 +152,11 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
     };
 
     const handleRemove = (document) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const documents = getValues("documents") ?? [];
+
+        const index = documents.findIndex(
+            (d) => d.documentTypeId === document.documentTypeId && d.documentSide === document.documentSide,
+        );
 
         update(index, {
             ...documents[index],
@@ -131,7 +166,11 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
     };
 
     const handleChange = (document, file) => {
-        const index = getValues("documents").findIndex((d) => d.documentTypeId === document.documentTypeId);
+        const documents = getValues("documents") ?? [];
+
+        const index = documents.findIndex(
+            (d) => d.documentTypeId === document.documentTypeId && d.documentSide === document.documentSide,
+        );
 
         update(index, {
             ...documents[index],
@@ -201,10 +240,11 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <FormReferenceDataAutoComplete
+                        <FormIdentityTypeSelect
                             name="identityTypeId"
                             label="Identity Type"
-                            referenceTypeId={referenceTypeId.identityTypes}
+                            country={identityIssuedCountryIso3}
+                            documentFor={documentFor.KYC}
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
@@ -319,14 +359,31 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                                     <Typography color="grey.700">Select a Identity Issued Country</Typography>
                                 </Grid>
                             );
-                        else if (isSuccess && documents.length <= 0)
+                        if (isEmpty(identityTypeId))
+                            return (
+                                <Grid item xs={12}>
+                                    <Typography color="grey.700">Select a Identity Type</Typography>
+                                </Grid>
+                            );
+                        else if (isEmpty(identityIssuedCountryId))
+                            return (
+                                <Grid item xs={12}>
+                                    <Typography color="grey.700">Select a Identity Type</Typography>
+                                </Grid>
+                            );
+                        else if (isSuccess && getValues("documents").length <= 0)
                             return (
                                 <Grid item xs={12}>
                                     <Row>
                                         <Typography color="grey.700">
                                             Document setting not found for selected identity issued country. &nbsp;
                                         </Typography>
-                                        <Link to={routePaths.documentAcceptance.index}>Click Here</Link> &nbsp;
+                                        <Link
+                                            to={`${routePaths.documentAcceptance.index}?countryId=${getCountryById(identityIssuedCountryId).iso3}&documentFor=${documentFor.KYC}`}
+                                        >
+                                            Click Here
+                                        </Link>{" "}
+                                        &nbsp;
                                         <Typography color="grey.700"> to add document setting. </Typography>
                                     </Row>{" "}
                                 </Grid>
@@ -334,12 +391,16 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                         else
                             return (
                                 <>
-                                    {documents.map((document, i) => (
-                                        <Grid key={document.documentTypeId} item xs={12} md={6}>
+                                    {getValues("documents").map((document, i) => (
+                                        <Grid
+                                            key={`${document.documentTypeId}-${document.documentName}-${i}`}
+                                            item
+                                            xs={12}
+                                            md={6}
+                                        >
                                             <FormInputWrapper
-                                                label={document.documentName}
-                                                errorMessage={errors?.documents?.[i]?.documentId?.message}
-                                                isOptional={!document.isRequired}
+                                                label={`${document.documentName} ${document.hasTwoSide ? `(${document.documentSide})` : ""}`}
+                                                errorMessage={get(errors, `documents.${i}.documentId`)?.message}
                                             >
                                                 <UploadFile
                                                     title={`Upload your ${document.documentName}`}
@@ -352,7 +413,7 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                                                     ]}
                                                     onFileRemove={() => handleRemove(document)}
                                                     onUploadSuccess={(id) => handleFileUploadSuccess(document, id)}
-                                                    error={!!errors?.documents?.[i]?.documentId?.message}
+                                                    error={!!get(errors, `documents.${i}.documentId`)?.message}
                                                     onChange={(file) => handleChange(document, file)}
                                                     file={document?.file ?? document?.documentLink}
                                                     fileType={document?.fileType}
@@ -361,6 +422,28 @@ export default function IndividualStakeholderForm({ isAddMode = true, isProcessi
                                             </FormInputWrapper>
                                         </Grid>
                                     ))}
+                                    <Grid item xs={12} md={6}>
+                                        <FormInputWrapper
+                                            label="User Selfie Photo"
+                                            errorMessage={get(errors, "userProfileId")?.message}
+                                        >
+                                            <UploadFile
+                                                title={`Upload a selfie photo`}
+                                                supportedFileDescription="Supported file formats: PDF, JPG, PNG."
+                                                allowedFileTypes={[
+                                                    "application/pdf",
+                                                    "image/jpeg",
+                                                    "image/png",
+                                                    "image/jpg",
+                                                ]}
+                                                onFileRemove={() => handleRemove(document)}
+                                                onUploadSuccess={(id) => setValue("userProfileId", id)}
+                                                error={!!get(errors, "userProfileId")?.message}
+                                                file={getValues("userProfileLink")}
+                                                fileType={getValues("userProfileFormat")}
+                                            />
+                                        </FormInputWrapper>
+                                    </Grid>
                                 </>
                             );
                     })()}

@@ -21,10 +21,13 @@ export const getAllAchTransactions = takeEvery(actions.GET_ACH_TRANSACTIONS, fun
     }
 });
 
-
 export const updateAchTransactionStatus = takeEvery(actions.UPDATE_ACH_TRANSACTION_STATUS, function* (action) {
     try {
-        const res = yield call(api.put, buildRoute(apiEndpoints.transaction.updateAchTransactionStatus, action.id), action.data);
+        const res = yield call(
+            api.put,
+            buildRoute(apiEndpoints.transaction.updateAchTransactionStatus, action.id),
+            action.data,
+        );
         yield put({
             type: actions.UPDATE_ACH_TRANSACTION_STATUS_SUCCESS,
             response: res,
@@ -42,12 +45,6 @@ export const updateAchTransactionStatus = takeEvery(actions.UPDATE_ACH_TRANSACTI
     }
 });
 
-
-
 export default function* saga() {
-    yield all([
-        getAllAchTransactions,
-        updateAchTransactionStatus,
-        
-    ]);
+    yield all([getAllAchTransactions, updateAchTransactionStatus]);
 }

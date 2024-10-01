@@ -1,36 +1,24 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import Box from "@mui/material/Box";
+import { Helmet } from "react-helmet-async";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import MuiIconButton from "@mui/material/IconButton";
-import { Box, Tooltip, Typography } from "@mui/material";
-import { Helmet } from "react-helmet-async";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import ListItemButton from "@mui/material/ListItemButton";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 
-import actions from "./../../Transactions/store/actions";
+import dateUtils from "App/utils/dateUtils";
+import Column from "App/components/Column/Column";
+import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
 import Header from "./components/Header";
 import Filter from "./components/Filter";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { CurrencyName, FormatDate, FormatNumber } from "./../../../../App/helpers";
-
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
-
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: "border.main",
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
+import actions from "./../../Transactions/store/actions";
+import { TablePagination } from "./../../../../App/components/Table";
+import { CurrencyName, FormatNumber } from "./../../../../App/helpers";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -64,15 +52,13 @@ function Transactions(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Name",
-                accessor: "customer_name",
-                maxWidth: 140,
-                Cell: (data) => (
+                header: "Transaction ID",
+                accessorKey: "tid",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -80,159 +66,99 @@ function Transactions(props) {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Partner",
-                accessor: "agent_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data?.row?.original?.payout_agent_name}
+                        <StyledName component="p" sx={{ opacity: 0.8 }}>
+                            {row?.original?.tid ? row?.original?.tid : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {CurrencyName(data?.row?.original?.payout_currency)}
-                        </Typography>
-                    </Box>
+                header: "Name",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">{row?.original?.customer_name}</Typography>
+                        <Typography variant="body2">{row?.original?.beneficiary_name}</Typography>
+                    </Column>
                 ),
             },
+
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Date</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
-                        </StyledName>
-                    </Box>
+                header: "Partner",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">{row?.original?.agent_name}</Typography>
+                        <Typography variant="body2">{row?.original?.payout_agent_name}</Typography>
+                    </Column>
                 ),
             },
+
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Rate</Typography>
-                    </Box>
-                ),
-                accessor: "payout_cost_rate",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Amount</Typography>
-                    </Box>
-                ),
-                accessor: "transfer_amount",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
+                header: "Currency",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">
+                            {row?.original?.collected_currency
+                                ? CurrencyName(row?.original?.collected_currency)
                                 : "N/A"}
                         </Typography>
-                    </Box>
+                        <Typography variant="body1">
+                            {row?.original?.payout_currency ? CurrencyName(row?.original?.payout_currency) : "N/A"}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
+                header: "Rate",
+                cell: ({ row }) => (
+                    <>{row.original.payout_cost_rate ? FormatNumber(row?.original?.payout_cost_rate) : "N/A"}</>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Tooltip title="Transaction Details" arrow>
-                            <IconButton onClick={() => navigate(`/transactions/details/${row.original.tid}`)}>
-                                <RemoveRedEyeOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
+            },
+            {
+                header: "Date",
+                cell: ({ row }) => (
+                    <>
+                        {row?.original?.payout_cost_rate
+                            ? dateUtils.getLocalDateFromUTC(row?.original?.created_ts)
+                            : "N/A"}
+                    </>
                 ),
+            },
+            {
+                header: "Amount",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">
+                            {row?.original?.transfer_amount ? FormatNumber(row?.original?.transfer_amount) : "N/A"}
+                        </Typography>
+                        <Typography variant="body2">
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
+                        </Typography>
+                    </Column>
+                ),
+            },
+
+            {
+                header: "Action",
+                accessorKey: "action",
+                cell: ({ row }) => {
+                    return (
+                        <PopoverButton>
+                            {({ onClose }) => (
+                                <>
+                                    <ListItemButton
+                                        onClick={() =>
+                                            navigate(
+                                                `/transactions/details/${row.original.tid}/${row.original.customer_id}`,
+                                            )
+                                        }
+                                    >
+                                        View Transaction
+                                    </ListItemButton>
+                                </>
+                            )}
+                        </PopoverButton>
+                    );
+                },
             },
         ],
         [],
@@ -287,30 +213,28 @@ function Transactions(props) {
     };
 
     return (
-        <>
+        <PageContent>
             <Helmet>
                 <title>
                     {import.meta.env.REACT_APP_NAME} | {props.title}
                 </title>
             </Helmet>
-            <CustomerWrapper>
-                <Header />
-                <Filter handleSearch={handleSearch} handleSort={handleSort} handleOrder={handleOrder} />
-                <Table
-                    columns={columns}
-                    data={TransactionData?.data || []}
-                    loading={l_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={TransactionData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </CustomerWrapper>
-        </>
+
+            <Column>
+                <PageContentContainer>
+                    <Header />
+                    <Filter handleSearch={handleSearch} handleSort={handleSort} handleOrder={handleOrder} />
+
+                    <TanstackReactTable columns={columns} data={TransactionData?.data || []} loading={l_loading} />
+                </PageContentContainer>
+            </Column>
+
+            <TablePagination
+                paginationData={TransactionData?.pagination}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+        </PageContent>
     );
 }
 

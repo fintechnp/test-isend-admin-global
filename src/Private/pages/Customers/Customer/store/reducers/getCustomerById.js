@@ -7,7 +7,7 @@ const initialState = {
     response: null,
 };
 
-const reducer = (state = initialState, action) => { 
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actions.GET_CUSTOMER_BY_ID:
             return {

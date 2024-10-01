@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
-import { useForm } from "react-hook-form";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo } from "react";
@@ -19,7 +18,6 @@ import FilterButton from "App/components/Button/FilterButton";
 import FilterForm from "App/components/Filter/FilterForm";
 import Column from "App/components/Column/Column";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import { TablePagination } from "App/components/Table";
 import referenceTypeId from "Private/config/referenceTypeId";
 
@@ -42,7 +40,6 @@ const ZaiAustraliaPayment = () => {
         openFilter,
         closeFilter,
         filterSchema,
-        onQuickFilter,
         onRowsPerPageChange,
         onFilterSubmit,
         onPageChange,
@@ -50,9 +47,9 @@ const ZaiAustraliaPayment = () => {
         onDeleteFilterParams,
     } = useListFilterStore({
         initialState,
+        pageNumberKeyName: "page_number",
+        pageSizeKeyName: "page_size",
     });
-
-    const { reset: formReset } = useForm();
 
     const [showBalance, setShowBalance] = useState({
         isOpen: false,
@@ -77,14 +74,8 @@ const ZaiAustraliaPayment = () => {
     );
 
     useEffect(() => {
-        dispatch(actions?.get_zai_australia_payment_details(filterSchema));
-        dispatch({ type: "GET_ZAI_AUSTRALIA_PAYMENT" });
+        dispatch(actions.get_zai_australia_payment_details(filterSchema));
     }, [filterSchema]);
-
-    const handleReset = () => {
-        dispatch({ type: "GET_ZAI_AUSTRALIA_PAYMENT_RESET" });
-        formReset();
-    };
 
     const transactionStatusOptions =
         reference
@@ -230,13 +221,6 @@ const ZaiAustraliaPayment = () => {
         },
     ];
 
-    const sortData = [
-        { key: "SN", value: "f_serial_no" },
-        { key: "Transaction ID", value: "transaction_id" },
-        { key: "Customer Details", value: "customer_name" },
-        { key: "Partner/Payout Country", value: "payout_agent_name" },
-    ];
-
     return (
         <PageContent
             documentTitle="Zai Australia Payment"
@@ -256,20 +240,7 @@ const ZaiAustraliaPayment = () => {
                     onReset={reset}
                 />
 
-                <PageContentContainer
-                    title="Zai Australia Payment List"
-                    topRightContent={
-                        <>
-                            <TableGridQuickFilter
-                                onSortByChange={onQuickFilter}
-                                onOrderByChange={onQuickFilter}
-                                disabled={l_loading}
-                                sortByData={sortData}
-                                values={filterSchema}
-                            />
-                        </>
-                    }
-                >
+                <PageContentContainer title="Zai Australia Payment List">
                     <TanstackReactTable
                         columns={columns}
                         title="Zai Australia Payment"

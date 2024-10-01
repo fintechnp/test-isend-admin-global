@@ -16,7 +16,6 @@ const Label = styled(Typography)(({ theme }) => ({
     paddingTop: "2px",
     paddingBottom: "2px",
     textAlign: "left",
-    
 }));
 
 const FormControl = styled(MuiFormControl)(({ theme }) => ({
@@ -37,11 +36,10 @@ const Select = styled(MuiSelect)(({ theme }) => ({
         padding: "9px 10px",
         fontSize: "15px",
     },
-    "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled":
-        {
-            "WebkitTextFillColor": "black",
-            fontWeight: 600,
-        },
+    "& .MuiNativeSelect-select.MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled": {
+        WebkitTextFillColor: "black",
+        fontWeight: 600,
+    },
     "&:focus": {
         border: "1px solid #D0D3D5",
     },
@@ -53,14 +51,7 @@ const Select = styled(MuiSelect)(({ theme }) => ({
     },
 }));
 
-const SelectField = ({
-    label,
-    input,
-    small,
-    meta: { touched, invalid, error },
-    children,
-    ...rest
-}) => {
+const SelectField = ({ label, input, small, meta: { touched, invalid, error }, children, ...rest }) => {
     return (
         <Wrapper container>
             {label && (

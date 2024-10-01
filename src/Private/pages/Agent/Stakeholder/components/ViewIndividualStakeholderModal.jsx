@@ -33,6 +33,22 @@ export default function ViewIndividualStakeholderModal({
 
     const data = response?.data;
 
+    const documents = data
+        ? [
+              ...(data?.documents ?? []),
+              {
+                  documentTypeId: null,
+                  documentId: data?.userprofileId,
+                  documentName: "Selfie Photo",
+                  documentLink: data?.userProfileLink,
+                  fileName: null,
+                  fileType: data?.userProfileFormat,
+                  documentSide: "front",
+                  hasTwoSide: false,
+              },
+          ]
+        : [];
+
     const definition = useSourceDetail([
         {
             title: "",
@@ -205,7 +221,7 @@ export default function ViewIndividualStakeholderModal({
             </Box>
             <SourceDetails definition={definition} data={data} isLoading={isLoading} />
             <Divider sx={{ my: "16px" }} />
-            <Documents data={data?.documents ?? []} isLoading={isLoading} />
+            <Documents data={documents} isLoading={isLoading} />
             {data && stakeholderId && (
                 <ChangeIndividualStakeholderStatusModal
                     open={isModalOpen}

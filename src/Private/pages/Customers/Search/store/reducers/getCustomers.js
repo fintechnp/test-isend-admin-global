@@ -5,7 +5,6 @@ const initialState = {
     loading: false,
     error: null,
     response: null,
-    isFilterOpen: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,7 +20,7 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
-                error: null
+                error: null,
             };
         case actions.GET_CUSTOMERS_FAILED:
             return {
@@ -34,18 +33,6 @@ const reducer = (state = initialState, action) => {
         case actions.GET_CUSTOMERS_RESET:
             return {
                 ...initialState,
-            };
-
-        case actions.OPEN_FILTER:
-            return {
-                ...state,
-                isFilterOpen: true,
-            };
-
-        case actions.CLOSE_FILTER:
-            return {
-                ...state,
-                isFilterOpen: false,
             };
         default:
             return state;

@@ -22,8 +22,8 @@ export const uploadAttachment = takeEvery(actions.UPLOAD_ATTACHMENT, function* (
             response: res,
         });
         yield put({
-            type: actions.UPLOAD_ATTACHMENT_RESET
-        })
+            type: actions.UPLOAD_ATTACHMENT_RESET,
+        });
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({

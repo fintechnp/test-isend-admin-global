@@ -79,7 +79,6 @@ export default function OrganizationStakeholderSelect({
     return (
         <Box display="flex" gap={1}>
             <Autocomplete
-                disablePortal
                 options={data}
                 size="small"
                 fullWidth
@@ -105,6 +104,7 @@ export default function OrganizationStakeholderSelect({
                     />
                 )}
                 getOptionLabel={(option) => option[labelKey] ?? ""}
+                isOptionEqualToValue={(option, value) => option[valueKey] === value[valueKey]}
                 disabled={isLoading}
                 loading={isLoading}
             />

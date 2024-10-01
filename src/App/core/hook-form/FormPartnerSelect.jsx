@@ -2,9 +2,9 @@ import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 import isEqual from "lodash/isEqual";
 import TextField from "@mui/material/TextField";
-import { useFormContext } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
+import { useFormContext, get } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import InputAdornment from "@mui/material/InputAdornment";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -75,7 +75,12 @@ export default function FormPartnerSelect({
     onChange,
     ...rest
 }) {
-    const { setValue, watch, clearErrors } = useFormContext();
+    const {
+        setValue,
+        watch,
+        clearErrors,
+        formState: { errors },
+    } = useFormContext();
 
     const [selectedOption, setSelectedOption] = useState(null);
 
@@ -104,6 +109,8 @@ export default function FormPartnerSelect({
         });
     };
 
+    const errorMessage = get(errors, name)?.message;
+
     useEffect(() => {
         if (options.length > 0 && isEqual(requestQueryParams, query)) return;
 
@@ -114,7 +121,7 @@ export default function FormPartnerSelect({
         const options = response?.data ?? [];
         const option = options?.find((d) => d[valueKey] === value);
         setSelectedOption(option ?? null);
-    }, [response]);
+    }, [response, value]);
 
     return (
         <Box display="flex" gap={1}>
@@ -161,6 +168,8 @@ export default function FormPartnerSelect({
                             ),
                         }}
                         required={required}
+                        error={!!errorMessage}
+                        helperText={errorMessage}
                         fullWidth
                     />
                 )}

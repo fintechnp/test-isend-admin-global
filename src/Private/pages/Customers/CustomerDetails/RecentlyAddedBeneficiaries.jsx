@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box'
-import React, { useEffect,useMemo } from "react";
+import Box from "@mui/material/Box";
+import React, { useEffect, useMemo } from "react";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import ListItemButton from '@mui/material/ListItemButton'
+import ListItemButton from "@mui/material/ListItemButton";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Block } from "App/components";
@@ -12,15 +12,15 @@ import PopoverButton from "App/components/Button/PopoverButton";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import ActiveBlockedStatusBadge from "App/components/Badge/ActiveBlockedStatusBadge";
 
-import {  ReferenceName } from "App/helpers";
+import { ReferenceName } from "App/helpers";
 import buildRoute from "App/helpers/buildRoute";
 import actions from "../Beneficiary/store/actions";
 import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import useListFilterStore from "App/hooks/useListFilterStore";
-import { getBeneficiaryFullName } from 'App/helpers/getFullName';
-import getFlagUrl from 'App/helpers/getFlagUrl';
-import PhoneIcon from 'App/components/Icon/PhoneIcon';
+import { getBeneficiaryFullName } from "App/helpers/getFullName";
+import getFlagUrl from "App/helpers/getFlagUrl";
+import PhoneIcon from "App/components/Icon/PhoneIcon";
 
 const initialState = {
     page_number: 1,
@@ -29,7 +29,6 @@ const initialState = {
     sort_by: "created_ts",
     order_by: "DESC",
 };
-
 
 function RecentlyAddedBeneficiaries() {
     const { id } = useParams();
@@ -54,7 +53,6 @@ function RecentlyAddedBeneficiaries() {
         dispatch({ type: "BLOCK_UNBLOCK_BENEFICIARY_RESET" });
     }, [dispatch, b_success]);
 
-    
     const columns = useMemo(
         () => [
             {

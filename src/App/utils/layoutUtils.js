@@ -9,7 +9,7 @@ class layoutUtils {
      */
     getCopyrightText() {
         const country = BaseUrlConfiguration.getDefaultSendingCountryIso3();
-        return (app.copyrightText?.[country] ?? "").replace('{{year}}', new Date().getFullYear())
+        return (app.copyrightText?.[country] ?? "").replace("{{year}}", new Date().getFullYear());
     }
 }
 

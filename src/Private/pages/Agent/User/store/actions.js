@@ -27,7 +27,7 @@ const actions = {
         type: actions.CHANGE_B2B_USER_KYC_STATUS,
     }),
 
-    get_b2b_user_kyc_by_id: (id, data) => ({
+    get_b2b_user_kyc_by_id: (id) => ({
         type: actions.GET_B2B_USER_KYC_BY_ID,
         id,
     }),

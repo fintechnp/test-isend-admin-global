@@ -20,6 +20,7 @@ const getAchResponseReducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
+                error: null,
             };
         case actions.ACH_ENTRIES_REPORT_FAILED:
             return {

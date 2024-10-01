@@ -15,10 +15,7 @@ const PlaceholderWrapper = styled(Box)(({ theme, touched, error }) => ({
     justifyContent: "center",
     border: "1px solid gray",
     borderRadius: "4px",
-    borderColor:
-        error && touched
-            ? `${theme.palette.warning.main}`
-            : "rgba(0, 0, 0, 0.23)",
+    borderColor: error && touched ? `${theme.palette.warning.main}` : "rgba(0, 0, 0, 0.23)",
     [theme.breakpoints.down("md")]: {
         minHeight: "150px",
     },

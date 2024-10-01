@@ -2,7 +2,8 @@ import { Box, IconButton, Typography, styled } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import PreviewFile from "./PreviewData";
 import SubmitButton from "./SubmitButton";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import UploadRoundedIcon from "@mui/icons-material/UploadRounded";
 
 import { MarketMakerActions as actions } from "Private/pages/Agent/MarketMaker/store";
 import Api from "App/services/api";
@@ -10,16 +11,15 @@ import apiEndpoints from "Private/config/apiEndpoints";
 
 const Container = styled("div", {
     shouldForwardProp: (prop) => prop !== "error",
-})(({ theme, error }) => ({
+})(({ error }) => ({
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
     alignItems: "center",
-    border: `2px dashed ${error ? "red" : "#C7D2E0"}`,
-    borderRadius: "5px",
+    border: `1px dashed ${error ? "red" : "#C7D2E0"}`,
+    borderRadius: "8px",
     cursor: "pointer",
     padding: "1.6rem 0",
-    margin: "1rem",
     gap: "1rem",
 }));
 
@@ -124,6 +124,7 @@ export default function UploadFile(props) {
                 }
             }}
             error={error}
+            title="Click to select file"
         >
             <>
                 <input
@@ -152,9 +153,11 @@ export default function UploadFile(props) {
                         />
                     </Box>
                 ) : (
-                    <IconButton size="large">Upload</IconButton>
+                    <IconButton>
+                        <UploadRoundedIcon sx={{ height: "50px", width: "50px" }} />
+                    </IconButton>
                 )}
-                <Typography mt="1rem" fontSize="1.2rem" fontWeight={600}>
+                <Typography fontSize="1.2rem" fontWeight={600}>
                     {title}
                 </Typography>
                 <Box
@@ -166,7 +169,9 @@ export default function UploadFile(props) {
                     }}
                 >
                     <Typography lineHeight="2rem">{description}</Typography>
-                    <Typography lineHeight="2rem">{supportedFileDescription}</Typography>
+                    <Typography lineHeight="2rem" color="grey.600">
+                        {supportedFileDescription}
+                    </Typography>
                 </Box>
             </>
             {(() => {

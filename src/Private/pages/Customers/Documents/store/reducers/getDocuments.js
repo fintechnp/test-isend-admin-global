@@ -20,7 +20,7 @@ const reducer = (state = initialState, action) => {
                 success: true,
                 loading: false,
                 response: action.response,
-                error: null
+                error: null,
             };
         case actions.GET_DOCUMENTS_FAILED:
             return {

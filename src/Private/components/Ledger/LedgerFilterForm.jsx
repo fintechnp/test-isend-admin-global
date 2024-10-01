@@ -13,7 +13,6 @@ import FormSearchAutoComplete from "App/core/hook-form/FormSearchAutocomplete";
 import apiEndpoints from "Private/config/apiEndpoints";
 import { relatedTo as relatedToConstant, relatedToOptions } from "Private/data/b2b";
 
-
 const entityTypeOptions = [
     {
         label: EntryType.Single,

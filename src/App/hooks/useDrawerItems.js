@@ -48,15 +48,15 @@ const useDrawerItems = () => {
             return {
                 key: permission.id,
                 text: permission.display_name,
-                sub: permission?.children?.length > 0,
                 icon: permission.icon,
-                sub: permission.type === PermissionType.MENU ? permission?.children?.length > 0 : false,
+                is_active: permission.is_active,
+                sub: permission.type === PermissionType.MENU ? (permission?.children?.length ?? 0) > 0 : false,
                 ...(permission.url
                     ? {
                           path: permission.url,
                       }
                     : {}),
-                ...(permission?.children?.length < 0
+                ...((permission?.children?.length ?? 0) < 0
                     ? {
                           url: permission.path,
                       }
@@ -67,7 +67,10 @@ const useDrawerItems = () => {
         for (let menu of permissions) {
             const transformed = transform(menu);
             if (transformed.sub) {
-                transformed.children = [...menu?.children].filter((m) => !isEmpty(m.url)).map((a) => transform(a));
+                transformed.children = [...(menu?.children ?? [])]
+                    .filter((m) => !isEmpty(m.url))
+                    ?.filter((item) => item?.is_active)
+                    .map((a) => transform(a));
             }
 
             transformedData.push(transformed);
@@ -77,9 +80,9 @@ const useDrawerItems = () => {
     };
 
     useEffect(() => {
-        const data = response?.data?.role_response?.menus ?? [];
-        if(data.length <= 0) return;
-        const menus = transformMenuData(data)
+        const data = response?.data?.role_response?.menus?.filter((item) => item?.is_active) ?? [];
+        if (data.length <= 0) return;
+        const menus = transformMenuData(data);
         setDrawerItems(menus);
         setFilteredDrawerItems(menus);
     }, [response]);

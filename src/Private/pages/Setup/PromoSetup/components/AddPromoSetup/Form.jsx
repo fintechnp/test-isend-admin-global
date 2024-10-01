@@ -96,21 +96,9 @@ const PromoSetupForm = ({
     const handleCurrency = (e) => {
         handleAgent(e.target.value);
         if (update) {
-            dispatch(
-                change(
-                    "update_promo_setup_form",
-                    "payout_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("update_promo_setup_form", "payout_currency", convertCurrency(e.target.value)));
         } else {
-            dispatch(
-                change(
-                    "add_promo_setup_form",
-                    "payout_currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+            dispatch(change("add_promo_setup_form", "payout_currency", convertCurrency(e.target.value)));
         }
     };
 
@@ -126,11 +114,7 @@ const PromoSetupForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength100,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength100, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -147,10 +131,7 @@ const PromoSetupForm = ({
                                 </option>
                                 {PartnerSend &&
                                     PartnerSend.map((data, index) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -164,21 +145,14 @@ const PromoSetupForm = ({
                                 small={12}
                                 onChange={handleCurrency}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Payout Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -191,21 +165,14 @@ const PromoSetupForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Payout Currency
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.currency} key={data.iso3}>
                                             {data.currency_name}
                                         </option>
                                     ))}
@@ -217,24 +184,16 @@ const PromoSetupForm = ({
                                 label="Payout Agent"
                                 type="number"
                                 small={12}
-                                disabled={
-                                    partnerPayout.length > 0 ? false : true
-                                }
+                                disabled={partnerPayout.length > 0 ? false : true}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payout Partner
                                 </option>
                                 {partnerPayout &&
                                     partnerPayout.map((data, index) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -247,26 +206,16 @@ const PromoSetupForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.maxLength1,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.maxLength1, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Payment Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 1)[0]
                                         .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
+                                            <option value={data.value} key={data.reference_id}>
                                                 {data.name}
                                             </option>
                                         ))}
@@ -294,15 +243,9 @@ const PromoSetupForm = ({
                         </FieldWrapper>
                         {update && (
                             <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
+                                <Grid container alignItems="flex-end" justifyContent="flex-end">
                                     <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
+                                        <StatusText component="p">Status</StatusText>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Field
@@ -330,11 +273,7 @@ const PromoSetupForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

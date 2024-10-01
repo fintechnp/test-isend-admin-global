@@ -1,26 +1,29 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
-import { Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import AccountForm from "./Form";
+import Modal from "App/components/Modal/Modal";
+
 import actions from "./../../store/actions";
 import PartnerActions from "./../../../Partner/store/actions";
+import { PayoutLocationAction } from "../../../../Setup/PayoutLocation/store";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -42,7 +45,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -103,7 +106,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddPartnerBank({ update_data, update, handleCloseDialog }) {
+function AddPartnerBank({ update_data, update, handleCloseDialog, enablePopoverAction }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [filterSchema, setFilterSchema] = React.useState({
@@ -114,15 +117,9 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
         sort_by: "name",
         order_by: "DESC",
     });
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
-    );
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.create_partner_bank
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_partner_bank
-    );
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.create_partner_bank);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_partner_bank);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -150,6 +147,7 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
     };
 
     const handleClose = () => {
+        dispatch(PayoutLocationAction.close_get_payout_location_details_modal());
         const updatedFilter = {
             ...filterSchema,
             country: "",
@@ -175,89 +173,78 @@ function AddPartnerBank({ update_data, update, handleCloseDialog }) {
             };
             setFilterSchema(updatedFilter);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Partner Bank" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                enablePopoverAction ? (
+                    <ListItemButton onClick={handleClickOpen}>Edit</ListItemButton>
+                ) : (
+                    <Tooltip title="Edit Partner Bank" arrow>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </Tooltip>
+                )
             ) : (
                 <AddButton
-                    size="small"
-                    variant="outlined"
+                    size="medium"
+                    variant="contained"
                     onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
+                    endIcon={<AddCircleOutlineIcon />}
                 >
                     Add Partner Bank
                 </AddButton>
             )}
-            <BootstrapDialog
-                onClose={handleClose}
-                TransitionComponent={Transition}
-                aria-labelledby="customized-dialog-title"
-                open={open}
-            >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
-                    {update ? "Update" : "Create New"} Partner Bank
-                </BootstrapDialogTitle>
-                <DialogContent dividers>
-                    {update ? (
-                        <AccountForm
-                            destroyOnUnmount
-                            initialValues={{
-                                tid: memoizedData?.tid,
-                                bank_name: memoizedData?.bank_name,
-                                country: memoizedData?.country,
-                                currency: memoizedData?.currency,
-                                agent_id: memoizedData?.agent_id,
-                                payment_type: memoizedData?.payment_type,
-                                external_bank_code:
-                                    memoizedData?.external_bank_code,
-                                external_bank_code1:
-                                    memoizedData?.external_bank_code1,
-                                external_bank_code2:
-                                    memoizedData?.external_bank_code2,
-                            }}
-                            onSubmit={handlePartnerBankUpdate}
-                            buttonText="Update"
-                            payout_country={memoizedData?.country}
-                            update={update}
-                            loading={update_loading}
-                            form={`update_partner_bank_form`}
-                            partner_payout={partner_payout?.data || []}
-                            handleClose={handleClose}
-                            handleAgent={handleAgent}
-                        />
-                    ) : (
-                        <AccountForm
-                            update={update}
-                            enableReinitialize={true}
-                            onSubmit={handlePartnerBankSubmit}
-                            buttonText="Create"
-                            form={`add_partner_bank_form`}
-                            loading={add_loading}
-                            partner_payout={partner_payout?.data || []}
-                            handleClose={handleClose}
-                            handleAgent={handleAgent}
-                        />
-                    )}
-                </DialogContent>
-            </BootstrapDialog>
+            <Modal onClose={handleClose} open={open} title={update ? "Update Partner Bank" : "Create New Partner Bank"}>
+                {update ? (
+                    <AccountForm
+                        destroyOnUnmount
+                        initialValues={{
+                            tid: memoizedData?.tid,
+                            bank_name: memoizedData?.bank_name,
+                            country: memoizedData?.country,
+                            currency: memoizedData?.currency,
+                            agent_id: memoizedData?.agent_id,
+                            payment_type: memoizedData?.payment_type,
+                            external_bank_code: memoizedData?.external_bank_code,
+                            external_bank_code1: memoizedData?.external_bank_code1,
+                            external_bank_code2: memoizedData?.external_bank_code2,
+                            payout_location_id: memoizedData?.payout_location_id,
+                        }}
+                        onSubmit={handlePartnerBankUpdate}
+                        buttonText="Update"
+                        payout_country={memoizedData?.country}
+                        update={update}
+                        loading={update_loading}
+                        form={`update_partner_bank_form`}
+                        partner_payout={partner_payout?.data || []}
+                        handleClose={handleClose}
+                        handleAgent={handleAgent}
+                    />
+                ) : (
+                    <AccountForm
+                        update={update}
+                        enableReinitialize={true}
+                        onSubmit={handlePartnerBankSubmit}
+                        buttonText="Create"
+                        form={`add_partner_bank_form`}
+                        loading={add_loading}
+                        partner_payout={partner_payout?.data || []}
+                        handleClose={handleClose}
+                        handleAgent={handleAgent}
+                    />
+                )}
+            </Modal>
         </div>
     );
 }

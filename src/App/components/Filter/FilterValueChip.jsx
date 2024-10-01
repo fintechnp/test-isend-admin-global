@@ -16,6 +16,6 @@ export default function FilterValueChip({ label, onDelete }) {
 }
 
 FilterValueChip.propTypes = {
-    status: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
     onDelete: PropTypes.func,
 };

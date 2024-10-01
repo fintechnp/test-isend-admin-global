@@ -13,8 +13,6 @@ import SelectSubMenuAndPermissions from "./profile-setup-forms/SelectSubMenuAndP
 export default function ProfileSetup(props) {
     const { role } = props;
 
-    console.log(role);
-
     const menus = PermissionUtils.getMenuIds(role?.menus ?? []);
 
     const subMenus = PermissionUtils.getSubMenuWithPermissions(role?.menus ?? []);

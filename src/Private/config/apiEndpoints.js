@@ -22,6 +22,9 @@ const apiEndpoints = {
         create: "/email/template",
         update: "/email/template/update/:template_id",
         tagList: "/email/template/tags",
+        elementList: "/email/element",
+        elementCreate: "/email/element",
+        elementUpdate: "/email/element/update/:element_id",
     },
 
     countries: {
@@ -207,16 +210,6 @@ const apiEndpoints = {
         getAll: "/b2b/account",
     },
 
-    ledger: {
-        getAll: "/ledger",
-        getById: "/ledger/:ledgerId",
-        add: "/ledger",
-    },
-
-    account: {
-        getAll: "/b2b/account",
-    },
-
     accountList: {
         getAll: "/b2b/accountlist",
         getBalance: "/b2b/AccountBalance/:id",
@@ -229,10 +222,7 @@ const apiEndpoints = {
     notification: {
         resend: "/notification/resend",
     },
-    transaction: {
-        achTransaction: "/AchTransactions",
-        updateAchTransactionStatus: "/AchTransactions/:id",
-    },
+
     userProfileSetups: {
         list: "/Roles/GetRoles",
         get: "/Roles/GetPermissionByRoleId",
@@ -254,7 +244,7 @@ const apiEndpoints = {
     },
 
     // region: Common
-    GetCountryValidationRules: '/common/:countryIso3/countryvalidationrules',
+    GetCountryValidationRules: "/common/:countryIso3/countryvalidationrules",
 
     // region: B2B - Business
     UpdateBusiness: "/business/:businessId",
@@ -283,6 +273,8 @@ const apiEndpoints = {
     GetAchCirWebhooks: "/CIRTransactions",
     GetReturnWebhooks: "/ReturnTransactions",
     GetRejectWebhooks: "/RejectTransactions",
+    GetAchOdfiWebhooks: "/webhooks/ODFI/Log",
+    GetAchNocWebhooks: "/webhooks/NOC/Log",
 
     // Help Center
     GetHelpCenters: "/contactdetails",
@@ -301,6 +293,48 @@ const apiEndpoints = {
 
     // Kyc Logs
     GetCustomerKycLogs: "/kyc/logs",
+
+    // Get Transactions
+    GetTransactions: "/transaction",
+
+    // Promo Code
+
+    ListPromoCode: "/campaign/promocodeList",
+    UpdatePromoCode: "/campaign/:campaignId",
+    CreatePromoCode: "/campaign/promocode",
+    ListValidatePromoCode: "/campaign/validatePromoCode",
+    ListCampaignReport: "/campaign/campaignReport",
+    UpdatePromoCodeStatus: "/campaign/promocodeEnableDisable",
+    ViewPromoCode: "/campaign/:id",
+    AddPromoCodeBudget: "/campaign/addBudget",
+    ListPromoCodeUsage: "/campaign/promoCodeUsage",
+    // Referral Reports
+
+    GetReferralReports: "/referral-code-report",
+    GetReferralReportById: "/referral-code-detail/:id",
+
+    // GET
+
+    // Campaign Reports
+    GetCampaignReports: "/campaign/campaignReport",
+    GetCampaignReportDetails: "/campaign/campaignReportDetails",
+    GetCampaignLedgerReport: "/campaign/campaignLegerReport",
+    GetCampaignIncentiveReport: "/campaign/incentive",
+
+    UpdateCampaignIncentiveReportStatus: "/campaign/incentive/:id/status",
+
+    // payout Locations
+    GetAllPayoutLocations: "/payoutlocation",
+
+    //Delivery Options
+    GetDeliveryOptions: "/deliveryoption",
+    GetDeliveryRoutes: "/deliveryroute",
+    GetParnterBanks: "/partnerbank",
+    GetPayoutLocations: "/payoutlocation",
+
+    // Application Config
+    GetApplicationConfig: "/config",
+    UpdateApplicationConfig: "/config",
 };
 
 export default apiEndpoints;

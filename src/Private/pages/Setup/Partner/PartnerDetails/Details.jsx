@@ -4,12 +4,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
-import {
-    CurrencyName,
-    CountryName,
-    FormatDate,
-    FormatNumber,
-} from "./../../../../../App/helpers";
+import { CurrencyName, CountryName, FormatDate, FormatNumber } from "./../../../../../App/helpers";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -58,12 +53,7 @@ function PartnerDetails({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Partner Name:</LabelWrapper>
@@ -92,9 +82,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Phone Number:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.phone_number
-                                    ? data?.phone_number
-                                    : "N/A"}
+                                {data?.phone_number ? data?.phone_number : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -110,9 +98,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Country:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.country
-                                    ? CountryName(data?.country)
-                                    : "N/A"}
+                                {data?.country ? CountryName(data?.country) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -181,19 +167,12 @@ function PartnerDetails({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Fullname:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.contact_person_full_name
-                                    ? data?.contact_person_full_name
-                                    : "N/A"}
+                                {data?.contact_person_full_name ? data?.contact_person_full_name : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -201,9 +180,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Post:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.contact_person_post
-                                    ? data?.contact_person_post
-                                    : "N/A"}
+                                {data?.contact_person_post ? data?.contact_person_post : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -211,9 +188,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Mobile Number:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.contact_person_mobile
-                                    ? data?.contact_person_mobile
-                                    : "N/A"}
+                                {data?.contact_person_mobile ? data?.contact_person_mobile : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -221,9 +196,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Email:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.contact_person_email
-                                    ? data?.contact_person_email
-                                    : "N/A"}
+                                {data?.contact_person_email ? data?.contact_person_email : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -236,31 +209,20 @@ function PartnerDetails({ data }) {
                 </Box>
             </Grid>
             <Grid item xs={12}>
-                <Grid
-                    container
-                    columnSpacing={2}
-                    rowSpacing={1}
-                    sx={{ paddingBottom: "8px" }}
-                >
+                <Grid container columnSpacing={2} rowSpacing={1} sx={{ paddingBottom: "8px" }}>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
                             <LabelWrapper>Incorporation Date:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.date_of_incorporation
-                                    ? FormatDate(data?.date_of_incorporation)
-                                    : "N/A"}
+                                {data?.date_of_incorporation ? FormatDate(data?.date_of_incorporation) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <InfoWrapper>
-                            <LabelWrapper>
-                                Business License Number:
-                            </LabelWrapper>
+                            <LabelWrapper>Business License Number:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.business_license_number
-                                    ? data?.business_license_number
-                                    : "N/A"}
+                                {data?.business_license_number ? data?.business_license_number : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -269,9 +231,7 @@ function PartnerDetails({ data }) {
                             <LabelWrapper>License Exp. Date:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.business_license_expiry_date
-                                    ? FormatDate(
-                                          data?.business_license_expiry_date
-                                      )
+                                    ? FormatDate(data?.business_license_expiry_date)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
@@ -280,9 +240,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Balance:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.balance
-                                    ? FormatNumber(data?.balance)
-                                    : "N/A"}
+                                {data?.balance ? FormatNumber(data?.balance) : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -290,9 +248,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Credit Limit:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.credit_limit
-                                    ? data?.credit_limit
-                                    : "N/A"}
+                                {data?.credit_limit ? data?.credit_limit : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -300,11 +256,8 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Transaction Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.transaction_currency
-                                    ? CurrencyName(data?.transaction_currency)
-                                    : "N/A"}
-                                {data?.transaction_currency &&
-                                    `[${data?.transaction_currency}]`}
+                                {data?.transaction_currency ? CurrencyName(data?.transaction_currency) : "N/A"}
+                                {data?.transaction_currency && `[${data?.transaction_currency}]`}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -312,11 +265,8 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Settlement Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.settlement_currency
-                                    ? CurrencyName(data?.settlement_currency)
-                                    : "N/A"}
-                                {data?.settlement_currency &&
-                                    `[${data?.settlement_currency}]`}
+                                {data?.settlement_currency ? CurrencyName(data?.settlement_currency) : "N/A"}
+                                {data?.settlement_currency && `[${data?.settlement_currency}]`}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -348,9 +298,7 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Transaction Limit:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.transaction_limit
-                                    ? data?.transaction_limit
-                                    : "N/A"}
+                                {data?.transaction_limit ? data?.transaction_limit : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -358,11 +306,8 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Commission Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.commission_currency
-                                    ? CurrencyName(data?.commission_currency)
-                                    : "N/A"}
-                                {data?.commission_currency &&
-                                    `[${data?.commission_currency}]`}
+                                {data?.commission_currency ? CurrencyName(data?.commission_currency) : "N/A"}
+                                {data?.commission_currency && `[${data?.commission_currency}]`}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -370,11 +315,8 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Bank Charge Currency:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.bank_charge_currency
-                                    ? CurrencyName(data?.bank_charge_currency)
-                                    : "N/A"}
-                                {data?.bank_charge_currency &&
-                                    `[${data?.bank_charge_currency}]`}
+                                {data?.bank_charge_currency ? CurrencyName(data?.bank_charge_currency) : "N/A"}
+                                {data?.bank_charge_currency && `[${data?.bank_charge_currency}]`}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>

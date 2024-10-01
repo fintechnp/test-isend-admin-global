@@ -110,14 +110,7 @@ const SubListText = styled(ListItemText)(({ theme, open }) => ({
     color: theme.palette.primary.contrastText,
 }));
 
-function SubButton({
-    sub_item,
-    open,
-    handleListItemSelect,
-    selectedSub,
-    setSelectedIndex,
-    index,
-}) {
+function SubButton({ sub_item, open, handleListItemSelect, selectedSub, setSelectedIndex, index }) {
     const { pathname } = useLocation();
     const [extend, setExtend] = React.useState(false);
     const [selectedLast, setSelectedLast] = React.useState("");
@@ -137,33 +130,17 @@ function SubButton({
 
     return (
         <ListItem dense disablePadding open={open}>
-            <ListButton
-                open={open}
-                selected={selectedSub === sub_item.key}
-                onClick={() => handleClick(sub_item)}
-            >
+            <ListButton open={open} selected={selectedSub === sub_item.key} onClick={() => handleClick(sub_item)}>
                 <ListText primary={sub_item.text} open={open} />
                 {extend ? <ExpandLess /> : <ExpandMore />}
             </ListButton>
-            <Collapse
-                in={extend}
-                timeout="auto"
-                unmountOnExit
-                sx={{ width: "100%" }}
-            >
+            <Collapse in={extend} timeout="auto" unmountOnExit sx={{ width: "100%" }}>
                 <List disablePadding open={open}>
                     {sub_item?.children.map((item, index) => (
-                        <Link
-                            to={item.path}
-                            color="inherit"
-                            style={{ textDecoration: "none" }}
-                        >
+                        <Link to={item.path} color="inherit" style={{ textDecoration: "none" }}>
                             <SubListButton
                                 key={index}
-                                selected={
-                                    selectedLast === item.path ||
-                                    pathname === item.path
-                                }
+                                selected={selectedLast === item.path || pathname === item.path}
                                 onClick={() => handleLastButton(item)}
                             >
                                 <SubListText primary={item.text} />

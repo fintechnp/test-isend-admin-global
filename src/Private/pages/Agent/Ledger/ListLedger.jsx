@@ -108,7 +108,7 @@ export default function ListLedger() {
                     <TableRowActionContainer>
                         <IconButton
                             onClick={() => {
-                                navigate(buildRoute(routePaths.agent.viewLedger, row?.original?.id));
+                                navigate(buildRoute(routePaths.agent.viewLedger, row.original.ledgerMasterId));
                             }}
                         >
                             <RemoveRedEyeOutlinedIcon

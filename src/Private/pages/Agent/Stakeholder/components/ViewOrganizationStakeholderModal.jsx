@@ -141,7 +141,9 @@ export default function ViewOrganizationStakeholderModal({
                             <>
                                 <ListItemButton onClick={() => (openModal(), onClose())}>Update Status</ListItemButton>
                                 {data?.statusId !== organizationStakeholderStatus.APPROVED && (
-                                    <ListItemButton onClick={() => onEditStakeholder?.(data.kybId)}>Edit</ListItemButton>
+                                    <ListItemButton onClick={() => onEditStakeholder?.(data.kybId)}>
+                                        Edit
+                                    </ListItemButton>
                                 )}
                             </>
                         )}

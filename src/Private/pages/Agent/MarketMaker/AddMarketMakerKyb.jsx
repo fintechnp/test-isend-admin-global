@@ -18,7 +18,6 @@ import AddOrganizationStakeholder from "../Stakeholder/components/AddOrganizatio
 import { relatedTo } from "Private/data/b2b";
 
 export default function AddMarketMakerKyb() {
-
     const { agentId } = useParams();
 
     const dispatch = useDispatch();
@@ -91,7 +90,7 @@ export default function AddMarketMakerKyb() {
                 },
                 {
                     label: agentId,
-                    link: buildRoute(routePaths.ViewAgent, agentId)
+                    link: buildRoute(routePaths.ViewAgent, agentId),
                 },
                 {
                     label: "Create Organization Stakeholder",
@@ -102,10 +101,10 @@ export default function AddMarketMakerKyb() {
             ]}
         >
             <AddOrganizationStakeholder
-                    relatedTo={relatedTo.AGENT}
-                    relatedId={agentId}
-                    onSuccess={() => navigate(-1)}
-                />
+                relatedTo={relatedTo.AGENT}
+                relatedId={agentId}
+                onSuccess={() => navigate(-1)}
+            />
         </PageContent>
     );
 }

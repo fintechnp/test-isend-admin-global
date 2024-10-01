@@ -152,11 +152,7 @@ export default function MarketMakerUserKycListing({ agentId }) {
     return (
         <>
             <TanstackReactTable columns={columns} title="Users" data={users?.data ?? []} loading={userLoading} />
-            <Modal
-                title="Kyc Detail"
-                open={open}
-                onClose={handleClose}
-            >
+            <Modal title="Kyc Detail" open={open} onClose={handleClose}>
                 <BusinessKycDetail data={kycDetailData?.data} loading={kycDetailLoading} relatedTo="market-maker" />
             </Modal>
         </>

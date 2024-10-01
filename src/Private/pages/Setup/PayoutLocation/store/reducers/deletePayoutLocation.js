@@ -1,4 +1,4 @@
-import actions from '../actions';
+import actions from "../actions";
 
 const initialState = {
     success: false,
@@ -8,29 +8,29 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-    switch ((action).type) {
+    switch (action.type) {
         case actions.DELETE_PAYOUT_LOCATION:
             return {
                 ...state,
-                loading: true
+                loading: true,
             };
         case actions.DELETE_PAYOUT_LOCATION_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
-                response: action.response
+                response: action.response,
             };
         case actions.DELETE_PAYOUT_LOCATION_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
-                error: action.error
+                error: action.error,
             };
         default:
             return state;
     }
-}
+};
 
 export default reducer;

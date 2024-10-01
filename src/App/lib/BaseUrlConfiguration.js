@@ -21,7 +21,7 @@ export default class BaseUrlConfiguration {
             const country = sendingCountries.find((c) => c.value.toUpperCase() === selectedCountry);
             if (!country) throw new Error("Country not found");
             return country.value;
-        } catch (e) {
+        } catch {
             return sendingCountries[0].value;
         }
     }
@@ -32,7 +32,7 @@ export default class BaseUrlConfiguration {
             const country = sendingCountries.find((c) => c.value.toUpperCase() === selectedCountry);
             if (!country) throw new Error("Country not found");
             return app.apiBaseUrl.replace("{country}", selectedCountry?.toLowerCase() || "");
-        } catch (e) {
+        } catch {
             AuthUtility.logOut();
             window.location.href = "/login";
             return "";

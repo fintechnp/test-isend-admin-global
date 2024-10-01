@@ -40,19 +40,21 @@ import LanguageCountry from "../pages/Setup/LanguageCountry/LanguageCountry";
 import AddLanguage from "../pages/Setup/AddLanguage/AddLanguage";
 import LocalizationDetails from "../pages/Setup/LocalizationDetails/LocalizationDetails";
 import StreetType from "../pages/Setup/StreetType/StreetType";
+import ListCampaignAttribute from "../pages/Setup/CampaignAttribute/ListCampaignAttribute";
 
 //Customers
 import CustomerSearch from "../pages/Customers/Search";
 import CreateCustomer from "../pages/Customers/Customer";
 import CustomerDetails from "../pages/Customers/CustomerDetails";
 import AllBeneficiary from "../pages/Customers/Beneficiary";
-import AddBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
 import BeneficiaryDetails from "../pages/Customers/Beneficiary/Details";
 import CustomerTransactions from "../pages/Customers/Transactions";
 import CustomerBanks from "../pages/Customers/Banks/Banks";
 import AllBanks from "../pages/Customers/AllBanks/BankList";
+import CreateBeneficiary from "../pages/Customers/Beneficiary/AddUpdateBeneficiary";
 import CustomerDeleteList from "Private/pages/Customers/DeleteList/CustomerDeleteList";
 import ListCustomerKycLog from "Private/pages/Customers/KycLogs/components/ListCustomerKycLog";
+import EditBeneficiary from "Private/pages/Customers/Beneficiary/AddUpdateBeneficiary/EditBeneficiary";
 
 //Documents
 import Documents from "../pages/Customers/Documents";
@@ -184,10 +186,23 @@ import ListReturnWebhooks from "Private/pages/AchWebhooks/ListReturnWebhooks";
 import ListRejectWebhooks from "Private/pages/AchWebhooks/ListRejectWebhooks";
 import ListHelpCenter from "Private/pages/Agent/HelpCenter/ListHelpCenter";
 import EditCustomer from "Private/pages/Customers/Customer/EditCustomer";
+import ListOdfiWebhooks from "Private/pages/AchWebhooks/ListOdfiWebhooks";
+import ListNocWebhooks from "Private/pages/AchWebhooks/ListNocWebhooks";
 
+import AddPromoCode from "Private/pages/PromoCode/components/AddPromoCode";
+import ListPromoCode from "Private/pages/PromoCode/components/ListPromoCode";
+import ViewPromoCode from "Private/pages/PromoCode/components/ViewPromoCode";
+import EditPromoCode from "Private/pages/PromoCode/components/EditPromoCode";
+import ListReferralReport from "Private/pages/Reports/Referral/ListReferralReport";
+import ViewReferralReport from "Private/pages/Reports/Referral/ViewReferralReport";
 import ListAccountClosureRequest from "Private/pages/Agent/AccountClosureRequest/ListAccountClosureRequest";
+import ListCampaignReportTab from "Private/pages/Reports/CampaignReport/ListCampaignReportTab";
+import ListCampaignLedgerReport from "Private/pages/Reports/CampaignReport/ListCampaignLedgerReport";
+import ListCampaignUsageReport from "Private/pages/Reports/CampaignReport/ListCampaignUsageReport";
 import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZaiComponent";
 import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
+import ListEmailElement from "Private/components/email-template/ListEmailElement";
+import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -317,7 +332,10 @@ const privateRoutes = [
         path: "/setup/email-template",
         component: <ListEmailTemplate />,
     },
-
+    {
+        path: routePaths.ListEmailElement,
+        component: <ListEmailElement />,
+    },
     {
         path: routePaths.countries.index,
         component: <ListCountries />,
@@ -379,11 +397,11 @@ const privateRoutes = [
     },
     {
         path: "/customer/beneficiary/add/:id",
-        component: <AddBeneficiary title="Create Beneficiary" />,
+        component: <CreateBeneficiary title="Create Beneficiary" />,
     },
     {
         path: "/customer/beneficiary/update/:id/:bene_id",
-        component: <AddBeneficiary title="Update Beneficiary" />,
+        component: <EditBeneficiary title="Update Beneficiary" />,
     },
     {
         path: "/customer/beneficiary/details/:id/:bene_id",
@@ -490,6 +508,26 @@ const privateRoutes = [
         path: routePaths.reports.onfidoReport,
         component: <OnfidoReport />,
     },
+    {
+        path: routePaths.ListReferralReport,
+        component: <ListReferralReport />,
+    },
+    {
+        path: routePaths.ViewReferralReport,
+        component: <ViewReferralReport />,
+    },
+    {
+        path: routePaths.ListCampaignReportTab,
+        component: <ListCampaignReportTab />,
+    },
+    {
+        path: routePaths.ListCampaignLedgerReport,
+        component: <ListCampaignLedgerReport />,
+    },
+    {
+        path: routePaths.ListCampaignUsageReport,
+        component: <ListCampaignUsageReport />,
+    },
 
     //PaymentProcess
     {
@@ -514,11 +552,15 @@ const privateRoutes = [
         component: <ExceptionTransactions title="Exception Transactions" />,
     },
     {
-        path: "/transactions/details/:id",
+        path: routePaths.viewTransaction,
         component: <TransactionsDetails title="Transaction Details" />,
     },
     {
-        path: "/transactions/details/aml-suspicious/:tid",
+        path: routePaths.viewAMLTransaction,
+        component: <TransactionsDetails title="Transaction Details" />,
+    },
+    {
+        path: "/transactions/details/:id",
         component: <TransactionsDetails title="Transaction Details" />,
     },
     {
@@ -702,6 +744,14 @@ const privateRoutes = [
         path: routePaths.ListRejctWebhooks,
         component: <ListRejectWebhooks />,
     },
+    {
+        path: routePaths.ListOdfiWebhooks,
+        component: <ListOdfiWebhooks />,
+    },
+    {
+        path: routePaths.ListNocWebhooks,
+        component: <ListNocWebhooks />,
+    },
 
     // Help Center
     {
@@ -712,6 +762,35 @@ const privateRoutes = [
     {
         path: routePaths.ListCustomerKycLog,
         component: <ListCustomerKycLog />,
+    },
+
+    // Setup
+    {
+        path: routePaths.ListCampaignAttribute,
+        component: <ListCampaignAttribute />,
+    },
+    // Promo Code
+    {
+        path: routePaths.ListPromoCode,
+        component: <ListPromoCode />,
+    },
+    {
+        path: routePaths.CreatePromoCode,
+        component: <AddPromoCode />,
+    },
+    {
+        path: routePaths.ViewPromoCode,
+        component: <ViewPromoCode />,
+    },
+    {
+        path: routePaths.EditPromoCode,
+        component: <EditPromoCode />,
+    },
+
+    // ApplicationConfig
+    {
+        path: routePaths.ListApplicationConfig,
+        component: <ListApplicationConfig />,
     },
 ];
 

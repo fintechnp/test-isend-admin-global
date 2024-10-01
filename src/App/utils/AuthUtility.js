@@ -33,7 +33,7 @@ export default class AuthUtility {
     static getUser() {
         try {
             return JSON.parse(localStorageGet("user"));
-        } catch (e) {
+        } catch {
             return null;
         }
     }

@@ -56,13 +56,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const ApiConfigForm = ({
-    handleSubmit,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
+const ApiConfigForm = ({ handleSubmit, update, loading, buttonText, handleClose }) => {
     return (
         <Form onSubmit={handleSubmit}>
             <Container container direction="column">
@@ -75,10 +69,7 @@ const ApiConfigForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -88,10 +79,7 @@ const ApiConfigForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -101,10 +89,7 @@ const ApiConfigForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -117,40 +102,16 @@ const ApiConfigForm = ({
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="ref1"
-                                label="Ref 1"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="ref1" label="Ref 1" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="ref2"
-                                label="Ref 2"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="ref2" label="Ref 2" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="ref3"
-                                label="Ref 3"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="ref3" label="Ref 3" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="remarks"
-                                label="Remarks"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="remarks" label="Remarks" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -166,11 +127,7 @@ const ApiConfigForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>

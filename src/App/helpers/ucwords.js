@@ -5,7 +5,7 @@
  * @return {string}
  */
 export default function ucwords(value) {
-  return value?.toLowerCase()?.replace(/\b[a-z]/g, function (letter) {
-    return letter?.toUpperCase();
-  });
+    return value?.toLowerCase()?.replace(/\b[a-z]/g, function (letter) {
+        return letter?.toUpperCase();
+    });
 }

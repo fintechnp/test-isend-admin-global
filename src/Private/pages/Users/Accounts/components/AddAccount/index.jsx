@@ -1,25 +1,23 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { useDispatch, useSelector } from "react-redux";
 import DialogContent from "@mui/material/DialogContent";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ListItemButton from "@mui/material/ListItemButton";
 
 import AccountForm from "./Form";
-import Box from "@mui/material/Box";
-import actions from "./../../store/actions";
 import HasPermission from "Private/components/shared/HasPermission";
 
-import useAuthUser from "Private/hooks/useAuthUser";
+import actions from "./../../store/actions";
 import { permissions } from "Private/data/permissions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -35,17 +33,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const UpdateButton = styled(IconButton)(({ theme }) => ({
-    opacity: 0.7,
-    padding: "3px",
-    color: theme.palette.border.main,
-    "&: hover": { color: "border.dark", opacity: 1 },
-}));
-
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    // 
     borderColor: theme.palette.border.main,
 }));
 
@@ -106,17 +96,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddAccount({ update_data, update }) {
-    const { can } = useAuthUser();
-
+function AddAccount({ update_data, update, onClose }) {
     const dispatch = useDispatch();
+
     const [open, setOpen] = React.useState(false);
-    const { response: add_user, success: add_success, loading: add_loading } = useSelector((state) => state.add_user);
-    const {
-        response: update_user,
-        success: update_success,
-        loading: update_loading,
-    } = useSelector((state) => state.update_user);
+
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_user);
+
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_user);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -132,10 +119,12 @@ function AddAccount({ update_data, update }) {
 
     const handleClose = () => {
         setOpen(false);
+        onClose?.();
     };
 
     const handleNewUser = (data) => {
         dispatch(actions.add_user(data));
+        onClose?.();
     };
 
     const handleUpdateUser = (data) => {
@@ -147,22 +136,13 @@ function AddAccount({ update_data, update }) {
             {update ? (
                 <Tooltip title="Edit Account" arrow>
                     <HasPermission permission={permissions.EDIT_USER}>
-                        <UpdateButton onClick={handleClickOpen}>
-                            <EditOutlinedIcon
-                                sx={{
-                                    fontSize: "20px",
-                                    "&:hover": {
-                                        background: "transparent",
-                                    },
-                                }}
-                            />
-                        </UpdateButton>
+                        <ListItemButton onClick={() => handleClickOpen()}>Update User</ListItemButton>
                     </HasPermission>
                 </Tooltip>
             ) : (
                 <HasPermission permission={permissions.CREATE_USER}>
-                    <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
-                        Add User
+                    <AddButton size="small" variant="contained" onClick={() => (handleClickOpen(), onClose?.())}>
+                        Create User
                     </AddButton>
                 </HasPermission>
             )}
@@ -212,3 +192,7 @@ function AddAccount({ update_data, update }) {
 }
 
 export default AddAccount;
+
+AddAccount.propTypes = {
+    onClose: PropTypes.func,
+};

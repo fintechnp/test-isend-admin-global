@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import store from "App/store";
 import { preserveIntendedPath } from "App/routes";
 import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
@@ -9,9 +10,9 @@ guestHttpService.interceptors.request.use((config) => ({
     ...config,
     headers: {
         ...config.headers,
-        source: 'web',
-        Accept: 'application/json',
-        "Content-Type": "application/json"
+        source: "web",
+        Accept: "application/json",
+        "Content-Type": "application/json",
     },
     baseURL: BaseUrlConfiguration.getApiBaseUrl(),
 }));
@@ -50,4 +51,4 @@ guestHttpService.interceptors.response.use(
     },
 );
 
-export default guestHttpService
+export default guestHttpService;

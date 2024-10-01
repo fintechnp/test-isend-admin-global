@@ -11,7 +11,6 @@ import ButtonWrapper from "App/components/Forms/ButtonWrapper";
 import { documentForOptions } from "../data/documentFor";
 
 export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading, handleReset }) {
-   
     const methods = useForm();
 
     const { handleSubmit, reset, watch } = methods;

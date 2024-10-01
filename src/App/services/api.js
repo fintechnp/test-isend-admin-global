@@ -37,7 +37,7 @@ export default class Api {
     setToken = () => {
         this.axiosFunction.interceptors.request.use(
             (config) => {
-                config['baseURL'] = BaseUrlConfiguration.getApiBaseUrl();
+                config["baseURL"] = BaseUrlConfiguration.getApiBaseUrl();
                 config.headers["Authorization"] = "Bearer " + AuthUtility.getAccessToken();
                 config.headers["source"] = "web";
                 config.headers["Accept"] = "application/json";
@@ -72,14 +72,42 @@ export default class Api {
                     return response;
                 }
             },
-            function (error) {
+            async function (error) {
                 if (error?.response?.status === 401) {
-                    preserveIntendedPath();
-                    store.dispatch({
-                        type: "INVALID_TOKEN",
-                    });
+                    try {
+                        preserveIntendedPath();
+                        // Attempt to refresh the token
+                        const response = await axios.post(
+                            `${BaseUrlConfiguration.getApiBaseUrl()}/account/refreshtoken`,
+                            {
+                                access_token: AuthUtility.getAccessToken(),
+                                refresh_token: AuthUtility.getRefreshToken(),
+                            },
+                        );
+                        // Update tokens
+                        AuthUtility.setAccessToken(response.data?.token);
+                        AuthUtility.setRefreshToken(response.data?.refresh_token);
+
+                        // Retry the original request with the new token
+                        error.config.headers["Authorization"] = "Bearer " + response?.data?.token;
+                        error.config.headers["source"] = "web";
+                        error.config.headers["Accept"] = "application/json";
+                        error.config.headers["Content-Type"] = "application/json";
+                        return axios(error.config);
+                    } catch (refreshError) {
+                        // If the refresh fails, dispatch an INVALID_TOKEN action
+                        store.dispatch({
+                            type: "INVALID_TOKEN",
+                        });
+                        return Promise.reject(refreshError);
+                    }
+                } else {
+                    // Handle other errors
+                    // store.dispatch({
+                    //     type: "INVALID_TOKEN",
+                    // });
+                    return Promise.reject(error);
                 }
-                return Promise.reject(error);
             },
         );
     };
@@ -108,7 +136,7 @@ export default class Api {
             }
         }
         return this.axiosFunction
-            .get(url, { params: data,responseType: "blob"})
+            .get(url, { params: data, responseType: "blob" })
             .then((response) => response)
             .catch((err) => {
                 throw err?.response;

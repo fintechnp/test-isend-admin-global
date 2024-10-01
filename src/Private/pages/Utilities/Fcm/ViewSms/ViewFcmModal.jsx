@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
 import dateUtils from "App/utils/dateUtils";
@@ -35,6 +36,11 @@ export default function ViewFcmModal() {
                 {
                     label: "Is Active ?",
                     accessorKey: "is_active",
+                    cell: (data) => (
+                        <>
+                            <Typography fontWeight={600}>{data?.is_active ? "True" : "False"}</Typography>
+                        </>
+                    ),
                 },
 
                 {
@@ -43,7 +49,9 @@ export default function ViewFcmModal() {
                 },
                 {
                     label: "Created At",
-                    cell: (data) => <>{dateUtils.getLocalDateTimeFromUTC(data?.created_ts)}</>,
+                    cell: (data) => (
+                        <Typography fontWeight={600}>{dateUtils.getLocalDateTimeFromUTC(data?.created_ts)}</Typography>
+                    ),
                 },
                 {
                     label: "Website",
@@ -54,8 +62,6 @@ export default function ViewFcmModal() {
     ]);
 
     const { is_open: isOpen, data } = useSelector((state) => state.view_fcm);
-
-    console.log(data);
 
     const handleClose = useCallback(() => {
         dispatch(actions.close_view_fcm_modal());
@@ -71,7 +77,7 @@ export default function ViewFcmModal() {
             onClose={handleClose}
             title="View Fcm Details"
         >
-            <SourceDetails definition={defination} data={data} />
+            <SourceDetails viewMode="column" rowMode="row" definition={defination} data={data} />
         </Modal>
     );
 }

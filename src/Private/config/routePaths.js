@@ -91,9 +91,6 @@ const routePaths = {
         addSystemUserKyc: "/user/accounts/:id/addKyc",
         editSystemUserKyc: "/user/accounts/:id/editKyc/:kycId",
     },
-    transaction: {
-        achTransaction: "/transaction/ach-transaction",
-    },
     users: {
         listUserSetup: "/user/setups",
         listProfileSetup: "/user/profile-setups",
@@ -101,6 +98,7 @@ const routePaths = {
         editProfileSetup: "/user/profile-setups/:userProfileSetupId/edit",
     },
     transaction: {
+        list: "/transaction/search",
         achTransaction: "/transaction/ach-transaction",
         zaiTransaction: "/payment/zai-australia-payment",
     },
@@ -151,6 +149,8 @@ const routePaths = {
     ListCirWebhooks: "/ach-webhooks/cir",
     ListReturnWebhooks: "/ach-webhooks/return",
     ListRejctWebhooks: "/ach-webhooks/reject",
+    ListOdfiWebhooks: "/ach-webhooks/odfi",
+    ListNocWebhooks: "/ach-webhooks/noc",
 
     // Help center
     ListHelpCenter: "/b2b/help-centers",
@@ -172,9 +172,42 @@ const routePaths = {
 
     // region B2B - Promo Code
 
+    ListPromoCode: "/setup/campaigns",
+    CreatePromoCode: "/setup/campaigns/create",
+    ViewPromoCode: "/setup/campaigns/:id",
+    EditPromoCode: "/setup/campaigns/:id/edit",
+    RedeemedPromoCode: "/setup/campaigns/:id/redeemed",
+    // region - Referral Reports
+
+    ListReferralReport: "/report/referral",
+    ViewReferralReport: "/report/referral/:id",
+
+    // region setup
+    ListCampaignAttribute: "/setup/campaigns/attributes",
+
+    // region - Campaign Reports
+
+    ListCampaignReportTab: "/report/campaign",
+    ListCampaignLedgerReport: "/report/campaign/ledger/:id",
+    ListCampaignUsageReport: "/report/campaign/usage/:id",
+
+    // region - Campaign Incentive Reports
+
+    ListCampaignIncentiveReports: "/report/campaign/incentive",
+
+    // region - Transactions
+    viewTransaction: "/transactions/details/:id/:customerId",
+    viewAMLTransaction: "/transactions/details/aml-suspicious/:tid/:customerId",
+
     // region - zaiLogs
 
     ListZaiLogs: "zai-logs",
+
+    // region -email element
+    ListEmailElement: "/setup/email-element",
+
+    // Application Config
+    ListApplicationConfig: "/setup/application-config",
 };
 
 export default routePaths;

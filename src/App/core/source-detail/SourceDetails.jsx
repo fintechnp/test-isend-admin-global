@@ -29,7 +29,35 @@ const ColumnContainer = styled(Box)(({ theme }) => ({
     flexWrap: "wrap",
 }));
 
-export default function SourceDetails({ definition, data, isLoading, viewMode = "default" }) {
+const LabelValueContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== "rowMode" && prop !== "disableLabelColon",
+})(({ theme, mode, disableLabelColon = true }) => ({
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    ...(mode === "row"
+        ? {
+              flexDirection: "row",
+              alignItems: "center",
+          }
+        : undefined),
+    ...(!disableLabelColon
+        ? {
+              "& .MuiLabel-root:after": {
+                  content: '" :"',
+              },
+          }
+        : undefined),
+}));
+
+export default function SourceDetails({
+    definition,
+    data,
+    isLoading,
+    viewMode = "default",
+    rowMode = "column",
+    disableLabelColon = true,
+}) {
     const getNestedValue = (obj, keys) =>
         keys.reduce((nestedObj, key) => (nestedObj && typeof nestedObj === "object" ? nestedObj[key] : undefined), obj);
 
@@ -40,10 +68,12 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
             const value = !isEmpty(data) ? item?.cell(data) : "-";
 
             return (
-                <Box>
-                    <Typography>{item.label}</Typography>
+                <LabelValueContainer mode={rowMode} disableLabelColon={disableLabelColon}>
+                    <Typography className="MuiLabel-root" color="text.secondary">
+                        {item.label}
+                    </Typography>
                     {isLoading ? (
-                        <Skeleton />
+                        <Skeleton width="20px" />
                     ) : (
                         <Box>
                             {typeof value === "string" ? (
@@ -55,7 +85,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                             )}
                         </Box>
                     )}
-                </Box>
+                </LabelValueContainer>
             );
         }
 
@@ -65,8 +95,10 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
             const value = getNestedValue(data, accessorKeys);
 
             return (
-                <Box>
-                    <Typography color="text.secondary">{item.label}</Typography>
+                <LabelValueContainer mode={rowMode} disableLabelColon={disableLabelColon}>
+                    <Typography className="MuiLabel-root" color="text.secondary">
+                        {item.label}
+                    </Typography>
                     {isLoading ? (
                         <Skeleton />
                     ) : (
@@ -74,7 +106,7 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                             {value?.toString()?.trim() ? value : "-"}
                         </Typography>
                     )}
-                </Box>
+                </LabelValueContainer>
             );
         }
 
@@ -100,7 +132,9 @@ export default function SourceDetails({ definition, data, isLoading, viewMode = 
                     return (
                         <Box key={i} width="100%">
                             <Box>
-                                {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
+                                <Box mb="8px">
+                                    {def.title && <Typography variant="subtitle0">{def.title}</Typography>}
+                                </Box>
                                 <DataContainer>
                                     {def.items.map((item, ik) => (
                                         <Fragment key={ik}>{renderItem(item)}</Fragment>
@@ -129,4 +163,6 @@ SourceDetails.propTypes = {
     data: PropTypes.object,
     isLoading: PropTypes.bool,
     viewMode: PropTypes.oneOf(["default", "column"]),
+    disableLabelColon: PropTypes.bool,
+    rowMode: PropTypes.oneOf(["column", "row"]),
 };

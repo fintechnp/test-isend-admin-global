@@ -1,8 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
-import LinearProgress, {
-    linearProgressClasses,
-} from "@mui/material/LinearProgress";
+import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 import React from "react";
 
 const CardWapper = styled(Box)(({ theme }) => ({
@@ -22,7 +20,6 @@ const CardWapper = styled(Box)(({ theme }) => ({
 const CardName = styled(Typography)(({ theme }) => ({
     fontSize: "18px",
     fontWeight: 500,
-    
 }));
 
 const BottomWraper = styled(Box)(({ theme }) => ({
@@ -35,7 +32,6 @@ const TotalNumber = styled(Typography)(({ theme }) => ({
     fontWeight: 600,
     fontSize: "16px",
     textAlign: "right",
-    
 }));
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme, color }) => ({
@@ -56,19 +52,12 @@ function Card({ name, total, number, color }) {
             <CardName>{name}</CardName>
             <BottomWraper>
                 <TotalNumber>
-                    <Typography
-                        component="span"
-                        sx={{ opacity: 0.7, fontSize: "15px", fontWeight: 500 }}
-                    >
+                    <Typography component="span" sx={{ opacity: 0.7, fontSize: "15px", fontWeight: 500 }}>
                         {number}
                     </Typography>{" "}
                     / {total}
                 </TotalNumber>
-                <BorderLinearProgress
-                    variant="determinate"
-                    value={(number * 100) / total}
-                    color={color}
-                />
+                <BorderLinearProgress variant="determinate" value={(number * 100) / total} color={color} />
             </BottomWraper>
         </CardWapper>
     );

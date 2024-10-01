@@ -6,7 +6,37 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 
-const orderData = [
+const DEFAULT_SORT_BY_FIELD_NAME = "sort_by";
+const DEFAULT_ORDER_BY_FIELD_NAME = "order_by";
+
+function valuesValidator(props, propName, componentName) {
+    const sortByFieldName = props.sortByFieldName || DEFAULT_SORT_BY_FIELD_NAME;
+    const orderByFieldName = props.orderByFieldName || DEFAULT_ORDER_BY_FIELD_NAME;
+
+    if (typeof props.values !== "object") {
+        return new Error(`${componentName} requires 'values' prop to be an object`);
+    }
+
+    if (!props.values.hasOwnProperty(sortByFieldName)) {
+        return new Error(`${componentName} requires 'values' prop to have a key '${sortByFieldName}'`);
+    }
+
+    if (!props.values.hasOwnProperty(orderByFieldName)) {
+        return new Error(`${componentName} requires 'values' prop to have a key '${orderByFieldName}'`);
+    }
+
+    if (typeof props.values[sortByFieldName] !== "string") {
+        return new Error(`${componentName} requires 'values.${sortByFieldName}' to be a string`);
+    }
+
+    if (typeof props.values[orderByFieldName] !== "string") {
+        return new Error(`${componentName} requires 'values.${orderByFieldName}' to be a string`);
+    }
+
+    return null;
+}
+
+const DEFAULT_ORDER_BY_DATA = [
     { key: "Ascending", value: "ASC" },
     { key: "Descending", value: "DESC" },
 ];
@@ -15,10 +45,11 @@ export default function TableGridQuickFilter({
     onSortByChange,
     onOrderByChange,
     sortByData = [],
-    sortByFieldName = "sort_by",
-    orderByFieldName = "order_by",
+    sortByFieldName = DEFAULT_SORT_BY_FIELD_NAME,
+    orderByFieldName = DEFAULT_ORDER_BY_FIELD_NAME,
     values,
     disabled,
+    orderData = DEFAULT_ORDER_BY_DATA,
 }) {
     return (
         <Box display="flex" gap="16px">
@@ -28,7 +59,7 @@ export default function TableGridQuickFilter({
                     onChange={(e) => onSortByChange(sortByFieldName, e.target.value)}
                     name={sortByFieldName}
                     displayEmpty
-                    defaultValue={values?.[sortByFieldName] ?? ""}
+                    value={values?.[sortByFieldName] ?? ""}
                     renderValue={(selected) => {
                         if (selected === "created_ts") {
                             return (
@@ -55,7 +86,7 @@ export default function TableGridQuickFilter({
                     onChange={(e) => onOrderByChange(orderByFieldName, e.target.value)}
                     name={orderByFieldName}
                     displayEmpty
-                    defaultValue={values?.[orderByFieldName] ?? ""}
+                    value={values?.[orderByFieldName] ?? ""}
                     renderValue={(selected) => {
                         if (!selected) {
                             return (
@@ -94,9 +125,6 @@ TableGridQuickFilter.propTypes = {
             value: PropTypes.string.isRequired,
         }),
     ).isRequired,
-    values: PropTypes.shape({
-        sort_by: PropTypes.string.isRequired,
-        order_by: PropTypes.string.isRequired,
-    }).isRequired,
+    values: valuesValidator,
     disabled: PropTypes.bool,
 };

@@ -15,7 +15,7 @@ function FormTextArea(props) {
         watch,
     } = useFormContext();
 
-    const { name, label, required, size, type, fullWidth, disabled, color, error, ...rest } = props;
+    const { name, label, required, size, type, fullWidth, disabled, minRows, color, error, ...rest } = props;
 
     const value = watch(name);
 
@@ -29,7 +29,7 @@ function FormTextArea(props) {
                         <FormLabel style={{ marginBottom: "4px" }}>{label}</FormLabel>
                         {/* References: https://mui.com/base-ui/react-textarea-autosize/ */}
                         <TextArea
-                            minrows={4}
+                            minrows={minRows}
                             {...rest}
                             onChange={(e) => {
                                 setValue(name, e.target.value);
@@ -56,11 +56,13 @@ FormTextArea.propTypes = {
     fullWidth: PropTypes.bool.isRequired,
     value: PropTypes.string,
     error: PropTypes.bool,
+    minRows: PropTypes.number,
 };
 
 FormTextArea.defaultProps = {
     required: false,
     disabled: false,
     fullWidth: true,
+    minRows: 4,
     value: "",
 };

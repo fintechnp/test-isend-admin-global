@@ -56,5 +56,5 @@ export default function AddDocumentAcceptanceModal({ selectedCountryISO3, docume
 AddDocumentAcceptanceModal.propTypes = {
     selectedCountryISO3: PropTypes.string,
     onAddSuccess: PropTypes.func,
-    documentFor: PropTypes.string
+    documentFor: PropTypes.string,
 };

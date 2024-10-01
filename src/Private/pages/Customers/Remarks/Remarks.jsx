@@ -42,9 +42,7 @@ function Remarks(props) {
     const dispatch = useDispatch();
     const [filterSchema, setFilterSchema] = useState(initialState);
 
-    const { response: remarksData, loading } = useSelector(
-        (state) => state.get_remarks
-    );
+    const { response: remarksData, loading } = useSelector((state) => state.get_remarks);
 
     const { success } = useSelector((state) => state.create_remarks);
 
@@ -73,10 +71,7 @@ function Remarks(props) {
                 Cell: (data) => {
                     return (
                         <>
-                            <Typography
-                                component="p"
-                                sx={{ fontSize: "14px", lineHeight: 1.2 }}
-                            >
+                            <Typography component="p" sx={{ fontSize: "14px", lineHeight: 1.2 }}>
                                 {data?.value ? data?.value : ""}
                             </Typography>
                         </>
@@ -130,7 +125,7 @@ function Remarks(props) {
                 ),
             },
         ],
-        []
+        [],
     );
 
     const handleSearch = useCallback(
@@ -142,7 +137,7 @@ function Remarks(props) {
             };
             setFilterSchema(updatedFilterSchema);
         },
-        [filterSchema]
+        [filterSchema],
     );
 
     const handleSort = (e) => {
@@ -184,7 +179,9 @@ function Remarks(props) {
     return (
         <>
             <Helmet>
-                <title>{import.meta.env.REACT_APP_NAME} | {props.title}</title>
+                <title>
+                    {import.meta.env.REACT_APP_NAME} | {props.title}
+                </title>
             </Helmet>
             <CustomerWrapper>
                 <Header />

@@ -19,7 +19,7 @@ import AccountForm from "./Form";
 import actions from "../../store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -41,7 +41,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -105,12 +105,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function AddSanction({ update_data, update }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_sanction
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_sanction
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_sanction);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_sanction);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -152,12 +148,7 @@ function AddSanction({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Sanction
                 </AddButton>
             )}
@@ -167,10 +158,7 @@ function AddSanction({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Sanction
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
@@ -183,9 +171,7 @@ function AddSanction({ update_data, update }) {
                                 type: memoizedData?.type,
                                 address: memoizedData?.address,
                                 country: memoizedData?.country,
-                                dob: new Date(memoizedData?.dob)
-                                    .toISOString()
-                                    .slice(0, 10),
+                                dob: new Date(memoizedData?.dob).toISOString().slice(0, 10),
                                 source: memoizedData?.source,
                                 remarks: memoizedData?.remarks,
                                 ref1: memoizedData?.ref1,

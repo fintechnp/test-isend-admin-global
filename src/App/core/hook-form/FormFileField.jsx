@@ -13,11 +13,9 @@ import { Controller, useFormContext, get } from "react-hook-form";
 import Center from "App/components/Center/Center";
 import UploadIcon from "App/components/Icon/UploadIcon";
 
-// accept: image/*, image/gif image/jpeg, image/png, application/pdf
-
 const FilePreview = styled(Box)(({ theme }) => ({
     width: "100%",
-    height: "250px",
+    height: "60px",
     minHeight: "200px",
     display: "flex",
     flexDirection: "column",
@@ -33,7 +31,7 @@ const FilePreview = styled(Box)(({ theme }) => ({
     },
 }));
 
-function FormFileField({ name, label, required, disabled, acceptedFiles = [], ...rest }) {
+function FormFileField({ name, label, required, disabled, acceptedFiles = [], onImageCallback, ...rest }) {
     const inputRef = useRef();
 
     const {
@@ -47,6 +45,9 @@ function FormFileField({ name, label, required, disabled, acceptedFiles = [], ..
     const onDrop = useCallback(
         (acceptedFiles) => {
             setValue(name, acceptedFiles[0]);
+            if (typeof onImageCallback === "function") {
+                onImageCallback(acceptedFiles[0]);
+            }
             clearErrors(name);
             inputRef.current.value = "";
         },
@@ -105,7 +106,7 @@ function FormFileField({ name, label, required, disabled, acceptedFiles = [], ..
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        p: "24px",
+                        p: "10px",
                         borderRadius: "10px",
                     }}
                 >
@@ -125,13 +126,13 @@ function FormFileField({ name, label, required, disabled, acceptedFiles = [], ..
                                         flexDirection="column"
                                         justifyContent="center"
                                         alignItems="center"
-                                        gap="16px"
+                                        gap="10px"
                                     >
                                         <Center
                                             sx={{
                                                 border: (theme) => `1px solid ${theme.palette.stroke.base}`,
                                                 height: "36px",
-                                                width: "36px",
+                                                width: "26px",
                                                 borderRadius: "50%",
                                             }}
                                         >
@@ -160,7 +161,7 @@ function FormFileField({ name, label, required, disabled, acceptedFiles = [], ..
                                                 flexDirection="column"
                                                 justifyContent="center"
                                                 alignItems="center"
-                                                gap="4px"
+                                                gap="2px"
                                             >
                                                 <Typography
                                                     fontWeight={500}

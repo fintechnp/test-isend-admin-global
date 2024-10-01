@@ -6,4 +6,5 @@ export const documentAcceptanceSchema = Yup.object().shape({
     document_type: Yup.string().required("Document Type is required"),
     status: Yup.string().required("Status is required"),
     is_required: Yup.boolean(),
+    reference_data_id: Yup.string().required("Reference Data is required"),
 });

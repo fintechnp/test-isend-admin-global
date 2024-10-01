@@ -14,7 +14,6 @@ const Label = styled(Typography)(({ theme }) => ({
     paddingTop: "2px",
     paddingBottom: "2px",
     textAlign: "left",
-    
 }));
 
 const CKEditorWrapper = styled("div", {

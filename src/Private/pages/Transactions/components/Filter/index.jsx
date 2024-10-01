@@ -88,11 +88,10 @@ const orderData = [
 ];
 
 function Filter({ handleSearch, handleSort, handleOrder }) {
-
     return (
         <FilterWrapper>
             <SearchBox sx={{ columnGap: 1 }}>
-                <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
                 {/* <TextField
                     type="search"
                     variant="outlined"
@@ -118,17 +117,12 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Sort By
                                         </Typography>
                                     );
                                 }
-                                const value = sortData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = sortData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >
@@ -147,17 +141,12 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

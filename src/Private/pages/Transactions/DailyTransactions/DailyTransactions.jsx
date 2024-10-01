@@ -1,16 +1,19 @@
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
+import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 
-import Filter from "./../components/Filter";
+import ucfirst from "App/helpers/ucfirst";
+import isEmpty from "App/helpers/isEmpty";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 
 import actions from "./../store/actions";
-import ucfirst from "App/helpers/ucfirst";
+import Filter from "./../components/Filter";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
@@ -54,7 +57,13 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/transactions/details/${data?.value}`} style={{ textDecoration: "none" }}>
+                            <Link
+                                to={buildRoute(routePaths.viewTransaction, {
+                                    id: data?.value,
+                                    customerId: data?.row?.original?.customer_id,
+                                })}
+                                style={{ textDecoration: "none" }}
+                            >
                                 {data.value ? data.value : "N/A"}
                             </Link>
                         </StyledName>
@@ -141,7 +150,7 @@ const DailyTransactions = (props) => {
                         >
                             {data?.row?.original?.payout_country_data
                                 ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : data?.row?.original?.payout_country ?? "N/A"}
+                                : (data?.row?.original?.payout_country ?? "N/A")}
                         </StyledName>
                     </Box>
                 ),
@@ -255,12 +264,14 @@ const DailyTransactions = (props) => {
                                 lineHeight: 1.2,
                             }}
                         >
-                            {data.value ? ReferenceName(66, data.value) : "N/A"}
+                            {isEmpty(data.row.original.status)
+                                ? data.row.original.send_status
+                                : ReferenceName(66, data.row.original.status)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.transaction_status
-                                ? ReferenceName(66, data?.row?.original?.transaction_status)
-                                : "N/A"}
+                            {!isEmpty(data.row.original.transaction_status)
+                                ? data.row.original.transaction_status
+                                : " "}
                         </Typography>
                     </Box>
                 ),

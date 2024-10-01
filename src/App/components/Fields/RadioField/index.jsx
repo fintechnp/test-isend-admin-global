@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    FormControlLabel,
-    Grid,
-    Radio,
-    RadioGroup,
-    Typography,
-} from "@mui/material";
+import { FormControlLabel, Grid, Radio, RadioGroup, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { renderFromHelper } from "../helpers";
 import { makeStyles } from "@mui/styles";
@@ -21,14 +15,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function RadioField({
-    label,
-    input,
-    meta: { touched, invalid, error },
-    small,
-    options,
-    ...rest
-}) {
+export default function RadioField({ label, input, meta: { touched, invalid, error }, small, options, ...rest }) {
     const classes = useStyles();
     const theme = useTheme();
 

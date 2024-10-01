@@ -98,15 +98,18 @@ function CreateFcm({ update, update_data, onClose }) {
     React.useEffect(() => {
         if (add_success || update_success) {
             setOpen(false);
+            if (onClose) onClose();
         }
     }, [add_success, update_success]);
 
     const handleClickOpen = () => {
         setOpen(true);
+        if (onClose) onClose();
     };
 
     const handleClose = () => {
         setOpen(false);
+        if (onClose) onClose();
     };
 
     const handleFCMCreate = (data) => {
@@ -173,7 +176,7 @@ function CreateFcm({ update, update_data, onClose }) {
     return (
         <div>
             {update ? (
-                <ListItemButton onClick={() => (handleClickOpen(), onClose())}>Edit</ListItemButton>
+                <ListItemButton onClick={() => handleClickOpen()}>Edit</ListItemButton>
             ) : (
                 <Button variant="contained" onClick={() => handleClickOpen()}>
                     Create FCM

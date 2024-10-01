@@ -12,6 +12,7 @@ function FormSelect(props) {
         clearErrors,
         formState: { errors },
         setValue,
+        watch,
     } = useFormContext();
 
     const {
@@ -25,11 +26,13 @@ function FormSelect(props) {
         multiple,
         fullWidth,
         options,
+        defaultValue,
         variant,
         showChooseOption,
         chooseOptionLabel,
         onChange,
         error,
+        placeholder,
         ...rest
     } = props;
 
@@ -37,32 +40,41 @@ function FormSelect(props) {
         <Controller
             name={name}
             control={control}
-            defaultValue=""
+            defaultValue={defaultValue}
             rules={rules}
+            placeholder={placeholder}
             render={({ field }) => (
                 <FormControl
                     variant={variant}
                     fullWidth={fullWidth}
                     size={size}
                     error={!!get(errors, name)}
-                    required={required}
+                    placeholder={placeholder}
                 >
-                    <InputLabel>{label}</InputLabel>
+                    <InputLabel>
+                        {
+                            <>
+                                {label}
+                                {required && <span style={{ color: "red", marginLeft: 2 }}>*</span>}
+                            </>
+                        }
+                    </InputLabel>
                     <Select
                         {...field}
                         {...rest}
                         error={!!get(errors, name)}
                         label={label}
                         variant={variant}
-                        required={required}
                         onFocus={() => clearErrors(name)}
                         disabled={disabled}
                         tabIndex={tabIndex}
                         multiple={multiple}
+                        placeholder={placeholder}
                         onChange={(e) => {
                             setValue(name, e.target.value);
                             onChange?.(e);
                         }}
+                        value={field.value}
                         fullWidth
                     >
                         {showChooseOption && (
@@ -111,6 +123,8 @@ FormSelect.propTypes = {
     error: PropTypes.string,
     variant: PropTypes.oneOf(["outlined", "standard", "filled"]),
     onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+    defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 FormSelect.defaultProps = {
@@ -127,4 +141,6 @@ FormSelect.defaultProps = {
     variant: "outlined",
     fullWidth: true,
     chooseOptionLabel: "Choose",
+    placeholder: "",
+    defaultValue: "",
 };

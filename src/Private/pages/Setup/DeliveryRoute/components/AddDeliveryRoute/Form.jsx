@@ -1,36 +1,24 @@
+import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
+import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
 
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../../App/utils/validators";
-import HookForm from "App/core/hook-form/HookForm";
 import { useForm } from "react-hook-form";
+import PartnerType from "App/data/PartnerType";
+import HookForm from "App/core/hook-form/HookForm";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormCheckbox from "App/core/hook-form/FormCheckbox";
+import FormPartnerSelect from "App/core/hook-form/FormPartnerSelect";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
 
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
     borderRadius: "5px",
     [theme.breakpoints.up("sm")]: {
-        minWidth: "350px",
+        minWidth: "650px",
     },
-}));
-
-const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
-    backgroundColor: theme.palette.background.light,
-}));
-
-const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
 }));
 
 const StatusText = styled(Typography)(({ theme }) => ({
@@ -44,20 +32,18 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
+    color: theme.palette.primary.main,
+    borderRadius: "8px",
     textTransform: "capitalize",
-    background: theme.palette.warning.main,
+    background: theme.palette.surface.primarySecond,
     "&:hover": {
-        background: theme.palette.warning.dark,
+        background: theme.palette.surface.primarySecond,
     },
 }));
 
 const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
     color: "#fff",
-    borderRadius: "2px",
+    borderRadius: "8px",
     textTransform: "capitalize",
     background: theme.palette.primary.main,
     "&:hover": {
@@ -81,7 +67,6 @@ const DeliveryRoute = ({
     initialValues,
     partner_payout,
 }) => {
-    const dispatch = useDispatch();
     const methods = useForm({
         defaultValues: initialValues,
         // resolver: yupResolver(deliveryOptionsSchema),
@@ -101,28 +86,10 @@ const DeliveryRoute = ({
                 return { label: data.name, value: data.value };
             });
 
-    const countryOptions =
-        country &&
-        country?.map((data) => {
-            return { label: data.country, value: data.iso3 };
-        });
-
     const currencyOptions =
         country &&
         country?.map((data) => {
             return { label: data.currency_name, value: data.currency };
-        });
-
-    const partnerSendingOptions =
-        partner_sending &&
-        partner_sending?.map((data) => {
-            return { label: data.name, value: data.agent_id };
-        });
-
-    const payoutAgentsOptions =
-        partner_payout &&
-        partner_payout?.map((data) => {
-            return { label: data.name, value: data.agent_id };
         });
 
     const handleSubmit = (data) => {
@@ -152,297 +119,61 @@ const DeliveryRoute = ({
         }
     }, [countryDataChanged.payout_country]);
 
-    // const handleCurrency = (e) => {
-    //     handleAgent(e.target.value);
-    //     if (update) {
-    //         dispatch(change("update_delivery_route_form", "payout_currency", convertCurrency(e.target.value)));
-    //     } else {
-    //         dispatch(change("add_delivery_route_form", "payout_currency", convertCurrency(e.target.value)));
-    //     }
-    // };
-
     return (
-        // <Form onSubmit={handleSubmit}>
-        //     <Container container direction="column">
-        //         <Grid item xs={12}>
-        //             <FormWrapper container direction="row">
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payment_type"
-        //                         label="Payment Type"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Payment Type
-        //                         </option>
-        //                         {reference &&
-        //                             reference
-        //                                 ?.filter(
-        //                                     (ref_data) =>
-        //                                         ref_data.reference_type === 1
-        //                                 )[0]
-        //                                 .reference_data.map((data) => (
-        //                                     <option
-        //                                         value={data.value}
-        //                                         key={data.reference_id}
-        //                                     >
-        //                                         {data.name}
-        //                                     </option>
-        //                                 ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_country"
-        //                         label="Country"
-        //                         type="number"
-        //                         small={12}
-        //                         onChange={handleCurrency}
-        //                         component={SelectField}
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Country
-        //                         </option>
-        //                         {country &&
-        //                             country.map((data) => (
-        //                                 <option
-        //                                     value={data.iso3}
-        //                                     key={data.tid}
-        //                                 >
-        //                                     {data.country}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_currency"
-        //                         label="Currency"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Currency
-        //                         </option>
-        //                         {country &&
-        //                             country.map((data) => (
-        //                                 <option
-        //                                     value={data.currency}
-        //                                     key={data.tid}
-        //                                 >
-        //                                     {data.currency_name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="send_agent_id"
-        //                         label="Sending Agent"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         disabled={
-        //                             partner_sending.length > 0 ? false : true
-        //                         }
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Sending Agent
-        //                         </option>
-        //                         {partner_sending &&
-        //                             partner_sending.map((data, index) => (
-        //                                 <option
-        //                                     value={data.agent_id}
-        //                                     key={data?.tid}
-        //                                 >
-        //                                     {data.name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 <FieldWrapper item xs={12} sm={6}>
-        //                     <Field
-        //                         name="payout_agent_id"
-        //                         label="Payout Agent"
-        //                         type="number"
-        //                         small={12}
-        //                         component={SelectField}
-        //                         disabled={
-        //                             partner_payout.length > 0 ? false : true
-        //                         }
-        //                         validate={[
-        //                             Validator.emptyValidator,
-        //                             Validator.minValue1,
-        //                         ]}
-        //                     >
-        //                         <option value="" disabled>
-        //                             Select Payout Agent
-        //                         </option>
-        //                         {partner_payout &&
-        //                             partner_payout.map((data) => (
-        //                                 <option
-        //                                     value={data.agent_id}
-        //                                     key={data?.tid}
-        //                                 >
-        //                                     {data.name}
-        //                                 </option>
-        //                             ))}
-        //                     </Field>
-        //                 </FieldWrapper>
-        //                 {update && (
-        //                     <FieldWrapper item xs={12} sm={6}>
-        //                         <Grid
-        //                             container
-        //                             alignItems="flex-end"
-        //                             justifyContent="flex-end"
-        //                         >
-        //                             <Grid item xs={12}>
-        //                                 <StatusText component="p">
-        //                                     Status
-        //                                 </StatusText>
-        //                             </Grid>
-        //                             <Grid item xs={12}>
-        //                                 <Field
-        //                                     name="is_active"
-        //                                     label="Active"
-        //                                     small={12}
-        //                                     reverse="row-reverse"
-        //                                     component={CheckboxField}
-        //                                 />
-        //                             </Grid>
-        //                         </Grid>
-        //                     </FieldWrapper>
-        //                 )}
-        //             </FormWrapper>
-        //         </Grid>
-        //         <Grid item>
-        //             <Divider sx={{ pt: 1.2 }} />
-        //         </Grid>
-        //         <Grid item>
-        //             <ButtonWrapper
-        //                 container
-        //                 columnGap={2}
-        //                 direction="row"
-        //                 justifyContent="flex-end"
-        //                 alignItems="center"
-        //             >
-        //                 <Grid item>
-        //                     <CancelButton
-        //                         size="small"
-        //                         variant="contained"
-        //                         onClick={handleClose}
-        //                     >
-        //                         Cancel
-        //                     </CancelButton>
-        //                 </Grid>
-        //                 <Grid item>
-        //                     <CreateButton
-        //                         size="small"
-        //                         variant="outlined"
-        //                         loading={loading}
-        //                         endIcon={update ? <UpdateIcon /> : <AddIcon />}
-        //                         type="submit"
-        //                     >
-        //                         {buttonText}
-        //                     </CreateButton>
-        //                 </Grid>
-        //             </ButtonWrapper>
-        //         </Grid>
-        //     </Container>
-        // </Form>
-        <>
-            <HookForm onSubmit={handleSubmit} {...methods}>
-                <Container>
-                    <Grid item xs={12}>
-                        <FormWrapper container direction="row">
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Payment Type" name="payment_type" options={paymentTypeOptions} />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Payout Country" name="payout_country" options={countryOptions} />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Payout Currency" name="payout_currency" options={currencyOptions} />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect
-                                    label="Sending Agent"
-                                    name="send_agent_id"
-                                    options={partnerSendingOptions}
-                                />
-                            </FieldWrapper>
-                            <FieldWrapper item xs={12} sm={6} style={{ marginTop: "0.5rem" }}>
-                                <FormSelect label="Payout Agent" name="payout_agent_id" options={payoutAgentsOptions} />
-                            </FieldWrapper>
-                            {update && (
-                                <FieldWrapper item xs={12} sm={6}>
-                                    <Grid container alignItems="flex-end" justifyContent="flex-end">
-                                        <Grid item xs={12}>
-                                            <StatusText component="p">Status</StatusText>
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <FormCheckbox name="is_active" label="Active" />
-                                        </Grid>
-                                    </Grid>
-                                </FieldWrapper>
-                            )}
-                        </FormWrapper>
+        <HookForm onSubmit={handleSubmit} {...methods}>
+            <Container>
+                <Grid
+                    container
+                    sx={{ border: "1px solid #EAEBF0", padding: "8px 16px 16px 8px", borderRadius: "8px" }}
+                    spacing={1}
+                >
+                    <Grid item xs={12} sm={6}>
+                        <FormSelect label="Payment Type" name="payment_type" options={paymentTypeOptions} />
                     </Grid>
-                    <Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormSelectCountry label="Payout Country" name="payout_country" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormSelect label="Payout Currency" name="payout_currency" options={currencyOptions} />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <FormPartnerSelect label="Sending Agent" name="send_agent_id" partnerType={PartnerType.SEND} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormPartnerSelect label="Payout Agent" name="payout_agent_id" partnerType={PartnerType.PAY} />
+                    </Grid>
+                    {update && (
+                        <Grid item xs={12} sm={6}>
+                            <StatusText component="p">Status</StatusText>
+                            <FormCheckbox name="is_active" label="Active" />
+                        </Grid>
+                    )}
+                </Grid>
+
+                <Grid item>
+                    <ButtonWrapper
+                        container
+                        columnGap={2}
+                        direction="row"
+                        justifyContent="flex-end"
+                        alignItems="center"
+                    >
                         <Grid item>
-                            <Divider sx={{ pt: 1.2 }} />
+                            <CancelButton size="medium" variant="contained" onClick={handleClose}>
+                                Cancel
+                            </CancelButton>
                         </Grid>
                         <Grid item>
-                            <ButtonWrapper
-                                container
-                                columnGap={2}
-                                direction="row"
-                                justifyContent="flex-end"
-                                alignItems="center"
-                            >
-                                <Grid item>
-                                    <CancelButton size="small" variant="contained" onClick={handleClose}>
-                                        Cancel
-                                    </CancelButton>
-                                </Grid>
-                                <Grid item>
-                                    <CreateButton
-                                        size="small"
-                                        variant="outlined"
-                                        loading={loading}
-                                        endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                        type="submit"
-                                    >
-                                        {buttonText}
-                                    </CreateButton>
-                                </Grid>
-                            </ButtonWrapper>
+                            <CreateButton size="medium" variant="outlined" loading={loading} type="submit">
+                                {buttonText}
+                            </CreateButton>
                         </Grid>
-                    </Grid>
-                </Container>
-            </HookForm>
-        </>
+                    </ButtonWrapper>
+                </Grid>
+            </Container>
+        </HookForm>
     );
 };
 
-// export default reduxForm({ form: ["form"] })(DeliveryOptionForm);
 export default DeliveryRoute;

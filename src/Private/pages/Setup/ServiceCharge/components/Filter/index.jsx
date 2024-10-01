@@ -74,18 +74,11 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     justifyContent: "center",
 }));
 
-function Filter({
-    state,
-    handleSearch,
-    handleOrder,
-    handleSort,
-    sortData,
-    orderData,
-}) {
+function Filter({ state, handleSearch, handleOrder, handleSort, sortData, orderData }) {
     return (
         <FilterWrapper>
             <SearchBox>
-                <SearchTextField onChange={handleSearch}/>
+                <SearchTextField onChange={handleSearch} />
             </SearchBox>
 
             <DropWrapper>
@@ -99,25 +92,17 @@ function Filter({
                                 renderValue={(selected) => {
                                     if (selected.length === 0) {
                                         return (
-                                            <Typography
-                                                component="p"
-                                                sx={{ opacity: 0.6 }}
-                                            >
+                                            <Typography component="p" sx={{ opacity: 0.6 }}>
                                                 Sort By
                                             </Typography>
                                         );
                                     }
-                                    const value = sortData.filter(
-                                        (type) => type.value === selected
-                                    );
+                                    const value = sortData.filter((type) => type.value === selected);
                                     return value[0]?.key;
                                 }}
                             >
                                 {sortData.map((order) => (
-                                    <MenuItem
-                                        value={order.value}
-                                        key={order.value}
-                                    >
+                                    <MenuItem value={order.value} key={order.value}>
                                         {order.key}
                                     </MenuItem>
                                 ))}
@@ -132,17 +117,12 @@ function Filter({
                             renderValue={(selected) => {
                                 if (selected.length === 0) {
                                     return (
-                                        <Typography
-                                            component="p"
-                                            sx={{ opacity: 0.6 }}
-                                        >
+                                        <Typography component="p" sx={{ opacity: 0.6 }}>
                                             Order By
                                         </Typography>
                                     );
                                 }
-                                const value = orderData.filter(
-                                    (type) => type.value === selected
-                                );
+                                const value = orderData.filter((type) => type.value === selected);
                                 return value[0]?.key;
                             }}
                         >

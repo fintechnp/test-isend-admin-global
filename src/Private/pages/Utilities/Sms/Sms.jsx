@@ -22,11 +22,12 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import CreateSms from "./CreateSms";
 import actions from "./../store/actions";
+import isEmpty from "App/helpers/isEmpty";
 import getFlagUrl from "App/helpers/getFlagUrl";
 import { useConfirm } from "App/core/mui-confirm";
 import { permissions } from "Private/data/permissions";
-import useListFilterStore from "App/hooks/useListFilterStore";
 import SmsStatusBadge from "./components/SmsStatusBadge";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     page_number: 1,
@@ -105,10 +106,14 @@ const Sms = () => {
                         <Row gap="8px">
                             <Column>
                                 <Typography color="text.primary" fontSize={14} fontWeight={400}>
-                                    {dateUtils.getDate(row.original.created_ts)}
+                                    {!isEmpty(row.original.created_ts)
+                                        ? dateUtils.getLocalDateFromUTC(row.original.created_ts)
+                                        : "N/A"}
                                 </Typography>
                                 <Typography color="text.primary" fontSize={14} fontWeight={400}>
-                                    {dateUtils.getLocalTimeFromUTC(row.original.created_ts)}
+                                    {!isEmpty(row.original.created_ts)
+                                        ? dateUtils.getLocalTimeFromUTC(row.original.created_ts)
+                                        : "N/A"}
                                 </Typography>
                             </Column>
                         </Row>

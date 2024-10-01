@@ -76,7 +76,9 @@ const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPer
                     <Typography>Rows per page : </Typography>
                     <Select size="small" onChange={handleChangeRowsPerPage} value={+paginationData?.pageSize || 10}>
                         {ROWS_PER_PAGE_OPTIONS.map((item) => (
-                            <MenuItem key={item} value={item}>{item}</MenuItem>
+                            <MenuItem key={item} value={item}>
+                                {item}
+                            </MenuItem>
                         ))}
                     </Select>
                 </Box>

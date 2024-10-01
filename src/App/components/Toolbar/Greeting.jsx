@@ -17,13 +17,13 @@ const waveAnimation = keyframes`
 `;
 
 const Wrapper = styled("div")(({ theme }) => ({
-    display: 'flex',
-    gap: '8px',
+    display: "flex",
+    gap: "8px",
     svg: {
-        width: '18px',
-        height: '18px',
-        animation: `${waveAnimation} 2s infinite`,  
-        transformOrigin: 'bottom center'
+        width: "18px",
+        height: "18px",
+        animation: `${waveAnimation} 2s infinite`,
+        transformOrigin: "bottom center",
     },
 }));
 

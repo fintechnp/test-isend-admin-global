@@ -25,7 +25,6 @@ export default function ZaiFilterForm({ loading, setFilterSchema, handleReset })
                 ...data,
             };
         });
-        console.log(data);
     };
 
     return (

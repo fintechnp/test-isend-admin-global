@@ -26,7 +26,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
     flexWrap: "wrap",
 }));
 
-export default function KycStat({ fromDate, toDate }) {
+export default function KycStat({ fromDate, toDate, pageName }) {
     const dispatch = useDispatch();
 
     const { loading: isLoading, response } = useSelector((state) => state.get_all_customer_kyc_count_by_status);
@@ -68,6 +68,20 @@ export default function KycStat({ fromDate, toDate }) {
             icon: <KycNotStartedIcon />,
             count: data?.customerWithNoKycCount ?? 0,
         },
+        ...(pageName === "customer_report"
+            ? [
+                  {
+                      label: "Total Inactive",
+                      icon: <KycExpiredIcon />,
+                      count: data?.totalInactiveCustomerCount ?? 0,
+                  },
+                  {
+                      label: "Total Deleted",
+                      icon: <KycRejectedIcon />,
+                      count: data?.totalDeletedCustomerCount ?? 0,
+                  },
+              ]
+            : []),
     ];
 
     return (

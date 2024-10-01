@@ -37,6 +37,7 @@ import { useDispatch, useSelector } from "react-redux";
 const useCountries = () => {
     const { response, loading: isLoading } = useSelector((state) => state.all_country);
 
+    /** @type {Country[]} */
     const countries = response?.data ?? localStorageGet("country") ?? [];
 
     const dispatch = useDispatch();

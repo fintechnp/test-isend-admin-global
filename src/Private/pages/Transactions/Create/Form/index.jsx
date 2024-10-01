@@ -45,11 +45,7 @@ const Fetching = styled(Typography)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-const steps = [
-    "Customer Information",
-    "Beneficiary Information",
-    "Sending Amount",
-];
+const steps = ["Customer Information", "Beneficiary Information", "Sending Amount"];
 
 const stateSend = {
     page_number: 1,
@@ -85,13 +81,9 @@ function TransactionForm() {
         error: add_error,
     } = useSelector((state) => state.create_transactions);
 
-    const { response: customer_list, loading: customer_loading } = useSelector(
-        (state) => state.get_customers
-    );
+    const { response: customer_list, loading: customer_loading } = useSelector((state) => state.get_customers);
 
-    const { response: sending_partner, loading: sending_loading } = useSelector(
-        (state) => state.get_sending_partner
-    );
+    const { response: sending_partner, loading: sending_loading } = useSelector((state) => state.get_sending_partner);
 
     React.useEffect(() => {
         if (add_error) {
@@ -134,9 +126,7 @@ function TransactionForm() {
 
     const handleNext = () => {
         const newActiveStep =
-            isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
+            isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
         setActiveStep(newActiveStep);
     };
 
@@ -191,12 +181,7 @@ function TransactionForm() {
 
     return (
         <Box sx={{ width: "100%", pt: "16px" }}>
-            <Stepper
-                nonLinear
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{ width: "100%", padding: "16px 0px" }}
-            >
+            <Stepper nonLinear activeStep={activeStep} alternativeLabel sx={{ width: "100%", padding: "16px 0px" }}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
                         <StepLabel color="inherit">{label}</StepLabel>
@@ -214,12 +199,9 @@ function TransactionForm() {
                                 fontSize: "18px",
                             }}
                         >
-                            All steps completed - Please submit to create
-                            Transaction.
+                            All steps completed - Please submit to create Transaction.
                         </Typography>
-                        <CheckCircleOutlineIcon
-                            sx={{ fontSize: "64px", color: "success.main" }}
-                        />
+                        <CheckCircleOutlineIcon sx={{ fontSize: "64px", color: "success.main" }} />
                         <LoadingButton
                             size="small"
                             variant="outlined"

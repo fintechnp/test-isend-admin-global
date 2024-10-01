@@ -1,25 +1,26 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import Paper from "@mui/material/Paper";
+import React, { useEffect } from "react";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
 import TableContainer from "@mui/material/TableContainer";
 
 import TablePagination from "App/components/Table/TablePagination";
 import TableBodySkeleton from "App/components/Table/TableBodySkeleton";
 
 import actions from "../../store/actions";
+import dateUtils from "App/utils/dateUtils";
 
 const StyledTableCell = styled(TableHead)(({ theme }) => ({
     "& .MuiTableCell-root": {
-        backgroundColor: "#F1F7FE",
-        color: "#000",
+        backgroundColor: theme.palette.background.light,
+        color: theme.palette.text.primary,
     },
 }));
 
@@ -74,12 +75,16 @@ function ListRefundPaymentLog({ customerId }) {
                             <TableCell>Transaction Amount</TableCell>
                             <TableCell>Refund Amount</TableCell>
                             <TableCell>Currency</TableCell>
+                            <TableCell>Created At</TableCell>
+                            <TableCell>Created By</TableCell>
+                            <TableCell>Updated At</TableCell>
+                            <TableCell>Refund By</TableCell>
                             <TableCell>Remarks</TableCell>
                         </TableRow>
                     </StyledTableCell>
                     <TableBody>
                         {loading ? (
-                            <TableBodySkeleton rowCount={10} columnCount={6} />
+                            <TableBodySkeleton rowCount={10} columnCount={10} />
                         ) : logData.data?.length <= 0 ? (
                             <TableRow>
                                 <TableCell colSpan={6} align="center">
@@ -95,6 +100,37 @@ function ListRefundPaymentLog({ customerId }) {
                                     <TableCell align="right">{row.transaction_amount.toLocaleString()}</TableCell>
                                     <TableCell align="right">{row.refund_amount.toLocaleString()}</TableCell>
                                     <TableCell>{row.transaction_currency}</TableCell>
+                                    <TableCell>
+                                        {row.created_ts ? (
+                                            <>
+                                                <Typography variant="body2">
+                                                    {dateUtils.getLocalDateFromUTC(row.created_ts)}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    {dateUtils.getLocalTimeFromUTC(row.created_ts)}
+                                                </Typography>
+                                            </>
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </TableCell>
+                                    <TableCell>{row.created_by ? row.created_by : "N/A"}</TableCell>
+                                    <TableCell>
+                                        {row.updated_ts ? (
+                                            <>
+                                                <Typography variant="body2">
+                                                    {dateUtils.getLocalDateFromUTC(row.updated_ts)}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    {dateUtils.getLocalTimeFromUTC(row.updated_ts)}
+                                                </Typography>
+                                            </>
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </TableCell>
+                                    <TableCell>{row.updated_by ? row.updated_by : "N/A"}</TableCell>
+
                                     <TableCell>{row.remarks}</TableCell>
                                 </TableRow>
                             ))

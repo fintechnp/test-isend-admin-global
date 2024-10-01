@@ -1,60 +1,44 @@
-import React, { useEffect } from "react";
+import * as Yup from "yup";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useMemo } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
 
-import TextField from "../../../../../../App/components/Fields/TextField";
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../../App/utils/validators";
+import PartnerType from "App/data/PartnerType";
+import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
+import FormTextField from "App/core/hook-form/FormTextField";
+import referenceTypeId from "Private/config/referenceTypeId";
+import FormPartnerSelect from "App/core/hook-form/FormPartnerSelect";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FormSearchAutocomplete from "App/core/hook-form/FormSearchAutocomplete";
 
-const Container = styled(Grid)(({ theme }) => ({
-    maxWidth: "900px",
-    borderRadius: "5px",
-    [theme.breakpoints.up("sm")]: {
-        minWidth: "350px",
-    },
-}));
-
-const FormWrapper = styled(Grid)(({ theme }) => ({
-    padding: "6px 0px 16px",
-    backgroundColor: theme.palette.background.light,
-}));
-
-const FieldWrapper = styled(Grid)(({ theme }) => ({
-    padding: "1px 16px",
-}));
-
-const StatusText = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    paddingTop: "6px",
-    paddingBottom: "-6px",
-}));
+import apiEndpoints from "Private/config/apiEndpoints";
+import { CurrencyName, ReferenceName } from "App/helpers";
+import useReactHookForm from "App/core/hook-form/useReactHookForm";
+import { PayoutLocationAction } from "Private/pages/Setup/PayoutLocation/store";
 
 const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingTop: "12px",
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
+    color: theme.palette.primary.main,
+    borderRadius: "8px",
     textTransform: "capitalize",
-    background: theme.palette.warning.main,
+    background: theme.palette.surface.primarySecond,
     "&:hover": {
-        background: theme.palette.warning.dark,
+        background: theme.palette.surface.primarySecond,
     },
 }));
 
 const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
     color: "#fff",
-    borderRadius: "2px",
+    borderRadius: "8px",
     textTransform: "capitalize",
     background: theme.palette.primary.main,
     "&:hover": {
@@ -65,8 +49,17 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
+const schema = Yup.object().shape({
+    bank_name: Yup.string().required("Bank Name is required"),
+    country: Yup.string().required("Country is required"),
+    currency: Yup.string().required("Currency is required"),
+    agent_id: Yup.string().required("Agent is required"),
+    payment_type: Yup.string().required("Payment Type is required"),
+    external_bank_code: Yup.string().required("External Bank Code is required"),
+});
+
 const PartnerBankForm = ({
-    handleSubmit,
+    onSubmit,
     update,
     loading,
     handleAgent,
@@ -74,16 +67,55 @@ const PartnerBankForm = ({
     handleClose,
     partner_payout,
     payout_country,
+    initialValues,
 }) => {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
 
+    const currencyOptions = country.map((c) => ({ label: c.currency_name, value: c.currency }));
+
+    const paymentTypeOptions = reference
+        .filter((ref) => ref.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((ref) => ({ label: ref.name, value: ref.value }));
+
+    const { response: payoutLocationData, loading: payoutLocationDetailsLoading } = useSelector(
+        (state) => state.get_payout_location_details,
+    );
+
+    const payoutLocationDetails = Array.isArray(payoutLocationData) ? payoutLocationData : [payoutLocationData.data];
+
+    const methods = useReactHookForm({
+        defaultValues: initialValues,
+        resolver: yupResolver(schema),
+    });
+
+    const { reset, watch, setValue } = methods;
+
+    const countryWatch = watch("country");
+    const currencyWatch = watch("currency");
+    const paymentTypeWatch = watch("payment_type");
+    const mapWithWatch = watch("payout_location_id");
+
+    const filterParams = useMemo(
+        () => ({
+            country: countryWatch,
+            currency: currencyWatch,
+            payment_type: paymentTypeWatch,
+            sort_by: "location_name",
+            order_by: "DESC",
+            page_no: 0,
+        }),
+        [countryWatch, currencyWatch, paymentTypeWatch],
+    );
+
     useEffect(() => {
-        if (payout_country && update) {
-            handleAgent(payout_country);
+        if (mapWithWatch) {
+            dispatch(PayoutLocationAction.get_payout_location_details(mapWithWatch));
+        } else {
+            dispatch({ type: "GET_PAYOUT_LOCATION_DETAILS_RESET" });
         }
-    }, [payout_country]);
+    }, [mapWithWatch]);
 
     const convertCurrency = (iso3) => {
         const currency = country.filter((data) => data.iso3 === iso3);
@@ -92,227 +124,135 @@ const PartnerBankForm = ({
         }
     };
 
-    const handleCurrency = (e) => {
-        handleAgent(e.target.value);
-        if (update) {
-            dispatch(
-                change(
-                    "update_partner_bank_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
-        } else {
-            dispatch(
-                change(
-                    "add_partner_bank_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+    useEffect(() => {
+        const handleCurrency = (e) => {
+            handleAgent(e);
+            setValue("currency", convertCurrency(e));
+        };
+        if (countryWatch) {
+            handleCurrency(countryWatch);
         }
-    };
+    }, [countryWatch]);
 
+    useEffect(() => {
+        if (!paymentTypeWatch && !countryWatch && !currencyWatch) {
+            setValue("payout_location_id", "");
+        }
+    }, [paymentTypeWatch, countryWatch, currencyWatch]);
+
+    const handleSubmit = (data) => {
+        onSubmit(data);
+        reset();
+    };
     return (
-        <Form onSubmit={handleSubmit}>
-            <Container container direction="column">
-                <Grid item xs={12}>
-                    <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="bank_name"
-                                label="Bank Name"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="country"
-                                label="Country"
-                                type="number"
-                                small={12}
-                                onChange={handleCurrency}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="currency"
-                                label="Currency"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.tid}
-                                        >
-                                            {data.currency_name}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="agent_id"
-                                label="Payout Agent"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                disabled={
-                                    partner_payout.length > 0 ? false : true
-                                }
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payout Agent
-                                </option>
-                                {partner_payout &&
-                                    partner_payout.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
-                                            {data.name}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payment_type"
-                                label="Payment Type"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payment Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data) => (
-                                            <option
-                                                value={data.value}
-                                                key={data.reference_id}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="external_bank_code"
-                                label="External Bank Code"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="external_bank_code1"
-                                label="External Bank Code 1"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="external_bank_code2"
-                                label="External Bank Code 2"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
-                        </FieldWrapper>
-                    </FormWrapper>
+        <HookForm onSubmit={handleSubmit} {...methods}>
+            <Grid
+                container
+                sx={{ border: "1px solid #EAEBF0", borderRadius: "8px", padding: "8px 16px 16px 8px" }}
+                spacing={1}
+            >
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormTextField name="bank_name" label="Bank Name" />
                 </Grid>
-                <Grid item>
-                    <Divider sx={{ pt: 1.2 }} />
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormSelectCountry name="country" label="Country" />
                 </Grid>
-                <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
-                                size="small"
-                                variant="outlined"
-                                loading={loading}
-                                endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                type="submit"
-                            >
-                                {buttonText}
-                            </CreateButton>
-                        </Grid>
-                    </ButtonWrapper>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormSelect name="currency" label="Currency" options={currencyOptions} />
                 </Grid>
-            </Container>
-        </Form>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormPartnerSelect name="agent_id" label="Payout Agent" partnerType={PartnerType.PAY} />
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormSelect name="payment_type" label="Payment Type" options={paymentTypeOptions} />
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormTextField name="external_bank_code" label="External Bank Code" />
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormTextField name="external_bank_code1" label="External Bank Code 1" />
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormTextField name="external_bank_code2" label="External Bank Code 2" />
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                    <FormSearchAutocomplete
+                        name="payout_location_id"
+                        label="Map With"
+                        shouldRenderPrevData
+                        pageNumberQueryKey="page_number"
+                        pageSizeQueryKey="page_size"
+                        apiEndpoint={
+                            countryWatch && currencyWatch && paymentTypeWatch && apiEndpoints.GetAllPayoutLocations
+                        }
+                        filterParams={filterParams}
+                        labelKey="location_name"
+                        valueKey="payout_location_id"
+                        searchParamName="search"
+                        paramkey="search"
+                        callApiAtfirst={countryWatch && currencyWatch && paymentTypeWatch ? true : false}
+                    />
+                </Grid>
+                {payoutLocationDetails.length > 0 && (
+                    <Grid item xs={12} marginBlock="1rem">
+                        <PayoutLocationDetailTable data={payoutLocationDetails} />
+                    </Grid>
+                )}
+            </Grid>
+
+            <Grid item>
+                <ButtonWrapper container columnGap={2} direction="row" justifyContent="flex-end" alignItems="center">
+                    <Grid item>
+                        <CancelButton size="medium" variant="contained" onClick={handleClose}>
+                            Cancel
+                        </CancelButton>
+                    </Grid>
+                    <Grid item>
+                        <CreateButton size="medium" variant="outlined" loading={loading} type="submit">
+                            {buttonText}
+                        </CreateButton>
+                    </Grid>
+                </ButtonWrapper>
+            </Grid>
+        </HookForm>
     );
 };
 
-export default reduxForm({ form: ["form"] })(PartnerBankForm);
+export default PartnerBankForm;
+
+const PayoutLocationDetailTable = ({ data }) => {
+    const columns = useMemo(
+        () => [
+            {
+                header: "S.N.",
+                cell: ({ row }) => <>{row.index + 1}</>,
+            },
+            {
+                header: "Location Name",
+                accessorKey: "location_name",
+            },
+            {
+                header: "Location Code",
+                accessorKey: "location_code",
+            },
+            {
+                header: "Payment Type",
+                accessorKey: "payment_type",
+                cell: ({ getValue }) => (
+                    <>{getValue() ? ReferenceName(referenceTypeId.paymentType, getValue()) : "-"}</>
+                ),
+            },
+            {
+                header: "Country",
+                accessorKey: "country",
+            },
+            {
+                header: "Currency",
+                accessorKey: "currency",
+                cell: ({ getValue }) => <>{getValue() ? CurrencyName(getValue()) : "-"}</>,
+            },
+        ],
+        [],
+    );
+    return <TanstackReactTable columns={columns || []} data={data || []} />;
+};

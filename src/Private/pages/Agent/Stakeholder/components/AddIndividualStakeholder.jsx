@@ -33,13 +33,13 @@ export default function AddIndividualStakeholder({ relatedTo, relatedId, onSucce
     const { handleSubmit, setError } = methods;
 
     const onSubmitData = (data) => {
-
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({
                 documentTypeId: document.documentTypeId,
                 documentName: document.documentName,
                 documentId: document.documentId,
+                documentSide: document.documentSide,
             }));
 
         const requiredEmptyDocuments = data.documents.filter((document, index) => {
@@ -59,7 +59,7 @@ export default function AddIndividualStakeholder({ relatedTo, relatedId, onSucce
             relatedKybId: data.relatedKybId === PARENT_ORGANIZATION_ID ? null : data.relatedKybId,
             documents: requiredDocuments,
             relatedId,
-            relatedTo
+            relatedTo,
         };
 
         dispatch(stakeholderActions.add_individual_stakeholder(requestPayload));

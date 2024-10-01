@@ -53,15 +53,7 @@ const NextButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const CustomerForm = ({
-    handleSubmit,
-    handleBack,
-    activeStep,
-    steps,
-    buttonText,
-    customer_list,
-    sending_partner,
-}) => {
+const CustomerForm = ({ handleSubmit, handleBack, activeStep, steps, buttonText, customer_list, sending_partner }) => {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));
@@ -85,21 +77,14 @@ const CustomerForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -119,10 +104,7 @@ const CustomerForm = ({
                                 </option>
                                 {sending_partner &&
                                     sending_partner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data.agent_id}
-                                        >
+                                        <option value={data.agent_id} key={data.agent_id}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -142,10 +124,7 @@ const CustomerForm = ({
                                 </option>
                                 {sending_partner &&
                                     sending_partner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data.agent_id}
-                                        >
+                                        <option value={data.agent_id} key={data.agent_id}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -165,14 +144,8 @@ const CustomerForm = ({
                                 </option>
                                 {customer_list &&
                                     customer_list.map((data) => (
-                                        <option
-                                            value={data.customer_id}
-                                            key={data.customer_id}
-                                        >
-                                            {data.first_name}{" "}
-                                            {data?.middle_name
-                                                ? data?.middle_name
-                                                : ""}{" "}
+                                        <option value={data.customer_id} key={data.customer_id}>
+                                            {data.first_name} {data?.middle_name ? data?.middle_name : ""}{" "}
                                             {data?.last_name}
                                         </option>
                                     ))}
@@ -184,12 +157,7 @@ const CustomerForm = ({
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -203,11 +171,7 @@ const CustomerForm = ({
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

@@ -44,14 +44,14 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const StyledText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     fontSize: "14px",
-    
+
     textTransform: "capitalize",
 }));
 
 const UserIdText = styled(Typography)(({ theme }) => ({
     opacity: 0.8,
     fontSize: "14px",
-    
+
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",

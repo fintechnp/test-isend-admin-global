@@ -130,7 +130,7 @@ const BlockedTransactions = (props) => {
                         <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
                             {data?.row?.original?.payout_country_data
                                 ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : data?.row?.original?.payout_country ?? "N/A"}{" "}
+                                : (data?.row?.original?.payout_country ?? "N/A")}{" "}
                         </StyledName>
                     </Box>
                 ),
@@ -238,7 +238,11 @@ const BlockedTransactions = (props) => {
                         }}
                     >
                         <Tooltip title="Transactions Details" arrow>
-                            <IconButton onClick={() => navigate(`/transactions/details/${row.original.tid}`)}>
+                            <IconButton
+                                onClick={() =>
+                                    navigate(`/transactions/details/${row.original.tid}/${row.original.customer_id}`)
+                                }
+                            >
                                 <RemoveRedEyeOutlinedIcon
                                     sx={{
                                         fontSize: "20px",

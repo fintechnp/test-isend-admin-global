@@ -100,8 +100,6 @@ function FormMobileNumber(props) {
                             renderValue={(value) => {
                                 const country = countries?.find((v) => v[countrySelectKeyValueAsValue] === value);
 
-                                console.log({ country, value, countrySelectKeyValueAsValue });
-
                                 if (country) {
                                     return (
                                         <Center>

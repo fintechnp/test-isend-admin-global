@@ -20,7 +20,7 @@ import actions from "./../../store/actions";
 import PartnerActions from "./../../../../Setup/Partner/store/actions";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -42,7 +42,7 @@ const UpdateButton = styled(IconButton)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -126,18 +126,10 @@ function AddUpdatePaymentRules({ update_data, update }) {
     const [open, setOpen] = React.useState(false);
     const [filterSend, setFilterSend] = React.useState(stateSend);
     const [filterPay, setFilterPay] = React.useState(statePay);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_payment_rules
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_payment_rules
-    );
-    const { response: partner_sending } = useSelector(
-        (state) => state.get_sending_partner
-    );
-    const { response: partner_payout } = useSelector(
-        (state) => state.get_payout_partner
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_payment_rules);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_payment_rules);
+    const { response: partner_sending } = useSelector((state) => state.get_sending_partner);
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -211,12 +203,7 @@ function AddUpdatePaymentRules({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Payment Rules
                 </AddButton>
             )}
@@ -226,10 +213,7 @@ function AddUpdatePaymentRules({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Payment Rules
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
@@ -245,11 +229,9 @@ function AddUpdatePaymentRules({ update_data, update }) {
                                 payout_agent_id: memoizedData?.payout_agent_id,
                                 payout_country: memoizedData?.payout_country,
                                 no_of_days: memoizedData?.no_of_days,
-                                no_of_transactions:
-                                    memoizedData?.no_of_transactions,
+                                no_of_transactions: memoizedData?.no_of_transactions,
                                 amount: memoizedData?.amount,
-                                compliance_action:
-                                    memoizedData?.compliance_action,
+                                compliance_action: memoizedData?.compliance_action,
                                 is_active: memoizedData?.is_active,
                             }}
                             onSubmit={handlePaymentRulesUpdate}

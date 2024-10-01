@@ -45,7 +45,7 @@ function SearchForm({
     SendPartner,
     handleSendPartner,
     handlePayPartner,
-    loading
+    loading,
 }) {
     const reference = JSON.parse(localStorage.getItem("reference"));
     const country = JSON.parse(localStorage.getItem("country"));

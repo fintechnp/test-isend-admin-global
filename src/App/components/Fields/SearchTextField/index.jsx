@@ -25,8 +25,8 @@ const SearchTextField = React.memo(({ debounceTime = 500, onChange, onClear, onC
     };
 
     useEffect(() => {
-        return () => clearTimeout(timeout)
-    }, [])
+        return () => clearTimeout(timeout);
+    }, []);
 
     return (
         <TextField

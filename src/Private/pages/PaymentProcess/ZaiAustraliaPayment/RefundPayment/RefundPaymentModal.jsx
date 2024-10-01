@@ -24,7 +24,12 @@ function RefundPaymentModal({ isOpen, customerId, customerName, onClose, onRefun
                         {
                             key: "refund-payment-webhook-logs",
                             tabName: "Webhook Logs",
-                            tabContent: <ListRefundPaymentWebhookLog customerId={customerId} onRefundSuccess={onRefundSuccess} />,
+                            tabContent: (
+                                <ListRefundPaymentWebhookLog
+                                    customerId={customerId}
+                                    onRefundSuccess={onRefundSuccess}
+                                />
+                            ),
                         },
                         {
                             key: "refund-payment-refund-logs",

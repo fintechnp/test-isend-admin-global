@@ -3,6 +3,7 @@ import { put, takeEvery, call, all } from "redux-saga/effects";
 import actions from "./actions";
 import Api from "App/services/api";
 import apiEndpoints from "Private/config/apiEndpoints";
+import buildRoute from "App/helpers/buildRoute";
 
 const api = new Api();
 
@@ -198,6 +199,144 @@ export const getOnfidoReports = takeEvery(actions.ONFIDO_REPORT, function* (acti
     }
 });
 
+export const getReferralReport = takeEvery(actions.REFERRAL_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetReferralReports), action.query);
+        yield put({
+            type: actions.REFERRAL_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.REFERRAL_REPORT_SUCCESS,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignReport = takeEvery(actions.CAMPAIGN_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignReports), action.query);
+        yield put({
+            type: actions.CAMPAIGN_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignReportDetails = takeEvery(actions.CAMPAIGN_REPORT_DETAILS, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignReportDetails), action.query);
+        yield put({
+            type: actions.CAMPAIGN_REPORT_DETAILS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_REPORT_DETAILS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignLedgerReport = takeEvery(actions.CAMPAIGN_LEDGER_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignLedgerReport), action.query);
+        yield put({
+            type: actions.CAMPAIGN_LEDGER_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_LEDGER_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignCodeUsageReport = takeEvery(actions.GET_PROMO_CODE_USAGE_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.ListPromoCodeUsage), action.query);
+        yield put({
+            type: actions.GET_PROMO_CODE_USAGE_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_PROMO_CODE_USAGE_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getReferralReportById = takeEvery(actions.REFERRAL_REPORT_BY_ID, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetReferralReportById, action.id));
+
+        yield put({
+            type: actions.REFERRAL_REPORT_BY_ID_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.REFERRAL_REPORT_BY_ID_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
+export const getCampaignIncentiveReport = takeEvery(actions.CAMPAIGN_INCENTIVE_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCampaignIncentiveReport), action.query);
+
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_FAILED,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const updateCampaignIncentiveStatus = takeEvery(actions.CAMPAIGN_INCENTIVE_REPORT_STATUS, function* (action) {
+    try {
+        const res = yield call(
+            api.put,
+            buildRoute(apiEndpoints.UpdateCampaignIncentiveReportStatus, action.id),
+            action.data,
+        );
+
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_STATUS_SUCCESS,
+            response: res,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.CAMPAIGN_INCENTIVE_REPORT_STATUS_FAILED,
+            response: error?.data,
+        });
+
+        yield put({
+            type: "SET_TOAST_DATA",
+            response: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerReport,
@@ -212,5 +351,13 @@ export default function* saga() {
         getAchEntriesReport,
         getIncompleteRegistrationReport,
         getOnfidoReports,
+        getReferralReport,
+        getReferralReportById,
+        getCampaignReport,
+        getCampaignReportDetails,
+        getCampaignLedgerReport,
+        getCampaignCodeUsageReport,
+        getCampaignIncentiveReport,
+        updateCampaignIncentiveStatus,
     ]);
 }

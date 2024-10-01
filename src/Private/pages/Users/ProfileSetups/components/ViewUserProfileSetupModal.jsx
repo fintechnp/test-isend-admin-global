@@ -1,14 +1,14 @@
+import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
 import Modal from "App/components/Modal/Modal";
-import ViewIconButton from "App/components/Button/ViewIconButton";
+import LabelValue from "App/components/Forms/LabelValue";
+import ListItemButton from "@mui/material/ListItemButton";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 
 import { userProfileSetupActions } from "../store";
-import LabelValue from "App/components/Forms/LabelValue";
-
 import { styled, alpha } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem, treeItemClasses } from "@mui/x-tree-view/TreeItem";
@@ -30,7 +30,7 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
     },
 }));
 
-export default function ViewUserProfileSetupModal({ userProfileSetupId }) {
+export default function ViewUserProfileSetupModal({ userProfileSetupId, onClose }) {
     const dispatch = useDispatch();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -45,8 +45,13 @@ export default function ViewUserProfileSetupModal({ userProfileSetupId }) {
 
     return (
         <>
-            <ViewIconButton onClick={() => setIsOpen(true)} />
-            <Modal title="User Profile Setup" open={isOpen} onClose={() => setIsOpen(false)} sx={{ minWidth: "600px" }}>
+            <ListItemButton onClick={() => setIsOpen(true)}>View</ListItemButton>
+            <Modal
+                title="User Profile Setup"
+                open={isOpen}
+                onClose={() => (setIsOpen(false), onClose?.())}
+                sx={{ minWidth: "600px" }}
+            >
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={2} lg={3} xl={4}>
                         <LabelValue label="Name" value={data?.role_name} isLoading={loading} />
@@ -126,3 +131,8 @@ export default function ViewUserProfileSetupModal({ userProfileSetupId }) {
         </>
     );
 }
+
+ViewUserProfileSetupModal.propTypes = {
+    userProfileSetupId: PropTypes.string.isRequired,
+    onClose: PropTypes.func,
+};

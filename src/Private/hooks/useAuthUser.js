@@ -38,7 +38,7 @@ const useAuthUser = () => {
      * check if a user has role
      */
     const hasRole = (role) => {
-        if (typeof role === "array") {
+        if (Array.isArray(role)) {
             return role.some((r) => user.roles.includes(r));
         }
         return user.roles.includes(role);

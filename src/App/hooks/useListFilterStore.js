@@ -27,7 +27,14 @@ import { useState } from "react";
  * @param {FilterStoreProps} props - The initial state of the filter schema.
  * @returns {FilterStore} The filter store with state and actions.
  */
-const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", pageSizeKeyName = "page_size" }) => {
+const useListFilterStore = ({
+    initialState,
+    pageNumberKeyName = "page_number",
+    pageSizeKeyName = "page_size",
+    resetInitialStateDate = false,
+    fromDateParamName = "from_date",
+    toDateParamName = "to_date",
+}) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [filterSchema, setFilterSchema] = useState(initialState);
 
@@ -78,11 +85,32 @@ const useListFilterStore = ({ initialState, pageNumberKeyName = "page_number", p
      * @param {Object} data - The data from the filter form.
      * @returns {void}
      */
-    const onFilterSubmit = (data) =>
-        setFilterSchema({
-            ...filterSchema,
-            ...data,
-        });
+    const onFilterSubmit = (data) => {
+        if (resetInitialStateDate) {
+            const updatedFilters = {
+                ...filterSchema, // Keep the current filter values
+                ...data, // Override with the newly submitted values
+            };
+
+            // Only include `from_date` and `to_date` if they are explicitly modified
+            if (!data[fromDateParamName]) {
+                delete updatedFilters[fromDateParamName];
+            }
+            if (!data[toDateParamName]) {
+                delete updatedFilters[toDateParamName];
+            }
+            return setFilterSchema({
+                ...updatedFilters,
+                [pageNumberKeyName]: 1,
+            });
+        } else {
+            return setFilterSchema({
+                ...filterSchema,
+                ...data,
+                [pageNumberKeyName]: 1,
+            });
+        }
+    };
 
     /**
      * Resets the filter schema to the initial state.

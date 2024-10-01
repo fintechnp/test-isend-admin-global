@@ -9,8 +9,8 @@ const Container = styled(Box)(({ theme }) => ({
         paddingTop: "4px",
     },
     "& .MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked ": {
-        color: "red"
-    }
+        color: "red",
+    },
 }));
 
 const TitleContainer = styled(Box)(({ theme }) => ({
@@ -37,11 +37,7 @@ function SwitchBoxSettings({ title, description, checked, handleChange }) {
         <Container>
             <TitleContainer>
                 <Title>{title}</Title>
-                <Switch
-                    size="small"
-                    checked={checked}
-                    onChange={handleChange}
-                />
+                <Switch size="small" checked={checked} onChange={handleChange} />
             </TitleContainer>
             <Description>{description}</Description>
         </Container>

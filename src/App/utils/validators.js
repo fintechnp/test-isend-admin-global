@@ -33,6 +33,7 @@ const validators = {
         return undefined;
     },
     urlValidator: (value) => {
+        /* eslint-disable no-useless-escape */
         if (value && !/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(value)) {
             return "Invalid image url";
         }

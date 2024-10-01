@@ -75,10 +75,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -88,10 +85,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.minValue3,
-                                    Validator.maxLength10,
-                                ]}
+                                validate={[Validator.minValue3, Validator.maxLength10]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -101,27 +95,18 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Agent Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 3
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 3)[0]
                                         .reference_data.map((data) => {
                                             if (data?.name !== "CORRIDOR") {
                                                 return (
-                                                    <option
-                                                        value={data.value}
-                                                        key={data.reference_id}
-                                                    >
+                                                    <option value={data.value} key={data.reference_id}>
                                                         {data.name}
                                                     </option>
                                                 );
@@ -146,10 +131,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="email"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emailValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emailValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -159,21 +141,14 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue3,
-                                    Validator.maxLength3,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue3, Validator.maxLength3]}
                             >
                                 <option value="" disabled>
                                     Select Country
                                 </option>
                                 {country &&
                                     country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.iso3}
-                                        >
+                                        <option value={data.iso3} key={data.iso3}>
                                             {data.country}
                                         </option>
                                     ))}
@@ -186,20 +161,11 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="unit"
-                                label="Unit"
-                                type="number"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="unit" label="Unit" type="number" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -208,10 +174,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
@@ -221,38 +184,17 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="state"
-                                label="State"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="state" label="State" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="address"
-                                label="Address"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="address" label="Address" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="website"
-                                label="Website"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="website" label="Website" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -260,12 +202,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                     <Divider sx={{ pt: 1.2 }} />
                 </Grid>
                 <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        alignItems="center"
-                    >
+                    <ButtonWrapper container columnGap={2} direction="row" alignItems="center">
                         <Grid item xs />
                         <Grid item>
                             <BackButton
@@ -279,11 +216,7 @@ const Basic = ({ handleSubmit, handleBack, activeStep, steps, buttonText }) => {
                         </Grid>
                         <Grid item>
                             {activeStep !== steps.length && (
-                                <NextButton
-                                    size="small"
-                                    variant="outlined"
-                                    type="submit"
-                                >
+                                <NextButton size="small" variant="outlined" type="submit">
                                     {buttonText}
                                 </NextButton>
                             )}

@@ -88,7 +88,7 @@ const actions = {
 
     get_country_validation_rules: (country) => ({
         type: actions.GET_COUNTRY_VALIDATION_RULES,
-        country
+        country,
     }),
 };
 

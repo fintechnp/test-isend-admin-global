@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import { useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import { Field, Form, reduxForm } from "redux-form";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
@@ -52,7 +52,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     padding: "4px 0px",
     paddingRight: "4px",
 }));
-
 
 function SearchForm({ handleSubmit, loading }) {
     const dispatch = useDispatch();

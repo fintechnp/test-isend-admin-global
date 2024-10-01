@@ -1,18 +1,19 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import CableIcon from "@mui/icons-material/Cable";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import ListItemButton from "@mui/material/ListItemButton";
 import MuiDialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Tooltip } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
-import CableIcon from "@mui/icons-material/Cable";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -79,16 +80,7 @@ const YesButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function Unmap({
-    loading,
-    id,
-    handleMapUnmap,
-    success,
-    information,
-    title,
-    map,
-    map_id,
-}) {
+function Unmap({ loading, id, handleMapUnmap, success, information, title, map, map_id, enablePopoverAction }) {
     const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
@@ -122,6 +114,8 @@ function Unmap({
                         Map
                     </Button>
                 </Tooltip>
+            ) : enablePopoverAction ? (
+                <ListItemButton onClick={handleClickOpen}>Unmap Partner Bank</ListItemButton>
             ) : (
                 <Tooltip title="Unmap Partner Bank" arrow>
                     <UnmapIcon
@@ -141,11 +135,7 @@ function Unmap({
                     </UnmapIcon>
                 </Tooltip>
             )}
-            <BootstrapDialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
+            <BootstrapDialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
                 <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
                 <DialogContent
                     sx={{
@@ -173,19 +163,10 @@ function Unmap({
                     <DialogContentText>{information}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <CancelButton
-                        size="small"
-                        variant="contained"
-                        onClick={handleClose}
-                    >
+                    <CancelButton size="small" variant="contained" onClick={handleClose}>
                         Cancel
                     </CancelButton>
-                    <YesButton
-                        size="small"
-                        variant="outlined"
-                        loading={loading}
-                        onClick={handleYes}
-                    >
+                    <YesButton size="small" variant="outlined" loading={loading} onClick={handleYes}>
                         Yes
                     </YesButton>
                 </DialogActions>

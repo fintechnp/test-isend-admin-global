@@ -1,12 +1,5 @@
-import {
-    CUSTOM_CHART_JS_CLASS,
-    LEGEND_CONTAINER_ID,
-} from "../../global/constants";
-import {
-    configureTooltipPosition,
-    createTooltipElement,
-    toggleTooltip,
-} from "./Tooltip";
+import { CUSTOM_CHART_JS_CLASS, LEGEND_CONTAINER_ID } from "../../global/constants";
+import { configureTooltipPosition, createTooltipElement, toggleTooltip } from "./Tooltip";
 
 export const stackedBarChartDefaultOption = {
     maxBarThickness: 40,
@@ -73,11 +66,8 @@ export const lineChartDefaultOptions = {
 
                 // Set Tooltip Actual Content
                 if (tooltipModel.body) {
-                    const tooltipRoot = tooltipEl.querySelector(
-                        `.${CUSTOM_CHART_JS_CLASS}`
-                    );
-                    const formattedNumber =
-                        tooltipModel.dataPoints[0].formattedValue;
+                    const tooltipRoot = tooltipEl.querySelector(`.${CUSTOM_CHART_JS_CLASS}`);
+                    const formattedNumber = tooltipModel.dataPoints[0].formattedValue;
 
                     tooltipRoot.innerHTML = `<div class="tooltip-title"><h6>${tooltipModel.dataPoints[0].dataset.label}</h6></div><div class="tooltip-body"><span class="value">${formattedNumber}</span><span class="label">for ${tooltipModel.dataPoints[0].label}, 2021</span></div>`;
                 }

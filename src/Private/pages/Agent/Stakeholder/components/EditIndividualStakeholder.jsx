@@ -30,13 +30,14 @@ export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeh
     const { handleSubmit, setError, setValue } = methods;
 
     const onSubmitData = (data) => {
-        
         const requiredDocuments = data.documents
             .filter((document) => !!document.documentTypeId && !!document.documentId)
             .map((document) => ({
                 documentTypeId: document.documentTypeId,
                 documentName: document.documentName,
                 documentId: document.documentId,
+                documentSide: document.documentSide,
+                hasTwoSide: document.hasTwoSide,
             }));
 
         const requiredEmptyDocuments = data.documents.filter((document, index) => {
@@ -113,8 +114,13 @@ export default function EditIndividualStakeholder({ relatedTo, relatedId, stakeh
                 documentLink: d.documentLink,
                 fileType: d.fileType,
                 documentId: d.documentId,
+                documentSide: d.documentSide,
+                hasTwoSide: d.hasTwoSide,
             })),
         );
+        setValue("userProfileId", data.userprofileId);
+        setValue("userProfileLink", data.userProfileLink);
+        setValue("userProfileFormat", data.userProfileFormat);
     }, [getIndividualStakeholderByIdResponse]);
 
     return (

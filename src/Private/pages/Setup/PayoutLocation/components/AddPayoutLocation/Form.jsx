@@ -1,17 +1,20 @@
-import React from "react";
+import * as Yup from "yup";
+import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import Button from "@mui/material/Button";
+import { useForm } from "react-hook-form";
 import { styled } from "@mui/material/styles";
-import { change, Field, Form, reduxForm } from "redux-form";
-import { Grid, Button, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
+import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
-import AddIcon from "@mui/icons-material/Add";
-import UpdateIcon from "@mui/icons-material/Update";
-import Divider from "@mui/material/Divider";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import SelectField from "../../../../../../App/components/Fields/SelectField";
-import TextField from "../../../../../../App/components/Fields/TextField";
-import CheckboxField from "../../../../../../App/components/Fields/CheckboxField";
-import Validator from "../../../../../../App/utils/validators";
+import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
+import FormCheckbox from "App/core/hook-form/FormCheckbox";
+import FormTextField from "App/core/hook-form/FormTextField";
+import FormSelectCountry from "App/core/hook-form/FormSelectCountry";
+
+import referenceTypeId from "Private/config/referenceTypeId";
 
 const Container = styled(Grid)(({ theme }) => ({
     maxWidth: "900px",
@@ -41,20 +44,18 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
-    minWidth: "100px",
-    color: "#fff",
-    borderRadius: "2px",
+    color: theme.palette.primary.main,
+    borderRadius: "8px",
     textTransform: "capitalize",
-    background: theme.palette.warning.main,
+    background: theme.palette.surface.primarySecond,
     "&:hover": {
-        background: theme.palette.warning.dark,
+        background: theme.palette.surface.primarySecond,
     },
 }));
 
 const CreateButton = styled(LoadingButton)(({ theme }) => ({
-    minWidth: "100px",
     color: "#fff",
-    borderRadius: "2px",
+    borderRadius: "8px",
     textTransform: "capitalize",
     background: theme.palette.primary.main,
     "&:hover": {
@@ -65,16 +66,30 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const DeliveryOptionForm = ({
-    handleSubmit,
-    update,
-    loading,
-    buttonText,
-    handleClose,
-}) => {
-    const dispatch = useDispatch();
+const schema = Yup.object().shape({
+    location_name: Yup.string().required("Location Name is required"),
+    location_code: Yup.string().required("Location Code is required"),
+    currency: Yup.string().required("Currency is required"),
+    country: Yup.string().required("Country is required"),
+    payment_type: Yup.string().required("Payment Type is required"),
+});
+
+const PayoutLocationForm = ({ onSubmit, update, loading, buttonText, handleClose, initialValues }) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
+    const paymentTypeOptions = reference
+        .filter((ref) => ref.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((ref) => ({ label: ref.name, value: ref.value }));
     const country = JSON.parse(localStorage.getItem("country"));
+
+    const currencyOptions = country.map((c) => ({ label: c.currency_name, value: c.currency }));
+
+    const methods = useForm({
+        defaultValues: initialValues,
+        resolver: yupResolver(schema),
+    });
+
+    const { watch, setValue } = methods;
+    const countryWatch = watch("country");
 
     const convertCurrency = (iso3) => {
         const currency = country.filter((data) => data.iso3 === iso3);
@@ -83,203 +98,59 @@ const DeliveryOptionForm = ({
         }
     };
 
-    const handleCurrency = (e) => {
-        if (update) {
-            dispatch(
-                change(
-                    "update_payout_location_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
-        } else {
-            dispatch(
-                change(
-                    "add_payout_location_form",
-                    "currency",
-                    convertCurrency(e.target.value)
-                )
-            );
+    useEffect(() => {
+        const handleCurrency = (e) => {
+            setValue("currency", convertCurrency(e));
+        };
+        if (countryWatch) {
+            handleCurrency(countryWatch);
         }
-    };
+    }, [countryWatch]);
 
     return (
-        <Form onSubmit={handleSubmit}>
-            <Container container direction="column">
-                <Grid item xs={12}>
-                    <FormWrapper container direction="row">
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="location_name"
-                                label="Location Name"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="location_code"
-                                label="Location Code"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="payment_type"
-                                label="Payment Type"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Payment Type
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 1
-                                        )[0]
-                                        .reference_data.map((data, index) => (
-                                            <option
-                                                value={data.value}
-                                                key={index}
-                                            >
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="country"
-                                label="Country"
-                                type="number"
-                                small={12}
-                                onChange={handleCurrency}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Country
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.iso3}
-                                            key={data.tid}
-                                        >
-                                            {data.country}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="currency"
-                                label="Currency"
-                                type="number"
-                                small={12}
-                                component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
-                            >
-                                <option value="" disabled>
-                                    Select Currency
-                                </option>
-                                {country &&
-                                    country.map((data) => (
-                                        <option
-                                            value={data.currency}
-                                            key={data.tid}
-                                        >
-                                            {data.currency_name}
-                                        </option>
-                                    ))}
-                            </Field>
-                        </FieldWrapper>
-                        {update && (
-                            <FieldWrapper item xs={12} sm={6}>
-                                <Grid
-                                    container
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
-                                    <Grid item xs={12}>
-                                        <StatusText component="p">
-                                            Status
-                                        </StatusText>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            name="is_active"
-                                            label="Active"
-                                            small={12}
-                                            reverse="row-reverse"
-                                            component={CheckboxField}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </FieldWrapper>
-                        )}
-                    </FormWrapper>
+        <HookForm onSubmit={onSubmit} {...methods}>
+            <Grid
+                container
+                sx={{ border: "1px solid #EAEBF0", borderRadius: "8px", padding: "8px 16px 16px 8px" }}
+                spacing={1}
+            >
+                <Grid item xs={12} sm={6}>
+                    <FormTextField name="location_name" label="Location Name" />
                 </Grid>
-                <Grid item>
-                    <Divider sx={{ pt: 1.2 }} />
+                <Grid item xs={12} sm={6}>
+                    <FormTextField name="location_code" label="Location Code" />
                 </Grid>
-                <Grid item>
-                    <ButtonWrapper
-                        container
-                        columnGap={2}
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
-                                Cancel
-                            </CancelButton>
-                        </Grid>
-                        <Grid item>
-                            <CreateButton
-                                size="small"
-                                variant="outlined"
-                                loading={loading}
-                                endIcon={update ? <UpdateIcon /> : <AddIcon />}
-                                type="submit"
-                            >
-                                {buttonText}
-                            </CreateButton>
-                        </Grid>
-                    </ButtonWrapper>
+                <Grid item xs={12} sm={6}>
+                    <FormSelect name="payment_type" label="Payment Type" options={paymentTypeOptions} />
                 </Grid>
-            </Container>
-        </Form>
+                <Grid item xs={12} sm={6}>
+                    <FormSelectCountry name="country" label="Country" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormSelect name="currency" label="Currency" options={currencyOptions} />
+                </Grid>
+                {update && (
+                    <Grid item xs={12} sm={6}>
+                        <StatusText component="p">Status</StatusText>
+                        <FormCheckbox name="is_active" label="Active" />
+                    </Grid>
+                )}
+            </Grid>
+            <Grid item>
+                <ButtonWrapper container columnGap={2} direction="row" justifyContent="flex-end" alignItems="center">
+                    <Grid item>
+                        <CancelButton size="medium" variant="contained" onClick={handleClose}>
+                            Cancel
+                        </CancelButton>
+                    </Grid>
+                    <Grid item>
+                        <CreateButton size="medium" variant="outlined" loading={loading} type="submit">
+                            {buttonText}
+                        </CreateButton>
+                    </Grid>
+                </ButtonWrapper>
+            </Grid>
+        </HookForm>
     );
 };
-
-export default reduxForm({ form: ["form"] })(DeliveryOptionForm);
+export default PayoutLocationForm;

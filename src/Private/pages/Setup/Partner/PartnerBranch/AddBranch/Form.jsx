@@ -57,13 +57,7 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-const AddBranchForm = ({
-    handleSubmit,
-    loading,
-    branch_id,
-    buttonText,
-    handleClose,
-}) => {
+const AddBranchForm = ({ handleSubmit, loading, branch_id, buttonText, handleClose }) => {
     const reference = JSON.parse(localStorage.getItem("reference"));
 
     return (
@@ -78,20 +72,11 @@ const AddBranchForm = ({
                                 type="text"
                                 small={12}
                                 component={TextField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="short_code"
-                                label="Short Code"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="short_code" label="Short Code" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
@@ -109,26 +94,17 @@ const AddBranchForm = ({
                                 type="text"
                                 small={12}
                                 component={SelectField}
-                                validate={[
-                                    Validator.emptyValidator,
-                                    Validator.minValue1,
-                                ]}
+                                validate={[Validator.emptyValidator, Validator.minValue1]}
                             >
                                 <option value="" disabled>
                                     Select Branch Type
                                 </option>
                                 {reference &&
                                     reference
-                                        ?.filter(
-                                            (ref_data) =>
-                                                ref_data.reference_type === 5
-                                        )[0]
+                                        ?.filter((ref_data) => ref_data.reference_type === 5)[0]
                                         .reference_data.map((data) => {
                                             return (
-                                                <option
-                                                    value={data.value}
-                                                    key={data.reference_id}
-                                                >
+                                                <option value={data.value} key={data.reference_id}>
                                                     {data.name}
                                                 </option>
                                             );
@@ -155,67 +131,25 @@ const AddBranchForm = ({
                             />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="postcode"
-                                label="Post Code"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="postcode" label="Post Code" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="unit"
-                                label="Unit"
-                                type="string"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="unit" label="Unit" type="string" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="street"
-                                label="Street"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="street" label="Street" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="city"
-                                label="City"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="city" label="City" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="state"
-                                label="State"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="state" label="State" type="text" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="start_time"
-                                label="Start Time"
-                                type="time"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="start_time" label="Start Time" type="time" small={12} component={TextField} />
                         </FieldWrapper>
                         <FieldWrapper item xs={12} sm={6}>
-                            <Field
-                                name="end_time"
-                                label="End Time"
-                                type="time"
-                                small={12}
-                                component={TextField}
-                            />
+                            <Field name="end_time" label="End Time" type="time" small={12} component={TextField} />
                         </FieldWrapper>
                     </FormWrapper>
                 </Grid>
@@ -231,11 +165,7 @@ const AddBranchForm = ({
                         alignItems="center"
                     >
                         <Grid item>
-                            <CancelButton
-                                size="small"
-                                variant="contained"
-                                onClick={handleClose}
-                            >
+                            <CancelButton size="small" variant="contained" onClick={handleClose}>
                                 Cancel
                             </CancelButton>
                         </Grid>
@@ -244,9 +174,7 @@ const AddBranchForm = ({
                                 size="small"
                                 variant="outlined"
                                 loading={loading}
-                                endIcon={
-                                    branch_id ? <UpdateIcon /> : <AddIcon />
-                                }
+                                endIcon={branch_id ? <UpdateIcon /> : <AddIcon />}
                                 type="submit"
                             >
                                 {buttonText}

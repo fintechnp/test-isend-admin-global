@@ -1,4 +1,4 @@
-import actions from '../actions';
+import actions from "../actions";
 
 const initialState = {
     success: false,
@@ -8,29 +8,29 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-    switch ((action).type) {
+    switch (action.type) {
         case actions.GET_DELIVERY_OPTION:
             return {
                 ...state,
-                loading: true
+                loading: true,
             };
         case actions.GET_DELIVERY_OPTION_SUCCESS:
             return {
                 ...state,
                 success: true,
                 loading: false,
-                response: action.response
+                response: action.response,
             };
         case actions.GET_DELIVERY_OPTION_FAILED:
             return {
                 ...state,
                 success: false,
                 loading: false,
-                error: action.error
+                error: action.error,
             };
         default:
             return state;
     }
-}
+};
 
 export default reducer;

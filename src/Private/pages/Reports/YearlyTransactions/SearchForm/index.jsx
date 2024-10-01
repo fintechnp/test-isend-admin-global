@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
-import Button from '@mui/material/Button'
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import { Field, Form, reduxForm } from "redux-form";
 
@@ -15,7 +15,6 @@ const Container = styled(Grid)(({ theme }) => ({
     borderRadius: "4px",
     border: `1px solid ${theme.palette.border.main}`,
 }));
-
 
 const FormWrapper = styled(Grid)(({ theme }) => ({
     padding: "0px 12px",
@@ -37,7 +36,6 @@ const ButtonWrapper = styled(Grid)(({ theme }) => ({
     paddingRight: "4px",
 }));
 
-
 function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner, loading }) {
     const handleResetButton = (e) => {
         handleReset();
@@ -57,9 +55,7 @@ function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner, loading
                                 component={SelectField}
                             >
                                 <option value="" disabled>
-                                    {s_loading
-                                        ? "Loading..."
-                                        : "Select Send Partner"}
+                                    {s_loading ? "Loading..." : "Select Send Partner"}
                                 </option>
                                 {!s_loading && SendPartner?.length === 0 && (
                                     <option value="" disabled>
@@ -68,10 +64,7 @@ function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner, loading
                                 )}
                                 {SendPartner &&
                                     SendPartner.map((data) => (
-                                        <option
-                                            value={data.agent_id}
-                                            key={data?.tid}
-                                        >
+                                        <option value={data.agent_id} key={data?.tid}>
                                             {data.name}
                                         </option>
                                     ))}
@@ -112,13 +105,7 @@ function SearchForm({ handleSubmit, handleReset, s_loading, SendPartner, loading
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={loading}
-
-                                    >
+                                    <Button size="small" variant="contained" type="submit" disabled={loading}>
                                         Filter
                                     </Button>
                                 </Grid>

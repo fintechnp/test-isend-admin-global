@@ -1,55 +1,69 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
-import { Helmet } from "react-helmet-async";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import React, { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
 
-import actions from "./store/actions";
 import Image from "./components/Image";
+import buildRoute from "App/helpers/buildRoute";
 import LargeImage from "./components/LargeImage";
-import Header from "./components/Header";
-import Filter from "./components/Filter";
-import { FormatDate, ReferenceName } from "./../../../../App/helpers";
+import Column from "App/components/Column/Column";
+import routePaths from "Private/config/routePaths";
 import { Delete } from "./../../../../App/components";
-import Table, { TablePagination } from "./../../../../App/components/Table";
-import { KycDocumentStatus } from "./data/KycDocumentStatus";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
+import { TablePagination } from "./../../../../App/components/Table";
+import { FormatDate, ReferenceName } from "./../../../../App/helpers";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
-
-const StyledName = styled(Typography)(({ theme }) => ({
-    fontSize: "13px",
-    color: "border.main",
-}));
+import { KycDocumentStatus, KycDocumentStatusOptions } from "./data/KycDocumentStatus";
+import actions from "./store/actions";
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
+    page_size: 10,
     search: "",
     sort_by: "",
-    order_by: "ASC",
-    status: KycDocumentStatus.ACTIVE
+    order_by: "DESC",
+    status: KycDocumentStatus.ACTIVE,
 };
+
+const sortByData = [
+    { key: "None", value: "" },
+    { key: "Type", value: "type" },
+    { key: "Name", value: "name" },
+    { key: "Created By", value: "created_by" },
+];
 
 function Documents(props) {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const statusOptions = KycDocumentStatusOptions;
 
     const { response: Documents, loading } = useSelector((state) => state.get_documents);
 
     const { success } = useSelector((state) => state.upload_documents);
     const { success: del_success, loading: d_loading } = useSelector((state) => state.delete_documents);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        reset,
+        filterSchema,
+        onFilterSubmit,
+        onQuickFilter,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         if (id) {
@@ -63,145 +77,90 @@ function Documents(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "SN",
-                accessor: "f_serial_no",
-                maxWidth: 50,
+                header: "SN",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Image",
-                accessor: "document",
-                minWidth: 250,
-                Cell: (data) => {
+                header: "Image",
+                accessorKey: "document",
+
+                cell: ({ getValue, row }) => {
                     return (
                         <>
-                            <Typography component="p" sx={{ fontSize: "14px", lineHeight: 1.2 }}>
-                                {data?.value ? (
-                                    <Image document={data?.value} />
+                            {getValue() ? (
+                                getValue().toLowerCase().includes(".pdf") ? (
+                                    "PDF Document"
                                 ) : (
-                                    <Image document="https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg" />
-                                )}
-                            </Typography>
+                                    <Image document={getValue()} />
+                                )
+                            ) : (
+                                <Image document="https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg" />
+                            )}
                         </>
                     );
                 },
             },
             {
-                Header: "Type",
-                accessor: "type",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data?.value ? ReferenceName(2, data?.value) : ""}
-                        </StyledName>
-                        <StyledName component="p" sx={{ fontSize: "13px", opacity: 0.9 }}>
-                            {data?.row.original?.side ? ReferenceName(48, data?.row.original?.side) : ""}
-                        </StyledName>
-                    </Box>
+                header: "Type",
+                accessorKey: "type",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? ReferenceName(2, getValue()) : ""}</Typography>
+                        <Typography>{row.original?.side ? ReferenceName(48, row.original?.side) : ""}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Name",
-                accessor: "name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data?.value ? data?.value : ""}
-                        </StyledName>
-                    </Box>
+                header: "Name",
+                accessorKey: "name",
+                cell: ({ getValue }) => <>{getValue() ? getValue() : ""}</>,
+            },
+            {
+                header: "Status",
+                accessorKey: "status",
+                cell: ({ getValue }) => <>{getValue() ? getValue() : "-"}</>,
+            },
+            {
+                header: "Created At/By",
+                accessorKey: "created_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? FormatDate(getValue()) : "-"}</Typography>
+                        <Typography>{row.original?.created_by ? `By: ${row.original?.created_by}` : "-"}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Status",
-                accessor: "status",
-                maxWidth: 50,
-                Cell: (data) => <>{data.value}</>,
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Created By</Typography>
-                    </Box>
-                ),
-                accessor: "created_by",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data?.value : ""}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Created At</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                maxWidth: 150,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data.value ? FormatDate(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="center">
-                        <Typography>Actions</Typography>
-                    </Box>
-                ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <LargeImage side={row.original.side} title={row.original.type} image={row.original?.document} />
-                        <Delete
-                            fontSize="25px"
-                            loading={d_loading}
-                            id={row.original.tid}
-                            handleDelete={() => handleDelete(row.original.document_id)}
-                            tooltext="Delete Documents"
-                        />
-                    </Box>
+                header: "Actions",
+                accessorKey: "show",
+                cell: ({ row }) => (
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                {row.original?.document.toLowerCase().includes(".pdf") ? (
+                                    <ListItemButton onClick={() => window.open(row.original?.document, "_blank")}>
+                                        View Document
+                                    </ListItemButton>
+                                ) : (
+                                    <LargeImage
+                                        side={row.original.side}
+                                        title={row.original.type}
+                                        image={row.original?.document}
+                                        enablePopoverAction
+                                    />
+                                )}
+                                <Delete
+                                    fontSize="25px"
+                                    loading={d_loading}
+                                    id={row.original.tid}
+                                    handleDelete={() => handleDelete(row.original.document_id)}
+                                    tooltext="Delete Documents"
+                                    enablePopoverAction
+                                    button
+                                />
+                            </>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
@@ -210,54 +169,6 @@ function Documents(props) {
 
     const handleDelete = (doc_id) => {
         dispatch(actions.delete_documents(id, doc_id));
-    };
-
-    const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: searchValue,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
     };
 
     const handleStatusChange = (e) => {
@@ -269,37 +180,68 @@ function Documents(props) {
         setFilterSchema(updatedFilterSchema);
     };
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "status",
+            label: "Status",
+            options: statusOptions,
+        },
+    ];
     return (
-        <>
-            <Helmet>
-                <title>
-                    {import.meta.env.REACT_APP_NAME} | {props.title}
-                </title>
-            </Helmet>
-            <CustomerWrapper>
-                <Header />
-                <Filter
-                    onStatusChange={handleStatusChange}
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
+        <PageContent
+            documentTitle="Customer's Documents"
+            breadcrumbs={[
+                {
+                    label: "Customers",
+                },
+                {
+                    label: `${id}`,
+                    link: buildRoute(routePaths.ViewCustomer, id),
+                },
+                {
+                    label: "Documents",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    onReset={reset}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onDelete={onDeleteFilterParams}
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onClose={closeFilter}
                 />
-                <Table
-                    columns={columns}
-                    data={Documents?.data || []}
-                    loading={loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={Documents?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                <PageContentContainer
+                    title="Customer's Documents"
+                    topRightContent={
+                        <TableGridQuickFilter
+                            sortByData={sortByData}
+                            onOrderByChange={onQuickFilter}
+                            onSortByChange={onQuickFilter}
+                            values={filterSchema}
                         />
-                    )}
+                    }
+                >
+                    <TanstackReactTable data={Documents?.data || []} columns={columns} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={Documents?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
                 />
-            </CustomerWrapper>
-        </>
+            </Column>
+        </PageContent>
     );
 }
 

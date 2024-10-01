@@ -20,7 +20,7 @@ import actions from "./../../store/actions";
 import { useParams } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-        "& .MuiDialog-container": {
+    "& .MuiDialog-container": {
         backdropFilter: "blur(3px)",
     },
     "& .MuiDialog-paper": {
@@ -53,7 +53,7 @@ const EditOutlinedIcon = styled(MuiEditOutlinedIcon)(({ theme }) => ({
 const AddButton = styled(Button)(({ theme }) => ({
     padding: "6px 12px",
     textTransform: "capitalize",
-    
+
     borderColor: theme.palette.border.main,
 }));
 
@@ -118,12 +118,8 @@ function AddCorridor({ update_data, update }) {
     const dispatch = useDispatch();
     const { id } = useParams();
     const [open, setOpen] = React.useState(false);
-    const { success: add_success, loading: add_loading } = useSelector(
-        (state) => state.add_corridor
-    );
-    const { success: update_success, loading: update_loading } = useSelector(
-        (state) => state.update_corridor
-    );
+    const { success: add_success, loading: add_loading } = useSelector((state) => state.add_corridor);
+    const { success: update_success, loading: update_loading } = useSelector((state) => state.update_corridor);
 
     const memoizedData = React.useMemo(() => update_data, [update_data]);
 
@@ -160,12 +156,7 @@ function AddCorridor({ update_data, update }) {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton
-                    size="small"
-                    variant="outlined"
-                    onClick={handleClickOpen}
-                    endIcon={<AddIcon />}
-                >
+                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Corridor
                 </AddButton>
             )}
@@ -175,10 +166,7 @@ function AddCorridor({ update_data, update }) {
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <BootstrapDialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose}
-                >
+                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {update ? "Update" : "Create New"} Corridor
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
@@ -190,8 +178,7 @@ function AddCorridor({ update_data, update }) {
                                 name: memoizedData?.name,
                                 short_code: memoizedData?.short_code,
                                 country: memoizedData?.country,
-                                transaction_currency:
-                                    memoizedData?.transaction_currency,
+                                transaction_currency: memoizedData?.transaction_currency,
                                 is_active: !memoizedData?.is_active,
                             }}
                             onSubmit={handleCorridorUpdate}

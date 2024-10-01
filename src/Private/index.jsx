@@ -91,19 +91,6 @@ import {
 } from "./pages/Setup/ServiceCharge/store";
 
 import {
-    GetPromoSetupReducer,
-    GetPromoSetupDetailsReducer,
-    AddPromoSetupReducer,
-    UpdatePromoSetupReducer,
-    DeletePromoSetupReducer,
-    GetPromoCodeReducer,
-    DeletePromoCodeReducer,
-    AddPromoCodeReducer,
-    ImportPromoCodeReducer,
-    PromoSetupSaga,
-} from "./pages/Setup/PromoSetup/store";
-
-import {
     GetApiConfigReducer,
     GetApiConfigDetailsReducer,
     AddApiConfigReducer,
@@ -302,6 +289,14 @@ import {
     GetSuspiciousTransactionsReportsReducer,
     GetCancelledTransactionsReportsReducer,
     ReportsSaga,
+    getReferralReportsReducer,
+    getReferralReportByIdReducer,
+    getCampaignReportsReducer,
+    getCampaignReportDetailsReducer,
+    getCampaignLedgerReportsReducer,
+    getCampaignUsageReportReducer,
+    getCampaignIncentiveReportsReducer,
+    updateCampaignIncentiveStatusByIdReducer,
 } from "./pages/Reports/store";
 
 //Utilities
@@ -557,6 +552,14 @@ import {
     updateDocumentAcceptanceReducer,
 } from "./features/documentAcceptance/documentAcceptanceReducer";
 
+import attributeFamilySaga from "./features/attributeFamily/attributeFamilySaga";
+import {
+    addAttributeFamilyReducer,
+    getAttributeFamilyReducer,
+    updateAttributeFamilyReducer,
+    deleteAttributeFamilyReducer,
+} from "./features/attributeFamily/attributeFamilyReducer";
+
 // region: User Profile Setup
 import {
     UserProfileSetupSaga,
@@ -574,6 +577,11 @@ import {
 } from "./components/email-template/store/reducer/emailTemplateReducer";
 import EmailTemplateSaga from "./components/email-template/store/emailTemplateSaga";
 
+import {
+    getEmailElementReducer,
+    addEmailElementReducer,
+    updateEmailElementReducer,
+} from "./components/email-template/store/reducer/emailElementReducer";
 // region: Dashboard
 import {
     DashboardSaga,
@@ -612,6 +620,8 @@ import {
     GetAchRejectWebhooksReducer,
     GetAchReturnWebhooksReducer,
     ReturnAchRdfiTransactionReducer,
+    GetAchOdfiWebhooksReducer,
+    GetAchNocWebhooksReducer,
 } from "./pages/AchWebhooks/store";
 import {
     CreateHelpCenterReducer,
@@ -627,6 +637,29 @@ import {
     ViewB2BAccountClosureRequestReducer,
 } from "./pages/Agent/AccountClosureRequest/store";
 import { CustomerKycLogsSaga, GetCustomerKycLogsReducer } from "./pages/Customers/KycLogs/store";
+import {
+    GetPromoCodeReducer,
+    AddPromoCodeReducer,
+    GetPromoCodeByIdReducer,
+    PromoCodeSagas,
+    UpdatePromoCodeStatusReducer,
+    AddPromoCodeBudgetReducer,
+    GetPromoCodeUsageReducers,
+    UpdatePromoCodeReducer,
+} from "./pages/PromoCode/store";
+import {
+    AddPromoSetupReducer,
+    DeletePromoSetupReducer,
+    GetPromoSetupDetailsReducer,
+    GetPromoSetupReducer,
+    UpdatePromoSetupReducer,
+} from "./pages/Setup/PromoSetup/store";
+
+import {
+    ApplicationConfigSaga,
+    GetApplicationConfigReducer,
+    UpdateApplicationConfigReducer,
+} from "./pages/Setup/ApplicationConfig/store";
 
 export const privateReducer = {
     get_all_user: GetAllUserReducer,
@@ -741,12 +774,6 @@ export const privateReducer = {
     add_promo_setup: AddPromoSetupReducer,
     update_promo_setup: UpdatePromoSetupReducer,
     delete_promo_setup: DeletePromoSetupReducer,
-
-    //promo code
-    get_promo_code: GetPromoCodeReducer,
-    delete_promo_code: DeletePromoCodeReducer,
-    add_promo_code: AddPromoCodeReducer,
-    import_promo_code: ImportPromoCodeReducer,
 
     //exchange charge
     get_all_exchange_rate: GetAllExchangeRateReducer,
@@ -876,6 +903,14 @@ export const privateReducer = {
     get_ach_entries_report: getAchResponseReducer,
     get_incomplete_registration_report: getIncompleteRegistrationReducer,
     get_onfido_report: getOnfidoReportReducer,
+    get_referral_reports: getReferralReportsReducer,
+    get_referral_report_by_id: getReferralReportByIdReducer,
+    get_campaign_reports: getCampaignReportsReducer,
+    get_campaign_report_details: getCampaignReportDetailsReducer,
+    get_campaign_ledger_report: getCampaignLedgerReportsReducer,
+    get_campaign_code_report_usage: getCampaignUsageReportReducer,
+    get_campaign_incentive_report: getCampaignIncentiveReportsReducer,
+    update_campaign_incentive_status: updateCampaignIncentiveStatusByIdReducer,
 
     //reference type and data
     get_sms: GetSmsReducer,
@@ -937,6 +972,9 @@ export const privateReducer = {
     get_email_template_tags: getEmailTemplateTagReducer,
     add_email_template: addEmailTemplateReducer,
     update_email_template: updateEmailTemplateReducer,
+    get_email_element: getEmailElementReducer,
+    add_email_element: addEmailElementReducer,
+    update_email_element: updateEmailElementReducer,
 
     // funding sources
     get_funding_source_list: getFundingSourcesReducer,
@@ -1126,6 +1164,8 @@ export const privateReducer = {
     get_ach_return_webhooks: GetAchReturnWebhooksReducer,
     get_ach_reject_webhooks: GetAchRejectWebhooksReducer,
     return_ach_rdfi_transaction: ReturnAchRdfiTransactionReducer,
+    get_ach_odfi_webhooks: GetAchOdfiWebhooksReducer,
+    get_ach_noc_webhooks: GetAchNocWebhooksReducer,
 
     //region: Help Center
 
@@ -1135,6 +1175,25 @@ export const privateReducer = {
 
     // region: Customer
     get_customer_kyc_logs: GetCustomerKycLogsReducer,
+
+    //region: Promo Codes
+    get_promo_codes: GetPromoCodeReducer,
+    get_promo_code_Usage: GetPromoCodeUsageReducers,
+    get_promo_code_by_id: GetPromoCodeByIdReducer,
+    add_promo_code: AddPromoCodeReducer,
+    update_promo_code: UpdatePromoCodeReducer,
+    add_promo_code_budget: AddPromoCodeBudgetReducer,
+    update_promo_code_status: UpdatePromoCodeStatusReducer,
+
+    // campaign Attribute
+    get_attribute_family_list: getAttributeFamilyReducer,
+    delete_attribute_family: deleteAttributeFamilyReducer,
+    add_attribute_family: addAttributeFamilyReducer,
+    update_attribute_family: updateAttributeFamilyReducer,
+
+    // Application Config
+    get_application_config: GetApplicationConfigReducer,
+    update_application_config: UpdateApplicationConfigReducer,
 };
 
 export const privateSaga = [
@@ -1145,7 +1204,6 @@ export const privateSaga = [
     PartnerBankSaga(),
     PayoutLocationSaga(),
     ServiceChargeSaga(),
-    PromoSetupSaga(),
     ExchangeRateSaga(),
     ReferenceSaga(),
     ApiConfigSaga(),
@@ -1205,6 +1263,9 @@ export const privateSaga = [
     HelpCenterSaga(),
     B2BAccountClosureRequestSaga(),
     CustomerKycLogsSaga(),
+    PromoCodeSagas(),
+    attributeFamilySaga(),
+    ApplicationConfigSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

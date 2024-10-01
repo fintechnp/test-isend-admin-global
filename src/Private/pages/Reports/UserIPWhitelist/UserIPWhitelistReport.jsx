@@ -162,4 +162,4 @@ function UserIPWhitelistReport() {
     );
 }
 
-export default withPermission({permission: [permissions.GENERATE_USER_IP_WHITELIST_REPORT]})(UserIPWhitelistReport);
+export default withPermission({ permission: [permissions.GENERATE_USER_IP_WHITELIST_REPORT] })(UserIPWhitelistReport);

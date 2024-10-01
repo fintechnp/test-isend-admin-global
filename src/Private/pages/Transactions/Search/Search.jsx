@@ -1,39 +1,39 @@
-import moment from "moment";
-import { reset } from "redux-form";
-import Grid from "@mui/material/Grid";
+import * as Yup from "yup";
+import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 
-import SearchForm from "../components/SearchForm";
-
-import ucfirst from "App/helpers/ucfirst";
-import actions from "../store/actions";
-import Filter from "../../Reports/Shared/Filter";
-import NoResults from "../components/NoResults";
-import downloadActions from "../../Reports/store/actions";
-import Loading from "App/components/Loading";
-import Table, { TablePagination } from "App/components/Table";
-import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-import PageContent from "App/components/Container/PageContent";
+import Row from "App/components/Row/Row";
+import dateUtils from "App/utils/dateUtils";
+import { ReferenceName } from "App/helpers";
+import getFlagUrl from "App/helpers/getFlagUrl";
 import Column from "App/components/Column/Column";
-import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import { TablePagination } from "App/components/Table";
+import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+import { isAfter } from "date-fns";
+import actions from "../store/actions";
+import isEmpty from "App/helpers/isEmpty";
+import PartnerType from "App/data/PartnerType";
+import buildRoute from "App/helpers/buildRoute";
+import Filter from "../../Reports/Shared/Filter";
+import routePaths from "Private/config/routePaths";
+import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import downloadActions from "../../Reports/store/actions";
+import referenceTypeId from "Private/config/referenceTypeId";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import StatusBadge from "Private/pages/PaymentProcess/data/StatusBadge";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -43,30 +43,60 @@ const StyledName = styled(Typography)(({ theme }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
-    transaction_id: null,
-    pin_number: "",
-    customer_id: 0,
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    payout_country: "",
-    payment_type: "",
-    status: "",
-    from_date: "",
-    to_date: "",
-    full_name: "",
-    email: "",
-    mobile: "",
+    page_size: 10,
+    status: null,
+    from_date: dateUtils.getDateBeforeTwoWeeks(),
+    to_date: dateUtils.getTodayDate(),
     sort_by: "created_ts",
     order_by: "DESC",
 };
 
+const headers = [
+    { label: "Customer Name", key: "customer_name" },
+    { label: "Txn Id", key: "tid" },
+    { label: "S. Currency", key: "collected_currency" },
+    { label: "Rate", key: "customer_rate" },
+    { label: "Charge", key: "service_charge" },
+    { label: "Collected", key: "collected_amount" },
+    { label: "Payout", key: "payout_amount" },
+    { label: "Status", key: "transaction_status" },
+    { label: "Created", key: "created_ts" },
+];
+
+const schema = Yup.object().shape({
+    from_date: Yup.string().nullable().optional(),
+    to_date: Yup.string()
+        .nullable()
+        .optional()
+        .when("from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                schema.test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(from_date)) : true;
+                    },
+                }),
+            otherwise: (schema) => schema.nullable().optional(),
+        }),
+});
+
 function Search(props) {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
-
+    const reference = JSON.parse(localStorage.getItem("reference"));
     const { response: transactionsData, loading: l_loading } = useSelector((state) => state.get_transactions);
+
+    const paymentTypeOptions =
+        reference
+            ?.filter((ref) => ref.reference_type === referenceTypeId.paymentType)[0]
+            .reference_data.map((data) => ({ label: data.name, value: data.value })) ?? [];
+
+    const statusOptions =
+        reference
+            ?.filter((ref) => ref.reference_type === referenceTypeId.transactionStatus)[0]
+            .reference_data.map((data) => ({ label: data.name, value: data.value })) ?? [];
 
     const {
         response: ReportsDownload,
@@ -76,25 +106,40 @@ function Search(props) {
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_transaction"));
         dispatch({ type: "GET_TRANSACTIONS_RESET" });
     }, [dispatch]);
 
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        onRowsPerPageChange,
+        onPageChange,
+        onQuickFilter,
+        onFilterSubmit,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+    });
+
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_transactions(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_transactions(filterSchema));
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 100,
-                Cell: ({ value, row }) => (
+                header: "S.N.",
+                accessorKey: "f_serial_no",
+            },
+
+            {
+                header: "Transaction ID",
+                accessorKey: "tid",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -103,235 +148,247 @@ function Search(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link to={`/transactions/details/${value}`} style={{ textDecoration: "none" }}>
-                                {value ? value : "N/A"}
-                            </Link>
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Name",
-                accessor: "customer_name",
-                maxWidth: 140,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "n/a"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Phone Number/Email",
-                accessor: "customer_email",
-                maxWidth: 850,
-                Cell: (data) => (
-                    <Column sx={{ wordBreak: "break-all" }}>
-                        <Typography variant="body2">{data?.row?.original?.customer_phone}</Typography>
-                        <Typography variant="caption" fontSize="12px">
-                            {data.value ? data.value : "N/A"}
-                        </Typography>
-                    </Column>
-                ),
-            },
-            {
-                Header: "C/B Id",
-                accessor: "customer_id",
-                maxWidth: 100,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            <Link to={`/customer/details/${data.value}`} style={{ textDecoration: "none" }}>
-                                {data.value ? data.value : "N/A"}
-                            </Link>
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             <Link
-                                to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
+                                to={buildRoute(routePaths.viewTransaction, {
+                                    id: row.original.tid,
+                                    customerId: row.original.customer_id,
+                                })}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data?.row?.original?.beneficiary_id ? data?.row?.original?.beneficiary_id : "n/a"}
+                                {row?.original?.tid ? row?.original?.tid : "N/A"}
                             </Link>
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Partner/Payout Country",
-                accessor: "agent_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                                opacity: 0.6,
-                            }}
-                        >
-                            {data?.row?.original?.payout_country_data
-                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : data?.row?.original?.payout_country ?? "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Date</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Rate</Typography>
-                    </Box>
-                ),
-                accessor: "payout_cost_rate",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>Amount</Typography>
-                    </Box>
-                ),
-                accessor: "transfer_amount",
-                maxWidth: 80,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data?.row?.original?.collected_amount
-                                ? FormatNumber(data?.row?.original?.collected_amount)
-                                : "N/A"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left" sx={{}}>
-                        <Typography>Currency</Typography>
-                    </Box>
-                ),
-                accessor: "collected_currency",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {CurrencyName(data?.row?.original?.payout_currency)}
-                        </Typography>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="right" sx={{}}>
-                        <Typography>S/T Status</Typography>
-                    </Box>
-                ),
-                accessor: "send_status",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            textAlign: "right",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
+                header: "Sender & Receiver Details",
+                cell: ({ row }) => (
+                    <Box>
+                        <Row
+                            gap={2}
                             sx={{
-                                paddingLeft: "2px",
-                                fontSize: "12px",
-                                lineHeight: 1.2,
+                                marginBottom: "3px",
                             }}
                         >
-                            {data.value ? ReferenceName(66, data.value) : "N/A"}
-                        </StyledName>
-                        <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.transaction_status
-                                ? ReferenceName(66, data?.row?.original?.transaction_status)
-                                : "N/A"}
-                        </Typography>
+                            <Typography variant="body1">CN :</Typography>
+                            <BadgeAvatar
+                                avatarUrl={getFlagUrl(row.original.send_country_iso2)}
+                                avatarDimension={20}
+                                smallAvatarDimension={0}
+                            />
+                            <Typography>
+                                {row.original.customer_name}&nbsp;({row.original.customer_id_number})
+                            </Typography>
+                        </Row>
+                        <Divider
+                            sx={{
+                                width: "100%",
+                            }}
+                        />
+                        <Row
+                            gap={2}
+                            sx={{
+                                marginTop: "5px",
+                            }}
+                        >
+                            <Typography>BN :</Typography>
+                            <BadgeAvatar
+                                avatarUrl={getFlagUrl(row.original.payout_country_iso2)}
+                                avatarDimension={20}
+                                smallAvatarDimension={0}
+                            />
+                            <Typography variant="body2">
+                                {row.original.beneficiary_name}&nbsp;({row?.original?.customer_id})
+                            </Typography>
+                        </Row>
                     </Box>
                 ),
+            },
+
+            {
+                header: "Contact Details",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">{row?.original?.customer_phone}</Typography>
+                        <Typography variant="body1">{row?.original?.customer_email}</Typography>
+                    </Column>
+                ),
+            },
+
+            {
+                header: "Created Date & Time",
+                cell: ({ row }) => (
+                    <Column sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body1">
+                            {dateUtils.getLocalDateFromUTC(row?.original?.created_ts)}
+                        </Typography>
+                        <Typography variant="body2">
+                            {dateUtils.getLocalTimeFromUTC(row?.original?.created_ts)}
+                        </Typography>
+                    </Column>
+                ),
+            },
+
+            {
+                header: "FX Rate",
+                accessorKey: "payout_cost_rate",
+            },
+
+            {
+                header: "Transfer Amount",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.payout_currency}&nbsp;
+                        {row?.original?.payout_amount}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Service Charge",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.payout_currency}&nbsp;
+                        {row?.original?.service_charge}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Colleted Amount",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.collected_currency}&nbsp;
+                        {row?.original?.collected_amount}
+                    </Typography>
+                ),
+            },
+
+            {
+                header: "Deposite Type",
+                cell: ({ row }) => <Typography variant="body1">{row?.original?.deposit_type}</Typography>,
+            },
+
+            {
+                header: "Payment Type",
+                cell: ({ row }) => (
+                    <Typography variant="body1">{ReferenceName(1, row?.original?.payment_type)}</Typography>
+                ),
+            },
+
+            {
+                header: "Payout Amount",
+                cell: ({ row }) => (
+                    <Typography variant="body1">
+                        {row?.original?.payout_currency}&nbsp;
+                        {row?.original?.payout_amount}
+                    </Typography>
+                ),
+            },
+            {
+                header: "Transaction Status",
+                accessorKey: "transaction_status_code",
+                cell: ({ row }) => (
+                    <StatusBadge
+                        status={
+                            isEmpty(row?.original?.status) ? row.original.transaction_status_code : row.original.status
+                        }
+                    />
+                ),
+            },
+            {
+                header: "Send Status",
+                accessorKey: "send_status_code",
+                cell: ({ row }) => <StatusBadge status={row.original.send_status_code} />,
+            },
+            {
+                header: "Partner",
+                accessorKey: "agent_name",
             },
         ],
         [],
     );
 
-    //Filter
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            label: "From Date",
+            name: "from_date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            label: "To Date",
+            name: "to_date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Full Name",
+            name: "full_name",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Transaction Id",
+            name: "transaction_id",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Pin Number",
+            name: "pin_number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Customer Id",
+            name: "customer_id",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Email",
+            name: "email",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Mobile Number",
+            name: "mobile",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            label: "Payout Country",
+            name: "payout_country",
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            label: "Sending Agent",
+            name: "sending_agent_id",
+            partnerType: PartnerType.SEND,
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            label: "Payout Agent",
+            name: "payout_agent_id",
+            partnerType: PartnerType.PAY,
+        },
+        {
+            type: fieldTypes.SELECT,
+            label: "Payment Type",
+            name: "payment_type",
+            options: paymentTypeOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            label: "Status",
+            name: "status",
+            options: statusOptions,
+        },
+    ];
+
     const sortData = [
         { key: "None", value: "created_ts" },
         { key: "Name", value: "first_name" },
@@ -339,90 +396,7 @@ function Search(props) {
         { key: "Country", value: "country" },
     ];
 
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            customer_id: data?.customer_id,
-            pin_number: data?.pin_number,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payment_type: data?.payment_type,
-            payout_country: data?.payout_country,
-            status: data?.status,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-            full_name: data?.full_name,
-            mobile: data?.mobile,
-            email: data?.email,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    //reset search form
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch(reset("search_form_transaction"));
-        dispatch({ type: "GET_TRANSACTIONS_RESET" });
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    //Pagination
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     //Downloads
-    const headers = [
-        { label: "Customer Name", key: "customer_name" },
-        { label: "Txn Id", key: "tid" },
-        { label: "S. Currency", key: "collected_currency" },
-        { label: "Rate", key: "customer_rate" },
-        { label: "Charge", key: "service_charge" },
-        { label: "Collected", key: "collected_amount" },
-        { label: "Payout", key: "payout_amount" },
-        { label: "Status", key: "transaction_status" },
-        { label: "Created", key: "created_ts" },
-    ];
-
     const csvReport = {
         title: "Report on Transactions",
         start: filterSchema?.from_date,
@@ -440,63 +414,52 @@ function Search(props) {
     };
 
     return (
-        <PageContent documentTitle="Search Transactions" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        enableReinitialize
-                        initialValues={{
-                            from_date: moment().format("YYYY-MM-DD"),
-                            to_date: moment().format("YYYY-MM-DD"),
-                        }}
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        loading={l_loading}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && transactionsData?.data && transactionsData?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Transaction Found" />
-                    </Grid>
-                )}
-                {!l_loading && transactionsData?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
-                            <Filter
-                                fileName="TransactionReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                csvReport={csvReport}
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Transaction List"
-                                state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
-                                downloadData={downloadData}
-                            />
-                            <Table
-                                columns={columns}
-                                data={transactionsData?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={transactionsData?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
+        <PageContent
+            documentTitle="Search Transactions"
+            breadcrumbs={[
+                {
+                    label: "Transactions",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <FilterForm
+                title="Search Transactions"
+                open={isFilterOpen}
+                fields={filterFields}
+                onClose={closeFilter}
+                onReset={reset}
+                onDelete={onDeleteFilterParams}
+                onSubmit={onFilterSubmit}
+                values={filterSchema}
+                schema={schema}
+            />
+
+            <Column gap="16px">
+                <PageContentContainer
+                    title="Transaction List"
+                    topRightContent={
+                        <Filter
+                            fileName="TransactionReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={transactionsData?.data || []} loading={l_loading} />
+                </PageContentContainer>
+
+                <TablePagination
+                    paginationData={transactionsData?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

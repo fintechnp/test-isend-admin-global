@@ -10,7 +10,6 @@ const useReactHookForm = (props) => {
     });
 
     const setErrors = (errors) => {
-        // eslint-disable-next-line no-restricted-syntax
         for (const [key, value] of Object.entries(errors)) {
             // TODO: This casing issue in normally must be fixed in backend but it is fixed in frontend
             const nestedNames = key.split(".");
@@ -23,7 +22,6 @@ const useReactHookForm = (props) => {
     };
 
     const setValues = (values) => {
-        // eslint-disable-next-line no-restricted-syntax
         for (const [key, value] of Object.entries(values)) {
             methods.setValue(key, value);
         }
@@ -42,10 +40,9 @@ export const useReactHookFormContext = () => {
     const methods = useFormContext();
 
     const setErrors = (errors) => {
-        // eslint-disable-next-line no-restricted-syntax
         for (const [key, value] of Object.entries(errors)) {
             // TODO: This casing issue in normally must be fixed in backend but it is fixed in frontend
-            const nestedNames = ke.split(".");
+            const nestedNames = key.split(".");
             const name = nestedNames.map((n) => `${n.charAt(0).toLowerCase()}${n.substring(1)}`).join(".");
             methods.setError(name, {
                 type: "manual",
@@ -55,7 +52,6 @@ export const useReactHookFormContext = () => {
     };
 
     const setValues = (values) => {
-        // eslint-disable-next-line no-restricted-syntax
         for (const [key, value] of Object.entries(values)) {
             methods.setValue(key, value);
         }
