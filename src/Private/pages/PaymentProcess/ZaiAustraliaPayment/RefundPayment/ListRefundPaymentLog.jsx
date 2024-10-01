@@ -97,7 +97,6 @@ function ListRefundPaymentLog({ customerId }) {
                                     <TableCell>{row.f_serial_no}</TableCell>
                                     <TableCell>{row.zai_transaction_id}</TableCell>
                                     <TableCell align="right">{row.transaction_amount.toLocaleString()}</TableCell>
-                                    <TableCell align="right">{row.transaction_amount.toLocaleString()}</TableCell>
                                     <TableCell align="right">{row.refund_amount.toLocaleString()}</TableCell>
                                     <TableCell>{row.transaction_currency}</TableCell>
                                     <TableCell>

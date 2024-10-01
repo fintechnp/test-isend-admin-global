@@ -8,10 +8,8 @@ import Button from "App/components/Button/Button";
 
 export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, onSubmit, loading }) {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
-    console.log("🚀 ~ ImageCropperModal ~ crop:", crop);
     const [zoom, setZoom] = useState(2);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-    console.log("🚀 ~ ImageCropperModal ~ croppedAreaPixels:", croppedAreaPixels);
 
     const handleCropComplete = (croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
