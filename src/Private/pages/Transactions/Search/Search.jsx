@@ -179,7 +179,7 @@ function Search(props) {
                                 smallAvatarDimension={0}
                             />
                             <Typography>
-                                {row.original.customer_name}&nbsp;({row.original.customer_id_number})
+                                {row.original.customer_name}&nbsp;({row.original.customer_id})
                             </Typography>
                         </Row>
                         <Divider
@@ -200,7 +200,7 @@ function Search(props) {
                                 smallAvatarDimension={0}
                             />
                             <Typography variant="body2">
-                                {row.original.beneficiary_name}&nbsp;({row?.original?.customer_id})
+                                {row.original.beneficiary_name}&nbsp;({row?.original?.beneficiary_id})
                             </Typography>
                         </Row>
                     </Box>
