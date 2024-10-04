@@ -1,78 +1,80 @@
-import moment from "moment";
-import { reset } from "redux-form";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
+import * as Yup from "yup";
+import { isAfter } from "date-fns";
 import Typography from "@mui/material/Typography";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
-import actions from "../store/actions";
-import SearchForm from "./SearchForm";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import Table, { TablePagination } from "App/components/Table";
+import Row from "App/components/Row/Row";
+import Column from "App/components/Column/Column";
+import PhoneIcon from "App/components/Icon/PhoneIcon";
+import { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import CustomerAvatar from "App/components/Avatar/CustomerAvatar";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import ActiveBlockedStatusBadge from "App/components/Badge/ActiveBlockedStatusBadge";
 
+import actions from "../store/actions";
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
+import calculateAge from "App/helpers/calculateAge";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
-import { CountryName, ReferenceName, FormatDate } from "App/helpers";
+import { CountryName, ReferenceName } from "App/helpers";
+import { getCustomerName } from "App/helpers/getFullName";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
-const CustomerWrapper = styled("div")(({ theme }) => ({
-    margin: "12px 0px",
-    borderRadius: "6px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.palette.border.light}`,
-    background: theme.palette.background.dark,
-}));
+const schema = Yup.object().shape({
+    created_from_date: Yup.string()
+        .nullable()
+        .test({
+            name: "from-to-pair",
+            message: "From Date is required",
+            test: function (value) {
+                const { created_to_date } = this.parent;
+                return !created_to_date || !!value;
+            },
+        })
+        .optional(),
 
-const StyledName = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    fontSize: "14px",
-    color: theme.palette.text.dark,
-    textTransform: "capitalize",
-}));
-
-const StyledMail = styled(Typography)(({ theme }) => ({
-    opacity: 0.9,
-    width: "90%",
-    display: "block",
-    fontSize: "14px",
-    color: theme.palette.text.main,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-}));
+    created_to_date: Yup.string()
+        .nullable()
+        .test({
+            name: "from-to-pair",
+            message: "To Date is required",
+            test: function (value) {
+                const { created_from_date } = this.parent;
+                return !created_from_date || !!value;
+            },
+        })
+        .when("created_from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                schema.test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { created_from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(created_from_date)) : true;
+                    },
+                }),
+        }),
+});
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
-    customer_id: 0,
-    beneficiary_id: 0,
-    name: "",
-    id_number: "",
-    mobile_number: "",
-    email: "",
-    date_of_birth: "",
-    created_from_date: "",
-    created_to_date: "",
-    country: "",
-    search: "",
+    page_size: 10,
+    created_from_date: dateUtils.getDateBeforeTwoWeeks(),
+    created_to_date: dateUtils.getTodayDate(),
     sort_by: "created_ts",
     order_by: "DESC",
 };
 
-function BeneficiaryReports(props) {
+function BeneficiaryReports() {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: BeneficiaryReports, loading: l_loading } = useSelector((state) => state.get_beneficiary_report);
 
@@ -84,318 +86,213 @@ function BeneficiaryReports(props) {
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_beneficiary_reports"));
         dispatch({ type: "BENEFICIARY_REPORT_RESET" });
     }, [dispatch]);
 
+    const {
+        openFilter,
+        closeFilter,
+        isFilterOpen,
+        filterSchema,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "created_from_date",
+        toDateParamName: "created_to_date",
+    });
+
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "created_from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "created_to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "beneficiary_id",
+            label: "Beneficiary ID",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_id",
+            label: "Customer ID",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "name",
+            label: "Beneficiary Name",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "id_number",
+            label: "Customer Id Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_mobile_number",
+            label: "Customer Phone Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "beneficiary_mobile_number",
+            label: "Beneficiary Phone Number",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "country",
+            label: "Country",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "status",
+            label: "Status",
+            options: [
+                {
+                    label: "Active",
+                    value: true,
+                },
+                {
+                    label: "Inactive",
+                    value: false,
+                },
+            ],
+        },
+    ];
+
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_beneficiary_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_beneficiary_report(filterSchema));
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link
-                                to={`/customer/beneficiary/details/${data?.row?.original?.customer_id}/${data.value}`}
-                                style={{ textDecoration: "none" }}
-                            >
-                                {data.value ? data.value : "N/A"}
-                            </Link>
-                        </StyledName>
-                    </Box>
+                header: "S.N.",
+                accessorKey: "f_serial_no",
+            },
+            {
+                header: "Beneficiary Details",
+                accessorKey: "first_name",
+                cell: ({ row }) => {
+                    const age = calculateAge(row.original?.date_of_birth ?? "");
+
+                    const caption = [age ? `${age} y` : "", row.original.gender].filter((value) => !isEmpty(value));
+
+                    return (
+                        <Row gap="8px">
+                            <CustomerAvatar
+                                name={getCustomerName(row.original)}
+                                countryIso2Code={row.original?.country_iso2 ?? ""}
+                            />
+                            <Column>
+                                <Typography fontWeight={500}>
+                                    {getCustomerName(row.original)} ({row.original.beneficiary_id})
+                                </Typography>
+                                <Row alignItems="center" gap="2px">
+                                    <PhoneIcon />
+                                    <Typography variant="caption">
+                                        {!isEmpty(row.original.phone_number)
+                                            ? row.original.phone_number
+                                            : row.original.beneficiary_mobile_number}
+                                        {caption.length > 0 ? ", " : null} {caption.join(" / ")}
+                                    </Typography>
+                                </Row>
+                            </Column>
+                        </Row>
+                    );
+                },
+            },
+            {
+                header: "Beneficiary Address",
+                accessorKey: "country",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{`${row?.original?.street} ${row?.original?.address ?? ""} ${row?.original?.city ?? ""}, `}</Typography>
+                        <Typography>
+                            {`${row?.original?.state ? row?.original?.state + "," : ""} ${CountryName(getValue())}`}
+                        </Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Name",
-                accessor: "first_name",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p">
-                            {data.value} {data?.row?.original?.middle_name} {data?.row?.original?.last_name}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.receiver_type_data ? data?.row?.original?.receiver_type_data : "N/A"}
-                        </StyledName>
-                    </Box>
+                header: "Relation",
+                accessorKey: "relation",
+            },
+            {
+                header: "Customer Name",
+                accessorKey: "customer_name",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography fontWeight={500}>
+                            {getValue()} ({row.original.customer_id})
+                        </Typography>
+                        {!isEmpty(row.original.customer_mobile_number) && (
+                            <Row alignItems="center" gap="2px">
+                                <PhoneIcon />
+                                <Typography variant="caption">{row.original.customer_mobile_number}</Typography>
+                            </Row>
+                        )}
+                    </Column>
                 ),
             },
             {
-                Header: "Address",
-                accessor: "country",
-                minWidth: 160,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data?.row?.original?.postcode} {data?.row?.original?.unit} {data?.row?.original?.street}{" "}
-                            {data?.row?.original?.address}
-                        </StyledName>
-                        <StyledName component="span" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data?.row?.original?.state}
-                            {data?.row?.original?.state && ","} {CountryName(data.value)}
-                        </StyledName>
-                    </Box>
+                header: "Delivery Method",
+                accessorKey: "payment_type",
+                cell: ({ getValue, row }) => <>{getValue() ? ReferenceName(1, getValue()) : ""}</>,
+            },
+            {
+                header: "Delivery Details",
+                accessorKey: "bank_name",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ?? ""}</Typography>
+                        <Typography>{row?.original?.account_number ? row?.original?.account_number : ""}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Customer",
-                accessor: "customer_name",
-                maxWidth: 125,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            <Link
-                                to={`/customer/details/${data?.row?.original?.customer_id}`}
-                                style={{
-                                    textDecoration: "none",
-                                    color: "gray",
-                                }}
-                            >
-                                {data.value ? data.value : "N/A"}
-                            </Link>
-                        </StyledName>
-                    </Box>
+                header: "Created At/By",
+                accessorKey: "created_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original?.created_by ? row.original?.created_by : ""}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Payment Type",
-                accessor: "payment_type",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            fontSize: "12px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? ReferenceName(1, data.value) : "N/A"}
-                        </StyledName>
-                    </Box>
+                header: "Updated At/By",
+                accessorKey: "updated_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original?.updated_by ? row.original?.updated_by : ""}</Typography>
+                    </Column>
                 ),
             },
             {
-                Header: "Collection",
-                accessor: "bank_name",
-                minWidth: 180,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            fontSize: "12px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.account_number ? data?.row?.original?.account_number : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Contact",
-                accessor: "mobile_number",
-                maxWidth: 110,
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "4px",
-                                fontSize: "13px",
-                            }}
-                        >
-                            {data.value ? data.value : "N/A"}
-                        </StyledName>
-                        <Tooltip title={data?.row?.original?.email} arrow>
-                            <StyledMail
-                                component="p"
-                                sx={{
-                                    paddingLeft: "4px",
-                                    fontSize: "13px",
-                                    opacity: 0.6,
-                                }}
-                            >
-                                {data?.row?.original?.email}
-                            </StyledMail>
-                        </Tooltip>
-                    </Box>
-                ),
-            },
-            {
-                Header: () => (
-                    <Box textAlign="left">
-                        <Typography sx={{ fontSize: "15px" }}>Since/Status</Typography>
-                    </Box>
-                ),
-                accessor: "created_ts",
-                maxWidth: 120,
-                Cell: (data) => (
-                    <Box textAlign="left">
-                        <StyledName component="p" value={data.value}>
-                            {FormatDate(data?.value)}
-                        </StyledName>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                            }}
-                        >
-                            {data?.row?.original?.is_active ? (
-                                <Tooltip title="Active" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>Active</StyledName>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Blocked" arrow>
-                                    <StyledName sx={{ opacity: 0.8 }}>Inactive</StyledName>
-                                </Tooltip>
-                            )}
-                        </Box>
-                    </Box>
-                ),
+                header: "Status",
+                accessorKey: "is_active",
+                cell: ({ getValue, row }) => <ActiveBlockedStatusBadge status={getValue() ? "active" : "blocked"} />,
             },
         ],
         [],
     );
-
-    const sortData = [
-        { key: "None", value: "created_ts" },
-        { key: "Name", value: "first_name" },
-        { key: "Customer", value: "customer_id" },
-        { key: "Payment Type", value: "payment_type" },
-        { key: "Country", value: "country" },
-    ];
-
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            customer_id: data?.customer_id,
-            beneficiary_id: data?.beneficiary_id,
-            name: data?.name,
-            id_number: data?.id_number,
-            mobile_number: data?.mobile_number,
-            email: data?.email,
-            date_of_birth: data?.date_of_birth,
-            country: data?.country,
-            created_from_date: data?.created_from_date,
-            created_to_date: data?.created_to_date,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_beneficiary_reports"));
-        dispatch({ type: "BENEFICIARY_REPORT_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
 
     //Downloads
     const headers = [
@@ -410,8 +307,8 @@ function BeneficiaryReports(props) {
 
     const csvReport = {
         title: "Report on Beneficiary",
-        start: filterSchema?.created_from_date,
-        end: filterSchema?.created_to_date,
+        start: dateUtils.getLocalDateFromUTC(filterSchema?.created_from_date),
+        end: dateUtils.getLocalDateFromUTC(filterSchema?.created_to_date),
         headers: headers,
         data: ReportsDownload?.data || [],
     };
@@ -425,63 +322,47 @@ function BeneficiaryReports(props) {
     };
 
     return (
-        <PageContent title="Filter Beneficiary" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        enableReinitialize
-                        onSubmit={handleSearch}
-                        handleReset={handleReset}
-                        initialValues={{
-                            created_from_date: moment().format("YYYY-MM-DD"),
-                            created_to_date: moment().format("YYYY-MM-DD"),
-                        }}
-                        loading={l_loading}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && BeneficiaryReports?.data && BeneficiaryReports?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Beneficiary Found" />
-                    </Grid>
-                )}
-                {!l_loading && BeneficiaryReports?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
-                            <Filter
-                                fileName="BeneficiaryReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                sortData={sortData}
-                                csvReport={csvReport}
-                                orderData={orderData}
-                                title="Beneficiary List"
-                                state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
-                                downloadData={downloadData}
-                            />
-                            <Table
-                                columns={columns}
-                                data={BeneficiaryReports?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={BeneficiaryReports?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
+        <PageContent
+            documentTitle="Beneficiary Report"
+            breadcrumbs={[{ label: "Generate Report" }, { label: "Beneficiaries" }]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    fields={filterFields}
+                    values={filterSchema}
+                    onDelete={onDeleteFilterParams}
+                    schema={schema}
+                    title="Search Beneficiary"
+                    onReset={reset}
+                />
+
+                <PageContentContainer
+                    title="Beneficiaries"
+                    topRightContent={
+                        <Filter
+                            fileName="BeneficiaryReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={BeneficiaryReports?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={BeneficiaryReports?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }
