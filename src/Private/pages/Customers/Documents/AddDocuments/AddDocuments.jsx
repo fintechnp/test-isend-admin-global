@@ -1,17 +1,17 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import { Box } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { useDispatch, useSelector } from "react-redux";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useDispatch, useSelector } from "react-redux";
+import DialogContent from "@mui/material/DialogContent";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import DocumentForm from "./Form";
 import actions from "../store/actions";
@@ -126,7 +126,7 @@ function AddDocuments() {
 
     return (
         <div>
-            <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
+            <AddButton size="small" variant="contained" onClick={handleClickOpen} endIcon={<AddCircleOutlineIcon />}>
                 Add Document
             </AddButton>
             <BootstrapDialog
