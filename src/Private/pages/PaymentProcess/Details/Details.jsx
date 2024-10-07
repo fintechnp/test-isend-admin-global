@@ -27,6 +27,7 @@ import SendMail from "./SendMailModal";
 import SuspiciosModal from "./SuspiciosModal";
 import PaymentType from "../data/PaymentType";
 import isValidURL from "App/helpers/isValidURL";
+import buildRoute from "App/helpers/buildRoute";
 import useCountries from "App/hooks/useCountries";
 import routePaths from "Private/config/routePaths";
 import FileViewer from "App/components/FileViewer/FileViewer";
@@ -425,7 +426,17 @@ export default function Details({ isAML = false, data: transData }) {
                 },
             ]}
         >
-            <PageContentContainer title="Transaction Details">
+            <PageContentContainer
+                title="Transaction Details"
+                topRightContent={
+                    <Button
+                        variant="contained"
+                        onClick={() => navigate(buildRoute(routePaths.ListCustomerTransaction, customerId))}
+                    >
+                        View all transactions
+                    </Button>
+                }
+            >
                 <ResponsiveBox
                     sx={{
                         display: "flex",
