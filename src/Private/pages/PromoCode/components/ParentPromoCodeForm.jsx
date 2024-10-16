@@ -388,7 +388,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                                     <Typography variant="h6">
                                         {Campaign.CampaignType === campaignCodes.PROMO
                                             ? "Reward Configuration"
-                                            : "Referral Reward Configuration"}
+                                            : "Referrer Reward Configuration"}
                                     </Typography>
                                 </Grid>
                             </Grid>
