@@ -36,6 +36,8 @@ const FormContainer = styled(Grid)(({ theme }) => ({
     "&:hover": {
         boxShadow: "10px 0px 20px 5px rgba(0, 0, 0, .2)",
     },
+    position: "relative",
+    zIndex: 1,
 }));
 
 const LogoWrapper = styled(CardMedia)(({ theme }) => ({
