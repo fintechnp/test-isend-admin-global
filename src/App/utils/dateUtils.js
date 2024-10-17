@@ -64,7 +64,7 @@ class dateUtils {
     }
 
     #getUTC(value) {
-        return value?.split(/[+-]/)[0] ?? value;
+        return value?.split("+")[0] ?? value;
     }
 
     /**
