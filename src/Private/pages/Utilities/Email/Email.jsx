@@ -97,12 +97,12 @@ const Email = () => {
                             <Column>
                                 <Typography color="text.primary">
                                     {!isEmpty(row.original.created_ts)
-                                        ? dateUtils.getLocalDateFromUTC(row.original.created_ts)
+                                        ? dateUtils.getFormattedDate(row.original.created_ts, "DD/MM/YYYY")
                                         : "N/A"}
                                 </Typography>
                                 <Typography color="text.primary">
                                     {!isEmpty(row.original.created_ts)
-                                        ? dateUtils.getLocalTimeFromUTC(row.original.created_ts)
+                                        ? dateUtils.getFormattedDate(row.original.created_ts, "hh:mm A")
                                         : "N/A"}
                                 </Typography>
                             </Column>
