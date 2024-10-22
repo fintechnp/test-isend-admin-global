@@ -69,9 +69,7 @@ export default function ViewBalanceRequest({ title }) {
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Name" value={response?.data?.name} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <RenderField label="Name" value={response?.data?.name} />
-                    </Grid>
+
                     <Grid item xs={12} sm={6}>
                         <RenderField label="Deposited Amount" value={response?.data?.depositedAmount} />
                     </Grid>

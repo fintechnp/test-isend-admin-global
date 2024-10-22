@@ -51,7 +51,7 @@ export default function ListNocWebhooks() {
         {
             header: "Received Date",
             accessorKey: "created_ts",
-            cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
+            cell: ({ getValue, row }) => (getValue() ? dateUtils.getFormattedDate(getValue()) : "-"),
         },
         {
             header: "Change Code",
@@ -121,7 +121,7 @@ export default function ListNocWebhooks() {
                     values={filterSchema}
                     onDelete={onDeleteFilterParams}
                 />
-                <PageContentContainer>
+                <PageContentContainer title="NOC Webhooks">
                     <TanstackReactTable columns={columns} data={nocWebhooks?.data ?? []} loading={loading} />
                 </PageContentContainer>
                 <TablePagination

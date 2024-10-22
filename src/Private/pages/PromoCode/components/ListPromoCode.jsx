@@ -95,12 +95,12 @@ const ListPromoCode = () => {
         {
             header: "Campaign Start Date",
             accessorKey: "startDate",
-            cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
+            cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
         },
         {
             header: "Campaign End Date",
             accessorKey: "endDate",
-            cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
+            cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
         },
         {
             header: "Available Budge",
@@ -113,12 +113,12 @@ const ListPromoCode = () => {
         {
             header: "Created At",
             accessorKey: "createdTs",
-            cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
+            cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
         },
         {
             header: "Updated At",
             accessorKey: "updatedTs",
-            cell: ({ getValue }) => <>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>,
+            cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
         },
         {
             header: "Action",

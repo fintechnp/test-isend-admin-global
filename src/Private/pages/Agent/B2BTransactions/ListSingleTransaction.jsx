@@ -15,6 +15,7 @@ import referenceTypeId from "Private/config/referenceTypeId";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 import singleTransactionActions from "Private/features/b2b-transactions/singleTransactionActions";
 import SingleTransactionFilterForm from "Private/components/b2b-transactions/SingleTransactionFilterForm";
+import dateUtils from "App/utils/dateUtils";
 
 const initialState = {
     page_number: 1,
@@ -54,7 +55,8 @@ export default function ListSingleTransaction() {
             {
                 header: "Txn Date",
                 accessorKey: "created_ts",
-                cell: ({ getValue }) => <>{FormatDate(getValue())}</>,
+                cell: ({ getValue, row }) =>
+                    getValue() ? dateUtils.getFormattedDate(getValue(), "MMM DD, YYYY") : "-",
             },
             {
                 header: "Beneficiary Name",

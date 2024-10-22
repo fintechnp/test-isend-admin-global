@@ -168,8 +168,9 @@ export default function Details({ isAML = false, data: transData }) {
                     ),
                 },
                 {
-                    label: "Transaction Data/Time",
-                    cell: (data) => (data.created_ts ? dateUtils.getLocalDateTimeFromUTC(data.created_ts) : "-"),
+                    label: "Transaction Date/Time",
+                    cell: (data) =>
+                        data.created_ts ? dateUtils.getFormattedDate(data.created_ts, "MM/DD/YYYY hh:mm A") : "-",
                 },
             ],
         },
@@ -304,13 +305,13 @@ export default function Details({ isAML = false, data: transData }) {
     const transactionStatus = [
         {
             label: `${transactionData?.transaction_status}`,
-            date: `${dateUtils.getLocalDateTimeFromUTC(transactionData?.created_ts)}`,
+            date: `${dateUtils.getFormattedDate(transactionData?.created_ts)}`,
         },
         ...(transactionData?.send_status
             ? [
                   {
                       label: `${transactionData.send_status}`,
-                      date: `${transactionData?.updated_ts ? dateUtils.getLocalDateTimeFromUTC(transactionData?.updated_ts) : "-"}`,
+                      date: `${transactionData?.updated_ts ? dateUtils.getFormattedDate(transactionData?.updated_ts) : "-"}`,
                   },
               ]
             : []),

@@ -78,7 +78,7 @@ const ViewZaiLogsModal = ({ title, isLoading, isOpen, handleClose, initial_value
                     accessorKey: "created_ts",
                     cell: (data) => (
                         <Typography fontWeight={600}>
-                            {data.created_ts ? dateUtils.getLocalDateTimeFromUTC(data.created_ts) : "-"}
+                            {data.created_ts ? dateUtils.getFormattedDate(data.created_ts, "MM/DD/YYYY hh:mm A") : "-"}
                         </Typography>
                     ),
                 },
@@ -87,7 +87,7 @@ const ViewZaiLogsModal = ({ title, isLoading, isOpen, handleClose, initial_value
                     accessorKey: "updated_ts",
                     cell: (data) => (
                         <Typography fontWeight={600}>
-                            {data.updated_ts ? dateUtils.getLocalDateTimeFromUTC(data.updated_ts) : "-"}
+                            {data.updated_ts ? dateUtils.getFormattedDate(data.updated_ts, "MM/DD/YYYY hh:mm A") : "-"}
                         </Typography>
                     ),
                 },
@@ -205,7 +205,7 @@ const ViewZaiLogsModal = ({ title, isLoading, isOpen, handleClose, initial_value
                     accessorKey: "created_ts",
                     cell: (data) => (
                         <Typography fontWeight={600}>
-                            {data.updated_ts ? dateUtils.getLocalDateTimeFromUTC(data.created_ts) : "-"}
+                            {data.updated_ts ? dateUtils.getFormattedDate(data.created_ts, "MM/DD/YYYY hh:mm A") : "-"}
                         </Typography>
                     ),
                 },
@@ -214,7 +214,7 @@ const ViewZaiLogsModal = ({ title, isLoading, isOpen, handleClose, initial_value
                     accessorKey: "updated_ts",
                     cell: (data) => (
                         <Typography fontWeight={600}>
-                            {data.updated_ts ? dateUtils.getLocalDateTimeFromUTC(data.updated_ts) : "-"}
+                            {data.updated_ts ? dateUtils.getFormattedDate(data.updated_ts, "MM/DD/YYYY hh:mm A") : "-"}
                         </Typography>
                     ),
                 },

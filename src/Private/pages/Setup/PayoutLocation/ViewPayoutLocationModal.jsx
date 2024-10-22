@@ -8,6 +8,7 @@ import SourceDetails from "App/core/source-detail/SourceDetails";
 
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 import { CountryName, CurrencyName, FormatDate, ReferenceName } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
 
 const ViewPayoutLocationModal = ({ open }) => {
     const dispatch = useDispatch();
@@ -60,7 +61,9 @@ const ViewPayoutLocationModal = ({ open }) => {
                 {
                     label: "Created Date",
                     accessorKey: "created_ts",
-                    cell: (data) => <>{data.created_ts ? FormatDate(data.created_ts) : "-"}</>,
+                    cell: (data) => (
+                        <>{data.created_ts ? dateUtils.getFormattedDate(data.created_ts, "MMM DD, YYYY") : "-"}</>
+                    ),
                 },
             ],
         },

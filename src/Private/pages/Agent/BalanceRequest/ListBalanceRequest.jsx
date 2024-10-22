@@ -18,6 +18,7 @@ import TableRowActionContainer from "App/components/Table/TableRowActionContaine
 
 import { FormatNumber } from "App/helpers";
 import { BalanceRequestActions as actions } from "../BalanceRequest/store";
+import dateUtils from "App/utils/dateUtils";
 
 const initialState = {
     PageNumber: 1,
@@ -98,12 +99,18 @@ export default function ListBalanceRequest({ title }) {
             {
                 header: "Created At",
                 accessorKey: "createdAt",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue()?.split("T")[0] : "N/A"}</Typography>,
+                cell: ({ getValue }) => (
+                    <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : "N/A"}</Typography>
+                ),
             },
             {
                 header: "Date of Deposit",
                 accessorKey: "depositDate",
-                cell: ({ getValue }) => <Typography>{getValue() ? getValue()?.split("T")[0] : "N/A"}</Typography>,
+                cell: ({ getValue }) => (
+                    <Typography>
+                        {getValue() ? dateUtils.getFormattedDate(getValue(), "MMM DD, YYYY") : "N/A"}
+                    </Typography>
+                ),
             },
 
             {

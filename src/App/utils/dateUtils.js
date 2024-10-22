@@ -12,7 +12,9 @@ class dateUtils {
     }
 
     getFormattedDate(date, dateFormat = "MMM DD, YYYY hh:mm A") {
-        return dayjs(date).format(dateFormat);
+        const newDate = new Date(date).toLocaleString();
+
+        return dayjs(newDate).format(dateFormat);
     }
 
     getFromDate(date) {

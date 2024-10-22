@@ -182,7 +182,9 @@ function Search() {
                 accessorKey: "created_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</Typography>
+                        <Typography>
+                            {getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}
+                        </Typography>
                         <Typography>By: {row.original.created_by}</Typography>
                     </Column>
                 ),
@@ -197,7 +199,7 @@ function Search() {
                             label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : ""}
                         />
                         {row.original.kyc_updated_ts
-                            ? dateUtils.getLocalDateTimeFromUTC(row.original.kyc_updated_ts)
+                            ? dateUtils.getFormattedDate(row.original.kyc_updated_ts, "MM/DD/YYYY hh:mm A")
                             : null}
                     </Column>
                 ),

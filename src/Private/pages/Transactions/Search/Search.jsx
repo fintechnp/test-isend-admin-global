@@ -241,10 +241,10 @@ function Search(props) {
                 cell: ({ row }) => (
                     <Column sx={{ wordBreak: "break-all" }}>
                         <Typography variant="body1">
-                            {dateUtils.getLocalDateFromUTC(row?.original?.created_ts)}
+                            {dateUtils.getFormattedDate(row?.original?.created_ts, "MM/DD/YYYY")}
                         </Typography>
                         <Typography variant="body2">
-                            {dateUtils.getLocalTimeFromUTC(row?.original?.created_ts)}
+                            {dateUtils.getFormattedDate(row?.original?.created_ts, "hh:mm A")}
                         </Typography>
                     </Column>
                 ),

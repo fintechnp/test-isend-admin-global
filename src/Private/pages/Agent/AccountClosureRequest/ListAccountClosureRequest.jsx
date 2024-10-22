@@ -88,7 +88,7 @@ export default function ListAccountClosureRequest() {
             header: "Created Date",
             accessorKey: "created_ts",
             cell: ({ getValue }) => {
-                return <>{dateUtils.getLocalDateTimeFromUTC(getValue())}</>;
+                return <>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}</>;
             },
         },
         {

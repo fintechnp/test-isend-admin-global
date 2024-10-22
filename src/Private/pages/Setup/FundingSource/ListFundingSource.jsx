@@ -123,7 +123,8 @@ function ListFundingSource() {
             {
                 header: "Created Date",
                 accessorKey: "created_ts",
-                cell: ({ getValue }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
+                cell: ({ getValue }) =>
+                    getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-",
             },
             {
                 header: "Actions",

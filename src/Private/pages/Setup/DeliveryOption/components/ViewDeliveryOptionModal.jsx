@@ -52,7 +52,9 @@ const ViewDeliveryOptionModal = ({ open }) => {
                 {
                     label: "Created Date",
                     accessorKey: "created_ts",
-                    cell: (data) => <>{data.created_ts ? dateUtils.getLocalDateFromUTC(data.created_ts) : "-"}</>,
+                    cell: (data) => (
+                        <>{data.created_ts ? dateUtils.getFormattedDate(data.created_ts, "DD/MM/YYYY") : "-"}</>
+                    ),
                 },
             ],
         },

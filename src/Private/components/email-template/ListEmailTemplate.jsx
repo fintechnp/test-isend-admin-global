@@ -109,7 +109,9 @@ function ListEmailTemplate() {
                 accessorKey: "created_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                        <Typography>
+                            {getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY") : "-"}
+                        </Typography>
                         {row.original.created_by && <Typography>By: {row.original.created_by}</Typography>}
                     </Column>
                 ),
@@ -119,7 +121,9 @@ function ListEmailTemplate() {
                 accessorKey: "updated_ts",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                        <Typography>
+                            {getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY") : "-"}
+                        </Typography>
                         {row.original.updated_by && <Typography>By: {row.original.updated_by}</Typography>}
                     </Column>
                 ),

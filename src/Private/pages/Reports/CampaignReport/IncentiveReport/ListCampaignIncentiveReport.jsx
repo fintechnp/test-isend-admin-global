@@ -81,22 +81,21 @@ const ListCampaignIncentiveReport = () => {
             {
                 header: "Created At",
                 cell: ({ row }) => (
-                    <>{row.original.createdTs ? dateUtils.getLocalDateTimeFromUTC(row.original.createdTs) : "-"}</>
+                    <>
+                        {row.original.createdTs
+                            ? dateUtils.getFormattedDate(row.original.createdTs, "MM/DD/YYYY hh:mm A")
+                            : "-"}
+                    </>
                 ),
             },
             {
                 header: "Created By",
-                accessorKey: "Created By",
+                accessorKey: "createdBy",
             },
-            {
-                header: "Created At",
-                cell: ({ row }) => (
-                    <>{row.original.updatedTs ? dateUtils.getLocalDateTimeFromUTC(row.original.updatedTs) : "-"}</>
-                ),
-            },
+
             {
                 header: "Updated By",
-                accessorKey: "Updated By",
+                accessorKey: "updatedBy",
             },
             {
                 header: "Action",
