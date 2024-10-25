@@ -71,6 +71,9 @@ export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transact
                     Amount: &nbsp; {row.transaction_currency} &nbsp;
                     {!isEmpty(row.transaction_amount) ? row.transaction_amount : "N/A"}
                 </Typography>
+                <Typography>
+                    Reference Number: &nbsp; {!isEmpty(row.reference_no) ? row.reference_no : "N/A"}
+                </Typography>
             </TableCell>
             <TableCell>{row.webhook_id}</TableCell>
             <TableCell>{row.transaction_id}</TableCell>

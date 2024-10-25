@@ -109,7 +109,7 @@ function ListMakePaymentWebhookLog({ customerId, transactionId }) {
                             <TableBodySkeleton rowCount={9} columnCount={9} />
                         ) : logData.data?.length <= 0 ? (
                             <TableRow>
-                                <TableCell colSpan={7} align="center">
+                                <TableCell colSpan={9} align="center">
                                     No data found
                                 </TableCell>
                             </TableRow>
