@@ -25,7 +25,7 @@ const schema = Yup.object().shape({
     currency_name: Yup.string().required("Currency Name is required"),
     phone_regex: Yup.string().required("Phone Regex is required"),
     postcode_regex: Yup.string().required("PostCode is required"),
-    has_state: Yup.string().required("State is required"),
+    has_state: Yup.boolean().required("State is required"),
 });
 
 const CountryForm = ({ initialValues, onSubmit, loading, handleClose, isAddMode }) => {
