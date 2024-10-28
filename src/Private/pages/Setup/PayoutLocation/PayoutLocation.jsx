@@ -26,6 +26,7 @@ import CustomerStatusBadge from "Private/pages/Customers/Search/components/Custo
 import actions from "./store/actions";
 import dateUtils from "App/utils/dateUtils";
 import { permissions } from "Private/data/permissions";
+import Filter from "../../Reports/Shared/Filter";
 import apiEndpoints from "Private/config/apiEndpoints";
 import referenceTypeId from "Private/config/referenceTypeId";
 import ViewPayoutLocationModal from "./ViewPayoutLocationModal";
@@ -63,6 +64,12 @@ const PayoutLocation = (props) => {
     const { success: a_success } = useSelector((state) => state.add_payout_location);
     const { success: u_success } = useSelector((state) => state.update_payout_location);
     const { is_open } = useSelector((state) => state.get_payout_location_details);
+
+    const {
+        response: reportDownloads,
+        loading: pdf_loading,
+        success: pdf_success,
+    } = useSelector((state) => state.download_report);
 
     const {
         isFilterOpen,
@@ -214,6 +221,54 @@ const PayoutLocation = (props) => {
         { key: "Country", value: "country" },
     ];
 
+    const headers = [
+        {
+            label: "Location Name",
+            key: "location_name",
+        },
+        {
+            label: "Location Code",
+            key: "location_code",
+        },
+        {
+            label: "Payment Type",
+            key: "payment_type",
+        },
+        {
+            label: "Country",
+            key: "country",
+        },
+        {
+            label: "Created At",
+            key: "created_ts",
+        },
+        {
+            label: "Update At",
+            key: "updated_ts",
+        },
+        {
+            label: "Status",
+            key: "is_active",
+        },
+    ];
+
+    const csvReport = {
+        title: "Report on Payout Locations",
+        headers: headers,
+        data: reportDownloads?.data || [],
+    };
+
+    const downloadData = () => {
+        dispatch({
+            type: "DOWNLOAD_REPORT",
+            path: apiEndpoints.GetPayoutLocations,
+            query: {
+                ...filterSchema,
+                page_size: payoutloaction_data?.pagination?.totalCount || 100,
+            },
+        });
+    };
+
     return (
         <PageContent
             documentTitle="Payout Location"
@@ -251,13 +306,16 @@ const PayoutLocation = (props) => {
                                 disabled={g_loading}
                                 sortByData={sortByData}
                             /> */}
-                            <ExportUpload
-                                data={payoutloaction_data?.data}
-                                paginationData={payoutloaction_data?.pagination}
-                                columns={columns}
-                                filename="Payout Locations"
-                                apiEndpoint={apiEndpoints.GetPayoutLocations}
+
+                            <Filter
+                                fileName="PayoutLocationReport"
+                                success={pdf_success}
+                                loading={pdf_loading}
+                                csvReport={csvReport}
+                                state={filterSchema}
+                                downloadData={downloadData}
                             />
+
                             <AddPayoutLocation update={false} />
                         </>
                     }

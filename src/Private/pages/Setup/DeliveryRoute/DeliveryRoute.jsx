@@ -25,6 +25,7 @@ import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 import CustomerStatusBadge from "Private/pages/Customers/Search/components/CustomerStatusBadge";
 
+import Filter from "../../Reports/Shared/Filter";
 import actions from "./store/actions";
 import dateUtils from "App/utils/dateUtils";
 import useAuthUser from "Private/hooks/useAuthUser";
@@ -73,6 +74,12 @@ const DeliveryRoute = (props) => {
     const { success: a_success } = useSelector((state) => state.create_delivery_route);
     const { success: u_success } = useSelector((state) => state.update_delivery_route);
     const { is_open } = useSelector((state) => state.get_delivery_route_by_id);
+
+    const {
+        response: reportDownloads,
+        loading: pdf_loading,
+        success: pdf_success,
+    } = useSelector((state) => state.download_report);
 
     const {
         isFilterOpen,
@@ -265,6 +272,51 @@ const DeliveryRoute = (props) => {
         dispatch({ type: "UPDATE_DELIVERY_ROUTE_RESET" });
     }, [dispatch, filterSchema, d_success, a_success, u_success]);
 
+    const downloadData = () => {
+        dispatch({
+            type: "DOWNLOAD_REPORT",
+            path: apiEndpoints.GetDeliveryRoutes,
+            query: { ...filterSchema, page_size: deliveryroute_data?.pagination?.totalCount || 100 },
+        });
+    };
+
+    const headers = [
+        {
+            label: "Sending Agent",
+            key: "sending_agent",
+        },
+        {
+            label: "Payout Agent",
+            key: "payout_agent",
+        },
+        {
+            label: "Payment Type",
+            key: "payment_type",
+        },
+        {
+            label: "Country",
+            key: "payout_country",
+        },
+        {
+            label: "Created At",
+            key: "created_ts",
+        },
+        {
+            label: "Updated At",
+            key: "updated_ts",
+        },
+        {
+            label: "Status",
+            key: "is_active",
+        },
+    ];
+
+    const csvReport = {
+        title: "Report on Delivery Routes",
+        headers: headers,
+        data: reportDownloads?.data || [],
+    };
+
     return (
         <PageContent
             documentTitle="Delivery Routes"
@@ -302,13 +354,23 @@ const DeliveryRoute = (props) => {
                                 disabled={g_loading}
                                 sortByData={sortByData}
                             /> */}
-                            <ExportUpload
+                            {/* <ExportUpload
                                 filename="Delivery Routes"
                                 columns={columns}
                                 data={deliveryroute_data?.data || []}
                                 paginationData={deliveryroute_data?.pagination}
                                 apiEndpoint={apiEndpoints.GetDeliveryRoutes}
+                            /> */}
+
+                            <Filter
+                                fileName="DeliveryRoutesReport"
+                                success={pdf_success}
+                                loading={pdf_loading}
+                                csvReport={csvReport}
+                                state={filterSchema}
+                                downloadData={downloadData}
                             />
+
                             <AddDeliveryRoute update={false} />
                         </>
                     }

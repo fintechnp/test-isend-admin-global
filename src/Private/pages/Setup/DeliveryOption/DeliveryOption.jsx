@@ -16,6 +16,7 @@ import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./store/actions";
+import Filter from "../../Reports/Shared/Filter";
 import useAuthUser from "Private/hooks/useAuthUser";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
@@ -28,7 +29,6 @@ import CustomerStatusBadge from "Private/pages/Customers/Search/components/Custo
 import dateUtils from "App/utils/dateUtils";
 import PartnerType from "App/data/PartnerType";
 import apiEndpoints from "Private/config/apiEndpoints";
-import ExportUpload from "Private/components/reports/ExportUpload";
 
 const initialState = {
     page_number: 1,
@@ -50,11 +50,21 @@ const DeliveryOption = () => {
 
     const { can } = useAuthUser();
 
-    const { response: deliveryoption_data, loading: g_loading } = useSelector((state) => state.get_all_delivery_option);
+    const {
+        response: deliveryoption_data,
+        success: g_success,
+        loading: g_loading,
+    } = useSelector((state) => state.get_all_delivery_option);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_delivery_option);
     const { success: a_success } = useSelector((state) => state.add_delivery_option);
     const { success: u_success } = useSelector((state) => state.update_delivery_option);
     const { is_open } = useSelector((state) => state.get_delivery_option_details);
+
+    const {
+        response: reportDownloads,
+        loading: pdf_loading,
+        success: pdf_success,
+    } = useSelector((state) => state.download_report);
 
     const {
         isFilterOpen,
@@ -237,6 +247,22 @@ const DeliveryOption = () => {
         [],
     );
 
+    const headers = [
+        { label: "Delivery Option", key: "delivery_name" },
+        { label: "Payout Agent ", key: "payout_agent" },
+        { label: "Payment Type", key: "payment_type" },
+        { label: "Country", key: "country_code" },
+        { label: "Created At", key: "created_ts" },
+        { label: "Update status ", key: "updated_ts" },
+        { label: "Status", key: "is_active" },
+    ];
+
+    const csvReport = {
+        title: "Report on Delivery Options",
+        headers: headers,
+        data: reportDownloads?.data || [],
+    };
+
     const handleDelete = (id) => {
         dispatch(actions.delete_delivery_option(id));
     };
@@ -244,6 +270,14 @@ const DeliveryOption = () => {
     const handleStatus = useCallback((is_active, id) => {
         dispatch(actions.update_delivery_option_status(id, { is_active: is_active }));
     }, []);
+
+    const downloadData = () => {
+        dispatch({
+            type: "DOWNLOAD_REPORT",
+            path: apiEndpoints.GetDeliveryOptions,
+            query: { ...filterSchema, page_size: deliveryoption_data?.pagination?.totalCount || 100 },
+        });
+    };
 
     return (
         <PageContent
@@ -275,13 +309,16 @@ const DeliveryOption = () => {
                                 disabled={g_loading}
                                 sortByData={sortByData}
                             /> */}
-                            <ExportUpload
-                                filename="Delivery Options"
-                                columns={columns}
-                                data={deliveryoption_data?.data || []}
-                                paginationData={deliveryoption_data?.pagination}
-                                apiEndpoint={apiEndpoints.GetDeliveryOptions}
+
+                            <Filter
+                                fileName="DeliveryOptionsReport"
+                                success={pdf_success}
+                                loading={pdf_loading}
+                                csvReport={csvReport}
+                                state={filterSchema}
+                                downloadData={downloadData}
                             />
+
                             <AddDeliveryOption update={false} />
                         </>
                     }

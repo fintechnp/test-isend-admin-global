@@ -103,10 +103,10 @@ function ListRefundPaymentLog({ customerId }) {
                                         {row.created_ts ? (
                                             <>
                                                 <Typography variant="body2">
-                                                    {dateUtils.getLocalDateFromUTC(row.created_ts)}
+                                                    {dateUtils.getFormattedDate(row.created_ts, "MM/DD/YYYY")}
                                                 </Typography>
                                                 <Typography variant="body2">
-                                                    {dateUtils.getLocalTimeFromUTC(row.created_ts)}
+                                                    {dateUtils.getFormattedDate(row.created_ts, "hh:mm A")}
                                                 </Typography>
                                             </>
                                         ) : (
@@ -118,10 +118,10 @@ function ListRefundPaymentLog({ customerId }) {
                                         {row.updated_ts ? (
                                             <>
                                                 <Typography variant="body2">
-                                                    {dateUtils.getLocalDateFromUTC(row.updated_ts)}
+                                                    {dateUtils.getFormattedDate(row.updated_ts, "MM/DD/YYYY")}
                                                 </Typography>
                                                 <Typography variant="body2">
-                                                    {dateUtils.getLocalTimeFromUTC(row.updated_ts)}
+                                                    {dateUtils.getFormattedDate(row.updated_ts, "hh:mm A")}
                                                 </Typography>
                                             </>
                                         ) : (

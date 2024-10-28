@@ -52,7 +52,7 @@ const initialState = {
     page_number: 1,
 };
 
-const CustomerDetailsWrapper = styled("Typography")(({ theme }) => ({
+const CustomerDetailsWrapper = styled(Typography)(({ theme }) => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

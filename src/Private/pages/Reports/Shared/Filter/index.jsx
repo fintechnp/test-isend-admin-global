@@ -18,6 +18,7 @@ import ExportToPdf from "./ExportToPdf";
 import ExportToCsv from "./ExportToCsv";
 import ExportToExcel from "./ExportToExcel";
 import { PdfDocument } from "./ExportToPdf";
+import dateUtils from "App/utils/dateUtils";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "2px",
@@ -133,28 +134,28 @@ function Filter({
     const open = Boolean(anchorEl);
 
     useEffect(() => {
-        if (csvReport?.data !== undefined || csvReport?.data.length > 0) {
+        if (csvReport?.data && csvReport.data.length > 0) {
+            const formattedData = csvReport.data.map((item) => ({
+                ...item,
+                created_ts: item.created_ts ? dateUtils.getFormattedDate(item.created_ts) : item.created_ts,
+                updated_ts: item.updated_ts ? dateUtils.getFormattedDate(item.updated_ts) : item.updated_ts,
+            }));
+
             if (success && down === "xlsx") {
                 const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
                 const fileExtension = ".xlsx";
-                const ws = XLSX.utils.json_to_sheet(csvReport?.data);
+                const ws = XLSX.utils.json_to_sheet(formattedData);
                 const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-                const excelBuffer = XLSX.write(wb, {
-                    bookType: "xlsx",
-                    type: "array",
-                });
+                const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
                 const data = new Blob([excelBuffer], { type: fileType });
                 FileSaver.saveAs(data, fileName + fileExtension);
                 dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                 setDown(null);
             } else if (success && down === "csv") {
                 const fileExtension = ".csv";
-                const ws = XLSX.utils.json_to_sheet(csvReport?.data);
+                const ws = XLSX.utils.json_to_sheet(formattedData);
                 const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-                const excelBuffer = XLSX.write(wb, {
-                    bookType: "csv",
-                    type: "array",
-                });
+                const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
                 const data = new Blob([excelBuffer], { type: "text/csv" });
                 FileSaver.saveAs(data, fileName + fileExtension);
                 dispatch({ type: "DOWNLOAD_REPORT_RESET" });
@@ -166,7 +167,7 @@ function Filter({
                     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                     setDown(null);
                 };
-                generatePdfDocument(csvReport, fileName);
+                generatePdfDocument({ ...csvReport, data: formattedData }, fileName);
             }
         }
     }, [csvReport?.data, fileName, down, success]);
