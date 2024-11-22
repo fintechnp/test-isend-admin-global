@@ -27,6 +27,7 @@ import SendMail from "./SendMailModal";
 import SuspiciosModal from "./SuspiciosModal";
 import PaymentType from "../data/PaymentType";
 import isValidURL from "App/helpers/isValidURL";
+import buildRoute from "App/helpers/buildRoute";
 import useCountries from "App/hooks/useCountries";
 import routePaths from "Private/config/routePaths";
 import FileViewer from "App/components/FileViewer/FileViewer";
@@ -167,8 +168,9 @@ export default function Details({ isAML = false, data: transData }) {
                     ),
                 },
                 {
-                    label: "Transaction Data/Time",
-                    cell: (data) => (data.created_ts ? dateUtils.getLocalDateTimeFromUTC(data.created_ts) : "-"),
+                    label: "Transaction Date/Time",
+                    cell: (data) =>
+                        data.created_ts ? dateUtils.getFormattedDate(data.created_ts, "MM/DD/YYYY hh:mm A") : "-",
                 },
             ],
         },
@@ -303,13 +305,13 @@ export default function Details({ isAML = false, data: transData }) {
     const transactionStatus = [
         {
             label: `${transactionData?.transaction_status}`,
-            date: `${dateUtils.getLocalDateTimeFromUTC(transactionData?.created_ts)}`,
+            date: `${dateUtils.getFormattedDate(transactionData?.created_ts)}`,
         },
         ...(transactionData?.send_status
             ? [
                   {
                       label: `${transactionData.send_status}`,
-                      date: `${transactionData?.updated_ts ? dateUtils.getLocalDateTimeFromUTC(transactionData?.updated_ts) : "-"}`,
+                      date: `${transactionData?.updated_ts ? dateUtils.getFormattedDate(transactionData?.updated_ts) : "-"}`,
                   },
               ]
             : []),
@@ -425,7 +427,17 @@ export default function Details({ isAML = false, data: transData }) {
                 },
             ]}
         >
-            <PageContentContainer title="Transaction Details">
+            <PageContentContainer
+                title="Transaction Details"
+                topRightContent={
+                    <Button
+                        variant="contained"
+                        onClick={() => navigate(buildRoute(routePaths.ListCustomerTransaction, customerId))}
+                    >
+                        View all transactions
+                    </Button>
+                }
+            >
                 <ResponsiveBox
                     sx={{
                         display: "flex",

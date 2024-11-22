@@ -88,7 +88,7 @@ export default function ListOdfiWebhooks() {
         {
             header: "Received Date",
             accessorKey: "created_ts",
-            cell: ({ getValue, row }) => (getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"),
+            cell: ({ getValue, row }) => (getValue() ? dateUtils.getFormattedDate(getValue()) : "-"),
         },
         {
             header: "Is International",

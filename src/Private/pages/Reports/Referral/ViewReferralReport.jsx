@@ -188,9 +188,11 @@ export default function ViewReferralReport() {
                                 <Box display="flex" gap={4}>
                                     <Column>
                                         <Typography color="text.secondary">Registration Date</Typography>
+
                                         <Typography>
-                                            {dateUtils.getLocalDateTimeFromUTC(
+                                            {dateUtils.getFormattedDate(
                                                 ReferralDetails?.referee_registered_date,
+                                                "MM/DD/YYYY hh:mm A",
                                             )}
                                         </Typography>
                                     </Column>

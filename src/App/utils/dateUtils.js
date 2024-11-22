@@ -12,7 +12,7 @@ class dateUtils {
     }
 
     getFormattedDate(date, dateFormat = "MMM DD, YYYY hh:mm A") {
-        return dayjs(date).format(dateFormat);
+        return dayjs(new Date(date)).format(dateFormat);
     }
 
     getFromDate(date) {

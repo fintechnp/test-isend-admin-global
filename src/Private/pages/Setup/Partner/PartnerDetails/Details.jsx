@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
 import { CurrencyName, CountryName, FormatDate, FormatNumber } from "./../../../../../App/helpers";
+import dateUtils from "App/utils/dateUtils";
 
 const Header = styled(Box)(({ theme }) => ({
     paddingBottom: "4px",
@@ -214,7 +215,9 @@ function PartnerDetails({ data }) {
                         <InfoWrapper>
                             <LabelWrapper>Incorporation Date:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
-                                {data?.date_of_incorporation ? FormatDate(data?.date_of_incorporation) : "N/A"}
+                                {data?.date_of_incorporation
+                                    ? dateUtils.getFormattedDate(data?.date_of_incorporation)
+                                    : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>
                     </Grid>
@@ -231,7 +234,7 @@ function PartnerDetails({ data }) {
                             <LabelWrapper>License Exp. Date:</LabelWrapper>
                             <ValueWrapper sx={{ wordBreak: "break-all" }}>
                                 {data?.business_license_expiry_date
-                                    ? FormatDate(data?.business_license_expiry_date)
+                                    ? dateUtils.getFormattedDate(data?.business_license_expiry_date)
                                     : "N/A"}
                             </ValueWrapper>
                         </InfoWrapper>

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "@react-pdf/renderer";
 import { CurrencyName, FormatDate, FormatNumber, CountryName, ReferenceName } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
 
 const styles = StyleSheet.create({
     tableContainer: {
@@ -16,67 +17,77 @@ const styles = StyleSheet.create({
     headerContainer: {
         width: "100%",
         backgroundColor: "#bff0fd",
-        height: 24,
-        fontStyle: "bold",
+        height: 32,
+        fontWeight: "bold",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        padding: "0 8px",
+    },
+    row: {
+        width: "100%",
+        paddingVertical: "8px",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    serial: {
+        width: "6%",
+        paddingLeft: "6px",
+        textAlign: "left",
+    },
+    name: {
+        flexGrow: 1,
+        flexBasis: "20%",
+        minWidth: "12%",
+        padding: "0 8px",
+        textAlign: "left",
+        textTransform: "capitalize",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
     },
     cellContainer: {
         width: "100%",
         backgroundColor: "#fff",
         display: "flex",
         flexDirection: "column",
-    },
-    row: {
-        width: "100%",
-        minHeight: 24,
-        backgroundColor: "#fff",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    serial: {
-        width: "4%",
-        paddingLeft: "6px",
-        textAlign: "left",
-    },
-    cellSn: {
-        width: "4%",
-        paddingLeft: "6px",
-        textAlign: "left",
-    },
-    name: {
-        flexGrow: 1,
-        minidth: "15%",
-        padding: "0px 4px",
-        textAlign: "left",
-        textTransform: "capitalize",
+        marginLeft: "20px",
     },
     head: {
-        minWidth: "10%",
-        padding: "0px 4px",
+        flexBasis: "17%",
+        padding: "0 8px",
         textAlign: "left",
         textTransform: "capitalize",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
     },
     headRight: {
-        minWidth: "10%",
-        padding: "0px 4px",
+        flexBasis: "17%",
+        padding: "0 8px",
         textAlign: "right",
         textTransform: "capitalize",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
     },
     headMail: {
-        minWidth: "12%",
-        padding: "0px 4px",
+        flexBasis: "17%",
+        padding: "0 8px",
         textAlign: "left",
         textTransform: "capitalize",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
     },
     monthrow: {
-        minHeight: 24,
+        minHeight: 32,
         backgroundColor: "#fff",
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
+        padding: "4px 8px",
     },
 });
 
@@ -197,7 +208,9 @@ const PdfTable = ({ csvReport }) => {
                                         if (header?.key === "date_of_birth" || header?.key === "created_ts") {
                                             return (
                                                 <Text style={styles.head} key={index}>
-                                                    {customer[header?.key] ? FormatDate(customer[header?.key]) : "n/a"}
+                                                    {customer[header?.key]
+                                                        ? dateUtils.getFormattedDate(customer[header?.key])
+                                                        : "n/a"}
                                                 </Text>
                                             );
                                         } else if (header?.key === "first_name") {

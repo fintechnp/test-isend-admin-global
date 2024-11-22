@@ -62,7 +62,7 @@ const ListCampaignLedgerReport = () => {
             {
                 header: "Usage DateTime",
                 accessorKey: "UsageDateTime",
-                cell: ({ getValue }) => <>{getValue() ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>,
+                cell: ({ getValue }) => <>{getValue() ? dateUtils.getFormattedDate(getValue()) : "-"}</>,
             },
             {
                 header: "Description",
@@ -83,7 +83,8 @@ const ListCampaignLedgerReport = () => {
             {
                 header: "Created At",
                 accessorKey: "created_ts",
-                cell: ({ getValue }) => dateUtils.getLocalDateTimeFromUTC(getValue()),
+                cell: ({ getValue }) =>
+                    getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-",
             },
         ],
         [],

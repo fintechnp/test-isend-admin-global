@@ -23,6 +23,7 @@ import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./store/actions";
+import Filter from "../../Reports/Shared/Filter";
 import dateUtils from "App/utils/dateUtils";
 import PartnerType from "App/data/PartnerType";
 import { permissions } from "Private/data/permissions";
@@ -62,6 +63,12 @@ const PartnerBank = (props) => {
     const { success: a_success } = useSelector((state) => state.create_partner_bank);
     const { success: u_success } = useSelector((state) => state.update_partner_bank);
     const { is_open } = useSelector((state) => state.get_partner_bank_by_id);
+
+    const {
+        response: reportDownloads,
+        loading: pdf_loading,
+        success: pdf_success,
+    } = useSelector((state) => state.download_report);
 
     const {
         isFilterOpen,
@@ -292,6 +299,51 @@ const PartnerBank = (props) => {
         { key: "Bank Name", value: "bank_name" },
     ];
 
+    const headers = [
+        {
+            label: "Bank Name",
+            key: "bank_name",
+        },
+        {
+            label: "Ex. Bank Code",
+            key: "external_bank_code",
+        },
+        {
+            label: "Payment Type",
+            key: "payment_type",
+        },
+        {
+            label: "Country",
+            key: "country",
+        },
+        {
+            label: "Created At",
+            key: "created_ts",
+        },
+        {
+            label: "Updated At",
+            key: "updated_ts",
+        },
+        {
+            label: "Mapped Status",
+            key: "location",
+        },
+    ];
+
+    const csvReport = {
+        title: "Report on Partner Bank",
+        headers: headers,
+        data: reportDownloads?.data || [],
+    };
+
+    const downloadData = () => {
+        dispatch({
+            type: "DOWNLOAD_REPORT",
+            path: apiEndpoints.GetParnterBanks,
+            query: { ...filterSchema, page_size: partnerbank_data?.pagination?.totalCount || 100 },
+        });
+    };
+
     return (
         <PageContent
             documentTitle="Partner Banks"
@@ -329,13 +381,16 @@ const PartnerBank = (props) => {
                                 disabled={g_loading}
                                 sortByData={sortByData}
                             /> */}
-                            <ExportUpload
-                                columns={columns}
-                                data={partnerbank_data?.data}
-                                paginationData={partnerbank_data?.pagination}
-                                apiEndpoint={apiEndpoints.GetParnterBanks}
-                                filename="Partner Banks"
+
+                            <Filter
+                                fileName="PartnerbanksReport"
+                                success={pdf_success}
+                                loading={pdf_loading}
+                                csvReport={csvReport}
+                                state={filterSchema}
+                                downloadData={downloadData}
                             />
+
                             <AddPartnerBank update={false} handleCloseDialog={handleCloseDialog} />
                         </>
                     }

@@ -122,9 +122,9 @@ const ListZaiWebhookLogs = () => {
             accessorKey: "created_ts",
             cell: ({ getValue }) => (
                 <>
-                    <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                    <Typography>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY") : "-"}</Typography>
                     <Typography variant="body2">
-                        {dateUtils.getLocalTimeFromUTC(getValue() ? getValue() : getValue())}
+                        {getValue() ? dateUtils.getFormattedDate(getValue(), "hh:mm A") : "-"}
                     </Typography>
                 </>
             ),
@@ -134,9 +134,9 @@ const ListZaiWebhookLogs = () => {
             accessorKey: "updated_ts",
             cell: ({ getValue }) => (
                 <>
-                    <Typography>{getValue() ? dateUtils.getLocalDateFromUTC(getValue()) : "-"}</Typography>
+                    <Typography>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY") : "-"}</Typography>
                     <Typography variant="body2">
-                        {dateUtils.getLocalTimeFromUTC(getValue() ? getValue() : getValue())}
+                        {getValue() ? dateUtils.getFormattedDate(getValue(), "hh:mm A") : "-"}
                     </Typography>
                 </>
             ),

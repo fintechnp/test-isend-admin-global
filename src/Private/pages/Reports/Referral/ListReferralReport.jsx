@@ -52,7 +52,7 @@ const initialState = {
     page_number: 1,
 };
 
-const CustomerDetailsWrapper = styled("Typography")(({ theme }) => ({
+const CustomerDetailsWrapper = styled(Typography)(({ theme }) => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -160,7 +160,9 @@ export default function ListReferralReport() {
                 {
                     header: "Registration Date",
                     accessorKey: "referrer_registered_date",
-                    cell: ({ getValue }) => <>{dateUtils.getLocalDateTimeFromUTC(getValue())}</>,
+                    cell: ({ getValue }) => (
+                        <>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}</>
+                    ),
                 },
                 {
                     header: "KYC Status",

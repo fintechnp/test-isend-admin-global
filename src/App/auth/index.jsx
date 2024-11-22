@@ -37,7 +37,16 @@ const initialState = {
 export const AuthContext = createContext(initialState);
 
 export default class AuthProvider extends Component {
-    state = initialState;
+    state = {
+        ...initialState,
+        setUserData: (data) => {
+            this.setState({
+                authStatusReported: true,
+                isUserLoggedIn: true,
+                currentUser: data,
+            });
+        },
+    };
 
     setPermissions = (permissions) => {
         this.setState({
@@ -56,16 +65,6 @@ export default class AuthProvider extends Component {
     componentDidMount = async () => {
         // @ignore check for reset password
         if (window.location.pathname.startsWith("/reset/")) return;
-
-        this.setState({
-            setUserData: (data) => {
-                this.setState({
-                    authStatusReported: true,
-                    isUserLoggedIn: true,
-                    currentUser: data,
-                });
-            },
-        });
 
         const token = AuthUtility.getAccessToken();
 
@@ -90,52 +89,35 @@ export default class AuthProvider extends Component {
                     isUserLoggedIn: true,
                     currentUser: user,
                 });
-                store.dispatch({
-                    type: "GET_ALL_COUNTRY",
-                });
-                store.dispatch({
-                    type: "GET_SEND_COUNTRY",
-                });
-                store.dispatch({
-                    type: "USER_DETAILS",
-                }),
-                    store.dispatch({
-                        type: actions.GET_USER_MENUS_AND_PERMISSIONS,
-                    });
+                store.dispatch({ type: "GET_ALL_COUNTRY" });
+                store.dispatch({ type: "GET_SEND_COUNTRY" });
+                store.dispatch({ type: "USER_DETAILS" });
+                store.dispatch({ type: actions.GET_USER_MENUS_AND_PERMISSIONS });
                 store.dispatch({
                     type: "GET_ALL_REFERENCE",
-                    query: {
-                        page_number: 1,
-                        page_size: 100,
-                    },
+                    query: { page_number: 1, page_size: 100 },
                 });
             } else {
-                this.setState({
-                    authStatusReported: true,
-                    isUserLoggedIn: false,
-                    currentUser: {},
-                });
-                Object.keys(Cookies.get()).forEach(function (cookie) {
-                    Cookies.remove(cookie);
-                });
-                localStorage.clear();
+                this.logOutAndResetState();
             }
         } catch (err) {
             preserveIntendedPath();
-            this.setState({
-                authStatusReported: true,
-                isUserLoggedIn: false,
-                currentUser: {},
-            });
-            Object.keys(Cookies.get()).forEach(function (cookie) {
-                Cookies.remove(cookie);
-            });
-            localStorage.clear();
+            this.logOutAndResetState();
             store.dispatch({
                 type: "SET_TOAST_DATA",
                 data: err?.data,
             });
         }
+    };
+
+    logOutAndResetState = () => {
+        Object.keys(Cookies.get()).forEach((cookie) => Cookies.remove(cookie));
+        localStorage.clear();
+        this.setState({
+            authStatusReported: true,
+            isUserLoggedIn: false,
+            currentUser: {},
+        });
     };
 
     render() {

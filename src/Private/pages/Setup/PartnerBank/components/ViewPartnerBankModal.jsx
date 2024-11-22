@@ -80,7 +80,7 @@ const ViewPartnerBankModal = ({ open }) => {
                     accessorKey: "created_ts",
                     cell: (data) => (
                         <Typography fontWeight={600}>
-                            {data.created_ts ? dateUtils.getLocalDateFromUTC(data.created_ts) : "-"},{" "}
+                            {data.created_ts ? dateUtils.getFormattedDate(data.created_ts, "MM/DD/YYYY") : "-"},{" "}
                             {data?.created_by ? data?.created_by : "-"}
                         </Typography>
                     ),
@@ -90,7 +90,7 @@ const ViewPartnerBankModal = ({ open }) => {
                     accessorKey: "updated_ts",
                     cell: (data) => (
                         <Typography fontWeight={600}>
-                            {data.updated_ts ? dateUtils.getLocalDateFromUTC(data.updated_ts) : "-"},{" "}
+                            {data.updated_ts ? dateUtils.getFormattedDate(data.updated_ts, "MM/DD/YYYY") : "-"},{" "}
                             {data?.updated_by ? data?.updated_by : "-"}
                         </Typography>
                     ),

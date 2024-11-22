@@ -50,7 +50,9 @@ export default function ViewFcmModal() {
                 {
                     label: "Created At",
                     cell: (data) => (
-                        <Typography fontWeight={600}>{dateUtils.getLocalDateTimeFromUTC(data?.created_ts)}</Typography>
+                        <Typography fontWeight={600}>
+                            {dateUtils.getFormattedDate(data?.created_ts, "MM/DD/YYYY hh:mm A")}
+                        </Typography>
                     ),
                 },
                 {

@@ -84,7 +84,7 @@ const ListCampaignReport = () => {
                 header: "Usage Date",
                 accessorKey: "usageDate",
                 cell: ({ getValue }) => (
-                    <>{!isEmpty(getValue()) ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>
+                    <>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}</>
                 ),
             },
 
@@ -92,7 +92,7 @@ const ListCampaignReport = () => {
                 header: "Created At",
                 accessorKey: "createdTs",
                 cell: ({ getValue }) => (
-                    <>{!isEmpty(getValue()) ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>
+                    <>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}</>
                 ),
             },
 
@@ -100,7 +100,7 @@ const ListCampaignReport = () => {
                 header: "Updated At",
                 accessorKey: "updatedTs",
                 cell: ({ getValue }) => (
-                    <>{!isEmpty(getValue()) ? dateUtils.getLocalDateTimeFromUTC(getValue()) : "-"}</>
+                    <>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}</>
                 ),
             },
         ],

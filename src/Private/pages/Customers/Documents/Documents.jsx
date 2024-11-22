@@ -22,8 +22,9 @@ import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import { KycDocumentStatus, KycDocumentStatusOptions } from "./data/KycDocumentStatus";
 import actions from "./store/actions";
+import AddDocuments from "./AddDocuments";
+import { KycDocumentStatus, KycDocumentStatusOptions } from "./data/KycDocumentStatus";
 
 const initialState = {
     page_number: 1,
@@ -171,15 +172,6 @@ function Documents(props) {
         dispatch(actions.delete_documents(id, doc_id));
     };
 
-    const handleStatusChange = (e) => {
-        const { value } = e.target;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            status: value,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const filterFields = [
         {
             type: fieldTypes.TEXTFIELD,
@@ -225,12 +217,15 @@ function Documents(props) {
                 <PageContentContainer
                     title="Customer's Documents"
                     topRightContent={
-                        <TableGridQuickFilter
-                            sortByData={sortByData}
-                            onOrderByChange={onQuickFilter}
-                            onSortByChange={onQuickFilter}
-                            values={filterSchema}
-                        />
+                        <>
+                            <TableGridQuickFilter
+                                sortByData={sortByData}
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                values={filterSchema}
+                            />
+                            <AddDocuments />
+                        </>
                     }
                 >
                     <TanstackReactTable data={Documents?.data || []} columns={columns} />

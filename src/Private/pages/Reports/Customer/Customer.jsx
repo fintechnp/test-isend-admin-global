@@ -415,7 +415,7 @@ function CustomerReports(props) {
         { label: "Kyc Status", key: "kyc_status" },
         { label: "Mobile Number", key: "mobile_number" },
         { label: "Created By", key: "created_by" },
-        { label: "Created", key: "created_ts" },
+        { label: "Created At", key: "created_ts" },
     ];
 
     const csvReport = {

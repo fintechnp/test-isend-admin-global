@@ -173,12 +173,14 @@ export default function ViewPromoCode() {
                 {
                     label: "Campaign Start Date",
                     accessorKey: "startDate",
-                    cell: (data) => (data.startDate ? dateUtils.getLocalDateTimeFromUTC(data.startDate) : "-"),
+                    cell: (data) =>
+                        data.startDate ? dateUtils.getFormattedDate(data.startDate, "MM/DD/YYYY hh:mm A") : "-",
                 },
                 {
                     label: "Campaign End Date",
                     accessorKey: "endDate",
-                    cell: (data) => (data.endDate ? dateUtils.getLocalDateTimeFromUTC(data.endDate) : "-"),
+                    cell: (data) =>
+                        data.endDate ? dateUtils.getFormattedDate(data.endDate, "MM/DD/YYYY hh:mm A") : "-",
                 },
             ],
         },
@@ -333,12 +335,14 @@ export default function ViewPromoCode() {
                 {
                     label: "Created Time",
                     accessorKey: "createdTs",
-                    cell: (data) => (data.createdTs ? dateUtils.getLocalDateTimeFromUTC(data.createdTs) : "-"),
+                    cell: (data) =>
+                        data.createdTs ? dateUtils.getFormattedDate(data.createdTs, "MM/DD/YYYY hh:mm A") : "-",
                 },
                 {
                     label: "Updated Time",
                     accessorKey: "updatedTs",
-                    cell: (data) => (data.updatedTs ? dateUtils.getLocalDateTimeFromUTC(data.updatedTs) : "-"),
+                    cell: (data) =>
+                        data.updatedTs ? dateUtils.getFormattedDate(data.updatedTs, "MM/DD/YYYY hh:mm A") : "-",
                 },
             ],
         },

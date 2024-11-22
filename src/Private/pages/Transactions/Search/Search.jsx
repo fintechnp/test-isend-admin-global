@@ -64,10 +64,30 @@ const headers = [
 ];
 
 const schema = Yup.object().shape({
-    from_date: Yup.string().nullable().optional(),
+    from_date: Yup.string()
+        .nullable()
+        .test({
+            name: "from-to-pair",
+            message: "From Date is required",
+            test: function (value) {
+                const { to_date } = this.parent;
+                // If to_date is provided but from_date is missing, show error on from_date
+                return !to_date || !!value;
+            },
+        })
+        .optional(),
+
     to_date: Yup.string()
         .nullable()
-        .optional()
+        .test({
+            name: "from-to-pair",
+            message: "To Date is required",
+            test: function (value) {
+                const { from_date } = this.parent;
+                // If from_date is provided but to_date is missing, show error on to_date
+                return !from_date || !!value;
+            },
+        })
         .when("from_date", {
             is: (value) => !isEmpty(value),
             then: (schema) =>
@@ -79,7 +99,6 @@ const schema = Yup.object().shape({
                         return value ? isAfter(new Date(value), new Date(from_date)) : true;
                     },
                 }),
-            otherwise: (schema) => schema.nullable().optional(),
         }),
 });
 
@@ -222,10 +241,10 @@ function Search(props) {
                 cell: ({ row }) => (
                     <Column sx={{ wordBreak: "break-all" }}>
                         <Typography variant="body1">
-                            {dateUtils.getLocalDateFromUTC(row?.original?.created_ts)}
+                            {dateUtils.getFormattedDate(row?.original?.created_ts, "MM/DD/YYYY")}
                         </Typography>
                         <Typography variant="body2">
-                            {dateUtils.getLocalTimeFromUTC(row?.original?.created_ts)}
+                            {dateUtils.getFormattedDate(row?.original?.created_ts, "hh:mm A")}
                         </Typography>
                     </Column>
                 ),
@@ -257,7 +276,7 @@ function Search(props) {
             },
 
             {
-                header: "Colleted Amount",
+                header: "Collected Amount",
                 cell: ({ row }) => (
                     <Typography variant="body1">
                         {row?.original?.collected_currency}&nbsp;
@@ -267,7 +286,7 @@ function Search(props) {
             },
 
             {
-                header: "Deposite Type",
+                header: "Deposit Type",
                 cell: ({ row }) => <Typography variant="body1">{row?.original?.deposit_type}</Typography>,
             },
 

@@ -22,6 +22,7 @@ import { TablePagination } from "App/components/Table";
 import referenceTypeId from "Private/config/referenceTypeId";
 
 import StatusBadge from "./components/ZaiStatusBadge";
+import dateUtils from "App/utils/dateUtils";
 
 const initialState = {
     page_number: 1,
@@ -121,7 +122,13 @@ const ZaiAustraliaPayment = () => {
             header: "Txn Date",
             cell: ({ row }) => (
                 <Box>
-                    <Typography>{dayjs(row?.original?.created_ts + "Z").format("MMM DD, YYYY")}</Typography>
+                    <Typography>
+                        <Typography>
+                            {row.original.created_ts
+                                ? dateUtils.getFormattedDate(row.original.created_ts, "MM/DD/YYYY")
+                                : "-"}
+                        </Typography>
+                    </Typography>
                     <Typography>
                         <AccessTimeIcon
                             sx={{
@@ -131,7 +138,8 @@ const ZaiAustraliaPayment = () => {
                             }}
                             fontSize="10px"
                         />
-                        {dayjs(row?.original?.created_ts + "Z").format("hh:mm A")}
+
+                        {row.original.created_ts ? dateUtils.getFormattedDate(row.original.created_ts, "hh:mm A") : "-"}
                     </Typography>
                 </Box>
             ),

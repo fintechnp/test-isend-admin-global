@@ -135,7 +135,7 @@ export default function ListCustomerKycLog() {
                                         </Stack>
 
                                         <Typography variant="body2" color="text.secondary" mb={1}>
-                                            {dateUtils.getLocalDateTimeFromUTC(item?.created_ts)}
+                                            {dateUtils.getFormattedDate(item?.created_ts, "MM/DD/YYYY hh:mm A")}
                                         </Typography>
 
                                         <Typography color="text.secondary" mb={2}>

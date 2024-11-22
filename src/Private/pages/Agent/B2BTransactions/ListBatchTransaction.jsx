@@ -14,6 +14,7 @@ import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { CurrencyName, FormatDate, ReferenceName } from "App/helpers";
 import batchTransactionActions from "Private/features/b2b-transactions/batchTransactionActions";
+import dateUtils from "App/utils/dateUtils";
 
 const initialState = {
     page_number: 1,
@@ -52,7 +53,8 @@ export default function ListBatchTransaction() {
             {
                 header: "Txn Date",
                 accessorKey: "created_ts",
-                cell: ({ getValue }) => <>{FormatDate(getValue())}</>,
+                cell: ({ getValue, row }) =>
+                    getValue() ? dateUtils.getFormattedDate(getValue(), "MMM DD, YYYY") : "-",
             },
             {
                 header: "No. of beneficiary",
