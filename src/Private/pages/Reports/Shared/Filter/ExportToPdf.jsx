@@ -6,6 +6,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { Page, Document, StyleSheet, View, Text, Image } from "@react-pdf/renderer";
 
 import Table from "./PdfTable";
+import dateUtils from "App/utils/dateUtils";
 import logo from "../../../../../assets/isend_logo.png";
 import DocumentDownloadIcon from "App/components/Icon/DocumentDownloadIcon";
 
@@ -64,7 +65,8 @@ export const PdfDocument = ({ csvReport }) => {
                 </View>
                 <View wrap={false} style={styles.invoiceDateContainer}>
                     <Text>
-                        {csvReport?.start ? csvReport?.start : "From"} - {csvReport?.end ? csvReport?.end : "To"}{" "}
+                        {csvReport?.start ? dateUtils.getFormattedDate(csvReport?.start) : "From"} -{" "}
+                        {csvReport?.end ? dateUtils.getFormattedDate(csvReport?.end) : "To"}{" "}
                     </Text>
                 </View>
                 <Table csvReport={csvReport} />
