@@ -114,6 +114,10 @@ function CancelledTransactions(props) {
                 maxWidth: 40,
             },
             {
+                Header: "Transaction Id",
+                accessor: "transaction_id",
+            },
+            {
                 Header: "Partner",
                 accessor: "agent_name",
                 minWidth: 190,
@@ -353,7 +357,7 @@ function CancelledTransactions(props) {
     //Downloads
     const headers = [
         { label: "Customer Name", key: "customer_name" },
-        { label: "Txn Id", key: "tid" },
+        { label: "Txn Id", key: "transaction_id" },
         { label: "S. Currency", key: "collected_currency" },
         { label: "Rate", key: "customer_rate" },
         { label: "Charge", key: "service_charge" },

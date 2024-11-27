@@ -139,6 +139,7 @@ function Filter({
                 ...item,
                 created_ts: item.created_ts ? dateUtils.getFormattedDate(item.created_ts) : item.created_ts,
                 updated_ts: item.updated_ts ? dateUtils.getFormattedDate(item.updated_ts) : item.updated_ts,
+                ...(item.refund_ts ? { refund_ts: dateUtils.getFormattedDate(item.refund_ts) } : {}),
             }));
 
             if (success && down === "xlsx") {
