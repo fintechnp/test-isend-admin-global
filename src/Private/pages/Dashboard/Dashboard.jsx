@@ -1,12 +1,13 @@
-import React from "react";
+import React, { lazy } from "react";
 import Grid from "@mui/material/Grid";
 
 import Header from "./components/Header";
 import KycStat from "./components/KycStat";
-import SummaryStat from "./components/SummaryStat";
-import TransactionStat from "./components/TransactionStat";
 import CustomerPieChart from "./components/CustomerPieChart";
 import PageContent from "App/components/Container/PageContent";
+import WholeAdminDetails from "./components/WholeAdminDetails";
+
+const DashboardCurrencyData = lazy(() => import("./components/CurrencyData"));
 
 function Dashboard() {
     return (
@@ -16,11 +17,15 @@ function Dashboard() {
                     <Header />
                 </Grid>
                 <Grid item xs={12}>
+                    <DashboardCurrencyData />
+                </Grid>
+                {/* <Grid item xs={12}>
                     <SummaryStat />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
-                    <TransactionStat />
+                    <WholeAdminDetails />
                 </Grid>
+
                 <Grid item xs={12} md={6}>
                     <CustomerPieChart />
                 </Grid>
