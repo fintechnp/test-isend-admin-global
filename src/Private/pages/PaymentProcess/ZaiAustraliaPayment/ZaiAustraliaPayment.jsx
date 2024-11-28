@@ -145,7 +145,7 @@ const ZaiAustraliaPayment = () => {
             ),
         },
         {
-            header: "Exc Amount",
+            header: "Fx Amount",
             accessorKey: "customer_rate",
         },
         {

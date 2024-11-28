@@ -439,6 +439,9 @@ function Search(props) {
                 {
                     label: "Transactions",
                 },
+                {
+                    label: "Search",
+                },
             ]}
             topRightEndContent={
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
