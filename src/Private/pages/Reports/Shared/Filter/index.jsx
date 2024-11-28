@@ -19,6 +19,7 @@ import ExportToCsv from "./ExportToCsv";
 import ExportToExcel from "./ExportToExcel";
 import { PdfDocument } from "./ExportToPdf";
 import dateUtils from "App/utils/dateUtils";
+import { CurrencyName, ReferenceName } from "App/helpers";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "2px",
@@ -135,11 +136,18 @@ function Filter({
 
     useEffect(() => {
         if (csvReport?.data && csvReport.data.length > 0) {
-            const formattedData = csvReport.data.map((item) => ({
-                ...item,
-                created_ts: item.created_ts ? dateUtils.getFormattedDate(item.created_ts) : item.created_ts,
-                updated_ts: item.updated_ts ? dateUtils.getFormattedDate(item.updated_ts) : item.updated_ts,
-                ...(item.refund_ts ? { refund_ts: dateUtils.getFormattedDate(item.refund_ts) } : {}),
+            const formattedData = csvReport?.data?.map((item) => ({
+                ...Object.fromEntries(
+                    Object.entries(item)?.map(([key, value]) => [key, value === null || value === "" ? "N/A" : value]),
+                ),
+                created_ts: item.created_ts
+                    ? dateUtils.getFormattedDate(item.created_ts, "MM/DD/YYYY  hh:mm A")
+                    : item.created_ts,
+                updated_ts: item.updated_ts
+                    ? dateUtils.getFormattedDate(item.updated_ts, "MM/DD/YYYY hh:mm A")
+                    : item.updated_ts,
+                ...(item?.refund_ts && { refund_ts: dateUtils.getFormattedDate(item.refund_ts) }),
+                ...(item?.payment_type && { payment_type: ReferenceName(1, item.payment_type) }),
             }));
 
             if (success && down === "xlsx") {

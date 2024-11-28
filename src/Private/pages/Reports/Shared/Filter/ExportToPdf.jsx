@@ -65,8 +65,12 @@ export const PdfDocument = ({ csvReport }) => {
                 </View>
                 <View wrap={false} style={styles.invoiceDateContainer}>
                     <Text>
-                        {csvReport?.start ? dateUtils.getFormattedDate(csvReport?.start) : "From"} -{" "}
-                        {csvReport?.end ? dateUtils.getFormattedDate(csvReport?.end) : "To"}{" "}
+                        {csvReport?.start
+                            ? `From  ${dateUtils.getFormattedDate(csvReport?.start, "MM/DD/YY")}`
+                            : "From"}
+                        {" - "}
+
+                        {csvReport?.end ? ` To  ${dateUtils.getFormattedDate(csvReport?.end, "MM/DD/YY")}` : "To"}
                     </Text>
                 </View>
                 <Table csvReport={csvReport} />

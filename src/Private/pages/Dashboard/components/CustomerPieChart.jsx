@@ -33,7 +33,7 @@ export default function CustomerPieChart() {
         { name: "iOS", value: data?.iosUsers ?? 0 },
         { name: "Android", value: data?.androidUsers ?? 0 },
         { name: "Web", value: data?.webUsers ?? 0 },
-        { name: "Others", value: data?.otherUsers ?? 0 },
+        { name: "Admin", value: data?.otherUsers ?? 0 },
     ];
 
     const statsNoData = [{ name: NO_DATA_LABEL, value: 1 }];
