@@ -14,6 +14,8 @@ import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -68,9 +70,9 @@ const ExchangeRate = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "SN",
+                header: "SN",
                 maxWidth: 100,
-                Cell: (data) => (
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -79,17 +81,15 @@ const ExchangeRate = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data?.row?.index ? data?.row?.index + 1 : "1"}
+                            {row?.index ? row?.index + 1 : "1"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Partner Name",
-                accessor: "agent_name",
-                width: 3000,
-                maxWidth: 500,
-                Cell: (data) => (
+                header: "Partner Name",
+                accessorKey: "agent_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -98,19 +98,19 @@ const ExchangeRate = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.agent_name ? row?.original?.agent_name : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -202,29 +202,43 @@ const ExchangeRate = (props) => {
     };
 
     return (
-        <PageContent documentTitle="Partnerwise Exchange Rate">
-            <Header title="Partnerwise Exchange Rate" buttonText="Add Exchange Rate" />
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSort={handleSort}
-            />
-            <Table
-                columns={columns}
-                data={servicecharge_data?.data || []}
-                loading={g_loading || false}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={servicecharge_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Partnerwise Exchange Rate"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Exchange Rate",
+                },
+            ]}
+        >
+            <PageContentContainer
+                topRightContent={
+                    <>
+                        <Filter
+                            state={filterSchema}
+                            sortData={sortData}
+                            orderData={orderData}
+                            handleSearch={handleSearch}
+                            handleOrder={handleOrder}
+                            handleSort={handleSort}
+                        />
+                        <Header buttonText="Add Exchange Rate" />
+                    </>
+                }
+            >
+                <TanstackReactTable
+                    columns={columns}
+                    data={servicecharge_data?.data || []}
+                    loading={g_loading || false}
+                />
+                <TablePagination
+                    paginationData={servicecharge_data?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };

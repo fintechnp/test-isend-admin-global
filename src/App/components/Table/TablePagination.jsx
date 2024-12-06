@@ -69,11 +69,31 @@ const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPer
     });
 
     return (
-        <Row justifyContent="space-between" alignItems="center" gap="16px">
+        <Row justifyContent="space-between" alignItems="center" gap="16px" flexWrap="wrap">
             <Typography fontWeight={500}>Total Records: {paginationData?.totalCount || 0}</Typography>
-            <Row flex={1} justifyContent="flex-end">
-                <Box display="flex" justifyContent="flex-end" alignItems="center" gap={1}>
-                    <Typography>Rows per page : </Typography>
+            <Row
+                flex={1}
+                sx={(theme) => ({
+                    [theme.breakpoints.up("sm")]: {
+                        justifyContent: "flex-end",
+                    },
+                })}
+            >
+                <Box
+                    display="flex"
+                    gap={1}
+                    sx={(theme) => ({
+                        justifyContent: "flex-end",
+                        [theme.breakpoints.up("sm")]: {
+                            alignItems: "center",
+                        },
+                        [theme.breakpoints.down("sm")]: {
+                            flexDirection: "column",
+                            width: "100%",
+                        },
+                    })}
+                >
+                    <Typography align="end">Rows per page : </Typography>
                     <Select size="small" onChange={handleChangeRowsPerPage} value={+paginationData?.pageSize || 10}>
                         {ROWS_PER_PAGE_OPTIONS.map((item) => (
                             <MenuItem key={item} value={item}>
@@ -83,7 +103,14 @@ const TablePagination = ({ paginationData, handleChangePage, handleChangeRowsPer
                     </Select>
                 </Box>
             </Row>
-            <List>
+            <List
+                sx={(theme) => ({
+                    overflow: "auto",
+                    [theme.breakpoints.down("sm")]: {
+                        width: "100%",
+                    },
+                })}
+            >
                 {items.map(({ page, type, selected, ...item }, index) => {
                     let children = null;
 

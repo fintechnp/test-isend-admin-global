@@ -40,7 +40,10 @@ const Container = styled("div", {
     ...(disablePadding
         ? undefined
         : {
-              padding: "24px",
+              [theme.breakpoints.up("sm")]: {
+                  padding: "24px",
+              },
+              padding: "8px",
           }),
     backgroundColor: theme.palette.background.primarySecond,
     overflowX: "auto",
@@ -82,7 +85,16 @@ export default function PageContent(props) {
     return (
         <Container disableBorder={disableBorder} disablePadding={disablePadding}>
             {!disableBreadcrumb && breadcrumbs.length > 0 && (
-                <Row sx={{ mb: "16px" }} alignItems="center" justifyContent="space-between">
+                <Row
+                    sx={(theme) => ({
+                        mb: "16px",
+                        [theme.breakpoints.down("sm")]: {
+                            width: "100%",
+                        },
+                    })}
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
                     <Breadcrumbs separator="/" aria-label="breadcrumb">
                         <Link component={RouterLink} underline="hover" color="inherit" to={routePaths.Dashboard}>
                             Dashboard

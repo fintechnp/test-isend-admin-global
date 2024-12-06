@@ -28,11 +28,11 @@ export default function TransactionStat() {
 
     return (
         <Paper sx={{ p: "16px", position: "relative" }}>
-            <Row>
+            <Row gap={1}>
                 <Box>
                     <Typography variant="h6">Transaction Forecast</Typography>
                 </Box>
-                <Row flex={1} justifyContent="flex-end" gap="16px">
+                <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
                     {statsData.map((stat) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
                             <FiberManualRecordIcon sx={{ fill: stat.color }} />

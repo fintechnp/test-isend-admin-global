@@ -58,7 +58,7 @@ export default function CustomerPieChart() {
                 <Typography fontWeight={600} fontSize="1.286rem" lineHeight="1.786rem">
                     Customers
                 </Typography>
-                <Row flex={1} justifyContent="flex-end" gap="16px">
+                <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
                     {statsData.map((stat, index) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
                             <FiberManualRecordIcon sx={{ fill: DATA_COLORS[index] }} />

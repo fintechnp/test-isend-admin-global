@@ -25,11 +25,18 @@ const FilterWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+
+    [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+        gap: "8px",
+        width: "100%",
+    },
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
     display: "flex",
     flexGrow: 1,
+    width: "100%",
 }));
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
@@ -81,6 +88,7 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
 }));
 
 function Filter({
@@ -117,7 +125,14 @@ function Filter({
     return (
         <FilterWrapper>
             <SearchBox>
-                <SearchTextField onChange={handleSearch} />
+                <SearchTextField
+                    onChange={handleSearch}
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("sm")]: {
+                            width: "100%",
+                        },
+                    })}
+                />
             </SearchBox>
             {sendingAgentId && (
                 <>
@@ -141,9 +156,31 @@ function Filter({
                 </>
             )}
             <DropWrapper>
-                <Box>
+                <Box
+                    sx={(theme) => {
+                        return {
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "8px",
+                            width: "100%",
+                            [theme.breakpoints.down("sm")]: {
+                                flexDirection: "column",
+                            },
+                        };
+                    }}
+                >
                     {handleSort && (
-                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                        <FormControl
+                            sx={(theme) => ({
+                                ml: 1,
+                                minWidth: 120,
+
+                                [theme.breakpoints.down("sm")]: {
+                                    width: "100%",
+                                    ml: 0,
+                                },
+                            })}
+                        >
                             <Select
                                 onChange={handleSort}
                                 displayEmpty
@@ -168,7 +205,17 @@ function Filter({
                             </Select>
                         </FormControl>
                     )}
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <FormControl
+                        sx={(theme) => ({
+                            ml: 1,
+                            minWidth: 120,
+
+                            [theme.breakpoints.down("sm")]: {
+                                width: "100%",
+                                ml: 0,
+                            },
+                        })}
+                    >
                         <Select
                             onChange={handleOrder}
                             displayEmpty
