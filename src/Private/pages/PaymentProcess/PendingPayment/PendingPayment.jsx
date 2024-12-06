@@ -19,6 +19,8 @@ import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
 import { permissions } from "Private/data/permissions";
 import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -66,15 +68,13 @@ const PendingPayment = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "Id",
+                accessorKey: "tid",
             },
             {
-                Header: "Name",
-                accessor: "customer_name",
-                maxWidth: 140,
-                Cell: (data) => (
+                header: "Name",
+                accessorKey: "customer_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -83,18 +83,18 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {row?.original?.customer_name ? row?.original?.customer_name : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "N/A"}
+                            {row?.original?.beneficiary_name ? row?.original?.beneficiary_name : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner/Payout Country",
-                accessor: "agent_name",
-                Cell: (data) => (
+                header: "Partner/Payout Country",
+                accessorKey: "agent_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -110,7 +110,7 @@ const PendingPayment = (props) => {
                                 opacity: 0.7,
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {row?.original?.agent_name ? row?.original?.agent_name : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -120,54 +120,52 @@ const PendingPayment = (props) => {
                                 opacity: 0.7,
                             }}
                         >
-                            {data?.row?.original?.payout_country_data
-                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : (data?.row?.original?.payout_country ?? "N/A")}{" "}
+                            {row?.original?.payout_country_data
+                                ? ucfirst(row?.original?.payout_country_data.toLowerCase())
+                                : (row?.original?.payout_country ?? "N/A")}{" "}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Date</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
-                Cell: (data) => (
+                accessorKey: "created_ts",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? FormatDate(data.value) : "N/A"}
+                            {row?.original?.created_ts ? FormatDate(row?.original?.created_ts) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Rate</Typography>
                     </Box>
                 ),
-                accessor: "payout_cost_rate",
-                maxWidth: 80,
-                Cell: (data) => (
+                accessorKey: "payout_cost_rate",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {row?.original?.payout_cost_rate ? FormatNumber(row?.original?.payout_cost_rate) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right" sx={{}}>
                         <Typography>Amount</Typography>
                     </Box>
                 ),
-                accessor: "transfer_amount",
-                maxWidth: 80,
-                Cell: (data) => (
+                accessorKey: "transfer_amount",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -176,26 +174,22 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data?.row?.original?.collected_amount
-                                ? FormatNumber(data?.row?.original?.collected_amount)
-                                : "N/A"}
+                            {row?.original?.collected_amount ? FormatNumber(row?.original?.collected_amount) : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Currency</Typography>
                     </Box>
                 ),
-                accessor: "collected_currency",
-                Cell: (data) => (
+                accessorKey: "collected_currency",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -204,24 +198,24 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? CurrencyName(data.value) : "N/A"}
+                            {row?.original?.collected_currency
+                                ? CurrencyName(row?.original?.collected_currency)
+                                : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(data?.row?.original?.payout_currency)
-                                : "N/A"}
+                            {row?.original?.payout_currency ? CurrencyName(row?.original?.payout_currency) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -331,26 +325,25 @@ const PendingPayment = (props) => {
     };
 
     return (
-        <PageContent title="Pending Payment Transactions">
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={paymentPending?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={paymentPending?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        <PageContent>
+            <PageContentContainer
+                title="Pending Payment Transactions"
+                topRightContent={
+                    <Filter
+                        handleSearch={handleSearch}
+                        handleSort={handleSort}
+                        handleOrder={handleOrder}
+                        handleFilter={handleFilter}
                     />
-                )}
-            />
+                }
+            >
+                <TanstackReactTable columns={columns} data={paymentPending?.data || []} loading={l_loading} />
+                <TablePagination
+                    paginationData={paymentPending?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };

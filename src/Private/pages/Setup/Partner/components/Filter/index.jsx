@@ -16,11 +16,17 @@ const FilterWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+        gap: "8px",
+        width: "100%",
+    },
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
     display: "flex",
     flexGrow: 1,
+    width: "100%",
 }));
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
@@ -76,6 +82,7 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
 }));
 
 const agentType = [
@@ -91,13 +98,40 @@ function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAg
     return (
         <FilterWrapper>
             <SearchBox>
-                <SearchTextField onChange={handleSearch} />
+                <SearchTextField
+                    onChange={handleSearch}
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("sm")]: {
+                            width: "100%",
+                        },
+                    })}
+                />
             </SearchBox>
 
             <DropWrapper>
-                <Box>
+                <Box
+                    sx={(theme) => ({
+                        display: "flex",
+                        gap: "8px",
+
+                        [theme.breakpoints.down("sm")]: {
+                            flexDirection: "column",
+                            width: "100%",
+                        },
+                    })}
+                >
                     {handleCountry && (
-                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                        <FormControl
+                            sx={(theme) => ({
+                                ml: 1,
+                                minWidth: 120,
+
+                                [theme.breakpoints.down("sm")]: {
+                                    width: "100%",
+                                    ml: 0,
+                                },
+                            })}
+                        >
                             <Select native onChange={handleCountry} displayEmpty defaultValue="">
                                 <option value="">All Country</option>
                                 {country &&
@@ -110,7 +144,17 @@ function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAg
                         </FormControl>
                     )}
                     {handleAgentType && (
-                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                        <FormControl
+                            sx={(theme) => ({
+                                ml: 1,
+                                minWidth: 120,
+
+                                [theme.breakpoints.down("sm")]: {
+                                    width: "100%",
+                                    ml: 0,
+                                },
+                            })}
+                        >
                             <Select
                                 onChange={handleAgentType}
                                 displayEmpty
@@ -136,7 +180,17 @@ function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAg
                         </FormControl>
                     )}
                     {handleSort && (
-                        <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                        <FormControl
+                            sx={(theme) => ({
+                                ml: 1,
+                                minWidth: 120,
+
+                                [theme.breakpoints.down("sm")]: {
+                                    width: "100%",
+                                    ml: 0,
+                                },
+                            })}
+                        >
                             <Select
                                 onChange={handleSort}
                                 displayEmpty
@@ -161,7 +215,17 @@ function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAg
                             </Select>
                         </FormControl>
                     )}
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <FormControl
+                        sx={(theme) => ({
+                            ml: 1,
+                            minWidth: 120,
+
+                            [theme.breakpoints.down("sm")]: {
+                                width: "100%",
+                                ml: 0,
+                            },
+                        })}
+                    >
                         <Select
                             onChange={handleOrder}
                             displayEmpty

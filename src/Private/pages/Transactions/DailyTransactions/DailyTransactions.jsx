@@ -17,6 +17,8 @@ import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -45,10 +47,10 @@ const DailyTransactions = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
+                header: "Id",
+                accessorKey: "tid",
                 maxWidth: 100,
-                Cell: (data) => (
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -59,22 +61,21 @@ const DailyTransactions = (props) => {
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
                             <Link
                                 to={buildRoute(routePaths.viewTransaction, {
-                                    id: data?.value,
-                                    customerId: data?.row?.original?.customer_id,
+                                    id: row?.original?.tid,
+                                    customerId: row?.original?.customer_id,
                                 })}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data.value ? data.value : "N/A"}
+                                {row?.original?.tid ? row?.original?.tid : "N/A"}
                             </Link>
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Name",
-                accessor: "customer_name",
-                width: 130,
-                Cell: (data) => (
+                header: "Name",
+                accessorKey: "customer_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -83,20 +84,19 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.customer_name ? row?.original?.customer_name : "n/a"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
+                            {row?.original?.beneficiary_name ? row?.original?.beneficiary_name : "n/a"}
                         </Typography>
                     </Box>
                 ),
             },
 
             {
-                Header: "C/B Id",
-                accessor: "customer_id",
-                width: 100,
-                Cell: (data) => (
+                header: "C/B Id",
+                accessorKey: "customer_id",
+                Cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -105,25 +105,28 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            <Link to={`/customer/details/${data.value}`} style={{ textDecoration: "none" }}>
-                                {data.value ? data.value : "N/A"}
+                            <Link
+                                to={`/customer/details/${row?.original?.customer_id}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {row?.original?.customer_id ? row?.original?.customer_id : "N/A"}
                             </Link>
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             <Link
-                                to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
+                                to={`/customer/beneficiary/details/${row?.original?.customer_id}/${row?.original?.beneficiary_id}`}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data?.row?.original?.beneficiary_id ? data?.row?.original?.beneficiary_id : "n/a"}
+                                {row?.original?.beneficiary_id ? row?.original?.beneficiary_id : "n/a"}
                             </Link>
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner/Payout Country",
-                accessor: "agent_name",
-                Cell: (data) => (
+                header: "Partner/Payout Country",
+                accessorKey: "agent_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -138,7 +141,7 @@ const DailyTransactions = (props) => {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {row?.original?.agent_name ? row?.original?.agent_name : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -148,54 +151,52 @@ const DailyTransactions = (props) => {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_country_data
-                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : (data?.row?.original?.payout_country ?? "N/A")}
+                            {row?.original?.payout_country_data
+                                ? ucfirst(row?.original?.payout_country_data.toLowerCase())
+                                : (row?.original?.payout_country ?? "N/A")}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Date</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
-                Cell: (data) => (
+                accessorKey: "created_ts",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
+                            {FormatDate(row?.original?.created_ts)}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Rate</Typography>
                     </Box>
                 ),
-                accessor: "payout_cost_rate",
-                width: 80,
-                Cell: (data) => (
+                accessorKey: "payout_cost_rate",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {row?.original?.payout_cost_rate ? FormatNumber(row?.original?.payout_cost_rate) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right" sx={{}}>
                         <Typography>Amount</Typography>
                     </Box>
                 ),
-                accessor: "transfer_amount",
-                width: 80,
-                Cell: (data) => (
+                accessorKey: "transfer_amount",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -204,26 +205,22 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data?.row?.original?.collected_amount
-                                ? FormatNumber(data?.row?.original?.collected_amount)
-                                : "N/A"}
+                            {row?.original?.collected_amount ? FormatNumber(row?.original?.collected_amount) : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Currency</Typography>
                     </Box>
                 ),
-                accessor: "collected_currency",
-                Cell: (data) => (
+                accessorKey: "collected_currency",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -232,22 +229,22 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
+                            {CurrencyName(row?.original?.collected_currency)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {CurrencyName(data?.row?.original?.payout_currency)}
+                            {CurrencyName(row?.original?.payout_currency)}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right" sx={{}}>
                         <Typography>S/T Status</Typography>
                     </Box>
                 ),
-                accessor: "send_status",
-                Cell: (data) => (
+                accessorKey: "send_status",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -264,14 +261,12 @@ const DailyTransactions = (props) => {
                                 lineHeight: 1.2,
                             }}
                         >
-                            {isEmpty(data.row.original.status)
-                                ? data.row.original.send_status
-                                : ReferenceName(66, data.row.original.status)}
+                            {isEmpty(row?.original?.status)
+                                ? row?.original?.send_status
+                                : ReferenceName(66, row?.original?.status)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {!isEmpty(data.row.original.transaction_status)
-                                ? data.row.original.transaction_status
-                                : " "}
+                            {!isEmpty(row?.original?.transaction_status) ? row?.original?.transaction_status : " "}
                         </Typography>
                     </Box>
                 ),
@@ -344,26 +339,34 @@ const DailyTransactions = (props) => {
     };
 
     return (
-        <PageContent title="Daily Transactions">
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={dailyTransactions?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={dailyTransactions?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        <PageContent
+            documentTitle="Daily Transactions"
+            breadcrumbs={[
+                {
+                    label: "Transaction",
+                },
+                {
+                    label: "Daily",
+                },
+            ]}
+        >
+            <PageContentContainer
+                topRightContent={
+                    <Filter
+                        handleSearch={handleSearch}
+                        handleSort={handleSort}
+                        handleOrder={handleOrder}
+                        handleFilter={handleFilter}
                     />
-                )}
-            />
+                }
+            >
+                <TanstackReactTable columns={columns} data={dailyTransactions?.data || []} loading={l_loading} />
+                <TablePagination
+                    paginationData={dailyTransactions?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };

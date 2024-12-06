@@ -21,7 +21,15 @@ export default function PageContentContainer({ title, children, topRightContent 
                 })}
             >
                 <Typography variant="h6">{title}</Typography>
-                <Row gap="16px" flexWrap="wrap">
+                <Row
+                    gap="16px"
+                    flexWrap="wrap"
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("md")]: {
+                            width: "100%",
+                        },
+                    })}
+                >
                     {topRightContent}
                 </Row>
             </Row>
