@@ -5,20 +5,24 @@ import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 
-import ucfirst from "App/helpers/ucfirst";
-import isEmpty from "App/helpers/isEmpty";
+import Column from "App/components/Column/Column";
 import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./../store/actions";
-import Filter from "./../components/Filter";
+import ucfirst from "App/helpers/ucfirst";
+import isEmpty from "App/helpers/isEmpty";
 import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import PageContentContainer from "App/components/Container/PageContentContainer";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -36,20 +40,27 @@ const initialState = {
 
 const DailyTransactions = (props) => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: dailyTransactions, loading: l_loading } = useSelector((state) => state.get_transactions);
 
-    useEffect(() => {
-        dispatch(actions.get_transactions(filterSchema));
-    }, [dispatch, filterSchema]);
+    const {
+        filterSchema,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+        openFilter,
+        isFilterOpen,
+        closeFilter,
+        onQuickFilter,
+        reset,
+    } = useListFilterStore({ initialState });
 
     const columns = useMemo(
         () => [
             {
                 header: "Id",
                 accessorKey: "tid",
-                maxWidth: 100,
                 cell: ({ row }) => (
                     <Box
                         sx={{
@@ -275,68 +286,24 @@ const DailyTransactions = (props) => {
         [],
     );
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
         },
-        [filterSchema],
-    );
+    ];
 
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    useEffect(() => {
+        dispatch(actions.get_transactions(filterSchema));
+    }, [dispatch, filterSchema]);
 
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleFilter = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            pin_number: data?.pin_number,
-            customer_id: data?.customer_id,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payout_country: data?.payment_country,
-            payment_type: data?.payment_type,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Partner Name", value: "agent_name" },
+        { key: "Payout Country", value: "payout_country" },
+        { key: "Payment Type", value: "payment_type" },
+    ];
 
     return (
         <PageContent
@@ -349,24 +316,40 @@ const DailyTransactions = (props) => {
                     label: "Daily",
                 },
             ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
         >
-            <PageContentContainer
-                topRightContent={
-                    <Filter
-                        handleSearch={handleSearch}
-                        handleSort={handleSort}
-                        handleOrder={handleOrder}
-                        handleFilter={handleFilter}
-                    />
-                }
-            >
-                <TanstackReactTable columns={columns} data={dailyTransactions?.data || []} loading={l_loading} />
-                <TablePagination
-                    paginationData={dailyTransactions?.pagination}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Daily Transaction"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onDelete={onDeleteFilterParams}
+                    onReset={reset}
                 />
-            </PageContentContainer>
+                <PageContentContainer
+                    title="Daily Transactions"
+                    topRightContent={
+                        <TableGridQuickFilter
+                            onOrderByChange={onQuickFilter}
+                            onSortByChange={onQuickFilter}
+                            sortByData={sortData}
+                            values={filterSchema}
+                            disabled={l_loading}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={dailyTransactions?.data || []} loading={l_loading} />
+                    <TablePagination
+                        paginationData={dailyTransactions?.pagination}
+                        handleChangePage={onPageChange}
+                        handleChangeRowsPerPage={onRowsPerPageChange}
+                    />
+                </PageContentContainer>
+            </Column>
         </PageContent>
     );
 };
