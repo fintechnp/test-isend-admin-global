@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 
@@ -111,14 +112,28 @@ const ListPromoCode = () => {
             accessorKey: "statusName",
         },
         {
-            header: "Created At",
+            header: "Created At/By",
             accessorKey: "createdTs",
-            cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
+            cell: ({ getValue, row }) => (
+                <Column>
+                    <Typography>
+                        {getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : ""}
+                    </Typography>
+                    <Typography>{row.original?.createdBy ? row.original?.createdBy : ""}</Typography>
+                </Column>
+            ),
         },
         {
-            header: "Updated At",
+            header: "Updated At/By",
             accessorKey: "updatedTs",
-            cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
+            cell: ({ getValue, row }) => (
+                <Column>
+                    <Typography>
+                        {getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : ""}
+                    </Typography>
+                    <Typography>{row.original?.updatedBy ? row.original?.updatedBy : ""}</Typography>
+                </Column>
+            ),
         },
         {
             header: "Action",

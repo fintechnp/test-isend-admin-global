@@ -111,12 +111,10 @@ export default function ViewPromoCode() {
         {
             label: "Mobile Image",
             src: mobileImage,
-            height: 200,
         },
         {
             label: "Web Image",
             src: webImage,
-            height: 100,
         },
         {
             label: "",
