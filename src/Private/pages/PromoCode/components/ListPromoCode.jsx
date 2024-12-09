@@ -104,7 +104,7 @@ const ListPromoCode = () => {
             cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"),
         },
         {
-            header: "Available Budge",
+            header: "Available Budget",
             accessorKey: "budget",
         },
         {
