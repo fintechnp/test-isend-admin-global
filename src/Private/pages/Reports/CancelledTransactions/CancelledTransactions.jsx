@@ -8,15 +8,19 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
-import actions from "../store/actions";
-import SearchForm from "./SearchForm";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import PageContent from "App/components/Container/PageContent";
-import Table, { TablePagination } from "App/components/Table";
-
-import { permissions } from "Private/data/permissions";
+import Column from "App/components/Column/Column";
 import withPermission from "Private/HOC/withPermission";
+import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import actions from "../store/actions";
+import { permissions } from "Private/data/permissions";
+import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import PartnerActions from "../../Setup/Partner/store/actions";
 import { CountryName, CurrencyName, FormatNumber, FormatDate, ReferenceName } from "App/helpers";
 
@@ -42,12 +46,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    customer_id: 0,
-    transaction_id: 0,
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    from_date: "",
-    to_date: "",
     sort_by: "agent_name",
     order_by: "ASC",
 };
@@ -72,14 +70,22 @@ const statePay = {
 
 function CancelledTransactions(props) {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: CancelledTransactions, loading: l_loading } = useSelector((state) => state.get_cancelled_report);
 
     const { response: SendPartner, loading: s_loading } = useSelector((state) => state.get_sending_partner);
 
+    const sendPartnerOptions = SendPartner?.data?.map((data) => ({
+        label: data.name,
+        value: data.agent_id,
+    }));
+
     const { response: PayPartner, loading: p_loading } = useSelector((state) => state.get_payout_partner);
+
+    const payoutPartnerOptions = PayPartner?.data?.map((data) => ({
+        label: data.name,
+        value: data.agent_id,
+    }));
 
     const {
         response: ReportsDownload,
@@ -87,18 +93,26 @@ function CancelledTransactions(props) {
         success: pd_success,
     } = useSelector((state) => state.download_report);
 
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        onQuickFilter,
+        reset,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+    } = useListFilterStore({ initialState });
+
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_cancel_reports"));
         dispatch({ type: "CANCELLED_TRANSACTIONS_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_cancelled_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_cancelled_report(filterSchema));
     }, [dispatch, filterSchema]);
 
     useEffect(() => {
@@ -109,19 +123,17 @@ function CancelledTransactions(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 40,
+                header: "Id",
+                accessorKey: "tid",
             },
             {
-                Header: "Transaction Id",
-                accessor: "transaction_id",
+                header: "Transaction Id",
+                accessorKey: "transaction_id",
             },
             {
-                Header: "Partner",
-                accessor: "agent_name",
-                minWidth: 190,
-                Cell: (data) => (
+                header: "Partner",
+                accessorKey: "agent_name",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -129,44 +141,14 @@ function CancelledTransactions(props) {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p">{data.value ? data.value : "N/A"}</StyledName>
+                        <StyledName component="p">{getValue() ? getValue() : "N/A"}</StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Type/Currency",
-                accessor: "payment_type",
-                Cell: (data) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            fontSize: "12px",
-                            flexDirection: "column",
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? ReferenceName(1, data?.value) : "N/A"}
-                        </StyledName>
-                        <StyledName
-                            component="p"
-                            sx={{
-                                paddingLeft: "2px",
-                                fontSize: "13px",
-                                opacity: 0.8,
-                            }}
-                        >
-                            {data?.row?.original?.collected_currency
-                                ? CurrencyName(data?.row?.original?.collected_currency)
-                                : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
-            },
-            {
-                Header: "Payout Country",
-                accessor: "payout_country",
-                Cell: (data) => (
+                header: "Type/Currency",
+                accessorKey: "payment_type",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -176,7 +158,7 @@ function CancelledTransactions(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
+                            {getValue() ? ReferenceName(referenceTypeId.paymentType, getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -186,17 +168,45 @@ function CancelledTransactions(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(data?.row?.original?.payout_currency)
+                            {row?.original?.collected_currency
+                                ? CurrencyName(row?.original?.collected_currency)
                                 : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Rate/Charge",
-                accessor: "customer_rate",
-                Cell: (data) => (
+                header: "Payout Country",
+                accessorKey: "payout_country",
+                cell: ({ getValue, row }) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            fontSize: "12px",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <StyledName component="p" sx={{ paddingLeft: "2px" }}>
+                            {getValue() ? CountryName(getValue()) : "N/A"}
+                        </StyledName>
+                        <StyledName
+                            component="p"
+                            sx={{
+                                paddingLeft: "2px",
+                                fontSize: "13px",
+                                opacity: 0.8,
+                            }}
+                        >
+                            {row?.original?.payout_currency ? CurrencyName(row?.original?.payout_currency) : "N/A"}
+                        </StyledName>
+                    </Box>
+                ),
+            },
+            {
+                header: "Rate/Charge",
+                accessorKey: "customer_rate",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -211,7 +221,7 @@ function CancelledTransactions(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -221,18 +231,15 @@ function CancelledTransactions(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.service_charge
-                                ? FormatNumber(data?.row?.original?.service_charge)
-                                : "N/A"}
+                            {row?.original?.service_charge ? FormatNumber(row?.original?.service_charge) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Sent/Payout Amount",
-                accessor: "collected_amount",
-                maxWidth: 120,
-                Cell: (data) => (
+                header: "Sent/Payout Amount",
+                accessorKey: "collected_amount",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -247,7 +254,7 @@ function CancelledTransactions(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -257,25 +264,22 @@ function CancelledTransactions(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left">
                         <Typography sx={{ fontSize: "15px" }}>Refund Date</Typography>
                     </Box>
                 ),
-                accessor: "refund_ts",
-                maxWidth: 120,
-                Cell: (data) => (
+                accessorKey: "refund_ts",
+                cell: ({ getValue }) => (
                     <Box textAlign="left">
-                        <StyledName component="p" value={data.value}>
-                            {FormatDate(data?.value)}
+                        <StyledName component="p" value={getValue()}>
+                            {FormatDate(getValue())}
                         </StyledName>
                     </Box>
                 ),
@@ -296,63 +300,6 @@ function CancelledTransactions(props) {
         { key: "Ascending", value: "ASC" },
         { key: "Descending", value: "DESC" },
     ];
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            customer_id: data?.customer_id,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_cancel_reports"));
-        dispatch({ type: "CANCELLED_TRANSACTIONS_REPORT_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
 
     //Downloads
     const headers = [
@@ -383,68 +330,96 @@ function CancelledTransactions(props) {
         dispatch(actions.download_report(updatedFilterSchema, "report/transaction_cancel"));
     };
 
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "transaction_id",
+            label: "Transaction ID",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_id",
+            label: "Customer ID",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "sending_agent_id",
+            label: "Sending Agent",
+            options: sendPartnerOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payout_agent_id",
+            label: "Payout Agent",
+            options: payoutPartnerOptions,
+        },
+    ];
+
     return (
-        <PageContent title="Cancelled Transactions" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        enableReinitialize
-                        initialValues={{
-                            from_date: moment().format("YYYY-MM-DD"),
-                            to_date: moment().format("YYYY-MM-DD"),
-                        }}
-                        onSubmit={handleSearch}
-                        s_loading={s_loading}
-                        p_loading={p_loading}
-                        SendPartner={SendPartner?.data}
-                        PayPartner={PayPartner?.data}
-                        handleReset={handleReset}
+        <PageContent
+            documentTitle="Cancelled Transactions"
+            breadcrumbs={[
+                { label: "Generate Reports" },
+                {
+                    label: "Cancelled Transactions",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Transactions"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    values={filterSchema}
+                    fields={filterFields}
+                />
+                <PageContentContainer
+                    title="Cancelled Transactions"
+                    topRightContent={
+                        <Filter
+                            fileName="CancelledReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        data={CancelledTransactions?.data || []}
                         loading={l_loading}
                     />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && CancelledTransactions?.data && CancelledTransactions?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Transaction Found" />
-                    </Grid>
-                )}
-                {!l_loading && CancelledTransactions?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
-                            <Filter
-                                fileName="CancelledReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                csvReport={csvReport}
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Cancelled Transaction Lists"
-                                state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
-                                downloadData={downloadData}
-                            />
-                            <Table
-                                columns={columns}
-                                data={CancelledTransactions?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={CancelledTransactions?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={CancelledTransactions?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

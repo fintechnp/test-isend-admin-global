@@ -79,7 +79,9 @@ const BuildFilterInput = ({ field }) => {
         );
 
     if (field.type === fieldTypes.COUNTRY_SELECT)
-        return <FormSelectCountry name={field.name} label={field.label} {...field.props} />;
+        return (
+            <FormSelectCountry name={field.name} label={field.label} {...field.props} onSelected={field?.onChange} />
+        );
 
     if (field.type === fieldTypes.PARTNER_SELECT)
         return (
