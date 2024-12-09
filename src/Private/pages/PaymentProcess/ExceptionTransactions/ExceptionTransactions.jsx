@@ -225,6 +225,30 @@ const ExceptionTransactions = (props) => {
             },
             {
                 Header: () => (
+                    <Box textAlign="left">
+                        <Typography>Reason</Typography>
+                    </Box>
+                ),
+                accessor: "compliance_msg",
+                maxWidth: 200,
+                Cell: ({ value }) => {
+                    let errorMessage = "N/A";
+
+                    const compliance_msg = JSON.parse(value);
+
+                    if (compliance_msg && compliance_msg[0] && compliance_msg[0].error_msg) {
+                        errorMessage = compliance_msg[0].error_msg;
+                    }
+
+                    return (
+                        <Box textAlign="left">
+                            <Typography>{errorMessage}</Typography>
+                        </Box>
+                    );
+                },
+            },
+            {
+                Header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>

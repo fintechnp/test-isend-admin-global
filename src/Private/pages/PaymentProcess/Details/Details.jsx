@@ -26,6 +26,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 import SendMail from "./SendMailModal";
 import SuspiciosModal from "./SuspiciosModal";
 import PaymentType from "../data/PaymentType";
+import { Status as StatusType } from "../data/Status";
 import isValidURL from "App/helpers/isValidURL";
 import buildRoute from "App/helpers/buildRoute";
 import useCountries from "App/hooks/useCountries";
@@ -101,6 +102,8 @@ export default function Details({ isAML = false, data: transData }) {
     const { response: Documents, loading } = useSelector((state) => state.get_documents);
     const transactionData = transData;
 
+    console.log(transactionData);
+
     useEffect(() => {
         if (customerId) {
             dispatch(
@@ -142,6 +145,15 @@ export default function Details({ isAML = false, data: transData }) {
     };
 
     const { getCountryNameByIso3 } = useCountries();
+
+    const releasedStatusTypes = [
+        StatusType.W.toUpperCase(),
+        StatusType.F.toUpperCase(),
+        StatusType.B.toUpperCase(),
+        StatusType.E.toUpperCase(),
+        StatusType.A.toUpperCase(),
+        StatusType.P.toUpperCase(),
+    ];
 
     const transactionDefinition = useSourceDetail([
         {
@@ -220,6 +232,22 @@ export default function Details({ isAML = false, data: transData }) {
                 {
                     label: "Deposit Type",
                     accessorKey: "deposit_type",
+                },
+            ],
+        },
+    ]);
+
+    const releaseHistoryDefinition = useSourceDetail([
+        {
+            title: "Release History",
+            items: [
+                {
+                    label: "Released By",
+                    accessorKey: "released_by",
+                },
+                {
+                    label: "Released On",
+                    accessorKey: "released_on",
                 },
             ],
         },
@@ -493,6 +521,24 @@ export default function Details({ isAML = false, data: transData }) {
                                 />
                             </Wrapper>
                         </Grid>
+
+                        {/* released Details */}
+
+                        {releasedStatusTypes.includes(transactionData?.transaction_status?.toUpperCase()) ? (
+                            <Grid item xs={12} md={6}>
+                                <Wrapper>
+                                    <SourceDetails
+                                        viewMode="column"
+                                        rowMode="row"
+                                        definition={releaseHistoryDefinition}
+                                        data={transactionData}
+                                        disableLabelColon={false}
+                                    />
+                                </Wrapper>
+                            </Grid>
+                        ) : (
+                            <></>
+                        )}
 
                         {/* Transaction Table */}
                         <Grid mb={2} item xs={12}>

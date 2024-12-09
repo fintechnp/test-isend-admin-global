@@ -58,8 +58,6 @@ const AmlSuspicious = (props) => {
     const { response: amlSuspicious, loading: l_loading } = useSelector((state) => state.get_aml_suspicious);
     const { success: u_success, loading: u_loading } = useSelector((state) => state.update_aml_suspicious);
 
-    console.log("amlSuspicious", amlSuspicious);
-
     useEffect(() => {
         dispatch(actions.get_aml_suspicious(filterSchema));
         dispatch({ type: "RELEASE_AML_SUSPICIOUS_RESET" });
