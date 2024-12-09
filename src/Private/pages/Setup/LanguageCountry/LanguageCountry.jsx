@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import ReportTable from "Private/components/reports/ReportTable";
 import apiEndpoints from "Private/config/apiEndpoints";
-import { Box, Tooltip, Typography, Grid } from "@mui/material";
+import { Box, Tooltip, Typography, Grid, TablePagination } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
@@ -19,6 +19,8 @@ import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
 import HasPermission from "Private/components/shared/HasPermission";
 import useAuthUser from "Private/hooks/useAuthUser";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 // import AddDeliveryOption from "../DeliveryOption/components/AddDeliveryOption";
 // import AddLanguageOption from "./Components/AddLanguageOption";
 
@@ -79,14 +81,13 @@ function LanguageCountry() {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "language_country_id",
-                maxWidth: 80,
+                header: "Id",
+                accessorKey: "language_country_id",
             },
             {
-                Header: "Language Code",
-                accessor: "language_code",
-                Cell: (data) => (
+                header: "Language Code",
+                accessorKey: "language_code",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -95,15 +96,15 @@ function LanguageCountry() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.language_code ? row?.original?.language_code : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Language Name",
-                accessor: "language_name",
-                Cell: (data) => (
+                header: "Language Name",
+                accessorKey: "language_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -112,15 +113,15 @@ function LanguageCountry() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.language_name ? row?.original?.language_name : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Country",
-                accessor: "country",
-                Cell: (data) => (
+                header: "Country",
+                accessorKey: "country",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -129,15 +130,15 @@ function LanguageCountry() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.country ? row?.original?.country : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Status",
-                accessor: "is_active",
-                Cell: (data) => (
+                header: "Status",
+                accessorKey: "is_active",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -146,7 +147,7 @@ function LanguageCountry() {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? "active" : "inactive"}
+                            {row?.original?.is_active ? "active" : "inactive"}
                         </StyledName>
                     </Box>
                 ),
@@ -154,18 +155,18 @@ function LanguageCountry() {
             ...(can([permissions.EDIT_LANGUAGE_COUNTRY, permissions.DELETE_LANGUAGE_COUNTRY])
                 ? [
                       {
-                          Header: () => (
+                          header: () => (
                               <Box textAlign="center">
                                   <Typography>Actions</Typography>
                               </Box>
                           ),
-                          accessor: "show",
-                          Cell: ({ row }) => (
+                          accessorKey: "show",
+                          cell: ({ row }) => (
                               <Box
                                   sx={{
                                       display: "flex",
                                       flexDirection: "row",
-                                      justifyContent: "center",
+                                      //   justifyContent: "center",
                                   }}
                               >
                                   {/* <AddLanguageOption update={true} update_data={row?.original} /> */}
@@ -189,54 +190,36 @@ function LanguageCountry() {
         [],
     );
     return (
-        <PageContent
-            documentTitle="Language Setup"
-            title={
-                <>
-                    <ContentPasteSearchIcon />
-                    <Typography>Language Country</Typography>
-                </>
-            }
-        >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginBottom: "1rem" }}>
-                <HasPermission permission={[permissions.CREATE_LANGUAGE_COUNTRY]}>
-                    <AddLanguageCountry update={false} />
-                </HasPermission>
-            </div>
-            <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                {/* {lang_loading && ( */}
-                <Grid item xs={12}>
-                    <Loading loading={languageDataLoading} />
-                </Grid>
-                {/* )} */}
+        <PageContent documentTitle="Language Setup">
+            <PageContentContainer title="Language Country">
+                <div
+                    style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginBottom: "1rem" }}
+                >
+                    <HasPermission permission={[permissions.CREATE_LANGUAGE_COUNTRY]}>
+                        <AddLanguageCountry update={false} />
+                    </HasPermission>
+                </div>
+                <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
+                    <Grid item xs={12}>
+                        <Loading loading={languageDataLoading} />
+                    </Grid>
 
-                {!languageDataLoading && !languageData && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Record Found" />
-                    </Grid>
-                )}
-                {!languageDataLoading && languageData?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <ReportTable
-                            columns={columns}
-                            data={languageData?.data || []}
-                            loading={languageDataLoading}
-                            apiEndpoint={apiEndpoints.languageCountry.get}
-                            filterQuery={filterSchema}
-                            filename="Language Country Options"
-                            showExport={false}
-                        />
-                    </Grid>
-                )}
-            </Grid>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "1rem" }}>
-                <Pagination
-                    count={noOfPage}
-                    variant="outlined"
-                    shape="rounded"
-                    onChange={(e, value) => handlePageChange(value)}
-                />
-            </div>
+                    {!languageDataLoading && !languageData && (
+                        <Grid item xs={12}>
+                            <NoResults text="No Record Found" />
+                        </Grid>
+                    )}
+                    {!languageDataLoading && languageData?.data?.length > 0 && (
+                        <Grid item xs={12}>
+                            <TanstackReactTable
+                                columns={columns}
+                                data={languageData?.data || []}
+                                loading={languageDataLoading}
+                            />
+                        </Grid>
+                    )}
+                </Grid>
+            </PageContentContainer>
         </PageContent>
     );
 }

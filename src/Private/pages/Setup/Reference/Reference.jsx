@@ -18,6 +18,8 @@ import PageContent from "App/components/Container/PageContent";
 
 import { permissions } from "Private/data/permissions";
 import HasPermission from "Private/components/shared/HasPermission";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -85,19 +87,17 @@ const Reference = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "S.N.",
-            accessor: "f_serial_no",
-            maxWidth: 60,
+            header: "S.N.",
+            accessorKey: "f_serial_no",
         },
         {
-            Header: "Type ID",
-            accessor: "reference_type_id",
-            maxWidth: 60,
+            header: "Type ID",
+            accessorKey: "reference_type_id",
         },
         {
-            Header: "Name",
-            accessor: "type_name",
-            Cell: (data) => (
+            header: "Name",
+            accessorKey: "type_name",
+            cell: ({ row }) => (
                 <Box
                     sx={{
                         display: "flex",
@@ -106,32 +106,34 @@ const Reference = (props) => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value ? data.value : "n/a"}
+                        {row?.original?.type_name ? row?.original?.type_name : "n/a"}
                     </StyledName>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box>
                     <Typography>Description</Typography>
                 </Box>
             ),
-            accessor: "description",
-            Cell: (data) => (
+            accessorKey: "description",
+            cell: ({ row }) => (
                 <Box>
-                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <StyledText component="p">
+                        {row?.original?.description ? row?.original?.description : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box textAlign="center">
                     <Typography>Actions</Typography>
                 </Box>
             ),
-            accessor: "show",
-            Cell: ({ row }) => (
+            accessorKey: "show",
+            cell: ({ row }) => (
                 <Box
                     sx={{
                         display: "flex",
@@ -139,7 +141,7 @@ const Reference = (props) => {
                         justifyContent: "center",
                     }}
                 >
-                    <span {...row.getToggleRowExpandedProps({})}>
+                    <span>
                         {row.isExpanded ? (
                             <Tooltip title="Hide Details" arrow>
                                 <IconButton>
@@ -252,29 +254,34 @@ const Reference = (props) => {
 
     return (
         <PageContent documentTitle="Reference Type">
-            <Header title="All Reference Type" type={true} />
-            <Filter
-                type={true}
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSortBy={handleSortBy}
-            />
-            <Table
-                columns={columns}
-                title="Reference Type Details"
-                data={referenceTypeData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={referenceTypeData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+            <PageContentContainer
+                title="All Reference Type"
+                topRightContent={
+                    <>
+                        <Filter
+                            type={true}
+                            state={filterSchema}
+                            handleSearch={handleSearch}
+                            handleOrder={handleOrder}
+                            handleSortBy={handleSortBy}
+                        />
+                        <Header type={true} />
+                    </>
+                }
+            >
+                <TanstackReactTable
+                    columns={columns}
+                    title="Reference Type Details"
+                    data={referenceTypeData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                />
+                <TablePagination
+                    paginationData={referenceTypeData?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };

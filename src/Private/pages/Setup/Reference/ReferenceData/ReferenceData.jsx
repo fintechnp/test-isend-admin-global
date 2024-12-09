@@ -17,6 +17,9 @@ import { Delete } from "../../../../../App/components";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import PageContent from "App/components/Container/PageContent";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -77,19 +80,17 @@ const ReferenceData = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "SN",
-            accessor: "f_serial_no",
-            maxWidth: 60,
+            header: "SN",
+            accessorKey: "f_serial_no",
         },
         {
-            Header: "ID",
-            accessor: "reference_id",
-            maxWidth: 60,
+            header: "ID",
+            accessorKey: "reference_id",
         },
         {
-            Header: "Name",
-            accessor: "name",
-            Cell: (data) => (
+            header: "Name",
+            accessorKey: "name",
+            cell: ({ row }) => (
                 <Box
                     sx={{
                         display: "flex",
@@ -98,45 +99,47 @@ const ReferenceData = (props) => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value ? data.value : "n/a"}
+                        {row?.original?.name ? row?.original?.name : "n/a"}
                     </StyledName>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box>
                     <Typography>Value</Typography>
                 </Box>
             ),
-            accessor: "value",
-            Cell: (data) => (
+            accessorKey: "value",
+            cell: ({ row }) => (
                 <Box>
-                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <StyledText component="p">{row?.original?.value ? row?.original?.value : "n/a"}</StyledText>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box>
                     <Typography>Description</Typography>
                 </Box>
             ),
-            accessor: "description",
-            Cell: (data) => (
+            accessorKey: "description",
+            cell: ({ row }) => (
                 <Box>
-                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <StyledText component="p">
+                        {row?.original?.description ? row?.original?.description : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box textAlign="center">
                     <Typography>Actions</Typography>
                 </Box>
             ),
-            accessor: "show",
-            Cell: ({ row }) => (
+            accessorKey: "show",
+            cell: ({ row }) => (
                 <Box
                     sx={{
                         display: "flex",
@@ -144,7 +147,7 @@ const ReferenceData = (props) => {
                         justifyContent: "center",
                     }}
                 >
-                    <span {...row.getToggleRowExpandedProps({})}>
+                    <span>
                         {row.isExpanded ? (
                             <Tooltip title="Hide Details" arrow>
                                 <IconButton>
@@ -250,36 +253,39 @@ const ReferenceData = (props) => {
     };
 
     return (
-        <>
+        <PageContent>
             <Helmet>
                 <title>iSend | {props.title}</title>
             </Helmet>
-            <MenuContainer>
-                <Header title="Reference Data" type={false} id={id} name={name} />
-                <Filter
-                    type={false}
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleOrder={handleOrder}
-                    handleSortBy={handleSortBy}
-                />
-                <Table
+            <PageContentContainer
+                title={name}
+                topRightContent={
+                    <>
+                        <Filter
+                            type={false}
+                            state={filterSchema}
+                            handleSearch={handleSearch}
+                            handleOrder={handleOrder}
+                            handleSortBy={handleSortBy}
+                        />
+                        <Header type={false} id={id} name={""} />
+                    </>
+                }
+            >
+                <TanstackReactTable
                     columns={columns}
                     title="Reference Data Details"
                     data={referenceData?.data || []}
                     sub_columns={sub_columns}
                     loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={referenceData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
                 />
-            </MenuContainer>
-        </>
+                <TablePagination
+                    paginationData={referenceData?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
+        </PageContent>
     );
 };
 

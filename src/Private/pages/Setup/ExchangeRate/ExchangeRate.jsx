@@ -214,6 +214,7 @@ const ExchangeRate = (props) => {
             ]}
         >
             <PageContentContainer
+                title="Partnerwise Exchange Rate"
                 topRightContent={
                     <>
                         <Filter

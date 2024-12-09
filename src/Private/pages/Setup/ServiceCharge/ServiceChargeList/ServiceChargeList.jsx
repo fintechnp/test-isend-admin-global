@@ -14,6 +14,9 @@ import Filter from "../components/Filter";
 import { Delete } from "./../../../../../App/components";
 import Table, { TablePagination, TableSwitch } from "./../../../../../App/components/Table";
 import { CountryName, CurrencyName, ReferenceName, FormatNumber } from "./../../../../../App/helpers";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -85,20 +88,19 @@ const ServiceChargeList = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "charge_id",
-                maxWidth: 60,
+                header: "Id",
+                accessorKey: "charge_id",
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>R.Country/Currency</Typography>
                     </Box>
                 ),
-                accessor: "receiving_country",
-                Cell: (data) => (
+                accessorKey: "receiving_country",
+                cell: ({ row }) => (
                     <Box>
-                        <StyledText component="p">{CountryName(data.value)}</StyledText>
+                        <StyledText component="p">{CountryName(row?.original?.receiving_country)}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -106,25 +108,25 @@ const ServiceChargeList = (props) => {
                                 lineHeight: 1,
                             }}
                         >
-                            {data?.row?.original?.receiving_currency
-                                ? CurrencyName(data?.row?.original?.receiving_currency)
-                                : ""}
+                            {row?.original?.receiving_currency ? CurrencyName(row?.original?.receiving_currency) : ""}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box sx={{ textAlign: "center" }}>
                         <Typography>Customer Type</Typography>
                     </Box>
                 ),
-                accessor: "customer_type",
+                accessorKey: "customer_type",
                 width: 130,
                 maxWidth: 180,
-                Cell: (data) => (
+                cell: ({ row }) => (
                     <Box sx={{ textAlign: "center" }}>
-                        <StyledText component="p">{data.value ? ReferenceName(37, data.value) : ""}</StyledText>
+                        <StyledText component="p">
+                            {row?.original?.customer_type ? ReferenceName(37, row?.original?.customer_type) : ""}
+                        </StyledText>
                         <Typography
                             component="p"
                             sx={{
@@ -133,24 +135,22 @@ const ServiceChargeList = (props) => {
                                 lineHeight: 1,
                             }}
                         >
-                            {data?.row?.original?.payment_type
-                                ? ReferenceName(1, data?.row?.original?.payment_type)
-                                : ""}
+                            {row?.original?.payment_type ? ReferenceName(1, row?.original?.payment_type) : ""}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box sx={{ textAlign: "right" }}>
                         <Typography>Min/Max Amount</Typography>
                     </Box>
                 ),
-                accessor: "min_amount",
-                Cell: (data) => (
+                accessorKey: "min_amount",
+                cell: ({ row }) => (
                     <Box>
                         <StyledText component="p" sx={{ textAlign: "right", paddingRight: "4px" }}>
-                            {data.value ? FormatNumber(data.value) : "n/a"}
+                            {row?.original?.min_amount ? FormatNumber(row?.original?.min_amount) : "n/a"}
                         </StyledText>
                         <Typography
                             sx={{
@@ -161,22 +161,22 @@ const ServiceChargeList = (props) => {
                                 textAlign: "right",
                             }}
                         >
-                            {data?.row?.original?.max_amount ? FormatNumber(data?.row?.original?.max_amount) : "n/a"}
+                            {row?.original?.max_amount ? FormatNumber(row?.original?.max_amount) : "n/a"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box sx={{ textAlign: "right" }}>
                         <Typography>Flat/Per Charge</Typography>
                     </Box>
                 ),
-                accessor: "charge_flat",
-                Cell: (data) => (
+                accessorKey: "charge_flat",
+                cell: ({ row }) => (
                     <Box>
                         <StyledText component="p" sx={{ textAlign: "right", paddingRight: "4px" }}>
-                            {data.value ? FormatNumber(data.value) : "n/a"}
+                            {row?.original?.charge_flat ? FormatNumber(row?.original?.charge_flat) : "n/a"}
                         </StyledText>
                         <Typography
                             sx={{
@@ -187,34 +187,36 @@ const ServiceChargeList = (props) => {
                                 textAlign: "right",
                             }}
                         >
-                            {data?.row?.original?.charge_per ? data?.row?.original?.charge_per : "n/a"}
+                            {row?.original?.charge_per ? row?.original?.charge_per : "n/a"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Status</Typography>
                     </Box>
                 ),
-                accessor: "is_active",
-                width: 130,
-                maxWidth: 180,
-                Cell: (data) => (
+                accessorKey: "is_active",
+                cell: ({ row }) => (
                     <SwitchWrapper textAlign="center" sx={{}}>
-                        <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
+                        <TableSwitch
+                            value={row?.original?.is_active}
+                            data={row?.original}
+                            handleStatus={handleStatus}
+                        />
                     </SwitchWrapper>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -328,36 +330,39 @@ const ServiceChargeList = (props) => {
     };
 
     return (
-        <>
+        <PageContent>
             <Helmet>
                 <title>iSend | {props.title}</title>
             </Helmet>
-            <MenuContainer>
-                <Header title="Service Charge List" buttonText="Add Service Charge" name={name} agent_id={id} />
-                <Filter
-                    state={filterSchema}
-                    sortData={sortData}
-                    orderData={orderData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
-                />
-                <Table
+            <PageContentContainer
+                title={`Service Charge List of ${name}`}
+                topRightContent={
+                    <>
+                        <Filter
+                            state={filterSchema}
+                            sortData={sortData}
+                            orderData={orderData}
+                            handleSearch={handleSearch}
+                            handleSort={handleSort}
+                            handleOrder={handleOrder}
+                        />
+                        <Header buttonText="Add Service Charge" agent_id={id} />
+                    </>
+                }
+            >
+                <TanstackReactTable
                     columns={columns}
                     title="Service Charge Details"
                     data={servicecharge_data?.data || []}
                     loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={servicecharge_data?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
                 />
-            </MenuContainer>
-        </>
+                <TablePagination
+                    paginationData={servicecharge_data?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
+        </PageContent>
     );
 };
 

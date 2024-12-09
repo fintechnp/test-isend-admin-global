@@ -9,24 +9,27 @@ import EditCountryStateModal from "Private/components/country-states/EditCountry
 import HasPermission from "Private/components/shared/HasPermission";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 function ListCountryState() {
     const dispatch = useDispatch();
 
     return (
-        <PageContent
-            title="Country States"
-            topRightEndContent={
-                <HasPermission permission={permissions.CREATE_COUNTRY_STATE}>
-                    <Button onClick={() => dispatch({ type: "OPEN_ADD_COUNTRY_STATE_MODAL" })}>
-                        Add Country State
-                    </Button>
-                </HasPermission>
-            }
-        >
-            <AddCountryStateModal />
-            <EditCountryStateModal />
-            <CountryStates />
+        <PageContent>
+            <PageContentContainer
+                title="Country States"
+                topRightContent={
+                    <HasPermission permission={permissions.CREATE_COUNTRY_STATE}>
+                        <Button onClick={() => dispatch({ type: "OPEN_ADD_COUNTRY_STATE_MODAL" })}>
+                            Add Country State
+                        </Button>
+                    </HasPermission>
+                }
+            >
+                <AddCountryStateModal />
+                <EditCountryStateModal />
+                <CountryStates />
+            </PageContentContainer>
         </PageContent>
     );
 }
