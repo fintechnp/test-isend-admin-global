@@ -70,6 +70,9 @@ const RewardConfigurationForm = ({
                         const isRewardTypeIncentive = watch(`Rewards.${index}.rewardOn`) === rewardOnEnums.INCENTIVE;
                         const isRewardTypePercentage =
                             watch(`Rewards.${index}.rewardType`) === rewardTypeEnums.PERCENTAGE;
+
+                        const maximumAmount = watch(`Rewards.${index}.maximumAmount`);
+
                         return (
                             <React.Fragment key={`${field.id}_field`}>
                                 {index === 0 && (

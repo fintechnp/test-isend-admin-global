@@ -1,13 +1,19 @@
+import * as Yup from "yup";
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import Modal from "App/components/Modal/Modal";
 import Typography from "@mui/material/Typography";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
-import FormTextField from "App/core/hook-form/FormTextField";
 
+import Modal from "App/components/Modal/Modal";
+import FormTextField from "App/core/hook-form/FormTextField";
 import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
+
+const schema = Yup.object().shape({
+    budget: Yup.number().required("Budget is required"),
+});
 
 const AddCampaignBudgetModal = ({
     isLoading,
@@ -23,6 +29,7 @@ const AddCampaignBudgetModal = ({
             campaignId: "",
             budget: "",
         },
+        resolver: yupResolver(schema),
     });
 
     const { reset, watch } = methods;

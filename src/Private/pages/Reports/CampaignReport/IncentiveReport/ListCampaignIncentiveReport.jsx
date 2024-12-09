@@ -150,9 +150,6 @@ const ListCampaignIncentiveReport = () => {
             }
             breadcrumbs={[
                 {
-                    label: "Dashboard",
-                },
-                {
                     label: "Report",
                 },
                 {

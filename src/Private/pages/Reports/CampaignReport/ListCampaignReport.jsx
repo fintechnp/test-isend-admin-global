@@ -133,9 +133,6 @@ const ListCampaignReport = () => {
             }
             breadcrumbs={[
                 {
-                    label: "Dashboard",
-                },
-                {
                     label: "Report",
                 },
                 {
