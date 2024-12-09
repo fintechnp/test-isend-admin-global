@@ -128,6 +128,7 @@ function Filter({
     downloadData,
     exportColumns,
     menu,
+    custompdfTable,
 }) {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -171,7 +172,9 @@ function Filter({
                 setDown(null);
             } else if (success && down === "pdf") {
                 const generatePdfDocument = async (csvReport, fileName) => {
-                    const blob = await pdf(<PdfDocument csvReport={csvReport} />).toBlob();
+                    const blob = await pdf(
+                        <PdfDocument csvReport={csvReport} customPdfTable={custompdfTable} />,
+                    ).toBlob();
                     FileSaver.saveAs(blob, fileName);
                     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                     setDown(null);
@@ -195,8 +198,22 @@ function Filter({
             </HeaderWrapper>
             {!menu ? (
                 <Box display="flex" columnGap="16px">
-                    <ExportToPdf setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
-                    <ExportToExcel setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
+                    <ExportToPdf
+                        setDown={setDown}
+                        handleClose={handleClose}
+                        downloadData={downloadData}
+                        downloading={loading}
+                    >
+                        <> {loading && down === "pdf" ? "Exporting..." : "PDF"}</>
+                    </ExportToPdf>
+                    <ExportToExcel
+                        setDown={setDown}
+                        handleClose={handleClose}
+                        downloadData={downloadData}
+                        downloading={loading}
+                    >
+                        <> {loading && down === "xlsx" ? "Exporting..." : "Excel"}</>
+                    </ExportToExcel>
                 </Box>
             ) : (
                 <DropWrapper>
