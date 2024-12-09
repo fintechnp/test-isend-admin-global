@@ -55,7 +55,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-export const PdfDocument = ({ csvReport }) => {
+export const PdfDocument = ({ csvReport, customPdfTable }) => {
     return (
         <Document>
             <Page size="A4" orientation="landscape" wrap style={styles.page}>
@@ -73,7 +73,7 @@ export const PdfDocument = ({ csvReport }) => {
                         {csvReport?.end ? ` To  ${dateUtils.getFormattedDate(csvReport?.end, "MM/DD/YY")}` : "To"}
                     </Text>
                 </View>
-                <Table csvReport={csvReport} />
+                {customPdfTable ? customPdfTable : <Table csvReport={csvReport} />}
                 <Text
                     style={styles.page_number}
                     render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
@@ -84,11 +84,11 @@ export const PdfDocument = ({ csvReport }) => {
     );
 };
 
-const ExportToPdf = ({ setDown, downloadData, handleClose, menu = false }) => {
+const ExportToPdf = ({ setDown, downloadData, handleClose, menu = false, downloading, children }) => {
     const fetchData = () => {
         setDown("pdf");
         downloadData();
-        handleClose();
+        if (handleClose && typeof handleClose === "function") handleClose();
     };
 
     return (
@@ -99,8 +99,8 @@ const ExportToPdf = ({ setDown, downloadData, handleClose, menu = false }) => {
                     PDF
                 </MenuItem>
             ) : (
-                <StyledButton endIcon={<DocumentDownloadIcon />} onClick={fetchData}>
-                    PDF
+                <StyledButton endIcon={<DocumentDownloadIcon />} onClick={fetchData} disabled={downloading}>
+                    {children}
                 </StyledButton>
             )}
         </>

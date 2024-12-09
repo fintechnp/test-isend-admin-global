@@ -1,37 +1,60 @@
+import * as Yup from "yup";
+import { isAfter } from "date-fns";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 import React, { useState, useEffect, useMemo } from "react";
 import useListFilterStore from "App/hooks/useListFilterStore";
 
+import CreateEmail from "./CreateEmail";
 import Row from "App/components/Row/Row";
-import isEmpty from "App/helpers/isEmpty";
-import dateUtils from "App/utils/dateUtils";
-import { useConfirm } from "App/core/mui-confirm";
 import Column from "App/components/Column/Column";
-import FilterForm from "App/components/Filter/FilterForm";
 import Table, { TablePagination } from "App/components/Table";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
+import EmailStatusBadge from "../Sms/components/EmailStatusBadge";
 import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import CreateEmail from "./CreateEmail";
+
 import actions from "./../store/actions";
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
+import { useConfirm } from "App/core/mui-confirm";
+import { emailStatus } from "../Sms/data/emailStatus";
 import { permissions } from "Private/data/permissions";
 import ViewEmailModal from "./ViewEmail/ViewEmailModal";
 import withPermission from "Private/HOC/withPermission";
-import EmailStatusBadge from "../Sms/components/EmailStatusBadge";
 
 const initialState = {
     page_number: 1,
     page_size: 15,
-    search: "",
     sort_by: "created_ts",
     order_by: "DESC",
 };
+
+const schema = Yup.object().shape({
+    from_date: Yup.string().nullable().optional(),
+    to_date: Yup.string()
+        .nullable()
+        .optional()
+        .when("from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                Yup.string().test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(from_date)) : true;
+                    },
+                }),
+            otherwise: (schema) => Yup.string().nullable().optional(),
+        }),
+});
 
 const Email = () => {
     const dispatch = useDispatch();
@@ -56,6 +79,11 @@ const Email = () => {
     const { response: EmailData, loading: l_loading } = useSelector((state) => state.get_email);
     const { success: c_success } = useSelector((state) => state.create_email);
     const { success: d_success } = useSelector((state) => state.delete_email);
+
+    const statusOptions = Object.entries(emailStatus).map(([label, value]) => ({
+        label,
+        value,
+    }));
 
     useEffect(() => {
         dispatch(actions.get_email(filterSchema));
@@ -177,9 +205,31 @@ const Email = () => {
 
     const filterFields = [
         {
-            type: "textfield",
-            label: "search",
-            name: "Search",
+            type: fieldTypes.DATE,
+            label: "From Date",
+            name: "from_date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            label: "To Date",
+            name: "to_date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            label: "Status",
+            name: "status",
+            options: statusOptions,
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            label: "Email To",
+            name: "email_to",
         },
     ];
 
@@ -238,6 +288,7 @@ const Email = () => {
                     fields={filterFields}
                     values={filterSchema}
                     onDelete={onDeleteFilterParams}
+                    schema={schema}
                 />
 
                 <PageContentContainer

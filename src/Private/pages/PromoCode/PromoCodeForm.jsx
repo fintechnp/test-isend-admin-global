@@ -54,6 +54,16 @@ const CellContainer = styled(Box)(() => ({
     },
 }));
 
+const CustomTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+        backgroundColor: "green",
+    },
+    "&:hover": {
+        backgroundColor: "red",
+        cursor: "pointer",
+    },
+}));
+
 export default function PromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -540,7 +550,7 @@ export default function PromoCodeForm({ isSubmitting = false, handleSubmit, init
                                     </TableHead>
                                     <TableBody>
                                         {rewardFields.map((field, index) => (
-                                            <TableRow key={`${field.id}_field`}>
+                                            <TableRow>
                                                 <TableCell>
                                                     <CellContainer>
                                                         <FormTextField
