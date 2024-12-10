@@ -59,6 +59,11 @@ const RewardConfigurationForm = ({
     useEffect(() => {
         rewards.forEach((reward, index) => {
             setValue(`Rewards.${index}.rewardCategory`, campaignRewardCatogoryEnumsOptionsReferrer[0].value);
+
+            if (index > 0) {
+                const previousMaxAmount = watch(`Rewards.${index - 1}.maximumAmount`);
+                setValue(`Rewards.${index}.minimumAmount`, previousMaxAmount);
+            }
         });
     }, [rewards]);
 
