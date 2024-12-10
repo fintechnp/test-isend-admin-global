@@ -5,29 +5,62 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import buildRoute from "App/helpers/buildRoute";
 import Button from "App/components/Button/Button";
-import routePaths from "Private/config/routePaths";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import LedgerFilterForm from "Private/components/Ledger/LedgerFilterForm";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import EntryType from "./enum/EntryType";
 import dateUtils from "App/utils/dateUtils";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 import { ledgerActions as actions } from "./store";
+import apiEndpoints from "Private/config/apiEndpoints";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import { relatedTo as relatedToConstant, relatedToOptions } from "Private/data/b2b";
 
 const initialState = {
     Page: 1,
     PageSize: 10,
 };
+
 export default function ListLedger() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const agentInitialState = {
+        label: "Agent",
+        searchParamName: "Name",
+        valueKey: "marketMakerId",
+        apiEndpoint: apiEndpoints.marketMaker.getAll,
+        shouldRenderPrevData: true,
+        pageNumberQueryKey: "Page",
+    };
+    const [newField, setNewField] = useState(agentInitialState);
 
     const { response, loading } = useSelector((state) => state.get_all_ledger);
+
+    const {
+        isFilterOpen,
+        closeFilter,
+        openFilter,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onQuickFilter,
+        onRowsPerPageChange,
+        reset,
+        filterSchema,
+    } = useListFilterStore({
+        initialState,
+        pageNumberKeyName: "Page",
+        pageSizeKeyName: "PageSize",
+    });
 
     useEffect(() => {
         dispatch(actions?.get_all_ledger(filterSchema));
@@ -127,50 +160,153 @@ export default function ListLedger() {
         [],
     );
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            Page: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
+    const entityTypeOptions = [
+        {
+            label: EntryType.Single,
+            value: 0,
+        },
+        {
+            label: EntryType.Batch,
+            value: 1,
+        },
+        {
+            label: EntryType.BalanceRequest,
+            value: 2,
+        },
+        {
+            label: EntryType.Manual,
+            value: 3,
+        },
+        {
+            label: EntryType.SingleServiceCharge,
+            value: 4,
+        },
+        {
+            label: EntryType.BatchServiceCharge,
+            value: 5,
+        },
+        {
+            label: EntryType.SingleReverseEntry,
+            value: 6,
+        },
+        {
+            label: EntryType.BatchReverseEntry,
+            value: 7,
+        },
+        {
+            label: EntryType.SingleServiceChargeReverseEntry,
+            value: 8,
+        },
+        {
+            label: EntryType.BatchServiceChargeReverseEntry,
+            value: 9,
+        },
+        {
+            label: EntryType.SingleBatchTransaction,
+            value: 10,
+        },
+        {
+            label: EntryType.SingleBatchServiceCharge,
+            value: 11,
+        },
+    ];
 
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageSize: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "FromDate",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "ToDate",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "RelatedTo",
+            label: "Market Maker",
+            options: relatedToOptions,
+            defaultValue: relatedToConstant.AGENT,
+            onChange: (event) => {
+                const { value } = event.target;
+                const isAgentSelected = value === relatedToConstant.AGENT;
+                setNewField({
+                    label: isAgentSelected ? "Agent" : "Business",
+                    searchParamName: isAgentSelected ? "Name" : "BusinessName",
+                    valueKey: isAgentSelected ? "marketMakerId" : "businessId",
+                    apiEndpoint: isAgentSelected ? apiEndpoints.marketMaker.getAll : apiEndpoints.business.getAll,
+                    shouldRenderPrevData: true,
+                    pageNumberQueryKey: isAgentSelected ? "Page" : "PageNumber",
+                });
+            },
+        },
+        {
+            type: fieldTypes.SEARCH_AUTOCOMPLETE_API,
+            name: "RelatedId",
+            labelKey: "name",
+            ...newField,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "EntryType",
+            label: "Entry Type",
+            options: entityTypeOptions,
+        },
+    ];
 
     return (
         <PageContent
-            title="Ledger List"
+            documentTitle="Ledger List"
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "Ledgers",
+                },
+            ]}
             topRightEndContent={
-                <Button
-                    onClick={() => {
-                        navigate(routePaths.agent.addLedger);
-                    }}
-                >
-                    Add Ledger
-                </Button>
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
         >
-            <LedgerFilterForm setFilterSchema={setFilterSchema} loading={loading} />
-            <TanstackReactTable
-                columns={columns}
-                title="Ledger"
-                data={response?.data ?? []}
-                loading={loading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={response?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Ledger"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onDelete={onDeleteFilterParams}
+                    values={filterSchema}
+                    fields={filterFields}
+                    onReset={reset}
+                />
+                <PageContentContainer
+                    title="Beneficiaries"
+                    topRightContent={
+                        <Button
+                            onClick={() => {
+                                navigate(routePaths.agent.addLedger);
+                            }}
+                        >
+                            Add Ledger
+                        </Button>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={response?.data ?? []} loading={loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={response?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

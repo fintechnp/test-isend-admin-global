@@ -5,16 +5,18 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { Loading } from "App/components";
 import Spacer from "App/components/Spacer/Spacer";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
+import dateUtils from "App/utils/dateUtils";
 import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { CurrencyName, FormatDate, ReferenceName } from "App/helpers";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 import batchTransactionActions from "Private/features/b2b-transactions/batchTransactionActions";
-import dateUtils from "App/utils/dateUtils";
 
 const initialState = {
     page_number: 1,
@@ -90,19 +92,27 @@ export default function ListBatchTransaction() {
         setFilterSchema(updatedFilterSchema);
     };
     return (
-        <PageContent title="Batch Transactions">
-            <TanstackReactTable
-                columns={columns}
-                data={response?.data ?? []}
-                loading={loading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={response?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Batch Transactions"
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "Batch Transactions",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <PageContentContainer title="Batch Transactions">
+                    <TanstackReactTable columns={columns} data={response?.data ?? []} loading={loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={response?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </Column>
         </PageContent>
     );
 }

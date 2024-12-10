@@ -1,4 +1,3 @@
-import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -6,19 +5,23 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import { Loading } from "App/components";
-import buildRoute from "App/helpers/buildRoute";
-import Spacer from "App/components/Spacer/Spacer";
-import routePaths from "Private/config/routePaths";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
-import FilterForm from "Private/components/BalanceRequest/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import { FormatNumber } from "App/helpers";
-import { BalanceRequestActions as actions } from "../BalanceRequest/store";
 import dateUtils from "App/utils/dateUtils";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
+import { localStorageGet } from "App/helpers/localStorage";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import { BalanceRequestActions as actions } from "../BalanceRequest/store";
 
 const initialState = {
     PageNumber: 1,
@@ -27,23 +30,27 @@ const initialState = {
 
 const sortByOptions = [
     {
-        label: "Name",
+        key: "None",
+        value: "",
+    },
+    {
+        key: "Name",
         value: "name",
     },
     {
-        label: "Deposited Amount",
+        key: "Deposited Amount",
         value: "deposited_amount",
     },
     {
-        label: "Currency",
+        key: "Currency",
         value: "currency",
     },
     {
-        label: "Date of deposit",
+        key: "Date of deposit",
         value: "deposit_date",
     },
     {
-        label: "Status",
+        key: "Status",
         value: "status",
     },
 ];
@@ -52,17 +59,33 @@ export default function ListBalanceRequest({ title }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [filterSchema, setFilterSchema] = useState(initialState);
-
     const { response: balanceRequestData, loading } = useSelector((state) => state.get_all_balance_request);
 
-    // const sortByOptions =
-    //     balanceRequestData?.data?.length > 0 &&
-    //     Object.keys(balanceRequestData?.data[0])
-    //         ?.map((item) => {
-    //             return { value: item, label: item };
-    //         })
-    //         .filter((item) => item.label !== "f_serial_no");
+    const statusOptions = localStorageGet("reference")
+        ?.find((item) => item?.reference_type === 67)
+        ?.reference_data?.map((referenceItem) => {
+            return {
+                label: referenceItem.name,
+                value: +referenceItem.value,
+            };
+        });
+
+    const {
+        isFilterOpen,
+        filterSchema,
+        onFilterSubmit,
+        onQuickFilter,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+        reset,
+        closeFilter,
+        openFilter,
+    } = useListFilterStore({
+        initialState,
+        pageNumberKeyName: "PageNumber",
+        pageSizeKeyName: "PageSize",
+    });
 
     useEffect(() => {
         dispatch(actions.get_all_balance_request(filterSchema));
@@ -143,39 +166,97 @@ export default function ListBalanceRequest({ title }) {
         [],
     );
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            Page: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "FromDate",
+            label: "Requested From",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "ToDate",
+            label: "Requested To",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "Name",
+            label: "Name",
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "DateOfDeposit",
+            label: "Date of Deposit",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "Status",
+            label: "Status",
+            options: statusOptions,
+        },
+    ];
 
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageSize: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
     return (
-        <PageContent title="Balance Requests" documentTitle="List Balance Request">
-            <FilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} loading={loading} />
-            <Spacer />
-            <TanstackReactTable
-                columns={columns}
-                title="Balance Request"
-                data={balanceRequestData?.data ?? []}
-                loading={loading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={balanceRequestData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        <PageContent
+            documentTitle="Balance Requests"
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "Balance Requests",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    open={isFilterOpen}
+                    title="Search Balance Request"
+                    fields={filterFields}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    values={filterSchema}
+                />
+                <PageContentContainer
+                    title="Balance Requests"
+                    topRightContent={
+                        <TableGridQuickFilter
+                            onSortByChange={onQuickFilter}
+                            onOrderByChange={onQuickFilter}
+                            sortByData={sortByOptions}
+                            values={filterSchema}
+                            disabled={loading}
+                            orderByFieldName="OrderBy"
+                            sortByFieldName="SortBy"
+                        />
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        title="Balance Request"
+                        data={balanceRequestData?.data ?? []}
+                        loading={loading}
                     />
-                )}
-            />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={balanceRequestData?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

@@ -5,13 +5,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import Modal from "App/components/Modal/Modal";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
+import { RenderField } from "App/components/Container";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import { RenderField } from "App/components/Container";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
 import { accountListActions as actions } from "./store";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 const initialState = {
     Page: 1,
@@ -94,22 +96,28 @@ export default function ListAccountList() {
     };
 
     return (
-        <>
-            <PageContent title="Account List">
-                <TanstackReactTable
-                    columns={columns}
-                    title="Account List"
-                    data={response?.data ?? []}
-                    loading={loading}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={response?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
+        <PageContent
+            documentTitle="Account List"
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "Legdger Accounts",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <PageContentContainer title="Ledger Accounts">
+                    <TanstackReactTable columns={columns} data={response?.data ?? []} loading={loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={response?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
                 />
-            </PageContent>
+            </Column>
+
             <Modal
                 open={openModal}
                 title="Account Balance"
@@ -142,6 +150,6 @@ export default function ListAccountList() {
                     )}
                 </div>
             </Modal>
-        </>
+        </PageContent>
     );
 }

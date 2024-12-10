@@ -2,12 +2,18 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
 
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
-import { b2bAccountActions as actions } from "./store";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import AccountFilterForm from "Private/components/B2bAcount/AccountFilterForm";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import ucwords from "App/helpers/ucwords";
+import { b2bAccountActions as actions } from "./store";
+import { localStorageGet } from "App/helpers/localStorage";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     Page: 1,
@@ -16,9 +22,32 @@ const initialState = {
 export default function ListB2bAccounts() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const countries = localStorageGet("country");
+
+    const countriesOptions = countries?.map((c) => {
+        return {
+            label: ucwords(c.country),
+            value: c.country_id,
+        };
+    });
 
     const { response, loading } = useSelector((state) => state.get_all_b2b_account);
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+        onQuickFilter,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        pageNumberKeyName: "Page",
+        pageSizeKeyName: "PageSize",
+    });
 
     useEffect(() => {
         dispatch(actions?.get_all_b2b_account(filterSchema));
@@ -55,38 +84,55 @@ export default function ListB2bAccounts() {
         [],
     );
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            Page: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "AccountName",
+            label: "Account Name",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "CountryId",
+            label: "Country",
+            options: countriesOptions,
+        },
+    ];
 
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageSize: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
     return (
-        <PageContent title="Balance Accounts">
-            <AccountFilterForm setFilterSchema={setFilterSchema} />
-            <TanstackReactTable
-                columns={columns}
-                title="B2b Accounts"
-                data={response?.data ?? []}
-                loading={loading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={response?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Balance Accounts"
+            breadcrumbs={[
+                {
+                    label: "B2B",
+                },
+                {
+                    label: "Balance Accounts",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Balance Accounts"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    fields={filterFields}
+                    values={filterSchema}
+                />
+                <PageContentContainer title="Balance Accounts">
+                    <TanstackReactTable columns={columns} data={response?.data ?? []} loading={loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={response?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }
