@@ -102,8 +102,6 @@ export default function Details({ isAML = false, data: transData }) {
     const { response: Documents, loading } = useSelector((state) => state.get_documents);
     const transactionData = transData;
 
-    console.log(transactionData);
-
     useEffect(() => {
         if (customerId) {
             dispatch(
@@ -237,18 +235,96 @@ export default function Details({ isAML = false, data: transData }) {
         },
     ]);
 
+    const hasReleasedData =
+        transactionData?.sanction_released_by ||
+        transactionData?.sanction_released_date ||
+        transactionData?.exception_released_by ||
+        transactionData?.exception_released_date ||
+        transactionData?.payment_pending_released_by ||
+        transactionData?.payment_pending_released_date ||
+        transactionData?.blocked_released_by ||
+        transactionData?.blocked_released_date;
+
     const releaseHistoryDefinition = useSourceDetail([
         {
             title: "Release History",
             items: [
-                {
-                    label: "Released By",
-                    accessorKey: "released_by",
-                },
-                {
-                    label: "Released On",
-                    accessorKey: "released_on",
-                },
+                ...(transactionData?.sanction_released_by || transactionData?.sanction_released_date
+                    ? [
+                          {
+                              label: "Sanction Released By",
+                              accessorKey: "sanction_released_by",
+                          },
+                          {
+                              label: "Sanction Released Date",
+                              accessorKey: "sanction_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.sanction_released_date
+                                          ? dateUtils.getFormattedDate(data.sanction_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
+                ...(transactionData?.exception_released_by || transactionData?.exception_released_date
+                    ? [
+                          {
+                              label: "Exception Released By",
+                              accessorKey: "exception_released_by",
+                          },
+                          {
+                              label: "Exception Released Date",
+                              accessorKey: "exception_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.exception_released_date
+                                          ? dateUtils.getFormattedDate(data.exception_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
+                ...(transactionData?.payment_pending_released_by || transactionData?.payment_pending_released_date
+                    ? [
+                          {
+                              label: "Payment Pending Released By",
+                              accessorKey: "payment_pending_released_by",
+                          },
+                          {
+                              label: "Payment Pending Released Date",
+                              accessorKey: "payment_pending_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.payment_pending_released_date
+                                          ? dateUtils.getFormattedDate(data.payment_pending_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
+                ...(transactionData?.blocked_released_by || transactionData?.blocked_released_date
+                    ? [
+                          {
+                              label: "Blocked Released By",
+                              accessorKey: "blocked_released_by",
+                          },
+                          {
+                              label: "Blocked Released Date",
+                              accessorKey: "blocked_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.blocked_released_date
+                                          ? dateUtils.getFormattedDate(data.blocked_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
             ],
         },
     ]);
@@ -524,7 +600,7 @@ export default function Details({ isAML = false, data: transData }) {
 
                         {/* released Details */}
 
-                        {releasedStatusTypes.includes(transactionData?.transaction_status?.toUpperCase()) ? (
+                        {hasReleasedData && (
                             <Grid item xs={12} md={6}>
                                 <Wrapper>
                                     <SourceDetails
@@ -536,8 +612,6 @@ export default function Details({ isAML = false, data: transData }) {
                                     />
                                 </Wrapper>
                             </Grid>
-                        ) : (
-                            <></>
                         )}
 
                         {/* Transaction Table */}
