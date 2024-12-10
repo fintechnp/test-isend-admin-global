@@ -201,9 +201,6 @@ const ListPromoCode = () => {
             }
             breadcrumbs={[
                 {
-                    label: "Dashboard",
-                },
-                {
                     label: "Setup",
                 },
                 {

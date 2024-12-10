@@ -153,7 +153,7 @@ const ListCampaignIncentiveReport = () => {
                     label: "Report",
                 },
                 {
-                    label: "List Campaign Report",
+                    label: "List Campaign Incentive Report",
                 },
             ]}
         >
