@@ -1,6 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import ListItemButton from "@mui/material/ListItemButton";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -121,7 +122,7 @@ const statePay = {
     order_by: "DESC",
 };
 
-function AddUpdatePaymentRules({ update_data, update }) {
+function AddUpdatePaymentRules({ update_data, update, enablePopoverAction = false }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [filterSend, setFilterSend] = React.useState(stateSend);
@@ -190,18 +191,22 @@ function AddUpdatePaymentRules({ update_data, update }) {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Payment Rules" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                enablePopoverAction ? (
+                    <ListItemButton onClick={handleClickOpen}>Update</ListItemButton>
+                ) : (
+                    <Tooltip title="Edit Payment Rules" arrow>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </Tooltip>
+                )
             ) : (
                 <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Payment Rules

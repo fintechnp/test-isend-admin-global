@@ -3,20 +3,28 @@ import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Tooltip, Typography } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-import actions from "./store/actions";
 import { Delete } from "App/components";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
+import Column from "App/components/Column/Column";
 import AddSanction from "./components/AddSanction";
-import Table, { TablePagination } from "App/components/Table";
-import { CountryName, FormatDate, ReferenceName } from "App/helpers";
-import PageContent from "App/components/Container/PageContent";
+import ViewSanction from "./components/ViewSanction";
 import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
+import { CountryName, FormatDate, ReferenceName } from "App/helpers";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import actions from "./store/actions";
+import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -46,21 +54,39 @@ const StyledName = styled(Typography)(({ theme }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
-    search: "",
+    page_size: 10,
     sort_by: "name",
     order_by: "DESC",
 };
 
+const sortData = [
+    { key: "None", value: "" },
+    { key: "Name", value: "name" },
+    { key: "Type", value: "type" },
+    { key: "Country", value: "country" },
+];
+
 const SanctionList = () => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: sanctionList, loading: l_loading } = useSelector((state) => state.get_sanction_list);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_sanction);
     const { success: a_success } = useSelector((state) => state.add_sanction);
     const { success: u_success } = useSelector((state) => state.update_sanction);
     const { success: i_success, loading: i_loading } = useSelector((state) => state.import_sanction);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        reset,
+        onPageChange,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onQuickFilter,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch(actions.get_sanction_list(filterSchema));
@@ -73,15 +99,13 @@ const SanctionList = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "Id",
+                accessorKey: "tid",
             },
             {
-                Header: "Name",
-                accessor: "name",
-                maxWidth: 140,
-                Cell: (data) => (
+                header: "Name",
+                accessorKey: "name",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -90,18 +114,18 @@ const SanctionList = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.type ? ReferenceName(30, data?.row?.original?.type) : "N/A"}
+                            {row?.original?.type ? ReferenceName(30, row?.original?.type) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Address",
-                accessor: "country",
-                Cell: (data) => (
+                header: "Address",
+                accessorKey: "country",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -116,101 +140,71 @@ const SanctionList = () => {
                                 fontSize: "14px",
                             }}
                         >
-                            {data.value ? CountryName(data.value) : "N/A"}
+                            {getValue() ? CountryName(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data?.row?.original?.address ? data?.row?.original?.address : "N/A"}
+                            {row?.original?.address ? row?.original?.address : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>DOB</Typography>
                     </Box>
                 ),
-                accessor: "dob",
-                Cell: (data) => (
+                accessorKey: "dob",
+                cell: ({ getValue }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatDate(data.value) : "N/A"}
+                            {getValue() ? FormatDate(getValue()) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Source</Typography>
                     </Box>
                 ),
-                accessor: "source",
-                maxWidth: 90,
-                Cell: (data) => (
+                accessorKey: "source",
+                cell: ({ getValue }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
-                                <Tooltip title="Hide Sanction Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Show Sanction Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </span>
-                        <HasPermission permission={permissions.EDIT_SANCTION}>
-                            <AddSanction update={true} update_data={row?.original} />
-                        </HasPermission>
-                        <HasPermission permission={permissions.DELETE_SANCTION}>
-                            <Delete
-                                id={row?.original.tid}
-                                handleDelete={handleDelete}
-                                loading={d_loading}
-                                tooltext="Delete Sanction"
-                            />
-                        </HasPermission>
-                    </Box>
+                accessorKey: "show",
+                cell: ({ row }) => (
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                <ViewSanction data={row?.original} onClose={onClose} />
+                                <HasPermission permission={permissions.EDIT_SANCTION}>
+                                    <AddSanction update={true} update_data={row?.original} enablePopoverAction />
+                                </HasPermission>
+                                <HasPermission permission={permissions.DELETE_SANCTION}>
+                                    <Delete
+                                        id={row?.original.tid}
+                                        handleDelete={handleDelete}
+                                        loading={d_loading}
+                                        tooltext="Delete Sanction"
+                                        enablePopoverAction
+                                    />
+                                </HasPermission>
+                            </>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
@@ -231,77 +225,67 @@ const SanctionList = () => {
         { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleDelete = (id) => {
         dispatch(actions.delete_sanction(id));
     };
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+    ];
+
     return (
-        <PageContent documentTitle="Sanction">
-            <Header loading={i_loading} />
-            <Filter handleSearch={handleSearch} handleSort={handleSort} handleOrder={handleOrder} />
-            <Table
-                columns={columns}
-                title="Payment Rules"
-                data={sanctionList?.data || []}
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                handleDelete={handleDelete}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={sanctionList?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Sanction"
+            breadcrumbs={[
+                {
+                    label: "Compliance",
+                },
+                {
+                    label: "Sanction Lists",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Sanction"
+                    fields={filterFields}
+                    values={filterSchema}
+                    onClose={closeFilter}
+                    onDelete={onDeleteFilterParams}
+                    open={isFilterOpen}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                />
+                <PageContentContainer
+                    title="Sanction Lists"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                values={filterSchema}
+                                sortByData={sortData}
+                                disabled={l_loading}
+                            />
+                            <Header loading={i_loading} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={sanctionList?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={sanctionList?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 };

@@ -45,39 +45,39 @@ function Header({ loading }) {
 
     return (
         <HeaderWrapper>
-            <Typography sx={{ fontSize: "22px" }}>Sanction Lists</Typography>
-            <Box sx={{ display: "flex", direction: "row", columnGap: 1 }}>
+            {/* <Typography sx={{ fontSize: "22px" }}>Sanction Lists</Typography> */}
+            <Box sx={{ display: "flex", columnGap: 1 }}>
+                <label htmlFor="contained-button-file">
+                    <Input
+                        id="contained-button-file"
+                        type="file"
+                        onChange={handleImport}
+                        onClick={(event) => {
+                            event.target.value = null;
+                        }}
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    />
+                    <ImportButton
+                        loading={loading}
+                        variant="outlined"
+                        color="primary"
+                        component="span"
+                        sx={{ minWidth: "3px" }}
+                        startIcon={
+                            <SimCardDownloadOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        }
+                    >
+                        Import
+                    </ImportButton>
+                </label>
                 <HasPermission permission={permissions.CREATE_SANCTION}>
-                    <label htmlFor="contained-button-file">
-                        <Input
-                            id="contained-button-file"
-                            type="file"
-                            onChange={handleImport}
-                            onClick={(event) => {
-                                event.target.value = null;
-                            }}
-                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                        />
-                        <ImportButton
-                            loading={loading}
-                            variant="outlined"
-                            color="primary"
-                            component="span"
-                            sx={{ minWidth: "3px" }}
-                            startIcon={
-                                <SimCardDownloadOutlinedIcon
-                                    sx={{
-                                        fontSize: "20px",
-                                        "&:hover": {
-                                            background: "transparent",
-                                        },
-                                    }}
-                                />
-                            }
-                        >
-                            Import
-                        </ImportButton>
-                    </label>
                     <AddSanction update={false} />
                 </HasPermission>
             </Box>
