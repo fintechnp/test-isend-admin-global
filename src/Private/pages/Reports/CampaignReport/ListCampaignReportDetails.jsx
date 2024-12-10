@@ -53,6 +53,10 @@ const ListCampaignReportDetails = () => {
                 accessorKey: "f_serial_no",
             },
             {
+                header: "Transaction Id",
+                accessorKey: "transactionId",
+            },
+            {
                 header: "Campaign Name",
                 accessorKey: "campaignName",
             },

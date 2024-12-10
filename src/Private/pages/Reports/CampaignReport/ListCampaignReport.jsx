@@ -81,14 +81,6 @@ const ListCampaignReport = () => {
                 accessorKey: "campaignAmount",
             },
             {
-                header: "Usage Date",
-                accessorKey: "usageDate",
-                cell: ({ getValue }) => (
-                    <>{getValue() ? dateUtils.getFormattedDate(getValue(), "MM/DD/YYYY hh:mm A") : "-"}</>
-                ),
-            },
-
-            {
                 header: "Created At",
                 accessorKey: "createdTs",
                 cell: ({ getValue }) => (
