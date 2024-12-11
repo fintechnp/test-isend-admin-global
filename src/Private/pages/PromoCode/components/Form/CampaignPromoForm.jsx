@@ -25,6 +25,7 @@ export default function CampaignPromoForm({
     allAttributeList,
     addTriggerFields,
     removeTriggerFields,
+    isLoading,
 }) {
     const { watch, setValue, control } = useFormContext();
 
@@ -56,8 +57,6 @@ export default function CampaignPromoForm({
 
                 const triggerFormOptions = getTriggerFormOptions(attributeFamilyTypeId);
 
-                const watchAttribute = watch(`AttributeConditions.${index}.attribute`);
-
                 const isDuplicate = triggerFields?.some((existingField, existingIndex) => {
                     if (existingIndex === index) return false;
                     const existingAttributeFamily = attributeConditions?.[existingIndex]?.attribute;
@@ -74,6 +73,13 @@ export default function CampaignPromoForm({
                     return isSameCondition;
                 });
 
+                const LoadingOption =
+                    mappedAttributeList.length > 0
+                        ? "Select an option"
+                        : isLoading
+                          ? "Loading option....."
+                          : "Select an option";
+
                 return (
                     <Grid container mb={1} spacing={2} key={`${field.id}_field`}>
                         <Grid item xs={10}>
@@ -81,7 +87,9 @@ export default function CampaignPromoForm({
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormSelect
                                         required
-                                        label="Select an Option"
+                                        label="Select an Options"
+                                        showChooseOption={true}
+                                        chooseOptionLabel={LoadingOption}
                                         name={`AttributeConditions.${index}.attribute`}
                                         options={mappedAttributeList}
                                         onChange={(e) => {

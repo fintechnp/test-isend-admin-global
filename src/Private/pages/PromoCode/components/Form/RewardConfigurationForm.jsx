@@ -76,8 +76,6 @@ const RewardConfigurationForm = ({
                         const isRewardTypePercentage =
                             watch(`Rewards.${index}.rewardType`) === rewardTypeEnums.PERCENTAGE;
 
-                        const maximumAmount = watch(`Rewards.${index}.maximumAmount`);
-
                         return (
                             <React.Fragment key={`${field.id}_field`}>
                                 {index === 0 && (
@@ -88,7 +86,6 @@ const RewardConfigurationForm = ({
                                             <TableCell width={450}>Reward On</TableCell>
                                             <TableCell width={450}>Reward Type</TableCell>
                                             <TableCell width={450}>Value</TableCell>
-
                                             <TableCell width={450}>Limit</TableCell>
 
                                             <TableCell
