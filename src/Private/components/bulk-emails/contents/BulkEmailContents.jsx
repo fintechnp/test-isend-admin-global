@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import toast from "react-hot-toast";
 import Box from "@mui/material/Box";
 import Radio from "@mui/material/Radio";
@@ -8,31 +7,37 @@ import Typography from "@mui/material/Typography";
 import RadioGroup from "@mui/material/RadioGroup";
 import { useSelector, useDispatch } from "react-redux";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import Center from "App/components/Center/Center";
 import Button from "App/components/Button/Button";
 import Spacer from "App/components/Spacer/Spacer";
+import Column from "App/components/Column/Column";
 import SearchBox from "App/components/Forms/SearchBox";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
 import ViewIconButton from "App/components/Button/ViewIconButton";
 import EditIconButton from "App/components/Button/EditIconButton";
 import DeleteIconButton from "App/components/Button/DeleteIconButton";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import EllipsisTypography from "App/components/Typography/EllipsisTypography";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import debounce from "App/helpers/debounce";
 import { useConfirm } from "App/core/mui-confirm";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
-    _number: 1,
-    page_size: 15,
+    page_number: 1,
+    page_size: 10,
     sort_by: "created_ts",
     order_by: "DESC",
 };
 
 const BulkEmailContents = (props) => {
     const dispatch = useDispatch();
-
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: data, loading: isLoading } = useSelector((state) => state.get_bulk_email_content_list);
 
@@ -46,23 +51,17 @@ const BulkEmailContents = (props) => {
 
     const confirm = useConfirm();
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        reset,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+    } = useListFilterStore({ initialState });
 
     const handleOnDelete = (id) => {
         confirm({
@@ -72,14 +71,6 @@ const BulkEmailContents = (props) => {
             dispatch({ type: "DELETE_BULK_EMAIL_CONTENT", bulk_email_content_id: id });
         });
     };
-
-    const handleOnSearch = useCallback((e) => {
-        setFilterSchema({ ...filterSchema, search: e.target.value });
-    }, []);
-
-    const handleOnClearSearch = useCallback(() => {
-        setFilterSchema(initialState);
-    }, []);
 
     const handleStatus = useCallback((is_active, id) => {
         dispatch({
@@ -94,14 +85,13 @@ const BulkEmailContents = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "content_id",
-                maxWidth: "40px",
+                header: "Id",
+                accessorKey: "content_id",
             },
             {
-                Header: "Send to Group / Email",
-                accessor: "group_name",
-                Cell: ({ value, row }) => (
+                header: "Send to Group / Email",
+                accessorKey: "group_name",
+                cell: ({ value, row }) => (
                     <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="controlled-radio-buttons-group"
@@ -122,28 +112,24 @@ const BulkEmailContents = (props) => {
             },
 
             {
-                Header: "Subject",
-                accessor: "email_subject",
+                header: "Subject",
+                accessorKey: "email_subject",
             },
             {
-                Header: "Status",
-                accessor: "is_active",
-                Cell: (data) => (
-                    <TableSwitch
-                        value={data?.value}
-                        dataId={data.row.original.content_id}
-                        handleStatus={handleStatus}
-                    />
+                header: "Status",
+                accessorKey: "is_active",
+                cell: ({ getValue, row }) => (
+                    <TableSwitch value={getValue()} dataId={row.original.content_id} handleStatus={handleStatus} />
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Center>
                         <ViewIconButton
                             onClick={() => {
@@ -208,43 +194,65 @@ const BulkEmailContents = (props) => {
         dispatch({ type: "SEND_BULK_EMAIL_CONTENT_RESET" });
     }, [isSendEmailSuccess]);
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+    ];
+
     return (
-        <Box>
-            <Box display="flex" justifyContent="space-between">
-                <SearchBox
-                    value={filterSchema?.search ?? ""}
-                    onChange={handleOnSearch}
-                    onClickClearSearch={handleOnClearSearch}
+        <PageContent
+            documentTitle="Email Contents"
+            breadcrumbs={[
+                {
+                    label: "Utilites",
+                },
+                {
+                    label: "Email Contents",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Email Contents"
+                    values={filterSchema}
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
                 />
-                <Box display="flex" gap={1}>
-                    <Button startIcon={<SendIcon />} onClick={handleSendEmail} disabled={isSending}>
-                        {isSending ? "Processing" : "Send Email"}
-                    </Button>
-                    <Button
-                        startIcon={<AddIcon />}
-                        onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_CONTENT_MODAL" })}
-                    >
-                        Add Email Content
-                    </Button>
-                </Box>
-            </Box>
-            <Spacer />
-            <Table
-                columns={columns}
-                title="EmailGroups"
-                data={data?.data || []}
-                loading={isLoading}
-                rowsPerPage={8}
-                totalPage={data?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
-        </Box>
+                <PageContentContainer
+                    title="Email Contents"
+                    topRightContent={
+                        <Box display="flex" gap={1}>
+                            <Button startIcon={<SendIcon />} onClick={handleSendEmail} disabled={isSending}>
+                                {isSending ? "Processing" : "Send Email"}
+                            </Button>
+                            <Button
+                                startIcon={<AddIcon />}
+                                onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_CONTENT_MODAL" })}
+                            >
+                                Add Email Content
+                            </Button>
+                        </Box>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={data?.data || []} loading={isLoading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={data?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
+        </PageContent>
     );
 };
 

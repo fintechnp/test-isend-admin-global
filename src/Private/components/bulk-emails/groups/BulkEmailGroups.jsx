@@ -1,17 +1,24 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import Center from "App/components/Center/Center";
 import Button from "App/components/Button/Button";
+import Column from "App/components/Column/Column";
 import SearchBox from "App/components/Forms/SearchBox";
 import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
 import EditIconButton from "App/components/Button/EditIconButton";
 import DeleteIconButton from "App/components/Button/DeleteIconButton";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import debounce from "App/helpers/debounce";
 import { useConfirm } from "App/core/mui-confirm";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     page_number: 1,
@@ -22,7 +29,6 @@ const initialState = {
 
 const BulkEmailGroups = (props) => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: data, loading: isLoading } = useSelector((state) => state.get_bulk_email_group_list);
 
@@ -34,23 +40,17 @@ const BulkEmailGroups = (props) => {
 
     const confirm = useConfirm();
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        reset,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+    } = useListFilterStore({ initialState });
 
     const handleOnDelete = (id) => {
         confirm({
@@ -61,32 +61,24 @@ const BulkEmailGroups = (props) => {
         });
     };
 
-    const handleOnSearch = useCallback((e) => {
-        setFilterSchema({ ...filterSchema, search: e.target.value });
-    }, []);
-
-    const handleOnClearSearch = useCallback(() => {
-        setFilterSchema(initialState);
-    }, []);
-
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "group_id",
+                header: "Id",
+                accessorKey: "group_id",
             },
             {
-                Header: "Name",
-                accessor: "group_name",
+                header: "Name",
+                accessorKey: "group_name",
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Center>
                         <EditIconButton
                             onClick={() => {
@@ -117,32 +109,59 @@ const BulkEmailGroups = (props) => {
         return () => clearTimeout(timeout);
     }, [dispatch, filterSchema, isDeleting, isAddSuccess, isDeleteSuccess, isUpdateSuccess]);
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+    ];
+
     return (
-        <Box>
-            <Box display="flex" justifyContent="space-between">
-                <SearchBox
-                    value={filterSchema?.search ?? ""}
-                    onChange={handleOnSearch}
-                    onClickClearSearch={handleOnClearSearch}
+        <PageContent
+            documentTitle="Email Groups"
+            breadcrumbs={[
+                {
+                    label: "Utilites",
+                },
+                {
+                    label: "Groups",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Email Groups"
+                    values={filterSchema}
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
                 />
-                <Button onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_GROUP_MODAL" })}>Add Group</Button>
-            </Box>
-            <Table
-                columns={columns}
-                title="EmailGroups"
-                data={data?.data || []}
-                loading={isLoading}
-                rowsPerPage={8}
-                totalPage={data?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                <PageContentContainer
+                    topRightContent={
+                        <Button onClick={() => dispatch({ type: "OPEN_ADD_BULK_EMAIL_GROUP_MODAL" })}>Add Group</Button>
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        title="EmailGroups"
+                        data={data?.data || []}
+                        loading={isLoading}
                     />
-                )}
-            />
-        </Box>
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={data?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
+        </PageContent>
     );
 };
 
