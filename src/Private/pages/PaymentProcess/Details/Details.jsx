@@ -441,7 +441,7 @@ export default function Details({ isAML = false, data: transData }) {
                 <Typography variant="body1"> {item?.label}</Typography>
                 <Typography variant="caption"> {item?.date}</Typography>
 
-                {index === 1 && transactionData?.send_status === StatusType.R && (
+                {index === 1 && transactionData?.send_status?.toUpperCase() === StatusType.R?.toUpperCase() && (
                     <Typography variant="caption"> Refunded By : {item?.refundedBy}</Typography>
                 )}
             </Stack>
