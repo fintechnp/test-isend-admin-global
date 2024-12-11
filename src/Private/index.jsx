@@ -833,7 +833,7 @@ export const privateReducer = {
     upload_documents: UploadDocumentsReducer,
     update_kyc: UpdateKycReducer,
     delete_documents: DeleteDocumentsReducer,
-    reset_kyc_verification: ResetKycVerificationReducer,
+    kyc_verification_limit: ResetKycVerificationReducer,
 
     //Remarks
     get_remarks: GetRemarksReducer,

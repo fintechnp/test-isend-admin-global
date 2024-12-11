@@ -64,7 +64,7 @@ function CustomerDetails() {
 
     const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_by_id);
     const { success: update_success } = useSelector((state) => state.update_kyc);
-    const { success: kycLimitSuccess } = useSelector((state) => state.reset_kyc_verification);
+    const { success: kycLimitSuccess } = useSelector((state) => state.kyc_verification_limit);
 
     const data = customersData?.data;
 
@@ -82,16 +82,18 @@ function CustomerDetails() {
     useEffect(() => {
         if (kycLimitSuccess) {
             dispatch(actions.get_customer_by_id(id));
+            dispatch({ type: "KYC_VERIFICATION_LIMIT_RESET" });
         }
     }, [dispatch, kycLimitSuccess]);
 
-    const handleKycReset = () => {
+    const handleKycReset = (onClose) => {
         confirm({
             description: "This action will a reset a KYC verification attempt limit for this customer?",
             confirmationText: "Yes",
         }).then(() => {
-            dispatch(customerActions.reset_kyc_verification(id));
+            dispatch(customerActions.kyc_verification_limit(id));
         });
+        onClose();
     };
 
     const definition = useSourceDetail([
@@ -362,7 +364,7 @@ function CustomerDetails() {
                                     KYC Logs
                                 </ListItemButton>
 
-                                <ListItemButton onClick={handleKycReset}> Reset KYC Limit</ListItemButton>
+                                <ListItemButton onClick={() => handleKycReset(onClose)}>Reset KYC Limit</ListItemButton>
                             </>
                         )}
                     </PopoverButton>
