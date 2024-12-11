@@ -416,6 +416,7 @@ export default function Details({ isAML = false, data: transData }) {
                   {
                       label: `${transactionData.send_status}`,
                       date: `${transactionData?.updated_ts ? dateUtils.getFormattedDate(transactionData?.updated_ts) : "-"}`,
+                      refundedBy: `${transactionData?.updated_by ? transactionData?.updated_by : "-"}`,
                   },
               ]
             : []),
@@ -439,6 +440,10 @@ export default function Details({ isAML = false, data: transData }) {
             <Stack direction="column" spacing={0.5}>
                 <Typography variant="body1"> {item?.label}</Typography>
                 <Typography variant="caption"> {item?.date}</Typography>
+
+                {index === 1 && transactionData?.send_status?.toUpperCase() === StatusType.R?.toUpperCase() && (
+                    <Typography variant="caption"> Refunded By : {item?.refundedBy}</Typography>
+                )}
             </Stack>
         </Box>
     ));

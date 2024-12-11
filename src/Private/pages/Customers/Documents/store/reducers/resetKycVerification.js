@@ -10,13 +10,13 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.RESET_KYC_VERIFICATION:
+        case actions.KYC_VERIFICATION_LIMIT:
             return {
                 ...state,
                 loading: true,
             };
 
-        case actions.RESET_KYC_VERIFICATION_SUCCESS:
+        case actions.KYC_VERIFICATION_LIMIT_SUCCESS:
             return {
                 ...state,
                 is_modal_open: false,
@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
                 loading: false,
                 response: action.response,
             };
-        case actions.RESET_KYC_VERIFICATION_FAILED:
+        case actions.KYC_VERIFICATION_LIMIT_FAILED:
             return {
                 ...state,
                 success: false,
@@ -32,7 +32,16 @@ const reducer = (state = initialState, action) => {
                 error: action.error,
             };
 
-        case actions.OPEN_RESET_KYC_VERIFICATION_MODAL:
+        case actions.KYC_VERIFICATION_LIMIT_RESET:
+            return {
+                ...state,
+                success: false,
+                loading: false,
+                error: null,
+                response: undefined,
+            };
+
+        case actions.OPEN_KYC_VERIFICATION_LIMIT_MODAL:
             return {
                 ...state,
                 is_modal_open: true,
@@ -41,7 +50,7 @@ const reducer = (state = initialState, action) => {
                 error: null,
                 response: undefined,
             };
-        case actions.CLOSE_RESET_KYC_VERIFICATION_MODAL:
+        case actions.CLOSE_KYC_VERIFICATION_LIMIT_MODAL:
             return {
                 ...state,
                 is_modal_open: false,
