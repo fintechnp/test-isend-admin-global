@@ -63,10 +63,10 @@ function CustomerDetails() {
     const confirm = useConfirm();
 
     const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_by_id);
+    const { success: update_success } = useSelector((state) => state.update_kyc);
+    const { success: kycLimitSuccess } = useSelector((state) => state.reset_kyc_verification);
 
     const data = customersData?.data;
-
-    const { success: update_success } = useSelector((state) => state.update_kyc);
 
     useEffect(() => {
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
@@ -78,6 +78,12 @@ function CustomerDetails() {
             dispatch({ type: "UPDATE_KYC_RESET" });
         }
     }, [dispatch, id, update_success]);
+
+    useEffect(() => {
+        if (kycLimitSuccess) {
+            dispatch(actions.get_customer_by_id(id));
+        }
+    }, [dispatch, kycLimitSuccess]);
 
     const handleKycReset = () => {
         confirm({
@@ -220,6 +226,18 @@ function CustomerDetails() {
         },
     ]);
 
+    const kycLimitDefinition = useSourceDetail([
+        {
+            title: "KYC Limit",
+            items: [
+                {
+                    label: "Max KYC Verification Attempt",
+                    accessorKey: "max_kyc_verification_attempt",
+                },
+            ],
+        },
+    ]);
+
     return (
         <PageContent
             documentTitle="Customer Details"
@@ -351,6 +369,8 @@ function CustomerDetails() {
                 </Row>
                 <Divider />
                 <SourceDetails definition={definition} data={data} isLoading={isLoading} />
+
+                <SourceDetails definition={kycLimitDefinition} data={data} isLoading={isLoading} />
             </Paper>
 
             <PageContentContainer
