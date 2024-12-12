@@ -332,19 +332,21 @@ function CustomerReports(props) {
                 ),
             },
             {
-                header: "Id Number",
+                header: "Document Number",
                 accessorKey: "id_number",
             },
 
             {
-                header: "Id",
+                header: "Document Details",
                 accessorKey: "id_issue_date",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? `Issue: ${dateUtils.getFormattedDate(getValue())}` : ""}</Typography>
+                        <Typography>
+                            {getValue() ? `Issue: ${dateUtils.getFormattedDate(getValue(), "MMM DD, YYYY")}` : ""}
+                        </Typography>
                         <Typography>
                             {row.original.id_expiry_date
-                                ? `Expiry: ${dateUtils.getFormattedDate(row.original.id_expiry_date)}`
+                                ? `Expiry: ${dateUtils.getFormattedDate(row.original.id_expiry_date, "MMM DD, YYYY")}`
                                 : ""}
                         </Typography>
                     </Column>

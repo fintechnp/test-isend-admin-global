@@ -14,7 +14,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const ExportToExcel = ({ setDown, downloadData, handleClose, menu }) => {
+const ExportToExcel = ({ setDown, downloadData, handleClose, menu, downloading, children }) => {
     const fetchData = () => {
         setDown("xlsx");
         downloadData();
@@ -29,8 +29,8 @@ const ExportToExcel = ({ setDown, downloadData, handleClose, menu }) => {
                     XLSX
                 </MenuItem>
             ) : (
-                <StyledButton endIcon={<DocumentDownloadIcon />} onClick={fetchData}>
-                    Excel
+                <StyledButton endIcon={<DocumentDownloadIcon />} onClick={fetchData} disabled={downloading}>
+                    {children}
                 </StyledButton>
             )}
         </>

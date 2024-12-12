@@ -14,11 +14,11 @@ const rewardsSchema = Yup.object().shape({
     minimumAmount: Yup.number()
         .typeError("Minimum amount is required")
         .required("Minimum amount is required")
-        .min(0.1, "Minimum Amount must be greater than or equal to 0.1"),
+        .min(0.1, "Must be greater than or equal to 0.1"),
     maximumAmount: Yup.number()
         .typeError("Maximum Amount is required")
         .required("Maximum amount is required")
-        .min(Yup.ref("minimumAmount"), "Maximum amount must be greater than minimum amount"),
+        .min(Yup.ref("minimumAmount"), "Must be greater than minimum amount"),
     rewardOn: Yup.number().typeError("Reward on is required").required("Reward on is required").integer(),
     rewardType: Yup.number().typeError("Reward Type is required").required("Reward type is required").integer(),
     rewardCategory: Yup.number()
@@ -28,14 +28,14 @@ const rewardsSchema = Yup.object().shape({
     rewardValue: Yup.number()
         .typeError("Reward value is required")
         .required("Reward value is required")
-        .min(0.1, "Reward value must be greater than or equal to 0.1"),
+        .min(0.1, "Must be greater than or equal to 0.1"),
     rewardLimit: Yup.number().when("rewardType", {
         is: (value) => value === rewardTypeEnums.PERCENTAGE,
         then: (schema) =>
             schema
                 .required("Reward limit must be at least 1")
                 .typeError("Reward limit must be greater than or equal to 0.1")
-                .min(0.1, "Reward limit must be greater than or equal to 0.1"),
+                .min(0.1, "Must be greater than or equal to 0.1"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
 });
