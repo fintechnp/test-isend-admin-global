@@ -17,6 +17,7 @@ import PhoneIcon from "App/components/Icon/PhoneIcon";
 import { TablePagination } from "App/components/Table";
 import KycStatusBadge from "./components/KycStatusBadge";
 import CustomerAvatar from "./components/CustomerAvatar";
+import referenceTypeId from "Private/config/referenceTypeId";
 import FilterButton from "App/components/Button/FilterButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import PageContent from "App/components/Container/PageContent";
@@ -37,7 +38,6 @@ import routePaths from "Private/config/routePaths";
 import calculateAge from "App/helpers/calculateAge";
 import { permissions } from "Private/data/permissions";
 import { getCustomerName } from "App/helpers/getFullName";
-import referenceTypeId from "Private/config/referenceTypeId";
 import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
@@ -92,8 +92,12 @@ const schema = Yup.object().shape({
 
 function Search() {
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
+    const reference = JSON.parse(localStorage.getItem("reference"));
+
+    const KycStatusOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.kycStatuses)[0]
+        .reference_data.map((data) => ({ ...data, label: data.name }));
 
     const {
         isFilterOpen,
@@ -288,6 +292,12 @@ function Search() {
             type: fieldTypes.TEXTFIELD,
             name: "mobile_number",
             label: "Mobile Number",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "kyc_status",
+            label: "KYC Status",
+            options: KycStatusOptions,
         },
         {
             type: fieldTypes.TEXTFIELD,
