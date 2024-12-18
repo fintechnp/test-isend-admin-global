@@ -63,6 +63,14 @@ const ListCampaignUsageReport = () => {
                 accessorKey: "customerName",
             },
             {
+                header: "Customer Email",
+                accessorKey: "customerEmail",
+            },
+            {
+                header: "Customer Mobile",
+                accessorKey: "customerMobile",
+            },
+            {
                 header: "Amount Redeemed",
                 accessorKey: "amountRedeemed",
             },
