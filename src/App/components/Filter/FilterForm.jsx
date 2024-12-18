@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Chip from "@mui/material/Chip";
+import React, { useMemo } from "react";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -58,6 +58,7 @@ const BuildFilterInput = ({ field }) => {
                 options={field.options}
                 defaultValue={field?.defaultValue}
                 onChange={field?.onChange}
+                {...field.props}
             />
         );
 

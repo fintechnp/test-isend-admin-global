@@ -409,6 +409,9 @@ function TransactionsSuspiciousReports(props) {
             name: "payout_agent_id",
             label: "Payout Partner",
             options: payPartnerOptions,
+            props: {
+                disabled: !payPartnerOptions?.length,
+            },
         },
         {
             type: fieldTypes.SELECT,

@@ -47,11 +47,20 @@ const initialState = {
     order_by: "DESC",
 };
 
+const statePay = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "PAY",
+    country: "",
+    sort_by: "name",
+    order_by: "DESC",
+};
+
 const PendingTransactions = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const country = JSON.parse(localStorage.getItem("country"));
     const reference = JSON.parse(localStorage.getItem("reference"));
+    const [filterPayPartner, setFilterPayPartner] = useState(statePay);
 
     const paymentTypeOptions = reference
         ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.paymentType)[0]
@@ -65,11 +74,6 @@ const PendingTransactions = (props) => {
     const partnerPayoutOptions = partner_payout?.data?.map((data) => ({
         label: data.name,
         value: data.agent_id,
-    }));
-
-    const countryOptions = country?.map((data) => ({
-        label: data.country,
-        value: data.iso3,
     }));
 
     const { response: pendingTransactions, loading: l_loading } = useSelector(
@@ -89,19 +93,23 @@ const PendingTransactions = (props) => {
         reset,
     } = useListFilterStore({ initialState });
 
+    const handlePayPartner = (e) => {
+        const updatedFilterSchema = {
+            ...filterPayPartner,
+            country: e.iso3,
+        };
+        setFilterPayPartner(updatedFilterSchema);
+    };
+
     useEffect(() => {
         dispatch(actions.get_pending_transactions(filterSchema));
-        dispatch(
-            PartnerActions.get_payout_partner({
-                page_number: 1,
-                page_size: 100,
-                agent_type: "PAY",
-                country: filterSchema.country,
-                sort_by: "name",
-                order_by: "DESC",
-            }),
-        );
     }, [dispatch, filterSchema]);
+
+    useEffect(() => {
+        if (filterPayPartner.country) {
+            dispatch(PartnerActions.get_payout_partner(filterPayPartner));
+        }
+    }, [dispatch, filterPayPartner]);
 
     const columns = useMemo(
         () => [
@@ -336,10 +344,10 @@ const PendingTransactions = (props) => {
             label: "Customer ID",
         },
         {
-            type: fieldTypes.SELECT,
+            type: fieldTypes.COUNTRY_SELECT,
             name: "payout_country",
             label: "Payout Country",
-            options: countryOptions,
+            onChange: handlePayPartner,
         },
         {
             type: fieldTypes.PARTNER_SELECT,
@@ -352,6 +360,9 @@ const PendingTransactions = (props) => {
             name: "payout_agent_id",
             label: "Payout Agent",
             options: partnerPayoutOptions,
+            props: {
+                disabled: !partnerPayoutOptions?.length,
+            },
         },
         {
             type: fieldTypes.SELECT,
@@ -378,7 +389,7 @@ const PendingTransactions = (props) => {
         >
             <Column gap="16px">
                 <FilterForm
-                    title="Search Daily Transactions"
+                    title="Search Pending Transactions"
                     open={isFilterOpen}
                     onClose={closeFilter}
                     onSubmit={onFilterSubmit}
@@ -400,12 +411,12 @@ const PendingTransactions = (props) => {
                     }
                 >
                     <TanstackReactTable columns={columns} data={pendingTransactions?.data || []} loading={l_loading} />
-                    <TablePagination
-                        paginationData={pendingTransactions?.pagination}
-                        handleChangePage={onPageChange}
-                        handleChangeRowsPerPage={onRowsPerPageChange}
-                    />
                 </PageContentContainer>
+                <TablePagination
+                    paginationData={pendingTransactions?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
             </Column>
         </PageContent>
     );
