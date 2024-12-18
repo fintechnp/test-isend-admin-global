@@ -1,25 +1,27 @@
-import moment from "moment";
 import { reset } from "redux-form";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Filter from "../Shared/Filter";
-import actions from "../store/actions";
-import SearchForm from "./SearchForm";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import PageContent from "App/components/Container/PageContent";
-import Table, { TablePagination } from "App/components/Table";
-
-import { permissions } from "Private/data/permissions";
+import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import withPermission from "Private/HOC/withPermission";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import actions from "../store/actions";
+import { permissions } from "Private/data/permissions";
+import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import PartnerActions from "../../Setup/Partner/store/actions";
-import { CountryName, CurrencyName, FormatNumber, FormatDate } from "App/helpers";
+import { CountryName, CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -43,17 +45,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    transaction_id: 0,
-    pin_number: "",
-    customer_id: 0,
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    payout_country: "",
-    payment_type: "",
-    status: "",
-    from_date: "",
-    to_date: "",
-    search: "",
     sort_by: "agent_name",
     order_by: "ASC",
 };
@@ -78,8 +69,7 @@ const statePay = {
 
 function TransactionsSuspiciousReports(props) {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const reference = JSON.parse(localStorage.getItem("reference"));
     const [filterPayPartner, setFilterPayPartner] = useState(statePay);
 
     const { response: SummaryReports, loading: l_loading } = useSelector(
@@ -88,13 +78,49 @@ function TransactionsSuspiciousReports(props) {
 
     const { response: SendPartner, loading: s_loading } = useSelector((state) => state.get_sending_partner);
 
+    const sendPartnerOptions = SendPartner?.data?.map((data) => ({
+        label: data.name,
+        value: data.agent_id,
+    }));
+
     const { response: PayPartner, loading: p_loading } = useSelector((state) => state.get_payout_partner);
+
+    const payPartnerOptions = PayPartner?.data?.map((data) => ({
+        label: data.name,
+        value: data.agent_id,
+    }));
+
+    const paymentTypeOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((data) => ({
+            label: data.name,
+            value: data.value,
+        }));
+
+    const statusOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.transactionStatus)[0]
+        .reference_data.map((data) => ({
+            label: data.name,
+            value: data.value,
+        }));
 
     const {
         response: ReportsDownload,
         loading: pd_loading,
         success: pd_success,
     } = useSelector((state) => state.download_report);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        onQuickFilter,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
@@ -104,11 +130,7 @@ function TransactionsSuspiciousReports(props) {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_suspicious_transactions_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_suspicious_transactions_report(filterSchema));
     }, [dispatch, filterSchema]);
 
     useEffect(() => {
@@ -124,10 +146,9 @@ function TransactionsSuspiciousReports(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "transaction_id",
-                maxWidth: 40,
-                Cell: (data) => (
+                header: "Id",
+                accessorKey: "transaction_id",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -136,21 +157,17 @@ function TransactionsSuspiciousReports(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
-                            <Link
-                                to={`/transactions/details/${data.row.original.tid}`}
-                                style={{ textDecoration: "none" }}
-                            >
-                                {data.value ? data.value : "N/A"}
+                            <Link to={`/transactions/details/${row.original.tid}`} style={{ textDecoration: "none" }}>
+                                {getValue() ? getValue() : "N/A"}
                             </Link>
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
-                accessor: "agent_name",
-                minWidth: 190,
-                Cell: (data) => (
+                header: "Partner",
+                accessorKey: "agent_name",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -158,14 +175,14 @@ function TransactionsSuspiciousReports(props) {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p">{data.value ? data.value : "N/A"}</StyledName>
+                        <StyledName component="p">{getValue() ? getValue() : "N/A"}</StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Send Country",
-                accessor: "send_country",
-                Cell: (data) => (
+                header: "Send Country",
+                accessorKey: "send_country",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -175,15 +192,15 @@ function TransactionsSuspiciousReports(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
+                            {getValue() ? CountryName(getValue()) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Payout Country",
-                accessor: "payout_country",
-                Cell: (data) => (
+                header: "Payout Country",
+                accessorKey: "payout_country",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -193,7 +210,7 @@ function TransactionsSuspiciousReports(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
+                            {getValue() ? CountryName(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -203,17 +220,15 @@ function TransactionsSuspiciousReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(data?.row?.original?.payout_currency)
-                                : "N/A"}
+                            {row?.original?.payout_currency ? CurrencyName(row?.original?.payout_currency) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Rate/Charge",
-                accessor: "customer_rate",
-                Cell: (data) => (
+                header: "Rate/Charge",
+                accessorKey: "customer_rate",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -228,7 +243,7 @@ function TransactionsSuspiciousReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -238,18 +253,15 @@ function TransactionsSuspiciousReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.service_charge
-                                ? FormatNumber(data?.row?.original?.service_charge)
-                                : "N/A"}
+                            {row?.original?.service_charge ? FormatNumber(row?.original?.service_charge) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Amount",
-                accessor: "collected_amount",
-                maxWidth: 120,
-                Cell: (data) => (
+                header: "Amount",
+                accessorKey: "collected_amount",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -264,7 +276,7 @@ function TransactionsSuspiciousReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -274,25 +286,22 @@ function TransactionsSuspiciousReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left">
                         <Typography sx={{ fontSize: "15px" }}>Date</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
-                maxWidth: 120,
-                Cell: (data) => (
+                accessorKey: "created_ts",
+                cell: ({ getValue }) => (
                     <Box textAlign="left">
-                        <StyledName component="p" value={data.value}>
-                            {FormatDate(data?.value)}
+                        <StyledName component="p" value={getValue()}>
+                            {FormatDate(getValue())}
                         </StyledName>
                     </Box>
                 ),
@@ -314,74 +323,12 @@ function TransactionsSuspiciousReports(props) {
         { key: "Descending", value: "DESC" },
     ];
 
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            customer_id: data?.customer_id,
-            pin_number: data?.pin_number,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payment_type: data?.payment_type,
-            payout_country: data?.payout_country,
-            status: data?.status,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handlePayPartner = (e) => {
         const updatedFilterSchema = {
             ...filterPayPartner,
-            country: e.target.value,
+            country: e.iso3,
         };
         setFilterPayPartner(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_suspicious_reports"));
-        dispatch({ type: "SUSPICIOUS_TRANSACTIONS_REPORT_RESET" });
-        dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
     };
 
     //Downloads
@@ -413,69 +360,121 @@ function TransactionsSuspiciousReports(props) {
         dispatch(actions.download_report(updatedFilterSchema, "report/transaction_suspicious"));
     };
 
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "from _date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "transaction_id",
+            label: "Transaction ID",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "pin_number",
+            label: "Pin Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_id",
+            label: "Customer ID",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "payout_country",
+            label: "Payout Country",
+            onChange: handlePayPartner,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "sending_agent_id",
+            label: "Send Partner",
+            options: sendPartnerOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payout_agent_id",
+            label: "Payout Partner",
+            options: payPartnerOptions,
+            props: {
+                disabled: !payPartnerOptions?.length,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payment_type",
+            label: "Payment Type",
+            options: paymentTypeOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "status",
+            label: "Status",
+            options: statusOptions,
+        },
+    ];
+
     return (
-        <PageContent title="Suspicious Transactions" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        enableReinitialize
-                        initialValues={{
-                            from_date: moment().format("YYYY-MM-DD"),
-                            to_date: moment().format("YYYY-MM-DD"),
-                        }}
-                        onSubmit={handleSearch}
-                        s_loading={s_loading}
-                        p_loading={p_loading}
-                        SendPartner={SendPartner?.data}
-                        PayPartner={PayPartner?.data}
-                        handleReset={handleReset}
-                        handlePayPartner={handlePayPartner}
-                        loading={l_loading}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && SummaryReports?.data && SummaryReports?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Transaction Found" />
-                    </Grid>
-                )}
-                {!l_loading && SummaryReports?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
-                            <Filter
-                                fileName="SuspiciousReport"
-                                success={pd_success}
-                                loading={pd_loading}
-                                csvReport={csvReport}
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Suspicious Transactions Report"
-                                state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
-                                downloadData={downloadData}
-                            />
-                            <Table
-                                columns={columns}
-                                data={SummaryReports?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={SummaryReports?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
+        <PageContent
+            documentTitle="Suspicious Transactions"
+            breadcrumbs={[
+                {
+                    label: "General Reports",
+                },
+                {
+                    label: "Suspicious Transactions",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Transactions"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onSubmit={onFilterSubmit}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    values={filterSchema}
+                />
+
+                <PageContentContainer
+                    title="Suspicious Transactions"
+                    topRightContent={
+                        <Filter
+                            fileName="SuspiciousReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={SummaryReports?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={SummaryReports?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

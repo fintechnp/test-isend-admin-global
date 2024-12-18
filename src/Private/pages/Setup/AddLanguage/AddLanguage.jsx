@@ -8,15 +8,23 @@ import MuiIconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import actions from "./store/actions";
 import { Delete } from "App/components";
-import Table, { TablePagination } from "App/components/Table";
-import PageContent from "App/components/Container/PageContent";
-import FilterLanguage from "../../../components/AddLanguage/FilterLanguage";
-import LanguageValueModal from "../../../components/AddLanguage/AddLanguageValueModal";
+import Column from "App/components/Column/Column";
 import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import FilterLanguage from "../../../components/AddLanguage/FilterLanguage";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import LanguageValueModal from "../../../components/AddLanguage/AddLanguageValueModal";
+
+import actions from "./store/actions";
+import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "15px",
@@ -29,15 +37,15 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
     "&: hover": { color: "border.dark", opacity: 1 },
 }));
 
+const initialState = {
+    page_size: 10,
+    page_number: 1,
+};
+
 const AddLanguage = () => {
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
-
-    const [filterSchema, setFilterSchema] = useState({
-        page_size: 15,
-        page_number: 1,
-    });
 
     const { loading: getLanguageValueLoading, response: allLanguageValue } = useSelector(
         (state) => state.get_all_language_value,
@@ -52,6 +60,20 @@ const AddLanguage = () => {
     const { success: deleteLanguageValueSuccess, loading: deleteLanguageValueLoading } = useSelector(
         (state) => state.delete_language_value,
     );
+
+    const {
+        filterSchema,
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        onQuickFilter,
+        reset,
+    } = useListFilterStore({ initialState });
+
     useEffect(() => {
         dispatch(actions.get_all_language_value(filterSchema));
         dispatch({ type: "DELETE_LANGUAGE_VALUE_RESET" });
@@ -60,44 +82,27 @@ const AddLanguage = () => {
     }, [filterSchema, dispatch, addLanguageValueSuccess, updateLanguageValueSuccess, deleteLanguageValueSuccess]);
 
     const sortByOptions =
-        allLanguageValue?.data?.length > 0 &&
-        Object.keys(allLanguageValue?.data[0])?.map((item) => {
-            return { value: item, label: item };
-        });
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+        allLanguageValue?.data?.length > 0
+            ? Object.keys(allLanguageValue?.data[0])?.map((item) => {
+                  return { value: item, key: item };
+              })
+            : [];
 
     const handleDelete = (id) => {
         dispatch(actions.delete_language_value(id));
-    };
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
     };
 
     const columns = useMemo(
         () => [
             {
-                Header: "SN",
-                accessor: "f_serial_no",
-                maxWidth: 80,
+                header: "SN",
+                accessorKey: "f_serial_no",
             },
 
             {
-                Header: "Language Key",
-                accessor: "localization_key",
-                Cell: (data) => (
+                header: "Language Key",
+                accessorKey: "localization_key",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -106,15 +111,15 @@ const AddLanguage = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {getValue() ? getValue() : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Language Value",
-                accessor: "localization_value",
-                Cell: (data) => (
+                header: "Language Value",
+                accessorKey: "localization_value",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -123,15 +128,15 @@ const AddLanguage = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {getValue() ? getValue() : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Translation Type",
-                accessor: "translation_type",
-                Cell: (data) => (
+                header: "Translation Type",
+                accessorKey: "translation_type",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -140,20 +145,20 @@ const AddLanguage = () => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {getValue() ? getValue() : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -192,40 +197,69 @@ const AddLanguage = () => {
         ],
         [],
     );
+
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "localization_key",
+            label: "Language Key",
+        },
+    ];
+
     return (
         <PageContent
             documentTitle="Add Language"
-            title={
-                <HasPermission permission={permissions.CREATE_LOCALIZATION}>
-                    <Typography>Add Localization Value</Typography>
-                </HasPermission>
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Localization",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
         >
-            <FilterLanguage sortByOptions={sortByOptions} />
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
-                <HasPermission permission={permissions.CREATE_LOCALIZATION}>
-                    <LanguageValueModal update={false} />
-                </HasPermission>
-            </div>
-            <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                <Grid item xs={12}>
-                    <Table
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Localizatin"
+                    open={isFilterOpen}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    fields={filterFields}
+                    onDelete={onDeleteFilterParams}
+                />
+                <PageContentContainer
+                    title="Language Value"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                sortByData={sortByOptions}
+                                values={filterSchema}
+                            />
+                            <HasPermission permission={permissions.CREATE_LOCALIZATION}>
+                                <LanguageValueModal update={false} />
+                            </HasPermission>
+                        </>
+                    }
+                >
+                    <TanstackReactTable
                         columns={columns}
-                        title="Language Value"
                         data={allLanguageValue?.data || []}
                         loading={getLanguageValueLoading}
-                        rowsPerPage={8}
-                        totalPage={allLanguageValue?.pagination?.totalPage || 1}
-                        renderPagination={() => (
-                            <TablePagination
-                                paginationData={allLanguageValue?.pagination}
-                                handleChangePage={handleChangePage}
-                                handleChangeRowsPerPage={handleChangeRowsPerPage}
-                            />
-                        )}
                     />
-                </Grid>
-            </Grid>
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={allLanguageValue?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 };

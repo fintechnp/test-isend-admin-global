@@ -1,22 +1,32 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import { Helmet } from "react-helmet-async";
-import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
-import actions from "./../store/actions";
 import Header from "./../components/Header";
 import Filter from "./../components/Filter";
-import AddReferenceData from "./../components/AddReferenceData";
-import Table, { TablePagination } from "./../../../../../App/components/Table";
+import Column from "App/components/Column/Column";
 import { Delete } from "../../../../../App/components";
 import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import AddReferenceData from "./../components/AddReferenceData";
+import PopoverButton from "App/components/Button/PopoverButton";
+import ViewReferenceData from "../components/ViewReferenceData";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import Table, { TablePagination } from "./../../../../../App/components/Table";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import actions from "./../store/actions";
+import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -51,7 +61,6 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    search: "",
     sort_by: "name",
     order_by: "DESC",
 };
@@ -59,12 +68,24 @@ const initialState = {
 const ReferenceData = (props) => {
     const { id, name } = useParams();
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: referenceData, loading: g_loading } = useSelector((state) => state.get_reference_data);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_reference_data);
     const { success: a_success } = useSelector((state) => state.add_reference_data);
     const { success: u_success } = useSelector((state) => state.update_reference_data);
+
+    const {
+        isFilterOpen,
+        closeFilter,
+        filterSchema,
+        openFilter,
+        onPageChange,
+        onDeleteFilterParams,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onQuickFilter,
+        reset,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         if (id) {
@@ -77,19 +98,17 @@ const ReferenceData = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "SN",
-            accessor: "f_serial_no",
-            maxWidth: 60,
+            header: "SN",
+            accessorKey: "f_serial_no",
         },
         {
-            Header: "ID",
-            accessor: "reference_id",
-            maxWidth: 60,
+            header: "ID",
+            accessorKey: "reference_id",
         },
         {
-            Header: "Name",
-            accessor: "name",
-            Cell: (data) => (
+            header: "Name",
+            accessorKey: "name",
+            cell: ({ row }) => (
                 <Box
                     sx={{
                         display: "flex",
@@ -98,93 +117,66 @@ const ReferenceData = (props) => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value ? data.value : "n/a"}
+                        {row?.original?.name ? row?.original?.name : "n/a"}
                     </StyledName>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box>
                     <Typography>Value</Typography>
                 </Box>
             ),
-            accessor: "value",
-            Cell: (data) => (
+            accessorKey: "value",
+            cell: ({ row }) => (
                 <Box>
-                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <StyledText component="p">{row?.original?.value ? row?.original?.value : "n/a"}</StyledText>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box>
                     <Typography>Description</Typography>
                 </Box>
             ),
-            accessor: "description",
-            Cell: (data) => (
+            accessorKey: "description",
+            cell: ({ row }) => (
                 <Box>
-                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <StyledText component="p">
+                        {row?.original?.description ? row?.original?.description : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box textAlign="center">
                     <Typography>Actions</Typography>
                 </Box>
             ),
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <HasPermission permission={permissions.EDIT_REFERENCE_DATA}>
-                        <AddReferenceData update={true} update_data={row?.original} />
-                    </HasPermission>
-                    <HasPermission permission={permissions.DELETE_REFERENCE_DATA}>
-                        <Delete
-                            handleDelete={handleDelete}
-                            d_loading={d_loading}
-                            id={row.original?.tid}
-                            tooltext="Delete Reference Data"
-                        />
-                    </HasPermission>
-                </Box>
+            accessorKey: "show",
+            cell: ({ row }) => (
+                <PopoverButton>
+                    {({ onClose }) => (
+                        <>
+                            <ViewReferenceData data={row?.original} onClose={onClose} />
+                            <HasPermission permission={permissions.EDIT_REFERENCE_DATA}>
+                                <AddReferenceData update={true} update_data={row?.original} enablePopoverAction />
+                            </HasPermission>
+                            <HasPermission permission={permissions.DELETE_REFERENCE_DATA}>
+                                <Delete
+                                    handleDelete={handleDelete}
+                                    d_loading={d_loading}
+                                    id={row.original?.tid}
+                                    tooltext="Delete Reference Data"
+                                    enablePopoverAction
+                                />
+                            </HasPermission>
+                        </>
+                    )}
+                </PopoverButton>
             ),
         },
     ]);
@@ -197,89 +189,83 @@ const ReferenceData = (props) => {
         { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
-    const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: searchValue,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSortBy = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Name", value: "name" },
+        { key: "Created Date", value: "created_ts" },
+    ];
 
     const handleDelete = (d_id) => {
         dispatch(actions.delete_reference_data(d_id));
     };
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+    ];
+
     return (
-        <>
-            <Helmet>
-                <title>iSend | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header title="Reference Data" type={false} id={id} name={name} />
-                <Filter
-                    type={false}
-                    state={filterSchema}
-                    handleSearch={handleSearch}
-                    handleOrder={handleOrder}
-                    handleSortBy={handleSortBy}
+        <PageContent
+            documentTitle="Reference Data"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "References",
+                },
+                {
+                    label: "Reference Data",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Seach Reference Data"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    values={filterSchema}
+                    fields={filterFields}
                 />
-                <Table
-                    columns={columns}
-                    title="Reference Data Details"
-                    data={referenceData?.data || []}
-                    sub_columns={sub_columns}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={referenceData?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+                <PageContentContainer
+                    title={name}
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                values={filterSchema}
+                                disabled={g_loading}
+                                sortByData={sortData}
+                            />
+                            <Header type={false} id={id} name={""} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        title="Reference Data Details"
+                        data={referenceData?.data || []}
+                        sub_columns={sub_columns}
+                        loading={g_loading}
+                    />
+                    <TablePagination
+                        paginationData={referenceData?.pagination}
+                        handleChangePage={onPageChange}
+                        handleChangeRowsPerPage={onRowsPerPageChange}
+                    />
+                </PageContentContainer>
+            </Column>
+        </PageContent>
     );
 };
 

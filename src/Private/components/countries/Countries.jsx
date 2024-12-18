@@ -4,14 +4,19 @@ import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-import dateUtils from "App/utils/dateUtils";
+import Button from "App/components/Button/Button";
+import Column from "App/components/Column/Column";
+import HasPermission from "../shared/HasPermission";
 import Table, { TablePagination } from "App/components/Table";
-import countryActions from "Private/features/countries/countryActions";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
+import dateUtils from "App/utils/dateUtils";
 import useAuthUser from "Private/hooks/useAuthUser";
 import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import countryActions from "Private/features/countries/countryActions";
 
 const initialState = {
     page_number: 1,
@@ -23,8 +28,6 @@ const Countries = () => {
 
     const { can } = useAuthUser();
 
-    const [filterSchema, setFilterSchema] = useState(initialState);
-
     const countriesList = JSON.parse(localStorage.getItem("country"));
 
     const { response, loading: isLoading } = useSelector((state) => state.get_countries);
@@ -32,6 +35,8 @@ const Countries = () => {
     const { success: isAddSuccess } = useSelector((state) => state.add_country);
 
     const { success: isUpdateSuccess } = useSelector((state) => state.update_country);
+
+    const { filterSchema, onPageChange, onRowsPerPageChange } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch(countryActions?.get_countries());
@@ -126,40 +131,33 @@ const Countries = () => {
         [],
     );
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     return (
-        <>
-            <TanstackReactTable
-                columns={columns}
-                title="Country"
-                data={countriesList ?? []}
-                loading={isLoading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={countriesList?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
+        <Column gap="16px">
+            <PageContentContainer
+                title="Countries"
+                topRightContent={
+                    <HasPermission permission={permissions.CREATE_COUNTRY_SETUP}>
+                        <Button
+                            variant="outlined"
+                            onClick={() =>
+                                dispatch({
+                                    type: "OPEN_ADD_COUNTRY_MODAL",
+                                })
+                            }
+                        >
+                            Add Country
+                        </Button>
+                    </HasPermission>
+                }
+            >
+                <TanstackReactTable columns={columns} title="Country" data={countriesList ?? []} loading={isLoading} />
+            </PageContentContainer>
+            <TablePagination
+                paginationData={countriesList?.pagination}
+                handleChangePage={onPageChange}
+                handleChangeRowsPerPage={onRowsPerPageChange}
             />
-        </>
+        </Column>
     );
 };
 

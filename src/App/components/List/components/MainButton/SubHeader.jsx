@@ -28,9 +28,9 @@ const ListItem = styled(MuiListItem)(({ theme, open }) => ({
         "& .MuiListItemText-root": {
             color: theme.palette.primary.main,
         },
-        [theme.breakpoints.down("sm")]: {
-            display: "none",
-        },
+        // [theme.breakpoints.down("sm")]: {
+        //     display: "none",
+        // },
     },
 }));
 
@@ -50,7 +50,16 @@ const ListText = styled(ListItemText)(({ theme, open, isSearching }) => ({
     lineHeight: "1rem",
 }));
 
-function SubHeader({ sub_item, open, handleListItemSelect, selectedSub, setSelectedIndex, index, isSearching }) {
+function SubHeader({
+    sub_item,
+    open,
+    handleListItemSelect,
+    selectedSub,
+    setSelectedIndex,
+    index,
+    isSearching,
+    setSelectedKey,
+}) {
     const { pathname } = useLocation();
 
     const handleSubHeader = (item) => {
@@ -60,7 +69,14 @@ function SubHeader({ sub_item, open, handleListItemSelect, selectedSub, setSelec
 
     return (
         <Link to={sub_item.path} color="inherit" style={{ textDecoration: "none" }}>
-            <ListItem dense disablePadding open={open}>
+            <ListItem
+                dense
+                disablePadding
+                open={open}
+                onClick={() => {
+                    setSelectedKey("");
+                }}
+            >
                 <ListButton
                     open={open}
                     selected={selectedSub === sub_item?.path || pathname === sub_item?.path}

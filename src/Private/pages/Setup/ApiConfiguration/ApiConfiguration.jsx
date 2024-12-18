@@ -16,6 +16,8 @@ import PageContent from "App/components/Container/PageContent";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 const ConfigContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -80,15 +82,13 @@ const ApiConfiguration = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "config_id",
-                maxWidth: 40,
+                header: "Id",
+                accessorKey: "config_id",
             },
             {
-                Header: "Partner Code",
-                accessor: "api_partner_code",
-                minWidth: 160,
-                Cell: (data) => (
+                header: "Partner Code",
+                accessorKey: "api_partner_code",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -97,67 +97,70 @@ const ApiConfiguration = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px", opacity: 0.9 }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.api_partner_code ? row?.original?.api_partner_code : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>Api Url</Typography>
                     </Box>
                 ),
-                minWidth: 160,
-                accessor: "api_url",
-                Cell: (data) => (
+                accessorKey: "api_url",
+                cell: ({ row }) => (
                     <Box>
-                        <Tooltip title={data.value ? data.value : ""} arrow>
-                            <UserIdText component="p">{data.value ? data.value : "N/A"}</UserIdText>
+                        <Tooltip title={row?.original?.api_url ? row?.original?.api_url : ""} arrow>
+                            <UserIdText component="p">
+                                {row?.original?.api_url ? row?.original?.api_url : "N/A"}
+                            </UserIdText>
                         </Tooltip>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>User Id</Typography>
                     </Box>
                 ),
-                accessor: "api_user_id",
-                width: 130,
-                Cell: (data) => (
+                accessorKey: "api_user_id",
+                cell: ({ row }) => (
                     <Box>
-                        <Tooltip title={data.value ? data.value : ""} arrow>
-                            <UserIdText component="p">{data.value ? data.value : "N/A"}</UserIdText>
+                        <Tooltip title={row?.original?.api_user_id ? row?.original?.api_user_id : ""} arrow>
+                            <UserIdText component="p">
+                                {row?.original?.api_user_id ? row?.original?.api_user_id : "N/A"}
+                            </UserIdText>
                         </Tooltip>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left">
                         <Typography>User Secret</Typography>
                     </Box>
                 ),
-                accessor: "api_user_secret",
-                width: 120,
-                Cell: (data) => (
+                accessorKey: "api_user_secret",
+                cell: ({ row }) => (
                     <Box>
-                        <Tooltip title={data.value ? data.value : ""} arrow>
-                            <UserIdText component="p">{data.value ? data.value : "N/A"}</UserIdText>
+                        <Tooltip title={row?.original?.api_user_secret ? row?.original?.api_user_secret : ""} arrow>
+                            <UserIdText component="p">
+                                {row?.original?.api_user_secret ? row?.original?.api_user_secret : "N/A"}
+                            </UserIdText>
                         </Tooltip>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -165,7 +168,7 @@ const ApiConfiguration = (props) => {
                             justifyContent: "center",
                         }}
                     >
-                        <span {...row.getToggleRowExpandedProps({})}>
+                        <span>
                             {row.isExpanded ? (
                                 <Tooltip title="Api Config Details" arrow>
                                     <IconButton>
@@ -278,35 +281,40 @@ const ApiConfiguration = (props) => {
 
     return (
         <PageContent documentTitle="API Configuration">
-            <Header title="API Configuration">
-                <HasPermission permission={[permissions.CREATE_API_CONFIGURATION]}>
-                    <AddApiConfig />
-                </HasPermission>
-            </Header>
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-            />
-            <Table
-                columns={columns}
-                title="Api Config Details"
-                data={ApiConfigData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                totalPage={ApiConfigData?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={ApiConfigData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+            <PageContentContainer
+                title="API Configuration"
+                topRightContent={
+                    <>
+                        <Filter
+                            state={filterSchema}
+                            sortData={sortData}
+                            orderData={orderData}
+                            handleSearch={handleSearch}
+                            handleSort={handleSort}
+                            handleOrder={handleOrder}
+                        />
+                        <Header>
+                            <HasPermission permission={[permissions.CREATE_API_CONFIGURATION]}>
+                                <AddApiConfig />
+                            </HasPermission>
+                        </Header>
+                    </>
+                }
+            >
+                <TanstackReactTable
+                    columns={columns}
+                    title="Api Config Details"
+                    data={ApiConfigData?.data || []}
+                    sub_columns={sub_columns}
+                    loading={g_loading}
+                    totalPage={ApiConfigData?.pagination?.totalPage || 1}
+                />
+                <TablePagination
+                    paginationData={ApiConfigData?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };

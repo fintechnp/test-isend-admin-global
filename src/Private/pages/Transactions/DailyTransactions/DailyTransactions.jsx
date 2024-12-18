@@ -5,17 +5,23 @@ import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 
-import ucfirst from "App/helpers/ucfirst";
-import isEmpty from "App/helpers/isEmpty";
+import Column from "App/components/Column/Column";
 import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./../store/actions";
-import Filter from "./../components/Filter";
+import ucfirst from "App/helpers/ucfirst";
+import isEmpty from "App/helpers/isEmpty";
 import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
 
 const StyledName = styled(Typography)(({ theme }) => ({
@@ -34,21 +40,28 @@ const initialState = {
 
 const DailyTransactions = (props) => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: dailyTransactions, loading: l_loading } = useSelector((state) => state.get_transactions);
 
-    useEffect(() => {
-        dispatch(actions.get_transactions(filterSchema));
-    }, [dispatch, filterSchema]);
+    const {
+        filterSchema,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+        openFilter,
+        isFilterOpen,
+        closeFilter,
+        onQuickFilter,
+        reset,
+    } = useListFilterStore({ initialState });
 
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 100,
-                Cell: (data) => (
+                header: "Id",
+                accessorKey: "tid",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -59,22 +72,21 @@ const DailyTransactions = (props) => {
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
                             <Link
                                 to={buildRoute(routePaths.viewTransaction, {
-                                    id: data?.value,
-                                    customerId: data?.row?.original?.customer_id,
+                                    id: row?.original?.tid,
+                                    customerId: row?.original?.customer_id,
                                 })}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data.value ? data.value : "N/A"}
+                                {row?.original?.tid ? row?.original?.tid : "N/A"}
                             </Link>
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Name",
-                accessor: "customer_name",
-                width: 130,
-                Cell: (data) => (
+                header: "Name",
+                accessorKey: "customer_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -83,20 +95,19 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.customer_name ? row?.original?.customer_name : "n/a"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "n/a"}
+                            {row?.original?.beneficiary_name ? row?.original?.beneficiary_name : "n/a"}
                         </Typography>
                     </Box>
                 ),
             },
 
             {
-                Header: "C/B Id",
-                accessor: "customer_id",
-                width: 100,
-                Cell: (data) => (
+                header: "C/B Id",
+                accessorKey: "customer_id",
+                Cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -105,25 +116,28 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            <Link to={`/customer/details/${data.value}`} style={{ textDecoration: "none" }}>
-                                {data.value ? data.value : "N/A"}
+                            <Link
+                                to={`/customer/details/${row?.original?.customer_id}`}
+                                style={{ textDecoration: "none" }}
+                            >
+                                {row?.original?.customer_id ? row?.original?.customer_id : "N/A"}
                             </Link>
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
                             <Link
-                                to={`/customer/beneficiary/details/${data?.value}/${data?.row?.original?.beneficiary_id}`}
+                                to={`/customer/beneficiary/details/${row?.original?.customer_id}/${row?.original?.beneficiary_id}`}
                                 style={{ textDecoration: "none" }}
                             >
-                                {data?.row?.original?.beneficiary_id ? data?.row?.original?.beneficiary_id : "n/a"}
+                                {row?.original?.beneficiary_id ? row?.original?.beneficiary_id : "n/a"}
                             </Link>
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner/Payout Country",
-                accessor: "agent_name",
-                Cell: (data) => (
+                header: "Partner/Payout Country",
+                accessorKey: "agent_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -138,7 +152,7 @@ const DailyTransactions = (props) => {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {row?.original?.agent_name ? row?.original?.agent_name : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -148,54 +162,52 @@ const DailyTransactions = (props) => {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_country_data
-                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : (data?.row?.original?.payout_country ?? "N/A")}
+                            {row?.original?.payout_country_data
+                                ? ucfirst(row?.original?.payout_country_data.toLowerCase())
+                                : (row?.original?.payout_country ?? "N/A")}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Date</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
-                Cell: (data) => (
+                accessorKey: "created_ts",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {FormatDate(data.value)}
+                            {FormatDate(row?.original?.created_ts)}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Rate</Typography>
                     </Box>
                 ),
-                accessor: "payout_cost_rate",
-                width: 80,
-                Cell: (data) => (
+                accessorKey: "payout_cost_rate",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {row?.original?.payout_cost_rate ? FormatNumber(row?.original?.payout_cost_rate) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right" sx={{}}>
                         <Typography>Amount</Typography>
                     </Box>
                 ),
-                accessor: "transfer_amount",
-                width: 80,
-                Cell: (data) => (
+                accessorKey: "transfer_amount",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -204,26 +216,22 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data?.row?.original?.collected_amount
-                                ? FormatNumber(data?.row?.original?.collected_amount)
-                                : "N/A"}
+                            {row?.original?.collected_amount ? FormatNumber(row?.original?.collected_amount) : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Currency</Typography>
                     </Box>
                 ),
-                accessor: "collected_currency",
-                Cell: (data) => (
+                accessorKey: "collected_currency",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -232,22 +240,22 @@ const DailyTransactions = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {CurrencyName(data.value)}
+                            {CurrencyName(row?.original?.collected_currency)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {CurrencyName(data?.row?.original?.payout_currency)}
+                            {CurrencyName(row?.original?.payout_currency)}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right" sx={{}}>
                         <Typography>S/T Status</Typography>
                     </Box>
                 ),
-                accessor: "send_status",
-                Cell: (data) => (
+                accessorKey: "send_status",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -264,14 +272,12 @@ const DailyTransactions = (props) => {
                                 lineHeight: 1.2,
                             }}
                         >
-                            {isEmpty(data.row.original.status)
-                                ? data.row.original.send_status
-                                : ReferenceName(66, data.row.original.status)}
+                            {isEmpty(row?.original?.status)
+                                ? row?.original?.send_status
+                                : ReferenceName(66, row?.original?.status)}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {!isEmpty(data.row.original.transaction_status)
-                                ? data.row.original.transaction_status
-                                : " "}
+                            {!isEmpty(row?.original?.transaction_status) ? row?.original?.transaction_status : " "}
                         </Typography>
                     </Box>
                 ),
@@ -280,90 +286,70 @@ const DailyTransactions = (props) => {
         [],
     );
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
         },
-        [filterSchema],
-    );
+    ];
 
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    useEffect(() => {
+        dispatch(actions.get_transactions(filterSchema));
+    }, [dispatch, filterSchema]);
 
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleFilter = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            pin_number: data?.pin_number,
-            customer_id: data?.customer_id,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payout_country: data?.payment_country,
-            payment_type: data?.payment_type,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Partner Name", value: "agent_name" },
+        { key: "Payout Country", value: "payout_country" },
+        { key: "Payment Type", value: "payment_type" },
+    ];
 
     return (
-        <PageContent title="Daily Transactions">
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={dailyTransactions?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
+        <PageContent
+            documentTitle="Daily Transactions"
+            breadcrumbs={[
+                {
+                    label: "Transaction",
+                },
+                {
+                    label: "Daily",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Daily Transaction"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onDelete={onDeleteFilterParams}
+                    onReset={reset}
+                />
+                <PageContentContainer
+                    title="Daily Transactions"
+                    topRightContent={
+                        <TableGridQuickFilter
+                            onOrderByChange={onQuickFilter}
+                            onSortByChange={onQuickFilter}
+                            sortByData={sortData}
+                            values={filterSchema}
+                            disabled={l_loading}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={dailyTransactions?.data || []} loading={l_loading} />
                     <TablePagination
                         paginationData={dailyTransactions?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        handleChangePage={onPageChange}
+                        handleChangeRowsPerPage={onRowsPerPageChange}
                     />
-                )}
-            />
+                </PageContentContainer>
+            </Column>
         </PageContent>
     );
 };

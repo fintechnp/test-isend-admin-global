@@ -53,7 +53,7 @@ const StreetTypeModal = ({ update, update_data }) => {
                     </UpdateButton>
                 </Tooltip>
             ) : (
-                <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
+                <AddButton variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />} sx={{ m: 0 }}>
                     Add Street Type
                 </AddButton>
             )}

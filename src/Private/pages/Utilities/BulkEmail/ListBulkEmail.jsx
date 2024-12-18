@@ -31,9 +31,5 @@ export default function ListBulkEmail() {
         },
     ];
 
-    return (
-        <PageContent title="Bulk Emails">
-            <Tabs tabs={tabs} />
-        </PageContent>
-    );
+    return <Tabs tabs={tabs} />;
 }

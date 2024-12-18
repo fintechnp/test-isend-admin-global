@@ -1,19 +1,20 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import Tooltip from "@mui/material/Tooltip";
+import DialogTitle from "@mui/material/DialogTitle";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { useDispatch, useSelector } from "react-redux";
+import DialogContent from "@mui/material/DialogContent";
+import ListItemButton from "@mui/material/ListItemButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import AccountForm from "./Form";
 import actions from "../../store/actions";
@@ -102,7 +103,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddSanction({ update_data, update }) {
+function AddSanction({ update_data, update, enablePopoverAction }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const { success: add_success, loading: add_loading } = useSelector((state) => state.add_sanction);
@@ -135,18 +136,22 @@ function AddSanction({ update_data, update }) {
     return (
         <div>
             {update ? (
-                <Tooltip title="Edit Sanction" arrow>
-                    <UpdateButton onClick={handleClickOpen}>
-                        <EditOutlinedIcon
-                            sx={{
-                                fontSize: "20px",
-                                "&:hover": {
-                                    background: "transparent",
-                                },
-                            }}
-                        />
-                    </UpdateButton>
-                </Tooltip>
+                enablePopoverAction ? (
+                    <ListItemButton onClick={handleClickOpen}>Update</ListItemButton>
+                ) : (
+                    <Tooltip title="Edit Sanction" arrow>
+                        <UpdateButton onClick={handleClickOpen}>
+                            <EditOutlinedIcon
+                                sx={{
+                                    fontSize: "20px",
+                                    "&:hover": {
+                                        background: "transparent",
+                                    },
+                                }}
+                            />
+                        </UpdateButton>
+                    </Tooltip>
+                )
             ) : (
                 <AddButton size="small" variant="outlined" onClick={handleClickOpen} endIcon={<AddIcon />}>
                     Add Sanction

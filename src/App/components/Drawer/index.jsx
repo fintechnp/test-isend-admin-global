@@ -80,14 +80,13 @@ const AppBar = styled(MuiAppBar, {
     zIndex: theme.zIndex.drawer,
     boxShadow: "none",
     background: theme.palette.appbar.main,
-    [theme.breakpoints.down("md")]: {
-        marginLeft: `calc(${theme.spacing(8)} + 1px)`,
-        width: `calc(100% - ${theme.spacing(8)})`,
-    },
-    [theme.breakpoints.down("sm")]: {
-        marginLeft: 0,
-        width: `100%`,
-    },
+    marginLeft: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(100% - ${theme.spacing(8)})`,
+    // [theme.breakpoints.down("md")]: {},
+    // [theme.breakpoints.down("sm")]: {
+    //     marginLeft: `calc(${theme.spacing(8)} + 1px)`,
+    //     width: `calc(100% - ${theme.spacing(8)})`,
+    // },
     transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -172,7 +171,7 @@ const Content = styled(Box, {
     shouldForwardProp: (prop) => prop !== "isDrawerOpen",
 })(({ isDrawerOpen }) => ({
     position: "relative",
-    margin: "56px 24px 56px 24px",
+    margin: "56px 0px",
     width: "100%",
     maxWidth: `calc(100vw - ${isDrawerOpen ? drawerOpenWidth : drawerClosedWidth}px)`,
     overflowY: "auto",
@@ -200,6 +199,7 @@ function Drawer({ children }) {
 
     React.useEffect(() => {
         setOpen(matches);
+        setSelectedKey("");
     }, [matches]);
 
     const handleDrawerToggle = () => {
@@ -238,6 +238,7 @@ function Drawer({ children }) {
                             setSelectedIndex={setSelectedIndex}
                             handleListItemClick={handleListItemClick}
                             isSearching={!isEmpty(menuSearchQuery)}
+                            setSelectedKey={setSelectedKey}
                         />
                     ) : (
                         <MainHeader
@@ -277,19 +278,21 @@ function Drawer({ children }) {
                     <DrawerHeader sx={{ height: "56px" }}>
                         <Row width="100%" justifyContent={open ? "space-between" : "center"} alignItems="center">
                             {open && (
-                                <Box flex={1}>
-                                    <ISendLogo
-                                        onClick={handleDashboard}
-                                        {...(open
-                                            ? {
-                                                  variant: "default",
-                                                  color: "white",
-                                              }
-                                            : { variant: "short", color: "white" })}
-                                    />
-                                </Box>
+                                <>
+                                    <Box flex={1}>
+                                        <ISendLogo
+                                            onClick={handleDashboard}
+                                            {...(open
+                                                ? {
+                                                      variant: "default",
+                                                      color: "white",
+                                                  }
+                                                : { variant: "short", color: "white" })}
+                                        />
+                                    </Box>
+                                    <HamburgerMenu onClick={() => setOpen((value) => !value)} />
+                                </>
                             )}
-                            <HamburgerMenu onClick={() => setOpen((value) => !value)} />
                         </Row>
                     </DrawerHeader>
                     <Divider />
@@ -298,6 +301,7 @@ function Drawer({ children }) {
                             className="search-menu__textfield"
                             placeholder="Search Menu"
                             sx={{
+                                width: "100%",
                                 "& .MuiInputBase-root": {
                                     background: (theme) => theme.palette.background.paper,
                                     marginTop: "8px",
@@ -327,7 +331,12 @@ function Drawer({ children }) {
                     })()}
                 </DrawerContainer>
             </CustomizedDrawer>
-            <Content component="main">
+            <Content
+                component="main"
+                onClick={() => {
+                    setSelectedKey("");
+                }}
+            >
                 <Box>{children}</Box>
                 <Footer className="Footer-root">
                     <div dangerouslySetInnerHTML={{ __html: layoutUtils.getCopyrightText() }}></div>

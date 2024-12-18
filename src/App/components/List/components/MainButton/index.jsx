@@ -44,9 +44,9 @@ const ListDropdownItem = styled(MuiListItem, {
             color: theme.palette.primary.dark,
             background: theme.palette.common.white,
         },
-        [theme.breakpoints.down("sm")]: {
-            display: "none",
-        },
+        // [theme.breakpoints.down("sm")]: {
+        //     display: "none",
+        // },
         svg: {
             fill: theme.palette.primary.main,
         },
@@ -106,9 +106,9 @@ const ListIcon = styled(ListItemIcon)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    [theme.breakpoints.down("sm")]: {
-        display: "none",
-    },
+    // [theme.breakpoints.down("sm")]: {
+    //     display: "none",
+    // },
 }));
 
 const ListText = styled(ListItemText)(({ theme, open }) => ({
@@ -176,7 +176,16 @@ const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} clas
     }),
 );
 
-function MainButton({ item, open, selectedkey, handleListItemClick, index, setSelectedIndex, isSearching }) {
+function MainButton({
+    item,
+    open,
+    selectedkey,
+    handleListItemClick,
+    index,
+    setSelectedIndex,
+    isSearching,
+    setSelectedKey,
+}) {
     const { pathname } = useLocation();
     const [extend, setExtend] = React.useState(false);
     const [select, setSelect] = React.useState(false);
@@ -218,6 +227,7 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
                                 selectedSub={selectedSub}
                                 setSelectedIndex={setSelectedIndex}
                                 handleListItemSelect={handleListItemSelect}
+                                setSelectedKey={setSelectedKey}
                             />
                         ))}
                     </List>
@@ -226,6 +236,7 @@ function MainButton({ item, open, selectedkey, handleListItemClick, index, setSe
             disableHoverListener={open}
             arrow
             placement="right"
+            open={!open && selectedkey === item.key}
         >
             <ListDropdownItem dense disablePadding open={open} isSearching={isSearching}>
                 <ListButton

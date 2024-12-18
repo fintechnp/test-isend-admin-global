@@ -15,6 +15,7 @@ import countryStateActions from "Private/features/country-states/countryStateAct
 import { permissions } from "Private/data/permissions";
 import HasPermission from "../shared/HasPermission";
 import useAuthUser from "Private/hooks/useAuthUser";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const initialState = {
     page_number: 1,
@@ -41,35 +42,42 @@ const CountryStates = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "S.N.",
-                accessor: "f_serial_no",
-                maxWidth: 80,
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Country",
-                accessor: "country",
-                Cell: (data) => <Typography component="p">{data.value ? CountryName(data.value) : "n/a"}</Typography>,
+                header: "Country",
+                accessorKey: "country",
+                cell: ({ row }) => (
+                    <Typography component="p">
+                        {row?.original?.country ? CountryName(row?.original?.country) : "n/a"}
+                    </Typography>
+                ),
             },
             {
-                Header: "State Name",
-                accessor: "name",
-                Cell: (data) => <Typography component="p">{data.value ? data.value : "n/a"}</Typography>,
+                header: "State Name",
+                accessorKey: "name",
+                cell: ({ row }) => (
+                    <Typography component="p">{row?.original?.name ? row?.original?.name : "n/a"}</Typography>
+                ),
             },
             {
-                Header: "State Code",
-                accessor: "code",
-                Cell: (data) => <Typography component="p">{data.value ? data.value : "n/a"}</Typography>,
+                header: "State Code",
+                accessorKey: "code",
+                cell: ({ row }) => (
+                    <Typography component="p">{row?.original?.code ? row?.original?.code : "n/a"}</Typography>
+                ),
             },
             ...(can([permissions.EDIT_COUNTRY_STATE, permissions.DELETE_COUNTRY_STATE])
                 ? [
                       {
-                          Header: () => (
+                          header: () => (
                               <Box textAlign="center">
                                   <Typography>Actions</Typography>
                               </Box>
                           ),
-                          accessor: "show",
-                          Cell: ({ row }) => (
+                          accessorKey: "show",
+                          cell: ({ row }) => (
                               <Box
                                   sx={{
                                       display: "flex",
@@ -153,23 +161,19 @@ const CountryStates = () => {
 
     return (
         <>
-            <Spacer />
             <CountryStateFilter onCountryChange={handleCountryChange} countries={countries} />
-            <Table
+            <TanstackReactTable
                 columns={columns}
                 title="Country States"
                 data={data?.data || []}
                 loading={isLoading}
-                rowsPerPage={8}
                 totalPage={data?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
                 noDataMessage={!country ? "Select a country" : "No data avaliable"}
+            />
+            <TablePagination
+                paginationData={data?.pagination}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
         </>
     );

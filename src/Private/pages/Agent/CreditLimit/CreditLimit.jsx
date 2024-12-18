@@ -4,22 +4,26 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import Button from "App/components/Button/Button";
-import routePaths from "Private/config/routePaths";
-import PageContent from "App/components/Container/PageContent";
-
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import buildRoute from "App/helpers/buildRoute";
-import Spacer from "App/components/Spacer/Spacer";
+import Button from "App/components/Button/Button";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
-import FilterForm from "Private/components/CreditLimit/FilterForm";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 
+import ucwords from "App/helpers/ucwords";
 import { creditLimitActions } from "./store";
+import routePaths from "Private/config/routePaths";
+import { localStorageGet } from "App/helpers/localStorage";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import { creditLimitStatusEnum } from "./constants/creditLimitStatus";
 
 const initialState = {
@@ -28,16 +32,17 @@ const initialState = {
 };
 
 const sortByOptions = [
+    { key: "None", value: "" },
     {
-        label: "Business Name",
+        key: "Business Name",
         value: "business_name",
     },
     {
-        label: "Currency",
+        key: "Currency",
         value: "currency",
     },
     {
-        label: "Status",
+        key: "Status",
         value: "status",
     },
 ];
@@ -45,12 +50,18 @@ const sortByOptions = [
 export default function CreditLimit({ title }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const countries = localStorageGet("country");
 
     const { response: creditLimitData, loading: creditLimitLoading } = useSelector(
         (state) => state.get_all_credit_limit,
     );
+
+    const currencyOptions = countries?.map((c) => {
+        return {
+            label: ucwords(c.currency_name),
+            value: c.currency,
+        };
+    });
 
     // const sortByOptions =
     //     creditLimitData?.data?.length > 0 &&
@@ -59,6 +70,23 @@ export default function CreditLimit({ title }) {
     //             return { value: item, label: item };
     //         })
     //         .filter((item) => item.label !== "f_serial_no");
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onPageChange,
+        onQuickFilter,
+        onRowsPerPageChange,
+        reset,
+        filterSchema,
+    } = useListFilterStore({
+        initialState,
+        pageNumberKeyName: "Page",
+        pageSizeKeyName: "PageSize",
+    });
 
     useEffect(() => {
         dispatch(creditLimitActions.get_all_credit_limit(filterSchema));
@@ -138,53 +166,108 @@ export default function CreditLimit({ title }) {
         ],
         [],
     );
+    const statusOptions = [
+        {
+            label: "Initial",
+            value: creditLimitStatusEnum.INITIAL,
+        },
+        {
+            label: "Success",
+            value: creditLimitStatusEnum.SUCCESS,
+        },
+        {
+            label: "Pending",
+            value: creditLimitStatusEnum.PENDING,
+        },
+        {
+            label: "Approved",
+            value: creditLimitStatusEnum.APPROVED,
+        },
+        {
+            label: "Rejected",
+            value: creditLimitStatusEnum.REJECTED,
+        },
+    ];
 
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            Page: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            PageSize: pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "BusinessNameFilter",
+            label: "Business/Agent Name",
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "CurrencyFilter",
+            label: "Currency",
+            options: currencyOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "StatusFilter",
+            label: "Status",
+            options: statusOptions,
+        },
+    ];
 
     return (
         <PageContent
-            title="Credit Limits"
             documentTitle="Credit Limits"
+            breadcrumbs={[
+                { label: "B2B" },
+                {
+                    label: "Credit Limit",
+                },
+            ]}
             topRightEndContent={
-                <Button
-                    onClick={() => {
-                        navigate(routePaths.agent.addCreditLimit);
-                    }}
-                >
-                    Add Credit Limit
-                </Button>
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
         >
-            <FilterForm sortByOptions={sortByOptions} setFilterSchema={setFilterSchema} />
-            <Spacer />
-            <TanstackReactTable
-                columns={columns}
-                title="Credit Limit"
-                data={creditLimitData?.data ?? []}
-                loading={creditLimitLoading}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={creditLimitData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Credit Limit"
+                    open={isFilterOpen}
+                    fields={filterFields}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    values={filterSchema}
+                />
+                <PageContentContainer
+                    title="Credit Limit"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                sortByData={sortByOptions}
+                                orderByFieldName="OrderBy"
+                                sortByFieldName="SortBy"
+                                values={filterSchema}
+                                disabled={creditLimitLoading}
+                            />
+                            <Button
+                                onClick={() => {
+                                    navigate(routePaths.agent.addCreditLimit);
+                                }}
+                            >
+                                Add Credit Limit
+                            </Button>
+                        </>
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        data={creditLimitData?.data ?? []}
+                        loading={creditLimitLoading}
                     />
-                )}
-            />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={creditLimitData?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

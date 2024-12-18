@@ -5,10 +5,10 @@ import EditBulkEmailGroupModal from "../groups/EditBulkEmailGroupModal";
 
 export default function BulkEmailGroupTab() {
     return (
-        <div>
+        <>
             <BulkEmailGroups />
             <AddBulkEmailGroupModal />
             <EditBulkEmailGroupModal />
-        </div>
+        </>
     );
 }

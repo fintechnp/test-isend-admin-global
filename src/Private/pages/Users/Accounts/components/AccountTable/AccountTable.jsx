@@ -68,8 +68,7 @@ function AccountTable({ onPageChange, onRowsPerPageChange, filterSchema }) {
         dispatch({ type: "UPDATE_ACCOUNT_USER_RESET" });
         dispatch({ type: "DELETE_ACCOUNT_USER_RESET" });
         dispatch({ type: "UPDATE_ACCOUNT_STATUS_RESET" });
-        dispatch(actions.get_all_user(filterSchema));
-    }, [d_success, u_success, a_success, filterSchema]);
+    }, [d_success, u_success, a_success]);
 
     const handleResetPassword = (id, email) => {
         confirm({

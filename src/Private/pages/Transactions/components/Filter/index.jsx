@@ -1,8 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import MuiSelect from "@mui/material/Select";
@@ -17,11 +15,17 @@ const FilterWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+        gap: "8px",
+        width: "100%",
+    },
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
     display: "flex",
     flexGrow: 1,
+    width: "100%",
 }));
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
@@ -73,6 +77,7 @@ const DropWrapper = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
 }));
 
 const sortData = [
@@ -91,7 +96,14 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
     return (
         <FilterWrapper>
             <SearchBox sx={{ columnGap: 1 }}>
-                <SearchTextField onChange={handleSearch} />
+                <SearchTextField
+                    onChange={handleSearch}
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("sm")]: {
+                            width: "100%",
+                        },
+                    })}
+                />
                 {/* <TextField
                     type="search"
                     variant="outlined"
@@ -108,8 +120,30 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
             </SearchBox>
 
             <DropWrapper>
-                <Box>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                <Box
+                    sx={(theme) => {
+                        return {
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "8px",
+                            width: "100%",
+                            [theme.breakpoints.down("sm")]: {
+                                flexDirection: "column",
+                            },
+                        };
+                    }}
+                >
+                    <FormControl
+                        sx={(theme) => ({
+                            ml: 1,
+                            minWidth: 120,
+
+                            [theme.breakpoints.down("sm")]: {
+                                width: "100%",
+                                ml: 0,
+                            },
+                        })}
+                    >
                         <Select
                             onChange={handleSort}
                             displayEmpty
@@ -133,7 +167,17 @@ function Filter({ handleSearch, handleSort, handleOrder }) {
                             ))}
                         </Select>
                     </FormControl>
-                    <FormControl sx={{ ml: 1, minWidth: 120 }}>
+                    <FormControl
+                        sx={(theme) => ({
+                            ml: 1,
+                            minWidth: 120,
+
+                            [theme.breakpoints.down("sm")]: {
+                                width: "100%",
+                                ml: 0,
+                            },
+                        })}
+                    >
                         <Select
                             onChange={handleOrder}
                             displayEmpty

@@ -36,7 +36,7 @@ const DateRangePickerWrapper: React.FunctionComponent<DateRangePickerWrapperProp
     const handleKeyPress = (event: any) => event?.key === "Escape" && handleToggle();
 
     return (
-        <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "relative", overflow: "auto" }}>
             {open && (
                 <Box
                     sx={{

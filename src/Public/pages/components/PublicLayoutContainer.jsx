@@ -18,6 +18,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
 const Container = styled(Box)(({ theme }) => ({
     height: "100svh",
     position: "relative",
+    margin: "0.4rem",
 }));
 
 export default function PublicLayoutContainer({ children, disablePoweredBy = true }) {

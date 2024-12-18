@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
+import React, { useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
+import Column from "App/components/Column/Column";
+import PageContent from "App/components/Container/PageContent";
 import BulkEmailCredentialForm from "../credentials/BulkEmailCredentialForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 import BulkEmailCredentialFormSkeleton from "../credentials/BulkEmailCredentialFormSkeleton";
 
 export default function BulkEmailCredentialTab() {
@@ -37,22 +40,35 @@ export default function BulkEmailCredentialTab() {
         );
 
     return (
-        <div>
-            <BulkEmailCredentialForm
-                onSubmit={handleSubmit}
-                initialState={{
-                    host: response?.data?.host ?? "",
-                    port: response?.data?.port ?? "",
-                    sender_name: response?.data?.sender_name ?? "",
-                    credential_email: response?.data?.credential_email ?? "",
-                    pwd: response?.data?.pwd ?? "",
-                    display_name: response?.data?.display_name ?? "",
-                    from_address: response?.data?.from_address ?? "",
-                    replyto_address: response?.data?.replyto_address ?? "",
-                    enable_ssl: response?.data?.enable_ssl ?? true,
-                }}
-                isProcessing={isUpdating}
-            />
-        </div>
+        <PageContent
+            breadcrumbs={[
+                {
+                    label: "Utilites",
+                },
+                {
+                    label: "Credentials",
+                },
+            ]}
+        >
+            <Column gap="16px">
+                <PageContentContainer>
+                    <BulkEmailCredentialForm
+                        onSubmit={handleSubmit}
+                        initialState={{
+                            host: response?.data?.host ?? "",
+                            port: response?.data?.port ?? "",
+                            sender_name: response?.data?.sender_name ?? "",
+                            credential_email: response?.data?.credential_email ?? "",
+                            pwd: response?.data?.pwd ?? "",
+                            display_name: response?.data?.display_name ?? "",
+                            from_address: response?.data?.from_address ?? "",
+                            replyto_address: response?.data?.replyto_address ?? "",
+                            enable_ssl: response?.data?.enable_ssl ?? true,
+                        }}
+                        isProcessing={isUpdating}
+                    />
+                </PageContentContainer>
+            </Column>
+        </PageContent>
     );
 }

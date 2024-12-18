@@ -1,24 +1,31 @@
+import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
-import { useSelector, useDispatch } from "react-redux";
-import { Box, Tooltip, Typography } from "@mui/material";
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useMemo } from "react";
 
-import Header from "./components/Header";
-import Filter from "./components/Filter";
-import AddPaymentRules from "./components/AddPaymentRules";
-import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import { Delete } from "App/components";
+import Column from "App/components/Column/Column";
+import withPermission from "Private/HOC/withPermission";
+import AddPaymentRules from "./components/AddPaymentRules";
+import ViewPaymentRule from "./components/ViewPaymentRule";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import PopoverButton from "App/components/Button/PopoverButton";
+import { TablePagination, TableSwitch } from "App/components/Table";
+import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "./store/actions";
-import { CountryName, FormatNumber } from "App/helpers";
-import PageContent from "App/components/Container/PageContent";
-import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
-import HasPermission from "Private/components/shared/HasPermission";
+import PartnerType from "App/data/PartnerType";
 import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
+import { CountryName, FormatNumber } from "App/helpers";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const SwitchWrapper = styled(Box)(({ theme }) => ({
     "& .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked": {
@@ -53,8 +60,7 @@ const StyledAction = styled(Typography)(({ theme, value }) => ({
 
 const initialState = {
     page_number: 1,
-    page_size: 15,
-    search: "",
+    page_size: 10,
     sort_by: "rule_name",
     order_by: "DESC",
 };
@@ -79,7 +85,6 @@ function stringToColor(string) {
 
 const PaymentRules = (props) => {
     const dispatch = useDispatch();
-    const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { can } = useAuthUser();
 
@@ -87,26 +92,39 @@ const PaymentRules = (props) => {
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_payment_rules);
     const { success: a_success } = useSelector((state) => state.add_payment_rules);
     const { success: u_success } = useSelector((state) => state.update_payment_rules);
+    const { success: v_success } = useSelector((state) => state.update_payment_rules_status);
+
+    const {
+        isFilterOpen,
+        closeFilter,
+        openFilter,
+        onPageChange,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onQuickFilter,
+        onRowsPerPageChange,
+        reset,
+        filterSchema,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch(actions.get_all_payment_rules(filterSchema));
         dispatch({ type: "ADD_PAYMENT_RULES_RESET" });
         dispatch({ type: "UPDATE_PAYMENT_RULES_RESET" });
         dispatch({ type: "DELETE_PAYMENT_RULES_RESET" });
-    }, [dispatch, filterSchema, d_success, a_success, u_success]);
+        dispatch({ type: "UPDATE_PAYMENT_RULES_STATUS_RESET" });
+    }, [dispatch, filterSchema, d_success, a_success, u_success, v_success]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "Id",
+                accessorKey: "tid",
             },
             {
-                Header: "Rule Name",
-                accessor: "rule_name",
-                maxWidth: 140,
-                Cell: (data) => (
+                header: "Rule Name",
+                accessorKey: "rule_name",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -115,25 +133,19 @@ const PaymentRules = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "13px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "10px", opacity: 0.7 }}>
-                            {data?.row?.original?.send_country
-                                ? CountryName(data?.row?.original?.send_country)
-                                : "null"}{" "}
-                            to{" "}
-                            {data?.row?.original?.payout_country
-                                ? CountryName(data?.row?.original?.payout_country)
-                                : "null"}
+                            {row?.original?.send_country ? CountryName(row?.original?.send_country) : "null"} to{" "}
+                            {row?.original?.payout_country ? CountryName(row?.original?.payout_country) : "null"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Sending/Payout Partner",
-                accessor: "sending_agent",
-                width: 240,
-                Cell: (data) => (
+                header: "Sending/Payout Partner",
+                accessorKey: "sending_agent",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -142,7 +154,7 @@ const PaymentRules = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "4px", fontSize: "13px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -152,151 +164,115 @@ const PaymentRules = (props) => {
                                 opacity: 0.6,
                             }}
                         >
-                            {data?.row?.original?.payout_agent ? data?.row?.original?.payout_agent : "N/A"}
+                            {row?.original?.payout_agent ? row?.original?.payout_agent : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right">
                         <Typography>Amount</Typography>
                     </Box>
                 ),
-                accessor: "amount",
-                maxWidth: 90,
-                Cell: (data) => (
+                accessorKey: "amount",
+                cell: ({ getValue }) => (
                     <Box textAlign="right">
                         {can(permissions.EDIT_PAYMENT_RULE) ? (
                             <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                                {data.value ? FormatNumber(data.value) : "N/A"}
+                                {getValue() ? FormatNumber(getValue()) : "N/A"}
                             </StyledName>
                         ) : (
-                            <>{!!data?.value ? "Active" : "Inactive"}</>
+                            <>{!!getValue() ? "Active" : "Inactive"}</>
                         )}
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Transactions</Typography>
                     </Box>
                 ),
-                accessor: "no_of_transactions",
-                maxWidth: 90,
-                Cell: (data) => (
+                accessorKey: "no_of_transactions",
+                cell: ({ getValue }) => (
                     <Box textAlign="center">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Days</Typography>
                     </Box>
                 ),
-                accessor: "no_of_days",
-                maxWidth: 80,
-                Cell: (data) => (
+                accessorKey: "no_of_days",
+                cell: ({ getValue }) => (
                     <Box textAlign="center">
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>C. Action</Typography>
                     </Box>
                 ),
-                accessor: "compliance_action",
-                maxWidth: 120,
-                Cell: (data) => (
+                accessorKey: "compliance_action",
+                cell: ({ getValue }) => (
                     <Box textAlign="center">
-                        <StyledAction component="p" value={data.value ? data.value : "Null"}>
-                            {data.value ? data.value : "N/A"}
+                        <StyledAction component="p" value={getValue() ? getValue() : "Null"}>
+                            {getValue() ? getValue() : "N/A"}
                         </StyledAction>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right">
                         <Typography>Status</Typography>
                     </Box>
                 ),
-                accessor: "is_active",
-                width: 80,
-                Cell: (data) => (
-                    <>
-                        <SwitchWrapper textAlign="right">
-                            <TableSwitch value={data?.value} data={data?.row?.original} handleStatus={handleStatus} />
-                        </SwitchWrapper>
-                    </>
+                accessorKey: "is_active",
+                cell: ({ getValue, row }) => (
+                    <SwitchWrapper textAlign="right">
+                        <TableSwitch value={getValue()} data={row?.original} handleStatus={handleStatus} />
+                    </SwitchWrapper>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <span {...row.getToggleRowExpandedProps({})}>
-                            {row.isExpanded ? (
-                                <Tooltip title="Hide Payment Rules Details" arrow>
-                                    <IconButton>
-                                        <VisibilityOffOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip title="Show Payment Rules Details" arrow>
-                                    <IconButton>
-                                        <RemoveRedEyeOutlinedIcon
-                                            sx={{
-                                                fontSize: "20px",
-                                                "&:hover": {
-                                                    background: "transparent",
-                                                },
-                                            }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                            )}
-                        </span>
-                        <HasPermission permission={permissions.EDIT_PAYMENT_RULE}>
-                            <AddPaymentRules update={true} update_data={row?.original} />
-                        </HasPermission>
-                        <HasPermission permission={permissions.DELETE_PAYMENT_RULE}>
-                            <Delete
-                                id={row.original.tid}
-                                handleDelete={handleDelete}
-                                loading={d_loading}
-                                tooltext="Delete Payment Rules"
-                            />
-                        </HasPermission>
-                    </Box>
+                accessorKey: "show",
+                cell: ({ row }) => (
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                <ViewPaymentRule data={row?.original} onClose={onClose} />
+                                <HasPermission permission={permissions.EDIT_PAYMENT_RULE}>
+                                    <AddPaymentRules update={true} update_data={row?.original} enablePopoverAction />
+                                </HasPermission>
+                                <HasPermission permission={permissions.DELETE_PAYMENT_RULE}>
+                                    <Delete
+                                        id={row.original.tid}
+                                        handleDelete={handleDelete}
+                                        loading={d_loading}
+                                        tooltext="Delete Payment Rules"
+                                        enablePopoverAction
+                                    />
+                                </HasPermission>
+                            </>
+                        )}
+                    </PopoverButton>
                 ),
             },
         ],
@@ -326,95 +302,85 @@ const PaymentRules = (props) => {
     ];
 
     const handleStatus = useCallback((is_active, id) => {
-        dispatch(actions.update_payemnt_rules_status({ is_active: is_active }, id));
+        dispatch(actions.update_payment_rules_status({ is_active: is_active }, id));
     }, []);
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Rule Name", value: "rule_name" },
+        { key: "Amount", value: "amount" },
+        { key: "Created Date", value: "created_ts" },
+    ];
+
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
         },
-        [filterSchema],
-    );
-
-    const handleFilterAgent = (e) => {
-        const agent_id = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            agent_id: agent_id,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            name: "agent_id",
+            label: "Payout Partner",
+            partnerType: PartnerType.PAY,
+        },
+    ];
 
     const handleDelete = (id) => {
         dispatch(actions.delete_payemnt_rules(id));
     };
 
     return (
-        <PageContent documentTitle="Payment Rules">
-            <Header />
-            <Filter
-                handleSearch={handleSearch}
-                handleFilterAgent={handleFilterAgent}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                filterSchema={filterSchema}
-            />
-            <Table
-                columns={columns}
-                title="Payment Rules"
-                data={paymentRules?.data || []}
-                sub_columns={sub_columns}
-                loading={l_loading}
-                rowsPerPage={8}
-                handleDelete={handleDelete}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={paymentRules?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+        <PageContent
+            documentTitle="Payment Rules"
+            breadcrumbs={[
+                {
+                    label: "Compliance",
+                },
+                {
+                    label: "Payment Rules",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Payment Rules"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    values={filterSchema}
+                    fields={filterFields}
+                />
+                <PageContentContainer
+                    title="Payment Rules"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                sortByData={sortData}
+                                values={filterSchema}
+                                disabled={l_loading}
+                            />
+                            <HasPermission permission={permissions.CREATE_PAYMENT_RULE}>
+                                <AddPaymentRules update={false} />
+                            </HasPermission>
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={paymentRules?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={paymentRules?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 };

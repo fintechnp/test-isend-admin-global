@@ -22,6 +22,8 @@ import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
 import HasPermission from "Private/components/shared/HasPermission";
 import useAuthUser from "Private/hooks/useAuthUser";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -98,10 +100,9 @@ const Partner = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 70,
-                Cell: (data) => (
+                header: "Id",
+                accessorKey: "tid",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -111,24 +112,22 @@ const Partner = (props) => {
                     >
                         <StyledName component="p" sx={{ opacity: 0.8 }}>
                             <Link
-                                to={`/setup/partner/details/${data?.row.original.agent_id}`}
+                                to={`/setup/partner/details/${row?.original?.agent_id}`}
                                 style={{
                                     textDecoration: "none",
                                     color: "border.dark",
                                 }}
                             >
-                                {data.value ? data.value : "N/A"}
+                                {row.original.tid ? row.original.tid : "N/A"}
                             </Link>
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Partner Name",
-                accessor: "name",
-                width: 280,
-                maxWidth: 500,
-                Cell: (data) => (
+                header: "Partner Name",
+                accessorKey: "name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -138,73 +137,77 @@ const Partner = (props) => {
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             <Link
-                                to={`/setup/partner/details/${data?.row.original.agent_id}`}
+                                to={`/setup/partner/details/${row?.original?.agent_id}`}
                                 style={{
                                     textDecoration: "none",
                                     color: "border.dark",
                                 }}
                             >
-                                {data.value ? data.value : "N/A"}
+                                {row?.original?.name ? row?.original?.name : "N/A"}
                             </Link>
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>Type</Typography>
                     </Box>
                 ),
-                accessor: "agent_type",
-                Cell: (data) => (
+                accessorKey: "agent_type",
+                cell: ({ row }) => (
                     <Box>
-                        <StyledText component="p">{data.value ? data.value : "N/A"}</StyledText>
+                        <StyledText component="p">{row?.original?.row ? row?.original?.row : "N/A"}</StyledText>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>Country</Typography>
                     </Box>
                 ),
-                accessor: "country",
-                Cell: (data) => (
+                accessorKey: "country",
+                cell: ({ row }) => (
                     <Box>
-                        <StyledText component="p">{data.value ? CountryName(data.value) : "N/A"}</StyledText>
+                        <StyledText component="p">
+                            {row?.original?.country ? CountryName(row?.original?.country) : "N/A"}
+                        </StyledText>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Status</Typography>
                     </Box>
                 ),
-                accessor: "is_active",
-                Cell: (data) => (
+                accessorKey: "is_active",
+                cell: ({ row }) => (
                     <>
                         {!can(permissions.EDIT_PARTNER) ? (
                             <SwitchWrapper textAlign="center" sx={{}}>
-                                <TableSwitch value={data?.value} data={data.row.original} handleStatus={handleStatus} />
+                                <TableSwitch
+                                    value={row?.original?.is_active}
+                                    data={row?.original}
+                                    handleStatus={handleStatus}
+                                />
                             </SwitchWrapper>
                         ) : (
-                            <Typography align="center">
-                                {data.row.original.is_active ? "Active" : "Inactive"}
-                            </Typography>
+                            <Typography align="center">{row.original.is_active ? "Active" : "Inactive"}</Typography>
                         )}
                     </>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -354,35 +357,35 @@ const Partner = (props) => {
     };
 
     return (
-        <PageContent documentTitle="Partners">
-            <Header title="Our Partner List">
+        <PageContent>
+            {/* <Header title="Our Partner List">
                 <HasPermission permission={permissions.CREATE_PARTNER}>
                     <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
                         Add Partner
                     </AddButton>
                 </HasPermission>
-            </Header>
-            <Filter
-                orderData={orderData}
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleCountry={handleCountry}
-                handleOrder={handleOrder}
-                handleAgentType={handleAgentType}
-            />
-            <Table
-                columns={columns}
-                data={partner_data?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={partner_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+            </Header> */}
+
+            <PageContentContainer
+                title="Partners"
+                topRightContent={
+                    <Filter
+                        orderData={orderData}
+                        state={filterSchema}
+                        handleSearch={handleSearch}
+                        handleCountry={handleCountry}
+                        handleOrder={handleOrder}
+                        handleAgentType={handleAgentType}
                     />
-                )}
-            />
+                }
+            >
+                <TanstackReactTable columns={columns} data={partner_data?.data || []} loading={g_loading} />
+                <TablePagination
+                    paginationData={partner_data?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };
