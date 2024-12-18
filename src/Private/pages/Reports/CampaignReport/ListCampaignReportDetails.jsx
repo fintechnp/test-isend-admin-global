@@ -53,6 +53,10 @@ const ListCampaignReportDetails = () => {
                 accessorKey: "f_serial_no",
             },
             {
+                header: "Transaction Id",
+                accessorKey: "transactionId",
+            },
+            {
                 header: "Campaign Name",
                 accessorKey: "campaignName",
             },
@@ -141,9 +145,6 @@ const ListCampaignReportDetails = () => {
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
             breadcrumbs={[
-                {
-                    label: "Dashboard",
-                },
                 {
                     label: "Report",
                 },

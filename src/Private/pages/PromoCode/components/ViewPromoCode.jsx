@@ -104,6 +104,9 @@ export default function ViewPromoCode() {
     useEffect(() => {
         if (isSuccess) {
             dispatch(promoCodeActions.get_promo_code_by_id(id));
+            dispatch({
+                type: "ADD_PROMO_CODE_BUDGET_RESET",
+            });
         }
     }, [dispatch, isSuccess]);
 

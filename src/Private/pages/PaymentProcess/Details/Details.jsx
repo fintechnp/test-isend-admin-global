@@ -26,6 +26,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 import SendMail from "./SendMailModal";
 import SuspiciosModal from "./SuspiciosModal";
 import PaymentType from "../data/PaymentType";
+import { Status as StatusType } from "../data/Status";
 import isValidURL from "App/helpers/isValidURL";
 import buildRoute from "App/helpers/buildRoute";
 import useCountries from "App/hooks/useCountries";
@@ -143,6 +144,15 @@ export default function Details({ isAML = false, data: transData }) {
 
     const { getCountryNameByIso3 } = useCountries();
 
+    const releasedStatusTypes = [
+        StatusType.W.toUpperCase(),
+        StatusType.F.toUpperCase(),
+        StatusType.B.toUpperCase(),
+        StatusType.E.toUpperCase(),
+        StatusType.A.toUpperCase(),
+        StatusType.P.toUpperCase(),
+    ];
+
     const transactionDefinition = useSourceDetail([
         {
             title: transactionData?.agent_name,
@@ -221,6 +231,100 @@ export default function Details({ isAML = false, data: transData }) {
                     label: "Deposit Type",
                     accessorKey: "deposit_type",
                 },
+            ],
+        },
+    ]);
+
+    const hasReleasedData =
+        transactionData?.sanction_released_by ||
+        transactionData?.sanction_released_date ||
+        transactionData?.exception_released_by ||
+        transactionData?.exception_released_date ||
+        transactionData?.payment_pending_released_by ||
+        transactionData?.payment_pending_released_date ||
+        transactionData?.blocked_released_by ||
+        transactionData?.blocked_released_date;
+
+    const releaseHistoryDefinition = useSourceDetail([
+        {
+            title: "Release History",
+            items: [
+                ...(transactionData?.sanction_released_by || transactionData?.sanction_released_date
+                    ? [
+                          {
+                              label: "Sanction Released By",
+                              accessorKey: "sanction_released_by",
+                          },
+                          {
+                              label: "Sanction Released Date",
+                              accessorKey: "sanction_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.sanction_released_date
+                                          ? dateUtils.getFormattedDate(data.sanction_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
+                ...(transactionData?.exception_released_by || transactionData?.exception_released_date
+                    ? [
+                          {
+                              label: "Exception Released By",
+                              accessorKey: "exception_released_by",
+                          },
+                          {
+                              label: "Exception Released Date",
+                              accessorKey: "exception_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.exception_released_date
+                                          ? dateUtils.getFormattedDate(data.exception_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
+                ...(transactionData?.payment_pending_released_by || transactionData?.payment_pending_released_date
+                    ? [
+                          {
+                              label: "Payment Pending Released By",
+                              accessorKey: "payment_pending_released_by",
+                          },
+                          {
+                              label: "Payment Pending Released Date",
+                              accessorKey: "payment_pending_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.payment_pending_released_date
+                                          ? dateUtils.getFormattedDate(data.payment_pending_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
+                ...(transactionData?.blocked_released_by || transactionData?.blocked_released_date
+                    ? [
+                          {
+                              label: "Blocked Released By",
+                              accessorKey: "blocked_released_by",
+                          },
+                          {
+                              label: "Blocked Released Date",
+                              accessorKey: "blocked_released_date",
+                              cell: (data) => (
+                                  <>
+                                      {data.blocked_released_date
+                                          ? dateUtils.getFormattedDate(data.blocked_released_date)
+                                          : "-"}
+                                  </>
+                              ),
+                          },
+                      ]
+                    : []),
             ],
         },
     ]);
@@ -312,6 +416,7 @@ export default function Details({ isAML = false, data: transData }) {
                   {
                       label: `${transactionData.send_status}`,
                       date: `${transactionData?.updated_ts ? dateUtils.getFormattedDate(transactionData?.updated_ts) : "-"}`,
+                      refundedBy: `${transactionData?.updated_by ? transactionData?.updated_by : "-"}`,
                   },
               ]
             : []),
@@ -335,6 +440,10 @@ export default function Details({ isAML = false, data: transData }) {
             <Stack direction="column" spacing={0.5}>
                 <Typography variant="body1"> {item?.label}</Typography>
                 <Typography variant="caption"> {item?.date}</Typography>
+
+                {index === 1 && transactionData?.send_status?.toUpperCase() === StatusType.R?.toUpperCase() && (
+                    <Typography variant="caption"> Refunded By : {item?.refundedBy}</Typography>
+                )}
             </Stack>
         </Box>
     ));
@@ -493,6 +602,22 @@ export default function Details({ isAML = false, data: transData }) {
                                 />
                             </Wrapper>
                         </Grid>
+
+                        {/* released Details */}
+
+                        {hasReleasedData && (
+                            <Grid item xs={12} md={6}>
+                                <Wrapper>
+                                    <SourceDetails
+                                        viewMode="column"
+                                        rowMode="row"
+                                        definition={releaseHistoryDefinition}
+                                        data={transactionData}
+                                        disableLabelColon={false}
+                                    />
+                                </Wrapper>
+                            </Grid>
+                        )}
 
                         {/* Transaction Table */}
                         <Grid mb={2} item xs={12}>

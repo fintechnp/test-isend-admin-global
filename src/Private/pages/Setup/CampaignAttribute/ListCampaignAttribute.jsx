@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -13,6 +14,7 @@ import EditCampaignAttributeModal from "./EditCampaignAttributeModal";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
+import dateUtils from "App/utils/dateUtils";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
@@ -58,7 +60,26 @@ function ListCampaignAttribute() {
             header: "Attribute Type Value Name",
             accessorKey: "attributeTypeValueName",
         },
-
+        {
+            header: "Created At/By",
+            accessorKey: "createdTs",
+            cell: ({ getValue, row }) => (
+                <Column>
+                    <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                    <Typography>{row?.original?.createdBy ? row.original.createdBy : ""}</Typography>
+                </Column>
+            ),
+        },
+        {
+            header: "Updated At/By",
+            accessorKey: "updatedTs",
+            cell: ({ getValue, row }) => (
+                <Column>
+                    <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                    <Typography>{row?.original?.updatedBy ? row.original.updatedBy : ""}</Typography>
+                </Column>
+            ),
+        },
         {
             header: "Actions",
             cell: ({ row }) => (

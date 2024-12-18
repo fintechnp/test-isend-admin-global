@@ -193,7 +193,7 @@ const ExceptionTransactions = (props) => {
                     </Box>
                 ),
                 accessorKey: "created_ts",
-                Cell: ({ row }) => (
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
                             {row?.original?.created_ts ? FormatDate(row?.original?.created_ts) : "N/A"}
@@ -268,6 +268,29 @@ const ExceptionTransactions = (props) => {
             },
             {
                 header: () => (
+                    <Box textAlign="left">
+                        <Typography>Reason</Typography>
+                    </Box>
+                ),
+                accessorKey: "compliance_msg",
+                cell: ({ getValue }) => {
+                    let errorMessage = "N/A";
+
+                    const compliance_msg = JSON.parse(getValue());
+
+                    if (compliance_msg && compliance_msg[0] && compliance_msg[0].error_msg) {
+                        errorMessage = compliance_msg[0].error_msg;
+                    }
+
+                    return (
+                        <Box textAlign="left">
+                            <Typography>{errorMessage}</Typography>
+                        </Box>
+                    );
+                },
+            },
+            {
+                Header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
