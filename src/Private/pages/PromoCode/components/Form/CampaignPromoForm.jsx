@@ -25,6 +25,7 @@ export default function CampaignPromoForm({
     allAttributeList,
     addTriggerFields,
     removeTriggerFields,
+    isLoading,
 }) {
     const { watch, setValue, control } = useFormContext();
 
@@ -56,7 +57,28 @@ export default function CampaignPromoForm({
 
                 const triggerFormOptions = getTriggerFormOptions(attributeFamilyTypeId);
 
-                const watchAttribute = watch(`AttributeConditions.${index}.attribute`);
+                const isDuplicate = triggerFields?.some((existingField, existingIndex) => {
+                    if (existingIndex === index) return false;
+                    const existingAttributeFamily = attributeConditions?.[existingIndex]?.attribute;
+                    const existingAttributeFamilyTypeId = allAttributeList?.find(
+                        (item) => item?.attributeFamilyId === existingAttributeFamily,
+                    )?.attributeTypeValue;
+
+                    const isSameCondition =
+                        existingAttributeFamily === attributeFamily &&
+                        existingAttributeFamilyTypeId === attributeFamilyTypeId &&
+                        triggerFields[existingIndex].amount === field.amount &&
+                        triggerFields[existingIndex].currency === field.currency;
+
+                    return isSameCondition;
+                });
+
+                const LoadingOption =
+                    mappedAttributeList.length > 0
+                        ? "Select an option"
+                        : isLoading
+                          ? "Loading option....."
+                          : "Select an option";
 
                 return (
                     <Grid container mb={1} spacing={2} key={`${field.id}_field`}>
@@ -65,7 +87,9 @@ export default function CampaignPromoForm({
                                 <Grid item xs={12} md={6} lg={3}>
                                     <FormSelect
                                         required
-                                        label="Select an Option"
+                                        label="Select an Options"
+                                        showChooseOption={true}
+                                        chooseOptionLabel={LoadingOption}
                                         name={`AttributeConditions.${index}.attribute`}
                                         options={mappedAttributeList}
                                         onChange={(e) => {
@@ -211,7 +235,7 @@ export default function CampaignPromoForm({
                         </Grid>
                         <Grid item xs={2} display="flex" alignItems="center" justifyContent="flex-end">
                             <ButtonWrapper>
-                                {triggerFields?.length - 1 === index && (
+                                {triggerFields?.length - 1 === index && !isDuplicate && (
                                     <Button
                                         variant="contained"
                                         size="small"
@@ -221,6 +245,12 @@ export default function CampaignPromoForm({
                                         }}
                                     >
                                         Add
+                                    </Button>
+                                )}
+
+                                {isDuplicate && (
+                                    <Button variant="contained" size="small" color="secondary" disabled>
+                                        Duplicate Trigger
                                     </Button>
                                 )}
 
