@@ -59,6 +59,11 @@ const RewardConfigurationForm = ({
     useEffect(() => {
         rewards.forEach((reward, index) => {
             setValue(`Rewards.${index}.rewardCategory`, campaignRewardCatogoryEnumsOptionsReferrer[0].value);
+
+            if (index > 0) {
+                const previousMaxAmount = watch(`Rewards.${index - 1}.maximumAmount`);
+                setValue(`Rewards.${index}.minimumAmount`, previousMaxAmount);
+            }
         });
     }, [rewards]);
 
@@ -70,6 +75,7 @@ const RewardConfigurationForm = ({
                         const isRewardTypeIncentive = watch(`Rewards.${index}.rewardOn`) === rewardOnEnums.INCENTIVE;
                         const isRewardTypePercentage =
                             watch(`Rewards.${index}.rewardType`) === rewardTypeEnums.PERCENTAGE;
+
                         return (
                             <React.Fragment key={`${field.id}_field`}>
                                 {index === 0 && (
@@ -80,7 +86,6 @@ const RewardConfigurationForm = ({
                                             <TableCell width={450}>Reward On</TableCell>
                                             <TableCell width={450}>Reward Type</TableCell>
                                             <TableCell width={450}>Value</TableCell>
-
                                             <TableCell width={450}>Limit</TableCell>
 
                                             <TableCell

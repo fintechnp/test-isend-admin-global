@@ -1,22 +1,24 @@
-import moment from "moment";
-import { reset } from "redux-form";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState, useMemo, useRef } from "react";
 
 import Filter from "../Shared/Filter";
-import SearchForm from "./SearchForm";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
+import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import withPermission from "Private/HOC/withPermission";
-import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "../store/actions";
 import { permissions } from "Private/data/permissions";
+import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
 import PartnerActions from "../../Setup/Partner/store/actions";
 import { CountryName, CurrencyName, FormatNumber } from "App/helpers";
 
@@ -42,13 +44,6 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    send_country: "",
-    payout_country: "",
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    payment_type: "",
-    from_date: "",
-    to_date: "",
     sort_by: "send_country",
     order_by: "ASC",
 };
@@ -73,8 +68,7 @@ const statePay = {
 
 function TransactionsSummaryReports(props) {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const reference = JSON.parse(localStorage.getItem("reference"));
     const [filterSendPartner, setFilterSendPartner] = useState(stateSend);
     const [filterPayPartner, setFilterPayPartner] = useState(statePay);
 
@@ -84,7 +78,24 @@ function TransactionsSummaryReports(props) {
 
     const { response: SendPartner, loading: s_loading } = useSelector((state) => state.get_sending_partner);
 
+    const sendPartnerOptions = SendPartner?.data?.map((data) => ({
+        label: data.name,
+        value: data.id,
+    }));
+
     const { response: PayPartner, loading: p_loading } = useSelector((state) => state.get_payout_partner);
+
+    const payoutParnterOptions = PayPartner?.data?.map((data) => ({
+        label: data.name,
+        value: data.id,
+    }));
+
+    const paymentTypeOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((data) => ({
+            label: data.name,
+            value: data.value,
+        }));
 
     const {
         response: ReportsDownload,
@@ -92,20 +103,28 @@ function TransactionsSummaryReports(props) {
         success: pd_success,
     } = useSelector((state) => state.download_report);
 
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onPageChange,
+        onRowsPerPageChange,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        reset,
+    } = useListFilterStore({ initialState });
+
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_summary_reports"));
         dispatch({ type: "TRANSACTIONS_SUMMARY_REPORT_RESET" });
         dispatch({ type: "GET_SENDING_PARTNER_RESET" });
         dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_transactions_summary_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_transactions_summary_report(filterSchema));
     }, [dispatch, filterSchema]);
 
     useEffect(() => {
@@ -123,14 +142,13 @@ function TransactionsSummaryReports(props) {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 40,
+                header: "Id",
+                accessorKey: "tid",
             },
             {
-                Header: "From",
-                accessor: "send_country",
-                Cell: (data) => (
+                header: "From",
+                accessorKey: "send_country",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -140,16 +158,15 @@ function TransactionsSummaryReports(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
+                            {getValue() ? CountryName(getValue()) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Partner",
-                accessor: "agent_name",
-                minWidth: 190,
-                Cell: (data) => (
+                header: "Partner",
+                accessorKey: "agent_name",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -157,18 +174,18 @@ function TransactionsSummaryReports(props) {
                             alignItems: "flex-start",
                         }}
                     >
-                        <StyledName component="p">{data.value ? data.value : "N/A"}</StyledName>
+                        <StyledName component="p">{getValue() ? getValue() : "N/A"}</StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left">
                         <Typography sx={{ fontSize: "13px" }}>To</Typography>
                     </Box>
                 ),
-                accessor: "payout_country",
-                Cell: (data) => (
+                accessorKey: "payout_country",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -178,7 +195,7 @@ function TransactionsSummaryReports(props) {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px" }}>
-                            {data.value ? CountryName(data.value) : "N/A"}
+                            {getValue() ? CountryName(getValue()) : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -188,22 +205,19 @@ function TransactionsSummaryReports(props) {
                                 opacity: 0.8,
                             }}
                         >
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(data?.row?.original?.payout_currency)
-                                : "N/A"}
+                            {row?.original?.payout_currency ? CurrencyName(row?.original?.payout_currency) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right">
                         <Typography sx={{ fontSize: "13px" }}>NOS</Typography>
                     </Box>
                 ),
-                accessor: "txn_cnt",
-                maxWidth: 80,
-                Cell: (data) => (
+                accessorKey: "txn_cnt",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -218,20 +232,19 @@ function TransactionsSummaryReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {getValue() ? getValue() : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right">
                         <Typography sx={{ fontSize: "13px" }}>Avg. Rate</Typography>
                     </Box>
                 ),
-                accessor: "average_customer_rate",
-                maxWidth: 100,
-                Cell: (data) => (
+                accessorKey: "average_customer_rate",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -246,19 +259,19 @@ function TransactionsSummaryReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right">
                         <Typography sx={{ fontSize: "13px" }}>T. Charge</Typography>
                     </Box>
                 ),
-                accessor: "total_charge",
-                Cell: (data) => (
+                accessorKey: "total_charge",
+                cell: ({ getValue }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -273,20 +286,19 @@ function TransactionsSummaryReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right">
                         <Typography sx={{ fontSize: "13px" }}>Payout Amount</Typography>
                     </Box>
                 ),
-                accessor: "payout_amount",
-                maxWidth: 120,
-                Cell: (data) => (
+                accessorKey: "payout_amount",
+                cell: ({ getValue, row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -301,7 +313,7 @@ function TransactionsSummaryReports(props) {
                                 fontSize: "13px",
                             }}
                         >
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {getValue() ? FormatNumber(getValue()) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
@@ -319,86 +331,70 @@ function TransactionsSummaryReports(props) {
         { key: "Payout Amount", value: "payout_amount" },
     ];
 
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
-    const handleSearch = (data) => {
+    const handlePayPartner = (e) => {
         const updatedFilterSchema = {
-            ...filterSchema,
-            send_country: data?.send_country,
-            payout_country: data?.payout_country,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payment_type: data?.payment_type,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
+            ...filterPayPartner,
+            country: e.iso3,
         };
-        setFilterSchema(updatedFilterSchema);
+        setFilterPayPartner(updatedFilterSchema);
     };
 
     const handleSendPartner = (e) => {
         const updatedFilterSchema = {
             ...filterSendPartner,
-            country: e.target.value,
+            country: e.iso3,
         };
         setFilterSendPartner(updatedFilterSchema);
     };
 
-    const handlePayPartner = (e) => {
-        const updatedFilterSchema = {
-            ...filterPayPartner,
-            country: e.target.value,
-        };
-        setFilterPayPartner(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_summary_reports"));
-        dispatch({ type: "TRANSACTIONS_SUMMARY_REPORT_RESET" });
-        dispatch({ type: "GET_SENDING_PARTNER_RESET" });
-        dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
-    };
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "send_country",
+            label: "Send Country",
+            onChange: handleSendPartner,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "sending_agent_id",
+            label: "Send Partner",
+            options: sendPartnerOptions,
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "payout_country",
+            label: "Payout Country",
+            onChange: handlePayPartner,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payout_agent_id",
+            label: "Payout Partner",
+            options: payoutParnterOptions,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payment_type",
+            label: "Payment Type",
+            options: paymentTypeOptions,
+        },
+    ];
 
     //Downloads
     const headers = [
@@ -429,69 +425,61 @@ function TransactionsSummaryReports(props) {
     };
 
     return (
-        <PageContent title="Filter Transaction" disableBorder>
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        enableReinitialize
-                        onSubmit={handleSearch}
-                        s_loading={s_loading}
-                        p_loading={p_loading}
-                        SendPartner={SendPartner?.data}
-                        PayPartner={PayPartner?.data}
-                        initialValues={{
-                            from_date: moment().format("YYYY-MM-DD"),
-                            to_date: moment().format("YYYY-MM-DD"),
-                        }}
-                        handleReset={handleReset}
-                        handleSendPartner={handleSendPartner}
-                        handlePayPartner={handlePayPartner}
-                        loading={l_loading}
-                    />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && SummaryReports?.data && SummaryReports?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Record Found" />
-                    </Grid>
-                )}
-                {!l_loading && SummaryReports?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <CustomerWrapper>
+        <PageContent
+            documentTitle="Transaction Summary"
+            breadcrumbs={[
+                {
+                    label: "Reports",
+                },
+                {
+                    label: "Transaction Summary",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    onSubmit={onFilterSubmit}
+                    onClose={closeFilter}
+                    open={isFilterOpen}
+                    values={filterSchema}
+                    fields={filterFields}
+                    onDelete={onDeleteFilterParams}
+                    title="Search Transactions"
+                    onReset={reset}
+                />
+                <PageContentContainer
+                    title="Transacations Summary Report"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                sortByData={sortData}
+                                values={filterSchema}
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                disabled={l_loading}
+                            />
                             <Filter
                                 fileName="SummaryReport"
                                 success={pd_success}
                                 loading={pd_loading}
                                 csvReport={csvReport}
-                                sortData={sortData}
-                                orderData={orderData}
-                                title="Transactions Summary Report"
                                 state={filterSchema}
-                                handleOrder={handleOrder}
-                                handleSort={handleSort}
                                 downloadData={downloadData}
                             />
-                            <Table
-                                columns={columns}
-                                data={SummaryReports?.data || []}
-                                loading={l_loading}
-                                rowsPerPage={8}
-                                renderPagination={() => (
-                                    <TablePagination
-                                        paginationData={SummaryReports?.pagination}
-                                        handleChangePage={handleChangePage}
-                                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                    />
-                                )}
-                            />
-                        </CustomerWrapper>
-                    </Grid>
-                )}
-            </Grid>
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={SummaryReports?.data || []} loading={l_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={SummaryReports?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 }

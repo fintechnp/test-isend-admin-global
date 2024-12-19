@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
@@ -6,18 +5,29 @@ import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
 import { Release } from "App/components";
 import Filter from "./../components/Filter";
+import Column from "App/components/Column/Column";
 import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
-import ucfirst from "App/helpers/ucfirst";
 import actions from "./../store/actions";
+import ucfirst from "App/helpers/ucfirst";
+import PartnerType from "App/data/PartnerType";
 import { permissions } from "Private/data/permissions";
+import referenceTypeId from "Private/config/referenceTypeId";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import { PartnerAction } from "Private/pages/Setup/Partner/store";
 import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
@@ -36,45 +46,84 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    search: "",
-    transaction_id: null,
-    pin_number: "",
-    customer_id: 0,
-    sending_agent_id: 0,
-    payout_agent_id: 0,
-    payout_country: "",
-    payment_type: "",
-    from_date: "",
-    to_date: "",
     sort_by: "created_ts",
+    order_by: "DESC",
+};
+
+const statePay = {
+    page_number: 1,
+    page_size: 100,
+    agent_type: "PAY",
+    country: "",
+    sort_by: "name",
     order_by: "DESC",
 };
 
 const PendingPayment = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const reference = JSON.parse(localStorage.getItem("reference"));
+    const [filterPayPartner, setFilterPayPartner] = useState(statePay);
+
+    const paymentTypeOptions = reference
+        ?.filter((ref_data) => ref_data.reference_type === referenceTypeId.paymentType)[0]
+        .reference_data.map((data) => ({
+            label: data.name,
+            value: data.value,
+        }));
 
     const { response: paymentPending, loading: l_loading } = useSelector((state) => state.get_payment_pending);
     const { success: u_success, loading: u_loading } = useSelector((state) => state.update_payment_pending);
+
+    const { response: partner_payout } = useSelector((state) => state.get_payout_partner);
+
+    const partnerPayoutOptions = partner_payout?.data?.map((data) => ({
+        label: data.name,
+        value: data.agent_id,
+    }));
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onQuickFilter,
+        onRowsPerPageChange,
+        filterSchema,
+        reset,
+    } = useListFilterStore({ initialState });
+
+    const handlePayPartner = (e) => {
+        const updatedFilterSchema = {
+            ...filterPayPartner,
+            country: e.iso3,
+        };
+        setFilterPayPartner(updatedFilterSchema);
+    };
 
     useEffect(() => {
         dispatch(actions.get_payment_pending(filterSchema));
         dispatch({ type: "RELEASE_PENDING_PAYMENT_RESET" });
     }, [dispatch, filterSchema, u_success]);
 
+    useEffect(() => {
+        if (filterPayPartner.country) {
+            dispatch(PartnerAction.get_payout_partner(filterPayPartner));
+        }
+    }, [dispatch, filterPayPartner]);
+
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "tid",
-                maxWidth: 50,
+                header: "Id",
+                accessorKey: "tid",
             },
             {
-                Header: "Name",
-                accessor: "customer_name",
-                maxWidth: 140,
-                Cell: (data) => (
+                header: "Name",
+                accessorKey: "customer_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -83,18 +132,18 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ fontSize: "14px" }}>
-                            {data.value ? data.value : "N/A"}
+                            {row?.original?.customer_name ? row?.original?.customer_name : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.8 }}>
-                            {data?.row?.original?.beneficiary_name ? data?.row?.original?.beneficiary_name : "N/A"}
+                            {row?.original?.beneficiary_name ? row?.original?.beneficiary_name : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: "Partner/Payout Country",
-                accessor: "agent_name",
-                Cell: (data) => (
+                header: "Partner/Payout Country",
+                accessorKey: "agent_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -110,7 +159,7 @@ const PendingPayment = (props) => {
                                 opacity: 0.7,
                             }}
                         >
-                            {data.value ? data.value : "N/A"}
+                            {row?.original?.agent_name ? row?.original?.agent_name : "N/A"}
                         </StyledName>
                         <StyledName
                             component="p"
@@ -120,54 +169,52 @@ const PendingPayment = (props) => {
                                 opacity: 0.7,
                             }}
                         >
-                            {data?.row?.original?.payout_country_data
-                                ? ucfirst(data?.row?.original?.payout_country_data.toLowerCase())
-                                : (data?.row?.original?.payout_country ?? "N/A")}{" "}
+                            {row?.original?.payout_country_data
+                                ? ucfirst(row?.original?.payout_country_data.toLowerCase())
+                                : (row?.original?.payout_country ?? "N/A")}{" "}
                         </StyledName>
                     </Box>
                 ),
             },
 
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Date</Typography>
                     </Box>
                 ),
-                accessor: "created_ts",
-                Cell: (data) => (
+                accessorKey: "created_ts",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? FormatDate(data.value) : "N/A"}
+                            {row?.original?.created_ts ? FormatDate(row?.original?.created_ts) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Rate</Typography>
                     </Box>
                 ),
-                accessor: "payout_cost_rate",
-                maxWidth: 80,
-                Cell: (data) => (
+                accessorKey: "payout_cost_rate",
+                cell: ({ row }) => (
                     <Box textAlign="left" sx={{}}>
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? FormatNumber(data.value) : "N/A"}
+                            {row?.original?.payout_cost_rate ? FormatNumber(row?.original?.payout_cost_rate) : "N/A"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="right" sx={{}}>
                         <Typography>Amount</Typography>
                     </Box>
                 ),
-                accessor: "transfer_amount",
-                maxWidth: 80,
-                Cell: (data) => (
+                accessorKey: "transfer_amount",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -176,26 +223,22 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data?.row?.original?.collected_amount
-                                ? FormatNumber(data?.row?.original?.collected_amount)
-                                : "N/A"}
+                            {row?.original?.collected_amount ? FormatNumber(row?.original?.collected_amount) : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
-                            {data?.row?.original?.payout_amount
-                                ? FormatNumber(data?.row?.original?.payout_amount)
-                                : "N/A"}
+                            {row?.original?.payout_amount ? FormatNumber(row?.original?.payout_amount) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="left" sx={{}}>
                         <Typography>Currency</Typography>
                     </Box>
                 ),
-                accessor: "collected_currency",
-                Cell: (data) => (
+                accessorKey: "collected_currency",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -204,24 +247,24 @@ const PendingPayment = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {data.value ? CurrencyName(data.value) : "N/A"}
+                            {row?.original?.collected_currency
+                                ? CurrencyName(row?.original?.collected_currency)
+                                : "N/A"}
                         </StyledName>
                         <Typography component="span" sx={{ fontSize: "12px", opacity: 0.7 }}>
-                            {data?.row?.original?.payout_currency
-                                ? CurrencyName(data?.row?.original?.payout_currency)
-                                : "N/A"}
+                            {row?.original?.payout_currency ? CurrencyName(row?.original?.payout_currency) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -263,93 +306,128 @@ const PendingPayment = (props) => {
         [],
     );
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
+    const sortData = [
+        { key: "None", value: "" },
+        { key: "Partner Name", value: "agent_name" },
+        { key: "Payout Country", value: "payout_country" },
+        { key: "Payment Type", value: "payment_type" },
+    ];
+
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
         },
-        [filterSchema],
-    );
-
-    const handleSort = (e) => {
-        const type = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: type,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleFilter = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            transaction_id: data?.transaction_id,
-            pin_number: data?.pin_number,
-            customer_id: data?.customer_id,
-            sending_agent_id: data?.sending_agent_id,
-            payout_agent_id: data?.payout_agent_id,
-            payout_country: data?.payment_country,
-            payment_type: data?.payment_type,
-            from_date: data?.from_date,
-            to_date: data?.to_date,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+        {
+            type: fieldTypes.DATE,
+            name: "to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "transaction_id",
+            label: "Transaction ID",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "pin_number",
+            label: "Pin Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_id",
+            label: "Customer ID",
+        },
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "payout_country",
+            label: "Payout Country",
+            onChange: handlePayPartner,
+        },
+        {
+            type: fieldTypes.PARTNER_SELECT,
+            name: "send_agent_id",
+            label: "Sending Agent",
+            partnerType: PartnerType.SEND,
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payout_agent_id",
+            label: "Payout Agent",
+            options: partnerPayoutOptions,
+            props: {
+                disabled: !partnerPayoutOptions?.length,
+            },
+        },
+        {
+            type: fieldTypes.SELECT,
+            name: "payment_type",
+            label: "Payment Type",
+            options: paymentTypeOptions,
+        },
+    ];
 
     const handleRelease = (transactionId, data) => {
         dispatch(actions.update_payment_pending(transactionId, { remarks: data?.remarks }));
     };
 
     return (
-        <PageContent title="Pending Payment Transactions">
-            <Filter
-                handleSearch={handleSearch}
-                handleSort={handleSort}
-                handleOrder={handleOrder}
-                handleFilter={handleFilter}
-            />
-            <Table
-                columns={columns}
-                data={paymentPending?.data || []}
-                loading={l_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={paymentPending?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
+        <PageContent
+            documentTitle="Pending Payment Transactions"
+            breadcrumbs={[
+                {
+                    label: "Payment Processing",
+                },
+                {
+                    label: "Pending Payment Transactions",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Pending Payment Transactions"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    values={filterSchema}
+                    fields={filterFields}
+                />
+                <PageContentContainer
+                    title="Pending Payment Transactions"
+                    topRightContent={
+                        <TableGridQuickFilter
+                            onOrderByChange={onQuickFilter}
+                            onSortByChange={onQuickFilter}
+                            sortByData={sortData}
+                            disabled={l_loading}
+                            values={filterSchema}
+                        />
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={paymentPending?.data || []} loading={l_loading} />
+                </PageContentContainer>
+            </Column>
+            <TablePagination
+                paginationData={paymentPending?.pagination}
+                handleChangePage={onPageChange}
+                handleChangeRowsPerPage={onRowsPerPageChange}
             />
         </PageContent>
     );

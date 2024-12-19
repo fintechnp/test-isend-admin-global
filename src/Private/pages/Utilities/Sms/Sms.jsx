@@ -1,3 +1,5 @@
+import * as Yup from "yup";
+import { isAfter } from "date-fns";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo } from "react";
@@ -9,7 +11,6 @@ import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
 import ViewSmsModal from "./ViewSms/ViewSmsModal";
 import withPermission from "Private/HOC/withPermission";
-import FilterForm from "App/components/Filter/FilterForm";
 import BadgeAvatar from "App/components/Avatar/BadgeAvatar";
 import FilterButton from "App/components/Button/FilterButton";
 import Table, { TablePagination } from "App/components/Table";
@@ -17,6 +18,7 @@ import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
@@ -32,10 +34,29 @@ import useListFilterStore from "App/hooks/useListFilterStore";
 const initialState = {
     page_number: 1,
     page_size: 15,
-    search: "",
     sort_by: "created_ts",
     order_by: "DESC",
 };
+
+const schema = Yup.object().shape({
+    from_date: Yup.string().nullable().optional(),
+    to_date: Yup.string()
+        .nullable()
+        .optional()
+        .when("from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                Yup.string().test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(from_date)) : true;
+                    },
+                }),
+            otherwise: (schema) => Yup.string().nullable().optional(),
+        }),
+});
 
 const Sms = () => {
     const dispatch = useDispatch();
@@ -187,18 +208,24 @@ const Sms = () => {
 
     const filterFields = [
         {
-            type: "date",
+            type: fieldTypes.DATE,
             label: "From Date",
             name: "from_date",
+            props: {
+                withStartDayTimezone: true,
+            },
         },
         {
-            type: "date",
+            type: fieldTypes.DATE,
             label: "To Date",
             name: "to_date",
+            props: {
+                withEndDayTimezone: true,
+            },
         },
 
         {
-            type: "textfield",
+            type: fieldTypes.TEXTFIELD,
             label: "Receiver",
             name: "receiver",
         },
@@ -259,6 +286,7 @@ const Sms = () => {
                     fields={filterFields}
                     values={filterSchema}
                     onDelete={onDeleteFilterParams}
+                    schema={schema}
                 />
 
                 <PageContentContainer

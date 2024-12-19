@@ -48,17 +48,30 @@ export const CampaignConfigurationForm = ({
                 )}
 
                 <Grid item xs={12} md={4} lg={4}>
-                    <FormTextField type="number" name="LimitPerUser" label="Limit Per Customer" />
+                    <FormTextField
+                        type="number"
+                        name="LimitPerUser"
+                        label="Limit Per Customer"
+                        required
+                        control={control}
+                    />
                 </Grid>
 
                 <Grid item xs={12} md={4} lg={4}>
-                    <FormTextField type="number" name="LimitPerPromo" label="Total Redemptions Allowed" />
+                    <FormTextField
+                        type="number"
+                        name="LimitPerPromo"
+                        label="Total Redemptions Allowed"
+                        required
+                        control={control}
+                    />
                 </Grid>
             </Grid>
 
             <Grid container spacing={2} marginY={2}>
                 <Grid item xs={12} md={6} lg={6}>
                     <CKEditorComponent
+                        required
                         name="Description"
                         label="Description"
                         elementData={description}
@@ -118,8 +131,21 @@ export const CampaignConfigurationForm = ({
                             </Grid>
                         )}
 
-                        <Grid item xs={6}>
-                            <FormLabel htmlFor="WebImage" component="label">
+                        <Grid
+                            sx={{
+                                textAlign: "left",
+                            }}
+                            item
+                            xs={6}
+                        >
+                            <FormLabel
+                                sx={{
+                                    fontWeight: "bold",
+                                    textTransform: "uppercase",
+                                }}
+                                htmlFor="WebImage"
+                                component="label"
+                            >
                                 Web Image
                             </FormLabel>
 
@@ -153,8 +179,21 @@ export const CampaignConfigurationForm = ({
                             </Grid>
                         )}
 
-                        <Grid item xs={6}>
-                            <FormLabel htmlFor="MobileImage" component="label">
+                        <Grid
+                            sx={{
+                                textAlign: "left",
+                            }}
+                            item
+                            xs={6}
+                        >
+                            <FormLabel
+                                sx={{
+                                    fontWeight: "bold",
+                                    textTransform: "uppercase",
+                                }}
+                                htmlFor="MobileImage"
+                                component="label"
+                            >
                                 Mobile Image
                             </FormLabel>
                             <FormFileField

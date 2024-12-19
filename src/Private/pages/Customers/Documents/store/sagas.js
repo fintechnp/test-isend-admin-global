@@ -87,19 +87,19 @@ export const deleteDocuments = takeEvery(actions.DELETE_DOCUMENTS, function* (ac
     }
 });
 
-export const resetKycVerification = takeEvery(actions.RESET_KYC_VERIFICATION, function* ({ data }) {
+export const resetKycVerification = takeEvery(actions.KYC_VERIFICATION_LIMIT, function* ({ data }) {
     try {
         const res = yield call(api.put, `customer/KycCount/${data.customer_id}`);
 
         yield put({
-            type: actions.RESET_KYC_VERIFICATION_SUCCESS,
+            type: actions.KYC_VERIFICATION_LIMIT_SUCCESS,
             response: res,
         });
 
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({
-            type: actions.RESET_KYC_VERIFICATION_FAILED,
+            type: actions.KYC_VERIFICATION_LIMIT_FAILED,
             error: error?.data,
         });
 

@@ -63,10 +63,11 @@ function CustomerDetails() {
     const confirm = useConfirm();
 
     const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_by_id);
+    const { success: update_success } = useSelector((state) => state.update_kyc);
+    const { success: kycLimitSuccess } = useSelector((state) => state.kyc_verification_limit);
+    const { success: updateCustomerSucess } = useSelector((state) => state.update_customer_account);
 
     const data = customersData?.data;
-
-    const { success: update_success } = useSelector((state) => state.update_kyc);
 
     useEffect(() => {
         dispatch({ type: "GET_CUSTOMER_BYID_RESET" });
@@ -77,15 +78,23 @@ function CustomerDetails() {
             dispatch(actions.get_customer_by_id(id));
             dispatch({ type: "UPDATE_KYC_RESET" });
         }
-    }, [dispatch, id, update_success]);
+    }, [dispatch, id, update_success, updateCustomerSucess]);
 
-    const handleKycReset = () => {
+    useEffect(() => {
+        if (kycLimitSuccess) {
+            dispatch(actions.get_customer_by_id(id));
+            dispatch({ type: "KYC_VERIFICATION_LIMIT_RESET" });
+        }
+    }, [dispatch, kycLimitSuccess]);
+
+    const handleKycReset = (onClose) => {
         confirm({
             description: "This action will a reset a KYC verification attempt limit for this customer?",
             confirmationText: "Yes",
         }).then(() => {
-            dispatch(customerActions.reset_kyc_verification(id));
+            dispatch(customerActions.kyc_verification_limit(id));
         });
+        onClose();
     };
 
     const definition = useSourceDetail([
@@ -220,6 +229,18 @@ function CustomerDetails() {
         },
     ]);
 
+    const kycLimitDefinition = useSourceDetail([
+        {
+            title: "KYC Limit",
+            items: [
+                {
+                    label: "Max KYC Verification Attempt",
+                    accessorKey: "max_kyc_verification_attempt",
+                },
+            ],
+        },
+    ]);
+
     return (
         <PageContent
             documentTitle="Customer Details"
@@ -344,13 +365,15 @@ function CustomerDetails() {
                                     KYC Logs
                                 </ListItemButton>
 
-                                <ListItemButton onClick={handleKycReset}> Reset KYC Limit</ListItemButton>
+                                <ListItemButton onClick={() => handleKycReset(onClose)}>Reset KYC Limit</ListItemButton>
                             </>
                         )}
                     </PopoverButton>
                 </Row>
                 <Divider />
                 <SourceDetails definition={definition} data={data} isLoading={isLoading} />
+
+                <SourceDetails definition={kycLimitDefinition} data={data} isLoading={isLoading} />
             </Paper>
 
             <PageContentContainer

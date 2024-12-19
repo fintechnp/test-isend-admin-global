@@ -33,7 +33,7 @@ export default function CustomerPieChart() {
         { name: "iOS", value: data?.iosUsers ?? 0 },
         { name: "Android", value: data?.androidUsers ?? 0 },
         { name: "Web", value: data?.webUsers ?? 0 },
-        { name: "Others", value: data?.otherUsers ?? 0 },
+        { name: "Admin", value: data?.otherUsers ?? 0 },
     ];
 
     const statsNoData = [{ name: NO_DATA_LABEL, value: 1 }];
@@ -58,7 +58,7 @@ export default function CustomerPieChart() {
                 <Typography fontWeight={600} fontSize="1.286rem" lineHeight="1.786rem">
                     Customers
                 </Typography>
-                <Row flex={1} justifyContent="flex-end" gap="16px">
+                <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
                     {statsData.map((stat, index) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
                             <FiberManualRecordIcon sx={{ fill: DATA_COLORS[index] }} />

@@ -9,6 +9,7 @@ import Row from "App/components/Row/Row";
 import Column from "App/components/Column/Column";
 import PhoneIcon from "App/components/Icon/PhoneIcon";
 import { TablePagination } from "App/components/Table";
+import ExportPdfTable from "./components/ExportBeneficiary";
 import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
 import CustomerAvatar from "App/components/Avatar/CustomerAvatar";
@@ -352,6 +353,7 @@ function BeneficiaryReports() {
                             csvReport={csvReport}
                             state={filterSchema}
                             downloadData={downloadData}
+                            custompdfTable={<ExportPdfTable reportData={csvReport} />}
                         />
                     }
                 >

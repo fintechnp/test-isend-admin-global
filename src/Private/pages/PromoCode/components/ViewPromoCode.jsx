@@ -104,6 +104,9 @@ export default function ViewPromoCode() {
     useEffect(() => {
         if (isSuccess) {
             dispatch(promoCodeActions.get_promo_code_by_id(id));
+            dispatch({
+                type: "ADD_PROMO_CODE_BUDGET_RESET",
+            });
         }
     }, [dispatch, isSuccess]);
 
@@ -111,12 +114,10 @@ export default function ViewPromoCode() {
         {
             label: "Mobile Image",
             src: mobileImage,
-            height: 200,
         },
         {
             label: "Web Image",
             src: webImage,
-            height: 100,
         },
         {
             label: "",

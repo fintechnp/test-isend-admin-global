@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Switch, Tooltip, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import SubdirectoryArrowLeftIcon from "@mui/icons-material/SubdirectoryArrowLeft";
+import { useSelector, useDispatch } from "react-redux";
+import ListItemButton from "@mui/material/ListItemButton";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import actions from "./store/actions";
 import Header from "./components/Header";
@@ -16,8 +15,17 @@ import withPermission from "Private/HOC/withPermission";
 import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 
+import Column from "App/components/Column/Column";
 import { permissions } from "Private/data/permissions";
+import FilterButton from "App/components/Button/FilterButton";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import ViewReferenceType from "./components/ViewReferenceType";
+import PopoverButton from "App/components/Button/PopoverButton";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -67,11 +75,24 @@ const initialState = {
 const Reference = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    // const [filterSchema, setFilterSchema] = useState(initialState);
 
     const { response: referenceTypeData, loading: g_loading } = useSelector((state) => state.get_all_reference);
     const { success: a_success } = useSelector((state) => state.add_reference);
     const { success: u_success } = useSelector((state) => state.update_reference);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onQuickFilter,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        onPageChange,
+        onRowsPerPageChange,
+        filterSchema,
+        reset,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch(actions.get_all_reference(filterSchema));
@@ -85,19 +106,17 @@ const Reference = (props) => {
 
     const columns = useMemo(() => [
         {
-            Header: "S.N.",
-            accessor: "f_serial_no",
-            maxWidth: 60,
+            header: "S.N.",
+            accessorKey: "f_serial_no",
         },
         {
-            Header: "Type ID",
-            accessor: "reference_type_id",
-            maxWidth: 60,
+            header: "Type ID",
+            accessorKey: "reference_type_id",
         },
         {
-            Header: "Name",
-            accessor: "type_name",
-            Cell: (data) => (
+            header: "Name",
+            accessorKey: "type_name",
+            cell: ({ row }) => (
                 <Box
                     sx={{
                         display: "flex",
@@ -106,73 +125,49 @@ const Reference = (props) => {
                     }}
                 >
                     <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                        {data.value ? data.value : "n/a"}
+                        {row?.original?.type_name ? row?.original?.type_name : "n/a"}
                     </StyledName>
                 </Box>
             ),
         },
         {
-            Header: () => (
+            header: () => (
                 <Box>
                     <Typography>Description</Typography>
                 </Box>
             ),
-            accessor: "description",
-            Cell: (data) => (
+            accessorKey: "description",
+            cell: ({ row }) => (
                 <Box>
-                    <StyledText component="p">{data.value ? data.value : "n/a"}</StyledText>
+                    <StyledText component="p">
+                        {row?.original?.description ? row?.original?.description : "n/a"}
+                    </StyledText>
                 </Box>
             ),
         },
         {
-            Header: () => (
-                <Box textAlign="center">
-                    <Typography>Actions</Typography>
-                </Box>
-            ),
-            accessor: "show",
-            Cell: ({ row }) => (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                    }}
-                >
-                    <span {...row.getToggleRowExpandedProps({})}>
-                        {row.isExpanded ? (
-                            <Tooltip title="Hide Details" arrow>
-                                <IconButton>
-                                    <VisibilityOffOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Show Details" arrow>
-                                <IconButton>
-                                    <RemoveRedEyeOutlinedIcon
-                                        sx={{
-                                            fontSize: "20px",
-                                            "&:hover": {
-                                                background: "transparent",
-                                            },
-                                        }}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                    </span>
-                    <HasPermission permission={permissions.EDIT_REFERENCE_TYPE}>
-                        <AddReference update={true} update_data={row?.original} />
-                    </HasPermission>
-                    <HasPermission permission={permissions.READ_REFERENCE_DATA}>
-                        <Tooltip title="Show Sub Data" arrow>
+            header: "Actions",
+            accessorKey: "show",
+            cell: ({ row }) => (
+                <PopoverButton>
+                    {({ onClose }) => (
+                        <>
+                            <ViewReferenceType data={row?.original} onClose={onClose} />
+                            <HasPermission permission={permissions.EDIT_REFERENCE_TYPE}>
+                                <AddReference update={true} update_data={row?.original} enablePopoverAction={true} />
+                            </HasPermission>
+                            <HasPermission permission={permissions.READ_REFERENCE_DATA}>
+                                <ListItemButton
+                                    onClick={() => {
+                                        navigate(
+                                            `/setup/reference/data/${row?.original?.type_name}/${row?.original?.reference_type_id}`,
+                                        );
+                                        onClose();
+                                    }}
+                                >
+                                    View Sub Data
+                                </ListItemButton>
+                                {/* <Tooltip title="Show Sub Data" arrow>
                             <IconButton
                                 onClick={() =>
                                     navigate(
@@ -189,9 +184,11 @@ const Reference = (props) => {
                                     }}
                                 />
                             </IconButton>
-                        </Tooltip>
-                    </HasPermission>
-                </Box>
+                        </Tooltip> */}
+                            </HasPermission>
+                        </>
+                    )}
+                </PopoverButton>
             ),
         },
     ]);
@@ -203,78 +200,75 @@ const Reference = (props) => {
         { key: "created_ts", name: "Created Date", type: "date" },
     ];
 
-    const handleSearch = useCallback(
-        (value) => {
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: value,
-            };
-            setFilterSchema(updatedFilterSchema);
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
         },
-        [filterSchema],
-    );
+    ];
 
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleSortBy = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+    const sortData = [
+        { key: "None", value: "type_name" },
+        { key: "Name", value: "name" },
+        { key: "Created Date", value: "created_ts" },
+    ];
 
     return (
-        <PageContent documentTitle="Reference Type">
-            <Header title="All Reference Type" type={true} />
-            <Filter
-                type={true}
-                state={filterSchema}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSortBy={handleSortBy}
-            />
-            <Table
-                columns={columns}
-                title="Reference Type Details"
-                data={referenceTypeData?.data || []}
-                sub_columns={sub_columns}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
+        <PageContent
+            documentTitle="Reference Type"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "References",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Reference Type"
+                    fields={filterFields}
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    values={filterSchema}
+                />
+                <PageContentContainer
+                    title="All Reference Type"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                sortByData={sortData}
+                                values={filterSchema}
+                                disabled={g_loading}
+                            />
+                            <Header type={true} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        title="Reference Type Details"
+                        data={referenceTypeData?.data || []}
+                        sub_columns={sub_columns}
+                        loading={g_loading}
+                    />
                     <TablePagination
                         paginationData={referenceTypeData?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        handleChangePage={onPageChange}
+                        handleChangeRowsPerPage={onRowsPerPageChange}
                     />
-                )}
-            />
+                </PageContentContainer>
+            </Column>
         </PageContent>
     );
 };

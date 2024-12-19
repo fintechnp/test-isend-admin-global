@@ -176,7 +176,6 @@ function LanguageSetup() {
                             data={languageData?.data || []}
                             loading={lang_loading}
                             apiEndpoint={apiEndpoints.language.get}
-                            // filterQuery={filterSchema}
                             filename="Language Options"
                         />
                     </Grid>

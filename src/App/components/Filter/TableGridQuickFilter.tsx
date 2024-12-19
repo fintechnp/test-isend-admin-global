@@ -52,8 +52,27 @@ export default function TableGridQuickFilter({
     orderData = DEFAULT_ORDER_BY_DATA,
 }) {
     return (
-        <Box display="flex" gap="16px">
-            <FormControl sx={{ ml: 1, minWidth: 120 }}>
+        <Box
+            display="flex"
+            gap="16px"
+            flexWrap="wrap"
+            sx={(theme) => ({
+                [theme.breakpoints.down("md")]: {
+                    width: "100%",
+                },
+            })}
+        >
+            <FormControl
+                sx={(theme) => ({
+                    [theme.breakpoints.up("md")]: {
+                        ml: 1,
+                        minWidth: 120,
+                    },
+                    [theme.breakpoints.down("md")]: {
+                        width: "100%",
+                    },
+                })}
+            >
                 <Select
                     size="small"
                     onChange={(e) => onSortByChange(sortByFieldName, e.target.value)}
@@ -80,7 +99,17 @@ export default function TableGridQuickFilter({
                     ))}
                 </Select>
             </FormControl>
-            <FormControl sx={{ ml: 1, minWidth: 120 }}>
+            <FormControl
+                sx={(theme) => ({
+                    [theme.breakpoints.up("md")]: {
+                        ml: 1,
+                        minWidth: 120,
+                    },
+                    [theme.breakpoints.down("md")]: {
+                        width: "100%",
+                    },
+                })}
+            >
                 <Select
                     size="small"
                     onChange={(e) => onOrderByChange(orderByFieldName, e.target.value)}

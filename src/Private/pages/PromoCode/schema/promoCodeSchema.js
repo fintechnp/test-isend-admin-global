@@ -14,11 +14,11 @@ const rewardsSchema = Yup.object().shape({
     minimumAmount: Yup.number()
         .typeError("Minimum amount is required")
         .required("Minimum amount is required")
-        .min(0.1, "Minimum Amount must be greater than or equal to 0.1"),
+        .min(0.1, "Must be greater than or equal to 0.1"),
     maximumAmount: Yup.number()
         .typeError("Maximum Amount is required")
         .required("Maximum amount is required")
-        .min(Yup.ref("minimumAmount"), "Maximum amount must be greater than minimum amount"),
+        .min(Yup.ref("minimumAmount"), "Must be greater than minimum amount"),
     rewardOn: Yup.number().typeError("Reward on is required").required("Reward on is required").integer(),
     rewardType: Yup.number().typeError("Reward Type is required").required("Reward type is required").integer(),
     rewardCategory: Yup.number()
@@ -28,14 +28,14 @@ const rewardsSchema = Yup.object().shape({
     rewardValue: Yup.number()
         .typeError("Reward value is required")
         .required("Reward value is required")
-        .min(0.1, "Reward value must be greater than or equal to 0.1"),
+        .min(0.1, "Must be greater than or equal to 0.1"),
     rewardLimit: Yup.number().when("rewardType", {
         is: (value) => value === rewardTypeEnums.PERCENTAGE,
         then: (schema) =>
             schema
                 .required("Reward limit must be at least 1")
                 .typeError("Reward limit must be greater than or equal to 0.1")
-                .min(0.1, "Reward limit must be greater than or equal to 0.1"),
+                .min(0.1, "Must be greater than or equal to 0.1"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
 });
@@ -69,8 +69,8 @@ export const createAttributePromoCodeSchema = Yup.object().shape({
     }),
     Rewards: Yup.array().of(rewardsSchema),
     DisplayMechanism: Yup.number().required("Display mechanism is required").integer(),
-    LimitPerUser: Yup.mixed().optional(),
-    LimitPerPromo: Yup.mixed().optional(),
+    LimitPerUser: Yup.number().typeError("Limit Per User is required").required("Limit Per User is required"),
+    LimitPerPromo: Yup.number().typeError("Total Redemptions is required").required("Total Redemptions is required"),
     WebImage: Yup.string().nullable(),
     MobileImage: Yup.string().nullable(),
     Description: Yup.string().required("Description is required"),
@@ -90,8 +90,8 @@ export const createReferralPromoCodeSchema = Yup.object().shape({
     }),
     Rewards: Yup.array().of(rewardsSchema),
     DisplayMechanism: Yup.number().required("Display mechanism is required").integer(),
-    LimitPerUser: Yup.mixed().optional(),
-    LimitPerPromo: Yup.mixed().optional(),
+    LimitPerUser: Yup.number().typeError("Limit Per User is required").required("Limit Per User is required"),
+    LimitPerPromo: Yup.number().typeError("Total Redemptions is required").required("Total Redemptions is required"),
     WebImage: Yup.string().nullable(),
     MobileImage: Yup.string().nullable(),
     Description: Yup.string().required("Description is required"),
@@ -106,8 +106,11 @@ export const updatePromoCodeSchema = Yup.object().shape({
         Budget: Yup.number().typeError("Budget is required").required("Budget is required").min(0),
         Status: Yup.number().required("Status is required").integer(),
     }),
-    LimitPerUser: Yup.mixed().optional(),
-    LimitPerPromo: Yup.mixed().optional(),
+    LimitPerUser: Yup.number().typeError("Limit Per User is required").required("Limit Per User is required").integer(),
+    LimitPerPromo: Yup.number()
+        .typeError("Total Redemptions is required")
+        .required("Total Redemptions is required")
+        .integer(),
     Description: Yup.string().required("Description is required"),
     TermsAndCondition: Yup.string().required("Terms and conditions are required"),
     WebImage: Yup.string().nullable(),

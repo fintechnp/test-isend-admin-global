@@ -13,6 +13,8 @@ import Table, { TablePagination } from "App/components/Table";
 import PageContent from "App/components/Container/PageContent";
 import withPermission from "Private/HOC/withPermission";
 import { permissions } from "Private/data/permissions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -67,9 +69,8 @@ const ServiceCharge = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "SN",
-                maxWidth: 100,
-                Cell: (data) => (
+                header: "SN",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -78,17 +79,15 @@ const ServiceCharge = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data?.row?.index ? data?.row?.index + 1 : "1"}
+                            {row?.index ? row?.index + 1 : "1"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: "Partner Name",
-                accessor: "agent_name",
-                width: 280,
-                maxWidth: 500,
-                Cell: (data) => (
+                header: "Partner Name",
+                accessorKey: "agent_name",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -97,19 +96,19 @@ const ServiceCharge = (props) => {
                         }}
                     >
                         <StyledName component="p" sx={{ paddingLeft: "8px" }}>
-                            {data.value ? data.value : "n/a"}
+                            {row?.original?.agent_name ? row?.original?.agent_name : "n/a"}
                         </StyledName>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center" sx={{}}>
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -201,29 +200,29 @@ const ServiceCharge = (props) => {
 
     return (
         <PageContent documentTitle="Partnerwise Service Charge">
-            <Header title="Partnerwise Service Charge" buttonText="Add Service Charge" />
-
-            <Filter
-                state={filterSchema}
-                sortData={sortData}
-                orderData={orderData}
-                handleSearch={handleSearch}
-                handleOrder={handleOrder}
-                handleSort={handleSort}
-            />
-            <Table
-                columns={columns}
-                data={servicecharge_data?.data || []}
-                loading={g_loading}
-                rowsPerPage={8}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={servicecharge_data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
-            />
+            <PageContentContainer
+                title="Partnerwise Service Charge"
+                topRightContent={
+                    <>
+                        <Filter
+                            state={filterSchema}
+                            sortData={sortData}
+                            orderData={orderData}
+                            handleSearch={handleSearch}
+                            handleOrder={handleOrder}
+                            handleSort={handleSort}
+                        />
+                        <Header buttonText="Add Service Charge" />
+                    </>
+                }
+            >
+                <TanstackReactTable columns={columns} data={servicecharge_data?.data || []} loading={g_loading} />
+                <TablePagination
+                    paginationData={servicecharge_data?.pagination}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </PageContentContainer>
         </PageContent>
     );
 };

@@ -61,6 +61,25 @@ export default function FormDateTimePicker({
                                     size="small"
                                     fullWidth={fullWidth}
                                     focused={focused}
+                                    label={
+                                        <>
+                                            {label}{" "}
+                                            {required && (
+                                                <span
+                                                    style={{
+                                                        color: "red",
+                                                    }}
+                                                >
+                                                    *
+                                                </span>
+                                            )}
+                                            {isOptional && (
+                                                <Typography component="span" variant="caption">
+                                                    ( Optional )
+                                                </Typography>
+                                            )}
+                                        </>
+                                    }
                                     color={color}
                                     error={!!errors[name]}
                                     helperText={errors[name]?.message ?? ""}

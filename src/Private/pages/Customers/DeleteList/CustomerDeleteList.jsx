@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { useNavigate } from "react-router";
 import React, { useEffect, useMemo } from "react";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
 import Column from "App/components/Column/Column";
@@ -187,6 +188,16 @@ export default function CustomerDeleteList() {
                 header: "Requested Date",
                 accessorKey: "created_ts",
                 cell: ({ getValue }) => dateUtils.getFormattedDate(getValue()),
+            },
+            {
+                header: "(Approved/Rejected) Date/By",
+                accessorKey: "updated_ts",
+                cell: ({ getValue, row }) => (
+                    <Column>
+                        <Typography>{getValue() ? dateUtils.getFormattedDate(getValue()) : ""}</Typography>
+                        <Typography>{row.original.updated_by ? `By: ${row.original.updated_by}` : ""}</Typography>
+                    </Column>
+                ),
             },
 
             {

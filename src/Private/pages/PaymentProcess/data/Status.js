@@ -6,6 +6,6 @@ export const Status = {
     F: "Suspicious",
     R: "Refunded/Rejected",
     B: "Blocked",
-    A: "Pending Approval",
+    A: "Approval Pending",
     E: "Exception",
 };

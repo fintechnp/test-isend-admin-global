@@ -3,29 +3,35 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import actions from "./store/action";
 import { Delete } from "App/components";
 import { CountryName } from "App/helpers";
+import Column from "App/components/Column/Column";
 import { TablePagination } from "App/components/Table";
-import PageContent from "App/components/Container/PageContent";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import FilterStreetType from "Private/components/StreetType/FilterStreetType";
-import StreetTypeModal from "Private/components/StreetType/AddStreetTypeModal";
-import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
 import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import StreetTypeModal from "Private/components/StreetType/AddStreetTypeModal";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+import TableRowActionContainer from "App/components/Table/TableRowActionContainer";
+
+import actions from "./store/action";
 import useAuthUser from "Private/hooks/useAuthUser";
+import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
+
+const initialState = {
+    page_size: 10,
+    page_number: 1,
+};
 
 const StreetType = ({ title }) => {
     const dispatch = useDispatch();
 
     const { can } = useAuthUser();
-
-    const [filterSchema, setFilterSchema] = useState({
-        page_size: 15,
-        page_number: 1,
-    });
 
     const { loading: streetTypeLoading, response: allStreetType } = useSelector((state) => state.get_street_type);
 
@@ -38,6 +44,20 @@ const StreetType = ({ title }) => {
     const { success: deleteStreetTypeSuccess, loading: deleteStreetTypeLoading } = useSelector(
         (state) => state.delete_street_type,
     );
+
+    const {
+        filterSchema,
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onDeleteFilterParams,
+        onFilterSubmit,
+        onPageChange,
+        onRowsPerPageChange,
+        onQuickFilter,
+        reset,
+    } = useListFilterStore({ initialState });
+
     useEffect(() => {
         dispatch(actions.get_street_type("AUS", filterSchema));
         dispatch({ type: "DELETE_STREET_TYPE_RESET" });
@@ -46,31 +66,14 @@ const StreetType = ({ title }) => {
     }, [filterSchema, dispatch, deleteStreetTypeSuccess, addStreetTypeSuccess, updateStreetTypeSuccess]);
 
     const sortByOptions =
-        allStreetType?.data?.length > 0 &&
-        Object.keys(allStreetType?.data[0])?.map((item) => {
-            return { value: item, label: item };
-        });
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
+        allStreetType?.data?.length > 0
+            ? Object.keys(allStreetType?.data[0])?.map((item) => {
+                  return { value: item, key: item };
+              })
+            : [];
 
     const handleDelete = (id) => {
         dispatch(actions.delete_street_type(id));
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
     };
 
     const columns = useMemo(
@@ -126,41 +129,62 @@ const StreetType = ({ title }) => {
         ],
         [],
     );
+
+    const filterFields = [
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "country",
+            label: "Country",
+        },
+    ];
+
     return (
         <PageContent
             documentTitle={title}
-            title={
-                <>
-                    <Typography>{title}</Typography>
-                </>
-            }
+            breadcrumbs={[{ label: "Setup" }, { label: "Street Type" }]}
             topRightEndContent={
-                <HasPermission permission={permissions.CREATE_STREET_TYPE}>
-                    <StreetTypeModal update={false} />
-                </HasPermission>
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
         >
-            <FilterStreetType sortByOptions={sortByOptions} />
-
-            <Grid container sx={{ pb: "24px", my: "15px" }} rowSpacing={2}>
-                <Grid item xs={12}>
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Street Type"
+                    open={isFilterOpen}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onClose={closeFilter}
+                    onReset={reset}
+                    fields={filterFields}
+                    onDelete={onDeleteFilterParams}
+                />
+                <PageContentContainer
+                    title="Street Type"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                sortByData={sortByOptions}
+                                values={filterSchema}
+                            />
+                            <HasPermission permission={permissions.CREATE_STREET_TYPE}>
+                                <StreetTypeModal update={false} />
+                            </HasPermission>
+                        </>
+                    }
+                >
                     <TanstackReactTable
                         columns={columns}
-                        title="Street Type"
                         data={allStreetType?.data || []}
                         loading={streetTypeLoading}
-                        rowsPerPage={10}
-                        totalPage={allStreetType?.pagination?.totalPage || 1}
-                        renderPagination={() => (
-                            <TablePagination
-                                paginationData={allStreetType?.pagination}
-                                handleChangePage={handleChangePage}
-                                handleChangeRowsPerPage={handleChangeRowsPerPage}
-                            />
-                        )}
                     />
-                </Grid>
-            </Grid>
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={allStreetType?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
+                />
+            </Column>
         </PageContent>
     );
 };

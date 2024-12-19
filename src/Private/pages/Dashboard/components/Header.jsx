@@ -134,42 +134,53 @@ export default function Header() {
 
     return (
         <HeaderContainer elevation={0}>
-            <Row>
+            <Row
+                sx={(theme) => ({
+                    gap: "2rem",
+                })}
+            >
                 <Column>
                     <Typography variant="h6">Dashboard</Typography>
                     <Typography fontSize="0.857rem" lineHeight="1rem" color="text.secondary">
                         Dashboard / Dashboard
                     </Typography>
                 </Column>
-                <Box className="DateRangeSelector-root" display="flex" flexDirection="row" gap={1}>
-                    <DateRangePicker
-                        onChange={handleDateRange}
-                        value={cleanObject({
-                            startDate: dateRange?.from_date,
-                            endDate: dateRange?.to_date,
-                        })}
-                    />
-                </Box>
-                <ToggleButtonGroup
-                    className="RangeSelector-root"
-                    value={params?.rangeType ? [params.rangeType] : []}
-                    onChange={handleChangeRangeSelector}
-                    aria-label="range selector"
-                    disabled={isLoading}
+                <Row
+                    sx={{
+                        overflowX: "auto",
+                        overflowY: "hidden",
+                    }}
                 >
-                    <ToggleButton value={RangeType.DAILY} aria-label="daily">
-                        Daily
-                    </ToggleButton>
-                    <ToggleButton value={RangeType.WEEKLY} aria-label="weekly">
-                        Weekly
-                    </ToggleButton>
-                    <ToggleButton value={RangeType.MONTHLY} aria-label="monthly">
-                        Monthly
-                    </ToggleButton>
-                    <ToggleButton value={RangeType.YEARLY} aria-label="yearly">
-                        Yearly
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                    <Box className="DateRangeSelector-root" display="flex" flexDirection="row" gap={1}>
+                        <DateRangePicker
+                            onChange={handleDateRange}
+                            value={cleanObject({
+                                startDate: dateRange?.from_date,
+                                endDate: dateRange?.to_date,
+                            })}
+                        />
+                    </Box>
+                    <ToggleButtonGroup
+                        className="RangeSelector-root"
+                        value={params?.rangeType ? [params.rangeType] : []}
+                        onChange={handleChangeRangeSelector}
+                        aria-label="range selector"
+                        disabled={isLoading}
+                    >
+                        <ToggleButton value={RangeType.DAILY} aria-label="daily">
+                            Daily
+                        </ToggleButton>
+                        <ToggleButton value={RangeType.WEEKLY} aria-label="weekly">
+                            Weekly
+                        </ToggleButton>
+                        <ToggleButton value={RangeType.MONTHLY} aria-label="monthly">
+                            Monthly
+                        </ToggleButton>
+                        <ToggleButton value={RangeType.YEARLY} aria-label="yearly">
+                            Yearly
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Row>
             </Row>
         </HeaderContainer>
     );

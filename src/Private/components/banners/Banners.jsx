@@ -10,6 +10,7 @@ import Table, { TablePagination, TableSwitch } from "App/components/Table";
 import bannerActions from "Private/features/banners/bannerActions";
 import TextButton from "App/components/Button/TextButton";
 import Modal from "App/components/Modal/Modal";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 
 const initialState = {
     page_number: 1,
@@ -41,63 +42,67 @@ const Banners = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "banner_id",
+                header: "Id",
+                accessorKey: "banner_id",
             },
             {
-                Header: "Banner Name",
-                accessor: "banner_name",
+                header: "Banner Name",
+                accessorKey: "banner_name",
             },
             {
-                Header: "Mobile Banner Image",
-                accessor: "link",
-                Cell: (data) => (
+                header: "Mobile Banner Image",
+                accessorKey: "link",
+                cell: ({ row }) => (
                     <img
-                        src={data.value}
+                        src={row?.original?.link}
                         style={{ height: "30px", width: "auto", cursor: "pointer" }}
                         alt="banner_mobile"
                         onClick={() =>
                             setImage({
                                 type: "mobile",
-                                url: data.value,
+                                url: row?.original?.link,
                             })
                         }
                     />
                 ),
             },
             {
-                Header: "Web Banner Image",
-                accessor: "weblink",
-                Cell: (data) => (
+                header: "Web Banner Image",
+                accessorKey: "weblink",
+                cell: ({ row }) => (
                     <img
-                        src={data.value}
+                        src={row?.original?.weblink}
                         style={{ height: "30px", width: "auto", cursor: "pointer" }}
                         alt="banner_web"
                         onClick={() =>
                             setImage({
                                 type: "web",
-                                url: data.value,
+                                url: row?.original?.weblink,
                             })
                         }
                     />
                 ),
             },
             {
-                Header: "Status",
-                accessor: "is_active",
+                header: "Status",
+                accessorKey: "is_active",
                 width: 120,
-                Cell: (data) => (
-                    <TableSwitch value={data?.value} dataId={data.row.original.banner_id} handleStatus={handleStatus} />
+                cell: ({ row }) => (
+                    <TableSwitch
+                        value={row?.original?.is_active}
+                        dataId={row?.original?.banner_id}
+                        handleStatus={handleStatus}
+                    />
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -176,20 +181,17 @@ const Banners = (props) => {
                     )}
                 </Box>
             </Modal>
-            <Table
+            <TanstackReactTable
                 columns={columns}
                 title="Banners"
                 data={data?.data || []}
                 loading={isLoading}
-                rowsPerPage={8}
                 totalPage={data?.pagination?.totalPage || 1}
-                renderPagination={() => (
-                    <TablePagination
-                        paginationData={data?.pagination}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                )}
+            />
+            <TablePagination
+                paginationData={data?.pagination}
+                handleChangePage={handleChangePage}
+                handleChangeRowsPerPage={handleChangeRowsPerPage}
             />
         </>
     );

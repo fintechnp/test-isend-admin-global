@@ -10,26 +10,31 @@ import AddBannerModal from "Private/components/banners/AddBannerModal";
 import EditBannerModal from "Private/components/banners/EditBannerModal";
 
 import { permissions } from "Private/data/permissions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 function ListBanner() {
     const dispatch = useDispatch();
 
     return (
-        <PageContent
-            title="Banners"
-            topRightEndContent={
+        <PageContent>
+            <PageContentContainer
+                title="Banners"
+                topRightContent={
+                    <>
+                        <HasPermission permission={[permissions.CREATE_BANNER]}>
+                            <Button onClick={() => dispatch({ type: "OPEN_ADD_BANNER_MODAL" })}>Add Banner</Button>
+                        </HasPermission>
+                    </>
+                }
+            >
                 <HasPermission permission={[permissions.CREATE_BANNER]}>
-                    <Button onClick={() => dispatch({ type: "OPEN_ADD_BANNER_MODAL" })}>Add Banner</Button>
+                    <AddBannerModal />
                 </HasPermission>
-            }
-        >
-            <HasPermission permission={[permissions.CREATE_BANNER]}>
-                <AddBannerModal />
-            </HasPermission>
-            <HasPermission permission={[permissions.EDIT_BANNER]}>
-                <EditBannerModal />
-            </HasPermission>
-            <Banners />
+                <HasPermission permission={[permissions.EDIT_BANNER]}>
+                    <EditBannerModal />
+                </HasPermission>
+                <Banners />
+            </PageContentContainer>
         </PageContent>
     );
 }

@@ -209,7 +209,10 @@ const PdfTable = ({ csvReport }) => {
                                             return (
                                                 <Text style={styles.head} key={index}>
                                                     {customer[header?.key]
-                                                        ? dateUtils.getFormattedDate(customer[header?.key])
+                                                        ? dateUtils.getFormattedDate(
+                                                              customer[header?.key],
+                                                              "MM/DD/YYYY HH:mm A",
+                                                          )
                                                         : "n/a"}
                                                 </Text>
                                             );
@@ -255,6 +258,14 @@ const PdfTable = ({ csvReport }) => {
                                                 </Text>
                                             );
                                         } else if (header?.key === "transaction_status") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key]
+                                                        ? ReferenceName(66, customer[header?.key])
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (header?.key === "transaction_status_code") {
                                             return (
                                                 <Text style={styles.head} key={index}>
                                                     {customer[header?.key]

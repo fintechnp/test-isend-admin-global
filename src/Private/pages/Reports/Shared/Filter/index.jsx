@@ -19,6 +19,7 @@ import ExportToCsv from "./ExportToCsv";
 import ExportToExcel from "./ExportToExcel";
 import { PdfDocument } from "./ExportToPdf";
 import dateUtils from "App/utils/dateUtils";
+import { CurrencyName, ReferenceName } from "App/helpers";
 
 const FilterWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "2px",
@@ -127,6 +128,7 @@ function Filter({
     downloadData,
     exportColumns,
     menu,
+    custompdfTable,
 }) {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -135,11 +137,18 @@ function Filter({
 
     useEffect(() => {
         if (csvReport?.data && csvReport.data.length > 0) {
-            const formattedData = csvReport.data.map((item) => ({
-                ...item,
-                created_ts: item.created_ts ? dateUtils.getFormattedDate(item.created_ts) : item.created_ts,
-                updated_ts: item.updated_ts ? dateUtils.getFormattedDate(item.updated_ts) : item.updated_ts,
-                ...(item.refund_ts ? { refund_ts: dateUtils.getFormattedDate(item.refund_ts) } : {}),
+            const formattedData = csvReport?.data?.map((item) => ({
+                ...Object.fromEntries(
+                    Object.entries(item)?.map(([key, value]) => [key, value === null || value === "" ? "N/A" : value]),
+                ),
+                created_ts: item.created_ts
+                    ? dateUtils.getFormattedDate(item.created_ts, "MM/DD/YYYY  hh:mm A")
+                    : item.created_ts,
+                updated_ts: item.updated_ts
+                    ? dateUtils.getFormattedDate(item.updated_ts, "MM/DD/YYYY hh:mm A")
+                    : item.updated_ts,
+                ...(item?.refund_ts && { refund_ts: dateUtils.getFormattedDate(item.refund_ts) }),
+                ...(item?.payment_type && { payment_type: ReferenceName(1, item.payment_type) }),
             }));
 
             if (success && down === "xlsx") {
@@ -163,7 +172,9 @@ function Filter({
                 setDown(null);
             } else if (success && down === "pdf") {
                 const generatePdfDocument = async (csvReport, fileName) => {
-                    const blob = await pdf(<PdfDocument csvReport={csvReport} />).toBlob();
+                    const blob = await pdf(
+                        <PdfDocument csvReport={csvReport} customPdfTable={custompdfTable} />,
+                    ).toBlob();
                     FileSaver.saveAs(blob, fileName);
                     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
                     setDown(null);
@@ -187,8 +198,22 @@ function Filter({
             </HeaderWrapper>
             {!menu ? (
                 <Box display="flex" columnGap="16px">
-                    <ExportToPdf setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
-                    <ExportToExcel setDown={setDown} handleClose={handleClose} downloadData={downloadData} />
+                    <ExportToPdf
+                        setDown={setDown}
+                        handleClose={handleClose}
+                        downloadData={downloadData}
+                        downloading={loading}
+                    >
+                        <> {loading && down === "pdf" ? "Exporting..." : "PDF"}</>
+                    </ExportToPdf>
+                    <ExportToExcel
+                        setDown={setDown}
+                        handleClose={handleClose}
+                        downloadData={downloadData}
+                        downloading={loading}
+                    >
+                        <> {loading && down === "xlsx" ? "Exporting..." : "Excel"}</>
+                    </ExportToExcel>
                 </Box>
             ) : (
                 <DropWrapper>

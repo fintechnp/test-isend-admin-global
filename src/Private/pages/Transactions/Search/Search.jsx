@@ -59,8 +59,8 @@ const headers = [
     { label: "Charge", key: "service_charge" },
     { label: "Collected", key: "collected_amount" },
     { label: "Payout", key: "payout_amount" },
-    { label: "Status", key: "transaction_status" },
-    { label: "Created", key: "created_ts" },
+    { label: "Status", key: "transaction_status_code" },
+    { label: "Created Time", key: "created_ts" },
 ];
 
 const schema = Yup.object().shape({
@@ -438,6 +438,9 @@ function Search(props) {
             breadcrumbs={[
                 {
                     label: "Transactions",
+                },
+                {
+                    label: "Search",
                 },
             ]}
             topRightEndContent={

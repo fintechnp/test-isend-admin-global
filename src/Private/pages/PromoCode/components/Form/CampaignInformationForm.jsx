@@ -46,7 +46,7 @@ const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData,
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>
-                <FormDateTimePicker name="Campaign.EndDate" label="End Date Time" control={control} />
+                <FormDateTimePicker required name="Campaign.EndDate" label="End Date Time" control={control} />
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>

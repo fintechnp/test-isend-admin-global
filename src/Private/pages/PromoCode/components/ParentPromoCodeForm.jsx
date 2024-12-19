@@ -37,20 +37,21 @@ import { campaignTriggerCriteria, campaignTriggerCriteriaOptions } from "../data
 
 export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [webImage, setWebImage] = useState(null);
+    const [mobileImage, setMobileImage] = useState(null);
 
     const getCampaignConditionSchema = (campaignType) => {
         return campaignType === campaignCodes.PROMO ? createAttributePromoCodeSchema : createReferralPromoCodeSchema;
     };
 
     const [schema, setSchema] = useState(getCampaignConditionSchema(campaignCodes.PROMO));
-    const navigate = useNavigate();
-
-    const [webImage, setWebImage] = useState(null);
-    const [mobileImage, setMobileImage] = useState(null);
 
     const { response } = useSelector((state) => state.get_countries);
 
-    const { response: getAttributeFamilyList } = useSelector((state) => state.get_attribute_family_list);
+    const { response: getAttributeFamilyList, loading: attributeFamilyLoading } = useSelector(
+        (state) => state.get_attribute_family_list,
+    );
 
     const mappedAttributeList =
         getAttributeFamilyList?.data?.data?.map((item) => ({
@@ -362,6 +363,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                                             triggerFields={triggerFields}
                                             mappedAttributeList={mappedAttributeList}
                                             countryCurrency={countryCurrency}
+                                            isLoading={attributeFamilyLoading}
                                             allAttributeList={getAttributeFamilyList?.data?.data}
                                             addTriggerFields={addTriggerFields}
                                             removeTriggerFields={removeTriggerFields}
