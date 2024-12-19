@@ -65,6 +65,7 @@ function CustomerDetails() {
     const { response: customersData, loading: isLoading } = useSelector((state) => state.get_customer_by_id);
     const { success: update_success } = useSelector((state) => state.update_kyc);
     const { success: kycLimitSuccess } = useSelector((state) => state.kyc_verification_limit);
+    const { success: updateCustomerSucess } = useSelector((state) => state.update_customer_account);
 
     const data = customersData?.data;
 
@@ -77,7 +78,7 @@ function CustomerDetails() {
             dispatch(actions.get_customer_by_id(id));
             dispatch({ type: "UPDATE_KYC_RESET" });
         }
-    }, [dispatch, id, update_success]);
+    }, [dispatch, id, update_success, updateCustomerSucess]);
 
     useEffect(() => {
         if (kycLimitSuccess) {
