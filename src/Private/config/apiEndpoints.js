@@ -4,6 +4,7 @@ const apiEndpoints = {
         getCustomerCountByDeviceType: "/dashboard/customer",
         getCustomerKycCountByStatus: "/dashboard/customer-kyc",
         getTransactionCountByStatus: "/dashboard/transaction-status",
+        getTopPayoutCountries: "/dashboard/top-payout-countries",
     },
     countryStates: {
         list: "common/:country/states",

@@ -69,11 +69,30 @@ export const getTransactionCountByStatus = takeEvery(actions.GET_TRANSACTION_COU
     }
 });
 
+export const getTopPayoutCountries = takeEvery(actions.GET_TOP_PAYOUT_COUNTRIES, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.dashboard.getTopPayoutCountries, action.query);
+
+        yield put({
+            type: actions.GET_TOP_PAYOUT_COUNTRIES_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        console.log("The error is ", error);
+
+        yield put({
+            type: actions.GET_TOP_PAYOUT_COUNTRIES_SUCCESS,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerCountByDeviceType,
         getCustomerKycCountByStatus,
         getTransactionCountByStatus,
         getCustomerKycCountByStatusPrevious,
+        getTopPayoutCountries,
     ]);
 }

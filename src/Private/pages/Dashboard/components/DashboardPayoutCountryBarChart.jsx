@@ -2,6 +2,9 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useSelector } from "react-redux";
+import { Skeleton } from "@mui/material";
+import Paper from "App/components/Paper/Paper";
 
 const DUMMY_DATA = [
     {
@@ -26,7 +29,30 @@ const DUMMY_DATA = [
     },
 ];
 
+const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+        return (
+            <Paper>
+                <Typography>
+                    <strong>Country:</strong> {payload[0].payload.country}
+                </Typography>
+                <Typography>
+                    <strong>Payout Amount:</strong> {payload[0].payload.payoutAmount}
+                </Typography>
+            </Paper>
+        );
+    }
+    return <></>;
+};
+
 export default function DashboardPayoutCountryBarChart() {
+    const { response, loading: isLoading, success } = useSelector((state) => state.get_top_payout_countries);
+
+    const payoutCountriesData = response?.data?.map((item) => ({
+        country: item?.country,
+        payoutAmount: item?.payoutAmount,
+    }));
+
     return (
         <Box>
             <Typography fontWeight={700} fontSize={16}>
@@ -40,28 +66,36 @@ export default function DashboardPayoutCountryBarChart() {
                 }}
             >
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        data={DUMMY_DATA}
-                        // margin={{ top: 10, right: 10, left: 0, bottom: 0 }} // Adjust margins
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="country" tick={{ fontSize: 12 }} padding={{ left: 0, right: 0 }} />
-                        <YAxis
-                            tick={{ fontSize: 12 }}
-                            padding={{
-                                top: 0,
-                                bottom: 0,
-                            }}
-                            label={{
-                                value: "Amount",
-                                angle: -90,
-                                position: "insideLeft",
-                                fontSize: 12,
-                            }}
-                        />
-                        <Tooltip />
-                        <Bar dataKey="amount" fill="#105BB7" />
-                    </BarChart>
+                    {isLoading ? (
+                        <Skeleton variant="rectangular" width="100%" height="100%" />
+                    ) : payoutCountriesData?.length === 0 ? (
+                        <Typography>No data found</Typography>
+                    ) : (
+                        <BarChart
+                            data={payoutCountriesData}
+
+                            // margin={{ top: 10, right: 10, left: 0, bottom: 0 }} // Adjust margins
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="country" tick={{ fontSize: 12 }} padding={{ left: 0, right: 0 }} />
+                            <YAxis
+                                tick={{ fontSize: 12 }}
+                                padding={{
+                                    top: 0,
+                                    bottom: 0,
+                                }}
+                                label={{
+                                    value: "Amount",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                    fontSize: 12,
+                                }}
+                            />
+                            <Tooltip content={<CustomTooltip />} />
+
+                            <Bar dataKey="payoutAmount" fill="#105BB7" />
+                        </BarChart>
+                    )}
                 </ResponsiveContainer>
             </Box>
         </Box>

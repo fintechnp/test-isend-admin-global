@@ -590,6 +590,7 @@ import {
     GetTransactionCountByStatusReducer,
     DashboardFilterParamsReducer,
     GetCustomerKycCountByStatusPreviousReducer,
+    GetTopPayoutCountriesReducer,
 } from "./pages/Dashboard/store";
 import {
     GetOrganizationStakeholdersReducer,
@@ -1156,6 +1157,7 @@ export const privateReducer = {
     get_customer_kyc_count_by_status: GetCustomerKycCountByStatusReducer,
     get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
+    get_top_payout_countries: GetTopPayoutCountriesReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
 
     // region ACH Webhooks

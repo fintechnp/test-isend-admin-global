@@ -1,7 +1,7 @@
 import React from "react";
-import { Paper } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
+import Paper from "App/components/Paper/Paper";
 import Typography from "@mui/material/Typography";
 
 import Row from "App/components/Row/Row";
