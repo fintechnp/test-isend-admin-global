@@ -16,6 +16,7 @@ import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
 import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardPayoutCountryBarChart from "./DashboardPayoutCountryBarChart";
 import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIcon";
+import { useSelector } from "react-redux";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -23,6 +24,26 @@ const Container = styled(Paper)(({ theme }) => ({
 
 export default function DetailsCard() {
     const theme = useTheme();
+
+    const { loading: isLoadingTransactionStat, response: transactionCountByStatusResponse } = useSelector(
+        (state) => state.get_transaction_count_by_status,
+    );
+
+    const { loading: isLoadingCustomerStatByDeviceType, response: customerCountByDeviceResponse } = useSelector(
+        (state) => state.get_customer_count_by_device_type,
+    );
+
+    const { loading: isLoadingCustomerKycStatByStatus, response: customerKycCountByStatusResponse } = useSelector(
+        (state) => state.get_customer_kyc_count_by_status,
+    );
+
+    const { loading: isLoadingPrevious, response: previousCustomerKycCountByStatusResponse } = useSelector(
+        (state) => state.get_customer_kyc_count_by_status_previous,
+    );
+
+    console.log("transactionCountByStatusResponse", transactionCountByStatusResponse);
+
+    const transactionCountByStatusData = transactionCountByStatusResponse?.data;
 
     const totalTransactionsData = {
         icon: <DashboardTransactionIcon />,

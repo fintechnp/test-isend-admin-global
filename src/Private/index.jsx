@@ -592,6 +592,8 @@ import {
     GetCustomerKycCountByStatusPreviousReducer,
     GetTopPayoutCountriesReducer,
     GetTopTransactionByAgentAndBusinessReducer,
+    GetTransactionCountByStatusPreviousReducer,
+    GetComplianceCountByStatusReducer,
 } from "./pages/Dashboard/store";
 import {
     GetOrganizationStakeholdersReducer,
@@ -1158,6 +1160,8 @@ export const privateReducer = {
     get_customer_kyc_count_by_status: GetCustomerKycCountByStatusReducer,
     get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
+    get_transaction_count_by_status_previous: GetTransactionCountByStatusPreviousReducer,
+    get_compliance_count_by_status: GetComplianceCountByStatusReducer,
     get_top_payout_countries: GetTopPayoutCountriesReducer,
     get_top_transaction_by_agent_and_business: GetTopTransactionByAgentAndBusinessReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
