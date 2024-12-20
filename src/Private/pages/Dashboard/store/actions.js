@@ -54,6 +54,11 @@ const actions = {
         type: actions.GET_TOP_PAYOUT_COUNTRIES,
         query,
     }),
+
+    get_top_transaction_by_agent_and_business: (query) => ({
+        type: actions.GET_TOP_TRANSACTION_BY_AGENT_AND_BUSINESS,
+        query,
+    }),
 };
 
 export default actions;

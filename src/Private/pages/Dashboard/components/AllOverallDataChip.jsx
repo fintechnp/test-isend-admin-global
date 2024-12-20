@@ -1,10 +1,11 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { Paper } from "@mui/material";
+
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 
+import Paper from "App/components/Paper/Paper";
 import Row from "App/components/Row/Row";
 import Column from "App/components/Column/Column";
 import AgentIcon from "App/components/Icon/AgentIcon";

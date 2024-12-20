@@ -78,14 +78,30 @@ export const getTopPayoutCountries = takeEvery(actions.GET_TOP_PAYOUT_COUNTRIES,
             response: res,
         });
     } catch (error) {
-        console.log("The error is ", error);
-
         yield put({
             type: actions.GET_TOP_PAYOUT_COUNTRIES_SUCCESS,
             error: error?.data,
         });
     }
 });
+
+export const getTopTransactionByAgentAndBusiness = takeEvery(
+    actions.GET_TOP_TRANSACTION_BY_AGENT_AND_BUSINESS,
+    function* (action) {
+        try {
+            const res = yield call(api.get, apiEndpoints.dashboard.getTopAgentBusinessTransactions, action.query);
+            yield put({
+                type: actions.GET_TOP_TRANSACTION_BY_AGENT_AND_BUSINESS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                type: actions.GET_TOP_TRANSACTION_BY_AGENT_AND_BUSINESS_FAILED,
+                error: error?.data,
+            });
+        }
+    },
+);
 
 export default function* saga() {
     yield all([
@@ -94,5 +110,6 @@ export default function* saga() {
         getTransactionCountByStatus,
         getCustomerKycCountByStatusPrevious,
         getTopPayoutCountries,
+        getTopTransactionByAgentAndBusiness,
     ]);
 }

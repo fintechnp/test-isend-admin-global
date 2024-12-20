@@ -5,6 +5,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { useSelector } from "react-redux";
 import { Skeleton } from "@mui/material";
 import Paper from "App/components/Paper/Paper";
+import TooltipMUI from "@mui/material/Tooltip";
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import Row from "App/components/Row/Row";
 
 const DUMMY_DATA = [
     {
@@ -55,9 +59,23 @@ export default function DashboardPayoutCountryBarChart() {
 
     return (
         <Box>
-            <Typography fontWeight={700} fontSize={16}>
-                Top Payout Country
-            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <Typography fontWeight={700} fontSize={16}>
+                    Top Payout Country
+                </Typography>
+
+                <TooltipMUI title="Shows the top 5 countries by payout value">
+                    <IconButton>
+                        <InfoIcon color="disabled" />
+                    </IconButton>
+                </TooltipMUI>
+            </Box>
 
             <Box
                 sx={{

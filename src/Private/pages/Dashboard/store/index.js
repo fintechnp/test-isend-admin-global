@@ -7,3 +7,4 @@ export { default as GetCustomerKycCountByStatusReducer } from "./reducers/getCus
 export { default as GetTransactionCountByStatusReducer } from "./reducers/getTransactionCountByStatus";
 export { default as GetCustomerKycCountByStatusPreviousReducer } from "./reducers/getCustomerKycCountByStatusPrevious";
 export { default as GetTopPayoutCountriesReducer } from "./reducers/getTopPayoutCountries";
+export { default as GetTopTransactionByAgentAndBusinessReducer } from "./reducers/getTopTransactionByAgentAndBusiness";

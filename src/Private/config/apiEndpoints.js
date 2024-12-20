@@ -5,6 +5,7 @@ const apiEndpoints = {
         getCustomerKycCountByStatus: "/dashboard/customer-kyc",
         getTransactionCountByStatus: "/dashboard/transaction-status",
         getTopPayoutCountries: "/dashboard/top-payout-countries",
+        getTopAgentBusinessTransactions: "/dashboard/top-agent-biz-txn",
     },
     countryStates: {
         list: "common/:country/states",
