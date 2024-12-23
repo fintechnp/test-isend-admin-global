@@ -9,44 +9,77 @@ import DashboardCardChart from "./DashboardCardChart";
 import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
 import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardCustomerIcon from "App/components/Icon/DashboardCustomerIcon";
+import { useSelector } from "react-redux";
+import numberUtils from "App/utils/numberUtils";
+import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
+import { Skeleton } from "@mui/material";
 
 export default function TotalCustomerCard() {
     const theme = useTheme();
+
+    const { loading: isLoadingCustomerKycStatByStatus, response: customerKycCountByStatusResponse } = useSelector(
+        (state) => state.get_customer_kyc_count_by_status,
+    );
+
+    const { loading: isLoadingPrevious, response: previousCustomerKycCountByStatusResponse } = useSelector(
+        (state) => state.get_customer_kyc_count_by_status_previous,
+    );
+
+    const customerKycCountByStatusData = customerKycCountByStatusResponse?.data;
+
+    const previousCustomerKycCountByStatusData = previousCustomerKycCountByStatusResponse?.data;
+
     const customerDetails = {
-        totalCustomers: 100,
+        isLoading: isLoadingCustomerKycStatByStatus,
+        totalCustomers: numberUtils.format(customerKycCountByStatusData?.totalCustomer ?? 0),
         icon: <DashboardCustomerIcon />,
         backgroundColor: theme.palette.surface.successSecond,
         isDropped: false,
-        change: "12.22%",
+        differenceInPercentage: calculatePercentageDifference(
+            customerKycCountByStatusData?.totalCustomer ?? 0,
+            previousCustomerKycCountByStatusData?.totalCustomer ?? 0,
+        ),
         childrenData: [
             {
                 title: "Verified",
-                total: 2254,
-                change: "12.22%",
+                total: numberUtils.format(customerKycCountByStatusData?.kycVerifiedCount ?? 0),
+                differenceInPercentage: calculatePercentageDifference(
+                    customerKycCountByStatusData?.kycVerifiedCount ?? 0,
+                    previousCustomerKycCountByStatusData?.kycVerifiedCount ?? 0,
+                ),
                 isDropped: true,
             },
             {
                 title: "Rejected",
-                total: 2254,
-                change: "12.22%",
+                total: numberUtils.format(customerKycCountByStatusData?.kycRejectCount ?? 0),
+                differenceInPercentage: calculatePercentageDifference(
+                    customerKycCountByStatusData?.kycRejectCount ?? 0,
+                    previousCustomerKycCountByStatusData?.kycRejectCount ?? 0,
+                ),
                 isDropped: true,
             },
             {
                 title: "Expired",
-                total: 2254,
-                change: "12.22%",
+                total: numberUtils.format(customerKycCountByStatusData?.kycExpiredCount ?? 0),
+                differenceInPercentage: calculatePercentageDifference(
+                    customerKycCountByStatusData?.kycExpiredCount ?? 0,
+                    previousCustomerKycCountByStatusData?.kycExpiredCount ?? 0,
+                ),
                 isDropped: false,
             },
             {
                 title: "Not Started",
-                total: 2254,
-                change: "12.22%",
+                total: numberUtils.format(customerKycCountByStatusData?.customerWithNoKycCount ?? 0),
+                differenceInPercentage: calculatePercentageDifference(
+                    customerKycCountByStatusData?.customerWithNoKycCount ?? 0,
+                    previousCustomerKycCountByStatusData?.customerWithNoKycCount ?? 0,
+                ),
                 isDropped: false,
             },
             {
                 title: "Nearly Expired",
                 total: 254,
-                change: "12.22%",
+                differenceInPercentage: "12.22%",
                 isDropped: false,
             },
         ],
@@ -75,32 +108,37 @@ export default function TotalCustomerCard() {
                         >
                             Total Customer
                         </Typography>
-                        <Row gap="8px" alignItems="center">
-                            <Typography fontWeight={700} fontSize={16}>
-                                {customerDetails.totalCustomers}
-                            </Typography>
-                            <Row
-                                gap="4px"
-                                sx={{
-                                    backgroundColor: customerDetails.backgroundColor,
-                                    padding: "6px",
-                                    borderRadius: "16px",
-                                }}
-                                alignItems="center"
-                            >
-                                <Typography>
-                                    {!customerDetails.isDropped ? <DashBoardSendIcon /> : <DashboardReceiveIcon />}
+
+                        {isLoadingCustomerKycStatByStatus ? (
+                            <Skeleton variant="text" width={100} />
+                        ) : (
+                            <Row gap="8px" alignItems="center">
+                                <Typography fontWeight={700} fontSize={16}>
+                                    {customerDetails.totalCustomers}
                                 </Typography>
-                                <Typography
+                                <Row
+                                    gap="4px"
                                     sx={{
-                                        color: theme.palette.success.main,
-                                        fontWeight: 600,
+                                        backgroundColor: customerDetails.backgroundColor,
+                                        padding: "6px",
+                                        borderRadius: "16px",
                                     }}
+                                    alignItems="center"
                                 >
-                                    {customerDetails.change}
-                                </Typography>
+                                    <Typography>
+                                        {!customerDetails.isDropped ? <DashBoardSendIcon /> : <DashboardReceiveIcon />}
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            color: theme.palette.success.main,
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        {customerDetails.differenceInPercentage}%{""}
+                                    </Typography>
+                                </Row>
                             </Row>
-                        </Row>
+                        )}
                     </Column>
                 </Row>
                 <Box
@@ -139,20 +177,26 @@ export default function TotalCustomerCard() {
                             >
                                 {data.title}
                             </Typography>
-                            <Row alignItems="center" gap="5px">
-                                <Typography fontSize={16} fontWeight={700}>
-                                    {data.total}
-                                </Typography>
-                                <Box>{!data.isDropped ? <DashBoardSendIcon /> : <DashboardReceiveIcon />}</Box>
-                                <Typography
-                                    sx={{
-                                        color: !data.isDropped ? theme.palette.success.main : theme.palette.error.main,
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    {data.change}
-                                </Typography>
-                            </Row>
+                            {isLoadingCustomerKycStatByStatus ? (
+                                <Skeleton variant="text" width={100} />
+                            ) : (
+                                <Row alignItems="center" gap="5px">
+                                    <Typography fontSize={16} fontWeight={700}>
+                                        {data.total}
+                                    </Typography>
+                                    <Box>{!data.isDropped ? <DashBoardSendIcon /> : <DashboardReceiveIcon />}</Box>
+                                    <Typography
+                                        sx={{
+                                            color: !data.isDropped
+                                                ? theme.palette.success.main
+                                                : theme.palette.error.main,
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        {data.differenceInPercentage}%{""}
+                                    </Typography>
+                                </Row>
+                            )}
                         </Column>
                     );
                 })}

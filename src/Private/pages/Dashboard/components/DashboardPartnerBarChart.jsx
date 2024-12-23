@@ -54,8 +54,6 @@ export default function DashboardPartnerBarChart() {
         txn_amount: item?.txn_amount,
     }));
 
-    console.log("The response is", getTransactionData);
-
     return (
         <Box>
             <Typography fontWeight={700} fontSize={16}>

@@ -17,6 +17,9 @@ import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardPayoutCountryBarChart from "./DashboardPayoutCountryBarChart";
 import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIcon";
 import { useSelector } from "react-redux";
+import numberUtils from "App/utils/numberUtils";
+import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
+import { Skeleton } from "@mui/material";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -33,6 +36,9 @@ export default function DetailsCard() {
         (state) => state.get_customer_count_by_device_type,
     );
 
+    const { loading: isLoadingCustomerStatByDeviceTypePrevious, response: customerCountByStatusPreviousResponse } =
+        useSelector((state) => state.get_customer_count_by_device_type_previous);
+
     const { loading: isLoadingCustomerKycStatByStatus, response: customerKycCountByStatusResponse } = useSelector(
         (state) => state.get_customer_kyc_count_by_status,
     );
@@ -41,29 +47,57 @@ export default function DetailsCard() {
         (state) => state.get_customer_kyc_count_by_status_previous,
     );
 
-    console.log("transactionCountByStatusResponse", transactionCountByStatusResponse);
+    const { loading: isLoadingTransactionStatPrevious, response: transactionCountByStatusResponsePrevious } =
+        useSelector((state) => state.get_transaction_count_by_status_previous);
 
     const transactionCountByStatusData = transactionCountByStatusResponse?.data;
 
+    const customerCountByDeviceData = customerCountByDeviceResponse?.data;
+
+    const customerKycCountByStatusData = customerKycCountByStatusResponse?.data;
+
+    const previousCustomerKycCountByStatusData = previousCustomerKycCountByStatusResponse?.data;
+
+    const previousTransactionCountByStatusData = transactionCountByStatusResponsePrevious?.data;
+
+    const previousCustomerCountByDeviceData = customerCountByStatusPreviousResponse?.data;
+
     const totalTransactionsData = {
+        isLoading: isLoadingTransactionStat,
         icon: <DashboardTransactionIcon />,
-        totalTransactions: 1254,
+        totalTransactions: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
         backgroundColor: theme.palette.surface.successSecond,
-        change: "12.22%",
+        totalDifferenceInPercentage: calculatePercentageDifference(
+            transactionCountByStatusData?.totalTxnAmount ?? 0,
+            previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
+        ),
         isDropped: false,
         pendingData: {
-            total: 254,
-            change: "12.22%",
+            total: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
+            differenceInPercentage: calculatePercentageDifference(
+                transactionCountByStatusData?.paymentPendingCount ?? 0,
+                previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
+            ),
+            totalDifferenceInPercentage: calculatePercentageDifference(
+                transactionCountByStatusData?.paymentPendingCount ?? 0,
+                previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
+            ),
             isDropped: true,
         },
         payoutData: {
-            total: 1000,
-            change: "12.22%",
+            total: numberUtils.format(transactionCountByStatusData?.pendingApprovalCount),
+            totalDifferenceInPercentage: calculatePercentageDifference(
+                transactionCountByStatusData?.pendingApprovalCount ?? 0,
+                previousTransactionCountByStatusData?.pendingApprovalCount ?? 0,
+            ),
             isDropped: true,
         },
         cancelledData: {
-            total: 169,
-            change: "12.22%",
+            total: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
+            totalDifferenceInPercentage: calculatePercentageDifference(
+                transactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
+            ),
             isDropped: false,
         },
     };
@@ -95,36 +129,40 @@ export default function DetailsCard() {
                                     >
                                         Total Transactions
                                     </Typography>
-                                    <Row gap="8px" alignItems="center">
-                                        <Typography fontWeight={700} fontSize={16}>
-                                            $ {totalTransactionsData.totalTransactions}
-                                        </Typography>
-                                        <Row
-                                            gap="4px"
-                                            sx={{
-                                                backgroundColor: totalTransactionsData.backgroundColor,
-                                                padding: "6px",
-                                                borderRadius: "16px",
-                                            }}
-                                            alignItems="center"
-                                        >
-                                            <Typography>
-                                                {!totalTransactionsData.isDropped ? (
-                                                    <DashBoardSendIcon />
-                                                ) : (
-                                                    <DashboardReceiveIcon />
-                                                )}
+                                    {totalTransactionsData.isLoading ? (
+                                        <Skeleton variant="text" width={100} />
+                                    ) : (
+                                        <Row gap="8px" alignItems="center">
+                                            <Typography fontWeight={700} fontSize={16}>
+                                                {totalTransactionsData.totalTransactions}
                                             </Typography>
-                                            <Typography
+                                            <Row
+                                                gap="4px"
                                                 sx={{
-                                                    color: theme.palette.success.main,
-                                                    fontWeight: 600,
+                                                    backgroundColor: totalTransactionsData.backgroundColor,
+                                                    padding: "6px",
+                                                    borderRadius: "16px",
                                                 }}
+                                                alignItems="center"
                                             >
-                                                {totalTransactionsData.change}
-                                            </Typography>
+                                                <Typography>
+                                                    {!totalTransactionsData.isDropped ? (
+                                                        <DashBoardSendIcon />
+                                                    ) : (
+                                                        <DashboardReceiveIcon />
+                                                    )}
+                                                </Typography>
+                                                <Typography
+                                                    sx={{
+                                                        color: theme.palette.success.main,
+                                                        fontWeight: 600,
+                                                    }}
+                                                >
+                                                    {totalTransactionsData.totalDifferenceInPercentage}%
+                                                </Typography>
+                                            </Row>
                                         </Row>
-                                    </Row>
+                                    )}
                                 </Column>
                             </Row>
                             <Box
@@ -152,29 +190,34 @@ export default function DetailsCard() {
                                     >
                                         Pending
                                     </Typography>
-                                    <Row gap={1}>
-                                        <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.pendingData.total}
-                                        </Typography>
-                                        <Row alignItems="center" gap="4px">
-                                            {totalTransactionsData.pendingData.isDropped ? (
-                                                <DashBoardSendIcon />
-                                            ) : (
-                                                <DashboardReceiveIcon />
-                                            )}
 
-                                            <Typography
-                                                fontWeight={500}
-                                                sx={{
-                                                    color: !totalTransactionsData.pendingData.isDropped
-                                                        ? theme.palette.error.main
-                                                        : theme.palette.success.main,
-                                                }}
-                                            >
-                                                {totalTransactionsData.pendingData.change}
+                                    {totalTransactionsData.isLoading ? (
+                                        <Skeleton variant="text" width={80} />
+                                    ) : (
+                                        <Row gap={1}>
+                                            <Typography fontWeight={700} fontSize={16}>
+                                                {totalTransactionsData.pendingData.total}
                                             </Typography>
+                                            <Row alignItems="center" gap="4px">
+                                                {totalTransactionsData.pendingData.isDropped ? (
+                                                    <DashBoardSendIcon />
+                                                ) : (
+                                                    <DashboardReceiveIcon />
+                                                )}
+
+                                                <Typography
+                                                    fontWeight={500}
+                                                    sx={{
+                                                        color: !totalTransactionsData.pendingData.isDropped
+                                                            ? theme.palette.error.main
+                                                            : theme.palette.success.main,
+                                                    }}
+                                                >
+                                                    {totalTransactionsData.pendingData.totalDifferenceInPercentage}%{" "}
+                                                </Typography>
+                                            </Row>
                                         </Row>
-                                    </Row>
+                                    )}
                                 </Column>
                             </Grid>
                             <Grid
@@ -194,29 +237,34 @@ export default function DetailsCard() {
                                     >
                                         Payout
                                     </Typography>
-                                    <Row gap={1}>
-                                        <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.payoutData.total}
-                                        </Typography>
-                                        <Row alignItems="center" gap="4px">
-                                            {totalTransactionsData.payoutData.isDropped ? (
-                                                <DashBoardSendIcon />
-                                            ) : (
-                                                <DashboardReceiveIcon />
-                                            )}
 
-                                            <Typography
-                                                fontWeight={500}
-                                                sx={{
-                                                    color: !totalTransactionsData.payoutData.isDropped
-                                                        ? theme.palette.error.main
-                                                        : theme.palette.success.main,
-                                                }}
-                                            >
-                                                {totalTransactionsData.payoutData.change}
+                                    {totalTransactionsData.isLoading ? (
+                                        <Skeleton variant="text" width={80} />
+                                    ) : (
+                                        <Row gap={1}>
+                                            <Typography fontWeight={700} fontSize={16}>
+                                                {totalTransactionsData.payoutData.total}
                                             </Typography>
+                                            <Row alignItems="center" gap="4px">
+                                                {totalTransactionsData.payoutData.isDropped ? (
+                                                    <DashBoardSendIcon />
+                                                ) : (
+                                                    <DashboardReceiveIcon />
+                                                )}
+
+                                                <Typography
+                                                    fontWeight={500}
+                                                    sx={{
+                                                        color: !totalTransactionsData.payoutData.isDropped
+                                                            ? theme.palette.error.main
+                                                            : theme.palette.success.main,
+                                                    }}
+                                                >
+                                                    {totalTransactionsData.payoutData.totalDifferenceInPercentage}%{" "}
+                                                </Typography>
+                                            </Row>
                                         </Row>
-                                    </Row>
+                                    )}
                                 </Column>
                             </Grid>
                             <Grid item xs={12} lg={4}>
@@ -228,29 +276,33 @@ export default function DetailsCard() {
                                     >
                                         Cancelled
                                     </Typography>
-                                    <Row gap={1}>
-                                        <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.cancelledData.total}
-                                        </Typography>
-                                        <Row alignItems="center" gap="4px">
-                                            {totalTransactionsData.cancelledData.isDropped ? (
-                                                <DashBoardSendIcon />
-                                            ) : (
-                                                <DashboardReceiveIcon />
-                                            )}
-
-                                            <Typography
-                                                fontWeight={500}
-                                                sx={{
-                                                    color: !totalTransactionsData.cancelledData.isDropped
-                                                        ? theme.palette.error.main
-                                                        : theme.palette.success.main,
-                                                }}
-                                            >
-                                                {totalTransactionsData.cancelledData.change}
+                                    {totalTransactionsData.isLoading ? (
+                                        <Skeleton variant="text" width={80} />
+                                    ) : (
+                                        <Row gap={1}>
+                                            <Typography fontWeight={700} fontSize={16}>
+                                                {totalTransactionsData.cancelledData.total}
                                             </Typography>
+                                            <Row alignItems="center" gap="4px">
+                                                {totalTransactionsData.cancelledData.isDropped ? (
+                                                    <DashBoardSendIcon />
+                                                ) : (
+                                                    <DashboardReceiveIcon />
+                                                )}
+
+                                                <Typography
+                                                    fontWeight={500}
+                                                    sx={{
+                                                        color: !totalTransactionsData.cancelledData.isDropped
+                                                            ? theme.palette.error.main
+                                                            : theme.palette.success.main,
+                                                    }}
+                                                >
+                                                    {totalTransactionsData.cancelledData.totalDifferenceInPercentage}%{" "}
+                                                </Typography>
+                                            </Row>
                                         </Row>
-                                    </Row>
+                                    )}
                                 </Column>
                             </Grid>
                         </Grid>
@@ -296,7 +348,7 @@ export default function DetailsCard() {
                                     </Typography>
                                     <Row gap="8px" alignItems="center">
                                         <Typography fontWeight={700} fontSize={16}>
-                                            $ {totalTransactionsData.totalTransactions}
+                                            {totalTransactionsData.totalTransactions}
                                         </Typography>
                                         <Row
                                             gap="4px"
@@ -320,7 +372,7 @@ export default function DetailsCard() {
                                                     fontWeight: 600,
                                                 }}
                                             >
-                                                {totalTransactionsData.change}
+                                                {totalTransactionsData.totalDifferenceInPercentage}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -370,7 +422,7 @@ export default function DetailsCard() {
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.pendingData.change}
+                                                {totalTransactionsData.pendingData.totalDifferenceInPercentage}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -412,7 +464,7 @@ export default function DetailsCard() {
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.payoutData.change}
+                                                {totalTransactionsData.payoutData.totalDifferenceInPercentage}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -446,7 +498,7 @@ export default function DetailsCard() {
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.cancelledData.change}
+                                                {totalTransactionsData.cancelledData.totalDifferenceInPercentage}
                                             </Typography>
                                         </Row>
                                     </Row>

@@ -121,6 +121,24 @@ export const getComplianceCountByStatus = takeEvery(actions.GET_COMPLIANCE_COUNT
     }
 });
 
+export const getComplianceCountByStatusPrevious = takeEvery(
+    actions.GET_COMPLIANCE_COUNT_BY_STATUS_PREVIOUS,
+    function* (action) {
+        try {
+            const res = yield call(api.get, apiEndpoints.dashboard.getComplianceCountByStatus, action.query);
+            yield put({
+                type: actions.GET_COMPLIANCE_COUNT_BY_STATUS_PREVIOUS_SUCCESS,
+                response: res,
+            });
+        } catch (error) {
+            yield put({
+                TYPE: actions.GET_COMPLIANCE_COUNT_BY_STATUS_PREVIOUS_FAILED,
+                error: error?.data,
+            });
+        }
+    },
+);
+
 export const getTopPayoutCountries = takeEvery(actions.GET_TOP_PAYOUT_COUNTRIES, function* (action) {
     try {
         const res = yield call(api.get, apiEndpoints.dashboard.getTopPayoutCountries, action.query);
@@ -166,5 +184,6 @@ export default function* saga() {
         getTopPayoutCountries,
         getTopTransactionByAgentAndBusiness,
         getComplianceCountByStatus,
+        getComplianceCountByStatusPrevious,
     ]);
 }

@@ -11,3 +11,4 @@ export { default as GetTopTransactionByAgentAndBusinessReducer } from "./reducer
 export { default as GetCustomerCountByDeviceTypePreviousReducer } from "./reducers/getCustomerCountByDeviceTypePrevious";
 export { default as GetTransactionCountByStatusPreviousReducer } from "./reducers/getTransactionCountByStatusPrevious";
 export { default as GetComplianceCountByStatusReducer } from "./reducers/getComplianceCountByStatus";
+export { default as GetComplianceCountByStatusPreviousReducer } from "./reducers/getComplianceCountByStatusPrevious";

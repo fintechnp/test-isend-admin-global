@@ -1,6 +1,6 @@
 import React from "react";
-import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import Paper from "App/components/Paper/Paper";
 
 import Column from "App/components/Column/Column";
 import ComplianceData from "./ComplianceData";
