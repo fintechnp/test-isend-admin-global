@@ -173,6 +173,21 @@ export const getTopTransactionByAgentAndBusiness = takeEvery(
     },
 );
 
+export const getSummaryData = takeEvery(actions.GET_SUMMARY_DATA, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.dashboard.getSummaryData, action.query);
+        yield put({
+            type: actions.GET_SUMMARY_DATA_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_SUMMARY_DATA_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerCountByDeviceType,
@@ -185,5 +200,6 @@ export default function* saga() {
         getTopTransactionByAgentAndBusiness,
         getComplianceCountByStatus,
         getComplianceCountByStatusPrevious,
+        getSummaryData,
     ]);
 }

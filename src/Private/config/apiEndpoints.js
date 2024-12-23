@@ -7,6 +7,7 @@ const apiEndpoints = {
         getTopPayoutCountries: "/dashboard/top-payout-countries",
         getTopAgentBusinessTransactions: "/dashboard/top-agent-biz-txn",
         getComplianceCountByStatus: "/dashboard/compliance-count",
+        getSummaryData: "/dashboard/summary",
     },
     countryStates: {
         list: "common/:country/states",

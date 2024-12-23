@@ -104,6 +104,7 @@ export default function Header() {
         dispatch(actions.get_transaction_count_by_status(current));
         dispatch(actions.get_compliance_count_by_status(current));
         dispatch(actions.get_top_payout_countries(current));
+        dispatch(actions.get_summary_data(current));
         dispatch(actions.get_top_transaction_by_agent_and_business(current));
         dispatch(actions.get_customer_kyc_count_by_status_previous(previous));
         dispatch(actions.get_transaction_count_by_status_previous(previous));

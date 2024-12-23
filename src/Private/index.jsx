@@ -596,6 +596,7 @@ import {
     GetComplianceCountByStatusReducer,
     GetCustomerCountByDeviceTypePreviousReducer,
     GetComplianceCountByStatusPreviousReducer,
+    GetSummaryDataReducer,
 } from "./pages/Dashboard/store";
 import {
     GetOrganizationStakeholdersReducer,
@@ -1167,6 +1168,7 @@ export const privateReducer = {
     get_compliance_count_by_status: GetComplianceCountByStatusReducer,
     get_compliance_count_by_status_previous: GetComplianceCountByStatusPreviousReducer,
     get_top_payout_countries: GetTopPayoutCountriesReducer,
+    get_summary_data: GetSummaryDataReducer,
     get_top_transaction_by_agent_and_business: GetTopTransactionByAgentAndBusinessReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
 

@@ -24,16 +24,16 @@ export default function OverallTransactionAndCustomer() {
         (state) => state.get_compliance_count_by_status_previous,
     );
 
-    const { loading: isLoadingCustomerStatByDeviceTypePrevious, response: customerCountByStatusPreviousResponse } =
-        useSelector((state) => state.get_customer_count_by_device_type_previous);
-
     const { loading: isLoadingCustomerKycStatByStatus, response: customerKycCountByStatusResponse } = useSelector(
         (state) => state.get_customer_kyc_count_by_status,
     );
 
+    const { loading: customerCountByStatusPreviousLoading, response: previousCustomerKycCountByStatusResponse } =
+        useSelector((state) => state.get_customer_kyc_count_by_status_previous);
+
     const customerCountByStatusData = customerKycCountByStatusResponse?.data;
 
-    const customerCountByStatusPreviousData = customerCountByStatusPreviousResponse?.data;
+    const customerCountByStatusPreviousData = previousCustomerKycCountByStatusResponse?.data;
 
     const transactionCountByStatusData = getTransactionCountResponse?.data;
 
@@ -138,9 +138,9 @@ export default function OverallTransactionAndCustomer() {
 
     const isTotalTransactionDataLoading = isTransactionCountLoading || isPreviousTransactionCountLoading;
 
-    const isTotalCustomerKycLoading = customerKycCountByStatusResponse;
+    const isTotalCustomerKycLoading = isLoadingCustomerKycStatByStatus;
 
-    const isTotalCustomerKycDataLoading = customerKycCountByStatusResponse || customerCountByStatusPreviousResponse;
+    const isTotalCustomerKycDataLoading = isLoadingCustomerKycStatByStatus || customerCountByStatusPreviousLoading;
 
     return (
         <Column gap={2}>

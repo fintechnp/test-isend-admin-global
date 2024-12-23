@@ -12,3 +12,4 @@ export { default as GetCustomerCountByDeviceTypePreviousReducer } from "./reduce
 export { default as GetTransactionCountByStatusPreviousReducer } from "./reducers/getTransactionCountByStatusPrevious";
 export { default as GetComplianceCountByStatusReducer } from "./reducers/getComplianceCountByStatus";
 export { default as GetComplianceCountByStatusPreviousReducer } from "./reducers/getComplianceCountByStatusPrevious";
+export { default as GetSummaryDataReducer } from "./reducers/getSummaryData";

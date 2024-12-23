@@ -10,39 +10,8 @@ import Row from "App/components/Row/Row";
 import Column from "App/components/Column/Column";
 import AgentIcon from "App/components/Icon/AgentIcon";
 import BusinessIcon from "App/components/Icon/BusinessIcon";
-
-const data = [
-    {
-        label: "Total Agents",
-        value: 10245,
-        icon: <AgentIcon />,
-    },
-    {
-        label: "Total Business",
-        value: 10245,
-        icon: <BusinessIcon />,
-    },
-    {
-        label: "Total P2P Transactions",
-        value: 10245,
-        icon: <BusinessIcon />,
-    },
-    {
-        label: "Total B2B Transactions",
-        value: 10245,
-        icon: <BusinessIcon />,
-    },
-    {
-        label: "Total Service Charge",
-        value: 10245,
-        icon: <BusinessIcon />,
-    },
-    {
-        label: "Total Additional Charge",
-        value: 10245,
-        icon: <BusinessIcon />,
-    },
-];
+import { useSelector } from "react-redux";
+import { Skeleton } from "@mui/material";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -50,6 +19,44 @@ const Container = styled(Paper)(({ theme }) => ({
 
 export default function AllOverallDataChip() {
     const theme = useTheme();
+
+    const { response: getSummaryResponse, loading: isSummaryLoading } = useSelector((state) => state.get_summary_data);
+
+    const getSummaryData = getSummaryResponse?.data;
+
+    const data = [
+        {
+            label: "Total Agents",
+            value: getSummaryData?.totalAgents,
+            icon: <AgentIcon />,
+        },
+        {
+            label: "Total Business",
+            value: getSummaryData?.totalBusiness,
+            icon: <BusinessIcon />,
+        },
+        {
+            label: "Total P2P Transactions",
+            value: getSummaryData?.totalP2PTransactions,
+            icon: <BusinessIcon />,
+        },
+        {
+            label: "Total B2B Transactions",
+            value: getSummaryData?.totalB2BTransactions,
+            icon: <BusinessIcon />,
+        },
+        {
+            label: "Total Service Charge",
+            value: getSummaryData?.totalServiceCharge,
+            icon: <BusinessIcon />,
+        },
+        {
+            label: "Total Additional Charge",
+            value: getSummaryData?.totalAdditionalCharge,
+            icon: <BusinessIcon />,
+        },
+    ];
+
     return (
         <Grid container spacing={"16px"}>
             {data.map((item, index) => {
@@ -88,9 +95,14 @@ export default function AllOverallDataChip() {
                                     >
                                         {item.label}
                                     </Typography>
-                                    <Typography fontSize={16} fontWeight={700}>
-                                        $ {item.value}
-                                    </Typography>
+
+                                    {isSummaryLoading ? (
+                                        <Skeleton variant="text" width={80} />
+                                    ) : (
+                                        <Typography fontSize={16} fontWeight={700}>
+                                            $ {item.value}
+                                        </Typography>
+                                    )}
                                 </Column>
                             </Row>
                         </Container>
