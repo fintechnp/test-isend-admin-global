@@ -67,7 +67,7 @@ export default function ComplianceData() {
                         </Typography>
 
                         {isLoading ? (
-                            <Skeleton variant="text" width={800} />
+                            <Skeleton variant="text" width={130} />
                         ) : (
                             <Row gap={1} alignItems="center">
                                 <Typography fontSize={16} fontWeight={700}>

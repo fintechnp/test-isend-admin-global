@@ -64,6 +64,7 @@ export default function DetailsCard() {
 
     const totalTransactionsData = {
         isLoading: isLoadingTransactionStat,
+        isSubDataLoading: isLoadingTransactionStat || isLoadingTransactionStatPrevious,
         icon: <DashboardTransactionIcon />,
         totalTransactions: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
         backgroundColor: theme.palette.surface.successSecond,
@@ -71,26 +72,28 @@ export default function DetailsCard() {
             transactionCountByStatusData?.totalTxnAmount ?? 0,
             previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
         ),
-        isDropped: false,
+        isDropped:
+            (transactionCountByStatusData?.totalTxnAmount ?? 0) <
+            (previousTransactionCountByStatusData?.totalTxnAmount ?? 0),
         pendingData: {
             total: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
-            differenceInPercentage: calculatePercentageDifference(
-                transactionCountByStatusData?.paymentPendingCount ?? 0,
-                previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
-            ),
             totalDifferenceInPercentage: calculatePercentageDifference(
                 transactionCountByStatusData?.paymentPendingCount ?? 0,
                 previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
             ),
-            isDropped: true,
+            isDropped:
+                (transactionCountByStatusData?.paymentPendingCount ?? 0) <
+                (previousTransactionCountByStatusData?.paymentPendingCount ?? 0),
         },
         payoutData: {
-            total: numberUtils.format(transactionCountByStatusData?.pendingApprovalCount),
+            total: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
             totalDifferenceInPercentage: calculatePercentageDifference(
-                transactionCountByStatusData?.pendingApprovalCount ?? 0,
-                previousTransactionCountByStatusData?.pendingApprovalCount ?? 0,
+                transactionCountByStatusData?.completedStatusCount ?? 0,
+                previousTransactionCountByStatusData?.completedStatusCount ?? 0,
             ),
-            isDropped: true,
+            isDropped:
+                (transactionCountByStatusData?.completedStatusCount ?? 0) <
+                (previousTransactionCountByStatusData?.completedStatusCount ?? 0),
         },
         cancelledData: {
             total: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
@@ -98,7 +101,9 @@ export default function DetailsCard() {
                 transactionCountByStatusData?.rejectedRefundedCount ?? 0,
                 previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
             ),
-            isDropped: false,
+            isDropped:
+                (transactionCountByStatusData?.rejectedRefundedCount ?? 0) <
+                (previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0),
         },
     };
 
@@ -171,7 +176,11 @@ export default function DetailsCard() {
                                     height: 50,
                                 }}
                             >
-                                <DashboardCardChart />
+                                {totalTransactionsData.isLoading ? (
+                                    <Skeleton variant="rectangular" height="80%" width={150} />
+                                ) : (
+                                    <DashboardCardChart />
+                                )}
                             </Box>
                         </Row>
                         <Grid
@@ -191,7 +200,7 @@ export default function DetailsCard() {
                                         Pending
                                     </Typography>
 
-                                    {totalTransactionsData.isLoading ? (
+                                    {totalTransactionsData.isSubDataLoading ? (
                                         <Skeleton variant="text" width={80} />
                                     ) : (
                                         <Row gap={1}>
@@ -238,7 +247,7 @@ export default function DetailsCard() {
                                         Payout
                                     </Typography>
 
-                                    {totalTransactionsData.isLoading ? (
+                                    {totalTransactionsData.isSubDataLoading ? (
                                         <Skeleton variant="text" width={80} />
                                     ) : (
                                         <Row gap={1}>
@@ -276,7 +285,7 @@ export default function DetailsCard() {
                                     >
                                         Cancelled
                                     </Typography>
-                                    {totalTransactionsData.isLoading ? (
+                                    {totalTransactionsData.isSubDataLoading ? (
                                         <Skeleton variant="text" width={80} />
                                     ) : (
                                         <Row gap={1}>

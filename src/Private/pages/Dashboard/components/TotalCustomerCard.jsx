@@ -77,9 +77,12 @@ export default function TotalCustomerCard() {
                 isDropped: false,
             },
             {
-                title: "Nearly Expired",
-                total: 254,
-                differenceInPercentage: "12.22%",
+                title: "Blocked",
+                total: numberUtils.format(customerKycCountByStatusData?.totalCustomerBlocked ?? 0),
+                differenceInPercentage: calculatePercentageDifference(
+                    customerKycCountByStatusData?.totalCustomerBlocked ?? 0,
+                    previousCustomerKycCountByStatusData?.totalCustomerBlocked ?? 0,
+                ),
                 isDropped: false,
             },
         ],
@@ -147,7 +150,11 @@ export default function TotalCustomerCard() {
                         height: 50,
                     }}
                 >
-                    <DashboardCardChart />
+                    {isLoadingCustomerKycStatByStatus ? (
+                        <Skeleton variant="rectangular" width={200} height={50} />
+                    ) : (
+                        <DashboardCardChart />
+                    )}
                 </Box>
             </Row>
             <Row
