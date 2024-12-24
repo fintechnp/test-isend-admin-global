@@ -17,6 +17,7 @@ import dateUtils from "App/utils/dateUtils";
 import { RangeType } from "App/data/RangeType";
 import { inputBorderRadius } from "App/theme/theme";
 import cleanObject from "App/helpers/cleanObject";
+import { useTheme } from "@emotion/react";
 
 const HeaderContainer = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -63,6 +64,7 @@ const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
 
 export default function Header() {
     const dispatch = useDispatch();
+    const theme = useTheme();
 
     const [open, setOpen] = useState(true);
 
@@ -154,8 +156,11 @@ export default function Header() {
                 </Column>
                 <Row
                     sx={{
-                        overflowX: "auto",
-                        overflowY: "hidden",
+                        overflowY: "none",
+                        [theme.breakpoints.down("md")]: {
+                            overflowX: "auto",
+                            overflowY: "hidden",
+                        },
                     }}
                 >
                     <Box className="DateRangeSelector-root" display="flex" flexDirection="row" gap={1}>

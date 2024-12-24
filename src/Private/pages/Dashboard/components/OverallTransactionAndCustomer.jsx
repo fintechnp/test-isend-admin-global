@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -11,10 +11,55 @@ import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import { useSelector } from "react-redux";
 import numberUtils from "App/utils/numberUtils";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
-import { Skeleton } from "@mui/material";
+import { Skeleton, ToggleButton } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import MuiToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { inputBorderRadius } from "App/theme/theme";
+
+const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
+    "& .MuiToggleButtonGroup-grouped": {
+        fontWeight: 600,
+        lineHeight: "20px",
+        backgroundColor: theme.palette.common.white,
+        color: theme.palette.text.baseMain,
+        padding: "10px 26px 10px 26px",
+        border: "none",
+        width: 140,
+        margin: 0,
+        "&:first-of-type": {
+            borderRadius: 10,
+        },
+        "&:last-of-type": {
+            borderRadius: 10,
+        },
+    },
+
+    "& .MuiToggleButtonGroup-grouped:not(.Mui-selected)": {
+        // marginRight: "-1px",
+    },
+    "& .MuiToggleButtonGroup-grouped.Mui-selected": {
+        backgroundColor: theme.palette.background.primarySecond,
+        "&:first-of-type": {
+            // borderRight: `1px solid ${theme.palette.stroke.primary}`,
+        },
+        "&:not(:first-of-type):not(:last-of-type)": {
+            //  borderLeft: `1px solid ${theme.palette.stroke.primary}`,
+            borderRight: `1px solid ${theme.palette.stroke.primary}`,
+        },
+        "&:last-of-type": {
+            //  borderLeft: `1px solid ${theme.palette.stroke.primary}`,
+        },
+    },
+}));
 
 export default function OverallTransactionAndCustomer() {
     const theme = useTheme();
+
+    const [transCategory, setTransCategory] = useState("amount");
+
+    const handleTransCategoryChange = (e) => {
+        e.target.value === "amount" ? setTransCategory("amount") : setTransCategory("count");
+    };
 
     const { response: getTransactionCountResponse, loading: isTransactionCountLoading } = useSelector(
         (state) => state.get_transaction_count_by_status,
@@ -41,7 +86,8 @@ export default function OverallTransactionAndCustomer() {
 
     const overallTransactionData = {
         transaction: {
-            totalTransaction: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
+            totalTransactionCount: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
+            totalTransactionAmount: `$ 125000`,
             differenceInPercentage: calculatePercentageDifference(
                 transactionCountByStatusData?.totalTxnAmount ?? 0,
                 previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
@@ -50,7 +96,8 @@ export default function OverallTransactionAndCustomer() {
             childrenData: [
                 {
                     title: "Pending",
-                    total: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
+                    totalCount: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
+                    totalAmount: `$ 500`,
                     differenceInPercentage: calculatePercentageDifference(
                         transactionCountByStatusData?.paymentPendingCount ?? 0,
                         previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
@@ -59,7 +106,8 @@ export default function OverallTransactionAndCustomer() {
                 },
                 {
                     title: "Payout",
-                    total: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
+                    totalCount: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
+                    totalAmount: `$ 900`,
                     differenceInPercentage: calculatePercentageDifference(
                         transactionCountByStatusData?.completedStatusCount ?? 0,
                         previousTransactionCountByStatusData?.completedStatusCount ?? 0,
@@ -68,7 +116,8 @@ export default function OverallTransactionAndCustomer() {
                 },
                 {
                     title: "Cancelled",
-                    total: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
+                    totalCount: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
+                    totalAmount: `$ 12000`,
                     differenceInPercentage: calculatePercentageDifference(
                         transactionCountByStatusData?.rejectedRefundedCount ?? 0,
                         previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
@@ -159,6 +208,23 @@ export default function OverallTransactionAndCustomer() {
                     Overall Transaction
                 </Typography>
 
+                <Box paddingY={1} display="flex" flexDirection="row" justifyContent="center">
+                    <ToggleButtonGroup value={transCategory} onChange={handleTransCategoryChange}>
+                        <ToggleButton
+                            disableRipple
+                            // value={isAmount}
+
+                            value="amount"
+                        >
+                            Amount
+                        </ToggleButton>
+
+                        <ToggleButton disableRipple value="count">
+                            Count
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Box>
+
                 <Column mt={1} gap={1}>
                     <Typography
                         sx={{
@@ -177,7 +243,11 @@ export default function OverallTransactionAndCustomer() {
                         <>
                             <Row gap={1} alignItems="center">
                                 <Typography fontSize={16} fontWeight={700}>
-                                    {overallTransactionData.transaction.totalTransaction}
+                                    {transCategory === "amount"
+                                        ? overallTransactionData.transaction.totalTransactionAmount
+                                        : overallTransactionData.transaction.totalTransactionCount}
+
+                                    {/* {overallTransactionData.transaction.totalTransactionCount} */}
                                 </Typography>
                                 <Box>
                                     {overallTransactionData.transaction.isDropped ? (
@@ -222,7 +292,9 @@ export default function OverallTransactionAndCustomer() {
                                 ) : (
                                     <Row gap={1} alignItems="center">
                                         <Typography fontSize={16} fontWeight={700}>
-                                            $ {data.total}
+                                            {transCategory === "amount" ? data.totalAmount : data.totalCount}
+
+                                            {/* {data.totalCount} */}
                                         </Typography>
                                         <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
                                         <Typography
