@@ -101,20 +101,26 @@ export default function KycStat() {
 
                 <Column>
                     <Row gap="4px" alignItems="flex-end">
-                        <Typography fontWeight={600} variant="h4" color="text.primary">
-                            {numberUtils.format(data?.totalCustomer)}
-                        </Typography>
-                        <StatBadge
-                            label={differenceInCustomer + "%"}
-                            circuitType={
-                                differenceInCustomer > 0
-                                    ? "positive"
-                                    : differenceInCustomer < 0
-                                      ? "negative"
-                                      : "neutral"
-                            }
-                            sx={{ mb: 1 }}
-                        />
+                        {isLoadingCurrent ? (
+                            <Skeleton variant="text" height={50} width={130} />
+                        ) : (
+                            <>
+                                <Typography fontWeight={600} variant="h4" color="text.primary">
+                                    {numberUtils.format(data?.totalCustomer)}
+                                </Typography>
+                                <StatBadge
+                                    label={differenceInCustomer + "%"}
+                                    circuitType={
+                                        differenceInCustomer > 0
+                                            ? "positive"
+                                            : differenceInCustomer < 0
+                                              ? "negative"
+                                              : "neutral"
+                                    }
+                                    sx={{ mb: 1 }}
+                                />
+                            </>
+                        )}
                     </Row>
                     <Typography fontSize="1rem" lineHeight="1.429rem" color="text.secondary">
                         Total Customer
@@ -136,16 +142,20 @@ export default function KycStat() {
                         </Center>
                         <Typography color="text.primary">{stat.label}</Typography>
                         <Box>
-                            <StatBadge
-                                label={stat.differenceInPercent + "%"}
-                                circuitType={
-                                    stat.differenceInPercent > 0
-                                        ? "positive"
-                                        : stat.differenceInPercent < 0
-                                          ? "negative"
-                                          : "neutral"
-                                }
-                            />
+                            {isLoading ? (
+                                <Skeleton variant="text" height={24} width={60} />
+                            ) : (
+                                <StatBadge
+                                    label={stat.differenceInPercent + "%"}
+                                    circuitType={
+                                        stat.differenceInPercent > 0
+                                            ? "positive"
+                                            : stat.differenceInPercent < 0
+                                              ? "negative"
+                                              : "neutral"
+                                    }
+                                />
+                            )}
                         </Box>
                         <Box flex={1}></Box>
                         {isLoading ? (

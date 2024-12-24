@@ -9,6 +9,7 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 import Paper from "App/components/Paper/Paper";
 import Center from "App/components/Center/Center";
+import { Skeleton } from "@mui/material";
 
 const DATA_COLORS = ["#4DB6AC", "#7986CB", "#4FC3F7", "#6aadd4"];
 const NO_DATA_COLORS = ["#eeeeee"];
@@ -25,7 +26,7 @@ const NO_DATA_LABEL = "NO_DATA_LABEL";
 export default function CustomerPieChart() {
     const theme = useTheme();
 
-    const { response } = useSelector((state) => state.get_customer_count_by_device_type);
+    const { response, loading: isLoading } = useSelector((state) => state.get_customer_count_by_device_type);
 
     const data = response?.data;
 
@@ -52,6 +53,8 @@ export default function CustomerPieChart() {
         );
     };
 
+    const isLoadingTrue = true;
+
     return (
         <Container>
             <Row mb="26px" alignItems="center">
@@ -68,35 +71,39 @@ export default function CustomerPieChart() {
                 </Row>
             </Row>
             <Center>
-                <PieChart width={500} height={400}>
-                    <Pie data={data?.totalUsers ? statsData : statsNoData} innerRadius={75} dataKey="value">
-                        {statsData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                    <text
-                        x="50%"
-                        y="48%"
-                        fontSize="0.857rem"
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill={theme.palette.text.secondary}
-                    >
-                        Total Customer
-                    </text>
-                    <text
-                        x="50%"
-                        y="53%"
-                        fontSize="1.286rem"
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill={theme.palette.text.primary}
-                        fontWeight={600}
-                    >
-                        {data?.totalUsers ?? 0}
-                    </text>
-                </PieChart>
+                {isLoading ? (
+                    <Skeleton variant="circular" height={300} width={300} />
+                ) : (
+                    <PieChart width={500} height={400}>
+                        <Pie data={data?.totalUsers ? statsData : statsNoData} innerRadius={75} dataKey="value">
+                            {statsData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+                        <Tooltip content={<CustomTooltip />} />
+                        <text
+                            x="50%"
+                            y="48%"
+                            fontSize="0.857rem"
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fill={theme.palette.text.secondary}
+                        >
+                            Total Customer
+                        </text>
+                        <text
+                            x="50%"
+                            y="53%"
+                            fontSize="1.286rem"
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fill={theme.palette.text.primary}
+                            fontWeight={600}
+                        >
+                            {data?.totalUsers ?? 0}
+                        </text>
+                    </PieChart>
+                )}
             </Center>
         </Container>
     );

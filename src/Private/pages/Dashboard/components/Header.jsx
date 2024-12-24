@@ -174,16 +174,16 @@ export default function Header() {
                         aria-label="range selector"
                         disabled={isLoading}
                     >
-                        <ToggleButton value={RangeType.DAILY} aria-label="daily">
+                        <ToggleButton disableRipple value={RangeType.DAILY} aria-label="daily">
                             Daily
                         </ToggleButton>
-                        <ToggleButton value={RangeType.WEEKLY} aria-label="weekly">
+                        <ToggleButton disableRipple value={RangeType.WEEKLY} aria-label="weekly">
                             Weekly
                         </ToggleButton>
-                        <ToggleButton value={RangeType.MONTHLY} aria-label="monthly">
+                        <ToggleButton disableRipple value={RangeType.MONTHLY} aria-label="monthly">
                             Monthly
                         </ToggleButton>
-                        <ToggleButton value={RangeType.YEARLY} aria-label="yearly">
+                        <ToggleButton disableRipple value={RangeType.YEARLY} aria-label="yearly">
                             Yearly
                         </ToggleButton>
                     </ToggleButtonGroup>

@@ -89,15 +89,11 @@ export default function DashboardPayoutCountryBarChart() {
                     ) : payoutCountriesData?.length === 0 ? (
                         <Typography>No data found</Typography>
                     ) : (
-                        <BarChart
-                            data={payoutCountriesData}
-
-                            // margin={{ top: 10, right: 10, left: 0, bottom: 0 }} // Adjust margins
-                        >
+                        <BarChart data={payoutCountriesData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="country" tick={{ fontSize: 12 }} padding={{ left: 0, right: 0 }} />
                             <YAxis
-                                tick={{ fontSize: 12 }}
+                                tick={{ fontSize: 10 }}
                                 padding={{
                                     top: 0,
                                     bottom: 0,

@@ -5,6 +5,10 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import TooltipMUI from "@mui/material/Tooltip";
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import SquareIcon from "@mui/icons-material/Square";
 
 import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
@@ -39,30 +43,30 @@ export default function TransactionStat() {
         cancelledAmount: item?.cancelledAmount,
     }));
 
-    const data = [
-        { day: "Sun", pending: 400, payout: 300, cancelled: 100 },
-        { day: "Mon", pending: 300, payout: 500, cancelled: 150 },
-        { day: "Tue", pending: 700, payout: 500, cancelled: 200 },
-        { day: "Wed", pending: 600, payout: 650, cancelled: 350 },
-        { day: "Thu", pending: 800, payout: 700, cancelled: 300 },
-        { day: "Fri", pending: 750, payout: 800, cancelled: 400 },
-        { day: "Sat", pending: 600, payout: 650, cancelled: 350 },
-    ];
-
     return (
         <Paper sx={{ p: "16px", position: "relative" }}>
             <Row gap={1}>
                 <Box>
                     <Typography variant="h6">Overall Transaction</Typography>
                 </Box>
-                {/* <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
+                <Row flex={1} justifyContent="flex-end" gap="16px">
                     {statsData.map((stat) => (
-                        <Box key={stat.name} display="flex" flexDirection="row">
-                            <FiberManualRecordIcon sx={{ fill: stat.color }} />
+                        <Box key={stat.name} display="flex" flexDirection="row" alignItems="center">
+                            <SquareIcon
+                                style={{
+                                    fill: stat.color,
+                                    borderRadius: "50%",
+                                }}
+                            />
                             <Typography>{stat.name}</Typography>
                         </Box>
                     ))}
-                </Row> */}
+                    <TooltipMUI title="Shows the overall transaction data for the last 7 days">
+                        <IconButton>
+                            <InfoIcon color="disabled" />
+                        </IconButton>
+                    </TooltipMUI>
+                </Row>
             </Row>
             <Box
                 sx={{
@@ -76,19 +80,6 @@ export default function TransactionStat() {
                         <Skeleton variant="rectangular" width="100%" height="100%" />
                     ) : (
                         <AreaChart data={overallTransactionData}>
-                            <Legend
-                                verticalAlign="top"
-                                align="right"
-                                height={30}
-                                iconType="square"
-                                wrapperStyle={{
-                                    top: -37,
-                                    right: 0,
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                    flexWrap: "wrap",
-                                }}
-                            />
                             <defs>
                                 <linearGradient id="gradientPending" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#105BB7" stopOpacity={0.8} />
@@ -105,13 +96,25 @@ export default function TransactionStat() {
                             </defs>
 
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="day" />
+                            <XAxis
+                                dataKey="day"
+                                tick={{
+                                    fontSize: 10,
+                                }}
+                            />
                             <YAxis
                                 label={{
                                     value: "Amount",
                                     angle: -90,
                                     position: "insideLeft",
                                     fontSize: 12,
+
+                                    style: {
+                                        textAnchor: "middle",
+                                    },
+                                }}
+                                tick={{
+                                    fontSize: 10,
                                 }}
                             />
                             <Tooltip cursor={true} />
@@ -119,7 +122,7 @@ export default function TransactionStat() {
                             <Area
                                 type="monotone"
                                 dataKey="pendingAmount"
-                                name="Pending Amount"
+                                name="Pending"
                                 stroke="#105BB7"
                                 isAnimationActive="true"
                                 animationEasing="ease-in-out"
@@ -129,7 +132,7 @@ export default function TransactionStat() {
                             <Area
                                 type="monotone"
                                 dataKey="payoutAmount"
-                                name="Payout Amount"
+                                name="Payout"
                                 stroke="#4C96EF"
                                 isAnimationActive="true"
                                 animationEasing="ease-in-out"
@@ -139,7 +142,7 @@ export default function TransactionStat() {
                             <Area
                                 type="monotone"
                                 dataKey="cancelledAmount"
-                                name="Cancelled Amount"
+                                name="Cancelled"
                                 stroke="#136FE0"
                                 isAnimationActive="true"
                                 animationEasing="ease-in-out"
