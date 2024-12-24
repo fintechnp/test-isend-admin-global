@@ -1,33 +1,14 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useSelector } from "react-redux";
-import Paper from "App/components/Paper/Paper";
-import { Skeleton } from "@mui/material";
+import Skeleton from "@mui/material/Skeleton";
+import TooltipMUI from "@mui/material/Tooltip";
+import InfoIcon from "@mui/icons-material/Info";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-const DUMMY_DATA = [
-    {
-        name: "iPay",
-        amount: 1000,
-    },
-    {
-        name: "Chariot",
-        amount: 600,
-    },
-    {
-        name: "Speed",
-        amount: 350,
-    },
-    {
-        name: "TBank",
-        amount: 500,
-    },
-    {
-        name: "BNB",
-        amount: 150,
-    },
-];
+import Paper from "App/components/Paper/Paper";
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -56,9 +37,24 @@ export default function DashboardPartnerBarChart() {
 
     return (
         <Box>
-            <Typography fontWeight={700} fontSize={16}>
-                Top Transaction by Agent & Business
-            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <Typography fontWeight={700} fontSize={16}>
+                    Top Transaction by Agent & Business
+                </Typography>
+
+                <TooltipMUI title="Shows the top 5 businesses & Agent by transaction amount">
+                    <IconButton>
+                        <InfoIcon color="disabled" />
+                    </IconButton>
+                </TooltipMUI>
+            </Box>
+
             <Box
                 sx={{
                     height: 350,

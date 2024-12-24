@@ -4,15 +4,18 @@ import { useSelector } from "react-redux";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
+import { Skeleton } from "@mui/material";
 
 export default function TransactionStat() {
-    const state = useSelector((state) => state.get_transaction_count_by_status);
-
     const theme = useTheme();
+
+    const { response: getOverallTransactionResponse, loading: isLoading } = useSelector(
+        (state) => state.get_overall_transaction_linegraph,
+    );
 
     const statsData = [
         {
@@ -28,6 +31,13 @@ export default function TransactionStat() {
             color: "#136FE0",
         },
     ];
+
+    const overallTransactionData = getOverallTransactionResponse?.data?.map((item) => ({
+        day: item?.dayOfWeekName,
+        pendingAmount: item?.pendingAmount,
+        payoutAmount: item?.payoutAmount,
+        cancelledAmount: item?.cancelledAmount,
+    }));
 
     const data = [
         { day: "Sun", pending: 400, payout: 300, cancelled: 100 },
@@ -45,14 +55,14 @@ export default function TransactionStat() {
                 <Box>
                     <Typography variant="h6">Overall Transaction</Typography>
                 </Box>
-                <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
+                {/* <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
                     {statsData.map((stat) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
                             <FiberManualRecordIcon sx={{ fill: stat.color }} />
                             <Typography>{stat.name}</Typography>
                         </Box>
                     ))}
-                </Row>
+                </Row> */}
             </Row>
             <Box
                 sx={{
@@ -62,54 +72,82 @@ export default function TransactionStat() {
                 }}
             >
                 <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={data}>
-                        <defs>
-                            <linearGradient id="gradientPending" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#105BB7" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#105BB7" stopOpacity={0} />
-                            </linearGradient>
-                            <linearGradient id="gradientPayout" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#4C96EF" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#4C96EF" stopOpacity={0} />
-                            </linearGradient>
-                            <linearGradient id="gradientCancelled" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#136FE0" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#136FE0" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="day" />
-                        <YAxis
-                            label={{
-                                value: "Amount",
-                                angle: -90,
-                                position: "insideLeft",
-                                fontSize: 12,
-                            }}
-                        />
-                        <Tooltip />
-                        <Area
-                            type="monotone"
-                            dataKey="pending"
-                            stroke="#105BB7"
-                            fill="url(#gradientPending)"
-                            dot={false}
-                        />
-                        <Area
-                            type="monotone"
-                            dataKey="payout"
-                            stroke="#4C96EF"
-                            fill="url(#gradientPayout)"
-                            dot={false}
-                        />
-                        <Area
-                            type="monotone"
-                            dataKey="cancelled"
-                            stroke="#136FE0"
-                            fill="url(#gradientCancelled)"
-                            dot={false}
-                        />
-                    </AreaChart>
+                    {isLoading ? (
+                        <Skeleton variant="rectangular" width="100%" height="100%" />
+                    ) : (
+                        <AreaChart data={overallTransactionData}>
+                            <Legend
+                                verticalAlign="top"
+                                align="right"
+                                height={30}
+                                iconType="square"
+                                wrapperStyle={{
+                                    top: -37,
+                                    right: 0,
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    flexWrap: "wrap",
+                                }}
+                            />
+                            <defs>
+                                <linearGradient id="gradientPending" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#105BB7" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#105BB7" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="gradientPayout" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#4C96EF" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#4C96EF" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="gradientCancelled" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#136FE0" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#136FE0" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="day" />
+                            <YAxis
+                                label={{
+                                    value: "Amount",
+                                    angle: -90,
+                                    position: "insideLeft",
+                                    fontSize: 12,
+                                }}
+                            />
+                            <Tooltip cursor={true} />
+
+                            <Area
+                                type="monotone"
+                                dataKey="pendingAmount"
+                                name="Pending Amount"
+                                stroke="#105BB7"
+                                isAnimationActive="true"
+                                animationEasing="ease-in-out"
+                                fill="url(#gradientPending)"
+                                dot={false}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="payoutAmount"
+                                name="Payout Amount"
+                                stroke="#4C96EF"
+                                isAnimationActive="true"
+                                animationEasing="ease-in-out"
+                                fill="url(#gradientPayout)"
+                                dot={false}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="cancelledAmount"
+                                name="Cancelled Amount"
+                                stroke="#136FE0"
+                                isAnimationActive="true"
+                                animationEasing="ease-in-out"
+                                fill="url(#gradientCancelled)"
+                                dot={false}
+                            />
+                        </AreaChart>
+                    )}
                 </ResponsiveContainer>
             </Box>
         </Paper>

@@ -43,6 +43,10 @@ const actions = {
     GET_SUMMARY_DATA_SUCCESS: "GET_SUMMARY_DATA_SUCCESS",
     GET_SUMMARY_DATA_FAILED: "GET_SUMMARY_DATA_FAILED",
 
+    GET_OVERALL_TRANSACTION_LINEGRAPH: "GET_OVERALL_TRANSACTION_LINEGRAPH",
+    GET_OVERALL_TRANSACTION_LINEGRAPH_SUCCESS: "GET_OVERALL_TRANSACTION_LINEGRAPH_SUCCESS",
+    GET_OVERALL_TRANSACTION_LINEGRAPH_FAILED: "GET_OVERALL_TRANSACTION_LINEGRAPH_FAILED",
+
     CHANGE_DASHBOARD_FILTER_PARAMS: "CHANGE_DASHBOARD_FILTER_PARAMS",
 
     get_customer_count_by_device_type: (query) => ({
@@ -98,6 +102,10 @@ const actions = {
     get_compliance_count_by_status_previous: (query) => ({
         type: actions.GET_COMPLIANCE_COUNT_BY_STATUS_PREVIOUS,
         query,
+    }),
+
+    get_overall_transaction_line_graph: () => ({
+        type: actions.GET_OVERALL_TRANSACTION_LINEGRAPH,
     }),
 
     get_summary_data: (query) => ({

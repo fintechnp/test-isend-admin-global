@@ -8,6 +8,7 @@ const apiEndpoints = {
         getTopAgentBusinessTransactions: "/dashboard/top-agent-biz-txn",
         getComplianceCountByStatus: "/dashboard/compliance-count",
         getSummaryData: "/dashboard/summary",
+        getOverallTransactionLineGraph: "/dashboard/transaction-linegraph",
     },
     countryStates: {
         list: "common/:country/states",

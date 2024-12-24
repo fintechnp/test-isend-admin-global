@@ -188,6 +188,22 @@ export const getSummaryData = takeEvery(actions.GET_SUMMARY_DATA, function* (act
     }
 });
 
+export const getOverallTransactionLineGraph = takeEvery(actions.GET_OVERALL_TRANSACTION_LINEGRAPH, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.dashboard.getOverallTransactionLineGraph, action.query);
+
+        yield put({
+            type: actions.GET_OVERALL_TRANSACTION_LINEGRAPH_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_OVERALL_TRANSACTION_LINEGRAPH_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerCountByDeviceType,
@@ -201,5 +217,6 @@ export default function* saga() {
         getComplianceCountByStatus,
         getComplianceCountByStatusPrevious,
         getSummaryData,
+        getOverallTransactionLineGraph,
     ]);
 }

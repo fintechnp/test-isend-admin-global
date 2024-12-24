@@ -1,14 +1,14 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { useSelector } from "react-redux";
 import { Skeleton } from "@mui/material";
-import Paper from "App/components/Paper/Paper";
+import { useSelector } from "react-redux";
 import TooltipMUI from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Row from "App/components/Row/Row";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+
+import Paper from "App/components/Paper/Paper";
 
 const DUMMY_DATA = [
     {
