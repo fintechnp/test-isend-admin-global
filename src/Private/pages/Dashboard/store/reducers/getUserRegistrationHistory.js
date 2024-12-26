@@ -9,12 +9,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.GET_SUMMARY_DATA:
+        case actions.GET_USER_REGISTRATION_HISTORY:
             return {
                 ...state,
                 loading: true,
             };
-        case actions.GET_SUMMARY_DATA_SUCCESS:
+        case actions.GET_USER_REGISTRATION_HISTORY_SUCCESS:
             return {
                 ...state,
                 loading: false,
@@ -22,7 +22,7 @@ const reducer = (state = initialState, action) => {
                 response: action.response,
                 error: null,
             };
-        case actions.GET_SUMMARY_DATA_FAILED:
+        case actions.GET_USER_REGISTRATION_HISTORY_FAILED:
             return {
                 ...state,
                 loading: false,

@@ -204,6 +204,22 @@ export const getOverallTransactionLineGraph = takeEvery(actions.GET_OVERALL_TRAN
     }
 });
 
+export const getUserRegistrationHistory = takeEvery(actions.GET_USER_REGISTRATION_HISTORY, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.dashboard.getUserRegistrationHistory, action.query);
+
+        yield put({
+            type: actions.GET_USER_REGISTRATION_HISTORY_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_USER_REGISTRATION_HISTORY_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerCountByDeviceType,
@@ -218,5 +234,6 @@ export default function* saga() {
         getComplianceCountByStatusPrevious,
         getSummaryData,
         getOverallTransactionLineGraph,
+        getUserRegistrationHistory,
     ]);
 }

@@ -14,3 +14,4 @@ export { default as GetComplianceCountByStatusReducer } from "./reducers/getComp
 export { default as GetComplianceCountByStatusPreviousReducer } from "./reducers/getComplianceCountByStatusPrevious";
 export { default as GetSummaryDataReducer } from "./reducers/getSummaryData";
 export { default as GetOverallTransactionLineGraphReducer } from "./reducers/getOverallTransactionLineGraph";
+export { default as GetUserRegistrationHHistoryReducer } from "./reducers/getUserRegistrationHistory";

@@ -35,8 +35,6 @@ export default function DashboardPartnerBarChart() {
         txn_amount: item?.txn_amount,
     }));
 
-    console.log("The get Transactions Data", getTransactionData);
-
     return (
         <Box>
             <Box
@@ -77,10 +75,6 @@ export default function DashboardPartnerBarChart() {
                             <XAxis dataKey="business_name" tick={{ fontSize: 10 }} padding={{ left: 0, right: 0 }} />
                             <YAxis
                                 tick={{ fontSize: 12 }}
-                                padding={{
-                                    top: 0,
-                                    bottom: 0,
-                                }}
                                 label={{
                                     value: "Amount",
                                     angle: -90,

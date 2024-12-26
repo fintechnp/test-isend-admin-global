@@ -6,6 +6,7 @@ import KycStat from "./components/KycStat";
 import CustomerPieChart from "./components/CustomerPieChart";
 import PageContent from "App/components/Container/PageContent";
 import WholeAdminDetails from "./components/WholeAdminDetails";
+import UserRegistrationHistoryStat from "./components/UserRegistrationHistoryStat";
 
 const DashboardCurrencyData = lazy(() => import("./components/CurrencyData"));
 
@@ -31,6 +32,10 @@ function Dashboard() {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <KycStat />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <UserRegistrationHistoryStat />
                 </Grid>
             </Grid>
         </PageContent>

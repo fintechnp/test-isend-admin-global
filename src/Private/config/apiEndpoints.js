@@ -9,6 +9,7 @@ const apiEndpoints = {
         getComplianceCountByStatus: "/dashboard/compliance-count",
         getSummaryData: "/dashboard/summary",
         getOverallTransactionLineGraph: "/dashboard/transaction-linegraph",
+        getUserRegistrationHistory: "/dashboard/user-registration-history",
     },
     countryStates: {
         list: "common/:country/states",

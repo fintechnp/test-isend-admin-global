@@ -598,6 +598,7 @@ import {
     GetComplianceCountByStatusPreviousReducer,
     GetSummaryDataReducer,
     GetOverallTransactionLineGraphReducer,
+    GetUserRegistrationHHistoryReducer,
 } from "./pages/Dashboard/store";
 import {
     GetOrganizationStakeholdersReducer,
@@ -1168,6 +1169,7 @@ export const privateReducer = {
     get_transaction_count_by_status_previous: GetTransactionCountByStatusPreviousReducer,
     get_compliance_count_by_status: GetComplianceCountByStatusReducer,
     get_compliance_count_by_status_previous: GetComplianceCountByStatusPreviousReducer,
+    get_user_registration_history: GetUserRegistrationHHistoryReducer,
     get_top_payout_countries: GetTopPayoutCountriesReducer,
     get_overall_transaction_linegraph: GetOverallTransactionLineGraphReducer,
     get_summary_data: GetSummaryDataReducer,
