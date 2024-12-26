@@ -19,7 +19,7 @@ const schema = Yup.object().shape({
     email_to: Yup.string().email().required("Required").max(100),
     email_cc: Yup.string().optional().max(100),
     email_bcc: Yup.string().optional().max(100),
-    email_subject: Yup.string().email().required("Required").max(100),
+    email_subject: Yup.string().required("Required").max(100),
     email_body: Yup.string().required("Enter a email body"),
 });
 
