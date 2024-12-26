@@ -20,7 +20,7 @@ const schema = Yup.object().shape({
     email_cc: Yup.string().optional().max(100),
     email_bcc: Yup.string().optional().max(100),
     email_subject: Yup.string().required("Required").max(100),
-    email_body: Yup.string().required("Enter a email body"),
+    email_format: Yup.string().required("Enter a email body"),
 });
 
 const EmailForm = ({ onSubmit, loading, handleClose }) => {
@@ -34,7 +34,7 @@ const EmailForm = ({ onSubmit, loading, handleClose }) => {
         watch,
     } = methods;
 
-    const emailBody = watch("email_body");
+    const emailBody = watch("email_format");
 
     return (
         <HookForm onSubmit={onSubmit} {...methods}>
@@ -56,8 +56,8 @@ const EmailForm = ({ onSubmit, loading, handleClose }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Typography>Body</Typography>
-                    <ReactQuill theme="snow" value={emailBody} onChange={(v) => setValue("email_body", v)} />
-                    <FormHelperText error={true}>{errors?.email_body?.message}</FormHelperText>
+                    <ReactQuill theme="snow" value={emailBody} onChange={(v) => setValue("email_format", v)} />
+                    <FormHelperText error={true}>{errors?.email_format?.message}</FormHelperText>
                 </Grid>
                 <Grid item xs={12}>
                     <ButtonWrapper>
