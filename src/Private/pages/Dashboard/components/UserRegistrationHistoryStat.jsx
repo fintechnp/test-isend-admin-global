@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
 import { useTheme } from "@mui/material/styles";
@@ -19,36 +19,14 @@ export default function UserRegistrationHistoryStat() {
 
     const isLoading = false;
 
-    const overallTransactionData = [
-        {
-            day: "Mon",
-            pendingAmount: 4000,
-        },
-        {
-            day: "Tue",
-            pendingAmount: 2000,
-        },
-        {
-            day: "Wed",
-            pendingAmount: 3000,
-        },
-        {
-            day: "Thu",
-            pendingAmount: 1000,
-        },
-        {
-            day: "Fri",
-            pendingAmount: 5000,
-        },
-        {
-            day: "Sat",
-            pendingAmount: 2000,
-        },
-        {
-            day: "Sun",
-            pendingAmount: 7000,
-        },
-    ];
+    const { response, loading } = useSelector((state) => state.get_user_registration_history);
+
+    const registrationHistoryData = response?.data?.map((item) => ({
+        date: item?.date,
+        count: item?.count,
+    }));
+
+    console.log("The get user Registration History is", registrationHistoryData);
 
     return (
         <Paper sx={{ p: "16px", position: "relative" }}>
@@ -59,16 +37,19 @@ export default function UserRegistrationHistoryStat() {
             </Row>
             <Box
                 sx={{
-                    width: "100%",
-                    height: 250,
+                    height: 280,
                     marginTop: "16px",
+                    overflowY: "hidden",
+                    overflowX: "scroll",
+                    whiteSpace: "nowrap",
+                    maxWidth: "100%",
                 }}
             >
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="150%" height="100%">
                     {isLoading ? (
                         <Skeleton variant="rectangular" width="100%" height="100%" />
                     ) : (
-                        <AreaChart data={overallTransactionData}>
+                        <AreaChart data={registrationHistoryData}>
                             <defs>
                                 <linearGradient id="gradientPending" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#105BB7" stopOpacity={0.8} />
@@ -78,14 +59,14 @@ export default function UserRegistrationHistoryStat() {
 
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
-                                dataKey="day"
+                                dataKey="date"
                                 tick={{
                                     fontSize: 10,
                                 }}
                             />
                             <YAxis
                                 label={{
-                                    value: "Amount",
+                                    value: "count",
                                     angle: -90,
                                     position: "insideLeft",
                                     fontSize: 12,
@@ -102,8 +83,8 @@ export default function UserRegistrationHistoryStat() {
 
                             <Area
                                 type="monotone"
-                                dataKey="pendingAmount"
-                                name="Pending"
+                                dataKey="count"
+                                name="count"
                                 stroke="#105BB7"
                                 isAnimationActive="true"
                                 animationEasing="ease-in-out"

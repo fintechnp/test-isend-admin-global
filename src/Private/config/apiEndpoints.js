@@ -9,7 +9,7 @@ const apiEndpoints = {
         getComplianceCountByStatus: "/dashboard/compliance-count",
         getSummaryData: "/dashboard/summary",
         getOverallTransactionLineGraph: "/dashboard/transaction-linegraph",
-        getUserRegistrationHistory: "/dashboard/user-registration-history",
+        getUserRegistrationHistory: "/dashboard/registration-chart",
         getExchangeRateSummary: "/dashboard/exchange-rate-summary",
     },
     countryStates: {

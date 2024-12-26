@@ -131,7 +131,7 @@ export default function KycStat() {
                     <Row key={index} justifyContent="center" alignItems="center" gap="4px">
                         <Center
                             sx={{
-                                height: "24px",
+                                height: "30px",
                                 width: "24px",
                                 mr: "4px",
                                 borderRadius: "4px",

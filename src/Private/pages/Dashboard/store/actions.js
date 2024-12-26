@@ -121,7 +121,7 @@ const actions = {
         query,
     }),
 
-    get_registration_history: (query) => ({
+    get_user_registration_history: (query) => ({
         type: actions.GET_USER_REGISTRATION_HISTORY,
         query,
     }),
