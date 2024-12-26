@@ -17,7 +17,8 @@ const NO_DATA_COLORS = ["#eeeeee"];
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
     "& .recharts-wrapper": {
-        maxWidth: "532px",
+        maxWidth: "352px",
+        maxHeight: "270px",
     },
 }));
 

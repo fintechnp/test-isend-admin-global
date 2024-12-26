@@ -32,42 +32,19 @@ export default function DetailsCard() {
         (state) => state.get_transaction_count_by_status,
     );
 
-    const { loading: isLoadingCustomerStatByDeviceType, response: customerCountByDeviceResponse } = useSelector(
-        (state) => state.get_customer_count_by_device_type,
-    );
-
-    const { loading: isLoadingCustomerStatByDeviceTypePrevious, response: customerCountByStatusPreviousResponse } =
-        useSelector((state) => state.get_customer_count_by_device_type_previous);
-
-    const { loading: isLoadingCustomerKycStatByStatus, response: customerKycCountByStatusResponse } = useSelector(
-        (state) => state.get_customer_kyc_count_by_status,
-    );
-
-    const { loading: isLoadingPrevious, response: previousCustomerKycCountByStatusResponse } = useSelector(
-        (state) => state.get_customer_kyc_count_by_status_previous,
-    );
-
     const { loading: isLoadingTransactionStatPrevious, response: transactionCountByStatusResponsePrevious } =
         useSelector((state) => state.get_transaction_count_by_status_previous);
 
     const transactionCountByStatusData = transactionCountByStatusResponse?.data;
 
-    const customerCountByDeviceData = customerCountByDeviceResponse?.data;
-
-    const customerKycCountByStatusData = customerKycCountByStatusResponse?.data;
-
-    const previousCustomerKycCountByStatusData = previousCustomerKycCountByStatusResponse?.data;
-
     const previousTransactionCountByStatusData = transactionCountByStatusResponsePrevious?.data;
-
-    const previousCustomerCountByDeviceData = customerCountByStatusPreviousResponse?.data;
 
     const totalTransactionsData = {
         isLoading: isLoadingTransactionStat,
         isSubDataLoading: isLoadingTransactionStat || isLoadingTransactionStatPrevious,
         icon: <DashboardTransactionIcon />,
         totalTransactions: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
-        backgroundColor: theme.palette.surface.successSecond,
+        backgroundColor: theme.palette.surface.primarySecond,
         totalDifferenceInPercentage: calculatePercentageDifference(
             transactionCountByStatusData?.totalTxnAmount ?? 0,
             previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
@@ -144,22 +121,26 @@ export default function DetailsCard() {
                                             <Row
                                                 gap="4px"
                                                 sx={{
-                                                    backgroundColor: totalTransactionsData.backgroundColor,
+                                                    backgroundColor: totalTransactionsData.isDropped
+                                                        ? theme.palette.surface.dangerSecond
+                                                        : theme.palette.surface.primarySecond,
                                                     padding: "6px",
                                                     borderRadius: "16px",
                                                 }}
                                                 alignItems="center"
                                             >
                                                 <Typography>
-                                                    {!totalTransactionsData.isDropped ? (
-                                                        <DashBoardSendIcon />
-                                                    ) : (
+                                                    {totalTransactionsData.isDropped ? (
                                                         <DashboardReceiveIcon />
+                                                    ) : (
+                                                        <DashBoardSendIcon />
                                                     )}
                                                 </Typography>
                                                 <Typography
                                                     sx={{
-                                                        color: theme.palette.success.main,
+                                                        color: totalTransactionsData.isDropped
+                                                            ? theme.palette.error.main
+                                                            : theme.palette.success.main,
                                                         fontWeight: 600,
                                                     }}
                                                 >
@@ -209,15 +190,15 @@ export default function DetailsCard() {
                                             </Typography>
                                             <Row alignItems="center" gap="4px">
                                                 {totalTransactionsData.pendingData.isDropped ? (
-                                                    <DashBoardSendIcon />
-                                                ) : (
                                                     <DashboardReceiveIcon />
+                                                ) : (
+                                                    <DashBoardSendIcon />
                                                 )}
 
                                                 <Typography
                                                     fontWeight={500}
                                                     sx={{
-                                                        color: !totalTransactionsData.pendingData.isDropped
+                                                        color: totalTransactionsData.pendingData.isDropped
                                                             ? theme.palette.error.main
                                                             : theme.palette.success.main,
                                                     }}
@@ -256,15 +237,15 @@ export default function DetailsCard() {
                                             </Typography>
                                             <Row alignItems="center" gap="4px">
                                                 {totalTransactionsData.payoutData.isDropped ? (
-                                                    <DashBoardSendIcon />
-                                                ) : (
                                                     <DashboardReceiveIcon />
+                                                ) : (
+                                                    <DashBoardSendIcon />
                                                 )}
 
                                                 <Typography
                                                     fontWeight={500}
                                                     sx={{
-                                                        color: !totalTransactionsData.payoutData.isDropped
+                                                        color: totalTransactionsData.payoutData.isDropped
                                                             ? theme.palette.error.main
                                                             : theme.palette.success.main,
                                                     }}
@@ -294,15 +275,15 @@ export default function DetailsCard() {
                                             </Typography>
                                             <Row alignItems="center" gap="4px">
                                                 {totalTransactionsData.cancelledData.isDropped ? (
-                                                    <DashBoardSendIcon />
-                                                ) : (
                                                     <DashboardReceiveIcon />
+                                                ) : (
+                                                    <DashBoardSendIcon />
                                                 )}
 
                                                 <Typography
                                                     fontWeight={500}
                                                     sx={{
-                                                        color: !totalTransactionsData.cancelledData.isDropped
+                                                        color: totalTransactionsData.cancelledData.isDropped
                                                             ? theme.palette.error.main
                                                             : theme.palette.success.main,
                                                     }}
@@ -362,22 +343,26 @@ export default function DetailsCard() {
                                         <Row
                                             gap="4px"
                                             sx={{
-                                                backgroundColor: totalTransactionsData.backgroundColor,
+                                                backgroundColor: totalTransactionsData.isDropped
+                                                    ? theme.palette.surface.dangerSecond
+                                                    : theme.palette.surface.primarySecond,
                                                 padding: "6px",
                                                 borderRadius: "16px",
                                             }}
                                             alignItems="center"
                                         >
                                             <Typography>
-                                                {!totalTransactionsData.isDropped ? (
-                                                    <DashBoardSendIcon />
-                                                ) : (
+                                                {totalTransactionsData.isDropped ? (
                                                     <DashboardReceiveIcon />
+                                                ) : (
+                                                    <DashBoardSendIcon />
                                                 )}
                                             </Typography>
                                             <Typography
                                                 sx={{
-                                                    color: theme.palette.success.main,
+                                                    color: totalTransactionsData.isDropped
+                                                        ? theme.palette.error.main
+                                                        : theme.palette.success.main,
                                                     fontWeight: 600,
                                                 }}
                                             >
@@ -418,20 +403,20 @@ export default function DetailsCard() {
                                         </Typography>
                                         <Row alignItems="center" gap="4px">
                                             {totalTransactionsData.pendingData.isDropped ? (
-                                                <DashBoardSendIcon />
-                                            ) : (
                                                 <DashboardReceiveIcon />
+                                            ) : (
+                                                <DashBoardSendIcon />
                                             )}
 
                                             <Typography
                                                 fontWeight={500}
                                                 sx={{
-                                                    color: !totalTransactionsData.pendingData.isDropped
+                                                    color: totalTransactionsData.pendingData.isDropped
                                                         ? theme.palette.error.main
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.pendingData.totalDifferenceInPercentage}
+                                                {totalTransactionsData.pendingData.totalDifferenceInPercentage}%{""}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -460,20 +445,20 @@ export default function DetailsCard() {
                                         </Typography>
                                         <Row alignItems="center" gap="4px">
                                             {totalTransactionsData.payoutData.isDropped ? (
-                                                <DashBoardSendIcon />
-                                            ) : (
                                                 <DashboardReceiveIcon />
+                                            ) : (
+                                                <DashBoardSendIcon />
                                             )}
 
                                             <Typography
                                                 fontWeight={500}
                                                 sx={{
-                                                    color: !totalTransactionsData.payoutData.isDropped
+                                                    color: totalTransactionsData.payoutData.isDropped
                                                         ? theme.palette.error.main
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.payoutData.totalDifferenceInPercentage}
+                                                {totalTransactionsData.payoutData.totalDifferenceInPercentage}%{""}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -494,20 +479,20 @@ export default function DetailsCard() {
                                         </Typography>
                                         <Row alignItems="center" gap="4px">
                                             {totalTransactionsData.cancelledData.isDropped ? (
-                                                <DashBoardSendIcon />
-                                            ) : (
                                                 <DashboardReceiveIcon />
+                                            ) : (
+                                                <DashBoardSendIcon />
                                             )}
 
                                             <Typography
                                                 fontWeight={500}
                                                 sx={{
-                                                    color: !totalTransactionsData.cancelledData.isDropped
+                                                    color: totalTransactionsData.cancelledData.isDropped
                                                         ? theme.palette.error.main
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.cancelledData.totalDifferenceInPercentage}
+                                                {totalTransactionsData.cancelledData.totalDifferenceInPercentage}%{""}
                                             </Typography>
                                         </Row>
                                     </Row>

@@ -132,7 +132,9 @@ export default function OverallTransactionAndCustomer() {
                 customerCountByStatusData?.totalCustomer ?? 0,
                 customerCountByStatusPreviousData?.totalCustomer ?? 0,
             ),
-            isDropped: false,
+            isDropped:
+                (customerCountByStatusData?.totalCustomer ?? 0) <
+                (customerCountByStatusPreviousData?.totalCustomer ?? 0),
             childrenData: [
                 {
                     title: "Verified",
@@ -141,7 +143,9 @@ export default function OverallTransactionAndCustomer() {
                         customerCountByStatusData?.kycVerifiedCount ?? 0,
                         customerCountByStatusPreviousData?.kycVerifiedCount ?? 0,
                     ),
-                    isDropped: true,
+                    isDropped:
+                        (customerCountByStatusData?.kycVerifiedCount ?? 0) <
+                        (customerCountByStatusPreviousData?.kycVerifiedCount ?? 0),
                 },
                 {
                     title: "Rejected",
@@ -150,7 +154,9 @@ export default function OverallTransactionAndCustomer() {
                         customerCountByStatusData?.kycRejectCount ?? 0,
                         customerCountByStatusPreviousData?.kycRejectCount ?? 0,
                     ),
-                    isDropped: true,
+                    isDropped:
+                        (customerCountByStatusData?.kycRejectCount ?? 0) <
+                        (customerCountByStatusPreviousData?.kycRejectCount ?? 0),
                 },
                 {
                     title: "Expired",
@@ -159,7 +165,9 @@ export default function OverallTransactionAndCustomer() {
                         customerCountByStatusData?.kycExpiredCount ?? 0,
                         customerCountByStatusPreviousData?.kycExpiredCount ?? 0,
                     ),
-                    isDropped: false,
+                    isDropped:
+                        (customerCountByStatusData?.kycExpiredCount ?? 0) <
+                        (customerCountByStatusPreviousData?.kycExpiredCount ?? 0),
                 },
                 {
                     title: "Not Started",
@@ -168,7 +176,9 @@ export default function OverallTransactionAndCustomer() {
                         customerCountByStatusData?.customerWithNoKycCount ?? 0,
                         customerCountByStatusPreviousData?.customerWithNoKycCount ?? 0,
                     ),
-                    isDropped: false,
+                    isDropped:
+                        (customerCountByStatusData?.customerWithNoKycCount ?? 0) <
+                        (customerCountByStatusPreviousData?.customerWithNoKycCount ?? 0),
                 },
                 {
                     title: "Blocked",
@@ -177,7 +187,9 @@ export default function OverallTransactionAndCustomer() {
                         customerCountByStatusData?.totalCustomerBlocked ?? 0,
                         customerCountByStatusPreviousData?.totalCustomerBlocked ?? 0,
                     ),
-                    isDropped: false,
+                    isDropped:
+                        (customerCountByStatusData?.totalCustomerBlocked ?? 0) <
+                        (customerCountByStatusPreviousData?.totalCustomerBlocked ?? 0),
                 },
             ],
         },

@@ -10,6 +10,7 @@ const apiEndpoints = {
         getSummaryData: "/dashboard/summary",
         getOverallTransactionLineGraph: "/dashboard/transaction-linegraph",
         getUserRegistrationHistory: "/dashboard/user-registration-history",
+        getExchangeRateSummary: "/dashboard/exchange-rate-summary",
     },
     countryStates: {
         list: "common/:country/states",

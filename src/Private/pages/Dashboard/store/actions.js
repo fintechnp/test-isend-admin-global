@@ -51,6 +51,10 @@ const actions = {
     GET_USER_REGISTRATION_HISTORY_SUCCESS: "GET_USER_REGISTRATION_HISTORY_SUCCESS",
     GET_USER_REGISTRATION_HISTORY_FAILED: "GET_USER_REGISTRATION_HISTORY_FAILED",
 
+    GET_EXCHANGE_RATE_SUMMARY: "GET_EXCHANGE_RATE_SUMMARY",
+    GET_EXCHANGE_RATE_SUMMARY_SUCCESS: "GET_EXCHANGE_RATE_SUMMARY_SUCCESS",
+    GET_EXCHANGE_RATE_SUMMARY_FAILED: "GET_EXCHANGE_RATE_SUMMARY_FAILED",
+
     CHANGE_DASHBOARD_FILTER_PARAMS: "CHANGE_DASHBOARD_FILTER_PARAMS",
 
     get_customer_count_by_device_type: (query) => ({
@@ -120,6 +124,10 @@ const actions = {
     get_registration_history: (query) => ({
         type: actions.GET_USER_REGISTRATION_HISTORY,
         query,
+    }),
+
+    get_exchange_rate_summary: () => ({
+        type: actions.GET_EXCHANGE_RATE_SUMMARY,
     }),
 };
 

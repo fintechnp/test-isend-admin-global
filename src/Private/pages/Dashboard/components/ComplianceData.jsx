@@ -30,21 +30,22 @@ export default function ComplianceData() {
     const complianceData = [
         {
             label: "Suspicious",
-            value: numberUtils.format(complianceCountData?.suspicious ?? 0),
+            value: numberUtils.format(complianceCountData?.suspiciousCount ?? 0),
             differenceInPercentage: calculatePercentageDifference(
-                complianceCountData?.suspicious ?? 0,
-                previousComplianceCountData?.suspicious ?? 0,
+                complianceCountData?.suspiciousCount ?? 0,
+                previousComplianceCountData?.suspiciousCount ?? 0,
             ),
-            isDropped: true,
+            isDropped:
+                (complianceCountData?.suspiciousCount ?? 0) < (previousComplianceCountData?.suspiciousCount ?? 0),
         },
         {
             label: "Blocked",
-            value: numberUtils.format(complianceCountData?.blocked ?? 0),
+            value: numberUtils.format(complianceCountData?.blockedCount ?? 0),
             differenceInPercentage: calculatePercentageDifference(
-                complianceCountData?.blocked ?? 0,
-                previousComplianceCountData?.blocked ?? 0,
+                complianceCountData?.blockedCount ?? 0,
+                previousComplianceCountData?.blockedCount ?? 0,
             ),
-            isDropped: false,
+            isDropped: (complianceCountData?.blockedCount ?? 0) < (previousComplianceCountData?.blockedCount ?? 0),
         },
     ];
 

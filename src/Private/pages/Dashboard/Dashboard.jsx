@@ -27,14 +27,14 @@ function Dashboard() {
                     <WholeAdminDetails />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} lg={4}>
                     <CustomerPieChart />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} lg={4}>
                     <KycStat />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} lg={4}>
                     <UserRegistrationHistoryStat />
                 </Grid>
             </Grid>

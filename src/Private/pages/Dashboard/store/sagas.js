@@ -220,6 +220,22 @@ export const getUserRegistrationHistory = takeEvery(actions.GET_USER_REGISTRATIO
     }
 });
 
+export const getExchangeRateSummary = takeEvery(actions.GET_EXCHANGE_RATE_SUMMARY, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.dashboard.getExchangeRateSummary, action.query);
+
+        yield put({
+            type: actions.GET_EXCHANGE_RATE_SUMMARY_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_EXCHANGE_RATE_SUMMARY_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerCountByDeviceType,
@@ -235,5 +251,6 @@ export default function* saga() {
         getSummaryData,
         getOverallTransactionLineGraph,
         getUserRegistrationHistory,
+        getExchangeRateSummary,
     ]);
 }

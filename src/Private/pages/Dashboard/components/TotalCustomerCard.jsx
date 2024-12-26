@@ -34,7 +34,9 @@ export default function TotalCustomerCard() {
         totalCustomers: numberUtils.format(customerKycCountByStatusData?.totalCustomer ?? 0),
         icon: <DashboardCustomerIcon />,
         backgroundColor: theme.palette.surface.successSecond,
-        isDropped: false,
+        isDropped:
+            (customerKycCountByStatusData?.totalCustomer ?? 0) <
+            (previousCustomerKycCountByStatusData?.totalCustomer ?? 0),
         differenceInPercentage: calculatePercentageDifference(
             customerKycCountByStatusData?.totalCustomer ?? 0,
             previousCustomerKycCountByStatusData?.totalCustomer ?? 0,
@@ -47,7 +49,9 @@ export default function TotalCustomerCard() {
                     customerKycCountByStatusData?.kycVerifiedCount ?? 0,
                     previousCustomerKycCountByStatusData?.kycVerifiedCount ?? 0,
                 ),
-                isDropped: true,
+                isDropped:
+                    (customerKycCountByStatusData?.kycVerifiedCount ?? 0) <
+                    (previousCustomerKycCountByStatusData?.kycVerifiedCount ?? 0),
             },
             {
                 title: "Rejected",
@@ -56,7 +60,9 @@ export default function TotalCustomerCard() {
                     customerKycCountByStatusData?.kycRejectCount ?? 0,
                     previousCustomerKycCountByStatusData?.kycRejectCount ?? 0,
                 ),
-                isDropped: true,
+                isDropped:
+                    (customerKycCountByStatusData?.kycRejectCount ?? 0) <
+                    (previousCustomerKycCountByStatusData?.kycRejectCount ?? 0),
             },
             {
                 title: "Expired",
@@ -65,7 +71,9 @@ export default function TotalCustomerCard() {
                     customerKycCountByStatusData?.kycExpiredCount ?? 0,
                     previousCustomerKycCountByStatusData?.kycExpiredCount ?? 0,
                 ),
-                isDropped: false,
+                isDropped:
+                    (customerKycCountByStatusData?.kycExpiredCount ?? 0) <
+                    (previousCustomerKycCountByStatusData?.kycExpiredCount ?? 0),
             },
             {
                 title: "Not Started",
@@ -74,7 +82,9 @@ export default function TotalCustomerCard() {
                     customerKycCountByStatusData?.customerWithNoKycCount ?? 0,
                     previousCustomerKycCountByStatusData?.customerWithNoKycCount ?? 0,
                 ),
-                isDropped: false,
+                isDropped:
+                    (customerKycCountByStatusData?.customerWithNoKycCount ?? 0) <
+                    (previousCustomerKycCountByStatusData?.customerWithNoKycCount ?? 0),
             },
             {
                 title: "Blocked",
@@ -83,7 +93,9 @@ export default function TotalCustomerCard() {
                     customerKycCountByStatusData?.totalCustomerBlocked ?? 0,
                     previousCustomerKycCountByStatusData?.totalCustomerBlocked ?? 0,
                 ),
-                isDropped: false,
+                isDropped:
+                    (customerKycCountByStatusData?.totalCustomerBlocked ?? 0) <
+                    (previousCustomerKycCountByStatusData?.totalCustomerBlocked ?? 0),
             },
         ],
     };
@@ -122,18 +134,22 @@ export default function TotalCustomerCard() {
                                 <Row
                                     gap="4px"
                                     sx={{
-                                        backgroundColor: customerDetails.backgroundColor,
+                                        backgroundColor: customerDetails.isDropped
+                                            ? theme.palette.surface.dangerSecond
+                                            : theme.palette.surface.successSecond,
                                         padding: "6px",
                                         borderRadius: "16px",
                                     }}
                                     alignItems="center"
                                 >
                                     <Typography>
-                                        {!customerDetails.isDropped ? <DashBoardSendIcon /> : <DashboardReceiveIcon />}
+                                        {customerDetails.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}
                                     </Typography>
                                     <Typography
                                         sx={{
-                                            color: theme.palette.success.main,
+                                            color: customerDetails.isDropped
+                                                ? theme.palette.error.main
+                                                : theme.palette.success.main,
                                             fontWeight: 600,
                                         }}
                                     >
@@ -191,12 +207,12 @@ export default function TotalCustomerCard() {
                                     <Typography fontSize={16} fontWeight={700}>
                                         {data.total}
                                     </Typography>
-                                    <Box>{!data.isDropped ? <DashBoardSendIcon /> : <DashboardReceiveIcon />}</Box>
+                                    <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
                                     <Typography
                                         sx={{
-                                            color: !data.isDropped
-                                                ? theme.palette.success.main
-                                                : theme.palette.error.main,
+                                            color: data.isDropped
+                                                ? theme.palette.error.main
+                                                : theme.palette.success.main,
                                             fontWeight: 500,
                                         }}
                                     >
