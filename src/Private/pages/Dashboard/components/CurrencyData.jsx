@@ -187,10 +187,16 @@ export default function DashboardCurrencyData() {
                         width: "35rem",
                         padding: "0px 16px 0px 0px",
                         borderRight: `1px solid ${theme.palette.divider}`,
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                     })}
                 >
+                    <Row>
+                        <Typography>As of {todayDate}</Typography>
+                    </Row>
                     <FormProvider {...methods}>
-                        <Grid container rowSpacing={2} columnSpacing={2}>
+                        <Grid container>
                             <Grid item xs={12} md={6}>
                                 <FormSelect name="agent_name" label="Agent Name" options={agentData} />
                             </Grid>
