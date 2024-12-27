@@ -134,8 +134,9 @@ const actions = {
         query,
     }),
 
-    get_exchange_rate_summary: () => ({
+    get_exchange_rate_summary: (query) => ({
         type: actions.GET_EXCHANGE_RATE_SUMMARY,
+        query,
     }),
 
     get_overall_transaction_report: () => ({
