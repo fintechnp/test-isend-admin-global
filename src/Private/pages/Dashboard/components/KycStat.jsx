@@ -5,18 +5,18 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 
-import StatBadge from "./StatBadge";
 import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
+import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
 import Center from "App/components/Center/Center";
 import KycExpiredIcon from "App/components/Icon/KycExpiredIcon";
 import KycVerifiedIcon from "App/components/Icon/KycVerifiedIcon";
 import KycRejectedIcon from "App/components/Icon/KycRejectedIcon";
 import KycNotStartedIcon from "App/components/Icon/KycNotStartedIcon";
-
-import numberUtils from "App/utils/numberUtils";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
+
+import StatBadge from "./StatBadge";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",

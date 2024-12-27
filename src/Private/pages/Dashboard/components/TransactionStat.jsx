@@ -1,18 +1,17 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import { useSelector } from "react-redux";
-import { useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import Skeleton from "@mui/material/Skeleton";
 import TooltipMUI from "@mui/material/Tooltip";
+import { useTheme } from "@mui/material/styles";
 import InfoIcon from "@mui/icons-material/Info";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import SquareIcon from "@mui/icons-material/Square";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
-import { Skeleton } from "@mui/material";
 
 export default function TransactionStat() {
     const theme = useTheme();
@@ -52,13 +51,19 @@ export default function TransactionStat() {
                 <Row flex={1} justifyContent="flex-end" gap="16px">
                     {statsData.map((stat) => (
                         <Box key={stat.name} display="flex" flexDirection="row" alignItems="center">
-                            <SquareIcon
-                                style={{
-                                    fill: stat.color,
-                                    borderRadius: "50%",
-                                }}
-                            />
-                            <Typography>{stat.name}</Typography>
+                            {isLoading ? (
+                                <Skeleton variant="rectangular" width={80} height={25} />
+                            ) : (
+                                <>
+                                    <SquareIcon
+                                        style={{
+                                            fill: stat.color,
+                                            borderRadius: "50%",
+                                        }}
+                                    />
+                                    <Typography>{stat.name}</Typography>
+                                </>
+                            )}
                         </Box>
                     ))}
                     <TooltipMUI title="Shows the overall transaction data for the last 7 days">

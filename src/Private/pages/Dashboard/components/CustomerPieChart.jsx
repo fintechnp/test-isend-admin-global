@@ -1,15 +1,15 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Row from "App/components/Row/Row";
 import { useSelector } from "react-redux";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { styled, useTheme } from "@mui/material/styles";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
+import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
 import Center from "App/components/Center/Center";
-import { Skeleton } from "@mui/material";
 
 const DATA_COLORS = ["#4DB6AC", "#7986CB", "#4FC3F7", "#6aadd4"];
 const NO_DATA_COLORS = ["#eeeeee"];
@@ -54,8 +54,6 @@ export default function CustomerPieChart() {
         );
     };
 
-    const isLoadingTrue = true;
-
     return (
         <Container>
             <Row mb="26px" alignItems="center">
@@ -65,15 +63,22 @@ export default function CustomerPieChart() {
                 <Row flex={1} justifyContent="flex-end" gap="16px" flexWrap="wrap">
                     {statsData.map((stat, index) => (
                         <Box key={stat.name} display="flex" flexDirection="row">
-                            <FiberManualRecordIcon sx={{ fill: DATA_COLORS[index] }} />
-                            <Typography>{stat.name}</Typography>
+                            {isLoading ? (
+                                <Skeleton variant="text" height={30} width={60} />
+                            ) : (
+                                <>
+                                    {" "}
+                                    <FiberManualRecordIcon sx={{ fill: DATA_COLORS[index] }} />
+                                    <Typography>{stat.name}</Typography>
+                                </>
+                            )}
                         </Box>
                     ))}
                 </Row>
             </Row>
             <Center>
                 {isLoading ? (
-                    <Skeleton variant="circular" height={300} width={300} />
+                    <Skeleton variant="circular" height={250} width={250} />
                 ) : (
                     <PieChart width={500} height={400}>
                         <Pie data={data?.totalUsers ? statsData : statsNoData} innerRadius={75} dataKey="value">

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
+import Skeleton from "@mui/material/Skeleton";
 import Paper from "App/components/Paper/Paper";
 import Typography from "@mui/material/Typography";
 
 import Row from "App/components/Row/Row";
 import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
-import { Button, Skeleton } from "@mui/material";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",

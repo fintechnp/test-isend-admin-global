@@ -1,25 +1,26 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import { useSelector } from "react-redux";
+import Skeleton from "@mui/material/Skeleton";
 import Paper from "App/components/Paper/Paper";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 
 import Row from "App/components/Row/Row";
-import TransactionStat from "./TransactionStat";
+import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
+import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
+import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
+import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIcon";
+import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
+
+import TransactionStat from "./TransactionStat";
 import TotalCustomerCard from "./TotalCustomerCard";
 import DashboardCardChart from "./DashboardCardChart";
 import AllOverallDataChip from "./AllOverallDataChip";
 import DashboardPartnerBarChart from "./DashboardPartnerBarChart";
-import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
-import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardPayoutCountryBarChart from "./DashboardPayoutCountryBarChart";
-import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIcon";
-import { useSelector } from "react-redux";
-import numberUtils from "App/utils/numberUtils";
-import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
-import { Skeleton } from "@mui/material";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -44,43 +45,87 @@ export default function DetailsCard() {
         isSubDataLoading: isLoadingTransactionStat || isLoadingTransactionStatPrevious,
         icon: <DashboardTransactionIcon />,
         totalTransactions: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
+        totalTransactionAmount: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
+        totalTransactionCount: numberUtils.format(transactionCountByStatusData?.totalTransactionsCount),
         backgroundColor: theme.palette.surface.primarySecond,
-        totalDifferenceInPercentage: calculatePercentageDifference(
+        totalDifferenceInPercentageCount: calculatePercentageDifference(
+            transactionCountByStatusData?.totalTransactionsCount ?? 0,
+            previousTransactionCountByStatusData?.totalTransactionsCount ?? 0,
+        ),
+
+        totalDifferenceInPercentageAmount: calculatePercentageDifference(
             transactionCountByStatusData?.totalTxnAmount ?? 0,
             previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
         ),
+
         isDropped:
             (transactionCountByStatusData?.totalTxnAmount ?? 0) <
             (previousTransactionCountByStatusData?.totalTxnAmount ?? 0),
-        pendingData: {
-            total: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
-            totalDifferenceInPercentage: calculatePercentageDifference(
-                transactionCountByStatusData?.paymentPendingCount ?? 0,
-                previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
-            ),
-            isDropped:
-                (transactionCountByStatusData?.paymentPendingCount ?? 0) <
-                (previousTransactionCountByStatusData?.paymentPendingCount ?? 0),
+
+        countData: {
+            pendingData: {
+                total: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
+                totalDifferenceInPercentage: calculatePercentageDifference(
+                    transactionCountByStatusData?.paymentPendingCount ?? 0,
+                    previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
+                ),
+                isDropped:
+                    (transactionCountByStatusData?.paymentPendingCount ?? 0) <
+                    (previousTransactionCountByStatusData?.paymentPendingCount ?? 0),
+            },
+            payoutData: {
+                total: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
+                totalDifferenceInPercentage: calculatePercentageDifference(
+                    transactionCountByStatusData?.completedStatusCount ?? 0,
+                    previousTransactionCountByStatusData?.completedStatusCount ?? 0,
+                ),
+                isDropped:
+                    (transactionCountByStatusData?.completedStatusCount ?? 0) <
+                    (previousTransactionCountByStatusData?.completedStatusCount ?? 0),
+            },
+            cancelledData: {
+                total: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
+                totalDifferenceInPercentage: calculatePercentageDifference(
+                    transactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                    previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                ),
+                isDropped:
+                    (transactionCountByStatusData?.rejectedRefundedCount ?? 0) <
+                    (previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0),
+            },
         },
-        payoutData: {
-            total: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
-            totalDifferenceInPercentage: calculatePercentageDifference(
-                transactionCountByStatusData?.completedStatusCount ?? 0,
-                previousTransactionCountByStatusData?.completedStatusCount ?? 0,
-            ),
-            isDropped:
-                (transactionCountByStatusData?.completedStatusCount ?? 0) <
-                (previousTransactionCountByStatusData?.completedStatusCount ?? 0),
-        },
-        cancelledData: {
-            total: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
-            totalDifferenceInPercentage: calculatePercentageDifference(
-                transactionCountByStatusData?.rejectedRefundedCount ?? 0,
-                previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
-            ),
-            isDropped:
-                (transactionCountByStatusData?.rejectedRefundedCount ?? 0) <
-                (previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0),
+
+        amountData: {
+            pendingData: {
+                total: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
+                totalDifferenceInPercentage: calculatePercentageDifference(
+                    transactionCountByStatusData?.paymentPendingCount ?? 0,
+                    previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
+                ),
+                isDropped:
+                    (transactionCountByStatusData?.paymentPendingCount ?? 0) <
+                    (previousTransactionCountByStatusData?.paymentPendingCount ?? 0),
+            },
+            payoutData: {
+                total: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
+                totalDifferenceInPercentage: calculatePercentageDifference(
+                    transactionCountByStatusData?.completedStatusCount ?? 0,
+                    previousTransactionCountByStatusData?.completedStatusCount ?? 0,
+                ),
+                isDropped:
+                    (transactionCountByStatusData?.completedStatusCount ?? 0) <
+                    (previousTransactionCountByStatusData?.completedStatusCount ?? 0),
+            },
+            cancelledData: {
+                total: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
+                totalDifferenceInPercentage: calculatePercentageDifference(
+                    transactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                    previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                ),
+                isDropped:
+                    (transactionCountByStatusData?.rejectedRefundedCount ?? 0) <
+                    (previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0),
+            },
         },
     };
 
@@ -116,7 +161,7 @@ export default function DetailsCard() {
                                     ) : (
                                         <Row gap="8px" alignItems="center">
                                             <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.totalTransactions}
+                                                {totalTransactionsData.totalTransactionCount}
                                             </Typography>
                                             <Row
                                                 gap="4px"
@@ -144,7 +189,7 @@ export default function DetailsCard() {
                                                         fontWeight: 600,
                                                     }}
                                                 >
-                                                    {totalTransactionsData.totalDifferenceInPercentage}%
+                                                    {totalTransactionsData.totalDifferenceInPercentageCount}%
                                                 </Typography>
                                             </Row>
                                         </Row>
@@ -186,10 +231,10 @@ export default function DetailsCard() {
                                     ) : (
                                         <Row gap={1}>
                                             <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.pendingData.total}
+                                                {totalTransactionsData.countData.pendingData.total}
                                             </Typography>
                                             <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.pendingData.isDropped ? (
+                                                {totalTransactionsData.countData.pendingData.isDropped ? (
                                                     <DashboardReceiveIcon />
                                                 ) : (
                                                     <DashBoardSendIcon />
@@ -198,12 +243,16 @@ export default function DetailsCard() {
                                                 <Typography
                                                     fontWeight={500}
                                                     sx={{
-                                                        color: totalTransactionsData.pendingData.isDropped
+                                                        color: totalTransactionsData.countData.pendingData.isDropped
                                                             ? theme.palette.error.main
                                                             : theme.palette.success.main,
                                                     }}
                                                 >
-                                                    {totalTransactionsData.pendingData.totalDifferenceInPercentage}%{" "}
+                                                    {
+                                                        totalTransactionsData.countData.pendingData
+                                                            .totalDifferenceInPercentage
+                                                    }
+                                                    %{" "}
                                                 </Typography>
                                             </Row>
                                         </Row>
@@ -233,10 +282,10 @@ export default function DetailsCard() {
                                     ) : (
                                         <Row gap={1}>
                                             <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.payoutData.total}
+                                                {totalTransactionsData.countData.payoutData.total}
                                             </Typography>
                                             <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.payoutData.isDropped ? (
+                                                {totalTransactionsData.countData.payoutData.isDropped ? (
                                                     <DashboardReceiveIcon />
                                                 ) : (
                                                     <DashBoardSendIcon />
@@ -245,12 +294,16 @@ export default function DetailsCard() {
                                                 <Typography
                                                     fontWeight={500}
                                                     sx={{
-                                                        color: totalTransactionsData.payoutData.isDropped
+                                                        color: totalTransactionsData.countData.payoutData.isDropped
                                                             ? theme.palette.error.main
                                                             : theme.palette.success.main,
                                                     }}
                                                 >
-                                                    {totalTransactionsData.payoutData.totalDifferenceInPercentage}%{" "}
+                                                    {
+                                                        totalTransactionsData.countData.payoutData
+                                                            .totalDifferenceInPercentage
+                                                    }
+                                                    %{" "}
                                                 </Typography>
                                             </Row>
                                         </Row>
@@ -271,10 +324,10 @@ export default function DetailsCard() {
                                     ) : (
                                         <Row gap={1}>
                                             <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.cancelledData.total}
+                                                {totalTransactionsData.countData.cancelledData.total}
                                             </Typography>
                                             <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.cancelledData.isDropped ? (
+                                                {totalTransactionsData.countData.cancelledData.isDropped ? (
                                                     <DashboardReceiveIcon />
                                                 ) : (
                                                     <DashBoardSendIcon />
@@ -283,12 +336,16 @@ export default function DetailsCard() {
                                                 <Typography
                                                     fontWeight={500}
                                                     sx={{
-                                                        color: totalTransactionsData.cancelledData.isDropped
+                                                        color: totalTransactionsData.countData.cancelledData.isDropped
                                                             ? theme.palette.error.main
                                                             : theme.palette.success.main,
                                                     }}
                                                 >
-                                                    {totalTransactionsData.cancelledData.totalDifferenceInPercentage}%{" "}
+                                                    {
+                                                        totalTransactionsData.countData.cancelledData
+                                                            .totalDifferenceInPercentage
+                                                    }
+                                                    %{" "}
                                                 </Typography>
                                             </Row>
                                         </Row>
@@ -338,7 +395,7 @@ export default function DetailsCard() {
                                     </Typography>
                                     <Row gap="8px" alignItems="center">
                                         <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.totalTransactions}
+                                            {"$"} {totalTransactionsData.totalTransactionAmount}
                                         </Typography>
                                         <Row
                                             gap="4px"
@@ -366,7 +423,8 @@ export default function DetailsCard() {
                                                     fontWeight: 600,
                                                 }}
                                             >
-                                                {totalTransactionsData.totalDifferenceInPercentage}
+                                                {totalTransactionsData.totalDifferenceInPercentageAmount}
+                                                {"%"}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -399,10 +457,10 @@ export default function DetailsCard() {
                                     </Typography>
                                     <Row gap={1}>
                                         <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.pendingData.total}
+                                            {totalTransactionsData.amountData.pendingData.total}
                                         </Typography>
                                         <Row alignItems="center" gap="4px">
-                                            {totalTransactionsData.pendingData.isDropped ? (
+                                            {totalTransactionsData.amountData.pendingData.isDropped ? (
                                                 <DashboardReceiveIcon />
                                             ) : (
                                                 <DashBoardSendIcon />
@@ -411,12 +469,16 @@ export default function DetailsCard() {
                                             <Typography
                                                 fontWeight={500}
                                                 sx={{
-                                                    color: totalTransactionsData.pendingData.isDropped
+                                                    color: totalTransactionsData.amountData.pendingData.isDropped
                                                         ? theme.palette.error.main
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.pendingData.totalDifferenceInPercentage}%{""}
+                                                {
+                                                    totalTransactionsData.amountData.pendingData
+                                                        .totalDifferenceInPercentage
+                                                }
+                                                %{""}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -441,10 +503,10 @@ export default function DetailsCard() {
                                     </Typography>
                                     <Row gap={1}>
                                         <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.payoutData.total}
+                                            {totalTransactionsData.amountData.payoutData.total}
                                         </Typography>
                                         <Row alignItems="center" gap="4px">
-                                            {totalTransactionsData.payoutData.isDropped ? (
+                                            {totalTransactionsData.amountData.payoutData.isDropped ? (
                                                 <DashboardReceiveIcon />
                                             ) : (
                                                 <DashBoardSendIcon />
@@ -453,12 +515,16 @@ export default function DetailsCard() {
                                             <Typography
                                                 fontWeight={500}
                                                 sx={{
-                                                    color: totalTransactionsData.payoutData.isDropped
+                                                    color: totalTransactionsData.amountData.payoutData.isDropped
                                                         ? theme.palette.error.main
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.payoutData.totalDifferenceInPercentage}%{""}
+                                                {
+                                                    totalTransactionsData.amountData.payoutData
+                                                        .totalDifferenceInPercentage
+                                                }
+                                                %{""}
                                             </Typography>
                                         </Row>
                                     </Row>
@@ -475,10 +541,10 @@ export default function DetailsCard() {
                                     </Typography>
                                     <Row gap={1}>
                                         <Typography fontWeight={700} fontSize={16}>
-                                            {totalTransactionsData.cancelledData.total}
+                                            {totalTransactionsData.amountData.cancelledData.total}
                                         </Typography>
                                         <Row alignItems="center" gap="4px">
-                                            {totalTransactionsData.cancelledData.isDropped ? (
+                                            {totalTransactionsData.amountData.cancelledData.isDropped ? (
                                                 <DashboardReceiveIcon />
                                             ) : (
                                                 <DashBoardSendIcon />
@@ -487,12 +553,16 @@ export default function DetailsCard() {
                                             <Typography
                                                 fontWeight={500}
                                                 sx={{
-                                                    color: totalTransactionsData.cancelledData.isDropped
+                                                    color: totalTransactionsData.amountData.cancelledData.isDropped
                                                         ? theme.palette.error.main
                                                         : theme.palette.success.main,
                                                 }}
                                             >
-                                                {totalTransactionsData.cancelledData.totalDifferenceInPercentage}%{""}
+                                                {
+                                                    totalTransactionsData.amountData.cancelledData
+                                                        .totalDifferenceInPercentage
+                                                }
+                                                %{""}
                                             </Typography>
                                         </Row>
                                     </Row>

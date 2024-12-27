@@ -17,9 +17,7 @@ import { Skeleton } from "@mui/material";
 export default function UserRegistrationHistoryStat() {
     const theme = useTheme();
 
-    const isLoading = false;
-
-    const { response, loading } = useSelector((state) => state.get_user_registration_history);
+    const { response, loading: isLoading } = useSelector((state) => state.get_user_registration_history);
 
     const registrationHistoryData = response?.data?.map((item) => ({
         date: item?.date,
@@ -66,17 +64,12 @@ export default function UserRegistrationHistoryStat() {
                             />
                             <YAxis
                                 label={{
-                                    value: "count",
                                     angle: -90,
                                     position: "insideLeft",
                                     fontSize: 12,
-
-                                    style: {
-                                        textAnchor: "middle",
-                                    },
                                 }}
                                 tick={{
-                                    fontSize: 10,
+                                    fontSize: 12,
                                 }}
                             />
                             <Tooltip cursor={true} />
@@ -86,6 +79,7 @@ export default function UserRegistrationHistoryStat() {
                                 dataKey="count"
                                 name="count"
                                 stroke="#105BB7"
+                                strokeLinecap="round"
                                 isAnimationActive="true"
                                 animationEasing="ease-in-out"
                                 fill="url(#gradientPending)"
