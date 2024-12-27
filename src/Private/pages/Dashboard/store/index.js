@@ -16,3 +16,4 @@ export { default as GetSummaryDataReducer } from "./reducers/getSummaryData";
 export { default as GetOverallTransactionLineGraphReducer } from "./reducers/getOverallTransactionLineGraph";
 export { default as GetUserRegistrationHHistoryReducer } from "./reducers/getUserRegistrationHistory";
 export { default as GetExchangeRateSummaryReducer } from "./reducers/getExchangeRateSummary";
+export { default as GetOverallCustomersReportReducer } from "./reducers/getOverallCustomersReport";

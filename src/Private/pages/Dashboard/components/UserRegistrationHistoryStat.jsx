@@ -24,8 +24,6 @@ export default function UserRegistrationHistoryStat() {
         count: item?.count,
     }));
 
-    console.log("The get user Registration History is", registrationHistoryData);
-
     return (
         <Paper sx={{ p: "16px", position: "relative" }}>
             <Row gap={1}>

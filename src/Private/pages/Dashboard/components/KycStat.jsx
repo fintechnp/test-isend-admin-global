@@ -94,6 +94,8 @@ export default function KycStat() {
         previousData?.totalCustomer ?? 0,
     );
 
+    console.log("The difference in customer chart", differenceInCustomer);
+
     return (
         <Container>
             <Column gap="24px">
