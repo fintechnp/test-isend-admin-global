@@ -1,22 +1,35 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import { Helmet } from "react-helmet-async";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, Tooltip, Typography } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import MuiIconButton from "@mui/material/IconButton";
+import { useSelector, useDispatch } from "react-redux";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
-import actions from "../store/actions";
 import Header from "../components/Header";
 import Filter from "../components/Filter";
-import { Delete } from "./../../../../../App/components";
-import Table, { TablePagination } from "./../../../../../App/components/Table";
-import { CountryName, CurrencyName } from "./../../../../../App/helpers";
+import Column from "App/components/Column/Column";
 import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
+import { Delete } from "./../../../../../App/components";
+import FilterButton from "App/components/Button/FilterButton";
+import SubmitButton from "App/components/Button/SubmitButton";
+import PageContent from "App/components/Container/PageContent";
 import HasPermission from "Private/components/shared/HasPermission";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import Table, { TablePagination } from "./../../../../../App/components/Table";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import actions from "../store/actions";
+import dateUtils from "App/utils/dateUtils";
+import { permissions } from "Private/data/permissions";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import { CountryName, CurrencyName } from "./../../../../../App/helpers";
 
 const MenuContainer = styled("div")(({ theme }) => ({
     margin: "8px 0px",
@@ -58,21 +71,39 @@ const StyledText = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    search: "",
     sort_by: "",
     order_by: "DESC",
 };
 
 const ExchangeRateList = (props) => {
     const { id, name, sending_currency } = useParams();
+    const [params] = useSearchParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [filterSchema, setFilterSchema] = useState(initialState);
+    const sendingAgentId = params.get("sending_agent_id");
 
     const { response: rateList, loading: g_loading } = useSelector((state) => state.get_exchange_rate_by_partner);
     const { loading: d_loading, success: d_success } = useSelector((state) => state.delete_excahnge_rate);
     const { success: a_success } = useSelector((state) => state.add_exchange_rate);
     const { success: u_success } = useSelector((state) => state.update_partner);
+    const { loading: isRefreshing, success: isSuccess } = useSelector((state) => state.refresh_exchange_rate);
+
+    const {
+        isFilterOpen,
+        closeFilter,
+        openFilter,
+        onFilterSubmit,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+        filterSchema,
+    } = useListFilterStore({ initialState });
+
+    const handleOnRefreshExchangeRate = () => {
+        dispatch(actions.refresh_exchange_rate({ sendingAgentId }));
+    };
 
     useEffect(() => {
         if (id) {
@@ -86,20 +117,19 @@ const ExchangeRateList = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Id",
-                accessor: "exchange_rate_id",
-                maxWidth: 50,
+                header: "Id",
+                accessorKey: "exchange_rate_id",
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>Receive Country/Currency</Typography>
                     </Box>
                 ),
-                accessor: "receiving_country",
-                Cell: (data) => (
+                accessorKey: "receiving_country",
+                cell: ({ getValue, row }) => (
                     <Box>
-                        <StyledText component="p">{data.value ? CountryName(data.value) : ""}</StyledText>
+                        <StyledText component="p">{getValue() ? CountryName(getValue()) : ""}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -107,23 +137,23 @@ const ExchangeRateList = (props) => {
                                 lineHeight: 1,
                             }}
                         >
-                            {data?.row?.original?.receiving_currency
-                                ? CurrencyName(data?.row?.original?.receiving_currency)
+                            {row?.original?.receiving_currency
+                                ? CurrencyName(row?.original?.receiving_currency)
                                 : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box>
                         <Typography>Sending/Base Currency</Typography>
                     </Box>
                 ),
-                accessor: "sending_currency",
-                Cell: (data) => (
+                accessorKey: "sending_currency",
+                cell: ({ getValue, row }) => (
                     <Box>
-                        <StyledText component="p">{data.value ? CurrencyName(data.value) : ""}</StyledText>
+                        <StyledText component="p">{getValue() ? CurrencyName(getValue()) : ""}</StyledText>
                         <Typography
                             sx={{
                                 opacity: 0.6,
@@ -131,34 +161,32 @@ const ExchangeRateList = (props) => {
                                 lineHeight: 1,
                             }}
                         >
-                            {data?.row?.original?.base_currency
-                                ? CurrencyName(data?.row?.original?.base_currency)
-                                : "N/A"}
+                            {row?.original?.base_currency ? CurrencyName(row?.original?.base_currency) : "N/A"}
                         </Typography>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box sx={{ textAlign: "center" }}>
                         <Typography>Customer Rate</Typography>
                     </Box>
                 ),
-                accessor: "customer_rate",
-                Cell: (data) => (
+                accessorKey: "customer_rate",
+                cell: ({ getValue, row }) => (
                     <Box sx={{ textAlign: "center" }}>
-                        <StyledText component="p">{data.value ? data.value : ""}</StyledText>
+                        <StyledText component="p">{getValue() ? getValue() : ""}</StyledText>
                     </Box>
                 ),
             },
             {
-                Header: () => (
+                header: () => (
                     <Box textAlign="center">
                         <Typography>Actions</Typography>
                     </Box>
                 ),
-                accessor: "show",
-                Cell: ({ row }) => (
+                accessorKey: "show",
+                cell: ({ row }) => (
                     <Box
                         sx={{
                             display: "flex",
@@ -222,59 +250,6 @@ const ExchangeRateList = (props) => {
         { key: "Receiving Currency", value: "receiving_currency" },
     ];
 
-    const orderData = [
-        { key: "Ascending", value: "ASC" },
-        { key: "Descending", value: "DESC" },
-    ];
-
-    const handleSearch = useCallback(
-        (e) => {
-            const searchValue = e.target.value;
-            const updatedFilterSchema = {
-                ...filterSchema,
-                search: searchValue,
-            };
-            setFilterSchema(updatedFilterSchema);
-        },
-        [filterSchema],
-    );
-
-    const handleSort = (e) => {
-        const sort = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            sort_by: sort,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleOrder = (e) => {
-        const order = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            order_by: order,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
     const handleDelete = (id) => {
         dispatch(actions.delete_exchange_rate(id));
     };
@@ -287,45 +262,96 @@ const ExchangeRateList = (props) => {
         return rateList?.data?.[0]?.updated_ts;
     }, [rateList]);
 
+    const filterFields = [
+        {
+            label: "Search",
+            name: "search",
+            type: fieldTypes.TEXTFIELD,
+        },
+    ];
+
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(actions.reset_refresh_exchange_rate());
+            handleOnRefreshExchangeRateSuccess();
+        }
+    }, [isSuccess]);
+
     return (
-        <>
-            <Helmet>
-                <title>iSend | {props.title}</title>
-            </Helmet>
-            <MenuContainer>
-                <Header
-                    title="Exchange Rate List"
-                    buttonText="Add Exchange Rate"
-                    name={name}
-                    id={id}
-                    sending_currency={sending_currency}
+        <PageContent
+            documentTitle={props.title}
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "PartnerWise Exchage Rate",
+                    link: "/setup/exchange-rate",
+                },
+                {
+                    label: `Exchange Rate List of ${name}`,
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+        >
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Exchange Rate List"
+                    open={isFilterOpen}
+                    onClose={closeFilter}
+                    values={filterSchema}
+                    onSubmit={onFilterSubmit}
+                    onReset={reset}
+                    onDelete={onDeleteFilterParams}
+                    fields={filterFields}
                 />
-                <Filter
-                    onRefreshSuccess={handleOnRefreshExchangeRateSuccess}
-                    lastUpdatedAt={lastUpdatedAt}
-                    state={filterSchema}
-                    sortData={sortData}
-                    orderData={orderData}
-                    handleSearch={handleSearch}
-                    handleSort={handleSort}
-                    handleOrder={handleOrder}
+                <PageContentContainer
+                    title={`Exchange Rate List of ${name}`}
+                    topRightContent={
+                        <>
+                            {sendingAgentId && (
+                                <Box display="flex" alignItems="center">
+                                    {lastUpdatedAt && (
+                                        <Box display="flex" flexDirection="row">
+                                            <Typography mr={2}>Last updated at:</Typography>
+                                            <Typography mr={2}>{dateUtils.getFormattedDate(lastUpdatedAt)}</Typography>
+                                        </Box>
+                                    )}
+                                    <HasPermission permission={permissions.PULL_EXCHANGE_RATE_FROM_IPAY}>
+                                        <SubmitButton
+                                            type="button"
+                                            size="medium"
+                                            variant="outlined"
+                                            onClick={handleOnRefreshExchangeRate}
+                                            isLoading={isRefreshing}
+                                        >
+                                            Pull exchange rate from IPAY
+                                        </SubmitButton>
+                                    </HasPermission>
+                                </Box>
+                            )}
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                values={filterSchema}
+                                disabled={d_loading}
+                                sortByData={sortData}
+                            />
+                            <Header buttonText="Add Exchange Rate" id={id} sending_currency={sending_currency} />
+                        </>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={rateList?.data || []} loading={g_loading} />
+                </PageContentContainer>
+                <TablePagination
+                    paginationData={rateList?.pagination}
+                    handleChangePage={onPageChange}
+                    handleChangeRowsPerPage={onRowsPerPageChange}
                 />
-                <Table
-                    columns={columns}
-                    title="Exchange Rate Details"
-                    data={rateList?.data || []}
-                    loading={g_loading}
-                    rowsPerPage={8}
-                    renderPagination={() => (
-                        <TablePagination
-                            paginationData={rateList?.pagination}
-                            handleChangePage={handleChangePage}
-                            handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                    )}
-                />
-            </MenuContainer>
-        </>
+            </Column>
+        </PageContent>
     );
 };
 
