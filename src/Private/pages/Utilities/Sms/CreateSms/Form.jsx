@@ -66,16 +66,6 @@ const DeliveryOptionForm = ({ handleSubmit, loading, handleClose }) => {
                     <FormWrapper container direction="row">
                         <FieldWrapper item xs={12} sm={6}>
                             <Field
-                                name="sms_by"
-                                label="SMS By"
-                                type="text"
-                                small={12}
-                                component={TextField}
-                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength20]}
-                            />
-                        </FieldWrapper>
-                        <FieldWrapper item xs={12} sm={6}>
-                            <Field
                                 name="sms_to"
                                 label="SMS To"
                                 type="text"

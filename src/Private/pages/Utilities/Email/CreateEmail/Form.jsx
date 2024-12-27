@@ -15,7 +15,6 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 
 const schema = Yup.object().shape({
-    email_by: Yup.string().email().required("Required").max(100),
     email_to: Yup.string().email().required("Required").max(100),
     email_cc: Yup.string().optional().max(100),
     email_bcc: Yup.string().optional().max(100),
@@ -39,9 +38,6 @@ const EmailForm = ({ onSubmit, loading, handleClose }) => {
     return (
         <HookForm onSubmit={onSubmit} {...methods}>
             <Grid container rowSpacing={2} columnSpacing={2}>
-                <Grid item xs={12} md={6}>
-                    <FormTextField name="email_by" label="Email by" />
-                </Grid>
                 <Grid item xs={12} md={6}>
                     <FormTextField name="email_to" label="Email to" />
                 </Grid>
