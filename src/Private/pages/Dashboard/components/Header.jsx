@@ -130,14 +130,14 @@ export default function Header() {
 
     useEffect(() => {
         if (isEmpty(params?.from_date) && isEmpty(params?.to_date)) {
-            const date = dateUtils.getDateRange(RangeType.DAILY);
+            const date = dateUtils.getDateRange(RangeType.WEEKLY);
             const query = {
                 from_date: date.startDate,
                 to_date: date.endDate,
                 previous_from_date: date.previousStartDate,
                 previous_end_date: date.previousEndDate,
             };
-            dispatch(actions.change_dashboard_filter_params({ ...query, rangeType: RangeType.DAILY }));
+            dispatch(actions.change_dashboard_filter_params({ ...query, rangeType: RangeType.WEEKLY }));
             handleChange(query);
         }
     }, [params]);
@@ -180,9 +180,9 @@ export default function Header() {
                         aria-label="range selector"
                         disabled={isLoading}
                     >
-                        <ToggleButton disableRipple value={RangeType.DAILY} aria-label="daily">
+                        {/* <ToggleButton disableRipple value={RangeType.DAILY} aria-label="daily">
                             Daily
-                        </ToggleButton>
+                        </ToggleButton> */}
                         <ToggleButton disableRipple value={RangeType.WEEKLY} aria-label="weekly">
                             Weekly
                         </ToggleButton>
