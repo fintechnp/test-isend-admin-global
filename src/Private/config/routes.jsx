@@ -203,6 +203,7 @@ import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZa
 import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 import ListEmailElement from "Private/components/email-template/ListEmailElement";
 import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
+import Policies from "Private/pages/Setup/policies";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -373,6 +374,10 @@ const privateRoutes = [
     {
         path: routePaths.setup.streetType,
         component: <StreetType title={"Street Type"} />,
+    },
+    {
+        path: routePaths.setup.policies,
+        component: <Policies />,
     },
     //Customers
     {
