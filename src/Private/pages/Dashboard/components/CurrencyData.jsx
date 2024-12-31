@@ -127,58 +127,6 @@ export default function DashboardCurrencyData() {
         return value >= 0;
     };
 
-    const DUMMY_DATA = [
-        {
-            currency: "USD",
-            buyRate: 133.86,
-            sellRate: 133.4,
-            drop: 1.2,
-            isDropped: true,
-        },
-        {
-            currency: "EUR",
-            buyRate: 145.86,
-            sellRate: 145.4,
-            drop: 0.2,
-            isDropped: false,
-        },
-        {
-            currency: "GBP",
-            buyRate: 170.86,
-            sellRate: 170.4,
-            drop: 2.2,
-            isDropped: true,
-        },
-        {
-            currency: "CHD",
-            buyRate: 150.19,
-            sellRate: 150.4,
-            drop: 1.2,
-            isDropped: false,
-        },
-        {
-            currency: "AUD",
-            buyRate: 88.92,
-            sellRate: 88.42,
-            drop: 1.2,
-            isDropped: true,
-        },
-        {
-            currency: "CAD",
-            buyRate: 97.78,
-            sellRate: 97.4,
-            drop: 1.2,
-            isDropped: false,
-        },
-        {
-            currency: "CAD",
-            buyRate: 97.78,
-            sellRate: 97.4,
-            drop: 1.2,
-            isDropped: false,
-        },
-    ];
-
     return (
         <Container>
             <Row gap={2}>
@@ -215,7 +163,7 @@ export default function DashboardCurrencyData() {
                         dashboardExchangeRateData.map((data, index) => (
                             <Row key={index} gap={"2px"}>
                                 {isLoading ? (
-                                    <Skeleton variant="text" width={300} height="100%" />
+                                    <Skeleton variant="text" width={100} height="100%" />
                                 ) : (
                                     <>
                                         <Box
