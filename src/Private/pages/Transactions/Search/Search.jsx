@@ -429,7 +429,7 @@ function Search(props) {
     const downloadData = () => {
         const updatedFilterSchema = {
             ...filterSchema,
-            page_size: 10000,
+            page_size: transactionsData?.pagination?.totalCount,
         };
         dispatch(downloadActions.download_report(updatedFilterSchema, "transaction"));
     };
