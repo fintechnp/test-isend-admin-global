@@ -17,6 +17,8 @@ import { Box, Grid } from "@mui/material";
 import FormSelect from "App/core/hook-form/FormSelect";
 import { DashboardAction } from "../store";
 import { useTheme } from "@emotion/react";
+import { permissions } from "Private/data/permissions";
+import withDashboardPermission from "Private/HOC/withDashboardPermission";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -27,61 +29,12 @@ const BoldText = styled(Typography)(({ theme }) => ({
     fontSize: 16,
 }));
 
-const CustomSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
-    ({ theme }) => ({
-        width: 30,
-        height: 18,
-        padding: 0,
-
-        "& .MuiSwitch-switchBase": {
-            padding: 0,
-            margin: "4px",
-            transitionDuration: "300ms",
-            "&.Mui-checked": {
-                transform: "translateX(12px)",
-                color: "#fff",
-                "& + .MuiSwitch-track": {
-                    backgroundColor: theme.palette.primary.main,
-                    opacity: 1,
-                    border: 0,
-                },
-                "&.Mui-disabled + .MuiSwitch-track": {
-                    opacity: 0.5,
-                },
-            },
-            "&.Mui-focusVisible .MuiSwitch-thumb": {
-                border: "6px solid #fff",
-            },
-            "&.Mui-disabled .MuiSwitch-thumb": {
-                color: theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[600],
-            },
-            "&.Mui-disabled + .MuiSwitch-track": {
-                opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-            },
-        },
-        "& .MuiSwitch-thumb": {
-            boxSizing: "border-box",
-            width: 10,
-            height: 10,
-        },
-
-        "& .MuiSwitch-track": {
-            borderRadius: 32 / 2,
-            backgroundColor: "#C1C3C7",
-            opacity: 1,
-            transition: theme.transitions.create(["background-color"], {
-                duration: 500,
-            }),
-        },
-    }),
-);
-
 const initialState = {
     page_number: 1,
     page_size: 100,
 };
 
-export default function DashboardCurrencyData() {
+function DashboardCurrencyData() {
     const dispatch = useDispatch();
     const todayDate = dateUtils.getFormattedDate(new Date());
     const [checked, setChecked] = useState(true);
@@ -132,7 +85,7 @@ export default function DashboardCurrencyData() {
             <Row gap={2}>
                 <Column
                     sx={(theme) => ({
-                        width: "35rem",
+                        width: "30rem",
                         padding: "0px 16px 0px 0px",
                         borderRight: `1px solid ${theme.palette.divider}`,
                         display: "flex",
@@ -144,10 +97,8 @@ export default function DashboardCurrencyData() {
                         <Typography>As of {todayDate}</Typography>
                     </Row>
                     <FormProvider {...methods}>
-                        <Grid container>
-                            <Grid item xs={12} md={6}>
-                                <FormSelect name="agent_name" label="Agent Name" options={agentData} />
-                            </Grid>
+                        <Grid item xs={12} md={6}>
+                            <FormSelect name="agent_name" label="Agent Name" options={agentData} />
                         </Grid>
                     </FormProvider>
                 </Column>
@@ -161,9 +112,9 @@ export default function DashboardCurrencyData() {
                 >
                     {dashboardExchangeRateData?.length > 0 ? (
                         dashboardExchangeRateData.map((data, index) => (
-                            <Row key={index} gap={"2px"}>
+                            <Row key={index} gap="2px">
                                 {isLoading ? (
-                                    <Skeleton variant="text" width={100} height="100%" />
+                                    <Skeleton variant="rectangular" width={500} height={20} />
                                 ) : (
                                     <>
                                         <Box
@@ -197,3 +148,9 @@ export default function DashboardCurrencyData() {
         </Container>
     );
 }
+
+//export default withPermission({ permission: [permissions.READ_EMAIL] })(Email);
+
+export default withDashboardPermission({ permissions: [permissions.READ_DASHBOARD_EXCHANGE_RATE] })(
+    DashboardCurrencyData,
+);
