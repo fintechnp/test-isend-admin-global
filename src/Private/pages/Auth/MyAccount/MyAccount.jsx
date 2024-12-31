@@ -209,6 +209,7 @@ function MyAccount(props) {
     useEffect(() => {
         if (upload_success) {
             dispatch(actions.get_user());
+            dispatch({ type: "UPLOAD_PROFILE_PICTURE_RESET" });
             setIsOpen(false);
         }
     }, [upload_success, dispatch]);

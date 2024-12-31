@@ -42,7 +42,7 @@ export default function EditProfilePictureModal({ open, onClose, id, handleUploa
     };
 
     return (
-        <Modal open={open} title="Edit Profile Picture">
+        <Modal open={open} onClose={handleCancel} title="Edit Profile Picture">
             {isEmpty(importFrom) ? (
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItemButton onClick={() => setImportFrom("webcam")}>
