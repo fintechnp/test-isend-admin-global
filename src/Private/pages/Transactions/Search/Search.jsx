@@ -421,7 +421,9 @@ function Search(props) {
         start: filterSchema?.from_date,
         end: filterSchema?.to_date,
         headers: headers,
-        data: ReportsDownload?.data || [],
+        data: (ReportsDownload?.data || []).map(({ transaction_id, send_country_iso2, ...othersTransaction }) => ({
+            ...othersTransaction,
+        })),
     };
 
     const downloadData = () => {
