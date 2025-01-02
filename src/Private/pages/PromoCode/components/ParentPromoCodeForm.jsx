@@ -59,6 +59,8 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
             value: item.attributeFamilyId,
         })) ?? [];
 
+    console.log("The mapped attribute list is", mappedAttributeList);
+
     useEffect(() => {
         dispatch(countryActions.get_countries());
     }, [dispatch]);

@@ -73,12 +73,20 @@ export default function CampaignPromoForm({
                     return isSameCondition;
                 });
 
+                const foundIndex = triggerFields?.findIndex((existingField, existingIndex) => {
+                    return existingIndex === index;
+                });
+
+                console.log("The mapped attribute list is", mappedAttributeList);
+
                 const LoadingOption =
                     mappedAttributeList.length > 0
                         ? "Select an option"
                         : isLoading
                           ? "Loading option....."
                           : "Select an option";
+
+                console.log("The mapped attribute list is", mappedAttributeList);
 
                 return (
                     <Grid container mb={1} spacing={2} key={`${field.id}_field`}>
@@ -92,6 +100,7 @@ export default function CampaignPromoForm({
                                         chooseOptionLabel={LoadingOption}
                                         name={`AttributeConditions.${index}.attribute`}
                                         options={mappedAttributeList}
+                                        disabledOptions={[1]}
                                         onChange={(e) => {
                                             const attributeFamilyTypeId = allAttributeList?.find(
                                                 (item) => item?.attributeFamilyId === e.target.value,
