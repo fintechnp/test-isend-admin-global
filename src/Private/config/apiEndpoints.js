@@ -241,6 +241,7 @@ const apiEndpoints = {
         zaiLogs: "/zai/webhook-log",
         zaiRefundPayment: "/zai/refund-payment",
         zaiRefundLogs: "/zai/refund-log",
+        exceptionTransactionLogs: "/utilities/exception_transaction_log",
     },
 
     // region: Common

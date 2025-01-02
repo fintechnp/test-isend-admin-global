@@ -131,6 +131,22 @@ export const getExceptionTransactions = takeEvery(actions.GET_EXCEPTION_TRANSACT
     }
 });
 
+export const getExceptionTransactionsLogs = takeEvery(actions.GET_EXCEPTION_TRANSACTIONS_LOGS, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.transaction.exceptionTransactionLogs, action.query);
+
+        yield put({
+            type: actions.GET_EXCEPTION_TRANSACTIONS_LOGS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_EXCEPTION_TRANSACTIONS_LOGS_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export const updatePaymentPending = takeEvery(actions.RELEASE_PENDING_PAYMENT, function* (action) {
     try {
         const res = yield call(api.put, `utilities/payment_pending_release/${action.id}`, action.data);
@@ -395,6 +411,7 @@ export default function* saga() {
         getPendingTransactions,
         getBlockedTransactions,
         getExceptionTransactions,
+        getExceptionTransactionsLogs,
         getAmlSuspicious,
         getDetailsAmlSuspicious,
         updatePaymentPending,

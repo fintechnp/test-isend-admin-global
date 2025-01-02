@@ -33,3 +33,7 @@ export { default as SendMailTransactionReducer } from "./reducers/sendMailTransa
 export { default as PaymentProcessingAction } from "./actions";
 
 export { default as GetZaiRefundLogsReducer } from "./reducers/getZaiRefundLogs";
+
+export { default as GetTransactionsLogsReducer } from "./reducers/getTransactionLogs";
+
+export { default as GetExceptionTransactionsLogsReducer } from "./reducers/getExceptionTransactionsLogs";
