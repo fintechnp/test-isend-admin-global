@@ -7,6 +7,8 @@ import MuiIconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import HistoryIcon from "@mui/icons-material/History";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 
 import { Release } from "App/components";
 import Filter from "./../components/Filter";
@@ -29,6 +31,7 @@ import { CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
+import TransactionLogsModal from "./TransactionLogsModal";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
     opacity: 0.7,
@@ -331,6 +334,19 @@ const ExceptionTransactions = (props) => {
                                 reduxGlobalStateKey="update_exception_transactions"
                             />
                         </HasPermission>
+
+                        <Tooltip title="Transaction Logs" arrow>
+                            <IconButton
+                                onClick={() => {
+                                    dispatch({
+                                        type: "OPEN_TRANSACTIONS_LOGS_MODAL",
+                                        payload: row.original.tid,
+                                    });
+                                }}
+                            >
+                                <ReceiptIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
                 ),
             },
@@ -463,6 +479,7 @@ const ExceptionTransactions = (props) => {
                         loading={l_loading}
                     />
                 </PageContentContainer>
+                <TransactionLogsModal />
                 <TablePagination
                     paginationData={exceptionTransactions?.pagination}
                     handleChangePage={onPageChange}
