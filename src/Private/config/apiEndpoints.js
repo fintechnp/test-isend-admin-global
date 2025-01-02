@@ -335,6 +335,16 @@ const apiEndpoints = {
     // Application Config
     GetApplicationConfig: "/config",
     UpdateApplicationConfig: "/config",
+
+    // Policies
+    DocumentFile: "/documentfile",
+    DeleteDocumentFile: "/documentfile/:type",
+
+    ListDocumentFileContent: "/documentfile/documentcontent",
+    AddDocumentFileContent: "/documentfile/documentcontent",
+    GetDocumentFileContentById: "documentfile/documentcontent/:id",
+    UpdateDocumentFileContent: "/documentfile/documentcontent/:id",
+    DeleteDocumentFileContent: "/documentfile/documentcontent/:id",
 };
 
 export default apiEndpoints;
