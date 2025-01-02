@@ -600,6 +600,7 @@ import {
     GetOverallTransactionLineGraphReducer,
     GetUserRegistrationHHistoryReducer,
     GetExchangeRateSummaryReducer,
+    GetOverallTransactionReportReducer,
 } from "./pages/Dashboard/store";
 import {
     GetOrganizationStakeholdersReducer,
@@ -1173,6 +1174,7 @@ export const privateReducer = {
     get_user_registration_history: GetUserRegistrationHHistoryReducer,
     get_top_payout_countries: GetTopPayoutCountriesReducer,
     get_exchange_rate_summary: GetExchangeRateSummaryReducer,
+    get_overall_transaction_report: GetOverallTransactionReportReducer,
     get_overall_transaction_linegraph: GetOverallTransactionLineGraphReducer,
     get_summary_data: GetSummaryDataReducer,
     get_top_transaction_by_agent_and_business: GetTopTransactionByAgentAndBusinessReducer,

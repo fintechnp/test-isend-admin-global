@@ -252,6 +252,22 @@ export const getOverallCustomerReport = takeEvery(actions.GET_OVERALL_CUSTOMERS_
     }
 });
 
+export const getOverallTransactionReport = takeEvery(actions.GET_OVERALL_TRANSACTION_REPORT, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.dashboard.getTransactionCountByStatus, action.query);
+
+        yield put({
+            type: actions.GET_OVERALL_TRANSACTION_REPORT_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_OVERALL_TRANSACTION_REPORT_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* saga() {
     yield all([
         getCustomerCountByDeviceType,
@@ -269,5 +285,6 @@ export default function* saga() {
         getUserRegistrationHistory,
         getExchangeRateSummary,
         getOverallCustomerReport,
+        getOverallTransactionReport,
     ]);
 }

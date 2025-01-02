@@ -3,7 +3,7 @@ const apiEndpoints = {
     dashboard: {
         getCustomerCountByDeviceType: "/dashboard/customer",
         getCustomerKycCountByStatus: "/dashboard/customer-kyc",
-        getTransactionCountByStatus: "/dashboard/transaction-status",
+        getTransactionCountByStatus: "/dashboard/transaction-info",
         getTopPayoutCountries: "/dashboard/top-payout-countries",
         getTopAgentBusinessTransactions: "/dashboard/top-agent-biz-txn",
         getComplianceCountByStatus: "/dashboard/compliance-count",

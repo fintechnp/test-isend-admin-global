@@ -61,9 +61,11 @@ export default function OverallTransactionAndCustomer() {
         e.target.value === "amount" ? setTransCategory("amount") : setTransCategory("count");
     };
 
-    const { response: getTransactionCountResponse, loading: isTransactionCountLoading } = useSelector(
-        (state) => state.get_transaction_count_by_status,
+    const { response: getOverallTransaction, loading: isTransactionCountLoading } = useSelector(
+        (state) => state.get_overall_transaction_report,
     );
+
+    console.log("The get overall transaction report", getOverallTransaction?.data);
 
     const { response: getPreviousTransactionCountResponse, loading: isPreviousTransactionCountLoading } = useSelector(
         (state) => state.get_compliance_count_by_status_previous,
@@ -80,49 +82,49 @@ export default function OverallTransactionAndCustomer() {
 
     const customerCountByStatusPreviousData = previousCustomerKycCountByStatusResponse?.data;
 
-    const transactionCountByStatusData = getTransactionCountResponse?.data;
+    const transactionOverallDataData = getOverallTransaction?.data;
 
     const previousTransactionCountByStatusData = getPreviousTransactionCountResponse?.data;
 
     const overallTransactionData = {
         transaction: {
-            totalTransactionCount: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
+            totalTransactionCount: numberUtils.format(transactionOverallDataData?.totalTxnAmount),
             totalTransactionAmount: `$ 125000`,
-            differenceInPercentage: calculatePercentageDifference(
-                transactionCountByStatusData?.totalTxnAmount ?? 0,
-                previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
-            ),
-            isDropped: false,
+            // differenceInPercentage: calculatePercentageDifference(
+            //     transactionCountByStatusData?.totalTxnAmount ?? 0,
+            //     previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
+            // ),
+            // isDropped: false,
             childrenData: [
                 {
                     title: "Pending",
-                    totalCount: numberUtils.format(transactionCountByStatusData?.paymentPendingCount),
+                    totalCount: numberUtils.format(transactionOverallDataData?.paymentPendingCount),
                     totalAmount: `$ 500`,
-                    differenceInPercentage: calculatePercentageDifference(
-                        transactionCountByStatusData?.paymentPendingCount ?? 0,
-                        previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
-                    ),
-                    isDropped: true,
+                    // differenceInPercentage: calculatePercentageDifference(
+                    //     transactionCountByStatusData?.paymentPendingCount ?? 0,
+                    //     previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
+                    // ),
+                    // isDropped: true,
                 },
                 {
                     title: "Payout",
-                    totalCount: numberUtils.format(transactionCountByStatusData?.completedStatusCount),
+                    totalCount: numberUtils.format(transactionOverallDataData?.completedStatusCount),
                     totalAmount: `$ 900`,
-                    differenceInPercentage: calculatePercentageDifference(
-                        transactionCountByStatusData?.completedStatusCount ?? 0,
-                        previousTransactionCountByStatusData?.completedStatusCount ?? 0,
-                    ),
-                    isDropped: true,
+                    // differenceInPercentage: calculatePercentageDifference(
+                    //     transactionCountByStatusData?.completedStatusCount ?? 0,
+                    //     previousTransactionCountByStatusData?.completedStatusCount ?? 0,
+                    // ),
+                    // isDropped: true,
                 },
                 {
                     title: "Cancelled",
-                    totalCount: numberUtils.format(transactionCountByStatusData?.rejectedRefundedCount),
+                    totalCount: numberUtils.format(transactionOverallDataData?.rejectedRefundedCount),
                     totalAmount: `$ 12000`,
-                    differenceInPercentage: calculatePercentageDifference(
-                        transactionCountByStatusData?.rejectedRefundedCount ?? 0,
-                        previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
-                    ),
-                    isDropped: false,
+                    // differenceInPercentage: calculatePercentageDifference(
+                    //     transactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                    //     previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
+                    // ),
+                    // isDropped: false,
                 },
             ],
         },
@@ -261,7 +263,7 @@ export default function OverallTransactionAndCustomer() {
 
                                     {/* {overallTransactionData.transaction.totalTransactionCount} */}
                                 </Typography>
-                                <Box>
+                                {/* <Box>
                                     {overallTransactionData.transaction.isDropped ? (
                                         <DashboardReceiveIcon />
                                     ) : (
@@ -276,16 +278,16 @@ export default function OverallTransactionAndCustomer() {
                                     }}
                                 >
                                     {overallTransactionData.transaction.differenceInPercentage}
-                                </Typography>
+                                </Typography> */}
                             </Row>
-                            <Box
+                            {/* <Box
                                 sx={{
                                     width: "100%",
                                     height: 50,
                                 }}
                             >
                                 <DashboardCardChart />
-                            </Box>
+                            </Box> */}
                         </>
                     )}
 
@@ -308,7 +310,7 @@ export default function OverallTransactionAndCustomer() {
 
                                             {/* {data.totalCount} */}
                                         </Typography>
-                                        <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
+                                        {/* <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
                                         <Typography
                                             sx={{
                                                 color: data.isDropped
@@ -317,7 +319,7 @@ export default function OverallTransactionAndCustomer() {
                                             }}
                                         >
                                             {data.differenceInPercentage}
-                                        </Typography>
+                                        </Typography> */}
                                     </Row>
                                 )}
                             </Column>

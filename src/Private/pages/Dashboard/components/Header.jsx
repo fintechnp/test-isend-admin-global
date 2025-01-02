@@ -109,6 +109,7 @@ export default function Header() {
         dispatch(actions.get_summary_data(current));
         dispatch(actions.get_user_registration_history(current));
         dispatch(actions.get_overall_transaction_line_graph());
+        dispatch(actions.get_overall_transaction_report());
         dispatch(actions.get_top_transaction_by_agent_and_business(current));
         dispatch(actions.get_customer_kyc_count_by_status_previous(previous));
         dispatch(actions.get_transaction_count_by_status_previous(previous));
