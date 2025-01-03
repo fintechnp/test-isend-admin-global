@@ -30,11 +30,11 @@ function Dashboard() {
                 <Grid item xs={12} md={6} lg={4}>
                     <CustomerPieChart />
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>
+                {/* <Grid item xs={12} md={6} lg={4}>
                     <KycStat />
-                </Grid>
+                </Grid> */}
 
-                <Grid item xs={12} md={6} lg={4}>
+                <Grid item xs={12} md={6} lg={8}>
                     <UserRegistrationHistoryStat />
                 </Grid>
             </Grid>

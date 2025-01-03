@@ -33,15 +33,12 @@ export default function UserRegistrationHistoryStat() {
             </Row>
             <Box
                 sx={{
-                    height: 280,
+                    width: "100%",
+                    height: 250,
                     marginTop: "16px",
-                    overflowY: "hidden",
-                    overflowX: "scroll",
-                    whiteSpace: "nowrap",
-                    maxWidth: "100%",
                 }}
             >
-                <ResponsiveContainer width="150%" height="100%">
+                <ResponsiveContainer width="100%" height="100%">
                     {isLoading ? (
                         <Skeleton variant="rectangular" width="100%" height="100%" />
                     ) : (
