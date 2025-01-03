@@ -49,10 +49,10 @@ export const CampaignConfigurationForm = ({
 
                 <Grid item xs={12} md={4} lg={4}>
                     <FormTextField
+                        required
                         type="number"
                         name="LimitPerUser"
                         label="Limit Per Customer"
-                        required
                         control={control}
                     />
                 </Grid>

@@ -89,7 +89,7 @@ function FormSelect(props) {
                                     key={option.value}
                                     value={option.value}
                                     selected={option.value == field.value}
-                                    disabled={disabledOptions.includes(index)}
+                                    disabled={disabledOptions?.includes(index)}
                                 >
                                     {option.label}
                                 </MenuItem>
