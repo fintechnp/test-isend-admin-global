@@ -12,6 +12,8 @@ import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import LogoutIcon from "../Icon/LogoutIcon";
 import MyAccountIcon from "../Icon/MyAccountIcon";
@@ -213,30 +215,56 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     color="inherit"
                 >
                     {showProfilePicture ? (
-                        <Avatar
-                            variant="circular"
-                            sx={{
-                                height: "36px",
-                                width: "36px",
-                                fontSize: "14px",
-                                textTransform: "capitalize",
-                                background: (theme) => theme.palette.primary.main,
-                            }}
-                            {...stringAvatar(currentUser?.name)}
-                        />
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Avatar
+                                variant="circular"
+                                sx={{
+                                    height: "36px",
+                                    width: "36px",
+                                    fontSize: "14px",
+                                    textTransform: "capitalize",
+                                    background: (theme) => theme.palette.primary.main,
+                                }}
+                                {...stringAvatar(currentUser?.name)}
+                            />
+                            <Typography color="black">
+                                {" "}
+                                {currentUser?.name?.length > 15
+                                    ? `${currentUser.name.slice(0, 15)}...`
+                                    : currentUser?.name}
+                            </Typography>
+                            {anchorEl ? (
+                                <KeyboardArrowUpIcon sx={{ fill: "#000" }} />
+                            ) : (
+                                <KeyboardArrowDownIcon sx={{ fill: "#000" }} />
+                            )}
+                        </Box>
                     ) : (
-                        <Avatar
-                            variant="circular"
-                            sx={{
-                                height: "36px",
-                                width: "36px",
-                                fontSize: "14px",
-                                textTransform: "capitalize",
-                                background: (theme) => theme.palette.primary.main,
-                            }}
-                            src={profilePicture}
-                            {...stringAvatar(currentUser?.name)}
-                        />
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Avatar
+                                variant="circular"
+                                sx={{
+                                    height: "36px",
+                                    width: "36px",
+                                    fontSize: "14px",
+                                    textTransform: "capitalize",
+                                    background: (theme) => theme.palette.primary.main,
+                                }}
+                                src={profilePicture}
+                                {...stringAvatar(currentUser?.name)}
+                            />
+                            <Typography color="black">
+                                {" "}
+                                {currentUser?.name?.length > 15
+                                    ? `${currentUser.name.slice(0, 15)}...`
+                                    : currentUser?.name}
+                            </Typography>
+                            {anchorEl ? (
+                                <KeyboardArrowUpIcon sx={{ fill: "#000" }} />
+                            ) : (
+                                <KeyboardArrowDownIcon sx={{ fill: "#000" }} />
+                            )}
+                        </Box>
                     )}
                 </ProfileIcon>
             </Toolbar>
