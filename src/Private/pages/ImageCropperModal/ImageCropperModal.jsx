@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Cropper from "react-easy-crop";
 import React, { useState } from "react";
@@ -6,12 +7,10 @@ import Slider from "@mui/material/Slider";
 import getCropperImg from "./getCropperImg";
 import Button from "App/components/Button/Button";
 
-export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, onSubmit, loading }) {
+function ImageCropperModal({ onCropComplete, imageSrc, onCancel, onSubmit, loading }) {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
-    console.log("🚀 ~ ImageCropperModal ~ crop:", crop);
-    const [zoom, setZoom] = useState(2);
+    const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-    console.log("🚀 ~ ImageCropperModal ~ croppedAreaPixels:", croppedAreaPixels);
 
     const handleCropComplete = (croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -44,7 +43,8 @@ export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, 
                                 zoom={zoom}
                                 aspect={1}
                                 cropShape="round"
-                                zoomWithScroll={true}
+                                zoomWithScroll={false}
+                                objectFit="vertical-cover"
                                 showGrid={true}
                                 onCropChange={setCrop}
                                 onCropComplete={handleCropComplete}
@@ -69,9 +69,19 @@ export default function ImageCropperModal({ onCropComplete, imageSrc, onCancel, 
                     Cancel
                 </Button>
                 <Button variant="contained" color="primary" disabled={loading} onClick={handleSubmit}>
-                    Upload
+                    {loading ? "Uploading...." : "Upload"}
                 </Button>
             </div>
         </Box>
     );
 }
+
+ImageCropperModal.propTypes = {
+    onCropComplete: PropTypes.func,
+    imageSrc: PropTypes.string,
+    onCancel: PropTypes.func,
+    onSubmit: PropTypes.func,
+    loading: PropTypes.bool,
+};
+
+export default ImageCropperModal;
