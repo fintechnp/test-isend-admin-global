@@ -27,7 +27,27 @@ export default function CampaignPromoForm({
     removeTriggerFields,
     isLoading,
 }) {
+    const [disabledPrevOptions, setPrevDisabledOptions] = React.useState([]);
     const { watch, setValue, control } = useFormContext();
+
+    const handleOptionChange = (selectedValue, index) => {
+        triggerFields[index].tempSelectedOption = selectedValue;
+    };
+
+    const handleAddTriggerFields = () => {
+        const lastFieldIndex = triggerFields.length - 1;
+        const lastFieldTempOption = triggerFields[lastFieldIndex]?.tempSelectedOption;
+
+        if (lastFieldTempOption) {
+            const selectedIndex = mappedAttributeList?.findIndex((option) => option.value === lastFieldTempOption);
+
+            if (selectedIndex >= 0 && !disabledPrevOptions.includes(selectedIndex)) {
+                setPrevDisabledOptions((prev) => [...prev, selectedIndex]);
+            }
+        }
+
+        addTriggerFields();
+    };
 
     const attributeConditions = watch("AttributeConditions");
 
@@ -45,6 +65,18 @@ export default function CampaignPromoForm({
         }
     };
 
+    const handleRemoveTriggerFields = (removeIndex) => {
+        setPrevDisabledOptions((prevDisabledOptions) =>
+            prevDisabledOptions?.filter((optionIndex) => optionIndex !== removeIndex),
+        );
+
+        setPrevDisabledOptions((prevDisabledOptions) =>
+            prevDisabledOptions?.map((optionIndex) => (optionIndex > removeIndex ? optionIndex - 1 : optionIndex)),
+        )?.filter((optionIndex) => optionIndex >= 0);
+
+        removeTriggerFields(removeIndex);
+    };
+
     return (
         <Grid container gap={2}>
             {triggerFields.map((field, index) => {
@@ -57,27 +89,11 @@ export default function CampaignPromoForm({
 
                 const triggerFormOptions = getTriggerFormOptions(attributeFamilyTypeId);
 
-                const isDuplicate = triggerFields?.some((existingField, existingIndex) => {
-                    if (existingIndex === index) return false;
-                    const existingAttributeFamily = attributeConditions?.[existingIndex]?.attribute;
-                    const existingAttributeFamilyTypeId = allAttributeList?.find(
-                        (item) => item?.attributeFamilyId === existingAttributeFamily,
-                    )?.attributeTypeValue;
-
-                    const isSameCondition =
-                        existingAttributeFamily === attributeFamily &&
-                        existingAttributeFamilyTypeId === attributeFamilyTypeId &&
-                        triggerFields[existingIndex].amount === field.amount &&
-                        triggerFields[existingIndex].currency === field.currency;
-
-                    return isSameCondition;
-                });
-
                 const LoadingOption =
                     mappedAttributeList.length > 0
                         ? "Select an option"
                         : isLoading
-                          ? "Loading option....."
+                          ? "Loading options....."
                           : "Select an option";
 
                 return (
@@ -92,6 +108,7 @@ export default function CampaignPromoForm({
                                         chooseOptionLabel={LoadingOption}
                                         name={`AttributeConditions.${index}.attribute`}
                                         options={mappedAttributeList}
+                                        disabledOptions={disabledPrevOptions}
                                         onChange={(e) => {
                                             const attributeFamilyTypeId = allAttributeList?.find(
                                                 (item) => item?.attributeFamilyId === e.target.value,
@@ -163,6 +180,7 @@ export default function CampaignPromoForm({
                                                     attributeFamilyTypeId,
                                                 );
                                             }
+                                            handleOptionChange(e.target.value, index);
                                         }}
                                     />
                                 </Grid>
@@ -235,28 +253,18 @@ export default function CampaignPromoForm({
                         </Grid>
                         <Grid item xs={2} display="flex" alignItems="center" justifyContent="flex-end">
                             <ButtonWrapper>
-                                {triggerFields?.length - 1 === index && !isDuplicate && (
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        color="primary"
-                                        onClick={() => {
-                                            addTriggerFields();
-                                        }}
-                                    >
-                                        Add
-                                    </Button>
-                                )}
-
-                                {isDuplicate && (
-                                    <Button variant="contained" size="small" color="secondary" disabled>
-                                        Duplicate Trigger
-                                    </Button>
-                                )}
+                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    color="primary"
+                                    onClick={handleAddTriggerFields}
+                                >
+                                    Add
+                                </Button>
 
                                 {index > 0 ? (
                                     <Button
-                                        onClick={() => removeTriggerFields(index)}
+                                        onClick={() => handleRemoveTriggerFields(index)}
                                         variant="outlined"
                                         size="small"
                                         color="error"
