@@ -337,10 +337,6 @@ function Search() {
         { key: "Country", value: "country" },
     ];
 
-    useEffect(() => {
-        dispatch(actions.get_customers(filterSchema));
-    }, []);
-
     return (
         <PageContent
             documentTitle="Customers"
