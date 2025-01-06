@@ -238,7 +238,7 @@ export const getExchangeRateSummary = takeEvery(actions.GET_EXCHANGE_RATE_SUMMAR
 
 export const getOverallCustomerReport = takeEvery(actions.GET_OVERALL_CUSTOMERS_REPORT, function* (action) {
     try {
-        const res = yield call(api.get, apiEndpoints.dashboard.overallCustomerReport, action.query);
+        const res = yield call(api.get, apiEndpoints.dashboard.getCustomerKycCountByStatus, action.query);
 
         yield put({
             type: actions.GET_OVERALL_CUSTOMERS_REPORT_SUCCESS,

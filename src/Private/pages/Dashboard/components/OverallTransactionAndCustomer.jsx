@@ -65,145 +65,64 @@ export default function OverallTransactionAndCustomer() {
         (state) => state.get_overall_transaction_report,
     );
 
-    const { response: getPreviousTransactionCountResponse, loading: isPreviousTransactionCountLoading } = useSelector(
-        (state) => state.get_compliance_count_by_status_previous,
+    const { response: getOverallCustomerByStatus, loading: isOverallCustomerByStatusLoading } = useSelector(
+        (state) => state.get_overall_customers_report,
     );
 
-    const { loading: isLoadingCustomerKycStatByStatus, response: customerKycCountByStatusResponse } = useSelector(
-        (state) => state.get_customer_kyc_count_by_status,
-    );
+    const customerOverallCountByStatusData = getOverallCustomerByStatus?.data;
 
-    const { loading: customerCountByStatusPreviousLoading, response: previousCustomerKycCountByStatusResponse } =
-        useSelector((state) => state.get_customer_kyc_count_by_status_previous);
-
-    const customerCountByStatusData = customerKycCountByStatusResponse?.data;
-
-    const customerCountByStatusPreviousData = previousCustomerKycCountByStatusResponse?.data;
-
-    const transactionOverallDataData = getOverallTransaction?.data;
-
-    //  const previousTransactionCountByStatusData = getPreviousTransactionCountResponse?.data;
-
-    console.log("The get overall transaction", transactionOverallDataData);
+    const transactionOverallData = getOverallTransaction?.data;
 
     const overallTransactionData = {
         transaction: {
-            totalTransactionCount: numberUtils.format(transactionOverallDataData?.totalTransactionsCount),
-            totalTransactionAmount: `$ ${numberUtils.format(transactionOverallDataData?.totalTransactionsAmount)}`,
-            // differenceInPercentage: calculatePercentageDifference(
-            //     transactionCountByStatusData?.totalTxnAmount ?? 0,
-            //     previousTransactionCountByStatusData?.totalTxnAmount ?? 0,
-            // ),
-            // isDropped: false,
+            totalTransactionCount: numberUtils.format(transactionOverallData?.totalTransactionsCount),
+            totalTransactionAmount: `$ ${numberUtils.format(transactionOverallData?.totalTransactionsAmount)}`,
+
             childrenData: [
                 {
                     title: "Pending",
-                    totalCount: numberUtils.format(transactionOverallDataData?.pendingCount),
-                    totalAmount: `$ ${numberUtils.format(transactionOverallDataData?.pendingAmount)}`,
-                    // differenceInPercentage: calculatePercentageDifference(
-                    //     transactionCountByStatusData?.paymentPendingCount ?? 0,
-                    //     previousTransactionCountByStatusData?.paymentPendingCount ?? 0,
-                    // ),
-                    // isDropped: true,
+                    totalCount: numberUtils.format(transactionOverallData?.pendingCount),
+                    totalAmount: `$ ${numberUtils.format(transactionOverallData?.pendingAmount)}`,
                 },
                 {
                     title: "Payout",
-                    totalCount: numberUtils.format(transactionOverallDataData?.payoutCount),
-                    totalAmount: `$ ${numberUtils.format(transactionOverallDataData?.pendingAmount)}`,
-                    // differenceInPercentage: calculatePercentageDifference(
-                    //     transactionCountByStatusData?.completedStatusCount ?? 0,
-                    //     previousTransactionCountByStatusData?.completedStatusCount ?? 0,
-                    // ),
-                    // isDropped: true,
+                    totalCount: numberUtils.format(transactionOverallData?.payoutCount),
+                    totalAmount: `$ ${numberUtils.format(transactionOverallData?.pendingAmount)}`,
                 },
                 {
                     title: "Cancelled",
-                    totalCount: numberUtils.format(transactionOverallDataData?.cancelledCount),
-                    totalAmount: `$ ${numberUtils.format(transactionOverallDataData?.cancelledAmount)}`,
-                    // differenceInPercentage: calculatePercentageDifference(
-                    //     transactionCountByStatusData?.rejectedRefundedCount ?? 0,
-                    //     previousTransactionCountByStatusData?.rejectedRefundedCount ?? 0,
-                    // ),
-                    // isDropped: false,
+                    totalCount: numberUtils.format(transactionOverallData?.cancelledCount),
+                    totalAmount: `$ ${numberUtils.format(transactionOverallData?.cancelledAmount)}`,
                 },
             ],
         },
         customer: {
-            totalCustomer: numberUtils.format(customerCountByStatusData?.totalCustomer ?? 0),
-            differenceInPercentage: calculatePercentageDifference(
-                customerCountByStatusData?.totalCustomer ?? 0,
-                customerCountByStatusPreviousData?.totalCustomer ?? 0,
-            ),
-            isDropped:
-                (customerCountByStatusData?.totalCustomer ?? 0) <
-                (customerCountByStatusPreviousData?.totalCustomer ?? 0),
+            totalCustomer: numberUtils.format(customerOverallCountByStatusData?.totalCustomer ?? 0),
+
             childrenData: [
                 {
                     title: "Verified",
-                    total: numberUtils.format(customerCountByStatusData?.kycVerifiedCount ?? 0),
-                    differenceInPercentage: calculatePercentageDifference(
-                        customerCountByStatusData?.kycVerifiedCount ?? 0,
-                        customerCountByStatusPreviousData?.kycVerifiedCount ?? 0,
-                    ),
-                    isDropped:
-                        (customerCountByStatusData?.kycVerifiedCount ?? 0) <
-                        (customerCountByStatusPreviousData?.kycVerifiedCount ?? 0),
+                    total: numberUtils.format(customerOverallCountByStatusData?.kycVerifiedCount ?? 0),
                 },
                 {
                     title: "Rejected",
-                    total: numberUtils.format(customerCountByStatusData?.kycRejectCount ?? 0),
-                    differenceInPercentage: calculatePercentageDifference(
-                        customerCountByStatusData?.kycRejectCount ?? 0,
-                        customerCountByStatusPreviousData?.kycRejectCount ?? 0,
-                    ),
-                    isDropped:
-                        (customerCountByStatusData?.kycRejectCount ?? 0) <
-                        (customerCountByStatusPreviousData?.kycRejectCount ?? 0),
+                    total: numberUtils.format(customerOverallCountByStatusData?.kycRejectCount ?? 0),
                 },
                 {
                     title: "Expired",
-                    total: numberUtils.format(customerCountByStatusData?.kycExpiredCount ?? 0),
-                    differenceInPercentage: calculatePercentageDifference(
-                        customerCountByStatusData?.kycExpiredCount ?? 0,
-                        customerCountByStatusPreviousData?.kycExpiredCount ?? 0,
-                    ),
-                    isDropped:
-                        (customerCountByStatusData?.kycExpiredCount ?? 0) <
-                        (customerCountByStatusPreviousData?.kycExpiredCount ?? 0),
+                    total: numberUtils.format(customerOverallCountByStatusData?.kycExpiredCount ?? 0),
                 },
                 {
                     title: "Not Started",
-                    total: numberUtils.format(customerCountByStatusData?.customerWithNoKycCount ?? 0),
-                    differenceInPercentage: calculatePercentageDifference(
-                        customerCountByStatusData?.customerWithNoKycCount ?? 0,
-                        customerCountByStatusPreviousData?.customerWithNoKycCount ?? 0,
-                    ),
-                    isDropped:
-                        (customerCountByStatusData?.customerWithNoKycCount ?? 0) <
-                        (customerCountByStatusPreviousData?.customerWithNoKycCount ?? 0),
+                    total: numberUtils.format(customerOverallCountByStatusData?.customerWithNoKycCount ?? 0),
                 },
                 {
                     title: "Blocked",
-                    total: numberUtils.format(customerCountByStatusData?.totalCustomerBlocked ?? 0),
-                    differenceInPercentage: calculatePercentageDifference(
-                        customerCountByStatusData?.totalCustomerBlocked ?? 0,
-                        customerCountByStatusPreviousData?.totalCustomerBlocked ?? 0,
-                    ),
-                    isDropped:
-                        (customerCountByStatusData?.totalCustomerBlocked ?? 0) <
-                        (customerCountByStatusPreviousData?.totalCustomerBlocked ?? 0),
+                    total: numberUtils.format(customerOverallCountByStatusData?.totalCustomerBlocked ?? 0),
                 },
             ],
         },
     };
-
-    const isTotalTransactionLoading = isTransactionCountLoading;
-
-    const isTotalTransactionDataLoading = isTransactionCountLoading || isPreviousTransactionCountLoading;
-
-    const isTotalCustomerKycLoading = isLoadingCustomerKycStatByStatus;
-
-    const isTotalCustomerKycDataLoading = isLoadingCustomerKycStatByStatus || customerCountByStatusPreviousLoading;
 
     return (
         <Column gap={2}>
@@ -224,12 +143,7 @@ export default function OverallTransactionAndCustomer() {
 
                 <Box paddingY={1} display="flex" flexDirection="row" justifyContent="center">
                     <ToggleButtonGroup value={transCategory} onChange={handleTransCategoryChange}>
-                        <ToggleButton
-                            disableRipple
-                            // value={isAmount}
-
-                            value="amount"
-                        >
+                        <ToggleButton disableRipple value="amount">
                             Amount
                         </ToggleButton>
 
@@ -248,7 +162,7 @@ export default function OverallTransactionAndCustomer() {
                         Total Transactions
                     </Typography>
 
-                    {isTotalTransactionLoading ? (
+                    {isTransactionCountLoading ? (
                         <>
                             <Skeleton variant="text" width={130} />
                             <Skeleton variant="rectangular" height={50} width="100%" />
@@ -260,34 +174,16 @@ export default function OverallTransactionAndCustomer() {
                                     {transCategory === "amount"
                                         ? overallTransactionData.transaction.totalTransactionAmount
                                         : overallTransactionData.transaction.totalTransactionCount}
-
-                                    {/* {overallTransactionData.transaction.totalTransactionCount} */}
                                 </Typography>
-                                {/* <Box>
-                                    {overallTransactionData.transaction.isDropped ? (
-                                        <DashboardReceiveIcon />
-                                    ) : (
-                                        <DashBoardSendIcon />
-                                    )}
-                                </Box>
-                                <Typography
-                                    sx={{
-                                        color: overallTransactionData.transaction.isDropped
-                                            ? theme.palette.error.main
-                                            : theme.palette.success.main,
-                                    }}
-                                >
-                                    {overallTransactionData.transaction.differenceInPercentage}
-                                </Typography> */}
                             </Row>
-                            {/* <Box
+                            <Box
                                 sx={{
                                     width: "100%",
                                     height: 50,
                                 }}
                             >
                                 <DashboardCardChart />
-                            </Box> */}
+                            </Box>
                         </>
                     )}
 
@@ -301,25 +197,13 @@ export default function OverallTransactionAndCustomer() {
                                 >
                                     {data.title}
                                 </Typography>
-                                {isTotalTransactionDataLoading ? (
+                                {isTransactionCountLoading ? (
                                     <Skeleton variant="text" width={130} />
                                 ) : (
                                     <Row gap={1} alignItems="center">
                                         <Typography fontSize={16} fontWeight={700}>
                                             {transCategory === "amount" ? data.totalAmount : data.totalCount}
-
-                                            {/* {data.totalCount} */}
                                         </Typography>
-                                        {/* <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
-                                        <Typography
-                                            sx={{
-                                                color: data.isDropped
-                                                    ? theme.palette.error.main
-                                                    : theme.palette.success.main,
-                                            }}
-                                        >
-                                            {data.differenceInPercentage}
-                                        </Typography> */}
                                     </Row>
                                 )}
                             </Column>
@@ -341,7 +225,7 @@ export default function OverallTransactionAndCustomer() {
                         Total Customer
                     </Typography>
 
-                    {isTotalCustomerKycLoading ? (
+                    {isOverallCustomerByStatusLoading ? (
                         <>
                             <Skeleton variant="text" width={130} />
                             <Skeleton variant="rectangular" height={50} width="100%" />
@@ -352,22 +236,6 @@ export default function OverallTransactionAndCustomer() {
                                 <Typography fontSize={16} fontWeight={700}>
                                     {overallTransactionData.customer.totalTransaction}
                                 </Typography>
-                                {/* <Box>
-                                    {overallTransactionData.customer.isDropped ? (
-                                        <DashboardReceiveIcon />
-                                    ) : (
-                                        <DashBoardSendIcon />
-                                    )}
-                                </Box>
-                                <Typography
-                                    sx={{
-                                        color: overallTransactionData.customer.isDropped
-                                            ? theme.palette.error.main
-                                            : theme.palette.success.main,
-                                    }}
-                                >
-                                    {overallTransactionData.customer.differenceInPercentage}
-                                </Typography> */}
                             </Row>
                             <Box
                                 sx={{
@@ -391,7 +259,7 @@ export default function OverallTransactionAndCustomer() {
                                     {data.title}
                                 </Typography>
 
-                                {isTotalCustomerKycDataLoading ? (
+                                {isOverallCustomerByStatusLoading ? (
                                     <>
                                         <Skeleton variant="text" width={130} />
                                     </>
@@ -399,16 +267,6 @@ export default function OverallTransactionAndCustomer() {
                                     <Row gap={1} alignItems="center">
                                         <Typography fontSize={16} fontWeight={700}>
                                             {data.total}
-                                        </Typography>
-                                        <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
-                                        <Typography
-                                            sx={{
-                                                color: data.isDropped
-                                                    ? theme.palette.error.main
-                                                    : theme.palette.success.main,
-                                            }}
-                                        >
-                                            {data.differenceInPercentage}
                                         </Typography>
                                     </Row>
                                 )}
