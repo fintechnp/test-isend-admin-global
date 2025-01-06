@@ -15,6 +15,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Column from "App/components/Column/Column";
 import PhoneIcon from "App/components/Icon/PhoneIcon";
 import { TablePagination } from "App/components/Table";
+import VerifiedBadge from "./components/VerifiedBadge";
 import KycStatusBadge from "./components/KycStatusBadge";
 import CustomerAvatar from "./components/CustomerAvatar";
 import referenceTypeId from "Private/config/referenceTypeId";
@@ -175,6 +176,16 @@ function Search() {
             {
                 header: "Email",
                 accessorKey: "email",
+            },
+            {
+                header: "Is email verified ?",
+                accessorKey: "is_email_verified",
+                cell: ({ getValue }) => <VerifiedBadge isVerified={!!getValue()} />,
+            },
+            {
+                header: "Is mobile verified ?",
+                accessorKey: "is_mobile_verified",
+                cell: ({ getValue }) => <VerifiedBadge isVerified={!!getValue()} />,
             },
             {
                 header: "Acc. Status",
