@@ -93,7 +93,7 @@ export default function CampaignPromoForm({
                     mappedAttributeList.length > 0
                         ? "Select an option"
                         : isLoading
-                          ? "Loading option....."
+                          ? "Loading options....."
                           : "Select an option";
 
                 return (
