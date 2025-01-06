@@ -120,8 +120,9 @@ const actions = {
         query,
     }),
 
-    get_overall_transaction_line_graph: () => ({
+    get_overall_transaction_line_graph: (query) => ({
         type: actions.GET_OVERALL_TRANSACTION_LINEGRAPH,
+        query,
     }),
 
     get_summary_data: (query) => ({

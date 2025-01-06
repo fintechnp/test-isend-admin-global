@@ -87,15 +87,15 @@ export default function TotalCustomerCard() {
                     (previousCustomerKycCountByStatusData?.customerWithNoKycCount ?? 0),
             },
             {
-                title: "Blocked",
-                total: numberUtils.format(customerKycCountByStatusData?.totalCustomerBlocked ?? 0),
+                title: "Nearly Expired",
+                total: numberUtils.format(customerKycCountByStatusData?.kycExpiringCount ?? 0),
                 differenceInPercentage: calculatePercentageDifference(
-                    customerKycCountByStatusData?.totalCustomerBlocked ?? 0,
-                    previousCustomerKycCountByStatusData?.totalCustomerBlocked ?? 0,
+                    customerKycCountByStatusData?.kycExpiringCount ?? 0,
+                    previousCustomerKycCountByStatusData?.kycExpiringCount ?? 0,
                 ),
                 isDropped:
-                    (customerKycCountByStatusData?.totalCustomerBlocked ?? 0) <
-                    (previousCustomerKycCountByStatusData?.totalCustomerBlocked ?? 0),
+                    (customerKycCountByStatusData?.kycExpiringCount ?? 0) <
+                    (previousCustomerKycCountByStatusData?.kycExpiringCount ?? 0),
             },
         ],
     };

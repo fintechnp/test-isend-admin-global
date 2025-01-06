@@ -36,7 +36,7 @@ export default function TransactionStat() {
     ];
 
     const overallTransactionData = getOverallTransactionResponse?.data?.map((item) => ({
-        day: item?.dayOfWeekName,
+        day: item?.dateString,
         pendingAmount: item?.pendingAmount,
         payoutAmount: item?.payoutAmount,
         cancelledAmount: item?.cancelledAmount,
@@ -66,7 +66,7 @@ export default function TransactionStat() {
                             )}
                         </Box>
                     ))}
-                    <TooltipMUI title="Shows the overall transaction data for the last 7 days">
+                    <TooltipMUI title="Shows the overall transaction data for the last 7 Date from current date">
                         <IconButton>
                             <InfoIcon color="disabled" />
                         </IconButton>

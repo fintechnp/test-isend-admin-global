@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from "react";
-import Switch from "@mui/material/Switch";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { useTheme } from "@emotion/react";
 import { styled } from "@mui/material/styles";
 import Skeleton from "@mui/material/Skeleton";
 import Paper from "App/components/Paper/Paper";
 import Typography from "@mui/material/Typography";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FormProvider, useForm } from "react-hook-form";
 
 import Row from "App/components/Row/Row";
 import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
-import { useDispatch, useSelector } from "react-redux";
+import FormSelect from "App/core/hook-form/FormSelect";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import { ExchangeRateAction } from "Private/pages/Setup/ExchangeRate/store";
-import CurrencyForm from "./form/CurrencyForm";
-import { FormProvider, useForm } from "react-hook-form";
-import { Box, Grid } from "@mui/material";
-import FormSelect from "App/core/hook-form/FormSelect";
+
 import { DashboardAction } from "../store";
-import { useTheme } from "@emotion/react";
-import { permissions } from "Private/data/permissions";
-import withDashboardPermission from "Private/HOC/withDashboardPermission";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -149,8 +147,4 @@ function DashboardCurrencyData() {
     );
 }
 
-//export default withPermission({ permission: [permissions.READ_EMAIL] })(Email);
-
-export default withDashboardPermission({ permissions: [permissions.READ_DASHBOARD_EXCHANGE_RATE] })(
-    DashboardCurrencyData,
-);
+export default DashboardCurrencyData;

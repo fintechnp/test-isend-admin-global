@@ -1,20 +1,18 @@
-import React, { useState } from "react";
 import Box from "@mui/material/Box";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import Skeleton from "@mui/material/Skeleton";
+import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import ToggleButton from "@mui/material/ToggleButton";
+import MuiToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 import Row from "App/components/Row/Row";
-import Column from "App/components/Column/Column";
-import DashboardCardChart from "./DashboardCardChart";
-import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
-import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
-import { useSelector } from "react-redux";
 import numberUtils from "App/utils/numberUtils";
-import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
-import { Skeleton, ToggleButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import MuiToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { inputBorderRadius } from "App/theme/theme";
+import Column from "App/components/Column/Column";
+
+import DashboardCardChart from "./DashboardCardChart";
 
 const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
     "& .MuiToggleButtonGroup-grouped": {
@@ -117,8 +115,8 @@ export default function OverallTransactionAndCustomer() {
                     total: numberUtils.format(customerOverallCountByStatusData?.customerWithNoKycCount ?? 0),
                 },
                 {
-                    title: "Blocked",
-                    total: numberUtils.format(customerOverallCountByStatusData?.totalCustomerBlocked ?? 0),
+                    title: "Nearly Expired",
+                    total: numberUtils.format(customerOverallCountByStatusData?.kycExpiringCount ?? 0),
                 },
             ],
         },

@@ -34,7 +34,7 @@ export default function UserRegistrationHistoryStat() {
             <Box
                 sx={{
                     width: "100%",
-                    height: 250,
+                    height: 280,
                     marginTop: "16px",
                 }}
             >
