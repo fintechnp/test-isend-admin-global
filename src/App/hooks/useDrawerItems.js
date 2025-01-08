@@ -50,7 +50,12 @@ const useDrawerItems = () => {
                 text: permission.display_name,
                 icon: permission.icon,
                 is_active: permission.is_active,
-                sub: permission.type === PermissionType.MENU ? (permission?.children?.length ?? 0) > 0 : false,
+                sub:
+                    permission.type === PermissionType.MENU
+                        ? permission.name !== "DASHBOARD"
+                            ? (permission?.children?.length ?? 0) > 0
+                            : false
+                        : false,
                 ...(permission.url
                     ? {
                           path: permission.url,
