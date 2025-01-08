@@ -79,6 +79,7 @@ export default function MakePaymentRowForm({ row, onMakePaymentSuccess, transact
             <TableCell>{row.transaction_id}</TableCell>
             <TableCell align="right">{row.transaction_amount.toLocaleString()} </TableCell>
             <TableCell>{row.transaction_currency}</TableCell>
+            <TableCell>{!isEmpty(row.debtor_name) ? row.debtor_name : "N/A"}</TableCell>
             <TableCell>
                 <TextField
                     type="text"
