@@ -9,6 +9,11 @@ import IconButton from "@mui/material/IconButton";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import Paper from "App/components/Paper/Paper";
+import styled from "@emotion/styled";
+
+const Container = styled(Paper)(({ theme }) => ({
+    padding: "16px",
+}));
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -36,7 +41,7 @@ export default function DashboardPartnerBarChart() {
     }));
 
     return (
-        <Box>
+        <Container>
             <Box
                 sx={{
                     display: "flex",
@@ -88,6 +93,6 @@ export default function DashboardPartnerBarChart() {
                     )}
                 </ResponsiveContainer>
             </Box>
-        </Box>
+        </Container>
     );
 }

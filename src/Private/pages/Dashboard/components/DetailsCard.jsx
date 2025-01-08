@@ -604,10 +604,8 @@ export default function DetailsCard() {
                     </Column>
                 </Container>
             </Grid>
-            <Grid item xs={12}>
-                <Container>
-                    <TotalCustomerCard />
-                </Container>
+            {/* <Grid item xs={12}>
+                <TotalCustomerCard />
             </Grid>
             <Grid item xs={12}>
                 <TransactionStat />
@@ -643,7 +641,7 @@ export default function DetailsCard() {
             </Grid>
             <Grid item xs={12}>
                 <AllOverallDataChip />
-            </Grid>
+            </Grid> */}
         </Grid>
     );
 }

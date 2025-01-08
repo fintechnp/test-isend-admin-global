@@ -9,6 +9,11 @@ import IconButton from "@mui/material/IconButton";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 import Paper from "App/components/Paper/Paper";
+import styled from "@emotion/styled";
+
+const Container = styled(Paper)(({ theme }) => ({
+    padding: "16px",
+}));
 
 const DUMMY_DATA = [
     {
@@ -58,7 +63,7 @@ export default function DashboardPayoutCountryBarChart() {
     }));
 
     return (
-        <Box>
+        <Container>
             <Box
                 sx={{
                     display: "flex",
@@ -112,6 +117,6 @@ export default function DashboardPayoutCountryBarChart() {
                     )}
                 </ResponsiveContainer>
             </Box>
-        </Box>
+        </Container>
     );
 }

@@ -13,6 +13,12 @@ import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
 import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardCustomerIcon from "App/components/Icon/DashboardCustomerIcon";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
+import styled from "@emotion/styled";
+import Paper from "App/components/Paper/Paper";
+
+const Container = styled(Paper)(({ theme }) => ({
+    padding: "16px",
+}));
 
 export default function TotalCustomerCard() {
     const theme = useTheme();
@@ -100,143 +106,149 @@ export default function TotalCustomerCard() {
         ],
     };
     return (
-        <Column gap={2}>
-            <Row alignItems="flex-end" justifyContent="space-between">
-                <Row alignItems="center" gap="10px">
-                    <Box
-                        sx={{
-                            padding: "8px",
-                            backgroundColor: "#F1F7FE",
-                            borderRadius: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        {customerDetails.icon}
-                    </Box>
-                    <Column gap="3px">
-                        <Typography
-                            sx={(theme) => ({
-                                color: theme.palette.text.secondary,
-                            })}
-                        >
-                            Total Customer
-                        </Typography>
-
-                        {isLoadingCustomerKycStatByStatus ? (
-                            <Skeleton variant="text" width={100} />
-                        ) : (
-                            <Row gap="8px" alignItems="center">
-                                <Typography fontWeight={700} fontSize={16}>
-                                    {customerDetails.totalCustomers}
-                                </Typography>
-                                <Row
-                                    gap="4px"
-                                    sx={{
-                                        backgroundColor: customerDetails.isDropped
-                                            ? theme.palette.surface.dangerSecond
-                                            : theme.palette.surface.successSecond,
-                                        padding: "6px",
-                                        borderRadius: "16px",
-                                    }}
-                                    alignItems="center"
-                                >
-                                    <Typography>
-                                        {customerDetails.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}
-                                    </Typography>
-                                    <Typography
-                                        sx={{
-                                            color: customerDetails.isDropped
-                                                ? theme.palette.error.main
-                                                : theme.palette.success.main,
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        {customerDetails.differenceInPercentage}%{""}
-                                    </Typography>
-                                </Row>
-                            </Row>
-                        )}
-                    </Column>
-                </Row>
-                <Box
-                    sx={{
-                        width: 200,
-                        height: 50,
-                    }}
-                >
-                    {isLoadingCustomerKycStatByStatus ? (
-                        <Skeleton variant="rectangular" width={200} height={50} />
-                    ) : (
-                        <DashboardCardChart />
-                    )}
-                </Box>
-            </Row>
-            <Row
-                sx={{
-                    [theme.breakpoints.down("lg")]: {
-                        flexWrap: "wrap",
-                    },
-                }}
-            >
-                {customerDetails.childrenData.map((data, index) => {
-                    const containsBorder = index !== 0;
-                    return (
-                        <Column
-                            key={index}
-                            gap={1}
+        <Paper>
+            <Column gap={2}>
+                <Row alignItems="flex-end" justifyContent="space-between">
+                    <Row alignItems="center" gap="10px">
+                        <Box
                             sx={{
-                                [theme.breakpoints.up("lg")]: {
-                                    borderLeft: containsBorder ? `1px solid ${theme.palette.divider}` : "none",
-                                    paddingLeft: "10px",
-                                },
+                                padding: "8px",
+                                backgroundColor: "#F1F7FE",
+                                borderRadius: "8px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                             }}
                         >
+                            {customerDetails.icon}
+                        </Box>
+                        <Column gap="3px">
                             <Typography
                                 sx={(theme) => ({
                                     color: theme.palette.text.secondary,
                                 })}
                             >
-                                {data.title}
+                                Total Customer
                             </Typography>
+
                             {isLoadingCustomerKycStatByStatus ? (
                                 <Skeleton variant="text" width={100} />
                             ) : (
-                                <Row alignItems="center" gap="5px">
-                                    <Typography fontSize={16} fontWeight={700}>
-                                        {data.total}
+                                <Row gap="8px" alignItems="center">
+                                    <Typography fontWeight={700} fontSize={16}>
+                                        {customerDetails.totalCustomers}
                                     </Typography>
-                                    <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
-                                    <Typography
+                                    <Row
+                                        gap="4px"
                                         sx={{
-                                            color: data.isDropped
-                                                ? theme.palette.error.main
-                                                : theme.palette.success.main,
-                                            fontWeight: 500,
+                                            backgroundColor: customerDetails.isDropped
+                                                ? theme.palette.surface.dangerSecond
+                                                : theme.palette.surface.successSecond,
+                                            padding: "6px",
+                                            borderRadius: "16px",
                                         }}
+                                        alignItems="center"
                                     >
-                                        {data.differenceInPercentage}%{""}
-                                    </Typography>
+                                        <Typography>
+                                            {customerDetails.isDropped ? (
+                                                <DashboardReceiveIcon />
+                                            ) : (
+                                                <DashBoardSendIcon />
+                                            )}
+                                        </Typography>
+                                        <Typography
+                                            sx={{
+                                                color: customerDetails.isDropped
+                                                    ? theme.palette.error.main
+                                                    : theme.palette.success.main,
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            {customerDetails.differenceInPercentage}%{""}
+                                        </Typography>
+                                    </Row>
                                 </Row>
                             )}
                         </Column>
-                    );
-                })}
-            </Row>
-
-            <Row>
-                <Typography
+                    </Row>
+                    <Box
+                        sx={{
+                            width: 200,
+                            height: 50,
+                        }}
+                    >
+                        {isLoadingCustomerKycStatByStatus ? (
+                            <Skeleton variant="rectangular" width={200} height={50} />
+                        ) : (
+                            <DashboardCardChart />
+                        )}
+                    </Box>
+                </Row>
+                <Row
                     sx={{
-                        color: theme.palette.primary.main,
-                        fontSize: 16,
-                        fontWeight: 700,
-                        cursor: "pointer",
+                        [theme.breakpoints.down("lg")]: {
+                            flexWrap: "wrap",
+                        },
                     }}
                 >
-                    View all -{">"}
-                </Typography>
-            </Row>
-        </Column>
+                    {customerDetails.childrenData.map((data, index) => {
+                        const containsBorder = index !== 0;
+                        return (
+                            <Column
+                                key={index}
+                                gap={1}
+                                sx={{
+                                    [theme.breakpoints.up("lg")]: {
+                                        borderLeft: containsBorder ? `1px solid ${theme.palette.divider}` : "none",
+                                        paddingLeft: "10px",
+                                    },
+                                }}
+                            >
+                                <Typography
+                                    sx={(theme) => ({
+                                        color: theme.palette.text.secondary,
+                                    })}
+                                >
+                                    {data.title}
+                                </Typography>
+                                {isLoadingCustomerKycStatByStatus ? (
+                                    <Skeleton variant="text" width={100} />
+                                ) : (
+                                    <Row alignItems="center" gap="5px">
+                                        <Typography fontSize={16} fontWeight={700}>
+                                            {data.total}
+                                        </Typography>
+                                        <Box>{data.isDropped ? <DashboardReceiveIcon /> : <DashBoardSendIcon />}</Box>
+                                        <Typography
+                                            sx={{
+                                                color: data.isDropped
+                                                    ? theme.palette.error.main
+                                                    : theme.palette.success.main,
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            {data.differenceInPercentage}%{""}
+                                        </Typography>
+                                    </Row>
+                                )}
+                            </Column>
+                        );
+                    })}
+                </Row>
+
+                <Row>
+                    <Typography
+                        sx={{
+                            color: theme.palette.primary.main,
+                            fontSize: 16,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                        }}
+                    >
+                        View all -{">"}
+                    </Typography>
+                </Row>
+            </Column>
+        </Paper>
     );
 }
