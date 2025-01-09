@@ -211,7 +211,7 @@ const PdfTable = ({ csvReport }) => {
                                                     {customer[header?.key]
                                                         ? dateUtils.getFormattedDate(
                                                               customer[header?.key],
-                                                              "MM/DD/YYYY HH:mm A",
+                                                              "MM/DD/YYYY hh:mm A",
                                                           )
                                                         : "n/a"}
                                                 </Text>
