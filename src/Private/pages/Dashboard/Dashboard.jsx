@@ -129,6 +129,13 @@ function Dashboard() {
 
                                 {/* Compliance Data */}
                                 <HasPermission permission={permissions.DASH_COMPLIANCE}>
+                                    <Grid item xs={12}>
+                                        <OverallTransactionReport />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <OverallCustomerReport />
+                                    </Grid>
+
                                     <Grid item xs={12} mt={2}>
                                         <ComplianceData />
                                     </Grid>

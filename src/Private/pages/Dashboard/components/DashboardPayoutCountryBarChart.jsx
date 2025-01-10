@@ -84,7 +84,7 @@ export default function DashboardPayoutCountryBarChart() {
 
             <Box
                 sx={{
-                    height: 400,
+                    height: 350,
                     mt: 2,
                 }}
             >

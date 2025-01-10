@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 
 import PageContent from "App/components/Container/PageContent";
@@ -24,7 +24,7 @@ import OverallCustomerReport from "./components/OverallCustomerReport";
 import OverallTransactionReport from "./components/OverallTransactionReport";
 import styled from "@emotion/styled";
 import Paper from "App/components/Paper/Paper";
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import isEmpty from "App/helpers/isEmpty";
 import Column from "App/components/Column/Column";
 import OverallReportHeading from "./components/OverallReportHeading";
@@ -42,116 +42,146 @@ const Item = styled(Paper)(({ theme }) => ({
     }),
 }));
 
-function TransactionDetailsFilter() {
+function useGridSizePermission(permission1, permission2) {
+    return {
+        xs1: !isEmpty(permission1) ? (!isEmpty(permission2) ? 6 : 12) : 12,
+        xs2: !isEmpty(permission2) ? (!isEmpty(permission1) ? 6 : 12) : 12,
+    };
+}
+
+const TransactionDetailsFilter = React.memo(() => {
     const hasTxnCountPermission = permissions.DASH_TXN_COUNT;
     const hasTxnAmountPermission = permissions.DASH_TXN_AMOUNT;
 
-    const xsTxnCount = !isEmpty(hasTxnCountPermission) ? (!isEmpty(hasTxnAmountPermission) ? 6 : 12) : 12;
+    const { xs1: xsTxnCount, xs2: xsTxnAmount } = useGridSizePermission(hasTxnCountPermission, hasTxnAmountPermission);
 
-    const xsTxnAmount = !isEmpty(hasTxnAmountPermission) ? (!isEmpty(hasTxnCountPermission) ? 6 : 12) : 12;
-
-    return (
-        <React.Fragment>
-            <Grid container spacing={2}>
-                <HasPermission permission={hasTxnCountPermission}>
-                    <Grid item xs={12} md={xsTxnCount}>
-                        <DashboardTransactionCount />
-                    </Grid>
-                </HasPermission>
-
-                <HasPermission permission={hasTxnAmountPermission}>
-                    <Grid item xs={12} md={xsTxnAmount}>
-                        <DashboardTransactionAmount />
-                    </Grid>
-                </HasPermission>
-
-                <Grid item xs={12}>
-                    <TotalCustomerCard />
-                </Grid>
-            </Grid>
-        </React.Fragment>
-    );
-}
-
-function TransactionBarGraphs() {
-    const hasPermissionAgentBiz = permissions.DASH_TXN_AGENT_BIZ;
-    const hasPermissionPayoutCountries = permissions.DASH_PAYOUT;
-
-    const xsAgentBiz = !isEmpty(hasPermissionAgentBiz) ? (!isEmpty(hasPermissionPayoutCountries) ? 6 : 12) : 12;
-    const xsPayoutCountries = !isEmpty(hasPermissionPayoutCountries) ? (!isEmpty(hasPermissionAgentBiz) ? 6 : 12) : 12;
-
-    return (
-        <React.Fragment>
-            <Grid container spacing={2}>
-                <HasPermission permission={hasPermissionAgentBiz}>
-                    <Grid item xs={12} md={xsAgentBiz}>
-                        <DashboardPartnerBarChart />
-                    </Grid>
-                </HasPermission>
-
-                <HasPermission permission={hasPermissionPayoutCountries}>
-                    <Grid item xs={12} md={xsPayoutCountries}>
-                        <DashboardPayoutCountryBarChart />
-                    </Grid>
-                </HasPermission>
-            </Grid>
-        </React.Fragment>
-    );
-}
-
-function OverallTransactionCustomerDetails() {
     return (
         <Grid container spacing={2}>
+            <HasPermission permission={hasTxnCountPermission}>
+                <Grid item xs={12} md={xsTxnCount}>
+                    <DashboardTransactionCount />
+                </Grid>
+            </HasPermission>
+
+            <HasPermission permission={hasTxnAmountPermission}>
+                <Grid item xs={12} md={xsTxnAmount}>
+                    <DashboardTransactionAmount />
+                </Grid>
+            </HasPermission>
+
             <Grid item xs={12}>
-                <OverallReportHeading />
-            </Grid>
-            <Grid item xs={12}>
-                <OverallTransactionReport />
-            </Grid>
-            <Grid item xs={12}>
-                <OverallCustomerReport />
-            </Grid>
-            <Grid item xs={12}>
-                <ComplianceData />
+                <TotalCustomerCard />
             </Grid>
         </Grid>
     );
-}
+});
 
-function Dashboard2() {
+const TransactionBarGraphs = React.memo(() => {
+    const hasPermissionAgentBiz = permissions.DASH_TXN_AGENT_BIZ;
+    const hasPermissionPayoutCountries = permissions.DASH_PAYOUT;
+
+    const { xs1: xsAgentBiz, xs2: xsPayoutCountries } = useGridSizePermission(
+        hasPermissionAgentBiz,
+        hasPermissionPayoutCountries,
+    );
+
+    return (
+        <Grid container spacing={2}>
+            <HasPermission permission={hasPermissionAgentBiz}>
+                <Grid item xs={12} md={xsAgentBiz}>
+                    <DashboardPartnerBarChart />
+                </Grid>
+            </HasPermission>
+
+            <HasPermission permission={hasPermissionPayoutCountries}>
+                <Grid item xs={12} md={xsPayoutCountries}>
+                    <DashboardPayoutCountryBarChart />
+                </Grid>
+            </HasPermission>
+        </Grid>
+    );
+});
+
+const OverallTransactionCustomerDetails = React.memo(() => {
+    const hasOverallTransactionPermission = permissions.DASH_TXN_OVERALL;
+    const hasOverallCustomerPermission = permissions.DASH_CUSTOMER_OVERALL;
+    const hasCompliancePermission = permissions.DASH_COMPLIANCE;
+
+    const hasOverallHeading = hasCompliancePermission && hasOverallCustomerPermission;
+
+    return (
+        <Grid container spacing={2}>
+            {hasOverallHeading && (
+                <Grid item xs={12}>
+                    <OverallReport />
+                </Grid>
+            )}
+
+            <HasPermission permission={hasOverallTransactionPermission}>
+                <Grid item xs={12}>
+                    <OverallTransactionReport />
+                </Grid>
+            </HasPermission>
+
+            <HasPermission permission={hasOverallCustomerPermission}>
+                <Grid item xs={12}>
+                    <OverallCustomerReport />
+                </Grid>
+            </HasPermission>
+
+            <HasPermission permission={hasCompliancePermission}>
+                <Grid item xs={12}>
+                    <ComplianceData />
+                </Grid>
+            </HasPermission>
+        </Grid>
+    );
+});
+
+const Dashboard2 = React.memo(() => {
     return (
         <PageContent documentTitle="Dashboard">
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Header />
-                </Grid>
+            <Box
+                sx={{
+                    flexGrow: 1,
+                }}
+            >
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Header />
+                    </Grid>
 
-                <Grid item xs={12}>
-                    <DashboardCurrencyData />
-                </Grid>
+                    <Grid item xs={12}>
+                        <DashboardCurrencyData />
+                    </Grid>
 
-                <Grid item xs={12} sm={12} md={9}>
-                    <Column gap={2}>
-                        <TransactionDetailsFilter />
-                        <TransactionBarGraphs />
-                        <AllOverallDataChip />
-                    </Column>
-                </Grid>
+                    <Grid item xs={12} sm={12} md={9}>
+                        <Column gap={2}>
+                            <TransactionDetailsFilter />
+                            <TransactionBarGraphs />
+                            <AllOverallDataChip />
+                        </Column>
+                    </Grid>
 
-                <Grid item xs={12} sm={12} md={3}>
-                    <OverallTransactionCustomerDetails />
-                </Grid>
+                    <Grid item xs={12} sm={12} md={3}>
+                        <OverallTransactionCustomerDetails />
+                    </Grid>
 
-                <Grid item xs={12} md={6} lg={4}>
-                    <CustomerPieChart />
-                </Grid>
+                    <HasPermission permission={permissions.DASH_DONUT_CHART}>
+                        <Grid item xs={12} md={6} lg={4}>
+                            <CustomerPieChart />
+                        </Grid>
+                    </HasPermission>
 
-                <Grid item xs={12} md={6} lg={8}>
-                    <UserRegistrationHistoryStat />
+                    <HasPermission permission={permissions.DASH_USER_REG_LINEGRAPH}>
+                        <Grid item xs={12} md={6} lg={8}>
+                            <UserRegistrationHistoryStat />
+                        </Grid>
+                    </HasPermission>
                 </Grid>
-            </Grid>
+            </Box>
         </PageContent>
     );
-}
+});
 
 export default Dashboard2;
