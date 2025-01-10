@@ -17,6 +17,10 @@ import useListFilterStore from "App/hooks/useListFilterStore";
 import { ExchangeRateAction } from "Private/pages/Setup/ExchangeRate/store";
 
 import { DashboardAction } from "../store";
+import isEmpty from "App/helpers/isEmpty";
+
+import HasPermission from "Private/components/shared/HasPermission";
+import withPermission from "Private/HOC/withPermission";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -40,7 +44,7 @@ function DashboardCurrencyData() {
 
     const methods = useForm({});
 
-    const { watch } = methods;
+    const { watch, setValue } = methods;
 
     const sendingAgentValue = watch("agent_name");
 
@@ -52,22 +56,25 @@ function DashboardCurrencyData() {
         (state) => state.get_exchange_rate_summary,
     );
 
+    const agentData =
+        exchangeRateResponse?.data?.map((item) => ({
+            label: item?.agent_name,
+            value: item.sending_agent_id,
+        })) || [];
+
     useEffect(() => {
-        dispatch(
-            DashboardAction.get_exchange_rate_summary({
-                id: sendingAgentValue,
-            }),
-        );
+        if (!isEmpty(sendingAgentValue)) {
+            dispatch(
+                DashboardAction.get_exchange_rate_summary({
+                    id: sendingAgentValue,
+                }),
+            );
+        }
     }, [dispatch, sendingAgentValue]);
 
     useEffect(() => {
         dispatch(ExchangeRateAction.get_all_exchange_rate(filterSchema));
     }, [dispatch, filterSchema]);
-
-    const agentData = exchangeRateResponse?.data?.map((item) => ({
-        label: item?.agent_name,
-        value: item.sending_agent_id,
-    }));
 
     const dashboardExchangeRateData = dashboardExchangeRateSummary?.data?.map((item) => ({
         customerRate: item?.customerRate,
@@ -77,6 +84,12 @@ function DashboardCurrencyData() {
     const isPositive = (value) => {
         return value >= 0;
     };
+
+    useEffect(() => {
+        if (agentData.length > 0 && isEmpty(sendingAgentValue)) {
+            setValue("agent_name", agentData[0]?.value || "");
+        }
+    }, [agentData, setValue]);
 
     return (
         <Container>

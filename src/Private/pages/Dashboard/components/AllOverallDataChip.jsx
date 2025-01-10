@@ -58,13 +58,13 @@ export default function AllOverallDataChip() {
     ];
 
     return (
-        <Grid container spacing={"16px"}>
+        <Grid container spacing={"26px"}>
             {data.map((item, index) => {
                 return (
                     <Grid
                         item
                         xs={12}
-                        lg={4}
+                        lg={6}
                         key={item.label}
                         sx={{
                             display: "grid",

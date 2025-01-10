@@ -14,12 +14,8 @@ const Container = styled(Paper)(({ theme }) => ({
 export default function OverallReport() {
     return (
         <Column gap={2}>
-            <Container>
-                <OverallTransactionAndCustomer />
-            </Container>
-            <Container>
-                <ComplianceData />
-            </Container>
+            {/* <OverallTransactionAndCustomer />
+            <ComplianceData /> */}
         </Column>
     );
 }

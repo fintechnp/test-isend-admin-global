@@ -13,6 +13,13 @@ import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
 
 import DashboardCardChart from "./DashboardCardChart";
+import Paper from "App/components/Paper/Paper";
+import HasPermission from "Private/components/shared/HasPermission";
+import { permissions } from "Private/data/permissions";
+
+const Container = styled(Paper)(({ theme }) => ({
+    padding: "16px",
+}));
 
 const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
     "& .MuiToggleButtonGroup-grouped": {
@@ -123,156 +130,161 @@ export default function OverallTransactionAndCustomer() {
     };
 
     return (
-        <Column gap={2}>
-            <Typography fontWeight={700} fontSize={16}>
-                Overall report
-            </Typography>
-
-            <Column
-                sx={{
-                    marginTop: "16px",
-                    borderBottom: `1px solid ${theme.palette.divider}`,
-                    paddingBottom: "16px",
-                }}
-            >
-                <Typography fontWeight={700} fontSize={14}>
-                    Overall Transaction
+        <Container>
+            <Column gap={2}>
+                <Typography fontWeight={700} fontSize={16}>
+                    Overall report
                 </Typography>
 
-                <Box paddingY={1} display="flex" flexDirection="row" justifyContent="center">
-                    <ToggleButtonGroup value={transCategory} onChange={handleTransCategoryChange}>
-                        <ToggleButton disableRipple value="amount">
-                            Amount
-                        </ToggleButton>
-
-                        <ToggleButton disableRipple value="count">
-                            Count
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                </Box>
-
-                <Column mt={1} gap={1}>
-                    <Typography
-                        sx={{
-                            color: theme.palette.text.secondary,
-                        }}
-                    >
-                        Total Transactions
+                <Column
+                    sx={{
+                        marginTop: "16px",
+                        borderBottom: `1px solid ${theme.palette.divider}`,
+                        paddingBottom: "16px",
+                    }}
+                >
+                    <Typography fontWeight={700} fontSize={14}>
+                        Overall Transaction
                     </Typography>
 
-                    {isTransactionCountLoading ? (
-                        <>
-                            <Skeleton variant="text" width={130} />
-                            <Skeleton variant="rectangular" height={50} width="100%" />
-                        </>
-                    ) : (
-                        <>
-                            <Row gap={1} alignItems="center">
-                                <Typography fontSize={16} fontWeight={700}>
-                                    {transCategory === "amount"
-                                        ? overallTransactionData.transaction.totalTransactionAmount
-                                        : overallTransactionData.transaction.totalTransactionCount}
-                                </Typography>
-                            </Row>
-                            <Box
-                                sx={{
-                                    width: "100%",
-                                    height: 50,
-                                }}
-                            >
-                                <DashboardCardChart />
-                            </Box>
-                        </>
-                    )}
+                    <Box paddingY={1} display="flex" flexDirection="row" justifyContent="center">
+                        <ToggleButtonGroup value={transCategory} onChange={handleTransCategoryChange}>
+                            <ToggleButton disableRipple value="amount">
+                                Amount
+                            </ToggleButton>
 
-                    <Column gap={"6px"}>
-                        {overallTransactionData.transaction.childrenData.map((data, index) => (
-                            <Column key={index} mt={1} gap={1}>
-                                <Typography
+                            <ToggleButton disableRipple value="count">
+                                Count
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
+
+                    <Column mt={1} gap={1}>
+                        <Typography
+                            sx={{
+                                color: theme.palette.text.secondary,
+                            }}
+                        >
+                            Total Transactions
+                        </Typography>
+
+                        {isTransactionCountLoading ? (
+                            <>
+                                <Skeleton variant="text" width={130} />
+                                <Skeleton variant="rectangular" height={50} width="100%" />
+                            </>
+                        ) : (
+                            <>
+                                <Row gap={1} alignItems="center">
+                                    <Typography fontSize={16} fontWeight={700}>
+                                        {transCategory === "amount"
+                                            ? overallTransactionData.transaction.totalTransactionAmount
+                                            : overallTransactionData.transaction.totalTransactionCount}
+                                    </Typography>
+                                </Row>
+                                <Box
                                     sx={{
-                                        color: theme.palette.text.secondary,
+                                        width: "100%",
+                                        height: 50,
                                     }}
                                 >
-                                    {data.title}
-                                </Typography>
-                                {isTransactionCountLoading ? (
-                                    <Skeleton variant="text" width={130} />
-                                ) : (
-                                    <Row gap={1} alignItems="center">
-                                        <Typography fontSize={16} fontWeight={700}>
-                                            {transCategory === "amount" ? data.totalAmount : data.totalCount}
-                                        </Typography>
-                                    </Row>
-                                )}
-                            </Column>
-                        ))}
-                    </Column>
-                </Column>
-            </Column>
-            <Column>
-                <Typography fontWeight={700} fontSize={14}>
-                    Overall Customer
-                </Typography>
+                                    <DashboardCardChart />
+                                </Box>
+                            </>
+                        )}
 
-                <Column mt={1} gap={1}>
-                    <Typography
-                        sx={{
-                            color: theme.palette.text.secondary,
-                        }}
-                    >
-                        Total Customer
-                    </Typography>
-
-                    {isOverallCustomerByStatusLoading ? (
-                        <>
-                            <Skeleton variant="text" width={130} />
-                            <Skeleton variant="rectangular" height={50} width="100%" />
-                        </>
-                    ) : (
-                        <>
-                            <Row gap={1} alignItems="center">
-                                <Typography fontSize={16} fontWeight={700}>
-                                    {overallTransactionData.customer.totalTransaction}
-                                </Typography>
-                            </Row>
-                            <Box
-                                sx={{
-                                    width: "100%",
-                                    height: 50,
-                                }}
-                            >
-                                <DashboardCardChart />
-                            </Box>
-                        </>
-                    )}
-
-                    <Column gap={"6px"}>
-                        {overallTransactionData.customer.childrenData.map((data, index) => (
-                            <Column key={index} mt={1} gap={1}>
-                                <Typography
-                                    sx={{
-                                        color: theme.palette.text.secondary,
-                                    }}
-                                >
-                                    {data.title}
-                                </Typography>
-
-                                {isOverallCustomerByStatusLoading ? (
-                                    <>
+                        <Column gap={"6px"}>
+                            {overallTransactionData.transaction.childrenData.map((data, index) => (
+                                <Column key={index} mt={1} gap={1}>
+                                    <Typography
+                                        sx={{
+                                            color: theme.palette.text.secondary,
+                                        }}
+                                    >
+                                        {data.title}
+                                    </Typography>
+                                    {isTransactionCountLoading ? (
                                         <Skeleton variant="text" width={130} />
-                                    </>
-                                ) : (
-                                    <Row gap={1} alignItems="center">
-                                        <Typography fontSize={16} fontWeight={700}>
-                                            {data.total}
-                                        </Typography>
-                                    </Row>
-                                )}
-                            </Column>
-                        ))}
+                                    ) : (
+                                        <Row gap={1} alignItems="center">
+                                            <Typography fontSize={16} fontWeight={700}>
+                                                {transCategory === "amount" ? data.totalAmount : data.totalCount}
+                                            </Typography>
+                                        </Row>
+                                    )}
+                                </Column>
+                            ))}
+                        </Column>
                     </Column>
                 </Column>
+
+                <HasPermission permission={permissions.DASH_CUSTOMER_OVERALL}>
+                    <Column>
+                        <Typography fontWeight={700} fontSize={14}>
+                            Overall Customer
+                        </Typography>
+
+                        <Column mt={1} gap={1}>
+                            <Typography
+                                sx={{
+                                    color: theme.palette.text.secondary,
+                                }}
+                            >
+                                Total Customer
+                            </Typography>
+
+                            {isOverallCustomerByStatusLoading ? (
+                                <>
+                                    <Skeleton variant="text" width={130} />
+                                    <Skeleton variant="rectangular" height={50} width="100%" />
+                                </>
+                            ) : (
+                                <>
+                                    <Row gap={1} alignItems="center">
+                                        <Typography fontSize={16} fontWeight={700}>
+                                            {overallTransactionData.customer.totalTransaction}
+                                        </Typography>
+                                    </Row>
+                                    <Box
+                                        sx={{
+                                            width: "100%",
+                                            height: 50,
+                                        }}
+                                    >
+                                        <DashboardCardChart />
+                                    </Box>
+                                </>
+                            )}
+
+                            <Column gap={"6px"}>
+                                {overallTransactionData.customer.childrenData.map((data, index) => (
+                                    <Column key={index} mt={1} gap={1}>
+                                        <Typography
+                                            sx={{
+                                                color: theme.palette.text.secondary,
+                                            }}
+                                        >
+                                            {data.title}
+                                        </Typography>
+
+                                        {isOverallCustomerByStatusLoading ? (
+                                            <>
+                                                <Skeleton variant="text" width={130} />
+                                            </>
+                                        ) : (
+                                            <Row gap={1} alignItems="center">
+                                                <Typography fontSize={16} fontWeight={700}>
+                                                    {data.total}
+                                                </Typography>
+                                            </Row>
+                                        )}
+                                    </Column>
+                                ))}
+                            </Column>
+                        </Column>
+                    </Column>
+                </HasPermission>
             </Column>
-        </Column>
+        </Container>
     );
 }

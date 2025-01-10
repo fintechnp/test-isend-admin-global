@@ -11,6 +11,12 @@ import { useSelector } from "react-redux";
 import numberUtils from "App/utils/numberUtils";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 import { Skeleton } from "@mui/material";
+import styled from "@emotion/styled";
+import Paper from "App/components/Paper/Paper";
+
+const Container = styled(Paper)(({ theme }) => ({
+    padding: "16px",
+}));
 
 export default function ComplianceData() {
     const theme = useTheme();
@@ -52,7 +58,7 @@ export default function ComplianceData() {
     const isLoading = isComplianceLoading || isPreviousLoading;
 
     return (
-        <Box>
+        <Container>
             <Typography fontWeight={700} fontSize={16}>
                 Compliance
             </Typography>
@@ -87,6 +93,6 @@ export default function ComplianceData() {
                     </Column>
                 ))}
             </Column>
-        </Box>
+        </Container>
     );
 }

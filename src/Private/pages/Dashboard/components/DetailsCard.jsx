@@ -15,12 +15,9 @@ import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIcon";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
-import TransactionStat from "./TransactionStat";
-import TotalCustomerCard from "./TotalCustomerCard";
 import DashboardCardChart from "./DashboardCardChart";
-import AllOverallDataChip from "./AllOverallDataChip";
-import DashboardPartnerBarChart from "./DashboardPartnerBarChart";
-import DashboardPayoutCountryBarChart from "./DashboardPayoutCountryBarChart";
+import HasPermission from "Private/components/shared/HasPermission";
+import { permissions } from "Private/data/permissions";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -129,519 +126,489 @@ export default function DetailsCard() {
     };
 
     return (
-        <Grid container spacing={"16px"}>
-            <Grid item xs={12} lg={6}>
-                <Container>
-                    <Column gap={2}>
-                        <Row alignItems="flex-end" justifyContent="space-between">
-                            <Row gap="10px" alignItems="center">
+        <Grid container spacing="16px">
+            <HasPermission permission={permissions.DASH_TXN_COUNT}>
+                <Grid item xs={12} lg={6}>
+                    <Container>
+                        <Column gap={2}>
+                            <Row alignItems="flex-end" justifyContent="space-between">
+                                <Row gap="10px" alignItems="center">
+                                    <Box
+                                        sx={{
+                                            padding: "8px",
+                                            backgroundColor: "#F1F7FE",
+                                            borderRadius: "8px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        {totalTransactionsData.icon}
+                                    </Box>
+                                    <Column gap="3px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Total Transactions
+                                        </Typography>
+                                        {totalTransactionsData.isLoading ? (
+                                            <Skeleton variant="text" width={100} />
+                                        ) : (
+                                            <Row gap="8px" alignItems="center">
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.totalTransactionCount}
+                                                </Typography>
+                                                <Row
+                                                    gap="4px"
+                                                    sx={{
+                                                        backgroundColor: totalTransactionsData.isDropped
+                                                            ? theme.palette.surface.dangerSecond
+                                                            : theme.palette.surface.primarySecond,
+                                                        padding: "6px",
+                                                        borderRadius: "16px",
+                                                    }}
+                                                    alignItems="center"
+                                                >
+                                                    <Typography>
+                                                        {totalTransactionsData.isDropped ? (
+                                                            <DashboardReceiveIcon />
+                                                        ) : (
+                                                            <DashBoardSendIcon />
+                                                        )}
+                                                    </Typography>
+                                                    <Typography
+                                                        sx={{
+                                                            color: totalTransactionsData.isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                            fontWeight: 600,
+                                                        }}
+                                                    >
+                                                        {totalTransactionsData.totalDifferenceInPercentageCount}%
+                                                    </Typography>
+                                                </Row>
+                                            </Row>
+                                        )}
+                                    </Column>
+                                </Row>
                                 <Box
                                     sx={{
-                                        padding: "8px",
-                                        backgroundColor: "#F1F7FE",
-                                        borderRadius: "8px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
+                                        width: 150,
+                                        height: 50,
                                     }}
                                 >
-                                    {totalTransactionsData.icon}
-                                </Box>
-                                <Column gap="3px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Total Transactions
-                                    </Typography>
                                     {totalTransactionsData.isLoading ? (
-                                        <Skeleton variant="text" width={100} />
+                                        <Skeleton variant="rectangular" height="80%" width={150} />
                                     ) : (
-                                        <Row gap="8px" alignItems="center">
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.totalTransactionCount}
-                                            </Typography>
-                                            <Row
-                                                gap="4px"
-                                                sx={{
-                                                    backgroundColor: totalTransactionsData.isDropped
-                                                        ? theme.palette.surface.dangerSecond
-                                                        : theme.palette.surface.primarySecond,
-                                                    padding: "6px",
-                                                    borderRadius: "16px",
-                                                }}
-                                                alignItems="center"
-                                            >
-                                                <Typography>
-                                                    {totalTransactionsData.isDropped ? (
+                                        <DashboardCardChart />
+                                    )}
+                                </Box>
+                            </Row>
+                            <Grid
+                                container
+                                spacing={2}
+                                sx={{
+                                    marginTop: "4px",
+                                }}
+                            >
+                                <Grid item xs={12} lg={4}>
+                                    <Column gap="4px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Pending
+                                        </Typography>
+
+                                        {totalTransactionsData.isSubDataLoading ? (
+                                            <Skeleton variant="text" width={80} />
+                                        ) : (
+                                            <Row gap={1}>
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.countData.pendingData.total}
+                                                </Typography>
+                                                <Row alignItems="center" gap="4px">
+                                                    {totalTransactionsData.countData.pendingData.isDropped ? (
                                                         <DashboardReceiveIcon />
                                                     ) : (
                                                         <DashBoardSendIcon />
                                                     )}
-                                                </Typography>
-                                                <Typography
-                                                    sx={{
-                                                        color: totalTransactionsData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                        fontWeight: 600,
-                                                    }}
-                                                >
-                                                    {totalTransactionsData.totalDifferenceInPercentageCount}%
-                                                </Typography>
+
+                                                    <Typography
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            color: totalTransactionsData.countData.pendingData.isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                        }}
+                                                    >
+                                                        {
+                                                            totalTransactionsData.countData.pendingData
+                                                                .totalDifferenceInPercentage
+                                                        }
+                                                        %{" "}
+                                                    </Typography>
+                                                </Row>
                                             </Row>
-                                        </Row>
-                                    )}
-                                </Column>
-                            </Row>
-                            <Box
-                                sx={{
-                                    width: 150,
-                                    height: 50,
-                                }}
-                            >
-                                {totalTransactionsData.isLoading ? (
-                                    <Skeleton variant="rectangular" height="80%" width={150} />
-                                ) : (
-                                    <DashboardCardChart />
-                                )}
-                            </Box>
-                        </Row>
-                        <Grid
-                            container
-                            spacing={2}
-                            sx={{
-                                marginTop: "4px",
-                            }}
-                        >
-                            <Grid item xs={12} lg={4}>
-                                <Column gap="4px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Pending
-                                    </Typography>
-
-                                    {totalTransactionsData.isSubDataLoading ? (
-                                        <Skeleton variant="text" width={80} />
-                                    ) : (
-                                        <Row gap={1}>
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.countData.pendingData.total}
-                                            </Typography>
-                                            <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.countData.pendingData.isDropped ? (
-                                                    <DashboardReceiveIcon />
-                                                ) : (
-                                                    <DashBoardSendIcon />
-                                                )}
-
-                                                <Typography
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        color: totalTransactionsData.countData.pendingData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                    }}
-                                                >
-                                                    {
-                                                        totalTransactionsData.countData.pendingData
-                                                            .totalDifferenceInPercentage
-                                                    }
-                                                    %{" "}
-                                                </Typography>
-                                            </Row>
-                                        </Row>
-                                    )}
-                                </Column>
-                            </Grid>
-                            <Grid
-                                item
-                                xs={12}
-                                lg={4}
-                                // sx={(theme) => ({
-                                //     borderLeft: `1px solid ${theme.palette.divider}`,
-                                //     borderRight: `1px solid ${theme.palette.divider}`,
-                                // })}
-                            >
-                                <Column gap="4px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Payout
-                                    </Typography>
-
-                                    {totalTransactionsData.isSubDataLoading ? (
-                                        <Skeleton variant="text" width={80} />
-                                    ) : (
-                                        <Row gap={1}>
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.countData.payoutData.total}
-                                            </Typography>
-                                            <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.countData.payoutData.isDropped ? (
-                                                    <DashboardReceiveIcon />
-                                                ) : (
-                                                    <DashBoardSendIcon />
-                                                )}
-
-                                                <Typography
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        color: totalTransactionsData.countData.payoutData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                    }}
-                                                >
-                                                    {
-                                                        totalTransactionsData.countData.payoutData
-                                                            .totalDifferenceInPercentage
-                                                    }
-                                                    %{" "}
-                                                </Typography>
-                                            </Row>
-                                        </Row>
-                                    )}
-                                </Column>
-                            </Grid>
-                            <Grid item xs={12} lg={4}>
-                                <Column gap="4px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Cancelled
-                                    </Typography>
-                                    {totalTransactionsData.isSubDataLoading ? (
-                                        <Skeleton variant="text" width={80} />
-                                    ) : (
-                                        <Row gap={1}>
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.countData.cancelledData.total}
-                                            </Typography>
-                                            <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.countData.cancelledData.isDropped ? (
-                                                    <DashboardReceiveIcon />
-                                                ) : (
-                                                    <DashBoardSendIcon />
-                                                )}
-
-                                                <Typography
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        color: totalTransactionsData.countData.cancelledData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                    }}
-                                                >
-                                                    {
-                                                        totalTransactionsData.countData.cancelledData
-                                                            .totalDifferenceInPercentage
-                                                    }
-                                                    %{" "}
-                                                </Typography>
-                                            </Row>
-                                        </Row>
-                                    )}
-                                </Column>
-                            </Grid>
-                        </Grid>
-                        <Row>
-                            <Typography
-                                sx={{
-                                    color: theme.palette.primary.main,
-                                    fontSize: 16,
-                                    fontWeight: 700,
-                                    cursor: "pointer",
-                                }}
-                            >
-                                View all -{">"}
-                            </Typography>
-                        </Row>
-                    </Column>
-                </Container>
-            </Grid>
-            <Grid item xs={12} lg={6}>
-                <Container>
-                    <Column gap={2}>
-                        <Row alignItems="flex-end" justifyContent="space-between">
-                            <Row gap="10px" alignItems="center">
-                                <Box
-                                    sx={{
-                                        padding: "8px",
-                                        backgroundColor: "#F1F7FE",
-                                        borderRadius: "8px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
+                                        )}
+                                    </Column>
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    lg={4}
+                                    // sx={(theme) => ({
+                                    //     borderLeft: `1px solid ${theme.palette.divider}`,
+                                    //     borderRight: `1px solid ${theme.palette.divider}`,
+                                    // })}
                                 >
-                                    {totalTransactionsData.icon}
-                                </Box>
-                                <Column gap="3px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Total Transactions
-                                    </Typography>
-                                    {totalTransactionsData.isLoading ? (
-                                        <Skeleton variant="text" width={100} />
-                                    ) : (
-                                        <Row gap="8px" alignItems="center">
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {"$"} {totalTransactionsData.totalTransactionAmount}
-                                            </Typography>
-                                            <Row
-                                                gap="4px"
-                                                sx={{
-                                                    backgroundColor: totalTransactionsData.isDropped
-                                                        ? theme.palette.surface.dangerSecond
-                                                        : theme.palette.surface.primarySecond,
-                                                    padding: "6px",
-                                                    borderRadius: "16px",
-                                                }}
-                                                alignItems="center"
-                                            >
-                                                <Typography>
-                                                    {totalTransactionsData.isDropped ? (
+                                    <Column gap="4px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Payout
+                                        </Typography>
+
+                                        {totalTransactionsData.isSubDataLoading ? (
+                                            <Skeleton variant="text" width={80} />
+                                        ) : (
+                                            <Row gap={1}>
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.countData.payoutData.total}
+                                                </Typography>
+                                                <Row alignItems="center" gap="4px">
+                                                    {totalTransactionsData.countData.payoutData.isDropped ? (
                                                         <DashboardReceiveIcon />
                                                     ) : (
                                                         <DashBoardSendIcon />
                                                     )}
-                                                </Typography>
-                                                <Typography
-                                                    sx={{
-                                                        color: totalTransactionsData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                        fontWeight: 600,
-                                                    }}
-                                                >
-                                                    {totalTransactionsData.totalDifferenceInPercentageAmount}
-                                                    {"%"}
-                                                </Typography>
+
+                                                    <Typography
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            color: totalTransactionsData.countData.payoutData.isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                        }}
+                                                    >
+                                                        {
+                                                            totalTransactionsData.countData.payoutData
+                                                                .totalDifferenceInPercentage
+                                                        }
+                                                        %{" "}
+                                                    </Typography>
+                                                </Row>
                                             </Row>
-                                        </Row>
-                                    )}
-                                </Column>
+                                        )}
+                                    </Column>
+                                </Grid>
+                                <Grid item xs={12} lg={4}>
+                                    <Column gap="4px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Cancelled
+                                        </Typography>
+                                        {totalTransactionsData.isSubDataLoading ? (
+                                            <Skeleton variant="text" width={80} />
+                                        ) : (
+                                            <Row gap={1}>
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.countData.cancelledData.total}
+                                                </Typography>
+                                                <Row alignItems="center" gap="4px">
+                                                    {totalTransactionsData.countData.cancelledData.isDropped ? (
+                                                        <DashboardReceiveIcon />
+                                                    ) : (
+                                                        <DashBoardSendIcon />
+                                                    )}
+
+                                                    <Typography
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            color: totalTransactionsData.countData.cancelledData
+                                                                .isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                        }}
+                                                    >
+                                                        {
+                                                            totalTransactionsData.countData.cancelledData
+                                                                .totalDifferenceInPercentage
+                                                        }
+                                                        %{" "}
+                                                    </Typography>
+                                                </Row>
+                                            </Row>
+                                        )}
+                                    </Column>
+                                </Grid>
+                            </Grid>
+                            <Row>
+                                <Typography
+                                    sx={{
+                                        color: theme.palette.primary.main,
+                                        fontSize: 16,
+                                        fontWeight: 700,
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    View all -{">"}
+                                </Typography>
                             </Row>
-                            <Box
-                                sx={{
-                                    width: 150,
-                                    height: 50,
-                                }}
-                            >
-                                {totalTransactionsData.isLoading ? (
-                                    <Skeleton variant="rectangular" height="80%" width={150} />
-                                ) : (
-                                    <DashboardCardChart />
-                                )}
-                            </Box>
-                        </Row>
-                        <Grid
-                            container
-                            spacing={2}
-                            sx={{
-                                marginTop: "4px",
-                            }}
-                        >
-                            <Grid item xs={12} lg={4}>
-                                <Column gap="4px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
+                        </Column>
+                    </Container>
+                </Grid>
+            </HasPermission>
+
+            <HasPermission permission={permissions.DASH_TXN_AMOUNT}>
+                <Grid item xs={12} lg={6}>
+                    <Container>
+                        <Column gap={2}>
+                            <Row alignItems="flex-end" justifyContent="space-between">
+                                <Row gap="10px" alignItems="center">
+                                    <Box
+                                        sx={{
+                                            padding: "8px",
+                                            backgroundColor: "#F1F7FE",
+                                            borderRadius: "8px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
                                     >
-                                        Pending
-                                    </Typography>
-
-                                    {totalTransactionsData.isSubDataLoading ? (
-                                        <Skeleton variant="text" width={80} />
-                                    ) : (
-                                        <Row gap={1}>
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.amountData.pendingData.total}
-                                            </Typography>
-                                            <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.amountData.pendingData.isDropped ? (
-                                                    <DashboardReceiveIcon />
-                                                ) : (
-                                                    <DashBoardSendIcon />
-                                                )}
-
-                                                <Typography
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        color: totalTransactionsData.amountData.pendingData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                    }}
-                                                >
-                                                    {
-                                                        totalTransactionsData.amountData.pendingData
-                                                            .totalDifferenceInPercentage
-                                                    }
-                                                    %{""}
+                                        {totalTransactionsData.icon}
+                                    </Box>
+                                    <Column gap="3px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Total Transactions
+                                        </Typography>
+                                        {totalTransactionsData.isLoading ? (
+                                            <Skeleton variant="text" width={100} />
+                                        ) : (
+                                            <Row gap="8px" alignItems="center">
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {"$"} {totalTransactionsData.totalTransactionAmount}
                                                 </Typography>
+                                                <Row
+                                                    gap="4px"
+                                                    sx={{
+                                                        backgroundColor: totalTransactionsData.isDropped
+                                                            ? theme.palette.surface.dangerSecond
+                                                            : theme.palette.surface.primarySecond,
+                                                        padding: "6px",
+                                                        borderRadius: "16px",
+                                                    }}
+                                                    alignItems="center"
+                                                >
+                                                    <Typography>
+                                                        {totalTransactionsData.isDropped ? (
+                                                            <DashboardReceiveIcon />
+                                                        ) : (
+                                                            <DashBoardSendIcon />
+                                                        )}
+                                                    </Typography>
+                                                    <Typography
+                                                        sx={{
+                                                            color: totalTransactionsData.isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                            fontWeight: 600,
+                                                        }}
+                                                    >
+                                                        {totalTransactionsData.totalDifferenceInPercentageAmount}
+                                                        {"%"}
+                                                    </Typography>
+                                                </Row>
                                             </Row>
-                                        </Row>
+                                        )}
+                                    </Column>
+                                </Row>
+                                <Box
+                                    sx={{
+                                        width: 150,
+                                        height: 50,
+                                    }}
+                                >
+                                    {totalTransactionsData.isLoading ? (
+                                        <Skeleton variant="rectangular" height="80%" width={150} />
+                                    ) : (
+                                        <DashboardCardChart />
                                     )}
-                                </Column>
-                            </Grid>
+                                </Box>
+                            </Row>
                             <Grid
-                                item
-                                xs={12}
-                                lg={4}
-                                // sx={(theme) => ({
-                                //     borderLeft: `1px solid ${theme.palette.divider}`,
-                                //     borderRight: `1px solid ${theme.palette.divider}`,
-                                // })}
-                            >
-                                <Column gap="4px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Payout
-                                    </Typography>
-                                    {totalTransactionsData.isSubDataLoading ? (
-                                        <Skeleton variant="text" width={80} />
-                                    ) : (
-                                        <Row gap={1}>
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.amountData.payoutData.total}
-                                            </Typography>
-                                            <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.amountData.payoutData.isDropped ? (
-                                                    <DashboardReceiveIcon />
-                                                ) : (
-                                                    <DashBoardSendIcon />
-                                                )}
-
-                                                <Typography
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        color: totalTransactionsData.amountData.payoutData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                    }}
-                                                >
-                                                    {
-                                                        totalTransactionsData.amountData.payoutData
-                                                            .totalDifferenceInPercentage
-                                                    }
-                                                    %{""}
-                                                </Typography>
-                                            </Row>
-                                        </Row>
-                                    )}
-                                </Column>
-                            </Grid>
-                            <Grid item xs={12} lg={4}>
-                                <Column gap="4px">
-                                    <Typography
-                                        sx={(theme) => ({
-                                            color: theme.palette.text.secondary,
-                                        })}
-                                    >
-                                        Cancelled
-                                    </Typography>
-                                    {totalTransactionsData.isSubDataLoading ? (
-                                        <Skeleton variant="text" width={80} />
-                                    ) : (
-                                        <Row gap={1}>
-                                            <Typography fontWeight={700} fontSize={16}>
-                                                {totalTransactionsData.amountData.cancelledData.total}
-                                            </Typography>
-                                            <Row alignItems="center" gap="4px">
-                                                {totalTransactionsData.amountData.cancelledData.isDropped ? (
-                                                    <DashboardReceiveIcon />
-                                                ) : (
-                                                    <DashBoardSendIcon />
-                                                )}
-
-                                                <Typography
-                                                    fontWeight={500}
-                                                    sx={{
-                                                        color: totalTransactionsData.amountData.cancelledData.isDropped
-                                                            ? theme.palette.error.main
-                                                            : theme.palette.success.main,
-                                                    }}
-                                                >
-                                                    {
-                                                        totalTransactionsData.amountData.cancelledData
-                                                            .totalDifferenceInPercentage
-                                                    }
-                                                    %{""}
-                                                </Typography>
-                                            </Row>
-                                        </Row>
-                                    )}
-                                </Column>
-                            </Grid>
-                        </Grid>
-                        <Row>
-                            <Typography
+                                container
+                                spacing={2}
                                 sx={{
-                                    color: theme.palette.primary.main,
-                                    fontSize: 16,
-                                    fontWeight: 700,
-                                    cursor: "pointer",
+                                    marginTop: "4px",
                                 }}
                             >
-                                View all -{">"}
-                            </Typography>
-                        </Row>
-                    </Column>
-                </Container>
-            </Grid>
-            {/* <Grid item xs={12}>
-                <TotalCustomerCard />
-            </Grid>
-            <Grid item xs={12}>
-                <TransactionStat />
-            </Grid>
+                                <Grid item xs={12} lg={4}>
+                                    <Column gap="4px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Pending
+                                        </Typography>
 
-            <Grid
-                item
-                xs={12}
-                lg={6}
-                sx={{
-                    display: "grid",
-                    gridTemplateRows: "subgrid",
-                    gridRow: "span 4",
-                }}
-            >
-                <Container>
-                    <DashboardPayoutCountryBarChart />
-                </Container>
-            </Grid>
-            <Grid
-                item
-                xs={12}
-                lg={6}
-                sx={{
-                    display: "grid",
-                    gridTemplateRows: "subgrid",
-                    gridRow: "span 4",
-                }}
-            >
-                <Container>
-                    <DashboardPartnerBarChart />
-                </Container>
-            </Grid>
-            <Grid item xs={12}>
-                <AllOverallDataChip />
-            </Grid> */}
+                                        {totalTransactionsData.isSubDataLoading ? (
+                                            <Skeleton variant="text" width={80} />
+                                        ) : (
+                                            <Row gap={1}>
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.amountData.pendingData.total}
+                                                </Typography>
+                                                <Row alignItems="center" gap="4px">
+                                                    {totalTransactionsData.amountData.pendingData.isDropped ? (
+                                                        <DashboardReceiveIcon />
+                                                    ) : (
+                                                        <DashBoardSendIcon />
+                                                    )}
+
+                                                    <Typography
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            color: totalTransactionsData.amountData.pendingData
+                                                                .isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                        }}
+                                                    >
+                                                        {
+                                                            totalTransactionsData.amountData.pendingData
+                                                                .totalDifferenceInPercentage
+                                                        }
+                                                        %{""}
+                                                    </Typography>
+                                                </Row>
+                                            </Row>
+                                        )}
+                                    </Column>
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    lg={4}
+                                    // sx={(theme) => ({
+                                    //     borderLeft: `1px solid ${theme.palette.divider}`,
+                                    //     borderRight: `1px solid ${theme.palette.divider}`,
+                                    // })}
+                                >
+                                    <Column gap="4px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Payout
+                                        </Typography>
+                                        {totalTransactionsData.isSubDataLoading ? (
+                                            <Skeleton variant="text" width={80} />
+                                        ) : (
+                                            <Row gap={1}>
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.amountData.payoutData.total}
+                                                </Typography>
+                                                <Row alignItems="center" gap="4px">
+                                                    {totalTransactionsData.amountData.payoutData.isDropped ? (
+                                                        <DashboardReceiveIcon />
+                                                    ) : (
+                                                        <DashBoardSendIcon />
+                                                    )}
+
+                                                    <Typography
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            color: totalTransactionsData.amountData.payoutData.isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                        }}
+                                                    >
+                                                        {
+                                                            totalTransactionsData.amountData.payoutData
+                                                                .totalDifferenceInPercentage
+                                                        }
+                                                        %{""}
+                                                    </Typography>
+                                                </Row>
+                                            </Row>
+                                        )}
+                                    </Column>
+                                </Grid>
+                                <Grid item xs={12} lg={4}>
+                                    <Column gap="4px">
+                                        <Typography
+                                            sx={(theme) => ({
+                                                color: theme.palette.text.secondary,
+                                            })}
+                                        >
+                                            Cancelled
+                                        </Typography>
+                                        {totalTransactionsData.isSubDataLoading ? (
+                                            <Skeleton variant="text" width={80} />
+                                        ) : (
+                                            <Row gap={1}>
+                                                <Typography fontWeight={700} fontSize={16}>
+                                                    {totalTransactionsData.amountData.cancelledData.total}
+                                                </Typography>
+                                                <Row alignItems="center" gap="4px">
+                                                    {totalTransactionsData.amountData.cancelledData.isDropped ? (
+                                                        <DashboardReceiveIcon />
+                                                    ) : (
+                                                        <DashBoardSendIcon />
+                                                    )}
+
+                                                    <Typography
+                                                        fontWeight={500}
+                                                        sx={{
+                                                            color: totalTransactionsData.amountData.cancelledData
+                                                                .isDropped
+                                                                ? theme.palette.error.main
+                                                                : theme.palette.success.main,
+                                                        }}
+                                                    >
+                                                        {
+                                                            totalTransactionsData.amountData.cancelledData
+                                                                .totalDifferenceInPercentage
+                                                        }
+                                                        %{""}
+                                                    </Typography>
+                                                </Row>
+                                            </Row>
+                                        )}
+                                    </Column>
+                                </Grid>
+                            </Grid>
+                            <Row>
+                                <Typography
+                                    sx={{
+                                        color: theme.palette.primary.main,
+                                        fontSize: 16,
+                                        fontWeight: 700,
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    View all -{">"}
+                                </Typography>
+                            </Row>
+                        </Column>
+                    </Container>
+                </Grid>
+            </HasPermission>
         </Grid>
     );
 }

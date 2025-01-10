@@ -203,9 +203,11 @@ import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZa
 import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 import ListEmailElement from "Private/components/email-template/ListEmailElement";
 import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
+import Dashboard2 from "Private/pages/Dashboard/Dashboard2";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
+    { path: "/second", component: <Dashboard2 /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
     { path: routePaths.users.listProfileSetup, component: <ListUserProfileSetup /> },
     { path: routePaths.users.editProfileSetup, component: <EditUserProfileSetup /> },

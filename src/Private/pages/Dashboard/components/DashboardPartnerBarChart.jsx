@@ -62,7 +62,7 @@ export default function DashboardPartnerBarChart() {
 
             <Box
                 sx={{
-                    height: 350,
+                    height: 400,
                     mt: 2,
                 }}
             >
