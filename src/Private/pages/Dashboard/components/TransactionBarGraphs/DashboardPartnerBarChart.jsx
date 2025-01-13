@@ -1,5 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
+import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
 import TooltipMUI from "@mui/material/Tooltip";
@@ -9,7 +10,6 @@ import IconButton from "@mui/material/IconButton";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import Paper from "App/components/Paper/Paper";
-import styled from "@emotion/styled";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",

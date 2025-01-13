@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FormProvider, useForm } from "react-hook-form";
 
 import Row from "App/components/Row/Row";
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import Column from "App/components/Column/Column";
 import FormSelect from "App/core/hook-form/FormSelect";
@@ -17,10 +18,6 @@ import useListFilterStore from "App/hooks/useListFilterStore";
 import { ExchangeRateAction } from "Private/pages/Setup/ExchangeRate/store";
 
 import { DashboardAction } from "../store";
-import isEmpty from "App/helpers/isEmpty";
-
-import HasPermission from "Private/components/shared/HasPermission";
-import withPermission from "Private/HOC/withPermission";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -96,7 +93,7 @@ function DashboardCurrencyData() {
             <Row gap={2}>
                 <Column
                     sx={(theme) => ({
-                        width: "30rem",
+                        width: "32rem",
                         padding: "0px 16px 0px 0px",
                         borderRight: `1px solid ${theme.palette.divider}`,
                         display: "flex",
@@ -104,9 +101,13 @@ function DashboardCurrencyData() {
                         justifyContent: "space-between",
                     })}
                 >
-                    <Row>
+                    <Box
+                        sx={{
+                            width: "27rem",
+                        }}
+                    >
                         <Typography>As of {todayDate}</Typography>
-                    </Row>
+                    </Box>
                     <FormProvider {...methods}>
                         <Grid item xs={12} md={6}>
                             <FormSelect name="agent_name" label="Agent Name" options={agentData} />

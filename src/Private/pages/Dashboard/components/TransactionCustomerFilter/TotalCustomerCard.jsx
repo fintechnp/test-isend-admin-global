@@ -1,20 +1,21 @@
 import React from "react";
 import Box from "@mui/material/Box";
+import styled from "@emotion/styled";
+import { useSelector } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
 import Row from "App/components/Row/Row";
-import { useSelector } from "react-redux";
+import Paper from "App/components/Paper/Paper";
 import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
-import DashboardCardChart from "../DashboardCardChart";
 import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
 import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardCustomerIcon from "App/components/Icon/DashboardCustomerIcon";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
-import styled from "@emotion/styled";
-import Paper from "App/components/Paper/Paper";
+
+import DashboardCardChart from "../DashboardCardChart";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",

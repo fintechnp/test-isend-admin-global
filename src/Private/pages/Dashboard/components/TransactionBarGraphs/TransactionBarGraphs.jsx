@@ -3,10 +3,10 @@ import Grid from "@mui/material/Grid";
 
 import { permissions } from "Private/data/permissions";
 
-import DashboardPartnerBarChart from "../DashboardPartnerBarChart";
+import DashboardPartnerBarChart from "./DashboardPartnerBarChart";
 import GridItemWithPermission from "../../ui/GridItemWithPermission";
-import DashboardPayoutCountryBarChart from "../DashboardPayoutCountryBarChart";
 import useGridSizePermission from "../../utils/useGridSizePermission";
+import DashboardPayoutCountryBarChart from "./DashboardPayoutCountryBarChart";
 
 const TransactionBarGraphs = React.memo(() => {
     const hasPermissionAgentBiz = permissions.DASH_TXN_AGENT_BIZ;

@@ -58,7 +58,7 @@ export default function AllOverallDataChip() {
     ];
 
     return (
-        <Grid container spacing={"26px"}>
+        <Grid container spacing={"16px"}>
             {data.map((item, index) => {
                 return (
                     <Grid

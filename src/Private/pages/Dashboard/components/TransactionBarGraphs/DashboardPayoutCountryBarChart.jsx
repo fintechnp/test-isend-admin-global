@@ -1,5 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
+import styled from "@emotion/styled";
 import { Skeleton } from "@mui/material";
 import { useSelector } from "react-redux";
 import TooltipMUI from "@mui/material/Tooltip";
@@ -9,34 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 import Paper from "App/components/Paper/Paper";
-import styled from "@emotion/styled";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
 }));
-
-const DUMMY_DATA = [
-    {
-        country: "NEP",
-        amount: 300,
-    },
-    {
-        country: "IND",
-        amount: 600,
-    },
-    {
-        country: "AUS",
-        amount: 350,
-    },
-    {
-        country: "USA",
-        amount: 200,
-    },
-    {
-        country: "SIG",
-        amount: 750,
-    },
-];
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {

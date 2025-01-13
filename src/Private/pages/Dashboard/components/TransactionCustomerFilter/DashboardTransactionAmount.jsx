@@ -16,8 +16,6 @@ import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIc
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
 import DashboardCardChart from "../DashboardCardChart";
-import HasPermission from "Private/components/shared/HasPermission";
-import { permissions } from "Private/data/permissions";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
