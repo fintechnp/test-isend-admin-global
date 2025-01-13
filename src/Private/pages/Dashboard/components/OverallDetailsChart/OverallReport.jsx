@@ -5,7 +5,7 @@ import Paper from "App/components/Paper/Paper";
 import Column from "App/components/Column/Column";
 
 import ComplianceData from "./ComplianceData";
-import OverallTransactionAndCustomer from "./OverallTransactionAndCustomer";
+import OverallTransactionAndCustomer from "../OverallTransactionAndCustomer";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",

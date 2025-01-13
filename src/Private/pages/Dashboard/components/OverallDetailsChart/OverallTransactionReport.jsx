@@ -12,7 +12,7 @@ import Row from "App/components/Row/Row";
 import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
 
-import DashboardCardChart from "./DashboardCardChart";
+import DashboardCardChart from "../DashboardCardChart";
 import Paper from "App/components/Paper/Paper";
 import HasPermission from "Private/components/shared/HasPermission";
 import { permissions } from "Private/data/permissions";

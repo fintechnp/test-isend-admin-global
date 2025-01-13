@@ -8,7 +8,7 @@ import Row from "App/components/Row/Row";
 import { useSelector } from "react-redux";
 import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
-import DashboardCardChart from "./DashboardCardChart";
+import DashboardCardChart from "../DashboardCardChart";
 import DashBoardSendIcon from "App/components/Icon/DashBoardSendIcon";
 import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardCustomerIcon from "App/components/Icon/DashboardCustomerIcon";

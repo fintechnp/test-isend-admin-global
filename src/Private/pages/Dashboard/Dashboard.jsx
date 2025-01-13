@@ -5,10 +5,10 @@ import PageContent from "App/components/Container/PageContent";
 
 import Header from "./components/Header";
 import DetailsCard from "./components/DetailsCard";
-import OverallReport from "./components/OverallReport";
+import OverallReport from "./components/OverallDetailsChart/OverallReport";
 import TransactionStat from "./components/TransactionStat";
 import CustomerPieChart from "./components/CustomerPieChart";
-import TotalCustomerCard from "./components/TotalCustomerCard";
+import TotalCustomerCard from "./components/TransactionCustomerFilter/TotalCustomerCard";
 import AllOverallDataChip from "./components/AllOverallDataChip";
 import DashboardPartnerBarChart from "./components/DashboardPartnerBarChart";
 import UserRegistrationHistoryStat from "./components/UserRegistrationHistoryStat";
@@ -17,11 +17,11 @@ import DashboardPayoutCountryBarChart from "./components/DashboardPayoutCountryB
 import HasPermission from "Private/components/shared/HasPermission";
 import { permissions } from "Private/data/permissions";
 import OverallTransactionAndCustomer from "./components/OverallTransactionAndCustomer";
-import ComplianceData from "./components/ComplianceData";
-import DashboardTransactionCount from "./components/DashboardTransactionCount";
-import DashboardTransactionAmount from "./components/DashboardTransactionAmount";
-import OverallCustomerReport from "./components/OverallCustomerReport";
-import OverallTransactionReport from "./components/OverallTransactionReport";
+import ComplianceData from "./components/OverallDetailsChart/ComplianceData";
+import DashboardTransactionCount from "./components/TransactionCustomerFilter/DashboardTransactionCount";
+import DashboardTransactionAmount from "./components/TransactionCustomerFilter/DashboardTransactionAmount";
+import OverallCustomerReport from "./components/OverallDetailsChart/OverallCustomerReport";
+import OverallTransactionReport from "./components/OverallDetailsChart/OverallTransactionReport";
 import styled from "@emotion/styled";
 import Paper from "App/components/Paper/Paper";
 

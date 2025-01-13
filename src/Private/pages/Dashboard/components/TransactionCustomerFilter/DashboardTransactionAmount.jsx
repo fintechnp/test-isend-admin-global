@@ -15,7 +15,7 @@ import DashboardReceiveIcon from "App/components/Icon/DashboardReceiveIcon";
 import DashboardTransactionIcon from "App/components/Icon/DashboardTransactionIcon";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
-import DashboardCardChart from "./DashboardCardChart";
+import DashboardCardChart from "../DashboardCardChart";
 import HasPermission from "Private/components/shared/HasPermission";
 import { permissions } from "Private/data/permissions";
 

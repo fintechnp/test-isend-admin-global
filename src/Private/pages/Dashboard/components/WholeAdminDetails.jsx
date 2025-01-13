@@ -2,7 +2,7 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 
 import DetailsCard from "./DetailsCard";
-import OverallReport from "./OverallReport";
+import OverallReport from "./OverallDetailsChart/OverallReport";
 
 export default function WholeAdminDetails() {
     return (

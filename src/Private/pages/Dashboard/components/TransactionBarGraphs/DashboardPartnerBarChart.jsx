@@ -1,12 +1,12 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import { Skeleton } from "@mui/material";
 import { useSelector } from "react-redux";
+import Skeleton from "@mui/material/Skeleton";
 import TooltipMUI from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 import Paper from "App/components/Paper/Paper";
 import styled from "@emotion/styled";
@@ -15,38 +15,15 @@ const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
 }));
 
-const DUMMY_DATA = [
-    {
-        country: "NEP",
-        amount: 300,
-    },
-    {
-        country: "IND",
-        amount: 600,
-    },
-    {
-        country: "AUS",
-        amount: 350,
-    },
-    {
-        country: "USA",
-        amount: 200,
-    },
-    {
-        country: "SIG",
-        amount: 750,
-    },
-];
-
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
         return (
             <Paper>
                 <Typography>
-                    <strong>Country:</strong> {payload[0].payload.country}
+                    <strong>Business:</strong> {payload[0].payload.business_name}
                 </Typography>
                 <Typography>
-                    <strong>Payout Amount:</strong> {payload[0].payload.payoutAmount}
+                    <strong>Transaction Amount:</strong> {payload[0].payload.txn_amount}
                 </Typography>
             </Paper>
         );
@@ -54,12 +31,13 @@ const CustomTooltip = ({ active, payload }) => {
     return <></>;
 };
 
-export default function DashboardPayoutCountryBarChart() {
-    const { response, loading: isLoading, success } = useSelector((state) => state.get_top_payout_countries);
+export default function DashboardPartnerBarChart() {
+    const { response, loading: isLoading } = useSelector((state) => state.get_top_transaction_by_agent_and_business);
 
-    const payoutCountriesData = response?.data?.map((item) => ({
-        country: item?.country,
-        payoutAmount: item?.payoutAmount,
+    const getTransactionData = response?.data?.map((item) => ({
+        business_id: item.business_id,
+        business_name: item?.business_name,
+        txn_amount: item?.txn_amount,
     }));
 
     return (
@@ -72,10 +50,10 @@ export default function DashboardPayoutCountryBarChart() {
                 }}
             >
                 <Typography fontWeight={700} fontSize={16}>
-                    Top Payout Country
+                    Top Transaction by Agent & Business
                 </Typography>
 
-                <TooltipMUI title="Shows the top 5 countries by payout value">
+                <TooltipMUI title="Shows the top 5 businesses & Agent by transaction amount">
                     <IconButton>
                         <InfoIcon color="disabled" />
                     </IconButton>
@@ -90,19 +68,18 @@ export default function DashboardPayoutCountryBarChart() {
             >
                 <ResponsiveContainer width="100%" height="100%">
                     {isLoading ? (
-                        <Skeleton variant="rectangular" width="100%" height="100%" />
-                    ) : payoutCountriesData?.length === 0 ? (
+                        <Skeleton variant="rectangular" height="100&" width="100&" />
+                    ) : getTransactionData?.length === 0 ? (
                         <Typography>No data found</Typography>
                     ) : (
-                        <BarChart data={payoutCountriesData}>
+                        <BarChart
+                            data={getTransactionData}
+                            // margin={{ top: 10, right: 10, left: 0, bottom: 0 }} // Adjust margins
+                        >
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="country" tick={{ fontSize: 12 }} padding={{ left: 0, right: 0 }} />
+                            <XAxis dataKey="business_name" tick={{ fontSize: 10 }} padding={{ left: 0, right: 0 }} />
                             <YAxis
-                                tick={{ fontSize: 10 }}
-                                padding={{
-                                    top: 0,
-                                    bottom: 0,
-                                }}
+                                tick={{ fontSize: 12 }}
                                 label={{
                                     value: "Amount",
                                     angle: -90,
@@ -111,8 +88,7 @@ export default function DashboardPayoutCountryBarChart() {
                                 }}
                             />
                             <Tooltip content={<CustomTooltip />} />
-
-                            <Bar dataKey="payoutAmount" fill="#105BB7" />
+                            <Bar dataKey="txn_amount" fill="#105BB7" />
                         </BarChart>
                     )}
                 </ResponsiveContainer>
