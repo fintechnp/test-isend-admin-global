@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
@@ -161,12 +162,23 @@ function Search() {
                                 </Typography>
                                 <Row alignItems="center" gap="2px">
                                     <PhoneIcon />
-                                    <Typography variant="caption">
-                                        {!isEmpty(row.original.phone_number)
-                                            ? row.original.phone_number
-                                            : row.original.mobile_number}
-                                        {caption.length > 0 ? ", " : null} {caption.join(" / ")}
-                                    </Typography>
+                                    <Row alignItems="center" gap="4px">
+                                        <Typography variant="caption">
+                                            {!isEmpty(row.original.phone_number)
+                                                ? row.original.phone_number
+                                                : row.original.mobile_number}
+                                        </Typography>
+                                        <Tooltip title={row.original?.is_mobile_verified ? "Verified" : "Not Verified"}>
+                                            <span style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+                                                <VerifiedBadge
+                                                    isVerified={!!row.original?.is_mobile_verified}
+                                                    size="12px"
+                                                />
+                                                {caption.length > 0 ? ", " : null}
+                                            </span>
+                                        </Tooltip>
+                                        <Typography variant="caption"> {caption.join(" / ")}</Typography>
+                                    </Row>
                                 </Row>
                             </Column>
                         </Row>
@@ -176,16 +188,16 @@ function Search() {
             {
                 header: "Email",
                 accessorKey: "email",
-            },
-            {
-                header: "Is email verified ?",
-                accessorKey: "is_email_verified",
-                cell: ({ getValue }) => <VerifiedBadge isVerified={!!getValue()} />,
-            },
-            {
-                header: "Is mobile verified ?",
-                accessorKey: "is_mobile_verified",
-                cell: ({ getValue }) => <VerifiedBadge isVerified={!!getValue()} />,
+                cell: ({ getValue, row }) => (
+                    <Row alignItems="center" gap="4px">
+                        <Typography>{getValue()}</Typography>
+                        <Tooltip title={row.original?.is_email_verified ? "Verified" : "Not Verified"}>
+                            <span style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+                                <VerifiedBadge isVerified={!!row.original?.is_email_verified} size="12px" />
+                            </span>
+                        </Tooltip>
+                    </Row>
+                ),
             },
             {
                 header: "Acc. Status",
