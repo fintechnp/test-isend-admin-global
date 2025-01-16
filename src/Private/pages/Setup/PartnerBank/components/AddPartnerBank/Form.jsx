@@ -53,9 +53,10 @@ const schema = Yup.object().shape({
     bank_name: Yup.string().required("Bank Name is required"),
     country: Yup.string().required("Country is required"),
     currency: Yup.string().required("Currency is required"),
-    agent_id: Yup.string().required("Agent is required"),
+    agent_id: Yup.number().required("Agent is required"),
     payment_type: Yup.string().required("Payment Type is required"),
     external_bank_code: Yup.string().required("External Bank Code is required"),
+    payout_location_id: Yup.string().required("Payout Location is required"),
 });
 
 const PartnerBankForm = ({
@@ -141,8 +142,7 @@ const PartnerBankForm = ({
     }, [paymentTypeWatch, countryWatch, currencyWatch]);
 
     const handleSubmit = (data) => {
-        onSubmit(data);
-        reset();
+        onSubmit({ ...data, payout_location_id: +data?.payout_location_id });
     };
     return (
         <HookForm onSubmit={handleSubmit} {...methods}>
