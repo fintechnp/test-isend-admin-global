@@ -32,26 +32,16 @@ import calculateAge from "App/helpers/calculateAge";
 import { GenderStringOptions } from "App/data/Gender";
 import { getCustomerName } from "App/helpers/getFullName";
 import referenceTypeId from "Private/config/referenceTypeId";
+import createMultiDateValidationSchema from "App/helpers/multiDateValidation";
 
-const schema = Yup.object().shape({
-    created_from_date: Yup.string().nullable().optional(),
-    created_to_date: Yup.string()
-        .nullable()
-        .optional()
-        .when("created_from_date", {
-            is: (value) => !isEmpty(value),
-            then: (schema) =>
-                Yup.string().test({
-                    name: "is-after",
-                    message: "To Date must be after From Date",
-                    test: function (value) {
-                        const { created_from_date } = this.parent;
-                        return value ? isAfter(new Date(value), new Date(created_from_date)) : true;
-                    },
-                }),
-            otherwise: (schema) => Yup.string().nullable().optional(),
-        }),
-});
+const schema = createMultiDateValidationSchema([
+    {
+        fromField: "created_from_date",
+        toField: "created_to_date",
+        fromFieldLabel: "From Date",
+        toFieldLabel: "To Date",
+    },
+]);
 
 const StyledMail = styled(Typography)(({ theme }) => ({
     opacity: 0.9,

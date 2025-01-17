@@ -18,11 +18,13 @@ import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "../store/actions";
+import dateUtils from "App/utils/dateUtils";
 import { permissions } from "Private/data/permissions";
 import referenceTypeId from "Private/config/referenceTypeId";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import PartnerActions from "../../Setup/Partner/store/actions";
 import { CountryName, CurrencyName, FormatNumber, FormatDate, ReferenceName } from "App/helpers";
+import createMultiDateValidationSchema from "App/helpers/multiDateValidation";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
     margin: "12px 0px",
@@ -48,6 +50,8 @@ const initialState = {
     page_size: 15,
     sort_by: "agent_name",
     order_by: "ASC",
+    from_date: dateUtils.getDateBeforeTwoWeeks(),
+    to_date: dateUtils.getTodayDate(),
 };
 
 const stateSend = {
@@ -67,6 +71,10 @@ const statePay = {
     sort_by: "name",
     order_by: "DESC",
 };
+
+const schema = createMultiDateValidationSchema([
+    { fromField: "from_date", toField: "to_date", fromFieldLabel: "From Date", toFieldLabel: "To Date" },
+]);
 
 function CancelledTransactions(props) {
     const dispatch = useDispatch();
@@ -104,7 +112,12 @@ function CancelledTransactions(props) {
         onFilterSubmit,
         onPageChange,
         onRowsPerPageChange,
-    } = useListFilterStore({ initialState });
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "from_date",
+        toDateParamName: "to_date",
+    });
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
@@ -325,7 +338,7 @@ function CancelledTransactions(props) {
     const downloadData = () => {
         const updatedFilterSchema = {
             ...filterSchema,
-            page_size: 10000,
+            page_size: CancelledTransactions?.pagination?.totalCount || 1000,
         };
         dispatch(actions.download_report(updatedFilterSchema, "report/transaction_cancel"));
     };
@@ -394,6 +407,7 @@ function CancelledTransactions(props) {
                     onSubmit={onFilterSubmit}
                     values={filterSchema}
                     fields={filterFields}
+                    schema={schema}
                 />
                 <PageContentContainer
                     title="Cancelled Transactions"

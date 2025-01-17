@@ -16,10 +16,12 @@ import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "../store/actions";
+import dateUtils from "App/utils/dateUtils";
 import { permissions } from "Private/data/permissions";
 import referenceTypeId from "Private/config/referenceTypeId";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import PartnerActions from "../../Setup/Partner/store/actions";
+import createMultiDateValidationSchema from "App/helpers/multiDateValidation";
 import { CountryName, CurrencyName, FormatDate, FormatNumber } from "App/helpers";
 
 const CustomerWrapper = styled("div")(({ theme }) => ({
@@ -46,6 +48,8 @@ const initialState = {
     page_size: 15,
     sort_by: "agent_name",
     order_by: "ASC",
+    from_date: dateUtils.getDateBeforeTwoWeeks(),
+    to_date: dateUtils.getTodayDate(),
 };
 
 const stateSend = {
@@ -66,12 +70,16 @@ const statePay = {
     order_by: "DESC",
 };
 
+const schema = createMultiDateValidationSchema([
+    { fromField: "from_date", toField: "to_date", fromFieldLabel: "From Date", toFieldLabel: "To Date" },
+]);
+
 function TransactionsSuspiciousReports(props) {
     const dispatch = useDispatch();
     const reference = JSON.parse(localStorage.getItem("reference"));
     const [filterPayPartner, setFilterPayPartner] = useState(statePay);
 
-    const { response: SummaryReports, loading: l_loading } = useSelector(
+    const { response: SuspiciousTransactions, loading: l_loading } = useSelector(
         (state) => state.get_suspicious_transactions_report,
     );
 
@@ -120,7 +128,12 @@ function TransactionsSuspiciousReports(props) {
         onRowsPerPageChange,
         onQuickFilter,
         reset,
-    } = useListFilterStore({ initialState });
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "from_date",
+        toDateParamName: "to_date",
+    });
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
@@ -354,7 +367,7 @@ function TransactionsSuspiciousReports(props) {
     const downloadData = () => {
         const updatedFilterSchema = {
             ...filterSchema,
-            page_size: 10000,
+            page_size: SuspiciousTransactions?.pagination?.totalCount || 1000,
         };
         dispatch(actions.download_report(updatedFilterSchema, "report/transaction_suspicious"));
     };
@@ -451,6 +464,7 @@ function TransactionsSuspiciousReports(props) {
                     onReset={reset}
                     onDelete={onDeleteFilterParams}
                     values={filterSchema}
+                    schema={schema}
                 />
 
                 <PageContentContainer
@@ -466,10 +480,14 @@ function TransactionsSuspiciousReports(props) {
                         />
                     }
                 >
-                    <TanstackReactTable columns={columns} data={SummaryReports?.data || []} loading={l_loading} />
+                    <TanstackReactTable
+                        columns={columns}
+                        data={SuspiciousTransactions?.data || []}
+                        loading={l_loading}
+                    />
                 </PageContentContainer>
                 <TablePagination
-                    paginationData={SummaryReports?.pagination}
+                    paginationData={SuspiciousTransactions?.pagination}
                     handleChangePage={onPageChange}
                     handleChangeRowsPerPage={onRowsPerPageChange}
                 />
