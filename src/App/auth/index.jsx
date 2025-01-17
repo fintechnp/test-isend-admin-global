@@ -45,6 +45,7 @@ export default class AuthProvider extends Component {
                 isUserLoggedIn: true,
                 currentUser: data,
             });
+            console.log("The data", data);
         },
     };
 

@@ -208,9 +208,8 @@ function MyAccount(props) {
 
     useEffect(() => {
         if (upload_success) {
-            dispatch(actions.get_user());
-            dispatch({ type: "UPLOAD_PROFILE_PICTURE_RESET" });
             setIsOpen(false);
+            dispatch(actions.get_user());
         }
     }, [upload_success, dispatch]);
 
