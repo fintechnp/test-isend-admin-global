@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -23,6 +24,7 @@ import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import { CurrencyName, FormatDate, FormatNumber, ReferenceName } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -32,8 +34,8 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const initialState = {
     page_number: 1,
     page_size: 15,
-    from_date: new Date().toISOString().slice(0, 10),
-    to_date: new Date().toISOString().slice(0, 10),
+    from_date: dayjs().startOf("day").toISOString(),
+    to_date: dateUtils.getTodayDate(),
     sort_by: "created_ts",
     order_by: "DESC",
 };
