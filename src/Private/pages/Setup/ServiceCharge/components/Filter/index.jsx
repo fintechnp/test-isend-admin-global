@@ -85,7 +85,7 @@ const DropWrapper = styled(Box)(({ theme }) => ({
 function Filter({ state, handleSearch, handleOrder, handleSort, sortData, orderData }) {
     return (
         <FilterWrapper>
-            <SearchBox>
+            {/* <SearchBox>
                 <SearchTextField
                     onChange={handleSearch}
                     sx={(theme) => ({
@@ -94,7 +94,7 @@ function Filter({ state, handleSearch, handleOrder, handleSort, sortData, orderD
                         },
                     })}
                 />
-            </SearchBox>
+            </SearchBox> */}
 
             <DropWrapper>
                 <Box

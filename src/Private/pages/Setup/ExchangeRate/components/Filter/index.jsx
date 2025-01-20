@@ -124,7 +124,7 @@ function Filter({
 
     return (
         <FilterWrapper>
-            <SearchBox>
+            {/* <SearchBox>
                 <SearchTextField
                     onChange={handleSearch}
                     sx={(theme) => ({
@@ -133,7 +133,7 @@ function Filter({
                         },
                     })}
                 />
-            </SearchBox>
+            </SearchBox> */}
             {sendingAgentId && (
                 <>
                     {lastUpdatedAt && (
