@@ -63,16 +63,7 @@ const BuildFilterInput = ({ field }) => {
         );
 
     if (field.type === fieldTypes.DATE)
-        return (
-            <FormDatePicker
-                name={field.name}
-                label={field.label}
-                options={field.options}
-                minDate={field.minDate || dateUtils.getDateBeforeOneMonth()}
-                maxDate={field.maxDate || dateUtils.getDateAfterOneMonth()}
-                {...field.props}
-            />
-        );
+        return <FormDatePicker name={field.name} label={field.label} options={field.options} {...field.props} />;
 
     if (field.type === fieldTypes.SEARCH_AUTOCOMPLETE_API)
         return (

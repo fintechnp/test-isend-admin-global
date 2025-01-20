@@ -27,16 +27,43 @@ import withPermission from "Private/HOC/withPermission";
 import { CountryName, ReferenceName } from "App/helpers";
 import { getCustomerName } from "App/helpers/getFullName";
 import useListFilterStore from "App/hooks/useListFilterStore";
-import createMultiDateValidationSchema from "App/helpers/multiDateValidation";
 
-const schema = createMultiDateValidationSchema([
-    {
-        fromField: "created_from_date",
-        toField: "created_to_date",
-        fromFieldLabel: "From Date",
-        toFieldLabel: "To Date",
-    },
-]);
+const schema = Yup.object().shape({
+    created_from_date: Yup.string()
+        .nullable()
+        .test({
+            name: "from-to-pair",
+            message: "From Date is required",
+            test: function (value) {
+                const { created_to_date } = this.parent;
+                return !created_to_date || !!value;
+            },
+        })
+        .optional(),
+
+    created_to_date: Yup.string()
+        .nullable()
+        .test({
+            name: "from-to-pair",
+            message: "To Date is required",
+            test: function (value) {
+                const { created_from_date } = this.parent;
+                return !created_from_date || !!value;
+            },
+        })
+        .when("created_from_date", {
+            is: (value) => !isEmpty(value),
+            then: (schema) =>
+                schema.test({
+                    name: "is-after",
+                    message: "To Date must be after From Date",
+                    test: function (value) {
+                        const { created_from_date } = this.parent;
+                        return value ? isAfter(new Date(value), new Date(created_from_date)) : true;
+                    },
+                }),
+        }),
+});
 
 const initialState = {
     page_number: 1,
@@ -290,7 +317,7 @@ function BeneficiaryReports() {
     const downloadData = () => {
         const updatedFilterSchema = {
             ...filterSchema,
-            page_size: BeneficiaryReports?.pagination?.totalCount || 1000,
+            page_size: 10000,
         };
         dispatch(actions.download_report(updatedFilterSchema, "report/beneficiary"));
     };
