@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { RangeType } from "App/data/RangeType";
-import { add, parseISO, sub } from "date-fns";
 
 class dateUtils {
     today() {
@@ -160,14 +159,6 @@ class dateUtils {
      */
     getTodayDate() {
         return dayjs().endOf("day").toISOString();
-    }
-    getDateBeforeOneMonth() {
-        const dateBeforeOneMonth = sub(new Date(), { months: 1 });
-        return parseISO(dateBeforeOneMonth.toISOString().split("T")[0]);
-    }
-    getDateAfterOneMonth() {
-        const dateBeforeOneMonth = add(new Date(), { months: 1 });
-        return parseISO(dateBeforeOneMonth.toISOString().split("T")[0]);
     }
 }
 
