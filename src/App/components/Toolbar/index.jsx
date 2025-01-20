@@ -98,8 +98,6 @@ export default function Appbar({ handleDrawerToggle, open }) {
     const showProfilePicture = isEmpty(profilePicture) || imageError;
 
     React.useEffect(() => {
-        console.log("The upload success is", upload_success);
-
         if (upload_success) {
             dispatch({
                 type: "USER_DETAILS",
