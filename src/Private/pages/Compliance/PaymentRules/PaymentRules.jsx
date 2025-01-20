@@ -45,11 +45,14 @@ const StyledName = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledAction = styled(Typography)(({ theme, value }) => ({
+    display: "inline-flex",
+    height: "32px",
     opacity: 0.8,
-    paddingTop: "3px",
-    paddingBottom: "3px",
+    padding: "3px 8px",
     fontSize: "12px",
-    borderRadius: "6px",
+    borderRadius: "16px",
+    alignItems: "center",
+    justifyContent: "center",
     textTransform: "capitalize",
     color: theme.palette.primary.contrastText,
     background: stringToColor(value),

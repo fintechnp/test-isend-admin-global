@@ -21,6 +21,7 @@ import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import { localStorageGet } from "App/helpers/localStorage";
 import useListFilterStore from "App/hooks/useListFilterStore";
+import BalanceRequestStatusBadge from "./data/BalanceRequestStatusBadge";
 import { BalanceRequestActions as actions } from "../BalanceRequest/store";
 
 const initialState = {
@@ -139,6 +140,7 @@ export default function ListBalanceRequest({ title }) {
             {
                 header: "Status",
                 accessorKey: "statusName",
+                cell: ({ getValue }) => <BalanceRequestStatusBadge status={getValue()} />,
             },
             {
                 header: "Actions",

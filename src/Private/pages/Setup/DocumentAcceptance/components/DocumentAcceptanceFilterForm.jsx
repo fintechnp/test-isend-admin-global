@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
@@ -37,13 +38,13 @@ export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading,
     };
 
     return (
-        <PageContent>
+        <Box sx={{ border: "1px solid #bfbfbf", padding: "10px", borderRadius: "4px" }}>
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <FormSelect name="country" label="Country" options={finalCountriesList} />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <FormSelect name="document_for" label="Document For" options={documentForOptions} />
                     </Grid>
                     <Grid item xs={12}>
@@ -69,6 +70,6 @@ export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading,
                     </Grid>
                 </Grid>
             </HookForm>
-        </PageContent>
+        </Box>
     );
 }

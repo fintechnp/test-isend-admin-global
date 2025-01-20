@@ -25,6 +25,7 @@ import routePaths from "Private/config/routePaths";
 import { localStorageGet } from "App/helpers/localStorage";
 import useListFilterStore from "App/hooks/useListFilterStore";
 import { creditLimitStatusEnum } from "./constants/creditLimitStatus";
+import BalanceRequestStatusBadge from "../BalanceRequest/data/BalanceRequestStatusBadge";
 
 const initialState = {
     Page: 1,
@@ -123,6 +124,7 @@ export default function CreditLimit({ title }) {
             {
                 header: "Status",
                 accessorKey: "statusName",
+                cell: ({ getValue }) => <BalanceRequestStatusBadge status={getValue()} />,
             },
 
             {
