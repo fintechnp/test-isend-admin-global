@@ -17,8 +17,9 @@ import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "../../PaymentProcess/store/actions";
-import { ZaiLogsType } from "../../PaymentProcess/ZaiAustraliaPayment/data/zaiLogsType";
+import ZaiStatusBadge from "./components/ZaiStatusBadge";
 import ViewZaiLogsModal from "./components/ViewZaiLogsModal";
+import { ZaiLogsType } from "../../PaymentProcess/ZaiAustraliaPayment/data/zaiLogsType";
 
 const initialState = {
     PageNumber: 1,
@@ -145,6 +146,7 @@ const ListZaiWebhookLogs = () => {
         {
             header: "Status",
             accessorKey: "status_description",
+            cell: ({ getValue, row }) => <ZaiStatusBadge status={row.original.status} label={getValue()} />,
         },
         {
             header: "Action",
