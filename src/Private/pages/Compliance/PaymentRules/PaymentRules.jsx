@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { alpha, styled } from "@mui/material/styles";
 import MuiIconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useCallback, useEffect, useMemo } from "react";
@@ -54,11 +54,8 @@ const StyledAction = styled(Typography)(({ theme, value }) => ({
     alignItems: "center",
     justifyContent: "center",
     textTransform: "capitalize",
-    color: theme.palette.primary.contrastText,
-    background: stringToColor(value),
-    "&: hover": {
-        background: stringToColor(value),
-    },
+    color: stringToColor(value),
+    background: alpha(stringToColor(value), 0.1),
 }));
 
 const initialState = {

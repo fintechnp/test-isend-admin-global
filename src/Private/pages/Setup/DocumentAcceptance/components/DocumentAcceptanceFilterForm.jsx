@@ -41,10 +41,10 @@ export default function DocumentAcceptanceFilterForm({ setFilterSchema, loading,
         <Box sx={{ border: "1px solid #bfbfbf", padding: "10px", borderRadius: "4px" }}>
             <HookForm onSubmit={handleSubmit} {...methods}>
                 <Grid container direction="row" spacing={2}>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                         <FormSelect name="country" label="Country" options={finalCountriesList} />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                         <FormSelect name="document_for" label="Document For" options={documentForOptions} />
                     </Grid>
                     <Grid item xs={12}>
