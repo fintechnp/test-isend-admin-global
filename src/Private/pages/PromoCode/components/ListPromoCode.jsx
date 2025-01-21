@@ -23,6 +23,7 @@ import PageContentContainer from "App/components/Container/PageContentContainer"
 
 import { promoCodeActions } from "../store";
 import { campaignStatus } from "../data/campaignStatus";
+import CustomerStatusBadge from "Private/pages/Customers/Search/components/CustomerStatusBadge";
 
 const initialState = {
     Page: 1,
@@ -109,7 +110,10 @@ const ListPromoCode = () => {
         },
         {
             header: "Status",
-            accessorKey: "statusName",
+            accessorKey: "status",
+            cell: ({ getValue }) => (
+                <CustomerStatusBadge status={getValue() === campaignStatus.ACTIVE ? "active" : "inActive"} />
+            ),
         },
         {
             header: "Created At/By",
