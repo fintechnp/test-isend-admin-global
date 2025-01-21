@@ -63,6 +63,7 @@ const light = {
         dangerSecond: "#FAE2E5",
         warningSecond: "#FDF6EA",
         purpleSecond: "#F9F8FB",
+        secondarySecond: "#d7d5ff",
     },
     stroke: {
         primary: "#0D4992",

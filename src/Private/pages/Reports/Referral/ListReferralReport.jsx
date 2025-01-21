@@ -23,9 +23,12 @@ import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import isEmpty from "App/helpers/isEmpty";
+import { ReferenceName } from "App/helpers";
 import routePaths from "Private/config/routePaths";
+import referenceTypeId from "Private/config/referenceTypeId";
 import ReferralCodeBadge from "./components/ReferralCodeBadge";
 import ReferralStatusBadge from "./components/ReferralStatusBadge";
+import KycStatusBadge from "Private/pages/Customers/Search/components/KycStatusBadge";
 
 const schema = Yup.object().shape({
     from_date: Yup.string().nullable().optional(),
@@ -166,8 +169,13 @@ export default function ListReferralReport() {
                 },
                 {
                     header: "KYC Status",
-                    accessorKey: "referee_kyc_status_name",
-                    cell: ({ row }) => <ReferralStatusBadge status={row.original.referee_kyc_status} />,
+                    accessorKey: "referee_kyc_status",
+                    cell: ({ row, getValue }) => (
+                        <KycStatusBadge
+                            status={getValue()}
+                            label={getValue() ? ReferenceName(referenceTypeId.kycStatuses, getValue()) : ""}
+                        />
+                    ),
                 },
             ],
         },
