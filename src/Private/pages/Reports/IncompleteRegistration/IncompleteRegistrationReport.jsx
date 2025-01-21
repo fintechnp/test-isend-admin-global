@@ -1,45 +1,32 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import Grid from "@mui/material/Grid";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import { TablePagination } from "App/components/Table";
-import ReportTitle from "App/components/Title/ReportTitle";
-import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
-import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
-
 import actions from "../store/actions";
-import ucwords from "App/helpers/ucwords";
+import { CountryName } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
+import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import { permissions } from "Private/data/permissions";
 import apiEndpoints from "Private/config/apiEndpoints";
 import withPermission from "Private/HOC/withPermission";
-import { CountryName, FormatDateTime } from "App/helpers";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import useListFilterStore from "App/hooks/useListFilterStore";
-import PageContentContainer from "App/components/Container/PageContentContainer";
 import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
-import Column from "App/components/Column/Column";
-import dateUtils from "App/utils/dateUtils";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
 import Filter from "../Shared/Filter";
 
 const initialState = {
     page_number: 1,
     page_size: 15,
-    // sort_by: "created_ts",
     created_from_date: dateUtils.getDateBeforeTwoWeeks(),
     created_to_date: dateUtils.getTodayDate(),
-    //  order_by: "DESC",
 };
 
 function IncompleteRegistrationReport() {
     const dispatch = useDispatch();
-
-    const { response: incompleteRegistrationResponse, loading: isReportLoading } = useSelector(
-        (state) => state.get_incomplete_registration_report,
-    );
 
     const {
         isFilterOpen,
@@ -58,6 +45,10 @@ function IncompleteRegistrationReport() {
         fromDateParamName: "created_from_date",
         toDateParamName: "created_to_date",
     });
+
+    const { response: incompleteRegistrationResponse, loading: isReportLoading } = useSelector(
+        (state) => state.get_incomplete_registration_report,
+    );
 
     const incompleteRegistrationData = incompleteRegistrationResponse?.data || [];
 
@@ -126,10 +117,7 @@ function IncompleteRegistrationReport() {
                 header: "Email Confirmed",
                 accessorKey: "email_confirmed",
             },
-            {
-                header: "Email Confirm Count",
-                accessorKey: "email_confirm_count",
-            },
+
             {
                 header: "Phone No.",
                 accessorKey: "phone_number",
@@ -145,6 +133,7 @@ function IncompleteRegistrationReport() {
             {
                 header: "Country",
                 accessorKey: "country",
+                cell: ({ getValue }) => <>{getValue() ? CountryName(getValue()) : "N/A"}</>,
             },
             {
                 header: "Created At",
@@ -158,8 +147,6 @@ function IncompleteRegistrationReport() {
     const headers = [
         { label: "Email", key: "email" },
         { label: "Email Confirmed", key: "email_confirmed" },
-        { label: "Email Confirm Count", key: "email_confirm_count" },
-        { label: "Phone No.", key: "phone_number" },
         { label: "Phone No. Confirmed", key: "phone_number_confirmed" },
         { label: "Phone Confirm Count", key: "phone_confirm_count" },
         { label: "Created At", key: "created_ts" },
@@ -167,10 +154,10 @@ function IncompleteRegistrationReport() {
 
     const csvReport = {
         title: "Incomplete Registration Report",
-        start: filterSchema?.created_from_date,
-        end: filterSchema?.created_to_date,
+        start: dateUtils.getLocalDateFromUTC(filterSchema?.created_from_date),
+        end: dateUtils.getLocalDateFromUTC(filterSchema?.created_to_date),
         headers: headers,
-        data: ReportsDownload || [],
+        data: ReportsDownload?.data || [],
     };
 
     const downloadData = () => {
@@ -218,7 +205,7 @@ function IncompleteRegistrationReport() {
                     title="Incomplete Registration Report"
                     topRightContent={
                         <Filter
-                            fileName={`IncompleteRegistrationReport_${Date.now()}`}
+                            fileName="IncompleteRegistrationReports"
                             success={pd_success}
                             loading={pd_loading}
                             csvReport={csvReport}

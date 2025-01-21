@@ -1,36 +1,24 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
 import * as Yup from "yup";
-
-import Grid from "@mui/material/Grid";
+import actions from "../store/actions";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import actions from "../store/actions";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import { TablePagination } from "App/components/Table";
-import ACHEntriesFilterForm from "./ACHEntriesFilterForm";
-import ReportTitle from "App/components/Title/ReportTitle";
-import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
-
-import { FormatDateTime } from "App/helpers";
-import apiEndpoints from "Private/config/apiEndpoints";
-import withPermission from "Private/HOC/withPermission";
-import { permissions } from "Private/data/permissions";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import useListFilterStore from "App/hooks/useListFilterStore";
-import FilterButton from "App/components/Button/FilterButton";
-import { Box, Breadcrumbs } from "@mui/material";
-import Column from "App/components/Column/Column";
+import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import achConfig from "App/config/achConfig";
-
+import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
+import apiEndpoints from "Private/config/apiEndpoints";
+import { permissions } from "Private/data/permissions";
+import withPermission from "Private/HOC/withPermission";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import isEmpty from "App/helpers/isEmpty";
-import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+
 import Filter from "../Shared/Filter";
-import ExportPdfTable from "../Beneficiary/components/ExportBeneficiary";
 
 const schema = Yup.object().shape({
     created_from_date: Yup.string().nullable().optional(),
@@ -219,8 +207,8 @@ function ACHEntriesReport2() {
 
     const csvReport = {
         title: "Report on ACH (Automated Clearing House) Entries Entries",
-        start: dateUtils.getLocalDateFromUTC(filterSchema?.created_from_date),
-        end: dateUtils.getLocalDateFromUTC(filterSchema?.created_to_date),
+        start: filterSchema?.created_from_date,
+        end: filterSchema?.created_to_date,
         headers: headers,
         data: (ReportsDownload?.data || []).map(
             ({
@@ -294,13 +282,6 @@ function ACHEntriesReport2() {
                                 csvReport={csvReport}
                                 state={filterSchema}
                                 downloadData={downloadData}
-                            />
-                            <TableGridQuickFilter
-                                onOrderByChange={onQuickFilter}
-                                onSortByChange={onQuickFilter}
-                                sortByData={sortData}
-                                values={filterSchema}
-                                disable={l_loading}
                             />
                         </>
                     }

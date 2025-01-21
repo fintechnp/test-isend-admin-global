@@ -1,31 +1,25 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
 import * as Yup from "yup";
-
+import moment from "moment";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import actions from "../store/actions";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
+import Column from "App/components/Column/Column";
+import { CountryNameByIso2Code } from "App/helpers";
 import { TablePagination } from "App/components/Table";
-import ReportTitle from "App/components/Title/ReportTitle";
-import ICNResponseFilterForm from "./ICNResponseFilterForm";
-import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
-
 import apiEndpoints from "Private/config/apiEndpoints";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
-import { CountryNameByIso2Code, FormatDateTime } from "App/helpers";
 import useListFilterStore from "App/hooks/useListFilterStore";
-import Column from "App/components/Column/Column";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
-import TanstackReactTable from "App/components/Table/TanstackReactTable";
-import FilterButton from "App/components/Button/FilterButton";
-import dateUtils from "App/utils/dateUtils";
-import isEmpty from "App/helpers/isEmpty";
-import moment from "moment";
+
+import Filter from "../Shared/Filter";
+import actions from "../store/actions";
 
 const maxDate = dateUtils.today();
 const minDate = moment(maxDate).subtract(30, "days").format("YYYY-MM-DD");
@@ -34,7 +28,6 @@ const initialState = {
     page_number: 1,
     page_size: 15,
     sort_by: "created_ts",
-    order_by: "DESC",
     created_from_date: minDate,
     created_to_date: maxDate,
 };
@@ -72,17 +65,6 @@ const schema = Yup.object().shape({
 
 function ICNResponseReport() {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    // const [filterSchema, setFilterSchema] = useState(initialState);
-
-    const { response: ICNResponseReportResponse, loading: l_loading } = useSelector(
-        (state) => state.get_icn_response_report,
-    );
-
-    useEffect(() => {
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
-    }, [dispatch]);
 
     const {
         isFilterOpen,
@@ -102,12 +84,31 @@ function ICNResponseReport() {
         toDateParamName: "created_to_date",
     });
 
+    const { response: ICNResponseReportResponse, loading: l_loading } = useSelector(
+        (state) => state.get_icn_response_report,
+    );
+
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
+    useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+        dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
+    }, [dispatch]);
+
     useEffect(() => {
         dispatch(actions.get_icn_response_report(filterSchema));
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
+            {
+                header: "S.N.",
+                accessorKey: "f_serial_no",
+            },
             {
                 header: "ICN ID",
                 accessorKey: "icn_id",
@@ -119,7 +120,7 @@ function ICNResponseReport() {
             {
                 header: "Country",
                 accessorKey: "country",
-                Cell: (data) => <>{CountryNameByIso2Code(data.value)}</>,
+                cell: ({ getValue }) => <>{getValue() ? CountryNameByIso2Code(getValue()) : "N/A"}</>,
             },
             {
                 header: "Transaction Type",
@@ -131,7 +132,8 @@ function ICNResponseReport() {
             },
             {
                 header: "Txn Date",
-                accessorKey: "txndate",
+                accessorKey: "timestamp",
+                cell: ({ getValue }) => <>{getValue() ? dateUtils.getFormattedDate(getValue()) : "N/A"}</>,
             },
             {
                 header: "Sender Party Name",
@@ -167,13 +169,6 @@ function ICNResponseReport() {
         [],
     );
 
-    // const handleReset = () => {
-    //     isMounted.current = false;
-    //     setFilterSchema(initialState);
-    //     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-    //     dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
-    // };
-
     const filterFields = [
         {
             type: fieldTypes.TEXTFIELD,
@@ -199,53 +194,66 @@ function ICNResponseReport() {
         },
     ];
 
-    const sortData = [
-        { label: "Ascending", value: "ASC" },
-        { label: "Descending", value: "DESC" },
+    const headers = [
+        {
+            label: "Org ID",
+            key: "orgid",
+        },
+        {
+            label: "Country",
+            key: "country",
+        },
+        {
+            label: "Transaction Type",
+            key: "txntype",
+        },
+        {
+            label: "Txn Ref ID",
+            key: "txnrefid",
+        },
+        {
+            label: "Txn Date",
+            key: "timestamp",
+        },
+        {
+            label: "Sender Party Name",
+            key: "senderpartyname",
+        },
+        {
+            label: "Amount",
+            key: "txnamt",
+        },
+        {
+            label: "Currency",
+            key: "txnccy",
+        },
+        {
+            label: "Receiving",
+            key: "receivingpartyname",
+        },
+        {
+            label: "Created At",
+            key: "created_ts",
+        },
     ];
 
-    return (
-        // <PageContent
-        //     documentTitle="ICN (Instant Credit Notification) Reports"
-        //     title={<ReportTitle>ICN (Instant Credit Notification) Reports</ReportTitle>}
-        // >
-        //     <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-        //         <Grid item xs={12}>
-        //             <ICNResponseFilterForm onSubmit={handleSearch} onReset={handleReset} loading={l_loading} />
-        //         </Grid>
-        //         {l_loading && (
-        //             <Grid item xs={12}>
-        //                 <Loading loading={l_loading} />
-        //             </Grid>
-        //         )}
-        //         {!l_loading && ICNResponseReportResponse?.data && ICNResponseReportResponse?.data?.length === 0 && (
-        //             <Grid item xs={12}>
-        //                 <NoResults text="No Record Found" />
-        //             </Grid>
-        //         )}
-        //         {/* {!l_loading && ICNResponseReportResponse?.data?.length > 0 && (
-        //             <Grid item xs={12}>
-        //                 <ReportTable
-        //                     columns={columns}
-        //                     data={ICNResponseReportResponse?.data || []}
-        //                     loading={l_loading}
-        //                     rowsPerPage={8}
-        //                     renderPagination={() => (
-        //                         <TablePagination
-        //                             paginationData={ICNResponseReportResponse?.pagination}
-        //                             handleChangePage={handleChangePage}
-        //                             handleChangeRowsPerPage={handleChangeRowsPerPage}
-        //                         />
-        //                     )}
-        //                     apiEndpoint={apiEndpoints.reports.icnResponse}
-        //                     filterQuery={filterSchema}
-        //                     filename="ICN Report"
-        //                 />
-        //             </Grid>
-        //         )} */}
-        //     </Grid>
-        // </PageContent>
+    const csvReport = {
+        title: "ICN Report",
+        start: filterSchema?.created_from_date,
+        end: filterSchema?.created_to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
 
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 100,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.icnResponse));
+    };
+
+    return (
         <PageContent
             documentTitle="ICN (Instant Credit Notification) Reports"
             topRightEndContent={
@@ -285,12 +293,13 @@ function ICNResponseReport() {
                 <PageContentContainer
                     title="ICN (Instant Credit Notification) Reports"
                     topRightContent={
-                        <TableGridQuickFilter
-                            onOrderByChange={onQuickFilter}
-                            onSortByChange={onQuickFilter}
-                            sortByData={sortData}
-                            values={filterSchema}
-                            disable={l_loading}
+                        <Filter
+                            fileName="ICNReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
                         />
                     }
                 >
