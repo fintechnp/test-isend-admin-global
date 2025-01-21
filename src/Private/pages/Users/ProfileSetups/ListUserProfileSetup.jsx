@@ -184,7 +184,7 @@ function ListUserProfileSetup() {
                                             onClose={onClose}
                                         />
                                     )}
-                                    {can(permissions.EDIT_USER_PROFILE_SETUP) && (
+                                    {can(permissions.EDIT_USER_PROFILE_SETUP) && !!row.original.is_editable && (
                                         <ListItemButton
                                             onClick={() => {
                                                 navigate(
