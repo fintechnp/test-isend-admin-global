@@ -84,7 +84,12 @@ const ListCirWebhooks = () => {
         {
             header: "Status",
             accessorKey: "status",
-            cell: ({ row }) => <Chip label={row.original.status.replace(/[^a-zA-Z0-9 ]/g, " ").toUpperCase()} />,
+            cell: ({ row }) => (
+                <Chip
+                    label={row.original.status.replace(/[^a-zA-Z0-9 ]/g, " ").toUpperCase()}
+                    sx={{ fontSize: "1rem" }}
+                />
+            ),
         },
     ]);
 
