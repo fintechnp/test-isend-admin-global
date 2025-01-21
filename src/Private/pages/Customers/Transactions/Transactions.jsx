@@ -118,7 +118,7 @@ function Transactions(props) {
                 cell: ({ row }) => (
                     <>
                         {row?.original?.payout_cost_rate
-                            ? dateUtils.getLocalDateFromUTC(row?.original?.created_ts)
+                            ? dateUtils.getFormattedDate(row?.original?.created_ts)
                             : "N/A"}
                     </>
                 ),
