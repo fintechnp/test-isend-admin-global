@@ -23,15 +23,15 @@ import FilterButton from "App/components/Button/FilterButton";
 import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import Column from "App/components/Column/Column";
 import dateUtils from "App/utils/dateUtils";
-import { Box } from "@mui/material";
+import Filter from "../Shared/Filter";
 
 const initialState = {
     page_number: 1,
     page_size: 15,
-    sort_by: "created_ts",
+    // sort_by: "created_ts",
     created_from_date: dateUtils.getDateBeforeTwoWeeks(),
     created_to_date: dateUtils.getTodayDate(),
-    order_by: "DESC",
+    //  order_by: "DESC",
 };
 
 function IncompleteRegistrationReport() {
@@ -40,8 +40,6 @@ function IncompleteRegistrationReport() {
     const { response: incompleteRegistrationResponse, loading: isReportLoading } = useSelector(
         (state) => state.get_incomplete_registration_report,
     );
-
-    const incompleteRegistrationData = incompleteRegistrationResponse?.data || [];
 
     const {
         isFilterOpen,
@@ -60,6 +58,23 @@ function IncompleteRegistrationReport() {
         fromDateParamName: "created_from_date",
         toDateParamName: "created_to_date",
     });
+
+    const incompleteRegistrationData = incompleteRegistrationResponse?.data || [];
+
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
+    useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+        dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
+    }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(actions.get_incomplete_registration_report(filterSchema));
+    }, [dispatch, filterSchema]);
 
     const filterFields = [
         {
@@ -140,40 +155,31 @@ function IncompleteRegistrationReport() {
         [],
     );
 
-    useEffect(() => {
-        dispatch(actions.get_incomplete_registration_report(filterSchema));
-    }, [dispatch, filterSchema]);
+    const headers = [
+        { label: "Email", key: "email" },
+        { label: "Email Confirmed", key: "email_confirmed" },
+        { label: "Email Confirm Count", key: "email_confirm_count" },
+        { label: "Phone No.", key: "phone_number" },
+        { label: "Phone No. Confirmed", key: "phone_number_confirmed" },
+        { label: "Phone Confirm Count", key: "phone_confirm_count" },
+        { label: "Created At", key: "created_ts" },
+    ];
 
-    // const defaultHiddenColumns = columns
-    //     .map((col) => {
-    //         return col.hidden ? col.accessor : undefined;
-    //     })
-    //     .filter((v) => v !== undefined);
+    const csvReport = {
+        title: "Incomplete Registration Report",
+        start: filterSchema?.created_from_date,
+        end: filterSchema?.created_to_date,
+        headers: headers,
+        data: ReportsDownload || [],
+    };
 
-    // const handleSearch = (data) => {
-    //     const updatedFilterSchema = {
-    //         ...filterSchema,
-    //         ...data,
-    //     };
-    //     setFilterSchema(updatedFilterSchema);
-    // };
-
-    // const handleReset = () => {
-    //     isMounted.current = false;
-    //     setFilterSchema(initialState);
-    //     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-    //     dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
-    // };
-
-    // useEffect(() => {
-    //     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-    //     dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
-    // }, [dispatch]);
-
-    // useEffect(() => {
-    //     if (isMounted.current) dispatch(actions.get_incomplete_registration_report(filterSchema));
-    //     else isMounted.current = true;
-    // }, [dispatch, filterSchema]);
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 100,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.incompleteRegistration));
+    };
 
     return (
         <PageContent
@@ -208,7 +214,19 @@ function IncompleteRegistrationReport() {
                     />
                 </Column>
 
-                <PageContentContainer title="Incomplete Registration Report">
+                <PageContentContainer
+                    title="Incomplete Registration Report"
+                    topRightContent={
+                        <Filter
+                            fileName={`IncompleteRegistrationReport_${Date.now()}`}
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
+                        />
+                    }
+                >
                     <TanstackReactTable columns={columns} data={incompleteRegistrationData} loading={isReportLoading} />
 
                     <TablePagination

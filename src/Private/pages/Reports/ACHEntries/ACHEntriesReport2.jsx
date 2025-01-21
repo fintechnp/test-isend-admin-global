@@ -29,6 +29,8 @@ import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 import isEmpty from "App/helpers/isEmpty";
 import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import Filter from "../Shared/Filter";
+import ExportPdfTable from "../Beneficiary/components/ExportBeneficiary";
 
 const schema = Yup.object().shape({
     created_from_date: Yup.string().nullable().optional(),
@@ -82,11 +84,16 @@ function ACHEntriesReport2() {
         toDateParamName: "created_to_date",
     });
 
-    // useEffect(() => {
-    //     dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-    //     dispatch(reset("search_form_ach_entries_reports"));
-    //     dispatch({ type: "ACH_ENTRIES_REPORT_RESET" });
-    // }, [dispatch]);
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
+    useEffect(() => {
+        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
+        dispatch({ type: "ACH_ENTRIES_REPORT_RESET" });
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(actions.get_ach_entries_report(filterSchema));
@@ -174,10 +181,70 @@ function ACHEntriesReport2() {
 
     const sortData = [
         {
-            label: "None",
+            key: "Created At",
             value: "created_ts",
         },
     ];
+
+    const headers = [
+        {
+            label: "ACH ID",
+            key: "ach_id",
+        },
+        {
+            label: "Txn No",
+            key: "txn_no",
+        },
+        {
+            label: "Name",
+            key: "name",
+        },
+        {
+            label: "Amount",
+            key: "amount",
+        },
+        {
+            label: "Txn Type",
+            key: "txn_type",
+        },
+        {
+            label: "Status",
+            key: "status",
+        },
+        {
+            label: "Created At",
+            key: "created_ts",
+        },
+    ];
+
+    const csvReport = {
+        title: "Report on ACH (Automated Clearing House) Entries Entries",
+        start: dateUtils.getLocalDateFromUTC(filterSchema?.created_from_date),
+        end: dateUtils.getLocalDateFromUTC(filterSchema?.created_to_date),
+        headers: headers,
+        data: (ReportsDownload?.data || []).map(
+            ({
+                routing_no,
+                account_no,
+                transaction_group_id,
+                ach_trace_number,
+                ach_payment_id,
+                is_active,
+                id,
+                ...others
+            }) => ({
+                ...others,
+            }),
+        ),
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 100,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.achEntries));
+    };
 
     return (
         <PageContent
@@ -219,13 +286,23 @@ function ACHEntriesReport2() {
                 <PageContentContainer
                     title="ACH (Automated Clearing House) Entries Reports"
                     topRightContent={
-                        <TableGridQuickFilter
-                            onOrderByChange={onQuickFilter}
-                            onSortByChange={onQuickFilter}
-                            sortByData={sortData}
-                            values={filterSchema}
-                            disable={l_loading}
-                        />
+                        <>
+                            <Filter
+                                fileName={`achEntriesReport_${Date.now()}`}
+                                success={pd_success}
+                                loading={pd_loading}
+                                csvReport={csvReport}
+                                state={filterSchema}
+                                downloadData={downloadData}
+                            />
+                            <TableGridQuickFilter
+                                onOrderByChange={onQuickFilter}
+                                onSortByChange={onQuickFilter}
+                                sortByData={sortData}
+                                values={filterSchema}
+                                disable={l_loading}
+                            />
+                        </>
                     }
                 >
                     <TanstackReactTable columns={columns} data={ACHEntriesResponse?.data || []} loading={l_loading} />
