@@ -81,7 +81,7 @@ function LanguageSetup() {
 
     useEffect(() => {
         dispatch(actions.get_all_language_option(filterSchema));
-    }, [d_success, add_success, update_success]);
+    }, [d_success, add_success, update_success, dispatch, filterSchema]);
 
     const handleDelete = (id) => {
         dispatch(actions.delete_language_option(id));

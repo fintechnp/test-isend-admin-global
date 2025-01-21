@@ -26,14 +26,6 @@ const initialState = {
 const sortByOptions = [
     {
         key: "None",
-        value: "",
-    },
-    {
-        key: "Name",
-        value: "name",
-    },
-    {
-        key: "Created At",
         value: "created_ts",
     },
 ];
@@ -189,7 +181,12 @@ function OnfidoReport() {
                         </>
                     }
                 >
-                    <TanstackReactTable columns={columns} data={onfidoReportResponse?.data || []} loading={l_loading} />
+                    <TanstackReactTable
+                        columns={columns}
+                        data={onfidoReportResponse?.data || []}
+                        loading={l_loading}
+                        noDataMessage={`${filterSchema.customer_id ? "No Data Found" : "Filter with Customer Id to view data"}`}
+                    />
                 </PageContentContainer>
             </Column>
         </PageContent>
