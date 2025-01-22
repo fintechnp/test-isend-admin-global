@@ -8,6 +8,7 @@ import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 
 import actions from "../../store/actions";
+import FcmStatusBadge from "../../Sms/components/FcmStatusBadge";
 
 export default function ViewFcmModal() {
     const dispatch = useDispatch();
@@ -31,6 +32,15 @@ export default function ViewFcmModal() {
                 {
                     label: "Message",
                     accessorKey: "body",
+                },
+                {
+                    label: "Status",
+                    accessorKey: "status",
+                    cell: (data) => (
+                        <>
+                            <FcmStatusBadge status={data?.status} />
+                        </>
+                    ),
                 },
 
                 {
