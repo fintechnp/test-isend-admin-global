@@ -1,37 +1,98 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { reset } from "redux-form";
-import Grid from "@mui/material/Grid";
+import * as Yup from "yup";
+import moment from "moment";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import actions from "../store/actions";
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
+import isEmpty from "App/helpers/isEmpty";
+import dateUtils from "App/utils/dateUtils";
+import Column from "App/components/Column/Column";
+import { CountryNameByIso2Code } from "App/helpers";
 import { TablePagination } from "App/components/Table";
-import ReportTitle from "App/components/Title/ReportTitle";
-import ICNResponseFilterForm from "./ICNResponseFilterForm";
-import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
-
 import apiEndpoints from "Private/config/apiEndpoints";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
-import { CountryNameByIso2Code, FormatDateTime } from "App/helpers";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import Filter from "../Shared/Filter";
+import actions from "../store/actions";
+
+const maxDate = dateUtils.today();
+const minDate = moment(maxDate).subtract(30, "days").format("YYYY-MM-DD");
 
 const initialState = {
     page_number: 1,
     page_size: 15,
     sort_by: "created_ts",
-    order_by: "DESC",
+    created_from_date: minDate,
+    created_to_date: maxDate,
 };
+
+const schema = Yup.object().shape({
+    created_from_date: Yup.string()
+        .test({
+            name: "required_when_to_date_is_not_empty",
+            message: "Form Date is required",
+            test: (value, context) => {
+                if (
+                    (isEmpty(context.parent.created_to_date) && isEmpty(value)) ||
+                    (!isEmpty(context.parent.created_to_date) && !isEmpty(value))
+                )
+                    return true;
+                return isEmpty(context.parent.created_to_date) && !isEmpty(value);
+            },
+        })
+        .required("From date is required"),
+    created_to_date: Yup.string()
+        .test({
+            name: "required_when_to_date_is_not_empty",
+            message: "To Date is required",
+            test: (value, context) => {
+                if (
+                    (isEmpty(context.parent.created_from_date) && isEmpty(value)) ||
+                    (!isEmpty(context.parent.created_from_date) && !isEmpty(value))
+                )
+                    return true;
+                return isEmpty(context.parent.created_from_date) && !isEmpty(value);
+            },
+        })
+        .required("From date is required"),
+});
 
 function ICNResponseReport() {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "created_from_date",
+        toDateParamName: "created_to_date",
+    });
 
     const { response: ICNResponseReportResponse, loading: l_loading } = useSelector(
         (state) => state.get_icn_response_report,
     );
+
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
@@ -39,186 +100,222 @@ function ICNResponseReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
-            dispatch(actions.get_icn_response_report(filterSchema));
-        } else {
-            isMounted.current = true;
-        }
+        dispatch(actions.get_icn_response_report(filterSchema));
     }, [dispatch, filterSchema]);
 
     const columns = useMemo(
         () => [
             {
-                Header: "ICN ID",
-                accessor: "icn_id",
-                pdfCellStyle: {
-                    minWidth: "10%",
-                },
+                header: "S.N.",
+                accessorKey: "f_serial_no",
             },
             {
-                Header: "Org ID",
-                accessor: "orgid",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "ICN ID",
+                accessorKey: "icn_id",
             },
             {
-                Header: "Country",
-                accessor: "country",
-                Cell: (data) => <>{CountryNameByIso2Code(data.value)}</>,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Org ID",
+                accessorKey: "orgid",
             },
             {
-                Header: "Transaction Type",
-                accessor: "txntype",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Country",
+                accessorKey: "country",
+                cell: ({ getValue }) => <>{getValue() ? CountryNameByIso2Code(getValue()) : "N/A"}</>,
             },
             {
-                Header: "Txn Ref ID",
-                accessor: "txnrefid",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Transaction Type",
+                accessorKey: "txntype",
             },
             {
-                Header: "Txn Date",
-                accessor: "txndate",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Txn Ref ID",
+                accessorKey: "txnrefid",
             },
             {
-                Header: "Sender Party Name",
-                accessor: "senderpartyname",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Txn Date",
+                accessorKey: "timestamp",
+                cell: ({ getValue }) => <>{getValue() ? dateUtils.getFormattedDate(getValue()) : "N/A"}</>,
             },
             {
-                Header: "Sender Bank ID",
-                accessor: "senderpartysenderbankid",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Sender Party Name",
+                accessorKey: "senderpartyname",
             },
             {
-                Header: "Amount",
-                accessor: "txnamt",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Sender Bank ID",
+                accessorKey: "senderpartysenderbankid",
             },
             {
-                Header: "Currency",
-                accessor: "txnccy",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Amount",
+                accessorKey: "txnamt",
             },
             {
-                Header: "Receiving Party Name",
-                accessor: "receivingpartyname",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Currency",
+                accessorKey: "txnccy",
             },
             {
-                Header: "Receiving Party Account No.",
-                accessor: "receivingpartyaccountno",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Receiving Party Name",
+                accessorKey: "receivingpartyname",
             },
             {
-                Header: "Created At",
-                accessor: "created_ts",
+                header: "Receiving Party Account No.",
+                accessorKey: "receivingpartyaccountno",
+            },
+            {
+                header: "Created At",
+                accessorKey: "created_ts",
                 maxWidth: 120,
-                Cell: (data) => FormatDateTime(data?.value),
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                cell: ({ getValue }) => (getValue() ? dateUtils.getFormattedDate(getValue()) : "-"),
             },
         ],
         [],
     );
 
-    const handleSearch = (data) => {
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "search",
+            label: "Search",
+        },
+
+        {
+            type: fieldTypes.DATE,
+            name: "created_from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "created_to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+    ];
+
+    const headers = [
+        {
+            label: "Org ID",
+            key: "orgid",
+        },
+        {
+            label: "Country",
+            key: "country",
+        },
+        {
+            label: "Transaction Type",
+            key: "txntype",
+        },
+        {
+            label: "Txn Ref ID",
+            key: "txnrefid",
+        },
+        {
+            label: "Txn Date",
+            key: "timestamp",
+        },
+        {
+            label: "Sender Party Name",
+            key: "senderpartyname",
+        },
+        {
+            label: "Amount",
+            key: "txnamt",
+        },
+        {
+            label: "Currency",
+            key: "txnccy",
+        },
+        {
+            label: "Receiving",
+            key: "receivingpartyname",
+        },
+        {
+            label: "Created At",
+            key: "created_ts",
+        },
+    ];
+
+    const csvReport = {
+        title: "ICN Report",
+        start: filterSchema?.created_from_date,
+        end: filterSchema?.created_to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadData = () => {
         const updatedFilterSchema = {
             ...filterSchema,
-            ...data,
+            page_size: 100,
         };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch({ type: "ICN_RESPONSE_REPORT_RESET" });
-    };
-
-    const handleChangePage = (e, newPage) => {
-        const updatedFilter = {
-            ...filterSchema,
-            page_number: ++newPage,
-        };
-        setFilterSchema(updatedFilter);
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        const updatedFilterSchema = {
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        };
-        setFilterSchema(updatedFilterSchema);
+        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.icnResponse));
     };
 
     return (
         <PageContent
             documentTitle="ICN (Instant Credit Notification) Reports"
-            title={<ReportTitle>ICN (Instant Credit Notification) Reports</ReportTitle>}
+            topRightEndContent={
+                <FilterButton
+                    size="small"
+                    onClick={() => (isFilterOpen ? closeFilter() : openFilter())}
+                    breadcrumbs={[
+                        {
+                            label: "Generate Reports",
+                        },
+                        {
+                            label: "ICN Report",
+                        },
+                    ]}
+                />
+            }
         >
-            <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                <Grid item xs={12}>
-                    <ICNResponseFilterForm onSubmit={handleSearch} onReset={handleReset} loading={l_loading} />
-                </Grid>
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-                {!l_loading && ICNResponseReportResponse?.data && ICNResponseReportResponse?.data?.length === 0 && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Record Found" />
-                    </Grid>
-                )}
-                {!l_loading && ICNResponseReportResponse?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <ReportTable
-                            columns={columns}
-                            data={ICNResponseReportResponse?.data || []}
-                            loading={l_loading}
-                            rowsPerPage={8}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={ICNResponseReportResponse?.pagination}
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                />
-                            )}
-                            apiEndpoint={apiEndpoints.reports.icnResponse}
-                            filterQuery={filterSchema}
-                            filename="ICN Report"
+            <Column>
+                <Column
+                    sx={{
+                        marginY: 1,
+                    }}
+                >
+                    <FilterForm
+                        open={isFilterOpen}
+                        onClose={closeFilter}
+                        onSubmit={onFilterSubmit}
+                        fields={filterFields}
+                        values={filterSchema}
+                        onDelete={onDeleteFilterParams}
+                        schema={schema}
+                        title="Search ICN Transactions"
+                        onReset={reset}
+                    />
+                </Column>
+
+                <PageContentContainer
+                    title="ICN (Instant Credit Notification) Reports"
+                    topRightContent={
+                        <Filter
+                            fileName="ICNReport"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
                         />
-                    </Grid>
-                )}
-            </Grid>
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        data={ICNResponseReportResponse?.data || []}
+                        loading={l_loading}
+                    />
+
+                    <TablePagination
+                        paginationData={ICNResponseReportResponse?.pagination}
+                        handleChangePage={onPageChange}
+                        handleChangeRowsPerPage={onRowsPerPageChange}
+                    />
+                </PageContentContainer>
+            </Column>
         </PageContent>
     );
 }

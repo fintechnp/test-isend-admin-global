@@ -1,155 +1,62 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import Grid from "@mui/material/Grid";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import NoResults from "../Shared/NoResults";
-import Loading from "App/components/Loading";
-import { TablePagination } from "App/components/Table";
-import ReportTitle from "App/components/Title/ReportTitle";
-import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
-import IncompleteRegistrationFilterForm from "./IncompleteRegistrationFilterForm";
-
 import actions from "../store/actions";
-import ucwords from "App/helpers/ucwords";
+import { CountryName } from "App/helpers";
+import dateUtils from "App/utils/dateUtils";
+import Column from "App/components/Column/Column";
+import { TablePagination } from "App/components/Table";
 import { permissions } from "Private/data/permissions";
 import apiEndpoints from "Private/config/apiEndpoints";
 import withPermission from "Private/HOC/withPermission";
-import { CountryName, FormatDateTime } from "App/helpers";
+import useListFilterStore from "App/hooks/useListFilterStore";
+import FilterButton from "App/components/Button/FilterButton";
+import PageContent from "App/components/Container/PageContent";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import PageContentContainer from "App/components/Container/PageContentContainer";
+
+import Filter from "../Shared/Filter";
 
 const initialState = {
     page_number: 1,
     page_size: 15,
-    sort_by: "created_ts",
-    order_by: "DESC",
+    created_from_date: dateUtils.getDateBeforeTwoWeeks(),
+    created_to_date: dateUtils.getTodayDate(),
 };
 
 function IncompleteRegistrationReport() {
     const dispatch = useDispatch();
-    const isMounted = useRef(false);
-    const [filterSchema, setFilterSchema] = useState(initialState);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        filterSchema,
+        onQuickFilter,
+        onRowsPerPageChange,
+        onFilterSubmit,
+        onPageChange,
+        onDeleteFilterParams,
+        reset,
+    } = useListFilterStore({
+        initialState,
+        resetInitialStateDate: true,
+        fromDateParamName: "created_from_date",
+        toDateParamName: "created_to_date",
+    });
 
     const { response: incompleteRegistrationResponse, loading: isReportLoading } = useSelector(
         (state) => state.get_incomplete_registration_report,
     );
 
-    const columns = useMemo(
-        () => [
-            {
-                Header: "Email",
-                accessor: "email",
-                hidden: false,
-                pdfCellStyle: {
-                    minWidth: "25%",
-                },
-            },
-            {
-                Header: "Email Confirmed",
-                accessor: "email_confirmed",
-                Cell: (data) => <>{data.value ? "Yes" : "No"}</>,
-                exportCell: (data) => (data.email_confirmed ? "Yes" : "No"),
-                hidden: false,
-                pdfCellStyle: {
-                    minWidth: "15%",
-                },
-            },
-            {
-                Header: "Email Confirm Count",
-                accessor: "email_confirm_count",
-                Cell: (data) => <>{data.value}</>,
-                hidden: true,
-                pdfCellStyle: {
-                    minWidth: "10%",
-                },
-            },
-            {
-                Header: "Phone No.",
-                accessor: "phone_number",
-                hidden: false,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
-            },
-            {
-                Header: "Phone No. Confirmed",
-                accessor: "phone_number_confirmed",
-                Cell: (data) => <>{data.value ? "Yes" : "No"}</>,
-                exportCell: (data) => (data.phone_number_confirmed ? "Yes" : "No"),
-                hidden: false,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
-            },
-            {
-                Header: "Phone Confirm Count",
-                accessor: "phone_confirm_count",
-                Cell: (data) => <>{data.value}</>,
-                hidden: true,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
-            },
-            {
-                Header: "Country",
-                accessor: "country",
-                Cell: (data) => <>{ucwords(CountryName(data.value))}</>,
-                exportCell: (data) => ucwords(CountryName(data.country)),
-                hidden: false,
-                pdfCellStyle: {
-                    minWidth: "15%",
-                },
-            },
-            {
-                Header: "Created At",
-                accessor: "created_ts",
-                maxWidth: 120,
-                Cell: (data) => <>{FormatDateTime(data?.value)}</>,
-                exportCell: (data) => FormatDateTime(data?.created_ts),
-                hidden: true,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
-            },
-        ],
-        [],
-    );
+    const incompleteRegistrationData = incompleteRegistrationResponse?.data || [];
 
-    const defaultHiddenColumns = columns
-        .map((col) => {
-            return col.hidden ? col.accessor : undefined;
-        })
-        .filter((v) => v !== undefined);
-
-    const handleSearch = (data) => {
-        const updatedFilterSchema = {
-            ...filterSchema,
-            ...data,
-        };
-        setFilterSchema(updatedFilterSchema);
-    };
-
-    const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
-        dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch({ type: "INCOMPLETE_REGISTRATION_REPORT_RESET" });
-    };
-
-    const handleChangePage = (e, newPage) => {
-        setFilterSchema({
-            ...filterSchema,
-            page_number: ++newPage,
-        });
-    };
-
-    const handleChangeRowsPerPage = (e) => {
-        const pageSize = e.target.value;
-        setFilterSchema({
-            ...filterSchema,
-            page_number: 1,
-            page_size: +pageSize,
-        });
-    };
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
@@ -157,60 +64,165 @@ function IncompleteRegistrationReport() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) dispatch(actions.get_incomplete_registration_report(filterSchema));
-        else isMounted.current = true;
+        dispatch(actions.get_incomplete_registration_report(filterSchema));
     }, [dispatch, filterSchema]);
+
+    const filterFields = [
+        {
+            type: fieldTypes.DATE,
+            name: "created_from_date",
+            label: "From Date",
+            props: {
+                withStartDayTimezone: true,
+            },
+        },
+        {
+            type: fieldTypes.DATE,
+            name: "created_to_date",
+            label: "To Date",
+            props: {
+                withEndDayTimezone: true,
+            },
+        },
+
+        {
+            type: fieldTypes.COUNTRY_SELECT,
+            name: "country",
+            label: "Country",
+        },
+
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "mobile_number",
+            label: "Mobile Number",
+        },
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "email",
+            label: "Email",
+        },
+    ];
+
+    const columns = useMemo(
+        () => [
+            {
+                header: "S.N.",
+                accessorKey: "f_serial_no",
+            },
+            {
+                header: "Email",
+                accessorKey: "email",
+            },
+            {
+                header: "Email Confirmed",
+                accessorKey: "email_confirmed",
+            },
+
+            {
+                header: "Phone No.",
+                accessorKey: "phone_number",
+            },
+            {
+                header: "Phone No. Confirmed",
+                accessorKey: "phone_number_confirmed",
+            },
+            {
+                header: "Phone Confirm Count",
+                accessorKey: "phone_confirm_count",
+            },
+            {
+                header: "Country",
+                accessorKey: "country",
+                cell: ({ getValue }) => <>{getValue() ? CountryName(getValue()) : "N/A"}</>,
+            },
+            {
+                header: "Created At",
+                accessorKey: "created_ts",
+                cell: ({ getValue }) => <Column>{getValue() ? dateUtils.getFormattedDate(getValue()) : "N/A"}</Column>,
+            },
+        ],
+        [],
+    );
+
+    const headers = [
+        { label: "Email", key: "email" },
+        { label: "Email Confirmed", key: "email_confirmed" },
+        { label: "Phone No. Confirmed", key: "phone_number_confirmed" },
+        { label: "Phone Confirm Count", key: "phone_confirm_count" },
+        { label: "Created At", key: "created_ts" },
+    ];
+
+    const csvReport = {
+        title: "Incomplete Registration Report",
+        start: dateUtils.getLocalDateFromUTC(filterSchema?.created_from_date),
+        end: dateUtils.getLocalDateFromUTC(filterSchema?.created_to_date),
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: 100,
+        };
+        dispatch(actions.download_report(updatedFilterSchema, apiEndpoints.reports.incompleteRegistration));
+    };
 
     return (
         <PageContent
             documentTitle="Incomplete Registration Reports"
-            title={<ReportTitle>Incomplete Registration Reports</ReportTitle>}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
+            }
+            breadcrumbs={[
+                {
+                    label: "Generate Reports",
+                },
+                {
+                    label: "Incomplete Registration",
+                },
+            ]}
         >
-            <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                <Grid item xs={12}>
-                    <IncompleteRegistrationFilterForm
-                        onSubmit={handleSearch}
-                        onReset={handleReset}
-                        loading={isReportLoading}
+            <Column>
+                <Column
+                    sx={{
+                        marginY: 2,
+                    }}
+                >
+                    <FilterForm
+                        open={isFilterOpen}
+                        onClose={closeFilter}
+                        onSubmit={onFilterSubmit}
+                        fields={filterFields}
+                        values={filterSchema}
+                        onDelete={onDeleteFilterParams}
+                        title="Search Incomplete Registration"
+                        onReset={onreset}
                     />
-                </Grid>
+                </Column>
 
-                {isReportLoading && (
-                    <Grid item xs={12}>
-                        <Loading loading={isReportLoading} />
-                    </Grid>
-                )}
-
-                {!isReportLoading &&
-                    incompleteRegistrationResponse?.data &&
-                    incompleteRegistrationResponse?.data?.length === 0 && (
-                        <Grid item xs={12}>
-                            <NoResults text="No Record Found" />
-                        </Grid>
-                    )}
-
-                {!isReportLoading && incompleteRegistrationResponse?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <ReportTable
-                            defaultHiddenColumns={defaultHiddenColumns}
-                            columns={columns}
-                            data={incompleteRegistrationResponse?.data || []}
-                            loading={isReportLoading}
-                            rowsPerPage={8}
-                            filename="Incomplete Registration Report"
-                            apiEndpoint={apiEndpoints.reports.incompleteRegistration}
-                            filterQuery={filterSchema}
-                            renderPagination={() => (
-                                <TablePagination
-                                    paginationData={incompleteRegistrationResponse?.pagination}
-                                    handleChangePage={handleChangePage}
-                                    handleChangeRowsPerPage={handleChangeRowsPerPage}
-                                />
-                            )}
+                <PageContentContainer
+                    title="Incomplete Registration Report"
+                    topRightContent={
+                        <Filter
+                            fileName="IncompleteRegistrationReports"
+                            success={pd_success}
+                            loading={pd_loading}
+                            csvReport={csvReport}
+                            state={filterSchema}
+                            downloadData={downloadData}
                         />
-                    </Grid>
-                )}
-            </Grid>
+                    }
+                >
+                    <TanstackReactTable columns={columns} data={incompleteRegistrationData} loading={isReportLoading} />
+
+                    <TablePagination
+                        paginationData={incompleteRegistrationResponse?.pagination}
+                        handleChangePage={onPageChange}
+                        handleChangeRowsPerPage={onRowsPerPageChange}
+                    />
+                </PageContentContainer>
+            </Column>
         </PageContent>
     );
 }
