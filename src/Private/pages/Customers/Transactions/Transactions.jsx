@@ -18,7 +18,9 @@ import Header from "./components/Header";
 import Filter from "./components/Filter";
 import actions from "./../../Transactions/store/actions";
 import { TablePagination } from "./../../../../App/components/Table";
+import StatusBadge from "./data/StatusBadge";
 import { CurrencyName, FormatNumber } from "./../../../../App/helpers";
+import isEmpty from "App/helpers/isEmpty";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -112,6 +114,22 @@ function Transactions(props) {
                 cell: ({ row }) => (
                     <>{row.original.payout_cost_rate ? FormatNumber(row?.original?.payout_cost_rate) : "N/A"}</>
                 ),
+            },
+            {
+                header: "Transaction Status",
+                accessorKey: "transaction_status_code",
+                cell: ({ row }) => (
+                    <StatusBadge
+                        status={
+                            isEmpty(row.original.status) ? row.original.transaction_status_code : row.original.status
+                        }
+                    />
+                ),
+            },
+            {
+                header: "Send Status",
+                accessorKey: "send_status",
+                cell: ({ row }) => <StatusBadge status={row.original.send_status_code} />,
             },
             {
                 header: "Date",
