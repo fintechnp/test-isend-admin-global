@@ -1,14 +1,50 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
-import React, { useEffect, useState } from "react";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Controller, get, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, get } from "react-hook-form";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import {
+    ClassicEditor,
+    AutoLink,
+    Autosave,
+    Bold,
+    Code,
+    CodeBlock,
+    Essentials,
+    FontBackgroundColor,
+    FontColor,
+    FontFamily,
+    FontSize,
+    FullPage,
+    GeneralHtmlSupport,
+    Heading,
+    Highlight,
+    HtmlComment,
+    HtmlEmbed,
+    Italic,
+    Link,
+    Paragraph,
+    RemoveFormat,
+    ShowBlocks,
+    SourceEditing,
+    SpecialCharacters,
+    Strikethrough,
+    Subscript,
+    Superscript,
+    Table,
+    TableCaption,
+    TableCellProperties,
+    TableColumnResize,
+    TableProperties,
+    TableToolbar,
+    Underline,
+} from "ckeditor5";
+import "ckeditor5/ckeditor5.css";
+const LICENSE_KEY = "GPL"; // Replace with your actual license key if needed.
 
-const CKEditorComponent = ({ elementData, required, name, label, ...rest }) => {
-    const [editorLoaded, setEditorLoaded] = useState(false);
-    const [CKEditor, setCKEditor] = useState(null);
-    const [ClassicEditor, setClassicEditor] = useState(null);
-
+const CKEditorComponent = ({ elementData, required, name, label, placeholder, ...rest }) => {
+    const [isLayoutReady, setIsLayoutReady] = useState(false);
     const {
         setValue,
         formState: { errors },
@@ -16,55 +52,150 @@ const CKEditorComponent = ({ elementData, required, name, label, ...rest }) => {
     } = useFormContext();
 
     const formName = name ?? "element_content";
-
     const isError = get(errors, formName);
 
     useEffect(() => {
-        const loadEditor = async () => {
-            const { CKEditor } = await import("@ckeditor/ckeditor5-react");
-            const ClassicEditor = await import("@ckeditor/ckeditor5-build-classic");
-            setCKEditor(() => CKEditor);
-            setClassicEditor(() => ClassicEditor.default);
-            setEditorLoaded(true);
-        };
-
-        loadEditor();
+        setIsLayoutReady(true);
+        return () => setIsLayoutReady(false);
     }, []);
+
+    const { editorConfig } = useMemo(() => {
+        if (!isLayoutReady) {
+            return {};
+        }
+        return {
+            editorConfig: {
+                toolbar: {
+                    items: [
+                        "sourceEditing",
+                        "showBlocks",
+                        "|",
+                        "heading",
+                        "|",
+                        "fontSize",
+                        "fontFamily",
+                        "fontColor",
+                        "fontBackgroundColor",
+                        "|",
+                        "bold",
+                        "italic",
+                        "underline",
+                        "strikethrough",
+                        "subscript",
+                        "superscript",
+                        "code",
+                        "removeFormat",
+                        "|",
+                        "specialCharacters",
+                        "link",
+                        "insertTable",
+                        "highlight",
+                        "codeBlock",
+                        "htmlEmbed",
+                    ],
+                    shouldNotGroupWhenFull: false,
+                },
+                plugins: [
+                    AutoLink,
+                    Autosave,
+                    Bold,
+                    Code,
+                    CodeBlock,
+                    Essentials,
+                    FontBackgroundColor,
+                    FontColor,
+                    FontFamily,
+                    FontSize,
+                    FullPage,
+                    GeneralHtmlSupport,
+                    Heading,
+                    Highlight,
+                    HtmlComment,
+                    HtmlEmbed,
+                    Italic,
+                    Link,
+                    Paragraph,
+                    RemoveFormat,
+                    ShowBlocks,
+                    SourceEditing,
+                    SpecialCharacters,
+                    Strikethrough,
+                    Subscript,
+                    Superscript,
+                    Table,
+                    TableCaption,
+                    TableCellProperties,
+                    TableColumnResize,
+                    TableProperties,
+                    TableToolbar,
+                    Underline,
+                ],
+                fontFamily: {
+                    supportAllValues: true,
+                },
+                fontSize: {
+                    options: [10, 12, 14, "default", 18, 20, 22],
+                    supportAllValues: true,
+                },
+                heading: {
+                    options: [
+                        { model: "paragraph", title: "Paragraph", class: "ck-heading_paragraph" },
+                        { model: "heading1", view: "h1", title: "Heading 1", class: "ck-heading_heading1" },
+                        { model: "heading2", view: "h2", title: "Heading 2", class: "ck-heading_heading2" },
+                        { model: "heading3", view: "h3", title: "Heading 3", class: "ck-heading_heading3" },
+                        { model: "heading4", view: "h4", title: "Heading 4", class: "ck-heading_heading4" },
+                        { model: "heading5", view: "h5", title: "Heading 5", class: "ck-heading_heading5" },
+                        { model: "heading6", view: "h6", title: "Heading 6", class: "ck-heading_heading6" },
+                    ],
+                },
+                licenseKey: LICENSE_KEY,
+                placeholder: placeholder ?? "",
+                table: {
+                    contentToolbar: [
+                        "tableColumn",
+                        "tableRow",
+                        "mergeTableCells",
+                        "tableProperties",
+                        "tableCellProperties",
+                    ],
+                },
+            },
+        };
+    }, [isLayoutReady]);
 
     return (
         <Controller
             control={control}
             name={formName}
-            render={() => {
-                return (
-                    <Box>
-                        <InputLabel>
-                            {<>{label ?? ""}</>}
-                            {required && <span style={{ color: "red", marginLeft: 2 }}>*</span>}
-                        </InputLabel>
-                        {editorLoaded ? (
-                            <Box
-                                sx={(theme) => ({
-                                    border: `1px solid ${isError ? theme.palette.error.main : "transparent"}`,
-                                })}
-                            >
-                                <CKEditor
-                                    editor={ClassicEditor}
-                                    data={elementData}
-                                    onChange={(event, editor) => {
-                                        const data = editor.getData();
-                                        setValue(formName, data);
-                                    }}
-                                    {...rest}
-                                />
-                            </Box>
-                        ) : (
-                            <p>Loading editor...</p>
-                        )}
-                        <FormHelperText error={true}>{isError?.message}</FormHelperText>
-                    </Box>
-                );
-            }}
+            render={() => (
+                <Box>
+                    <InputLabel>
+                        {label ?? ""}
+                        {required && <span style={{ color: "red", marginLeft: 2 }}>*</span>}
+                    </InputLabel>
+                    {isLayoutReady ? (
+                        <Box
+                            sx={(theme) => ({
+                                border: `1px solid ${isError ? theme.palette.error.main : "transparent"}`,
+                            })}
+                        >
+                            <CKEditor
+                                editor={ClassicEditor}
+                                config={editorConfig}
+                                data={elementData}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setValue(formName, data);
+                                }}
+                                {...rest}
+                            />
+                        </Box>
+                    ) : (
+                        <p>Loading editor...</p>
+                    )}
+                    <FormHelperText error>{isError?.message}</FormHelperText>
+                </Box>
+            )}
         />
     );
 };
