@@ -75,6 +75,7 @@ import YearlyTransactions from "../pages/Reports/YearlyTransactions";
 import TransactionsSummary from "../pages/Reports/TransactionsSummary";
 import CancelledTransactions from "../pages/Reports/CancelledTransactions";
 import ACHEntriesReport from "../pages/Reports/ACHEntries/ACHEntriesReport";
+import ACHEntriesReport2 from "Private/pages/Reports/ACHEntries/ACHEntriesReport2";
 import SuspiciousTransactions from "../pages/Reports/SuspiciousTransactions";
 import ICNResponseReport from "../pages/Reports/ICNResponse/ICNResponseReport";
 import UserIPWhitelistReport from "../pages/Reports/UserIPWhitelist/UserIPWhitelistReport";
@@ -503,7 +504,7 @@ const privateRoutes = [
     },
     {
         path: routePaths.reports.achEntries,
-        component: <ACHEntriesReport />,
+        component: <ACHEntriesReport2 />,
     },
     {
         path: routePaths.reports.incompleteRegistration,

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text } from "@react-pdf/renderer";
-import { CurrencyName, FormatDate, FormatNumber, CountryName, ReferenceName } from "App/helpers";
+import { CurrencyName, FormatDate, FormatNumber, CountryName, ReferenceName, CountryNameByIso2Code } from "App/helpers";
 import dateUtils from "App/utils/dateUtils";
 
 const styles = StyleSheet.create({
@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        textAlign: "left",
+        justifyContent: "center",
+        fontSize: 10,
     },
     serial: {
         width: "6%",
@@ -46,6 +49,7 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         whiteSpace: "nowrap",
         textOverflow: "ellipsis",
+        fontSize: 8,
     },
     cellContainer: {
         width: "100%",
@@ -136,6 +140,25 @@ const PdfTable = ({ csvReport }) => {
                 ) : (
                     "0"
                 );
+
+            case "email_confirm_count":
+                return data?.email_confirm_count ? (
+                    <Text style={styles.head} key={index}>
+                        {data?.email_confirm_count}
+                    </Text>
+                ) : (
+                    "0"
+                );
+
+            case "phone_confirm_count":
+                return data?.phone_confirm_count ? (
+                    <Text style={style.head} key={index}>
+                        {data?.phone_confirm_count}
+                    </Text>
+                ) : (
+                    "0"
+                );
+
             default:
                 return "0";
         }
@@ -187,6 +210,18 @@ const PdfTable = ({ csvReport }) => {
                                     <Text>{header?.label}</Text>
                                 </View>
                             );
+                        } else if (header?.key === "email_confirmed") {
+                            return (
+                                <View style={styles.head} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
+                        } else if (header?.key === "phone_number_confirmed") {
+                            return (
+                                <View style={styles.head} key={index}>
+                                    <Text>{header?.label}</Text>
+                                </View>
+                            );
                         } else {
                             return (
                                 <View style={styles.head} key={index}>
@@ -205,7 +240,11 @@ const PdfTable = ({ csvReport }) => {
                                 <Text style={styles.cellSn}>{index + 1}</Text>
                                 {apiData?.headers &&
                                     apiData?.headers.map((header, index) => {
-                                        if (header?.key === "date_of_birth" || header?.key === "created_ts") {
+                                        if (
+                                            header?.key === "date_of_birth" ||
+                                            header?.key === "created_ts" ||
+                                            header?.key === "timestamp"
+                                        ) {
                                             return (
                                                 <Text style={styles.head} key={index}>
                                                     {customer[header?.key]
@@ -280,7 +319,11 @@ const PdfTable = ({ csvReport }) => {
                                         ) {
                                             return (
                                                 <Text style={styles.headMail} key={index}>
-                                                    {customer[header?.key] ? CountryName(customer[header?.key]) : "n/a"}
+                                                    {customer[header?.key]
+                                                        ? customer[header?.key]?.length === 2
+                                                            ? CountryNameByIso2Code(customer[header?.key])
+                                                            : CountryName(customer[header?.key])
+                                                        : "n/a"}
                                                 </Text>
                                             );
                                         } else if (header?.key === "collected_currency") {
@@ -305,6 +348,19 @@ const PdfTable = ({ csvReport }) => {
                                                 </Text>
                                             );
                                         } else if (
+                                            header?.key === "email_confirmed" ||
+                                            header?.key === "phone_number_confirmed"
+                                        ) {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {[header?.key]
+                                                        ? customer[header?.key] === 1
+                                                            ? "true"
+                                                            : "false"
+                                                        : "n/a"}
+                                                </Text>
+                                            );
+                                        } else if (
                                             header?.key === "months" ||
                                             header?.key === "avg_rate" ||
                                             header?.key === "charge" ||
@@ -317,6 +373,12 @@ const PdfTable = ({ csvReport }) => {
                                                         handleYealyData(header?.key, each, index),
                                                     )}
                                                 </View>
+                                            );
+                                        } else if (header?.key === "is_active") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key] ? "Active" : "Inactive"}
+                                                </Text>
                                             );
                                         } else {
                                             return (

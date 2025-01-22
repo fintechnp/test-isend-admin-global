@@ -1,19 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 
-import { Loading } from "App/components";
-import NoResults from "../Shared/NoResults";
+import Filter from "../Shared/Filter";
+import Column from "App/components/Column/Column";
 import withPermission from "Private/HOC/withPermission";
-import OnfidoReportFilterForm from "./OnfidoReportFilterForm";
+import FilterButton from "App/components/Button/FilterButton";
 import PageContent from "App/components/Container/PageContent";
-import ReportTable from "Private/components/reports/ReportTable";
+import TanstackReactTable from "App/components/Table/TanstackReactTable";
+import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
+import TableGridQuickFilter from "App/components/Filter/TableGridQuickFilter";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import actions from "../store/actions";
-import apiEndpoints from "Private/config/apiEndpoints";
 import { permissions } from "Private/data/permissions";
+import downloadActions from "../../Reports/store/actions";
+import useListFilterStore from "App/hooks/useListFilterStore";
 
 const initialState = {
     page_number: 1,
@@ -22,128 +23,172 @@ const initialState = {
     order_by: "ASC",
 };
 
+const sortByOptions = [
+    {
+        key: "None",
+        value: "created_ts",
+    },
+];
+
+const headers = [
+    { label: "Id", key: "id" },
+    { label: "Name", key: "name" },
+    { label: "Result", key: "result" },
+    { label: "Sub Result", key: "sub_result" },
+    { label: "Summaries", key: "summaries" },
+    { label: "Summary", key: "summary" },
+];
+
 function OnfidoReport() {
-    const [filterSchema, setFilterSchema] = useState(initialState);
-    const isMounted = useRef(false);
     const dispatch = useDispatch();
 
     const { response: onfidoReportResponse, loading: l_loading } = useSelector((state) => state.get_onfido_report);
+
+    const {
+        response: ReportsDownload,
+        loading: pd_loading,
+        success: pd_success,
+    } = useSelector((state) => state.download_report);
+
+    const {
+        isFilterOpen,
+        openFilter,
+        closeFilter,
+        onFilterSubmit,
+        onDeleteFilterParams,
+        reset,
+        filterSchema,
+        onQuickFilter,
+    } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch({ type: "ONFIDO_REPORT_RESET" });
     }, [dispatch]);
 
     useEffect(() => {
-        if (isMounted.current) {
+        if (filterSchema.customer_id) {
             dispatch(actions.get_onfido_report(filterSchema));
-        } else {
-            isMounted.current = true;
         }
     }, [dispatch, filterSchema]);
 
-    const handleSubmit = (data) => {
-        setFilterSchema((prev) => {
-            return { ...prev, ...data };
-        });
-    };
-
     const handleReset = () => {
-        isMounted.current = false;
-        setFilterSchema(initialState);
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
         dispatch({ type: "ONFIDO_REPORT_RESET" });
+    };
+
+    const downloadData = () => {
+        const updatedFilterSchema = {
+            ...filterSchema,
+            page_size: onfidoReportResponse?.pagination?.totalCount || 10000,
+        };
+        dispatch(downloadActions.download_report(updatedFilterSchema, "/onfido/checkkyc"));
     };
 
     const columns = useMemo(
         () => [
             {
-                Header: "Name",
-                accessor: "name",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Name",
+                accessorKey: "name",
             },
             {
-                Header: "Result",
-                accessor: "result",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Result",
+                accessorKey: "result",
             },
             {
-                Header: "Status",
-                accessor: "status",
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Status",
+                accessorKey: "status",
             },
             {
-                Header: "Sub Result",
-                accessor: "sub_result",
-                Cell: (data) => <>{data.value || "-"}</>,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Sub Result",
+                accessorKey: "sub_result",
             },
             {
-                Header: "Summaries",
-                accessor: "summaries",
-                Cell: (data) => <>{data.value || "-"}</>,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Summaries",
+                accessorKey: "summaries",
             },
             {
-                Header: "Summary",
-                accessor: "summary",
-                maxWidth: 120,
-                pdfCellStyle: {
-                    minWidth: "20%",
-                },
+                header: "Summary",
+                accessorKey: "summary",
             },
         ],
         [],
     );
 
+    const filterFields = [
+        {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_id",
+            label: "Customer Id",
+        },
+    ];
+
+    const csvReport = {
+        title: "Report on Onfido",
+        start: filterSchema?.from_date,
+        end: filterSchema?.to_date,
+        headers: headers,
+        data: ReportsDownload?.data || [],
+    };
+
     return (
         <PageContent
             documentTitle="Onfido Reports"
-            title={
-                <>
-                    <ContentPasteSearchIcon />
-                    <Typography>Onfido Reports</Typography>
-                </>
+            breadcrumbs={[
+                {
+                    label: "General Reports",
+                },
+                {
+                    label: "Onfido Reports",
+                },
+            ]}
+            topRightEndContent={
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
         >
-            <Grid container sx={{ pb: "24px" }} rowSpacing={2}>
-                <Grid item xs={12}>
-                    <OnfidoReportFilterForm onSubmit={handleSubmit} onReset={handleReset} loading={l_loading} />
-                </Grid>
-
-                {l_loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={l_loading} />
-                    </Grid>
-                )}
-
-                {!l_loading && !onfidoReportResponse && (
-                    <Grid item xs={12}>
-                        <NoResults text="No Record Found" />
-                    </Grid>
-                )}
-                {!l_loading && onfidoReportResponse?.data?.length > 0 && (
-                    <Grid item xs={12}>
-                        <ReportTable
-                            columns={columns}
-                            data={onfidoReportResponse?.data || []}
-                            loading={l_loading}
-                            apiEndpoint={apiEndpoints.reports.onfidoReports}
-                            filterQuery={filterSchema}
-                            filename="Onfido Report"
-                        />
-                    </Grid>
-                )}
-            </Grid>
+            <Column gap="16px">
+                <FilterForm
+                    title="Search Onfido"
+                    open={isFilterOpen}
+                    values={filterSchema}
+                    onClose={closeFilter}
+                    onReset={() => {
+                        reset();
+                        handleReset();
+                    }}
+                    onDelete={onDeleteFilterParams}
+                    onSubmit={onFilterSubmit}
+                    fields={filterFields}
+                />
+                <PageContentContainer
+                    title="Onfido Report"
+                    topRightContent={
+                        <>
+                            <TableGridQuickFilter
+                                onSortByChange={onQuickFilter}
+                                onOrderByChange={onQuickFilter}
+                                sortByData={sortByOptions}
+                                disabled={l_loading}
+                                values={filterSchema}
+                            />
+                            <Filter
+                                fileName="Onfido Report"
+                                success={pd_success}
+                                loading={pd_loading}
+                                csvReport={csvReport}
+                                state={filterSchema}
+                                downloadData={downloadData}
+                            />
+                        </>
+                    }
+                >
+                    <TanstackReactTable
+                        columns={columns}
+                        data={onfidoReportResponse?.data || []}
+                        loading={l_loading}
+                        noDataMessage={`${filterSchema.customer_id ? "No Data Found" : "Filter with Customer Id to view data"}`}
+                    />
+                </PageContentContainer>
+            </Column>
         </PageContent>
     );
 }

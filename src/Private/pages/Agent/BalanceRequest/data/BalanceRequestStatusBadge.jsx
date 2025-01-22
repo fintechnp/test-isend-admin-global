@@ -22,6 +22,10 @@ export default function BalanceRequestStatusBadge({ status }) {
     const color = colors[status];
 
     return (
-        <Chip sx={{ color: color || "default", bgcolor: surfaceColors[status] }} label={status ?? "N/A"} size="small" />
+        <Chip
+            sx={{ color: color || "default", bgcolor: surfaceColors[status], fontSize: "1rem" }}
+            label={status ?? "N/A"}
+            size="small"
+        />
     );
 }

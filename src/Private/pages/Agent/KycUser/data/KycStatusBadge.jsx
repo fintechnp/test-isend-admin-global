@@ -28,6 +28,10 @@ export default function KycStatusBadge({ status, label }) {
     const color = colors[status];
 
     return (
-        <Chip sx={{ color: color || "default", bgcolor: surfaceColors[status] }} label={label ?? "N/A"} size="small" />
+        <Chip
+            sx={{ color: color || "default", bgcolor: surfaceColors[status], fontSize: "1rem" }}
+            label={label ?? "N/A"}
+            size="small"
+        />
     );
 }

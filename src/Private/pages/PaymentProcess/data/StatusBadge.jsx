@@ -40,7 +40,7 @@ export default function StatusBadge({ status }) {
 
     return (
         <Chip
-            sx={{ color: color || "default", bgcolor: surfaceColor || "default" }}
+            sx={{ color: color || "default", bgcolor: surfaceColor || "default", fontSize: "1rem" }}
             label={Status?.[label] ?? "N/A"}
             size="small"
         />

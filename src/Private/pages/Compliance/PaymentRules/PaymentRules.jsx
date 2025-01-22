@@ -49,7 +49,7 @@ const StyledAction = styled(Typography)(({ theme, value }) => ({
     height: "32px",
     opacity: 0.8,
     padding: "3px 8px",
-    fontSize: "12px",
+    fontSize: "1rem",
     borderRadius: "16px",
     alignItems: "center",
     justifyContent: "center",

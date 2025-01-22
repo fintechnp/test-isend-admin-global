@@ -25,7 +25,7 @@ export default function ZaiStatusBadge({ status, label }) {
 
     return (
         <Chip
-            sx={{ color: color || "default", bgcolor: surfaceColors[status.toUpperCase()] }}
+            sx={{ color: color || "default", bgcolor: surfaceColors[status.toUpperCase()], fontSize: "1rem" }}
             label={label ?? "N/A"}
             size="small"
         />
