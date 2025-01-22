@@ -374,6 +374,12 @@ const PdfTable = ({ csvReport }) => {
                                                     )}
                                                 </View>
                                             );
+                                        } else if (header?.key === "is_active") {
+                                            return (
+                                                <Text style={styles.head} key={index}>
+                                                    {customer[header?.key] ? "Active" : "Inactive"}
+                                                </Text>
+                                            );
                                         } else {
                                             return (
                                                 <Text style={styles.head} key={index}>

@@ -24,7 +24,7 @@ export default function AccountClosureStatusBadge({ status }) {
 
     return (
         <Chip
-            sx={{ color: getColor(), bgcolor: surfaceColors?.[status?.toUpperCase()] }}
+            sx={{ color: getColor(), bgcolor: surfaceColors?.[status?.toUpperCase()], fontSize: "1rem" }}
             label={capitalize(status)}
             size="small"
         />
