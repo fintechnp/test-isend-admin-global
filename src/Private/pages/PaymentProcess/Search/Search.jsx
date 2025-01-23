@@ -15,6 +15,7 @@ import HasPermission from "Private/components/shared/HasPermission";
 
 import actions from "./../store/actions";
 import { permissions } from "Private/data/permissions";
+import PageContentContainer from "App/components/Container/PageContentContainer";
 
 function Search(props) {
     const dispatch = useDispatch();
@@ -92,62 +93,74 @@ function Search(props) {
     };
 
     return (
-        <PageContent documentTitle="Search Transaction">
-            <Grid container sx={{ pb: "24px" }}>
-                <Grid item xs={12}>
-                    <SearchForm
-                        onSubmit={handleSearch}
-                        initialValues={{ transaction_id: "", pin_number: "" }}
-                        loading={loading}
-                    />
+        <PageContent
+            documentTitle="Search Transaction"
+            breadcrumbs={[
+                {
+                    label: "Payment Processing",
+                },
+                {
+                    label: "Refund Transactions",
+                },
+            ]}
+        >
+            <PageContentContainer>
+                <Grid container sx={{ pb: "24px" }}>
+                    <Grid item xs={12}>
+                        <SearchForm
+                            onSubmit={handleSearch}
+                            initialValues={{ transaction_id: "", pin_number: "" }}
+                            loading={loading}
+                        />
+                    </Grid>
+                    {loading && (
+                        <Grid item xs={12}>
+                            <Loading loading={loading} />
+                        </Grid>
+                    )}
+                    {!response?.data && !loading && error && (
+                        <Grid item xs={12}>
+                            <MessageBox text="No Transaction Found" />
+                        </Grid>
+                    )}
+                    {response?.data && !loading && (
+                        <>
+                            <Grid item xs={12}>
+                                <Details data={response?.data} handleBlockOrCancel={setButton} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <HasPermission permission={permissions.BLOCK_TRANSACTION}>
+                                    {button === "block" && (
+                                        <BlockForm
+                                            onSubmit={handleBlock}
+                                            loading={b_loading}
+                                            initialValues={
+                                                response?.data?.tid && {
+                                                    id: response?.data?.tid,
+                                                }
+                                            }
+                                        />
+                                    )}
+                                </HasPermission>
+                                <HasPermission permission={permissions.REFUND_TRANSACTION}>
+                                    {button === "cancel" && (
+                                        <RefundForm
+                                            onSubmit={handleRefund}
+                                            loading={r_loading}
+                                            initialValues={
+                                                response?.data?.tid && {
+                                                    id: response?.data?.tid,
+                                                    refund_charge: false,
+                                                }
+                                            }
+                                        />
+                                    )}
+                                </HasPermission>
+                            </Grid>
+                        </>
+                    )}
                 </Grid>
-                {loading && (
-                    <Grid item xs={12}>
-                        <Loading loading={loading} />
-                    </Grid>
-                )}
-                {!response?.data && !loading && error && (
-                    <Grid item xs={12}>
-                        <MessageBox text="No Transaction Found" />
-                    </Grid>
-                )}
-                {response?.data && !loading && (
-                    <>
-                        <Grid item xs={12}>
-                            <Details data={response?.data} handleBlockOrCancel={setButton} />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <HasPermission permission={permissions.BLOCK_TRANSACTION}>
-                                {button === "block" && (
-                                    <BlockForm
-                                        onSubmit={handleBlock}
-                                        loading={b_loading}
-                                        initialValues={
-                                            response?.data?.tid && {
-                                                id: response?.data?.tid,
-                                            }
-                                        }
-                                    />
-                                )}
-                            </HasPermission>
-                            <HasPermission permission={permissions.REFUND_TRANSACTION}>
-                                {button === "cancel" && (
-                                    <RefundForm
-                                        onSubmit={handleRefund}
-                                        loading={r_loading}
-                                        initialValues={
-                                            response?.data?.tid && {
-                                                id: response?.data?.tid,
-                                                refund_charge: false,
-                                            }
-                                        }
-                                    />
-                                )}
-                            </HasPermission>
-                        </Grid>
-                    </>
-                )}
-            </Grid>
+            </PageContentContainer>
         </PageContent>
     );
 }

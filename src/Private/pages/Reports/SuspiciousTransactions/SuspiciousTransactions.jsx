@@ -1,4 +1,3 @@
-import { reset } from "redux-form";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -120,11 +119,11 @@ function TransactionsSuspiciousReports(props) {
         onPageChange,
         onRowsPerPageChange,
         onQuickFilter,
+        reset,
     } = useListFilterStore({ initialState });
 
     useEffect(() => {
         dispatch({ type: "DOWNLOAD_REPORT_RESET" });
-        dispatch(reset("search_form_suspicious_reports"));
         dispatch({ type: "SUSPICIOUS_TRANSACTIONS_REPORT_RESET" });
         dispatch({ type: "GET_PAYOUT_PARTNER_RESET" });
     }, [dispatch]);
@@ -363,7 +362,7 @@ function TransactionsSuspiciousReports(props) {
     const filterFields = [
         {
             type: fieldTypes.DATE,
-            name: "from _date",
+            name: "from_date",
             label: "From Date",
             props: {
                 withStartDayTimezone: true,

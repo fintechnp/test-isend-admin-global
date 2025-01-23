@@ -75,6 +75,7 @@ import YearlyTransactions from "../pages/Reports/YearlyTransactions";
 import TransactionsSummary from "../pages/Reports/TransactionsSummary";
 import CancelledTransactions from "../pages/Reports/CancelledTransactions";
 import ACHEntriesReport from "../pages/Reports/ACHEntries/ACHEntriesReport";
+import ACHEntriesReport2 from "Private/pages/Reports/ACHEntries/ACHEntriesReport2";
 import SuspiciousTransactions from "../pages/Reports/SuspiciousTransactions";
 import ICNResponseReport from "../pages/Reports/ICNResponse/ICNResponseReport";
 import UserIPWhitelistReport from "../pages/Reports/UserIPWhitelist/UserIPWhitelistReport";
@@ -203,11 +204,10 @@ import ProtectedZaiComponent from "Private/pages/ApiLogs/ZaiLogs/HOC/ProtectedZa
 import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 import ListEmailElement from "Private/components/email-template/ListEmailElement";
 import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
-import Dashboard2 from "Private/pages/Dashboard/Dashboard2";
+import Policies from "Private/pages/Setup/policies";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
-    { path: "/second", component: <Dashboard2 /> },
     { path: "/user/accounts", component: <Accounts title="User Accounts" /> },
     { path: routePaths.users.listProfileSetup, component: <ListUserProfileSetup /> },
     { path: routePaths.users.editProfileSetup, component: <EditUserProfileSetup /> },
@@ -376,6 +376,10 @@ const privateRoutes = [
         path: routePaths.setup.streetType,
         component: <StreetType title={"Street Type"} />,
     },
+    {
+        path: routePaths.setup.policies,
+        component: <Policies />,
+    },
     //Customers
     {
         path: "/customer/search",
@@ -500,7 +504,7 @@ const privateRoutes = [
     },
     {
         path: routePaths.reports.achEntries,
-        component: <ACHEntriesReport />,
+        component: <ACHEntriesReport2 />,
     },
     {
         path: routePaths.reports.incompleteRegistration,

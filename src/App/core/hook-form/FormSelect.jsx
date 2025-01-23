@@ -33,6 +33,7 @@ function FormSelect(props) {
         onChange,
         error,
         placeholder,
+        disabledOptions = [],
         ...rest
     } = props;
 
@@ -84,7 +85,12 @@ function FormSelect(props) {
                         )}
                         {options &&
                             options.map((option, index) => (
-                                <MenuItem key={index} value={option.value} selected={option.value == field.value}>
+                                <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                    selected={option.value == field.value}
+                                    disabled={disabledOptions?.includes(index)}
+                                >
                                     {option.label}
                                 </MenuItem>
                             ))}
@@ -125,6 +131,7 @@ FormSelect.propTypes = {
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
     defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    disabledOptions: PropTypes.arrayOf(PropTypes.number),
 };
 
 FormSelect.defaultProps = {
@@ -143,4 +150,5 @@ FormSelect.defaultProps = {
     chooseOptionLabel: "Choose",
     placeholder: "",
     defaultValue: "",
+    disabledOptions: [],
 };

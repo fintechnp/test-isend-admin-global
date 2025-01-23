@@ -4,7 +4,7 @@ import { useContext } from "react";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MenuItem from "@mui/material/MenuItem";
 import MuiToolbar from "@mui/material/Toolbar";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,8 @@ import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import LogoutIcon from "../Icon/LogoutIcon";
 import MyAccountIcon from "../Icon/MyAccountIcon";
@@ -80,6 +82,10 @@ export default function Appbar({ handleDrawerToggle, open }) {
     const dispatch = useDispatch();
     const [imageError, setImageError] = React.useState(false);
 
+    const { response: UserData } = useSelector((state) => state.get_user);
+
+    const { success: upload_success } = useSelector((state) => state.upload_profile_picture);
+
     const { currentUser } = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -87,9 +93,17 @@ export default function Appbar({ handleDrawerToggle, open }) {
 
     const isMenuOpen = Boolean(anchorEl);
 
-    const profilePicture = currentUser?.profile_picture;
+    const profilePicture = UserData?.data?.profile_picture;
 
     const showProfilePicture = isEmpty(profilePicture) || imageError;
+
+    React.useEffect(() => {
+        if (upload_success) {
+            dispatch({
+                type: "USER_DETAILS",
+            });
+        }
+    }, [upload_success, dispatch]);
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -213,30 +227,56 @@ export default function Appbar({ handleDrawerToggle, open }) {
                     color="inherit"
                 >
                     {showProfilePicture ? (
-                        <Avatar
-                            variant="circular"
-                            sx={{
-                                height: "36px",
-                                width: "36px",
-                                fontSize: "14px",
-                                textTransform: "capitalize",
-                                background: (theme) => theme.palette.primary.main,
-                            }}
-                            {...stringAvatar(currentUser?.name)}
-                        />
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Avatar
+                                variant="circular"
+                                sx={{
+                                    height: "36px",
+                                    width: "36px",
+                                    fontSize: "14px",
+                                    textTransform: "capitalize",
+                                    background: (theme) => theme.palette.primary.main,
+                                }}
+                                {...stringAvatar(currentUser?.name)}
+                            />
+                            <Typography color="black">
+                                {" "}
+                                {currentUser?.name?.length > 15
+                                    ? `${currentUser.name.slice(0, 15)}...`
+                                    : currentUser?.name}
+                            </Typography>
+                            {anchorEl ? (
+                                <KeyboardArrowUpIcon sx={{ fill: "#000" }} />
+                            ) : (
+                                <KeyboardArrowDownIcon sx={{ fill: "#000" }} />
+                            )}
+                        </Box>
                     ) : (
-                        <Avatar
-                            variant="circular"
-                            sx={{
-                                height: "36px",
-                                width: "36px",
-                                fontSize: "14px",
-                                textTransform: "capitalize",
-                                background: (theme) => theme.palette.primary.main,
-                            }}
-                            src={profilePicture}
-                            {...stringAvatar(currentUser?.name)}
-                        />
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Avatar
+                                variant="circular"
+                                sx={{
+                                    height: "36px",
+                                    width: "36px",
+                                    fontSize: "14px",
+                                    textTransform: "capitalize",
+                                    background: (theme) => theme.palette.primary.main,
+                                }}
+                                src={profilePicture}
+                                {...stringAvatar(currentUser?.name)}
+                            />
+                            <Typography color="black">
+                                {" "}
+                                {currentUser?.name?.length > 15
+                                    ? `${currentUser.name.slice(0, 15)}...`
+                                    : currentUser?.name}
+                            </Typography>
+                            {anchorEl ? (
+                                <KeyboardArrowUpIcon sx={{ fill: "#000" }} />
+                            ) : (
+                                <KeyboardArrowDownIcon sx={{ fill: "#000" }} />
+                            )}
+                        </Box>
                     )}
                 </ProfileIcon>
             </Toolbar>

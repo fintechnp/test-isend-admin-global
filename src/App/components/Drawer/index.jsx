@@ -338,7 +338,7 @@ function Drawer({ children }) {
                 }}
             >
                 <Box>{children}</Box>
-                <Footer className="Footer-root">
+                <Footer className="Footer-root" sx={{ zIndex: 1 }}>
                     <div dangerouslySetInnerHTML={{ __html: layoutUtils.getCopyrightText() }}></div>
                 </Footer>
             </Content>

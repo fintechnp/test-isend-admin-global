@@ -133,6 +133,11 @@ function CustomerReports(props) {
             },
         },
         {
+            type: fieldTypes.TEXTFIELD,
+            name: "customer_name",
+            label: "Customer Name",
+        },
+        {
             type: fieldTypes.COUNTRY_SELECT,
             name: "country",
             label: "Country",
@@ -431,7 +436,7 @@ function CustomerReports(props) {
     const downloadData = () => {
         const updatedFilterSchema = {
             ...filterSchema,
-            page_size: 10000,
+            page_size: CustomerReports?.pagination?.totalCount,
         };
         dispatch(actions.download_report(updatedFilterSchema, "report/customer"));
     };

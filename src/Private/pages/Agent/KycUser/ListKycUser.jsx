@@ -12,6 +12,7 @@ import FilterForm, { fieldTypes } from "App/components/Filter/FilterForm";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import buildRoute from "App/helpers/buildRoute";
+import KycStatusBadge from "./data/KycStatusBadge";
 import routePaths from "Private/config/routePaths";
 import apiEndpoints from "Private/config/apiEndpoints";
 import { localStorageGet } from "App/helpers/localStorage";
@@ -139,6 +140,7 @@ export default function ListKycUser() {
             {
                 header: "Status",
                 accessorKey: "statusName",
+                cell: ({ getValue, row }) => <KycStatusBadge status={row.original.status} label={getValue()} />,
             },
             {
                 header: "Actions",

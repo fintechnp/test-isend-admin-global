@@ -27,6 +27,7 @@ import actions from "./../store/actions";
 import ViewFcmModal from "./ViewSms/ViewFcmModal";
 import AddFcmModal from "./CreateFcm/AddFcmModal";
 import EditFcmModal from "./CreateFcm/EditFcmModal";
+import FcmStatusBadge from "../Sms/components/FcmStatusBadge";
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontSize: "14px",
@@ -157,13 +158,7 @@ const Fcm = () => {
                 ),
                 accessorKey: "status",
                 maxWidth: 100,
-                cell: ({ row }) => (
-                    <Box textAlign="left" sx={{}}>
-                        <StyledName component="p" sx={{ paddingLeft: "2px", opacity: 0.8 }}>
-                            {row.original.status ? ReferenceName(88, row.original.status) : "N/A"}
-                        </StyledName>
-                    </Box>
-                ),
+                cell: ({ row }) => <FcmStatusBadge status={row.original.status} />,
             },
             {
                 header: () => (
@@ -311,7 +306,7 @@ const Fcm = () => {
 
     return (
         <PageContent
-            documentTitle="SMS List"
+            documentTitle="FCM List"
             topRightEndContent={
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }

@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
@@ -8,6 +9,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useForm } from "react-hook-form";
 import PartnerType from "App/data/PartnerType";
 import HookForm from "App/core/hook-form/HookForm";
+import { yupResolver } from "@hookform/resolvers/yup";
 import FormSelect from "App/core/hook-form/FormSelect";
 import FormCheckbox from "App/core/hook-form/FormCheckbox";
 import FormPartnerSelect from "App/core/hook-form/FormPartnerSelect";
@@ -54,6 +56,14 @@ const CreateButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
+const schema = Yup.object().shape({
+    payout_country: Yup.string().required("Payout Country is required"),
+    payout_currency: Yup.string().required("Payout Currency is required"),
+    payment_type: Yup.string().required("Payment Type is required"),
+    send_agent_id: Yup.number().required("Sending Agent is required"),
+    payout_agent_id: Yup.number().required("Payout Agetn is required"),
+});
+
 const DeliveryRoute = ({
     // handleSubmit,
     onSubmit,
@@ -69,7 +79,7 @@ const DeliveryRoute = ({
 }) => {
     const methods = useForm({
         defaultValues: initialValues,
-        // resolver: yupResolver(deliveryOptionsSchema),
+        resolver: yupResolver(schema),
     });
 
     const { reset, setValue, getValues } = methods;

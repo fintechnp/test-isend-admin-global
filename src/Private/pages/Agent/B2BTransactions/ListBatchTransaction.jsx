@@ -15,6 +15,7 @@ import buildRoute from "App/helpers/buildRoute";
 import routePaths from "Private/config/routePaths";
 import referenceTypeId from "Private/config/referenceTypeId";
 import { CurrencyName, FormatDate, ReferenceName } from "App/helpers";
+import StatusBadge from "Private/pages/PaymentProcess/data/StatusBadge";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 import batchTransactionActions from "Private/features/b2b-transactions/batchTransactionActions";
 
@@ -65,7 +66,7 @@ export default function ListBatchTransaction() {
             {
                 header: "Status",
                 accessorKey: "status",
-                cell: ({ getValue }) => <>{ReferenceName(referenceTypeId.transactionStatus, getValue())}</>,
+                cell: ({ getValue }) => <StatusBadge status={getValue()} />,
             },
         ],
         [],

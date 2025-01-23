@@ -15,12 +15,11 @@ import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 
 const schema = Yup.object().shape({
-    email_by: Yup.string().email().required("Required").max(100),
     email_to: Yup.string().email().required("Required").max(100),
     email_cc: Yup.string().optional().max(100),
     email_bcc: Yup.string().optional().max(100),
-    email_subject: Yup.string().email().required("Required").max(100),
-    email_body: Yup.string().required("Enter a email body"),
+    email_subject: Yup.string().required("Required").max(100),
+    email_format: Yup.string().required("Enter a email body"),
 });
 
 const EmailForm = ({ onSubmit, loading, handleClose }) => {
@@ -34,14 +33,11 @@ const EmailForm = ({ onSubmit, loading, handleClose }) => {
         watch,
     } = methods;
 
-    const emailBody = watch("email_body");
+    const emailBody = watch("email_format");
 
     return (
         <HookForm onSubmit={onSubmit} {...methods}>
             <Grid container rowSpacing={2} columnSpacing={2}>
-                <Grid item xs={12} md={6}>
-                    <FormTextField name="email_by" label="Email by" />
-                </Grid>
                 <Grid item xs={12} md={6}>
                     <FormTextField name="email_to" label="Email to" />
                 </Grid>
@@ -56,8 +52,8 @@ const EmailForm = ({ onSubmit, loading, handleClose }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Typography>Body</Typography>
-                    <ReactQuill theme="snow" value={emailBody} onChange={(v) => setValue("email_body", v)} />
-                    <FormHelperText error={true}>{errors?.email_body?.message}</FormHelperText>
+                    <ReactQuill theme="snow" value={emailBody} onChange={(v) => setValue("email_format", v)} />
+                    <FormHelperText error={true}>{errors?.email_format?.message}</FormHelperText>
                 </Grid>
                 <Grid item xs={12}>
                     <ButtonWrapper>

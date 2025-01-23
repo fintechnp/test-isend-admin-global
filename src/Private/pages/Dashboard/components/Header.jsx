@@ -153,14 +153,15 @@ export default function Header() {
             <Row
                 sx={(theme) => ({
                     gap: "2rem",
+                    justifyContent: "space-between",
                 })}
             >
-                <Column>
+                <Box display="flex" flexDirection="column">
                     <Typography variant="h6">Dashboard</Typography>
                     <Typography fontSize="0.857rem" lineHeight="1rem" color="text.secondary">
                         Dashboard / Dashboard
                     </Typography>
-                </Column>
+                </Box>
                 <Row
                     sx={{
                         overflowY: "none",

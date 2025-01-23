@@ -64,6 +64,7 @@ function AccountTable({ onPageChange, onRowsPerPageChange, filterSchema }) {
                 }),
             );
         }
+        dispatch(actions.get_all_user(filterSchema));
         dispatch({ type: "ADD_ACCOUNT_USER_RESET" });
         dispatch({ type: "UPDATE_ACCOUNT_USER_RESET" });
         dispatch({ type: "DELETE_ACCOUNT_USER_RESET" });

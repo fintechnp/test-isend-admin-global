@@ -5,9 +5,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import SubmitButton from "App/components/Button/SubmitButton";
-import isEmpty from "App/helpers/isEmpty";
 
 import actions from "../../store/actions";
+import isEmpty from "App/helpers/isEmpty";
 import { refundPaymentSchema } from "../schema/refundPaymentSchema";
 
 export default function RefundRowForm({ row, onRefundSuccess }) {

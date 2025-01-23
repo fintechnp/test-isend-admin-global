@@ -1,3 +1,4 @@
+import Chip from "@mui/material/Chip";
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -83,6 +84,12 @@ const ListCirWebhooks = () => {
         {
             header: "Status",
             accessorKey: "status",
+            cell: ({ row }) => (
+                <Chip
+                    label={row.original.status.replace(/[^a-zA-Z0-9 ]/g, " ").toUpperCase()}
+                    sx={{ fontSize: "1rem" }}
+                />
+            ),
         },
     ]);
 

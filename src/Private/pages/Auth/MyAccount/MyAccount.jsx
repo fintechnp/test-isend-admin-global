@@ -10,7 +10,6 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
-import BorderColorRoundedIcon from "@mui/icons-material/BorderColorRounded";
 import EditIcon from "@mui/icons-material/Edit";
 
 import actions from "Common/store/actions";
@@ -206,10 +205,15 @@ function MyAccount(props) {
         dispatch(UploadProfilePictureActions.upload_profile_picture(formData));
     };
 
+    const handleClose = () => {
+        setIsOpen(false);
+    };
+
     useEffect(() => {
         if (upload_success) {
+            handleClose();
+            dispatch({ type: "UPLOAD_PROFILE_PICTURE_RESET" });
             dispatch(actions.get_user());
-            setIsOpen(false);
         }
     }, [upload_success, dispatch]);
 
@@ -335,7 +339,7 @@ function MyAccount(props) {
 
             <EditProfilePictureModal
                 open={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={handleClose}
                 handleUpload={handleUploadImage}
                 loading={upload_loading}
             />

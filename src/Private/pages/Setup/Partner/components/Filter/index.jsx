@@ -97,7 +97,7 @@ function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAg
 
     return (
         <FilterWrapper>
-            <SearchBox>
+            {/* <SearchBox>
                 <SearchTextField
                     onChange={handleSearch}
                     sx={(theme) => ({
@@ -106,7 +106,7 @@ function Filter({ handleSearch, handleCountry, handleSort, handleOrder, handleAg
                         },
                     })}
                 />
-            </SearchBox>
+            </SearchBox> */}
 
             <DropWrapper>
                 <Box

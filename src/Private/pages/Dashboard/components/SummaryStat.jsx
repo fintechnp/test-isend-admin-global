@@ -45,7 +45,7 @@ export default function SummaryStat() {
             isLoading: isLoadingTransactionStat,
             label: "Total Transaction",
             icon: <TotalTransactionIcon />,
-            count: numberUtils.format(transactionCountByStatusData?.totalTxnAmount),
+            count: numberUtils.format(transactionCountByStatusData?.totalTransactionsCount),
             cardBgColor: "linear-gradient(94.93deg, #DCEDC8 0%, #F1F8E9 100.09%)",
         },
         {

@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import Button from "@mui/material/Button";
+import { useDispatch } from "react-redux";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -9,11 +11,13 @@ import DesktopMacRoundedIcon from "@mui/icons-material/DesktopMacRounded";
 
 import Webcam from "react-webcam";
 import Row from "App/components/Row/Row";
-import Modal from "App/components/Modal/Modal";
-import ImageCropperModal from "./ImageCropperModal";
 import isEmpty from "App/helpers/isEmpty";
+import Modal from "App/components/Modal/Modal";
 
-export default function EditProfilePictureModal({ open, onClose, id, handleUpload, loading }) {
+import ImageCropperModal from "./ImageCropperModal";
+import { UploadProfilePictureActions } from "../Auth/MyAccount/store";
+
+function EditProfilePictureModal({ open, onClose, id, handleUpload, loading }) {
     const [importFrom, setImportFrom] = React.useState(null);
     const [imageSrc, setImageSrc] = React.useState(null);
     const [croppedImageSrc, setCroppedImageSrc] = React.useState(null);
@@ -42,7 +46,7 @@ export default function EditProfilePictureModal({ open, onClose, id, handleUploa
     };
 
     return (
-        <Modal open={open} title="Edit Profile Picture">
+        <Modal open={open} onClose={handleCancel} title="Edit Profile Picture">
             {isEmpty(importFrom) ? (
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItemButton onClick={() => setImportFrom("webcam")}>
@@ -82,7 +86,12 @@ export default function EditProfilePictureModal({ open, onClose, id, handleUploa
                     )}
                 </Webcam>
             ) : (
-                <ImageCropperModal onCancel={handleCancel} imageSrc={imageSrc} onSubmit={handleUpload} />
+                <ImageCropperModal
+                    onCancel={handleCancel}
+                    imageSrc={imageSrc}
+                    onSubmit={handleUpload}
+                    loading={loading}
+                />
             )}
             <input
                 ref={inputFileRef}
@@ -94,3 +103,11 @@ export default function EditProfilePictureModal({ open, onClose, id, handleUploa
         </Modal>
     );
 }
+
+EditProfilePictureModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+};
+
+export default EditProfilePictureModal;

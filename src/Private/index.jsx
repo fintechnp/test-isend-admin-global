@@ -277,6 +277,8 @@ import {
     GetMakePaymentReducer,
     GetZaiRefundLogsReducer,
     GetZaiPaymentModalReducers,
+    GetTransactionsLogsReducer,
+    GetExceptionTransactionsLogsReducer,
 } from "./pages/PaymentProcess/store";
 
 //Reports
@@ -413,6 +415,20 @@ import {
     getBulkEmailCredentialReducer,
     updateBulkEmailCredentialReducer,
 } from "./features/bulk-emails/bulkEmailCredentialReducer";
+
+//Policies
+import {
+    addDocumentFileContentReducer,
+    addDocumentFileReducer,
+    deleteDocumentFileContentReducer,
+    deleteDocumentFileReducer,
+    getDocumentFileContentByIdReducer,
+    getDocumentFileContentReducer,
+    getDocumentFileReducer,
+    PoliciesSaga,
+    updateDocumentFileContentReducer,
+    updateDocumentFileReducer,
+} from "./pages/Setup/policies/store";
 
 //MARKET MAKER
 
@@ -880,6 +896,7 @@ export const privateReducer = {
 
     get_aml_suspicious_details: GetAmlSuspiciousDetailsReducer,
     get_exception_transactions: GetExceptionTransactionsReducer,
+    get_exception_transactions_logs: GetExceptionTransactionsLogsReducer,
     get_transaction_refund_block: GetRefundBlockTransactionsReducer,
     get_zai_australia_payment_details: GetZaiAustraliaPaymentReducer,
     get_balance_details: GetBalanceDetailsReducers,
@@ -888,6 +905,7 @@ export const privateReducer = {
     make_payment: GetMakePaymentReducer,
     refund_payment: GetRefundPaymentReducer,
     get_zai_refund_logs: GetZaiRefundLogsReducer,
+    get_transactions_logs: GetTransactionsLogsReducer,
 
     // GET_BALANCE_DETAILS
 
@@ -1218,6 +1236,17 @@ export const privateReducer = {
     // Application Config
     get_application_config: GetApplicationConfigReducer,
     update_application_config: UpdateApplicationConfigReducer,
+
+    // region: Policies
+    get_document_file_Content_list: getDocumentFileContentReducer,
+    get_document_file_content_by_id: getDocumentFileContentByIdReducer,
+    add_document_file_content: addDocumentFileContentReducer,
+    update_document_file_content: updateDocumentFileContentReducer,
+    delete_document_file_content: deleteDocumentFileContentReducer,
+    add_document_file: addDocumentFileReducer,
+    get_document_file_list: getDocumentFileReducer,
+    update_document_file: updateDocumentFileReducer,
+    delete_document_file: deleteDocumentFileReducer,
 };
 
 export const privateSaga = [
@@ -1290,6 +1319,7 @@ export const privateSaga = [
     PromoCodeSagas(),
     attributeFamilySaga(),
     ApplicationConfigSaga(),
+    PoliciesSaga(),
 ];
 
 export { default as privateRoutes } from "./config/routes";

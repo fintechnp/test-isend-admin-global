@@ -33,6 +33,7 @@ const routePaths = {
         addLanguage: "/setup/add-language",
         localizationDetails: "/localization/details/:id",
         streetType: "/setup/street-type",
+        policies: "/setup/policies",
     },
     customer: {
         create: "/customer/create",
