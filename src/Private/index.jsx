@@ -323,6 +323,9 @@ import {
     ViewSmsReducer,
     ViewEmailReducer,
     GetEmailConfigReducer,
+    AddEmailConfigReducer,
+    DeleteEmailConfigReducer,
+    EditEmailConfigReducer,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -1227,6 +1230,9 @@ export const privateReducer = {
 
     // region: Email Config
     get_email_config: GetEmailConfigReducer,
+    add_email_config: AddEmailConfigReducer,
+    edit_email_config: EditEmailConfigReducer,
+    delete_email_config: DeleteEmailConfigReducer,
 };
 
 export const privateSaga = [

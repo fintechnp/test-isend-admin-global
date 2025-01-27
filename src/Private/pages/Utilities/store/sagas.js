@@ -1,7 +1,8 @@
-import { put, takeEvery, call, all } from "redux-saga/effects";
-import Api from "../../../../App/services/api";
 import actions from "./actions";
+import Api from "../../../../App/services/api";
+import buildRoute from "App/helpers/buildRoute";
 import apiEndpoints from "Private/config/apiEndpoints";
+import { put, takeEvery, call, all } from "redux-saga/effects";
 
 const api = new Api();
 
@@ -213,6 +214,40 @@ export const getEmailConfig = takeEvery(actions.GET_EMAIL_CONFIG, function* (act
         });
     }
 });
+
+export const addEmailConfig = takeEvery(actions.ADD_EMAIL_CONFIG, function* (action) {
+    try {
+        const res = yield call(api.post, apiEndpoints.AddEmailConfig, action.data);
+        yield put({ type: actions.ADD_EMAIL_CONFIG_SUCCESS, response: res });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({ type: actions.ADD_EMAIL_CONFIG_FAILED, error: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const editEmailConfig = takeEvery(actions.EDIT_EMAIL_CONFIG, function* (action) {
+    try {
+        const res = yield call(api.put, buildRoute(apiEndpoints.EditEmailConfig, action.id), action.data);
+        yield put({ type: actions.EDIT_EMAIL_CONFIG_SUCCESS, response: res });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({ type: actions.EDIT_EMAIL_CONFIG_FAILED, error: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
+export const deleteEmailConfig = takeEvery(actions.DELETE_EMAIL_CONFIG, function* (action) {
+    try {
+        const res = yield call(api.delete, buildRoute(apiEndpoints.DeleteEmailConfig, action.id));
+        yield put({ type: actions.DELETE_EMAIL_CONFIG_SUCCESS, response: res });
+        yield put({ type: "SET_TOAST_DATA", response: res });
+    } catch (error) {
+        yield put({ type: actions.DELETE_EMAIL_CONFIG_FAILED, error: error?.data });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* saga() {
     yield all([
         getSms,
@@ -231,5 +266,8 @@ export default function* saga() {
         deleteFcm,
         resendNotification,
         getEmailConfig,
+        addEmailConfig,
+        editEmailConfig,
+        deleteEmailConfig,
     ]);
 }

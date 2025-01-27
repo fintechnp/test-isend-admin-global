@@ -25,3 +25,6 @@ export { default as ResendNotification } from "./reducers/resendNotification";
 
 // Email Config
 export { default as GetEmailConfigReducer } from "./reducers/getEmailConfig";
+export { default as AddEmailConfigReducer } from "./reducers/addEmailConfig";
+export { default as EditEmailConfigReducer } from "./reducers/editEmailConfig";
+export { default as DeleteEmailConfigReducer } from "./reducers/deleteEmailConfig";

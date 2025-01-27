@@ -349,6 +349,9 @@ const apiEndpoints = {
 
     // Email config
     GetEmailConfig: "/email/config",
+    AddEmailConfig: "/email/config",
+    EditEmailConfig: "/email/config/:id",
+    DeleteEmailConfig: "/email/config/:id",
 };
 
 export default apiEndpoints;
