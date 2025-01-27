@@ -28,26 +28,26 @@ const Policies = () => {
                         tabName: "FAQs",
                         tabContent: <ListFaqs />,
                     },
-                    {
-                        key: "TermsAndCondition",
-                        tabName: "Terms & Conditions",
-                        tabContent: <ListTermsAndCondition />,
-                    },
-                    {
-                        key: "PrivacyPolicy",
-                        tabName: "Privacy Policy",
-                        tabContent: <ListPrivacyPolicy />,
-                    },
-                    {
-                        key: "AmlPolicy",
-                        tabName: "AML Policy",
-                        tabContent: <ListAmlPolicy />,
-                    },
-                    {
-                        key: "Contact",
-                        tabName: "Contact",
-                        tabContent: <ListContact />,
-                    },
+                    // {
+                    //     key: "TermsAndCondition",
+                    //     tabName: "Terms & Conditions",
+                    //     tabContent: <ListTermsAndCondition />,
+                    // },
+                    // {
+                    //     key: "PrivacyPolicy",
+                    //     tabName: "Privacy Policy",
+                    //     tabContent: <ListPrivacyPolicy />,
+                    // },
+                    // {
+                    //     key: "AmlPolicy",
+                    //     tabName: "AML Policy",
+                    //     tabContent: <ListAmlPolicy />,
+                    // },
+                    // {
+                    //     key: "Contact",
+                    //     tabName: "Contact",
+                    //     tabContent: <ListContact />,
+                    // },
                 ]}
             />
         </PageContent>
