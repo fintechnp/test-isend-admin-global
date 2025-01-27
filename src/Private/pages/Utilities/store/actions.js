@@ -82,6 +82,11 @@ const actions = {
     RESEND_NOTIFICATION_FAILED: "RESEND_NOTIFICATION_FAILED",
     RESEND_NOTIFICATION_RESET: "RESEND_NOTIFICATION_RESET",
 
+    // Email config
+    GET_EMAIL_CONFIG: "GET_EMAIL_CONFIG",
+    GET_EMAIL_CONFIG_SUCCESS: "GET_EMAIL_CONFIG_SUCCESS",
+    GET_EMAIL_CONFIG_FAILED: "GET_EMAIL_CONFIG_FAILED",
+
     //sms
     get_sms: (query) => ({
         type: actions.GET_SMS,
@@ -202,6 +207,12 @@ const actions = {
 
     close_view_email_modal: () => ({
         type: actions.CLOSE_VIEW_EMAIL_MODAL,
+    }),
+
+    // Email Config
+    get_email_config: (query) => ({
+        type: actions.GET_EMAIL_CONFIG,
+        query,
     }),
 };
 

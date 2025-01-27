@@ -198,6 +198,21 @@ export const resendNotification = takeEvery(actions.RESEND_NOTIFICATION, functio
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
     }
 });
+
+export const getEmailConfig = takeEvery(actions.GET_EMAIL_CONFIG, function* (action) {
+    try {
+        const res = yield call(api.get, apiEndpoints.GetEmailConfig, action.query);
+        yield put({
+            type: actions.GET_EMAIL_CONFIG_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_EMAIL_CONFIG_FAILED,
+            error: error?.data,
+        });
+    }
+});
 export default function* saga() {
     yield all([
         getSms,
@@ -215,5 +230,6 @@ export default function* saga() {
         updateFcm,
         deleteFcm,
         resendNotification,
+        getEmailConfig,
     ]);
 }

@@ -346,6 +346,9 @@ const apiEndpoints = {
     GetDocumentFileContentById: "documentfile/documentcontent/:id",
     UpdateDocumentFileContent: "/documentfile/documentcontent/:id",
     DeleteDocumentFileContent: "/documentfile/documentcontent/:id",
+
+    // Email config
+    GetEmailConfig: "/email/config",
 };
 
 export default apiEndpoints;

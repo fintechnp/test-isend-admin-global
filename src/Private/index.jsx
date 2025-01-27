@@ -322,6 +322,7 @@ import {
     ViewFcmReducer,
     ViewSmsReducer,
     ViewEmailReducer,
+    GetEmailConfigReducer,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -1223,6 +1224,9 @@ export const privateReducer = {
     get_document_file_list: getDocumentFileReducer,
     update_document_file: updateDocumentFileReducer,
     delete_document_file: deleteDocumentFileReducer,
+
+    // region: Email Config
+    get_email_config: GetEmailConfigReducer,
 };
 
 export const privateSaga = [

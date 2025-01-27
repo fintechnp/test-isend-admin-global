@@ -209,6 +209,9 @@ const routePaths = {
 
     // Application Config
     ListApplicationConfig: "/setup/application-config",
+
+    // Email config
+    ListEmailConfig: "/utilities/email-config",
 };
 
 export default routePaths;

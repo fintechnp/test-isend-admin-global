@@ -22,3 +22,6 @@ export { default as ViewSmsReducer } from "./reducers/viewSms";
 export { default as ViewEmailReducer } from "./reducers/viewEmail";
 
 export { default as ResendNotification } from "./reducers/resendNotification";
+
+// Email Config
+export { default as GetEmailConfigReducer } from "./reducers/getEmailConfig";

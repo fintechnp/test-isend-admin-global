@@ -19,6 +19,7 @@ const referenceTypeId = {
     rdfiReturnCodes: 270,
     relations: 18,
     balanceRequestStatus: 67,
+    emailConfigFor: 10,
 };
 
 export default referenceTypeId;
