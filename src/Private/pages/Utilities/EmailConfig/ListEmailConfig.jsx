@@ -61,8 +61,10 @@ const ListEmailConfig = () => {
                 cell: ({ getValue }) => (
                     <Column>
                         {getValue()
-                            ? JSON.parse(getValue()).map((email, index) => (
-                                  <Typography key={index + "email"}>{email ? `${email},` : ""}</Typography>
+                            ? JSON.parse(getValue()).map((email, index, array) => (
+                                  <span key={index + "email"}>
+                                      {email ? `${email}${index < array.length - 1 ? "," : ""}` : ""}
+                                  </span>
                               ))
                             : ""}
                     </Column>
@@ -101,10 +103,10 @@ const ListEmailConfig = () => {
                             {({ onClose }) => (
                                 <>
                                     <HasPermission permission={permissions.EDIT_EMAIL_CONFIG}>
-                                        <EditEmailConfig data={row.original} onClose={() => onClose()} />
+                                        <EditEmailConfig data={row.original} onClose={onClose} />
                                     </HasPermission>
                                     <HasPermission permission={permissions.DELETE_EMAIL_CONFIG}>
-                                        <ListItemButton onClick={() => handleDelete(row?.original?.config_id)}>
+                                        <ListItemButton onClick={() => handleDelete(row?.original?.config_id, onClose)}>
                                             Delete
                                         </ListItemButton>
                                     </HasPermission>
@@ -120,10 +122,11 @@ const ListEmailConfig = () => {
 
     const { onPageChange, filterSchema, onRowsPerPageChange, onQuickFilter } = useListFilterStore({ initialState });
 
-    const handleDelete = (id) => {
+    const handleDelete = (id, onClose) => {
         confirm({ description: "Are you sure you want to delete this email config?" }).then(() => {
             dispatch(actions.delete_email_config(id));
         });
+        onClose();
     };
 
     useEffect(() => {
@@ -173,4 +176,3 @@ const ListEmailConfig = () => {
 };
 
 export default withPermission({ permission: [permissions.READ_EMAIL_CONFIG] })(ListEmailConfig);
-// export default ListEmailConfig;
