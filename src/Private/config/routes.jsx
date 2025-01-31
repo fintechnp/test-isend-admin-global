@@ -205,6 +205,7 @@ import ZaiLogsTab from "Private/pages/ApiLogs/ZaiLogs/ZaiLogsTab";
 import ListEmailElement from "Private/components/email-template/ListEmailElement";
 import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
 import Policies from "Private/pages/Setup/policies";
+import ListEmailConfig from "Private/pages/Utilities/EmailConfig";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -587,6 +588,7 @@ const privateRoutes = [
     { path: "/utilities/email", component: <Email title="Email" /> },
     { path: "/utilities/fcm", component: <Fcm title="FCM" /> },
     { path: routePaths.bulkEmails.index, component: <ListBulkEmail /> },
+    { path: routePaths.ListEmailConfig, component: <ListEmailConfig /> },
 
     //Compliance
     {
