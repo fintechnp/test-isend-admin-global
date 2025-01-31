@@ -18,11 +18,16 @@ import PageContent from "App/components/Container/PageContent";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 import Loader from "App/components/Loader/Loader";
 
+import KycLogs from "./KycLogs";
 import { kycLogsActions } from "../store";
+import isEmpty from "App/helpers/isEmpty";
 import { useParams } from "react-router-dom";
-import { getKycLogsStatus } from "../data/kycLogsStatus";
-import routePaths from "Private/config/routePaths";
 import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
+import { getKycLogsStatus } from "../data/kycLogsStatus";
+import { localStorageGet } from "App/helpers/localStorage";
+
+const SELECTED_COUNTRY_KEY = "iSendRemit.166e95bafdc0bb30c1daea3a47afc91b.csk";
 
 const StatusStepper = styled(Stack)(({ theme }) => ({
     flexDirection: "column",
@@ -63,17 +68,27 @@ export default function ListCustomerKycLog() {
         loadingMore: isLoadingMore,
     } = useSelector((state) => state.get_customer_kyc_logs);
 
+    const {
+        response: kycLogsGreenIdData,
+        loading: isKycLogGreenLoading,
+        success: isKycLogGreenSucces,
+    } = useSelector((state) => state.get_customer_kyc_logs_green_id);
+
     const data = kycLogs?.data ?? [];
 
     const totalCount = kycLogs?.pagination?.totalCount ?? 0;
 
     useEffect(() => {
-        dispatch(
-            kycLogsActions.get_kyc_logs({
-                ...filterSchema,
-                customer_id: customerId,
-            }),
-        );
+        if (localStorageGet(SELECTED_COUNTRY_KEY) === "AUS") {
+            dispatch(kycLogsActions.get_customer_kyc_logs_green_id(customerId));
+        } else {
+            dispatch(
+                kycLogsActions.get_kyc_logs({
+                    ...filterSchema,
+                    customer_id: customerId,
+                }),
+            );
+        }
     }, [dispatch, customerId]);
 
     const handleGetMore = (e) => {
@@ -169,7 +184,7 @@ export default function ListCustomerKycLog() {
 
     return (
         <PageContent
-            documentTitle="KYC Logs"
+            documentTitle={"KYC Logs"}
             breadcrumbs={[
                 {
                     label: "Customers",
@@ -185,26 +200,40 @@ export default function ListCustomerKycLog() {
             ]}
         >
             <Column gap="16px">
-                <PageContentContainer title="KYC Status">
-                    {renderLogs()}
+                <PageContentContainer
+                    title={localStorageGet(SELECTED_COUNTRY_KEY) === "AUS" ? "KYC Logs" : "KYC Status"}
+                >
+                    {localStorageGet(SELECTED_COUNTRY_KEY) === "AUS" ? (
+                        isKycLogGreenLoading ? (
+                            <Loader />
+                        ) : isKycLogGreenSucces && isEmpty(kycLogsGreenIdData?.data) ? (
+                            <Typography alignSelf="center">No KYC logs found.</Typography>
+                        ) : (
+                            <KycLogs kycLogs={kycLogsGreenIdData?.data || {}} />
+                        )
+                    ) : (
+                        <>
+                            {renderLogs()}
 
-                    {(() => {
-                        if (isLoadingMore) {
-                            return <Loader />;
-                        } else if (data.length < totalCount) {
-                            return (
-                                <Button
-                                    sx={{
-                                        mr: "auto",
-                                    }}
-                                    fontWeight={600}
-                                    onClick={handleGetMore}
-                                >
-                                    See More <ExpandMoreOutlinedIcon />
-                                </Button>
-                            );
-                        }
-                    })()}
+                            {(() => {
+                                if (isLoadingMore) {
+                                    return <Loader />;
+                                } else if (data.length < totalCount) {
+                                    return (
+                                        <Button
+                                            sx={{
+                                                mr: "auto",
+                                            }}
+                                            fontWeight={600}
+                                            onClick={handleGetMore}
+                                        >
+                                            See More <ExpandMoreOutlinedIcon />
+                                        </Button>
+                                    );
+                                }
+                            })()}
+                        </>
+                    )}
                 </PageContentContainer>
             </Column>
         </PageContent>

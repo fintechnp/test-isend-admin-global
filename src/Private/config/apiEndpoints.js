@@ -352,6 +352,9 @@ const apiEndpoints = {
     AddEmailConfig: "/email/config",
     EditEmailConfig: "/email/config/:id",
     DeleteEmailConfig: "/email/config/:id",
+
+    // Kyc Logs Green Id
+    GetCustomerKycLogsGreenId: "/greenid/:id",
 };
 
 export default apiEndpoints;

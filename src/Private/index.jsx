@@ -656,7 +656,11 @@ import {
     B2BAccountClosureRequestSaga,
     ViewB2BAccountClosureRequestReducer,
 } from "./pages/Agent/AccountClosureRequest/store";
-import { CustomerKycLogsSaga, GetCustomerKycLogsReducer } from "./pages/Customers/KycLogs/store";
+import {
+    CustomerKycLogsSaga,
+    GetCustomerKycLogsGreenIdReducer,
+    GetCustomerKycLogsReducer,
+} from "./pages/Customers/KycLogs/store";
 import {
     GetPromoCodeReducer,
     AddPromoCodeReducer,
@@ -1233,6 +1237,9 @@ export const privateReducer = {
     add_email_config: AddEmailConfigReducer,
     edit_email_config: EditEmailConfigReducer,
     delete_email_config: DeleteEmailConfigReducer,
+
+    // green id
+    get_customer_kyc_logs_green_id: GetCustomerKycLogsGreenIdReducer,
 };
 
 export const privateSaga = [
