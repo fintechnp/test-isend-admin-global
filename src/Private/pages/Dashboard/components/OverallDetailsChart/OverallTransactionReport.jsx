@@ -12,10 +12,10 @@ import Row from "App/components/Row/Row";
 import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
 
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 import DashboardCardChart from "../DashboardCardChart";
 import Paper from "App/components/Paper/Paper";
-import HasPermission from "Private/components/shared/HasPermission";
-import { permissions } from "Private/data/permissions";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -60,6 +60,9 @@ const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
 export default function OverallTransactionReport() {
     const theme = useTheme();
 
+    const isBetweenMdAndLg = useMediaQuery(
+        `(min-width:${theme.breakpoints.values.md}px) and (max-width:${theme.breakpoints.values.lg - 1}px)`,
+    );
     const [transCategory, setTransCategory] = useState("amount");
 
     const handleTransCategoryChange = (e) => {
@@ -141,8 +144,14 @@ export default function OverallTransactionReport() {
                     Overall Transaction
                 </Typography>
 
-                <Box paddingY={1} display="flex" flexDirection="row" justifyContent="center">
-                    <ToggleButtonGroup value={transCategory} onChange={handleTransCategoryChange}>
+                <Box paddingY={1} paddingX={1} display="flex" justifyContent="center" alignItems="center">
+                    <ToggleButtonGroup
+                        sx={{
+                            flexDirection: !isBetweenMdAndLg ? "row" : "column",
+                        }}
+                        value={transCategory}
+                        onChange={handleTransCategoryChange}
+                    >
                         <ToggleButton disableRipple value="amount">
                             Amount
                         </ToggleButton>

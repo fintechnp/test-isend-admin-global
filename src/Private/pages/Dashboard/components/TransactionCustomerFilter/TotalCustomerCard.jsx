@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
 import { useTheme } from "@mui/material/styles";
@@ -16,10 +15,6 @@ import DashboardCustomerIcon from "App/components/Icon/DashboardCustomerIcon";
 import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
 import DashboardCardChart from "../DashboardCardChart";
-
-const Container = styled(Paper)(({ theme }) => ({
-    padding: "16px",
-}));
 
 export default function TotalCustomerCard() {
     const theme = useTheme();
@@ -197,7 +192,7 @@ export default function TotalCustomerCard() {
                         return (
                             <Column
                                 key={index}
-                                gap={1}
+                                gap={2}
                                 sx={{
                                     [theme.breakpoints.up("lg")]: {
                                         borderLeft: containsBorder ? `1px solid ${theme.palette.divider}` : "none",

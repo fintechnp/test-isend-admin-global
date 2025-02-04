@@ -9,6 +9,7 @@ import OverallTransactionReport from "./OverallTransactionReport";
 import ComplianceData from "./ComplianceData";
 
 import GridItemWithPermission from "../../ui/GridItemWithPermission";
+import OverallReportHeading from "../OverallReportHeading";
 
 const OverallDetailsChart = React.memo(() => {
     const hasOverallTransactionPermission = permissions.DASH_TXN_OVERALL;
@@ -21,7 +22,7 @@ const OverallDetailsChart = React.memo(() => {
         <Grid container spacing={2}>
             {hasOverallHeading && (
                 <Grid item xs={12}>
-                    <OverallReport />
+                    <OverallReportHeading />
                 </Grid>
             )}
 

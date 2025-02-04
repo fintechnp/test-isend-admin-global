@@ -21,12 +21,16 @@ const Dashboard = React.memo(() => {
     const hasOverallChipDataPermission = permissions.DASH_TXN_REV_SUMMARY;
     const hasRightGirdPermission =
         permissions.DASH_TXN_OVERALL && permissions.DASH_CUSTOMER_OVERALL && permissions.DASH_COMPLIANCE;
-    const hasLeftGridPermission =
-        permissions.DASH_TXN_COUNT &&
-        permissions.DASH_TXN_AMOUNT &&
-        permissions.DASH_TXN_AGENT_BIZ &&
-        permissions.DASH_PAYOUT &&
-        permissions.DASH_TXN_REV_SUMMARY;
+
+    const hasLeftGridPermissions = [
+        permissions.DASH_TXN_COUNT,
+        permissions.DASH_TXN_AMOUNT,
+        permissions.DASH_TXN_AGENT_BIZ,
+        permissions.DASH_PAYOUT,
+        permissions.DASH_TXN_REV_SUMMARY,
+    ];
+
+    const hasLeftGridPermission = hasLeftGridPermissions.every(Boolean);
 
     return (
         <PageContent documentTitle="Dashboard">
@@ -49,9 +53,11 @@ const Dashboard = React.memo(() => {
                     </Column>
                 </Grid>
 
-                <Grid item xs={12} sm={12} md={hasLeftGridPermission ? 3 : 12}>
-                    <OverallDetailsChart />
-                </Grid>
+                {hasLeftGridPermission && (
+                    <Grid item xs={12} sm={12} md={hasRightGirdPermission ? 3 : 12}>
+                        <OverallDetailsChart />
+                    </Grid>
+                )}
 
                 <HasPermission permission={permissions.DASH_DONUT_CHART}>
                     <Grid item xs={12} md={6} lg={4}>

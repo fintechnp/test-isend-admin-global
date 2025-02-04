@@ -8,7 +8,7 @@ const Container = styled(Paper)(({ theme }) => ({}));
 const OverallReportHeading = () => {
     return (
         <Container>
-            <Typography fontWeight={700} fontSize={16}>
+            <Typography align="center" fontWeight={700} fontSize={16}>
                 Overall report
             </Typography>
         </Container>

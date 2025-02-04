@@ -6,6 +6,7 @@ import Column from "App/components/Column/Column";
 
 import ComplianceData from "./ComplianceData";
 import OverallTransactionAndCustomer from "../OverallTransactionAndCustomer";
+import Typography from "@mui/material/Typography";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -16,6 +17,8 @@ export default function OverallReport() {
         <Column gap={2}>
             {/* <OverallTransactionAndCustomer />
             <ComplianceData /> */}
+
+            <Typography variant="h6">Overall Report</Typography>
         </Column>
     );
 }
