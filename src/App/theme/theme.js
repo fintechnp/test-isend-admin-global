@@ -21,6 +21,15 @@ export const ChangeTheme = (mode = true) => {
         typography: {
             fontFamily: '"Poppins", sans-serif',
         },
+        breakpoints: {
+            values: {
+                xs: 0,
+                sm: 600,
+                md: 900,
+                lg: 1349,
+                xl: 1536,
+            },
+        },
         palette: mode ? LightPalette : DarkPalette,
         overrides: {
             MuiPaper: {

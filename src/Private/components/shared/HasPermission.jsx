@@ -5,7 +5,7 @@ import useAuthUser from "Private/hooks/useAuthUser";
 export default function HasPermission({ role, permission, children }) {
     const { can, hasRole } = useAuthUser();
 
-    return <div>{(can(permission) || hasRole(role)) && children}</div>;
+    return <>{(can(permission) || hasRole(role)) && children}</>;
 }
 
 HasPermission.propTypes = {

@@ -6,3 +6,15 @@ export { default as GetCustomerCountByDeviceTypeReducer } from "./reducers/getCu
 export { default as GetCustomerKycCountByStatusReducer } from "./reducers/getCustomerKycCountByStatus";
 export { default as GetTransactionCountByStatusReducer } from "./reducers/getTransactionCountByStatus";
 export { default as GetCustomerKycCountByStatusPreviousReducer } from "./reducers/getCustomerKycCountByStatusPrevious";
+export { default as GetTopPayoutCountriesReducer } from "./reducers/getTopPayoutCountries";
+export { default as GetTopTransactionByAgentAndBusinessReducer } from "./reducers/getTopTransactionByAgentAndBusiness";
+export { default as GetCustomerCountByDeviceTypePreviousReducer } from "./reducers/getCustomerCountByDeviceTypePrevious";
+export { default as GetTransactionCountByStatusPreviousReducer } from "./reducers/getTransactionCountByStatusPrevious";
+export { default as GetComplianceCountByStatusReducer } from "./reducers/getComplianceCountByStatus";
+export { default as GetComplianceCountByStatusPreviousReducer } from "./reducers/getComplianceCountByStatusPrevious";
+export { default as GetSummaryDataReducer } from "./reducers/getSummaryData";
+export { default as GetOverallTransactionLineGraphReducer } from "./reducers/getOverallTransactionLineGraph";
+export { default as GetUserRegistrationHHistoryReducer } from "./reducers/getUserRegistrationHistory";
+export { default as GetExchangeRateSummaryReducer } from "./reducers/getExchangeRateSummary";
+export { default as GetOverallCustomersReportReducer } from "./reducers/getOverallCustomersReport";
+export { default as GetOverallTransactionReportReducer } from "./reducers/getOverallTransactionReport";
