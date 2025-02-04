@@ -38,6 +38,21 @@ export const getMoreKycLogs = takeEvery(actions.GET_MORE_KYC_LOGS, function* (ac
     }
 });
 
+export const getKycLogsGreenId = takeEvery(actions.GET_KYC_LOG_GREEN_ID, function* (action) {
+    try {
+        const res = yield call(api.get, buildRoute(apiEndpoints.GetCustomerKycLogsGreenId, action.id));
+        yield put({
+            type: actions.GET_KYC_LOG_GREEN_ID_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: actions.GET_KYC_LOG_GREEN_ID_FAILED,
+            error: error?.data,
+        });
+    }
+});
+
 export default function* kycLogsSaga() {
-    yield all([getKycLogs, getMoreKycLogs]);
+    yield all([getKycLogs, getMoreKycLogs, getKycLogsGreenId]);
 }

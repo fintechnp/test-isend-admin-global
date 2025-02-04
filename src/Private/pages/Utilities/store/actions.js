@@ -82,6 +82,26 @@ const actions = {
     RESEND_NOTIFICATION_FAILED: "RESEND_NOTIFICATION_FAILED",
     RESEND_NOTIFICATION_RESET: "RESEND_NOTIFICATION_RESET",
 
+    // Email config
+    GET_EMAIL_CONFIG: "GET_EMAIL_CONFIG",
+    GET_EMAIL_CONFIG_SUCCESS: "GET_EMAIL_CONFIG_SUCCESS",
+    GET_EMAIL_CONFIG_FAILED: "GET_EMAIL_CONFIG_FAILED",
+
+    ADD_EMAIL_CONFIG: "ADD_EMAIL_CONFIG",
+    ADD_EMAIL_CONFIG_SUCCESS: "ADD_EMAIL_CONFIG_SUCCESS",
+    ADD_EMAIL_CONFIG_FAILED: "ADD_EMAIL_CONFIG_FAILED",
+    ADD_EMAIL_CONFIG_RESET: "ADD_EMAIL_CONFIG_RESET",
+
+    EDIT_EMAIL_CONFIG: "EDIT_EMAIL_CONFIG",
+    EDIT_EMAIL_CONFIG_SUCCESS: "EDIT_EMAIL_CONFIG_SUCCESS",
+    EDIT_EMAIL_CONFIG_FAILED: "EDIT_EMAIL_CONFIG_FAILED",
+    EDIT_EMAIL_CONFIG_RESET: "EDIT_EMAIL_CONFIG_RESET",
+
+    DELETE_EMAIL_CONFIG: "DELETE_EMAIL_CONFIG",
+    DELETE_EMAIL_CONFIG_SUCCESS: "DELETE_EMAIL_CONFIG_SUCCESS",
+    DELETE_EMAIL_CONFIG_FAILED: "DELETE_EMAIL_CONFIG_FAILED",
+    DELETE_EMAIL_CONFIG_RESET: "DELETE_EMAIL_CONFIG_RESET",
+
     //sms
     get_sms: (query) => ({
         type: actions.GET_SMS,
@@ -202,6 +222,28 @@ const actions = {
 
     close_view_email_modal: () => ({
         type: actions.CLOSE_VIEW_EMAIL_MODAL,
+    }),
+
+    // Email Config
+    get_email_config: (query) => ({
+        type: actions.GET_EMAIL_CONFIG,
+        query,
+    }),
+
+    add_email_config: (data) => ({
+        type: actions.ADD_EMAIL_CONFIG,
+        data,
+    }),
+
+    edit_email_config: (id, data) => ({
+        type: actions.EDIT_EMAIL_CONFIG,
+        id,
+        data,
+    }),
+
+    delete_email_config: (id) => ({
+        type: actions.DELETE_EMAIL_CONFIG,
+        id,
     }),
 };
 

@@ -322,6 +322,10 @@ import {
     ViewFcmReducer,
     ViewSmsReducer,
     ViewEmailReducer,
+    GetEmailConfigReducer,
+    AddEmailConfigReducer,
+    DeleteEmailConfigReducer,
+    EditEmailConfigReducer,
 } from "./pages/Utilities/store";
 
 //Manage Compliance payment rules
@@ -664,7 +668,11 @@ import {
     B2BAccountClosureRequestSaga,
     ViewB2BAccountClosureRequestReducer,
 } from "./pages/Agent/AccountClosureRequest/store";
-import { CustomerKycLogsSaga, GetCustomerKycLogsReducer } from "./pages/Customers/KycLogs/store";
+import {
+    CustomerKycLogsSaga,
+    GetCustomerKycLogsGreenIdReducer,
+    GetCustomerKycLogsReducer,
+} from "./pages/Customers/KycLogs/store";
 import {
     GetPromoCodeReducer,
     AddPromoCodeReducer,
@@ -1247,6 +1255,15 @@ export const privateReducer = {
     get_document_file_list: getDocumentFileReducer,
     update_document_file: updateDocumentFileReducer,
     delete_document_file: deleteDocumentFileReducer,
+
+    // region: Email Config
+    get_email_config: GetEmailConfigReducer,
+    add_email_config: AddEmailConfigReducer,
+    edit_email_config: EditEmailConfigReducer,
+    delete_email_config: DeleteEmailConfigReducer,
+
+    // green id
+    get_customer_kyc_logs_green_id: GetCustomerKycLogsGreenIdReducer,
 };
 
 export const privateSaga = [

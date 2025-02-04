@@ -1,14 +1,23 @@
 import * as Yup from "yup";
 import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React, { useEffect, useRef } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 
+import FormCheckbox from "App/core/hook-form/FormCheckbox";
 import FormTextField from "App/core/hook-form/FormTextField";
 import CancelButton from "App/components/Button/CancelButton";
 import SubmitButton from "App/components/Button/SubmitButton";
 import CKEditorComponent from "App/components/Editor/CkEditor";
 import ButtonWrapper from "App/components/Forms/ButtonWrapper";
+
+const StatusText = styled(Typography)(({ theme }) => ({
+    opacity: 0.9,
+    paddingTop: "6px",
+    paddingBottom: "-6px",
+}));
 
 const DocumentFileContentSchema = Yup.object().shape({
     order_id: Yup.number().required("Order ID is required").typeError("Order ID is required"),
@@ -32,6 +41,7 @@ const DocumentFileContentForm = ({
             content: initialValues?.content || "",
             content_title: initialValues?.content || "",
             order_id: isAddMode ? orderID + 1 : initialValues?.order_id || "",
+            ...initialValues,
         },
         resolver: yupResolver(DocumentFileContentSchema),
     });
@@ -54,8 +64,8 @@ const DocumentFileContentForm = ({
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
-                    <Grid display="none" item xs={12} md={6}>
-                        <FormTextField type="number" name="order_id" label="Order Id" />
+                    <Grid item xs={12} md={6}>
+                        <FormTextField type="number" name="order_id" label="Order" />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <FormTextField name="content_title" label="Content Title" />
@@ -86,6 +96,11 @@ const DocumentFileContentForm = ({
                                 });
                             }}
                         />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <StatusText component="p">Status</StatusText>
+                        <FormCheckbox name="is_active" label="Active" />
                     </Grid>
 
                     <Grid

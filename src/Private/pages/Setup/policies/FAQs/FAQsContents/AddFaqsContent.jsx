@@ -21,7 +21,7 @@ const AddFaqsContent = () => {
     const ListOrderID = faqDocumentList?.pagination?.totalCount;
 
     const handleSubmitFaqsList = (data) => {
-        dispatch(DocumentFileActions.create_document_file_content(data));
+        dispatch(DocumentFileActions.create_document_file_content({ ...data, order: data.order_id }));
     };
 
     const handleClose = useCallback(() => {
@@ -51,6 +51,9 @@ const AddFaqsContent = () => {
                 loading={l_loading}
                 onSubmit={handleSubmitFaqsList}
                 handleClose={handleClose}
+                initialValues={{
+                    is_active: true,
+                }}
             />
         </Modal>
     );

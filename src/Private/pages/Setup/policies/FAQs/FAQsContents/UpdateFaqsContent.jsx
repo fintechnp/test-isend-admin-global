@@ -18,7 +18,12 @@ const UpdateFaqsContent = () => {
     } = useSelector((state) => state.update_document_file_content);
 
     const handleUpdateFaqsList = (data) => {
-        dispatch(DocumentFileActions.update_document_file_content(initialFormState?.contentId, data));
+        dispatch(
+            DocumentFileActions.update_document_file_content(initialFormState?.contentId, {
+                ...data,
+                order: data.order_id,
+            }),
+        );
     };
 
     useEffect(() => {
@@ -50,6 +55,7 @@ const UpdateFaqsContent = () => {
                     order_id: initialFormState?.contentOrder,
                     content_title: initialFormState?.content_title,
                     content: initialFormState?.contents,
+                    is_active: initialFormState?.is_active,
                 }}
             />
         </Modal>
