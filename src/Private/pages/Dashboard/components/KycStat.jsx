@@ -5,18 +5,18 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 
+import StatBadge from "./StatBadge";
 import Row from "App/components/Row/Row";
 import Paper from "App/components/Paper/Paper";
-import numberUtils from "App/utils/numberUtils";
 import Column from "App/components/Column/Column";
 import Center from "App/components/Center/Center";
 import KycExpiredIcon from "App/components/Icon/KycExpiredIcon";
 import KycVerifiedIcon from "App/components/Icon/KycVerifiedIcon";
 import KycRejectedIcon from "App/components/Icon/KycRejectedIcon";
 import KycNotStartedIcon from "App/components/Icon/KycNotStartedIcon";
-import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
-import StatBadge from "./StatBadge";
+import numberUtils from "App/utils/numberUtils";
+import calculatePercentageDifference from "App/helpers/calculatePercentageDifference";
 
 const Container = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -101,26 +101,20 @@ export default function KycStat() {
 
                 <Column>
                     <Row gap="4px" alignItems="flex-end">
-                        {isLoadingCurrent ? (
-                            <Skeleton variant="text" height={50} width={130} />
-                        ) : (
-                            <>
-                                <Typography fontWeight={600} variant="h4" color="text.primary">
-                                    {numberUtils.format(data?.totalCustomer)}
-                                </Typography>
-                                <StatBadge
-                                    label={differenceInCustomer + "%"}
-                                    circuitType={
-                                        differenceInCustomer > 0
-                                            ? "positive"
-                                            : differenceInCustomer < 0
-                                              ? "negative"
-                                              : "neutral"
-                                    }
-                                    sx={{ mb: 1 }}
-                                />
-                            </>
-                        )}
+                        <Typography fontWeight={600} variant="h4" color="text.primary">
+                            {numberUtils.format(data?.totalCustomer)}
+                        </Typography>
+                        <StatBadge
+                            label={differenceInCustomer + "%"}
+                            circuitType={
+                                differenceInCustomer > 0
+                                    ? "positive"
+                                    : differenceInCustomer < 0
+                                      ? "negative"
+                                      : "neutral"
+                            }
+                            sx={{ mb: 1 }}
+                        />
                     </Row>
                     <Typography fontSize="1rem" lineHeight="1.429rem" color="text.secondary">
                         Total Customer
@@ -131,7 +125,7 @@ export default function KycStat() {
                     <Row key={index} justifyContent="center" alignItems="center" gap="4px">
                         <Center
                             sx={{
-                                height: "30px",
+                                height: "24px",
                                 width: "24px",
                                 mr: "4px",
                                 borderRadius: "4px",
@@ -142,20 +136,16 @@ export default function KycStat() {
                         </Center>
                         <Typography color="text.primary">{stat.label}</Typography>
                         <Box>
-                            {isLoading ? (
-                                <Skeleton variant="text" height={24} width={60} />
-                            ) : (
-                                <StatBadge
-                                    label={stat.differenceInPercent + "%"}
-                                    circuitType={
-                                        stat.differenceInPercent > 0
-                                            ? "positive"
-                                            : stat.differenceInPercent < 0
-                                              ? "negative"
-                                              : "neutral"
-                                    }
-                                />
-                            )}
+                            <StatBadge
+                                label={stat.differenceInPercent + "%"}
+                                circuitType={
+                                    stat.differenceInPercent > 0
+                                        ? "positive"
+                                        : stat.differenceInPercent < 0
+                                          ? "negative"
+                                          : "neutral"
+                                }
+                            />
                         </Box>
                         <Box flex={1}></Box>
                         {isLoading ? (

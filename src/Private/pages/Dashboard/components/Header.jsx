@@ -17,7 +17,6 @@ import dateUtils from "App/utils/dateUtils";
 import { RangeType } from "App/data/RangeType";
 import { inputBorderRadius } from "App/theme/theme";
 import cleanObject from "App/helpers/cleanObject";
-import { useTheme } from "@emotion/react";
 
 const HeaderContainer = styled(Paper)(({ theme }) => ({
     padding: "16px",
@@ -64,7 +63,6 @@ const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
 
 export default function Header() {
     const dispatch = useDispatch();
-    const theme = useTheme();
 
     const [open, setOpen] = useState(true);
 
@@ -104,16 +102,7 @@ export default function Header() {
         dispatch(actions.get_customer_count_by_device_type(current));
         dispatch(actions.get_customer_kyc_count_by_status(current));
         dispatch(actions.get_transaction_count_by_status(current));
-        dispatch(actions.get_compliance_count_by_status(current));
-        dispatch(actions.get_top_payout_countries(current));
-        dispatch(actions.get_summary_data(current));
-        dispatch(actions.get_user_registration_history(current));
-        dispatch(actions.get_overall_transaction_line_graph(current));
-
-        dispatch(actions.get_top_transaction_by_agent_and_business(current));
         dispatch(actions.get_customer_kyc_count_by_status_previous(previous));
-        dispatch(actions.get_transaction_count_by_status_previous(previous));
-        dispatch(actions.get_compliance_count_by_status_previous(previous));
     };
 
     const handleDateRange = (value) => {
@@ -131,22 +120,17 @@ export default function Header() {
 
     useEffect(() => {
         if (isEmpty(params?.from_date) && isEmpty(params?.to_date)) {
-            const date = dateUtils.getDateRange(RangeType.WEEKLY);
+            const date = dateUtils.getDateRange(RangeType.DAILY);
             const query = {
                 from_date: date.startDate,
                 to_date: date.endDate,
                 previous_from_date: date.previousStartDate,
                 previous_end_date: date.previousEndDate,
             };
-            dispatch(actions.change_dashboard_filter_params({ ...query, rangeType: RangeType.WEEKLY }));
+            dispatch(actions.change_dashboard_filter_params({ ...query, rangeType: RangeType.DAILY }));
             handleChange(query);
         }
     }, [params]);
-
-    useEffect(() => {
-        dispatch(actions.get_overall_transaction_report());
-        dispatch(actions.get_overall_customers_report());
-    }, [dispatch]);
 
     return (
         <HeaderContainer elevation={0}>
@@ -164,11 +148,8 @@ export default function Header() {
                 </Box>
                 <Row
                     sx={{
-                        overflowY: "none",
-                        [theme.breakpoints.down("md")]: {
-                            overflowX: "auto",
-                            overflowY: "hidden",
-                        },
+                        overflowX: "auto",
+                        overflowY: "hidden",
                     }}
                 >
                     <Box className="DateRangeSelector-root" display="flex" flexDirection="row" gap={1}>
@@ -187,16 +168,16 @@ export default function Header() {
                         aria-label="range selector"
                         disabled={isLoading}
                     >
-                        {/* <ToggleButton disableRipple value={RangeType.DAILY} aria-label="daily">
+                        <ToggleButton value={RangeType.DAILY} aria-label="daily">
                             Daily
-                        </ToggleButton> */}
-                        <ToggleButton disableRipple value={RangeType.WEEKLY} aria-label="weekly">
+                        </ToggleButton>
+                        <ToggleButton value={RangeType.WEEKLY} aria-label="weekly">
                             Weekly
                         </ToggleButton>
-                        <ToggleButton disableRipple value={RangeType.MONTHLY} aria-label="monthly">
+                        <ToggleButton value={RangeType.MONTHLY} aria-label="monthly">
                             Monthly
                         </ToggleButton>
-                        <ToggleButton disableRipple value={RangeType.YEARLY} aria-label="yearly">
+                        <ToggleButton value={RangeType.YEARLY} aria-label="yearly">
                             Yearly
                         </ToggleButton>
                     </ToggleButtonGroup>

@@ -610,18 +610,6 @@ import {
     GetTransactionCountByStatusReducer,
     DashboardFilterParamsReducer,
     GetCustomerKycCountByStatusPreviousReducer,
-    GetTopPayoutCountriesReducer,
-    GetTopTransactionByAgentAndBusinessReducer,
-    GetTransactionCountByStatusPreviousReducer,
-    GetComplianceCountByStatusReducer,
-    GetCustomerCountByDeviceTypePreviousReducer,
-    GetComplianceCountByStatusPreviousReducer,
-    GetSummaryDataReducer,
-    GetOverallTransactionLineGraphReducer,
-    GetUserRegistrationHHistoryReducer,
-    GetExchangeRateSummaryReducer,
-    GetOverallTransactionReportReducer,
-    GetOverallCustomersReportReducer,
 } from "./pages/Dashboard/store";
 import {
     GetOrganizationStakeholdersReducer,
@@ -1191,21 +1179,9 @@ export const privateReducer = {
 
     // region: Dashboard
     get_customer_count_by_device_type: GetCustomerCountByDeviceTypeReducer,
-    get_customer_count_by_device_type_previous: GetCustomerCountByDeviceTypePreviousReducer,
     get_customer_kyc_count_by_status: GetCustomerKycCountByStatusReducer,
     get_customer_kyc_count_by_status_previous: GetCustomerKycCountByStatusPreviousReducer,
     get_transaction_count_by_status: GetTransactionCountByStatusReducer,
-    get_transaction_count_by_status_previous: GetTransactionCountByStatusPreviousReducer,
-    get_compliance_count_by_status: GetComplianceCountByStatusReducer,
-    get_compliance_count_by_status_previous: GetComplianceCountByStatusPreviousReducer,
-    get_user_registration_history: GetUserRegistrationHHistoryReducer,
-    get_top_payout_countries: GetTopPayoutCountriesReducer,
-    get_exchange_rate_summary: GetExchangeRateSummaryReducer,
-    get_overall_transaction_report: GetOverallTransactionReportReducer,
-    get_overall_customers_report: GetOverallCustomersReportReducer,
-    get_overall_transaction_linegraph: GetOverallTransactionLineGraphReducer,
-    get_summary_data: GetSummaryDataReducer,
-    get_top_transaction_by_agent_and_business: GetTopTransactionByAgentAndBusinessReducer,
     dashboard_filter_params: DashboardFilterParamsReducer,
 
     // region ACH Webhooks

@@ -105,7 +105,6 @@ const routePaths = {
     },
     dashboard: {
         base: "/",
-        second: "/second",
     },
 
     Dashboard: "/",
