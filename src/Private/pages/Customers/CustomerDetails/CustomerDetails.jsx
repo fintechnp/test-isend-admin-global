@@ -270,10 +270,6 @@ function CustomerDetails() {
                     accessorKey: "zai_pay_id",
                 },
                 {
-                    label: "Customer Referral Code",
-                    accessorKey: "referral_code",
-                },
-                {
                     label: "Occupation",
                     accessorKey: "occupation_data",
                 },
