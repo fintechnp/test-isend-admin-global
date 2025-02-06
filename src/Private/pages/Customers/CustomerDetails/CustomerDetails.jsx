@@ -29,8 +29,8 @@ import PageContent from "App/components/Container/PageContent";
 import PopoverButton from "App/components/Button/PopoverButton";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
-import { SINGAPORE_ISO3, UNITED_STATES_ISO3 } from "App/data/SendingCountry";
 import PageContentContainer from "App/components/Container/PageContentContainer";
+import { AUSTRALIA_ISO3, SINGAPORE_ISO3, UNITED_STATES_ISO3 } from "App/data/SendingCountry";
 
 import UpdateKyc from "./UpdateKyc";
 import actions from "../Customer/store/actions";
@@ -43,6 +43,7 @@ import CustomerStatusBadge from "../Search/components/CustomerStatusBadge";
 import customerActions from "Private/pages/Customers/Documents/store/actions";
 import UpdateCustomerAccountModal from "../Account/UpdateCustomerAccountModal";
 import ReferralCodeBadge from "Private/pages/Reports/Referral/components/ReferralCodeBadge";
+import { DRIVING_LICENSE, INTERNATIONAL_PASSPORT, PASSPORT } from "App/data/KycDocuments";
 
 const CustomerTypeContainer = styled("div")(({ theme }) => ({
     "& .MuiIconButton-root": {
@@ -96,73 +97,153 @@ function CustomerDetails() {
         });
         onClose();
     };
+    const documentTypeFields = {
+        [DRIVING_LICENSE]: [
+            { label: "State/Territory", accessorKey: "id_issued_state" },
+            { label: "Driver's License Number", accessorKey: "id_number" },
+            { label: "Card Number", accessorKey: "card_number" },
+        ],
+        [INTERNATIONAL_PASSPORT]: [
+            { label: "Issued Country", accessorKey: "id_issued_country_data" },
+            { label: "Passport Number", accessorKey: "id_number" },
+            {
+                label: "Expiry Date",
+                cell: (data) =>
+                    data?.id_expiry_date ? dateUtils.getFormattedDate(data.id_expiry_date, "MMM DD, YYYY") : "-",
+            },
+        ],
+        [PASSPORT]: [
+            { label: "Passport Number", accessorKey: "id_number" },
+            {
+                label: "Expiry Date",
+                cell: (data) =>
+                    data?.id_expiry_date ? dateUtils.getFormattedDate(data.id_expiry_date, "MMM DD, YYYY") : "-",
+            },
+        ],
+    };
 
     const definition = useSourceDetail([
         {
             title: "Address Details",
-            items: [
-                {
-                    label: "Country",
-                    accessorKey: "country_data",
-                },
-                {
-                    label: "Postal Code",
-                    accessorKey: "postcode",
-                },
-                {
-                    label: "City",
-                    accessorKey: "city",
-                },
-                {
-                    label: "Unit",
-                    accessorKey: "unit",
-                },
-                {
-                    label: "Street ",
-                    accessorKey: "street",
-                },
-                {
-                    label: "Street Type",
-                    accessorKey: "street_type_data",
-                },
-                {
-                    label: "State",
-                    accessorKey: "state_data",
-                },
-                {
-                    label: "Birth Country",
-                    accessorKey: "birth_country_data",
-                },
-                {
-                    label: "Nationality",
-                    accessorKey: "citizenship_country_data",
-                },
-            ],
+            items:
+                data?.country?.toUpperCase() === AUSTRALIA_ISO3
+                    ? [
+                          {
+                              label: "Unit",
+                              accessorKey: "unit",
+                          },
+                          {
+                              label: "Street Number",
+                              accessorKey: "street_no",
+                          },
+                          {
+                              label: "Street Name",
+                              accessorKey: "street_name",
+                              cell: (data) => (
+                                  <Typography
+                                      fontWeight={600}
+                                  >{`${data.street || ""}  ${data.street_type_data || ""}`}</Typography>
+                              ),
+                          },
+                          {
+                              label: "City/Suburbs",
+                              accessorKey: "city",
+                          },
+                          {
+                              label: "State",
+                              accessorKey: "state",
+                          },
+                          {
+                              label: "Postal Code",
+                              accessorKey: "postcode",
+                          },
+                          {
+                              label: "Country",
+                              accessorKey: "country_data",
+                          },
+                      ]
+                    : [
+                          {
+                              label: "Country",
+                              accessorKey: "country_data",
+                          },
+                          {
+                              label: "Postal Code",
+                              accessorKey: "postcode",
+                          },
+                          {
+                              label: "City",
+                              accessorKey: "city",
+                          },
+                          {
+                              label: "Unit",
+                              accessorKey: "unit",
+                          },
+                          {
+                              label: "Street ",
+                              accessorKey: "street",
+                          },
+                          {
+                              label: "Street Type",
+                              accessorKey: "street_type_data",
+                          },
+                          {
+                              label: "State",
+                              accessorKey: "state_data",
+                          },
+                          {
+                              label: "Birth Country",
+                              accessorKey: "birth_country_data",
+                          },
+                          {
+                              label: "Nationality",
+                              accessorKey: "citizenship_country_data",
+                          },
+                      ],
         },
         {
             title: "Document Details",
-            items: [
-                {
-                    label: "Document Type",
-                    accessorKey: "id_type",
-                },
-                {
-                    label: "Document Number",
-                    accessorKey: "id_number",
-                },
-                {
-                    label: "Issued Country",
-                    accessorKey: "id_issued_country_data",
-                },
-                {
-                    label: "Issued Date",
-                    cell: (data) => (data?.id_issue_date ? dateUtils.getDate(data?.id_issue_date) : "-"),
-                },
-                {
-                    label: "Expiry Date",
-                    cell: (data) => (data?.id_expiry_date ? dateUtils.getDate(data?.id_expiry_date) : "-"),
-                },
-            ],
+            items:
+                data?.country?.toUpperCase() === AUSTRALIA_ISO3
+                    ? [
+                          {
+                              label: "Document Type",
+                              accessorKey: "id_type",
+                              cell: (data) => (
+                                  <Typography fontWeight={600}>
+                                      {data?.id_type ? ReferenceName(referenceTypeId.kycDocuments, data.id_type) : ""}
+                                  </Typography>
+                              ),
+                          },
+                          ...(documentTypeFields[data?.id_type] || [
+                              {
+                                  label: "Document Number",
+                                  accessorKey: "id_number",
+                              },
+                          ]),
+                      ]
+                    : [
+                          {
+                              label: "Document Type",
+                              accessorKey: "id_type",
+                          },
+                          {
+                              label: "Document Number",
+                              accessorKey: "id_number",
+                          },
+                          {
+                              label: "Issued Country",
+                              accessorKey: "id_issued_country_data",
+                          },
+                          {
+                              label: "Issued Date",
+                              cell: (data) => (data?.id_issue_date ? dateUtils.getDate(data?.id_issue_date) : "-"),
+                          },
+                          {
+                              label: "Expiry Date",
+                              cell: (data) => (data?.id_expiry_date ? dateUtils.getDate(data?.id_expiry_date) : "-"),
+                          },
+                      ],
         },
         ...(data?.country?.toUpperCase() === UNITED_STATES_ISO3 || data?.country?.toUpperCase() === SINGAPORE_ISO3
             ? []
