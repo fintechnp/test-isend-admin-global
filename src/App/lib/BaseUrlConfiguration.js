@@ -31,7 +31,14 @@ export default class BaseUrlConfiguration {
             const selectedCountry = Cookies.get(SELECTED_COUNTRY_KEY);
             const country = sendingCountries.find((c) => c.value.toUpperCase() === selectedCountry);
             if (!country) throw new Error("Country not found");
-            return app.apiBaseUrl.replace("{country}", selectedCountry?.toLowerCase() || "");
+
+            let baseUrl = "";
+            if (selectedCountry?.toLowerCase() === "usa" && app.isDevelopmentMode) {
+                baseUrl = app.apiBaseUrl.replace("{country}", "");
+            } else {
+                baseUrl = app.apiBaseUrl.replace("{country}", selectedCountry.toLowerCase());
+            }
+            return baseUrl;
         } catch {
             AuthUtility.logOut();
             window.location.href = "/login";
