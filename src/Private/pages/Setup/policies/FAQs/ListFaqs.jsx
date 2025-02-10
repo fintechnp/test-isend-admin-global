@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { useConfirm } from "App/core/mui-confirm";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
 
@@ -28,6 +28,7 @@ import { DocumentFileActions } from "../store";
 import { permissions } from "Private/data/permissions";
 import documentFileType from "../data/documentFilteType";
 import useListFilterStore from "App/hooks/useListFilterStore";
+import DocumentFileStatusBadge from "./DocumentFileStatusBadge";
 
 const initialState = {
     page: 1,
@@ -158,6 +159,14 @@ const ListFaqs = () => {
                 accessorKey: "contents",
                 cell: ({ row }) => {
                     return <ListContentBox content={row?.original?.contents} />;
+                },
+            },
+            {
+                header: "Status",
+                accessorKey: "is_active",
+                cell: ({ row }) => {
+                    const status = row?.original?.is_active ? "active" : "inactive";
+                    return <DocumentFileStatusBadge status={status} />;
                 },
             },
 
