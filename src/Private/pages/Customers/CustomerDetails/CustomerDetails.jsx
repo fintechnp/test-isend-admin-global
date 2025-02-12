@@ -102,6 +102,11 @@ function CustomerDetails() {
             { label: "State/Territory", accessorKey: "id_issued_state" },
             { label: "Driver's License Number", accessorKey: "id_number" },
             { label: "Card Number", accessorKey: "card_number" },
+            {
+                label: "Expiry Date",
+                cell: (data) =>
+                    data?.id_expiry_date ? dateUtils.getFormattedDate(data.id_expiry_date, "MMM DD, YYYY") : "-",
+            },
         ],
         [INTERNATIONAL_PASSPORT]: [
             { label: "Issued Country", accessorKey: "id_issued_country_data" },
