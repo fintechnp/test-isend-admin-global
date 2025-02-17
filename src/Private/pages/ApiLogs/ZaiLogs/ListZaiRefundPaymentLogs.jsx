@@ -190,6 +190,14 @@ const ListZaiRefundPaymentLogs = () => {
             topRightEndContent={
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
+            breadcrumbs={[
+                {
+                    label: "API Logs",
+                },
+                {
+                    label: "Zai Refund Logs",
+                },
+            ]}
         >
             <Column gap="16px">
                 <FilterForm

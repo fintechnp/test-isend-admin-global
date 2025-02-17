@@ -16,7 +16,16 @@ function ListBanner() {
     const dispatch = useDispatch();
 
     return (
-        <PageContent>
+        <PageContent
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Banners",
+                },
+            ]}
+        >
             <PageContentContainer
                 title="Banners"
                 topRightContent={

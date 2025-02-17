@@ -196,6 +196,9 @@ export default function ListBusiness() {
             documentTitle="Businesses"
             breadcrumbs={[
                 {
+                    label: "B2B",
+                },
+                {
                     label: "Businesses",
                 },
             ]}

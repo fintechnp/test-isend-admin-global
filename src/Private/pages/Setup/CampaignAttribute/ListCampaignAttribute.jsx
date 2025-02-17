@@ -116,6 +116,9 @@ function ListCampaignAttribute() {
             documentTitle="Campaign Attribute Family"
             breadcrumbs={[
                 {
+                    label: "Setup",
+                },
+                {
                     label: "Campaign Attribute Family",
                 },
             ]}

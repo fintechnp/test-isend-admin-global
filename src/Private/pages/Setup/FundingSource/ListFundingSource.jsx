@@ -178,10 +178,17 @@ function ListFundingSource() {
 
     return (
         <PageContent
-            title="Funding Sources"
             topRightEndContent={
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Funding Sources",
+                },
+            ]}
         >
             <HasPermission permission={permissions.CREATE_FUNDING_SOURCE}>
                 <AddFundingSourceModal />

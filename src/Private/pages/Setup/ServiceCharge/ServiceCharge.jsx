@@ -199,7 +199,10 @@ const ServiceCharge = (props) => {
     };
 
     return (
-        <PageContent documentTitle="Partnerwise Service Charge">
+        <PageContent
+            documentTitle="Partnerwise Service Charge"
+            breadcrumbs={[{ label: "Setup" }, { label: "Partnerwise Service Charge" }]}
+        >
             <PageContentContainer
                 title="Partnerwise Service Charge"
                 topRightContent={

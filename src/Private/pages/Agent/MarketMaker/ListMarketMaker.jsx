@@ -174,6 +174,9 @@ export default function ListMarketMaker() {
             documentTitle="Agents"
             breadcrumbs={[
                 {
+                    label: "B2B",
+                },
+                {
                     label: "Agents",
                 },
             ]}

@@ -168,6 +168,9 @@ function ListEmailTemplate() {
             documentTitle="Email Templates"
             breadcrumbs={[
                 {
+                    label: "Setup",
+                },
+                {
                     label: "Email Templates",
                 },
             ]}
