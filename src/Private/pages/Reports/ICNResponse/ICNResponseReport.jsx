@@ -257,19 +257,16 @@ function ICNResponseReport() {
         <PageContent
             documentTitle="ICN (Instant Credit Notification) Reports"
             topRightEndContent={
-                <FilterButton
-                    size="small"
-                    onClick={() => (isFilterOpen ? closeFilter() : openFilter())}
-                    breadcrumbs={[
-                        {
-                            label: "Generate Reports",
-                        },
-                        {
-                            label: "ICN Report",
-                        },
-                    ]}
-                />
+                <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
+            breadcrumbs={[
+                {
+                    label: "Generate Reports",
+                },
+                {
+                    label: "ICN Report",
+                },
+            ]}
         >
             <Column>
                 <Column

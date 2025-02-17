@@ -198,6 +198,14 @@ const ListZaiWebhookLogs = () => {
             topRightEndContent={
                 <FilterButton size="small" onClick={() => (isFilterOpen ? closeFilter() : openFilter())} />
             }
+            breadcrumbs={[
+                {
+                    label: "API Logs",
+                },
+                {
+                    label: "Zai Webhook Logs",
+                },
+            ]}
         >
             <Column gap="16px">
                 <FilterForm

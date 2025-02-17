@@ -280,7 +280,17 @@ const ApiConfiguration = (props) => {
     };
 
     return (
-        <PageContent documentTitle="API Configuration">
+        <PageContent
+            documentTitle="API Configuration"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "API Configuration",
+                },
+            ]}
+        >
             <PageContentContainer
                 title="API Configuration"
                 topRightContent={

@@ -15,7 +15,16 @@ function ListCountryState() {
     const dispatch = useDispatch();
 
     return (
-        <PageContent>
+        <PageContent
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Country States",
+                },
+            ]}
+        >
             <PageContentContainer
                 title="Country States"
                 topRightContent={

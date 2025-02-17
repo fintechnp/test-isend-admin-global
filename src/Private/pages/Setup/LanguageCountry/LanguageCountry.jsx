@@ -190,7 +190,17 @@ function LanguageCountry() {
         [],
     );
     return (
-        <PageContent documentTitle="Language Setup">
+        <PageContent
+            documentTitle="Language Setup"
+            breadcrumbs={[
+                {
+                    label: "Setup",
+                },
+                {
+                    label: "Language Country",
+                },
+            ]}
+        >
             <PageContentContainer title="Language Country">
                 <div
                     style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginBottom: "1rem" }}

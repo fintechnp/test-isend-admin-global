@@ -357,7 +357,7 @@ const Partner = (props) => {
     };
 
     return (
-        <PageContent>
+        <PageContent breadcrumbs={[{ label: "Setup" }, { label: "Partner" }]}>
             {/* <Header title="Our Partner List">
                 <HasPermission permission={permissions.CREATE_PARTNER}>
                     <AddButton size="small" variant="outlined" onClick={handleAdd} endIcon={<AddIcon />}>
