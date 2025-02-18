@@ -60,6 +60,7 @@ const ListPromoCode = () => {
     useEffect(() => {
         if (isStatusSuccess) {
             dispatch(promoCodeActions.get_promo_codes(filterSchema));
+            dispatch({ type: "UPDATE_PROMO_CODE_STATUS_RESET" });
         }
     }, [dispatch, isStatusSuccess]);
 
