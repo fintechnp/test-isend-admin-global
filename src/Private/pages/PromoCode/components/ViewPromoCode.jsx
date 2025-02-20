@@ -3,26 +3,27 @@ import { styled } from "@mui/styles";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-import { CardActionArea } from "@mui/material";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import CardActionArea from "@mui/material/CardActionArea";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import isEmpty from "App/helpers/isEmpty";
 import dateUtils from "App/utils/dateUtils";
 import Modal from "App/components/Modal/Modal";
 import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 import Clipboard from "App/components/Clipboard/Clipboard";
 import PageContent from "App/components/Container/PageContent";
 import SourceDetails from "App/core/source-detail/SourceDetails";
 import useSourceDetail from "App/core/source-detail/useSourceDetail";
 import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
-import routePaths from "Private/config/routePaths";
 
 import { promoCodeActions } from "../store";
+import PromoAttributeTable from "./PromoAttributeTable";
 import AddCampaignBudgetModal from "./AddCampaignBudgetModal";
 import { campaignEventTypes } from "../data/campaignEventTypesEnums";
 
@@ -275,55 +276,6 @@ export default function ViewPromoCode() {
         },
     ]);
 
-    const Attributecolumns = useMemo(() => [
-        {
-            header: "SN",
-            accessorKey: "f_serial_no",
-            cell: (info) => info.row.index + 1,
-        },
-        {
-            header: "Attribute Name",
-            accessorKey: "attributeFamilyName",
-        },
-        {
-            header: "Criteria Name",
-            accessorKey: "criteriaName",
-        },
-
-        ...(attributeValue.includes(campaignEventTypes?.AMOUNT)
-            ? [
-                  {
-                      header: "Currency",
-                      accessorKey: "currency",
-                      cell: ({ row }) => (row.original.currency ? row.original.currency : "N/A"),
-                  },
-                  {
-                      header: "Amount",
-                      accessorKey: "amount",
-                  },
-              ]
-            : []),
-
-        ...(attributeValue.includes(campaignEventTypes?.COUNT) ||
-        attributeValue.includes(campaignEventTypes?.BENEFICIARY_COUNTRY)
-            ? [
-                  {
-                      header: "Amount",
-                      accessorKey: "amount",
-                  },
-              ]
-            : []),
-
-        ...(attributeValue.includes(campaignEventTypes?.BENEFICIARY_RELATION)
-            ? [
-                  {
-                      header: "Beneficiary Relation",
-                      accessorKey: "Value",
-                  },
-              ]
-            : []),
-    ]);
-
     const AdditionalDataDefinition = useSourceDetail([
         {
             title: "Additional Campaign Information",
@@ -348,6 +300,38 @@ export default function ViewPromoCode() {
             ],
         },
     ]);
+
+    const attributeFamilyTypeMappings = {
+        [campaignEventTypes.AMOUNT]: {
+            label: ["Attribute Name", "Criteria Name", "Currency", "Amount"],
+            values: (key) => [key.attributeFamilyName, key.criteriaName, key.currency, key.amount],
+        },
+        [campaignEventTypes.BENEFICIARY_COUNTRY]: {
+            label: ["Attribute Name", "Criteria Name", "Country"],
+            values: (key) => [key.attributeFamilyName, key.criteriaName, key.Value],
+        },
+        [campaignEventTypes.BENEFICIARY_RELATION]: {
+            label: ["Attribute Name", "Criteria Name", "Beneficiary Relation"],
+            values: (key) => [key.attributeFamilyName, key.criteriaName, key.Value],
+        },
+        [campaignEventTypes.DATE_RANGE]: {
+            label: ["Attribute Name", "Criteria"],
+            values: (key) => [key.attributeFamilyName, key.criteriaName],
+        },
+        [campaignEventTypes.COUNT]: {
+            label: ["Attribute Name", "Criteria Name", "Count"],
+            values: (key) => [key.attributeFamilyName, key.criteriaName, key.amount],
+        },
+    };
+
+    const renderPromoAttributeTable = (key) => {
+        const mapping = attributeFamilyTypeMappings[key.attributeFamilyType];
+        if (!mapping) return null;
+
+        return (
+            <PromoAttributeTable loading={loading} key={key.id} label={mapping.label} values={mapping.values(key)} />
+        );
+    };
 
     return (
         <PageContent
@@ -435,19 +419,15 @@ export default function ViewPromoCode() {
                             }}
                         />
 
-                        {attributeFamilyData.length > 0 && (
-                            <Grid item>
+                        <Grid item xs={12} md={6}>
+                            <>
                                 <Typography marginBottom={2} variant="h6">
                                     Attribute Values
                                 </Typography>
 
-                                <TanstackReactTable
-                                    columns={Attributecolumns}
-                                    data={attributeFamilyData}
-                                    loading={loading}
-                                />
-                            </Grid>
-                        )}
+                                {attributeFamilyData?.map(renderPromoAttributeTable)}
+                            </>
+                        </Grid>
 
                         {referralFamilyCampaignsData.length > 0 && (
                             <Grid item>
