@@ -26,6 +26,7 @@ import { promoCodeActions } from "../store";
 import PromoAttributeTable from "./PromoAttributeTable";
 import AddCampaignBudgetModal from "./AddCampaignBudgetModal";
 import { campaignEventTypes } from "../data/campaignEventTypesEnums";
+import { Skeleton } from "@mui/material";
 
 const Wrapper = styled(Box)(({ theme }) => ({
     border: `1px solid ${theme.palette.stroke.base}`,
@@ -419,26 +420,37 @@ export default function ViewPromoCode() {
                             }}
                         />
 
-                        <Grid item xs={12} md={6}>
-                            <>
-                                <Typography marginBottom={2} variant="h6">
-                                    Attribute Values
-                                </Typography>
-
-                                {attributeFamilyData?.map(renderPromoAttributeTable)}
-                            </>
-                        </Grid>
+                        {attributeValue.length > 0 && (
+                            <Grid item xs={12} md={6}>
+                                <>
+                                    {loading ? (
+                                        <Skeleton variant="text" />
+                                    ) : (
+                                        <Typography variant="h6">Attribute Family Campaigns</Typography>
+                                    )}
+                                    {attributeFamilyData?.map(renderPromoAttributeTable)}
+                                </>
+                            </Grid>
+                        )}
 
                         {referralFamilyCampaignsData.length > 0 && (
                             <Grid item>
-                                <Typography variant="h6" marginBottom={2}>
-                                    Referral Family Campaigns
-                                </Typography>
+                                {loading ? (
+                                    <Skeleton variant="text" />
+                                ) : (
+                                    <Typography variant="h6" marginBottom={2}>
+                                        Referral Family Campaigns
+                                    </Typography>
+                                )}
 
                                 <Grid item>
-                                    <Typography variant="body1" fontWeight={600} marginBottom={2}>
-                                        Referrer
-                                    </Typography>
+                                    {loading ? (
+                                        <Skeleton variant="text" />
+                                    ) : (
+                                        <Typography variant="body1" fontWeight={600} marginBottom={2}>
+                                            Referrer
+                                        </Typography>
+                                    )}
 
                                     <TanstackReactTable
                                         columns={referrerColumns}
@@ -448,9 +460,13 @@ export default function ViewPromoCode() {
                                 </Grid>
 
                                 <Grid item marginTop={2}>
-                                    <Typography variant="body1" fontWeight={600}>
-                                        Referee
-                                    </Typography>
+                                    {loading ? (
+                                        <Skeleton variant="text" />
+                                    ) : (
+                                        <Typography variant="body1" fontWeight={600}>
+                                            Referee
+                                        </Typography>
+                                    )}
 
                                     <TanstackReactTable
                                         columns={refereeColumns}
