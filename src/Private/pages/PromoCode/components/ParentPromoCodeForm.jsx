@@ -35,7 +35,13 @@ import {
 import { DisplayMechanismEnums, displayMechanismsOptions } from "../data/displayMechanismEnums";
 import { campaignTriggerCriteria, campaignTriggerCriteriaOptions } from "../data/campaignTriggerCriteria";
 
-export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit, initialValues, isAddMode }) {
+export default function ParentPromoCodeForm({
+    isSubmitting = false,
+    handleSubmit,
+    initialValues,
+    isAddMode,
+    isCampaignInUse = false,
+}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [webImage, setWebImage] = useState(null);
@@ -335,6 +341,7 @@ export default function ParentPromoCodeForm({ isSubmitting = false, handleSubmit
                         campaignCodesOptions={campaignCodesOptions}
                         countryData={countryData}
                         campaignStatusOptions={campaignStatusOptions}
+                        isCampaignInUse={isCampaignInUse}
                     />
 
                     <Divider />

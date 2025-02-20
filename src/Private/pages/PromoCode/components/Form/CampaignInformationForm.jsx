@@ -6,7 +6,13 @@ import FormSelect from "App/core/hook-form/FormSelect";
 import FormTextField from "App/core/hook-form/FormTextField";
 import FormDateTimePicker from "App/core/hook-form/FormDateTimePicker";
 
-const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData, campaignStatusOptions }) => {
+const CampaignInformationForm = ({
+    isAddMode,
+    campaignCodesOptions,
+    countryData,
+    campaignStatusOptions,
+    isCampaignInUse = false,
+}) => {
     const { register, control } = useFormContext();
 
     return (
@@ -50,7 +56,14 @@ const CampaignInformationForm = ({ isAddMode, campaignCodesOptions, countryData,
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField required type="number" name="Campaign.Budget" label="Budget" control={control} />
+                <FormTextField
+                    required
+                    type="number"
+                    name="Campaign.Budget"
+                    label="Budget"
+                    control={control}
+                    disabled={isCampaignInUse}
+                />
             </Grid>
 
             <Grid item xs={12} md={6} lg={3}>

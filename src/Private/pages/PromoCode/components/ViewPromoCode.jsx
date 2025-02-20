@@ -377,6 +377,7 @@ export default function ViewPromoCode() {
                                     rowMode="row"
                                     definition={CampaignDefinition}
                                     data={data}
+                                    isLoading={loading}
                                 />
                             </Wrapper>
                         </Grid>
@@ -394,6 +395,7 @@ export default function ViewPromoCode() {
                                     rowMode="row"
                                     definition={CampaignBudgetDefinition}
                                     data={data}
+                                    isLoading={loading}
                                 />
 
                                 <Box alignItems="flex-end">
@@ -417,6 +419,7 @@ export default function ViewPromoCode() {
                                     rowMode="row"
                                     definition={AdditionalDataDefinition}
                                     data={data}
+                                    isLoading={loading}
                                 />
                             </Wrapper>
                         </Grid>
@@ -438,7 +441,11 @@ export default function ViewPromoCode() {
                                     Attribute Values
                                 </Typography>
 
-                                <TanstackReactTable columns={Attributecolumns} data={attributeFamilyData} />
+                                <TanstackReactTable
+                                    columns={Attributecolumns}
+                                    data={attributeFamilyData}
+                                    loading={loading}
+                                />
                             </Grid>
                         )}
 
@@ -453,15 +460,23 @@ export default function ViewPromoCode() {
                                         Referrer
                                     </Typography>
 
-                                    <TanstackReactTable columns={referrerColumns} data={referralFamilyCampaignsData} />
+                                    <TanstackReactTable
+                                        columns={referrerColumns}
+                                        data={referralFamilyCampaignsData}
+                                        loading={loading}
+                                    />
                                 </Grid>
 
                                 <Grid item marginTop={2}>
                                     <Typography variant="body1" fontWeight={600}>
-                                        Referrer
+                                        Referee
                                     </Typography>
 
-                                    <TanstackReactTable columns={refereeColumns} data={referralFamilyCampaignsData} />
+                                    <TanstackReactTable
+                                        columns={refereeColumns}
+                                        data={referralFamilyCampaignsData}
+                                        loading={loading}
+                                    />
                                 </Grid>
                             </Grid>
                         )}
@@ -472,7 +487,7 @@ export default function ViewPromoCode() {
                                     Discount Details
                                 </Typography>
 
-                                <TanstackReactTable columns={columns} data={promoCodeData} />
+                                <TanstackReactTable columns={columns} data={promoCodeData} loading={loading} />
                             </Grid>
                         )}
                     </Grid>
@@ -480,33 +495,38 @@ export default function ViewPromoCode() {
                     <StyleImageWrapper>
                         <Wrapper>
                             <Typography variant="h6">Campaign Images</Typography>
-
-                            <Box display="flex" flexDirection="column" gap={4}>
-                                {filteredPromoImages.length > 0 ? (
-                                    filteredPromoImages.map((image, index) => (
-                                        <Card key={index}>
-                                            <CardActionArea>
-                                                <Typography variant="body2" sx={{ p: 1 }}>
-                                                    {image.label}
-                                                </Typography>
-                                                <CardMedia
-                                                    sx={{
-                                                        objectFit: "contain",
-                                                        height: image.height,
-                                                    }}
-                                                    component="img"
-                                                    image={image.src}
-                                                    alt={image.label}
-                                                />
-                                            </CardActionArea>
-                                        </Card>
-                                    ))
-                                ) : (
-                                    <Typography alignItems="center" textAlign="center">
-                                        No images available
-                                    </Typography>
-                                )}
-                            </Box>
+                            {loading ? (
+                                <Typography alignItems="center" textAlign="center">
+                                    Loading...
+                                </Typography>
+                            ) : (
+                                <Box display="flex" flexDirection="column" gap={4}>
+                                    {filteredPromoImages.length > 0 ? (
+                                        filteredPromoImages.map((image, index) => (
+                                            <Card key={index}>
+                                                <CardActionArea>
+                                                    <Typography variant="body2" sx={{ p: 1 }}>
+                                                        {image.label}
+                                                    </Typography>
+                                                    <CardMedia
+                                                        sx={{
+                                                            objectFit: "contain",
+                                                            height: image.height,
+                                                        }}
+                                                        component="img"
+                                                        image={image.src}
+                                                        alt={image.label}
+                                                    />
+                                                </CardActionArea>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <Typography alignItems="center" textAlign="center">
+                                            No images available
+                                        </Typography>
+                                    )}
+                                </Box>
+                            )}
                         </Wrapper>
                     </StyleImageWrapper>
                 </ResponsiveBox>

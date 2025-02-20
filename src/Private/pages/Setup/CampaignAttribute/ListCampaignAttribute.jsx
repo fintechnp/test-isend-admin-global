@@ -82,32 +82,34 @@ function ListCampaignAttribute() {
         },
         {
             header: "Actions",
-            cell: ({ row }) => (
-                <PopoverButton>
-                    {({ onClose }) => (
-                        <>
-                            <HasPermission permission={permissions.EDIT_CAMPAIGN_ATTRIBUTE_FAMILY}>
-                                <ListItemButton
-                                    onClick={() => {
-                                        dispatch(attributeFamilyActions.open_update_modal(row.original));
-                                    }}
-                                >
-                                    Edit
-                                </ListItemButton>
-                            </HasPermission>
-                            <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
-                                <ListItemButton
-                                    onClick={() => {
-                                        handleCampaignAttribute(row.original.attributeFamilyId, onClose());
-                                    }}
-                                >
-                                    Delete
-                                </ListItemButton>
-                            </HasPermission>
-                        </>
-                    )}
-                </PopoverButton>
-            ),
+            cell: ({ row }) =>
+                !row.original?.isAttributeFamilyInUse && (
+                    <PopoverButton>
+                        {({ onClose }) => (
+                            <>
+                                <HasPermission permission={permissions.EDIT_CAMPAIGN_ATTRIBUTE_FAMILY}>
+                                    <ListItemButton
+                                        onClick={() => {
+                                            dispatch(attributeFamilyActions.open_update_modal(row.original));
+                                        }}
+                                    >
+                                        Edit
+                                    </ListItemButton>
+                                </HasPermission>
+                                <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
+                                    <ListItemButton
+                                        onClick={() => {
+                                            handleCampaignAttribute(row.original.attributeFamilyId);
+                                            onClose();
+                                        }}
+                                    >
+                                        Delete
+                                    </ListItemButton>
+                                </HasPermission>
+                            </>
+                        )}
+                    </PopoverButton>
+                ),
         },
     ]);
 

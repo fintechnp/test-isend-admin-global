@@ -124,6 +124,7 @@ const EditPromoCode = () => {
                         isSubmitting={isLoading}
                         handleSubmit={handleSubmit}
                         initialValues={initialValues}
+                        isCampaignInUse={getUpdateById?.isCampaignInUse}
                     />
                 </Box>
             </PageContentContainer>
