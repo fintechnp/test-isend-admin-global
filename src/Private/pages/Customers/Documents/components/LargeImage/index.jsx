@@ -17,6 +17,7 @@ import FitScreenOutlinedIcon from "@mui/icons-material/FitScreenOutlined";
 import Row from "App/components/Row/Row";
 import TextButton from "App/components/Button/TextButton";
 
+import Image from "../Image";
 import { ReferenceName } from "App/helpers";
 import { ListItemButton } from "@mui/material";
 
@@ -120,7 +121,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function LargeImage({ image, side, title, enablePopoverAction }) {
+function LargeImage({ image, side, title, enablePopoverAction, enableImage }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -135,6 +136,10 @@ function LargeImage({ image, side, title, enablePopoverAction }) {
         <div>
             {enablePopoverAction ? (
                 <ListItemButton onClick={handleClickOpen}>View Image</ListItemButton>
+            ) : enableImage ? (
+                <Box onClick={handleClickOpen}>
+                    <Image document={image} />
+                </Box>
             ) : (
                 <Tooltip title="Enlarge Image" arrow>
                     <IconButton sx={{ paddingRight: "6px" }} onClick={handleClickOpen}>

@@ -92,7 +92,12 @@ function Documents(props) {
                                 getValue().toLowerCase().includes(".pdf") ? (
                                     "PDF Document"
                                 ) : (
-                                    <Image document={getValue()} />
+                                    <LargeImage
+                                        side={row.original.side}
+                                        title={row.original.type}
+                                        image={row.original?.document}
+                                        enableImage
+                                    />
                                 )
                             ) : (
                                 <Image document="https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg" />
@@ -106,15 +111,17 @@ function Documents(props) {
                 accessorKey: "type",
                 cell: ({ getValue, row }) => (
                     <Column>
-                        <Typography>{getValue() ? ReferenceName(2, getValue()) : ""}</Typography>
-                        <Typography>{row.original?.side ? ReferenceName(48, row.original?.side) : ""}</Typography>
+                        {/* <Typography>{getValue() ? ReferenceName(2, getValue()) : ""}</Typography> */}
+                        <Typography>{row.original?.side ? row.original?.side : ""}</Typography>
                     </Column>
                 ),
             },
             {
                 header: "Name",
                 accessorKey: "name",
-                cell: ({ getValue }) => <>{getValue() ? getValue() : ""}</>,
+                cell: ({ getValue, row }) => (
+                    <Typography>{row.original?.type ? ReferenceName(2, row.original?.type) : ""}</Typography>
+                ),
             },
             {
                 header: "Status",
@@ -228,7 +235,7 @@ function Documents(props) {
                         </>
                     }
                 >
-                    <TanstackReactTable data={Documents?.data || []} columns={columns} />
+                    <TanstackReactTable data={Documents?.data || []} columns={columns} loading={loading} />
                 </PageContentContainer>
                 <TablePagination
                     paginationData={Documents?.pagination}
