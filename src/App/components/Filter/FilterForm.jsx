@@ -109,8 +109,10 @@ export default function FilterForm({ open, onClose, onSubmit, onReset, onDelete,
     const { handleSubmit, reset } = methods;
 
     const handleOnSubmit = (data) => {
+        const cleanedData = Object.fromEntries(Object.entries(data).filter(([_, value]) => !isEmpty(value)));
+
         onClose?.();
-        onSubmit?.(data);
+        onSubmit?.(cleanedData);
     };
 
     const handleOnReset = () => {
