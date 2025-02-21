@@ -185,6 +185,7 @@ const routePaths = {
 
     // region setup
     ListCampaignAttribute: "/setup/campaigns/attributes",
+    CampaignAttributeHistory: "/setup/campaigns/attributes/:id/history",
 
     // region - Campaign Reports
 

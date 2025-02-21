@@ -578,6 +578,7 @@ import {
     getAttributeFamilyReducer,
     updateAttributeFamilyReducer,
     deleteAttributeFamilyReducer,
+    getAttributeFamilyLogReducer,
 } from "./features/attributeFamily/attributeFamilyReducer";
 
 // region: User Profile Setup
@@ -1216,6 +1217,7 @@ export const privateReducer = {
     delete_attribute_family: deleteAttributeFamilyReducer,
     add_attribute_family: addAttributeFamilyReducer,
     update_attribute_family: updateAttributeFamilyReducer,
+    get_attribute_family_logs: getAttributeFamilyLogReducer,
 
     // Application Config
     get_application_config: GetApplicationConfigReducer,

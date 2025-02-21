@@ -29,7 +29,7 @@ export const deleteAttributeFamily = takeEvery(attributeFamilyActions.DELETE_ATT
         yield put({ type: "SET_TOAST_DATA", response: res });
     } catch (error) {
         yield put({
-            type: attributeFamilyActions.DELETE_ATTRIBUTE_FAMILY_FAILED,
+            type: attributeFamilyActions.DELETE_ATTRIBUTE_FAMILY_FAILURE,
             error: error?.data,
         });
         yield put({ type: "SET_TOAST_DATA", response: error?.data });
@@ -70,6 +70,28 @@ export const updateAttributeFamily = takeEvery(attributeFamilyActions.UPDATE_ATT
     }
 });
 
+export const getAttributeFamilyLogs = takeEvery(attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS, function* (action) {
+    try {
+        const res = yield call(api.get, `attribute-family/${action.id}/logs`);
+        yield put({
+            type: attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS_SUCCESS,
+            response: res,
+        });
+    } catch (error) {
+        yield put({
+            type: attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS_FAILURE,
+            error: error?.data,
+        });
+        yield put({ type: "SET_TOAST_DATA", response: error?.data });
+    }
+});
+
 export default function* attributeFamilySaga() {
-    yield all([getAttributeFamilyList, deleteAttributeFamily, addAttributeFamily, updateAttributeFamily]);
+    yield all([
+        getAttributeFamilyList,
+        deleteAttributeFamily,
+        addAttributeFamily,
+        updateAttributeFamily,
+        getAttributeFamilyLogs,
+    ]);
 }

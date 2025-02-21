@@ -190,9 +190,45 @@ const deleteAttributeFamilyReducer = (state = deleteAttributeFamilyInitialState,
     }
 };
 
+const getAttributeFamilyLogInitialState = {
+    success: false,
+    loading: false,
+    error: null,
+    response: null,
+};
+
+const getAttributeFamilyLogReducer = (state = getAttributeFamilyLogInitialState, action) => {
+    switch (action.type) {
+        case attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS:
+            return {
+                ...state,
+                loading: true,
+            };
+        case attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS_SUCCESS:
+            return {
+                ...state,
+                success: true,
+                loading: false,
+                error: null,
+                response: action.response,
+            };
+        case attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS_FAILURE:
+            return {
+                ...state,
+                success: false,
+                loading: false,
+                error: action.error,
+                response: null,
+            };
+        default:
+            return state;
+    }
+};
+
 export {
     addAttributeFamilyReducer,
     getAttributeFamilyReducer,
     updateAttributeFamilyReducer,
     deleteAttributeFamilyReducer,
+    getAttributeFamilyLogReducer,
 };

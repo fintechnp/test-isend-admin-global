@@ -206,6 +206,7 @@ import ListEmailElement from "Private/components/email-template/ListEmailElement
 import ListApplicationConfig from "Private/pages/Setup/ApplicationConfig/ListApplicationConfig";
 import Policies from "Private/pages/Setup/policies";
 import ListEmailConfig from "Private/pages/Utilities/EmailConfig";
+import CampaignAttributeHistoryLogs from "Private/pages/Setup/CampaignAttribute/CampaignAttributeHistoryLogs";
 
 const privateRoutes = [
     { path: "/", component: <Dashboard title="Dashboard" /> },
@@ -776,6 +777,10 @@ const privateRoutes = [
     {
         path: routePaths.ListCampaignAttribute,
         component: <ListCampaignAttribute />,
+    },
+    {
+        path: routePaths.CampaignAttributeHistory,
+        component: <CampaignAttributeHistoryLogs />,
     },
     // Promo Code
     {

@@ -1,7 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ListItemButton from "@mui/material/ListItemButton";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import Button from "App/components/Button/Button";
 import Column from "App/components/Column/Column";
@@ -15,6 +16,8 @@ import TanstackReactTable from "App/components/Table/TanstackReactTable";
 import PageContentContainer from "App/components/Container/PageContentContainer";
 
 import dateUtils from "App/utils/dateUtils";
+import buildRoute from "App/helpers/buildRoute";
+import routePaths from "Private/config/routePaths";
 import { permissions } from "Private/data/permissions";
 import withPermission from "Private/HOC/withPermission";
 import attributeFamilyActions from "Private/features/attributeFamily/attributeFamilyActions";
@@ -22,6 +25,7 @@ import attributeFamilyActions from "Private/features/attributeFamily/attributeFa
 function ListCampaignAttribute() {
     const dispatch = useDispatch();
     const confirm = useConfirm();
+    const navigate = useNavigate();
     const { response: attributeFamiliesData, loading: isLoading } = useSelector(
         (state) => state.get_attribute_family_list,
     );
@@ -82,34 +86,49 @@ function ListCampaignAttribute() {
         },
         {
             header: "Actions",
-            cell: ({ row }) =>
-                !row.original?.isAttributeFamilyInUse && (
-                    <PopoverButton>
-                        {({ onClose }) => (
-                            <>
-                                <HasPermission permission={permissions.EDIT_CAMPAIGN_ATTRIBUTE_FAMILY}>
-                                    <ListItemButton
-                                        onClick={() => {
-                                            dispatch(attributeFamilyActions.open_update_modal(row.original));
-                                        }}
-                                    >
-                                        Edit
-                                    </ListItemButton>
-                                </HasPermission>
-                                <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
-                                    <ListItemButton
-                                        onClick={() => {
-                                            handleCampaignAttribute(row.original.attributeFamilyId);
-                                            onClose();
-                                        }}
-                                    >
-                                        Delete
-                                    </ListItemButton>
-                                </HasPermission>
-                            </>
-                        )}
-                    </PopoverButton>
-                ),
+            cell: ({ row }) => (
+                <PopoverButton>
+                    {({ onClose }) => (
+                        <>
+                            {!row.original?.isAttributeFamilyInUse && (
+                                <>
+                                    <HasPermission permission={permissions.EDIT_CAMPAIGN_ATTRIBUTE_FAMILY}>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                dispatch(attributeFamilyActions.open_update_modal(row.original));
+                                            }}
+                                        >
+                                            Edit
+                                        </ListItemButton>
+                                    </HasPermission>
+                                    <HasPermission permission={permissions.DELETE_CAMPAIGN_ATTRIBUTE_FAMILY}>
+                                        <ListItemButton
+                                            onClick={() => {
+                                                handleCampaignAttribute(row.original.attributeFamilyId);
+                                                onClose();
+                                            }}
+                                        >
+                                            Delete
+                                        </ListItemButton>
+                                    </HasPermission>
+                                </>
+                            )}
+                            <ListItemButton
+                                onClick={() =>
+                                    navigate(
+                                        buildRoute(
+                                            routePaths.CampaignAttributeHistory,
+                                            row?.original?.attributeFamilyId,
+                                        ),
+                                    )
+                                }
+                            >
+                                View History Logs
+                            </ListItemButton>
+                        </>
+                    )}
+                </PopoverButton>
+            ),
         },
     ]);
 
