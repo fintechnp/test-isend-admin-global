@@ -24,6 +24,10 @@ const attributeFamilyActions = {
     OPEN_UPDATE_ATTRIBUTE_FAMILY_MODAL: "OPEN_UPDATE_ATTRIBUTE_FAMILY_MODAL",
     CLOSE_UPDATE_ATTRIBUTE_FAMILY_MODAL: "CLOSE_UPDATE_ATTRIBUTE_FAMILY_MODAL",
 
+    GET_ATTRIBUTE_FAMILY_LOGS: "GET_ATTRIBUTE_FAMILY_LOGS",
+    GET_ATTRIBUTE_FAMILY_LOGS_SUCCESS: "GET_ATTRIBUTE_FAMILY_LOGS_SUCCESS",
+    GET_ATTRIBUTE_FAMILY_LOGS_FAILURE: "GET_ATTRIBUTE_FAMILY_LOGS_FAILURE",
+
     get_attribute_family_list: () => ({
         type: attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LIST,
     }),
@@ -70,6 +74,11 @@ const attributeFamilyActions = {
 
     close_update_modal: () => ({
         type: attributeFamilyActions.CLOSE_UPDATE_ATTRIBUTE_FAMILY_MODAL,
+    }),
+
+    get_attribute_family_logs: (id) => ({
+        type: attributeFamilyActions.GET_ATTRIBUTE_FAMILY_LOGS,
+        id,
     }),
 };
 
