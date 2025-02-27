@@ -11,6 +11,7 @@ import isEmpty from "App/helpers/isEmpty";
 import debounce from "App/helpers/debounce";
 import buildRoute from "App/helpers/buildRoute";
 import apiEndpoints from "Private/config/apiEndpoints";
+import BaseUrlConfiguration from "App/lib/BaseUrlConfiguration";
 
 const http = new Api();
 
@@ -57,7 +58,7 @@ export default function SelectBulkEmailGroup(props) {
     const fetchBulkEmailGroups = async () => {
         setIsLoading(true);
         try {
-            let endpoint = `${app.apiBaseUrl + "/" + apiEndpoints.bulkEmailGroup.list}?${new URLSearchParams(params)}`;
+            let endpoint = `${BaseUrlConfiguration.getApiBaseUrl() + "/" + apiEndpoints.bulkEmailGroup.list}?${new URLSearchParams(params)}`;
             let response = await http.get(endpoint);
             let data = response.data;
             if (data) {
