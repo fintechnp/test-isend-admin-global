@@ -68,7 +68,7 @@ export const updateCustomerFormStep2Schema = updateCustomerFormStep1Schema.shape
         then: (schema) => schema.required("Street Number is required"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
-    address: Yup.string().required("Address is required").max(50),
+    address: Yup.string().required("Address is required"),
     [IS_STATE_REQUIRED]: Yup.bool(),
 });
 
