@@ -58,9 +58,13 @@ const ImageWrapper = styled(Box)(({ theme }) => ({
         minHeight: "150px",
     },
     "& .MuiCardMedia-root": {
-        width: "100%",
-        height: "100%",
+        height: "70vh",
+        width: "auto",
         objectFit: "cover",
+    },
+    "& img": {
+        height: "70vh",
+        width: "auto",
     },
 }));
 
@@ -137,8 +141,8 @@ function LargeImage({ image, side, title, enablePopoverAction, enableImage }) {
             {enablePopoverAction ? (
                 <ListItemButton onClick={handleClickOpen}>View Image</ListItemButton>
             ) : enableImage ? (
-                <Box onClick={handleClickOpen}>
-                    <Image document={image} />
+                <Box onClick={handleClickOpen} height="100px" textAlign="center">
+                    <img src={image} style={{ height: "100%", width: "auto", objectFit: "contain" }} />
                 </Box>
             ) : (
                 <Tooltip title="Enlarge Image" arrow>
