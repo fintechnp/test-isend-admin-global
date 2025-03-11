@@ -1,13 +1,16 @@
 import React from "react";
+import * as Yup from "yup";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import { useForm } from "react-hook-form";
 import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Field, Form, reduxForm, reset } from "redux-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Validator from "App/utils/validators";
-import SelectField from "App/components/Fields/SelectField";
-import CheckboxField from "App/components/Fields/CheckboxField";
+import HookForm from "App/core/hook-form/HookForm";
+import FormSelect from "App/core/hook-form/FormSelect";
+import FormCheckbox from "App/core/hook-form/FormCheckbox";
+import FormTextField from "App/core/hook-form/FormTextField";
 
 const BlockBox = styled(Box)(({ theme }) => ({
     width: "100%",
@@ -34,60 +37,72 @@ const RefundButton = styled(LoadingButton)(({ theme }) => ({
     },
 }));
 
-function RefundForm({ handleSubmit, loading }) {
+function RefundForm({ onSubmit, loading, initialValues }) {
     const reference = JSON.parse(localStorage.getItem("reference"));
+
+    const remarksOptions =
+        reference &&
+        reference
+            ?.filter((ref_data) => ref_data.reference_type === 54)[0]
+            .reference_data.map((data) => ({
+                label: data.name,
+                value: data.value,
+            }));
+
+    const methods = useForm({
+        defaultValues: initialValues,
+        resolver: yupResolver(
+            Yup.object().shape({
+                remarks: Yup.string().required("Remarks is Required"),
+                others: Yup.string().when("remarks", {
+                    is: (value) => value === "others",
+                    then: (schema) => schema.required("Remarks is Required"),
+                }),
+                refund_charge: Yup.boolean(),
+            }),
+        ),
+    });
+
+    const { watch } = methods;
+    const reasonValue = watch("remarks");
 
     return (
         <Grid container sx={{ pb: "24px" }}>
             <Grid item xs={12}>
-                <Form onSubmit={handleSubmit}>
+                <HookForm onSubmit={onSubmit} {...methods}>
                     <BlockBox>
-                        <Box
-                            sx={{
-                                width: "100%",
-                                display: "flex",
-                                columnGap: 2,
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <Field
-                                name="remarks"
-                                type="text"
-                                small={12}
-                                component={SelectField}
-                                validate={[Validator.emptyValidator, Validator.minValue1, Validator.maxLength50]}
-                            >
-                                <option value="" disabled>
-                                    Select Reason
-                                </option>
-                                {reference &&
-                                    reference
-                                        ?.filter((ref_data) => ref_data.reference_type === 54)[0]
-                                        .reference_data.map((data) => (
-                                            <option value={data.value} key={data.reference_id}>
-                                                {data.name}
-                                            </option>
-                                        ))}
-                            </Field>
-                            <Field
-                                name="refund_charge"
-                                label="Refund Charge"
-                                small={4}
-                                reverse="row-reverse"
-                                component={CheckboxField}
-                                validate={Validator.emptyValidator}
-                            />
-                        </Box>
+                        <Grid container columnGap={2}>
+                            <Grid item xs={12} sm={6} md={4}>
+                                <FormSelect
+                                    name="remarks"
+                                    type="text"
+                                    options={[
+                                        ...remarksOptions,
+                                        {
+                                            label: "Others",
+                                            value: "others",
+                                        },
+                                    ]}
+                                    label="Select Reason"
+                                />
+                            </Grid>
+                            {reasonValue === "others" && (
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <FormTextField name="others" label="Remarks" />
+                                </Grid>
+                            )}
+                            <Grid item xs={12} sm={6} md={3}>
+                                <FormCheckbox name="refund_charge" label="Refund Charge" />
+                            </Grid>
+                        </Grid>
                         <RefundButton size="small" variant="outlined" loading={loading} type="submit">
                             Refund
                         </RefundButton>
                     </BlockBox>
-                </Form>
+                </HookForm>
             </Grid>
         </Grid>
     );
 }
 
-export default reduxForm({ form: "refund_form_transaction" })(RefundForm);
+export default RefundForm;

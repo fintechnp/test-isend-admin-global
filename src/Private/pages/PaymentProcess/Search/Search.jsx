@@ -85,8 +85,8 @@ function Search(props) {
 
     const handleRefund = (data) => {
         dispatch(
-            actions.refund_transactions(data?.id, {
-                remarks: data?.remarks,
+            actions.refund_transactions(data.id, {
+                remarks: data?.remarks === "others" ? data.others : data?.remarks,
                 refund_charge: data?.refund_charge,
             }),
         );
