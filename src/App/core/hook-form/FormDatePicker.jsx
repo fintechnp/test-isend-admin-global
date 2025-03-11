@@ -89,7 +89,8 @@ function FormDatePicker({
                                         {/* {required && <span style={{ color: "red" }}>*</span>} */}
                                         {isOptional && (
                                             <Typography component="span" variant="caption">
-                                                ( Optional )
+                                                {" "}
+                                                (Optional)
                                             </Typography>
                                         )}
                                     </>

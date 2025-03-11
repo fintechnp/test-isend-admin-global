@@ -16,10 +16,11 @@ const BasicForm = () => {
                     labelKey="name"
                     valueKey="value"
                     referenceTypeId={referenceTypeId.relations}
+                    required
                 />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField name="first_name" label="First Name" />
+                <FormTextField name="first_name" label="First Name" required />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
                 <FormTextField name="middle_name" label="Middle Name" />

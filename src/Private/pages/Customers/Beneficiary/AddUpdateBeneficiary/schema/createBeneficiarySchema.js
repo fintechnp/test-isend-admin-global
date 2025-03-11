@@ -17,7 +17,7 @@ export const form2Schema = form1Schema.concat(
             .required("Phone Number is required")
             .matches(/^\d{8,12}$/, "Invalid Mobile Number")
             .nullable(),
-        date_of_birth: Yup.string().required("Date of birth is required"),
+        date_of_birth: Yup.string(),
     }),
 );
 
