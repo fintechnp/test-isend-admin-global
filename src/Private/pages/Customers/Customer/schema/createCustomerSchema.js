@@ -62,7 +62,7 @@ export const createCustomerFormStep2Schema = createCustomerFormStep1Schema.shape
                 return new RegExp(context.parent[POSTAL_CODE_REGEX] ?? "").test(value ?? "");
             },
         }),
-    unit: Yup.string().optional().max(50),
+    unit: Yup.string().nullable().optional().max(50),
     street: Yup.string().required("Street is required").max(50),
     city: Yup.string().required("City is required").max(50),
     state: Yup.string().when(IS_STATE_REQUIRED, {
@@ -81,7 +81,7 @@ export const createCustomerFormStep2Schema = createCustomerFormStep1Schema.shape
         then: (schema) => schema.required("Street Number is required"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
-    address: Yup.string().required("Address is required"),
+    address: Yup.string().nullable(),
     [IS_STATE_REQUIRED]: Yup.bool(),
     register_agent_id: Yup.string().required("Select a partner"),
 });
