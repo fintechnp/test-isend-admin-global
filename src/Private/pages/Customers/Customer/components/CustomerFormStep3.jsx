@@ -41,7 +41,7 @@ export default function CustomerFormStep3({ isAddMode }) {
                 <FormDatePicker name="id_issue_date" label="Issued Date" required />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormDatePicker name="id_expiry_date" label="Expiry Date" />
+                <FormDatePicker name="id_expiry_date" label="Expiry Date" isOptional />
             </Grid>
             <Grid item xs={8} />
             {isAddMode && (

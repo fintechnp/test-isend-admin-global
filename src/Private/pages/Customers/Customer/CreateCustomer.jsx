@@ -23,7 +23,7 @@ function CreateCustomer() {
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
             if (!Array.isArray(data[key])) {
-                formData.append(key, data[key]);
+                formData.append(key, data[key] === undefined ? "" : data[key]);
             }
         });
 

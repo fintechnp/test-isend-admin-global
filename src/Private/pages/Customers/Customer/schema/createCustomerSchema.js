@@ -7,7 +7,7 @@ import { CustomerDocumentSide } from "../data/CustomerDocumentSide";
 export const createCustomerFormStep1Schema = Yup.object().shape({
     first_name: Yup.string().required("First Name is required").max(50, "Maximum 50 characters allowed"),
     middle_name: Yup.string().nullable().max(50, "Maximum 50 characters allowed"),
-    last_name: Yup.string().nullable().max(50, "Maximum 50 characters allowed"),
+    last_name: Yup.string().required("Last Name is required").max(50, "Maximum 50 characters allowed"),
     birth_country: Yup.string().required("Birth country is required"),
     citizenship_country: Yup.string().required("Nationality is required"),
     date_of_birth: Yup.string()
