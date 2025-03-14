@@ -84,7 +84,7 @@ export default function CustomerFormStep2({ isAddMode }) {
                 </Grid>
             )}
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField name="address" label="Address" required />
+                <FormTextField name="address" label="Address" isOptional />
             </Grid>
             <LoadingBackdrop open={isLoading} />
         </Grid>

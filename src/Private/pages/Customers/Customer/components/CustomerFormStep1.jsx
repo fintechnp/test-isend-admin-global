@@ -53,10 +53,11 @@ export default function CustomerFormStep1({ isAddMode }) {
                     label="Gender"
                     referenceTypeId={referenceTypeId.genders}
                     valueKey="value"
+                    required
                 />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormDatePicker name="date_of_birth" label="Date of birth" disableFuture />
+                <FormDatePicker name="date_of_birth" label="Date of birth" disableFuture required />
             </Grid>
             {isAddMode && (
                 <>

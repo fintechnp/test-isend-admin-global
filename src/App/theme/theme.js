@@ -187,6 +187,9 @@ export const ChangeTheme = (mode = true) => {
                     root: {
                         fontFamily: fonts.secondary,
                     },
+                    asterisk: {
+                        color: "red",
+                    },
                 },
             },
             MuiTextField: {

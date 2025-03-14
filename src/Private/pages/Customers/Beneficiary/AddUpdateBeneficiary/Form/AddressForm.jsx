@@ -42,25 +42,36 @@ const AddressForm = () => {
     return (
         <Grid container spacing="16px">
             <Grid item xs={12} md={6} lg={3}>
-                <FormSelect name="country" label="Beneficary Country" onChange={handleCurrency} options={countryMap} />
+                <FormSelect
+                    name="country"
+                    label="Beneficary Country"
+                    onChange={handleCurrency}
+                    options={countryMap}
+                    required
+                />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField name="unit" label="Postal Code (Optional)" type="number" />
+                <FormTextField name="unit" label="Postal Code" type="number" isOptional />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField name="state" label="State / Province" />
+                <FormTextField name="state" label="State / Province" isOptional />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField name="city" label="City / Town" />
+                <FormTextField name="city" label="City / Town" required />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormTextField name="street" label="Street" />
+                <FormTextField name="street" label="Street" required />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormPhoneNumber dialingCodeName="phone_country_code" name="mobile_number" label="Phone Number" />
+                <FormPhoneNumber
+                    dialingCodeName="phone_country_code"
+                    name="mobile_number"
+                    label="Phone Number"
+                    required
+                />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-                <FormDatePicker name="date_of_birth" label="Date of Birth" />
+                <FormDatePicker name="date_of_birth" label="Date of Birth" isOptional />
             </Grid>
         </Grid>
     );

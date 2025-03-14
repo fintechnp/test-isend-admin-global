@@ -7,7 +7,7 @@ import { CustomerDocumentSide } from "../data/CustomerDocumentSide";
 export const createCustomerFormStep1Schema = Yup.object().shape({
     first_name: Yup.string().required("First Name is required").max(50, "Maximum 50 characters allowed"),
     middle_name: Yup.string().nullable().max(50, "Maximum 50 characters allowed"),
-    last_name: Yup.string().nullable().max(50, "Maximum 50 characters allowed"),
+    last_name: Yup.string().required("Last Name is required").max(50, "Maximum 50 characters allowed"),
     birth_country: Yup.string().required("Birth country is required"),
     citizenship_country: Yup.string().required("Nationality is required"),
     date_of_birth: Yup.string()
@@ -62,7 +62,7 @@ export const createCustomerFormStep2Schema = createCustomerFormStep1Schema.shape
                 return new RegExp(context.parent[POSTAL_CODE_REGEX] ?? "").test(value ?? "");
             },
         }),
-    unit: Yup.string().optional().max(50),
+    unit: Yup.string().nullable().optional().max(50),
     street: Yup.string().required("Street is required").max(50),
     city: Yup.string().required("City is required").max(50),
     state: Yup.string().when(IS_STATE_REQUIRED, {
@@ -81,7 +81,7 @@ export const createCustomerFormStep2Schema = createCustomerFormStep1Schema.shape
         then: (schema) => schema.required("Street Number is required"),
         otherwise: (schema) => schema.nullable().optional(),
     }),
-    address: Yup.string().required("Address is required"),
+    address: Yup.string().nullable(),
     [IS_STATE_REQUIRED]: Yup.bool(),
     register_agent_id: Yup.string().required("Select a partner"),
 });
