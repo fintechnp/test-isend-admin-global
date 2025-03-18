@@ -145,7 +145,11 @@ const Fcm = () => {
                 ),
                 accessorKey: "body",
                 cell: ({ row }) => (
-                    <Box>
+                    <Box
+                        sx={{
+                            width: "300px",
+                        }}
+                    >
                         <Text component="span">{row.original.body ? row.original.body : "N/A"}</Text>
                     </Box>
                 ),
