@@ -28,6 +28,7 @@ import { emailStatus } from "../Sms/data/emailStatus";
 import { permissions } from "Private/data/permissions";
 import ViewEmailModal from "./ViewEmail/ViewEmailModal";
 import withPermission from "Private/HOC/withPermission";
+import { Box, Checkbox, FormControlLabel } from "@mui/material";
 
 const initialState = {
     page_number: 1,
@@ -58,6 +59,7 @@ const schema = Yup.object().shape({
 
 const Email = () => {
     const dispatch = useDispatch();
+    const [showAllEmails, setShowAllEmails] = useState(true);
 
     const methods = useListFilterStore({ initialState });
 
@@ -295,6 +297,19 @@ const Email = () => {
                     title="Email List"
                     topRightContent={
                         <>
+                            {/* <Box>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={showAllEmails}
+                                            onChange={(e) => {
+                                                setShowAllEmails(e.target.checked ? true : false);
+                                            }}
+                                        />
+                                    }
+                                    label="Show All Emails"
+                                />
+                            </Box> */}
                             <TableGridQuickFilter
                                 onSortByChange={onQuickFilter}
                                 onOrderByChange={onQuickFilter}

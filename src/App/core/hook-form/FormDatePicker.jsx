@@ -32,6 +32,7 @@ function FormDatePicker({
     withStartDayTimezone,
     withEndDayTimezone,
     isOptional,
+    isClearable = false,
 }) {
     const [open, setOpen] = useState(false);
 
@@ -41,7 +42,10 @@ function FormDatePicker({
         setValue,
         formState: { errors },
         getValues,
+        watch,
     } = useFormContext();
+
+    const watchValue = watch(name);
 
     useEffect(() => {
         if (!value && !defaultValue && !getValues(name)) setValue(name, undefined);
@@ -78,7 +82,7 @@ function FormDatePicker({
                                 onChange?.(null);
                             }
                         }}
-                        value={field.value ?? null}
+                        value={watchValue ?? null}
                         inputFormat={dateFormat}
                         renderInput={(params) => (
                             <TextField
@@ -112,6 +116,29 @@ function FormDatePicker({
                                     ...params.inputProps,
                                     readOnly: true,
                                     onClick: (e) => setOpen(true),
+                                }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <>
+                                            {params.InputProps?.endAdornment}
+                                            {watchValue && isClearable && (
+                                                <button
+                                                    onClick={() => {
+                                                        setValue(name, undefined);
+                                                    }}
+                                                    style={{
+                                                        border: "none",
+                                                        background: "transparent",
+                                                        cursor: "pointer",
+                                                        marginLeft: 8,
+                                                    }}
+                                                >
+                                                    ❌
+                                                </button>
+                                            )}
+                                        </>
+                                    ),
                                 }}
                             />
                         )}
