@@ -202,7 +202,15 @@ function Search() {
             {
                 header: "Acc. Status",
                 accessorKey: "is_active",
-                cell: ({ getValue }) => <CustomerStatusBadge status={getValue() ? "active" : "blocked"} />,
+                cell: ({ getValue, row }) => {
+                    let status = getValue() ? "active" : "blocked";
+
+                    if (row.original.is_deleted && !row.original.is_active) {
+                        status = "closed";
+                    }
+
+                    return <CustomerStatusBadge status={status} />;
+                },
             },
             {
                 header: "Created Status",
