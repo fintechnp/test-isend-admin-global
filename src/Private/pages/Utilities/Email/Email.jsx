@@ -59,7 +59,7 @@ const schema = Yup.object().shape({
 
 const Email = () => {
     const dispatch = useDispatch();
-    const [showAllEmails, setShowAllEmails] = useState(true);
+    const [showAllEmails, setShowAllEmails] = useState(false);
 
     const methods = useListFilterStore({ initialState });
 
@@ -88,10 +88,15 @@ const Email = () => {
     }));
 
     useEffect(() => {
-        dispatch(actions.get_email(filterSchema));
+        dispatch(
+            actions.get_email({
+                ...filterSchema,
+                view_all: showAllEmails,
+            }),
+        );
         dispatch({ type: "CREATE_EMAIL_RESET" });
         dispatch({ type: "DELETE_EMAIL_RESET" });
-    }, [dispatch, filterSchema, d_success, c_success]);
+    }, [dispatch, filterSchema, d_success, c_success, showAllEmails]);
 
     const columns = useMemo(
         () => [
@@ -297,7 +302,7 @@ const Email = () => {
                     title="Email List"
                     topRightContent={
                         <>
-                            {/* <Box>
+                            <Box>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -309,7 +314,7 @@ const Email = () => {
                                     }
                                     label="Show All Emails"
                                 />
-                            </Box> */}
+                            </Box>
                             <TableGridQuickFilter
                                 onSortByChange={onQuickFilter}
                                 onOrderByChange={onQuickFilter}
