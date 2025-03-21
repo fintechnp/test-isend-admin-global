@@ -44,9 +44,6 @@ const LoginForm = ({ onSubmit, loading }) => {
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <Grid container gap="12px">
-                    <Grid item xs={12} mt={2}>
-                        <FormSelect size="medium" name="identifier" label="Select Country" options={sendingCountries} />
-                    </Grid>
                     <Grid item xs={12}>
                         <FormTextField size="medium" name="email" label="Email" />
                     </Grid>
