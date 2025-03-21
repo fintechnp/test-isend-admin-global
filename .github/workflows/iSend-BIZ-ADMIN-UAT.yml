@@ -1,0 +1,58 @@
+name: CI/CD Pipeline for iSend-BIZ-ADMIN-UAT
+
+on:
+  workflow_dispatch:
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        env:
+         MODE: development
+         REACT_APP_NAME: "iSend"
+         REACT_APP_API_BASE_URL: 'https://tst-admin-isendbiz.isendglobal.com/api'
+         REACT_APP_VERSION=REACT_POWERED_BY_NAME: 'TransCash International Pty. Ltd.'
+         REACT_APP_POWERED_BY_ABN_NUMBER: 11147705324
+         REACT_APP_POWERED_BY_URL_DISPLAY_TEXT: 'www.payremit.com'
+         REACT_APP_POWERED_BY_URL: 'https://ipayremit.com'
+         REACT_APP_COPYRIGHT_TEXT_SGP: "Copyright &copy; {{year}} iSend Pte Ltd. All Rights reserved"
+         REACT_APP_COPYRIGHT_TEXT_AUS: "Copyright &copy; {{year}} TransCash International Pty Ltd. All Rights reserved."
+         REACT_APP_COPYRIGHT_TEXT_USA: "Copyright &copy; {{year}} ISend Pte. Ltd. All Rights reserved."
+        
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "18"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build app
+              run: npm run build
+
+            - name: Transfer files to BIZ Server
+              uses: appleboy/scp-action@master
+              with:
+                  host: ${{ secrets.EC2_HOST_iSend_BIZ_UAT }}
+                  username: ${{ secrets.EC2_USER_iSend_BIZ_UAT }}
+                  key: ${{ secrets.EC2_SSH_KEY_iSend_BIZ_UAT }}
+                  source: "dist/"
+                  target: "/home/admin/deploy-UI"
+
+            - name: SSH into BIZ Server and run command
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.EC2_HOST_iSend_BIZ_UAT }}
+                  username: ${{ secrets.EC2_USER_iSend_BIZ_UAT }}
+                  key: ${{ secrets.EC2_SSH_KEY_iSend_BIZ_UAT }}
+                  port: ${{ secrets.PORT_iSend_BIZ_UAT }}
+                  script: |
+                      sudo mv /home/admin/deploy-UI/dist /home/admin/deploy-UI/admin-UI &&
+                      sudo chown -R www-data:www-data /home/admin/deploy-UI/admin-UI/ &&
+                      sudo rm -rf /var/www/html/admin-UI
+                      sudo mv /home/admin/deploy-UI/admin-UI /var/www/html/ &&
+                      sudo systemctl daemon-reload &&
+                      sudo systemctl restart nginx
